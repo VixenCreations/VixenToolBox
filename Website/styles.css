@@ -249,8 +249,13 @@ fluent-data-grid-row {
         background: rgba(255, 0, 170, 0.05) !important;
     }
 
+/* Force text colors in the grid to override any Fluent UI defaults */
 fluent-data-grid-cell {
-    padding: 12px 16px !important;
+    color: var(--neutral-foreground-rest) !important;
+}
+
+.packageName {
+    color: #fff !important;
 }
 
 .searchBlock {
