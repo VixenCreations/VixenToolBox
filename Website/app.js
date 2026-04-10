@@ -1,31 +1,8 @@
 /**
  * Optimized app.js for VPM Listing
  * Handles DOM filtering, VCC URI protocols, and Clipboard API.
- * Safely generates JSON data using Scriban.
+ * 100% Pure JavaScript (No Scriban tags in this file).
  */
-
-// Dynamically generate the packages metadata object from the Scriban template
-const PACKAGES = {
-{ { ~ for package in packages ~} }
-"{{ package.Name }}": {
-    name: "{{ package.Name }}",
-        displayName: "{{ if package.DisplayName; package.DisplayName; else; package.Name; end; }}",
-            description: "{{ if package.Description; package.Description; else; 'No description provided.'; end; }}",
-                version: "{{ package.Version }}",
-                    author: {
-        name: "{{ if package.Author.Name; package.Author.Name; else; 'Vixenlicous'; end; }}",
-            url: "{{ if package.Author.Url; package.Author.Url; else; '#'; end; }}"
-    },
-    dependencies: {
-        { { ~ for dependency in package.Dependencies ~} }
-        "{{ dependency.Name }}": "{{ dependency.Version }}",
-            {{ ~end ~}
-    }
-},
-license: "{{ if package.License; package.License; else; 'None specified'; end; }}"
-  },
-{ { ~end ~} }
-};
 
 const handleSearch = (event) => {
     const searchTerm = event.target.value.trim().toLowerCase();
@@ -125,11 +102,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // 5. PACKAGE INFO MODAL (Using the Clean JS Object)
+    // 5. PACKAGE INFO MODAL (Reads from the clean window object in index.html)
     document.querySelectorAll('.rowPackageInfoButton').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const pkgId = e.currentTarget.dataset.packageId;
-            const meta = PACKAGES[pkgId];
+
+            // Pull the data from the global object we generated in index.html
+            const meta = window.VPM_PACKAGES[pkgId];
             if (!meta) return;
 
             document.getElementById('packageInfoName').textContent = meta.displayName;
@@ -139,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const authorEl = document.getElementById('packageInfoAuthor');
             authorEl.textContent = meta.author.name;
-            authorEl.href = meta.author.url;
+            authorEl.href = meta.author.url !== '#' ? meta.author.url : 'javascript:void(0)';
 
             document.getElementById('packageInfoLicense').textContent = meta.license;
 
