@@ -1,356 +1,575 @@
 :root {
-  color-scheme: light dark;
+    color-scheme: dark;
+    /* Signature Vixenlicious Palette */
+    --neon-pink: #ff00aa;
+    --neon-pink-glow: rgba(255, 0, 170, 0.6);
+    --neon-cyan: #00e5ff;
+    --neon-cyan-glow: rgba(0, 229, 255, 0.6);
+    --dark-void: #06020a;
+    --glass-bg: rgba(15, 8, 25, 0.65);
+    --glass-border: rgba(255, 0, 170, 0.25);
+    /* Overriding Fluent UI base variables to force dark mode & neon accents */
+    --neutral-fill-rest: rgba(20, 10, 35, 0.5);
+    --neutral-fill-hover: rgba(255, 0, 170, 0.1);
+    --neutral-fill-active: rgba(255, 0, 170, 0.2);
+    --accent-fill-rest: var(--neon-pink);
+    --accent-fill-hover: #d900ff;
+    --accent-fill-active: #b300cc;
+    --neutral-foreground-rest: #e0d5eb;
+    --neutral-foreground-hover: #ffffff;
+    --stroke-width: 1;
+    --corner-radius: 8;
 }
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
+/* Custom Webkit Scrollbars for the cyberpunk feel */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--neon-pink);
+    border-radius: 4px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--neon-cyan);
+    }
+
 body {
-  padding: 0;
-  margin: 0;
-  min-width: 100vw;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: var(--neutral-foreground-rest);
+    padding: 0;
+    margin: 0;
+    min-width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--neutral-foreground-rest);
+    background-color: var(--dark-void);
+}
+
+/* The generated Torii Gate / Cyberpunk background */
+.background-art {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    /* Assuming you save the generated background as background.jpg */
+    background-image: url('background.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: blur(8px) brightness(0.4);
+    z-index: -1;
 }
 
 .hidden {
-  display: none !important;
+    display: none !important;
 }
 
 .row {
-  display: flex;
-  flex-direction: row;
+    display: flex;
+    flex-direction: row;
 }
 
 .col {
-  display: flex;
-  flex-direction: column;
-}
-
-.content {
-  max-width: 1000px;
-  width: 100%;
-  margin: 0 auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .align-items-center {
-  align-items: center;
+    align-items: center;
+}
+
+.justify-content-center {
+    justify-content: center;
 }
 
 .justify-content-between {
-  justify-content: space-between;
+    justify-content: space-between;
 }
 
 .justify-content-end {
-  justify-content: flex-end;
+    justify-content: flex-end;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Main Glassmorphism Container */
+.content {
+    max-width: 1000px;
+    width: 95%;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(255, 0, 170, 0.1);
 }
 
 h1 {
-  margin-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #fff;
+    text-shadow: 0 0 15px var(--neon-pink-glow), 0 0 30px var(--neon-pink-glow);
+}
+
+h3, h5 {
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #fff;
+}
+
+.text-glow-pink {
+    text-shadow: 0 0 10px var(--neon-pink-glow);
+}
+
+.text-glow-cyan {
+    text-shadow: 0 0 10px var(--neon-cyan-glow);
 }
 
 .caption1 {
-  font-size: 1rem;
-  color: var(--neutral-foreground-hover);
+    font-size: 1rem;
+    color: #bfa8d2;
 }
 
 .caption2 {
-  font-size: 0.8rem;
-  margin-top: 0.25rem;
-  color: var(--neutral-foreground-rest);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    color: #8c73a6;
 }
 
-.packages {
-  margin: 0.5rem 0 1rem 0;
-  max-width: 90%;
-  padding: 0.25rem;
-  display: flex;
-  flex: 1;
+/* Hyperlinks */
+.neon-link {
+    color: var(--neon-cyan);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
-#packageGrid {
-  overflow-y: auto;
-  width: 100%;
-  max-height: 40rem;
-}
+    .neon-link:hover {
+        color: #fff;
+        text-shadow: 0 0 10px var(--neon-cyan);
+    }
 
-.packages .packageName {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0.25rem 0;
-}
-
-.searchBlock {
-  margin-top: 1rem;
-  width: 100%;
-  max-width: 90%;
-}
-
-.searchBlock .root {
-  width: 100%;
-}
-
-#searchInput {
-  width: 100%;
-}
-
-.vccUrlField {
-  min-width: 450px;
-  max-width: 90%;
-  flex-grow:1;
-}
-
-#addListingToVccHelp {
-  z-index: 11;
-}
-
-#packageInfoModal {
-  z-index: 10;
-}
-
-#rowMoreMenu {
-  top: 0;
-  left: 0;
-  position: absolute;
-  z-index: 10;
-}
-
-#rowMoreMenu a {
-  display: block;
-  text-decoration: none;
-  color: var(--neutral-foreground-rest);
-}
-
+/* Banner Image Setup */
 .bannerImage {
-  aspect-ratio: 5 / 1;
-  border-radius: 6px;
-  max-width: 90%;
-  width: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  margin-bottom: 0.25rem;
+    aspect-ratio: 5 / 1;
+    border-radius: 12px;
+    max-width: 100%;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
 }
 
 .badge {
-  border-radius: 4px;
-  padding: 0.25rem 0.5rem;
-  background-color: var(--neutral-fill-hover);
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    background-color: rgba(0, 229, 255, 0.15);
+    border: 1px solid rgba(0, 229, 255, 0.4);
+    color: var(--neon-cyan);
+    font-size: 0.85rem;
+    text-shadow: 0 0 5px rgba(0, 229, 255, 0.5);
 }
 
+.id-badge {
+    font-family: 'Consolas', monospace;
+    background: rgba(0,0,0,0.4);
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 4px;
+}
+
+.type-badge {
+    background: linear-gradient(45deg, rgba(255,0,170,0.2), rgba(0,229,255,0.2));
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #fff;
+}
+
+/* Packages Grid styling */
+.packages {
+    margin: 1.5rem 0 1rem 0;
+    max-width: 100%;
+    padding: 0.5rem;
+    display: flex;
+    flex: 1;
+    background: transparent !important;
+    border: none !important;
+}
+
+#packageGrid {
+    overflow-y: auto;
+    width: 100%;
+    max-height: 40rem;
+    background: rgba(0,0,0,0.3);
+    border-radius: 12px;
+    border: 1px solid rgba(0, 229, 255, 0.2);
+}
+
+.packages .packageName {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0.25rem 0;
+    color: #fff;
+    text-shadow: 0 0 8px rgba(255, 0, 170, 0.4);
+}
+
+/* Forcing the Fluent DataGrid to respect our glass theme */
+fluent-data-grid-row {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    transition: background 0.2s ease;
+}
+
+    fluent-data-grid-row:hover {
+        background: rgba(255, 0, 170, 0.05) !important;
+    }
+
+fluent-data-grid-cell {
+    padding: 12px 16px !important;
+}
+
+.searchBlock {
+    margin-top: 1.5rem;
+    width: 100%;
+    max-width: 100%;
+}
+
+    .searchBlock .root {
+        width: 100%;
+    }
+
+#searchInput {
+    width: 100%;
+}
+
+.vccUrlField {
+    min-width: 400px;
+    max-width: 70%;
+    flex-grow: 1;
+}
+
+/* Customizing Fluent UI Buttons */
+.custom-accent-btn {
+    box-shadow: 0 0 10px var(--neon-pink-glow);
+    transition: all 0.3s ease;
+}
+
+    .custom-accent-btn:hover {
+        box-shadow: 0 0 20px var(--neon-pink);
+        transform: translateY(-1px);
+    }
+
+.custom-stealth-btn {
+    color: var(--neon-cyan) !important;
+    border: 1px solid rgba(0, 229, 255, 0.3) !important;
+    transition: all 0.3s ease;
+}
+
+    .custom-stealth-btn:hover {
+        background: rgba(0, 229, 255, 0.1) !important;
+        box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+        color: #fff !important;
+    }
+
+.small-btn {
+    min-width: 32px !important;
+    padding: 0 10px !important;
+}
+
+.close-btn {
+    border: none !important;
+    color: var(--neon-pink) !important;
+}
+
+    .close-btn:hover {
+        background: rgba(255, 0, 170, 0.1) !important;
+        box-shadow: 0 0 15px rgba(255, 0, 170, 0.3);
+        color: #fff !important;
+    }
+
+/* Modals & Menus (Targeting Fluent UI inner elements) */
+fluent-dialog::part(control) {
+    background: rgba(10, 5, 20, 0.85);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--neon-cyan);
+    box-shadow: 0 0 40px rgba(0, 229, 255, 0.2);
+    border-radius: 16px;
+    color: #fff;
+    padding: 1rem;
+}
+
+#addListingToVccHelp, #packageInfoModal {
+    z-index: 11;
+}
+
+#rowMoreMenu {
+    top: 0;
+    left: 0;
+    position: absolute;
+    z-index: 10;
+}
+
+fluent-menu {
+    background: rgba(10, 5, 20, 0.95) !important;
+    border: 1px solid var(--neon-pink) !important;
+    box-shadow: 0 4px 20px rgba(255, 0, 170, 0.3) !important;
+    border-radius: 8px !important;
+}
+
+fluent-menu-item {
+    color: #e0d5eb !important;
+    transition: background 0.2s ease;
+}
+
+    fluent-menu-item:hover {
+        background: rgba(255, 0, 170, 0.2) !important;
+        color: #fff !important;
+    }
+
+ul.custom-list li {
+    color: #bfa8d2;
+    position: relative;
+}
+
+    ul.custom-list li::marker {
+        color: var(--neon-cyan);
+    }
+
+/* Standard Spacing Utilities */
 .m-0 {
-  margin: 0;
+    margin: 0;
 }
 
 .m-1 {
-  margin: 0.25rem;
+    margin: 0.25rem;
 }
 
 .m-2 {
-  margin: 0.5rem;
+    margin: 0.5rem;
 }
 
 .m-3 {
-  margin: 0.75rem;
+    margin: 0.75rem;
 }
 
 .m-4 {
-  margin: 1rem;
+    margin: 1rem;
 }
 
 .m-5 {
-  margin: 2rem;
+    margin: 2rem;
 }
 
 .mt-1 {
-  margin-top: 0.25rem;
+    margin-top: 0.25rem;
 }
 
 .mt-2 {
-  margin-top: 0.5rem;
+    margin-top: 0.5rem;
 }
 
 .mt-3 {
-  margin-top: 0.75rem;
+    margin-top: 0.75rem;
 }
 
 .mt-4 {
-  margin-top: 1rem;
+    margin-top: 1rem;
 }
 
 .mt-5 {
-  margin-top: 2rem;
+    margin-top: 2rem;
 }
 
 .mb-1 {
-  margin-bottom: 0.25rem;
+    margin-bottom: 0.25rem;
 }
 
 .mb-2 {
-  margin-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .mb-3 {
-  margin-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
 }
 
 .mb-4 {
-  margin-bottom: 1rem;
+    margin-bottom: 1rem;
 }
 
 .mb-5 {
-  margin-bottom: 2rem;
+    margin-bottom: 2rem;
 }
 
 .ms-1 {
-  margin-left: 0.25rem;
+    margin-left: 0.25rem;
 }
 
 .ms-2 {
-  margin-left: 0.5rem;
+    margin-left: 0.5rem;
 }
 
 .ms-3 {
-  margin-left: 0.75rem;
+    margin-left: 0.75rem;
 }
 
 .ms-4 {
-  margin-left: 1rem;
+    margin-left: 1rem;
 }
 
 .ms-5 {
-  margin-left: 2rem;
+    margin-left: 2rem;
 }
 
 .me-1 {
-  margin-right: 0.25rem;
+    margin-right: 0.25rem;
 }
 
 .me-2 {
-  margin-right: 0.5rem;
+    margin-right: 0.5rem;
 }
 
 .me-3 {
-  margin-right: 0.75rem;
+    margin-right: 0.75rem;
 }
 
 .me-4 {
-  margin-right: 1rem;
+    margin-right: 1rem;
 }
 
 .me-5 {
-  margin-right: 2rem;
+    margin-right: 2rem;
 }
 
 .p-1 {
-  padding: 0.25rem;
+    padding: 0.25rem;
 }
 
 .p-2 {
-  padding: 0.5rem;
+    padding: 0.5rem;
 }
 
 .p-3 {
-  padding: 0.75rem;
+    padding: 0.75rem;
 }
 
 .p-4 {
-  padding: 1rem;
+    padding: 1rem;
 }
 
 .p-5 {
-  padding: 2rem;
+    padding: 2rem;
 }
 
 .pt-1 {
-  padding-top: 0.25rem;
+    padding-top: 0.25rem;
 }
 
 .pt-2 {
-  padding-top: 0.5rem;
+    padding-top: 0.5rem;
 }
 
 .pt-3 {
-  padding-top: 0.75rem;
+    padding-top: 0.75rem;
 }
 
 .pt-4 {
-  padding-top: 1rem;
+    padding-top: 1rem;
 }
 
 .pt-5 {
-  padding-top: 2rem;
+    padding-top: 2rem;
 }
 
 .pb-1 {
-  padding-bottom: 0.25rem;
+    padding-bottom: 0.25rem;
 }
 
 .pb-2 {
-  padding-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 
 .pb-3 {
-  padding-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
 }
 
 .pb-4 {
-  padding-bottom: 1rem;
+    padding-bottom: 1rem;
 }
 
 .pb-5 {
-  padding-bottom: 2rem;
+    padding-bottom: 2rem;
 }
 
 .ps-1 {
-  padding-left: 0.25rem;
+    padding-left: 0.25rem;
 }
 
 .ps-2 {
-  padding-left: 0.5rem;
+    padding-left: 0.5rem;
 }
 
 .ps-3 {
-  padding-left: 0.75rem;
+    padding-left: 0.75rem;
 }
 
 .ps-4 {
-  padding-left: 1rem;
+    padding-left: 1rem;
 }
 
 .ps-5 {
-  padding-left: 2rem;
+    padding-left: 2rem;
 }
 
 .pe-1 {
-  padding-right: 0.25rem;
+    padding-right: 0.25rem;
 }
 
 .pe-2 {
-  padding-right: 0.5rem;
+    padding-right: 0.5rem;
 }
 
 .pe-3 {
-  padding-right: 0.75rem;
+    padding-right: 0.75rem;
 }
 
 .pe-4 {
-  padding-right: 1rem;
+    padding-right: 1rem;
 }
 
 .pe-5 {
-  padding-right: 2rem;
+    padding-right: 2rem;
 }
 
 .w-100 {
-  width: 100%;
+    width: 100%;
 }
 
 .flex-1 {
-  flex: 1;
+    flex: 1;
 }
