@@ -1,0 +1,350 @@
+/* Animation Workbench USS — Unity 2022.3 Compatible */
+
+/* ============================
+   Global Theme Tokens
+   ============================ */
+:root {
+    --bg-dark: #1a1a1a;
+    --bg-darker: #141414;
+    --bg-panel: #222;
+    --bg-toolbar: #2a2a2a;
+    --bg-graph: #0f0f0f;
+
+    --color-border: #2f2f2f;
+    --color-border-strong: #555;
+
+    --color-accent: #4fa3ff;
+
+    --color-grid-soft: #1e1e1e;
+    --color-grid-strong: #333333;
+
+    --curve-pos: #ff6666;
+    --curve-key: #ffb3b3;
+
+    --text: #e5e5e5;
+    --text-muted: #9a9a9a;
+
+    --btn-bg: #2c2c2c;
+    --btn-bg-hover: #3a3a3a;
+    --btn-bg-active: #4f4f4f;
+
+    --radius: 4px;
+}
+
+/* ============================
+   Base UI Overrides
+   ============================ */
+.unity-base-field,
+.unity-object-field,
+.unity-button,
+.unity-label,
+.unity-toggle,
+.unity-enum-field {
+    font-size: 12px;
+    color: var(--text);
+}
+
+/* LEFT ALIGN LABEL TEXT */
+.unity-label {
+    -unity-text-align: upper-left;
+}
+
+/* Inputs */
+.unity-base-field,
+.unity-object-field,
+.unity-enum-field {
+    background-color: var(--bg-panel);
+    border-color: var(--color-border);
+    border-width: 1px;
+    border-radius: var(--radius);
+}
+
+/* ============================
+   Root Container
+   ============================ */
+#workbench-root {
+    flex-direction: column;
+    min-width: 640px;
+    min-height: 420px;
+    background-color: var(--bg-dark);
+    padding: 4px;
+}
+
+/* ============================
+   Top Toolbar
+   ============================ */
+#top-toolbar {
+    height: 34px;
+    background-color: var(--bg-toolbar);
+    border-bottom-width: 1px;
+    border-bottom-color: var(--color-border);
+
+    padding-left: 6px;
+    padding-right: 6px;
+
+    flex-direction: row;
+    align-items: center;
+}
+
+#top-toolbar .unity-object-field,
+#top-toolbar .unity-base-field {
+    height: 24px;
+    margin-top: 4px;
+    margin-right: 6px;
+}
+
+/* ============================
+   Main Scroll
+   ============================ */
+#main-scroll {
+    flex-grow: 1;
+    padding: 6px;
+}
+
+/* ============================
+   Bindings Panel
+   ============================ */
+#bindings-panel {
+    background-color: var(--bg-panel);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: var(--radius);
+
+    padding: 10px;
+    flex-direction: column;
+}
+
+/* Binding row */
+.binding-row {
+    flex-direction: row;
+    align-items: center;
+    padding: 4px 6px;
+
+    border-radius: 3px;
+    background-color: rgba(255,255,255,0.015);
+}
+
+.binding-row:hover {
+    background-color: rgba(255,255,255,0.05);
+}
+
+/* ============================
+   ScrollViews
+   ============================ */
+.scroll-section {
+    flex-grow: 1;
+    overflow: scroll;
+}
+
+unity-scroll-view .unity-base-slider__tracker {
+    background-color: #252525;
+}
+unity-scroll-view .unity-base-slider__thumb {
+    background-color: #666;
+    border-radius: 4px;
+}
+
+/* ============================
+   Graph Container
+   ============================ */
+#curve-graph-container {
+    flex-grow: 1;
+    min-height: 250px;
+    background-color: var(--bg-graph);
+
+    border-top-width: 1px;
+    border-top-color: var(--color-border);
+    border-bottom-width: 1px;
+    border-bottom-color: var(--color-border-strong);
+
+    border-radius: var(--radius);
+
+    position: relative;
+    overflow: hidden;
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/* Timeline Ribbon */
+#timeline-ribbon {
+    height: 38px;
+    background-color: var(--bg-toolbar);
+    border-top-width: 1px;
+    border-top-color: var(--color-border);
+
+    border-radius: var(--radius);
+    padding: 6px;
+    margin-top: 4px;
+}
+
+/* Status Bar */
+#status-bar {
+    height: 26px;
+    background-color: var(--bg-darker);
+
+    border-top-width: 1px;
+    border-top-color: var(--color-border);
+
+    padding-left: 8px;
+
+    color: var(--text-muted);
+    font-size: 11px;
+
+    align-items: center;
+    border-radius: var(--radius);
+    margin-top: 4px;
+}
+
+/* ============================
+   Buttons
+   ============================ */
+.unity-button {
+    height: 24px;
+    min-width: 72px;
+
+    background-color: var(--btn-bg);
+    border-width: 1px;
+    border-color: rgba(255,255,255,0.05);
+    border-radius: var(--radius);
+
+    color: var(--text);
+}
+
+.unity-button:hover {
+    background-color: var(--btn-bg-hover);
+}
+.unity-button:active {
+    background-color: var(--btn-bg-active);
+}
+
+/* ============================
+   Helpers
+   ============================ */
+.label-muted {
+    color: var(--text-muted);
+    font-size: 11px;
+}
+
+/* ========================================================================== */
+/* POPUP WINDOW STYLING (MaterialPropertySearchPopup)                         */
+/* ========================================================================== */
+
+/* Root */
+.popup-root {
+    background-color: var(--bg-panel);
+    padding: 6px;
+}
+
+/* Search */
+.popup-search {
+    margin-bottom: 6px;
+}
+
+/* Scroll area */
+.popup-scroll {
+    border-width: 1px;
+    border-color: var(--color-border);
+    background-color: var(--bg-dark);
+    padding: 4px;
+}
+
+/* Footer */
+.popup-footer {
+    margin-top: 6px;
+}
+
+/* Close button */
+.popup-close-btn {
+    min-width: 70px;
+}
+
+/* ------------------------------
+   FOLDOUT FIX (critical)
+   ------------------------------ */
+foldout {
+    background-color: transparent;
+    padding-left: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* Arrow + label header */
+foldout > .unity-foldout__input {
+    padding-left: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+/* Children container */
+foldout > .unity-foldout__content {
+    padding-left: 10px;
+}
+
+/* Material Foldout */
+.mat-foldout {
+    margin-bottom: 4px;
+}
+
+/* Category Foldout */
+.cat-foldout {
+    margin-bottom: 3px;
+}
+
+/* Property Row */
+.prop-row {
+    margin-left: 18px;
+    height: 20px;
+    -unity-text-align: upper-left;
+}
+
+/* Selected Row */
+.prop-row-selected {
+    -unity-font-style: bold;
+}
+
+/* ================================================
+   Easing Dropdown (Custom ComboBox)
+   ================================================ */
+
+.easing-dropdown {
+    background-color: var(--bg-panel);
+    border-color: var(--color-border);
+    border-width: 1px;
+    border-radius: var(--radius);
+    height: 22px;
+
+    padding-left: 6px;
+    padding-right: 4px;
+    margin-left: 4px;
+
+    color: var(--text);
+    align-items: center;
+}
+
+.easing-dropdown:hover {
+    background-color: var(--btn-bg-hover);
+}
+
+.easing-dropdown-label {
+    color: var(--text);
+    font-size: 12px;
+    -unity-font-style: normal;
+    -unity-text-align: upper-left;
+}
+
+.easing-dropdown-button {
+    width: 22px;
+    height: 18px;
+    padding: 0;
+    margin: 0;
+
+    background-color: transparent;
+    color: var(--text-muted);
+    border-width: 0;
+}
+
+.easing-dropdown-button:hover {
+    background-color: var(--btn-bg-hover);
+    color: var(--text);
+}

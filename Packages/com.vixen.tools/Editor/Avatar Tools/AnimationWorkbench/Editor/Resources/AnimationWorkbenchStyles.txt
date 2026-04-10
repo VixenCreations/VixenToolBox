@@ -1,0 +1,214 @@
+/* Animation Workbench USS
+   Compatible with Unity 2022.3 UI Toolkit
+*/
+
+/* ============================
+   Theme variables
+   ============================ */
+:root {
+    --bg-dark: #1e1e1e;
+    --bg-panel: #2b2b2b;
+    --bg-graph: #111111;
+    --bg-toolbar: #272727;
+
+    --color-border: #333333;
+    --color-accent: #4fa3ff;
+    --color-grid-soft: #202020;
+    --color-grid-strong: #333333;
+
+    --curve-pos: #ff5555;
+    --curve-key: #ff9999;
+    --text: #e6e6e6;
+    --muted: #9a9a9a;
+}
+
+/* Base text sizes for common elements */
+.unity-base-field,
+.unity-object-field,
+.unity-button,
+.unity-label,
+.unity-toggle {
+    font-size: 12px;
+    color: var(--text);
+}
+
+/* ============================
+   Root & Toolbar
+   ============================ */
+#workbench-root {
+    flex-direction: column;
+    min-width: 600px;
+    min-height: 360px;
+    background-color: var(--bg-dark);
+}
+
+#top-toolbar {
+    height: 30px;
+    background-color: var(--bg-toolbar);
+    border-bottom: 1px solid var(--color-border);
+    padding-left: 6px;
+    padding-right: 6px;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    gap: 8px;
+}
+
+/* Ensure object fields look compact in toolbar */
+#top-toolbar .unity-object-field,
+#top-toolbar .unity-base-field {
+    height: 22px;
+    margin-top: 4px;
+}
+
+/* ============================
+   Main scroll area & panels
+   ============================ */
+#main-scroll {
+    flex-grow: 1;
+    padding: 6px;
+}
+
+#bindings-panel {
+    background-color: var(--bg-panel);
+    padding: 8px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Binding rows */
+.binding-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 6px;
+    border-radius: 3px;
+}
+.binding-row:hover {
+    background-color: rgba(255,255,255,0.02);
+}
+
+/* label in binding row takes available room */
+.binding-row > Label {
+    unity-text-align: left;
+    flex-grow: 1;
+    color: var(--text);
+}
+
+/* ============================
+   ScrollView adjustments
+   ============================ */
+.scroll-section {
+    flex-grow: 1;
+    overflow: auto;
+}
+
+/* Make Unity's scrollbars visible and reasonably wide */
+unity-scroll-view {
+    --unity-scrollbar-width: 12px;
+}
+
+/* Thumb & track */
+unity-scroll-view .unity-base-slider__tracker {
+    background-color: #2b2b2b;
+}
+unity-scroll-view .unity-base-slider__thumb {
+    background-color: #5a5a5a;
+    border-radius: 4px;
+}
+
+/* ============================
+   Graph area
+   ============================ */
+#curve-graph-container {
+    flex-grow: 1;
+    min-height: 220px;
+    background-color: var(--bg-graph);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    position: relative;
+    overflow: hidden;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+/* Graph internal helpers (for any absolute-positioned markers) */
+.graph-grid-line {
+    position: absolute;
+    background-color: var(--color-grid-soft);
+    opacity: 0.6;
+}
+.graph-grid-line-major {
+    background-color: var(--color-grid-strong);
+    opacity: 0.9;
+}
+
+/* Curve keys and lines: used if you add VisualElement-based key markers */
+.keyframe-point {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--curve-key);
+    border: 1px solid rgba(255,255,255,0.14);
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+.keyframe-point:hover {
+    background-color: #ffcccc;
+    border-color: white;
+}
+
+/* Curve line placeholder styling (if using elements for curves) */
+.curve-line {
+    position: absolute;
+    height: 2px;
+    background-color: var(--curve-pos);
+    border-radius: 2px;
+}
+
+/* ============================
+   Timeline & status
+   ============================ */
+#timeline-ribbon {
+    height: 36px;
+    border-top: 1px solid var(--color-border);
+    padding: 6px;
+    background-color: rgba(0,0,0,0.04);
+}
+
+#status-bar {
+    height: 24px;
+    background-color: #111111;
+    border-top: 1px solid var(--color-border);
+    padding-left: 8px;
+    align-items: center;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* ============================
+   Buttons / Controls
+   ============================ */
+.unity-button {
+    height: 22px;
+    min-width: 72px;
+    background-color: #2f2f2f;
+    border: 1px solid rgba(255,255,255,0.03);
+    color: var(--text);
+}
+.unity-button:hover {
+    background-color: #3b3b3b;
+}
+
+/* ============================
+   Small helpers
+   ============================ */
+.label-muted {
+    color: var(--muted);
+    font-size: 11px;
+}
+.small-gap {
+    width: 8px;
+}
