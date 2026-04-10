@@ -102,12 +102,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // 5. PACKAGE INFO MODAL (Reads from the clean window object in index.html)
+    // 5. PACKAGE INFO MODAL
     document.querySelectorAll('.rowPackageInfoButton').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const pkgId = e.currentTarget.dataset.packageId;
-
-            // Pull the data from the global object we generated in index.html
             const meta = window.VPM_PACKAGES[pkgId];
             if (!meta) return;
 
@@ -155,4 +153,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener('click', (e) => {
         if (!e.target.closest('#rowMoreMenu') && !e.target.closest('.rowMenuButton')) hideContextMenu();
     });
+
+    // 8. Architecture Modal Trigger
+    const toolsBreakdownBtn = document.getElementById('openToolsBreakdownBtn');
+    if (toolsBreakdownBtn) toolsBreakdownBtn.addEventListener('click', () => showDialog('toolsBreakdownModal'));
 });

@@ -342,9 +342,9 @@ fluent-data-grid-row.grid-header fluent-data-grid-cell {
         font-family: inherit;
     }
 
-/* Modals & Menus - FIXING THE BACKDROP AND SQUASHING BUG */
+/* Modals & Menus */
 fluent-dialog::part(overlay) {
-    background: rgba(0, 0, 0, 0.7); /* Darken the background behind the modal */
+    background: rgba(0, 0, 0, 0.7);
 }
 
 fluent-dialog::part(control) {
@@ -356,13 +356,13 @@ fluent-dialog::part(control) {
     border-radius: 16px;
     color: #fff;
     padding: 1.5rem;
-    width: 600px; /* Forces a proper width so it doesn't squash */
-    max-width: 90vw; /* Keeps it responsive */
+    width: 600px;
+    max-width: 90vw;
     max-height: 80vh;
-    overflow-y: auto; /* Ensures long text scrolls inside the modal */
+    overflow-y: auto;
 }
 
-#addListingToVccHelp, #packageInfoModal {
+#addListingToVccHelp, #packageInfoModal, #toolsBreakdownModal {
     z-index: 11;
 }
 

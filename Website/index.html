@@ -54,6 +54,15 @@
             </fluent-button>
         </div>
 
+        <div class="row w-100 justify-content-center mt-4 mb-4">
+            <fluent-button id="openToolsBreakdownBtn" appearance="stealth" class="custom-stealth-btn" style="padding: 0.5rem 1.5rem; font-size: 1rem;">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                    <path d="M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2ZM11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14V10C9 9.44772 9.44772 9 10 9C10.5523 9 11 9.44772 11 10V14ZM10 8C9.44772 8 9 7.55228 9 7C9 6.44772 9.44772 6 10 6C10.5523 6 11 6.44772 11 7C11 7.55228 10.5523 8 10 8Z" />
+                </svg>
+                View Tool Architecture
+            </fluent-button>
+        </div>
+
         <fluent-dialog id="addListingToVccHelp" hidden modal>
             <div class="col ps-4 pe-4 glass-dialog">
                 <div class="row align-items-center justify-content-between mt-3 mb-4">
@@ -96,34 +105,47 @@
             </div>
         </fluent-dialog>
 
-        <fluent-card class="glass-panel mt-4 mb-4 p-4" style="width: 100%; box-sizing: border-box;">
-            <h3 class="m-0 mb-2 text-glow-pink">VixenTools: PhysBoneTopologyMapper</h3>
-            <p class="caption1 mb-4" style="line-height: 1.5;">
-                The flagship utility of the VixenTools suite. Automates PhysBone architecture management through a two-phase process called <strong>Extraction</strong> and <strong>Injection</strong>, utilizing a blueprint-based approach to ensure perfect physics consistency across different avatars.
-            </p>
-
-            <div class="row w-100" style="gap: 2rem; flex-wrap: wrap;">
-                <div class="col flex-1">
-                    <h5 class="text-glow-cyan m-0 mb-2">Phase 1: Architecture Extraction</h5>
-                    <p class="caption2 mb-2">Extracts the complete physics setup from a "Source Avatar" to create a Master Blueprint.</p>
-                    <ul class="custom-list m-0 ps-4 caption1" style="line-height: 1.5;">
-                        <li class="mb-2"><strong>Path Mapping:</strong> Uses <code>AnimationUtility.CalculateTransformPath</code> to determine the exact relative skeletal path for every <code>VRCPhysBone</code> component.</li>
-                        <li class="mb-2"><strong>Preset Creation:</strong> Generates a Unity <code>.preset</code> file capturing all tuned parameters (pull, spring, stiffness, gravity).</li>
-                        <li class="mb-2"><strong>Blueprint Generation:</strong> Saves a central manifest linking each skeletal path to its corresponding preset.</li>
-                    </ul>
+        <fluent-dialog id="toolsBreakdownModal" hidden modal>
+            <div class="col ps-4 pe-4 glass-dialog">
+                <div class="row align-items-center justify-content-between mt-3 mb-4">
+                    <div class="row align-items-center">
+                        <h3 class="m-0 text-glow-pink">VixenTools: PhysBoneTopologyMapper</h3>
+                    </div>
+                    <fluent-button appearance="stealth" id="toolsBreakdownModalClose" class="custom-stealth-btn close-btn">
+                        <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                            <path d="M4.08859 4.21569L4.14645 4.14645C4.32001 3.97288 4.58944 3.9536 4.78431 4.08859L4.85355 4.14645L10 9.293L15.1464 4.14645C15.32 3.97288 15.5894 3.9536 15.7843 4.08859L15.8536 4.14645C16.0271 4.32001 16.0464 4.58944 15.9114 4.78431L15.8536 4.85355L10.707 10L15.8536 15.1464C16.0271 15.32 16.0464 15.5894 15.9114 15.7843L15.8536 15.8536C15.68 16.0271 15.4106 16.0464 15.2157 15.9114L15.1464 15.8536L10 10.707L4.85355 15.8536C4.67999 16.0271 4.41056 16.0464 4.21569 15.9114L4.14645 15.8536C3.97288 15.68 3.9536 15.4106 4.08859 15.2157L4.14645 15.1464L9.293 10L4.14645 4.85355C3.97288 4.67999 3.9536 4.41056 4.08859 4.21569L4.14645 4.14645L4.08859 4.21569Z" />
+                        </svg>
+                    </fluent-button>
                 </div>
 
-                <div class="col flex-1">
-                    <h5 class="text-glow-cyan m-0 mb-2">Phase 2: Architecture Injection</h5>
-                    <p class="caption2 mb-2">Reconstructs the saved physics matrix onto a "Target Avatar" using the Blueprint.</p>
-                    <ul class="custom-list m-0 ps-4 caption1" style="line-height: 1.5;">
-                        <li class="mb-2"><strong>Automated Reconstruction:</strong> Iterates through blueprint nodes, searching for stored skeletal paths on the new avatar.</li>
-                        <li class="mb-2"><strong>Component Management:</strong> Automatically adds missing <code>VRCPhysBone</code> components to matching bones.</li>
-                        <li class="mb-2"><strong>Parameter Application:</strong> Applies the stored preset data (<code>node.preset.ApplyTo(pb)</code>) for a 1:1 physics match.</li>
-                    </ul>
+                <p class="caption1 mb-4" style="line-height: 1.5;">
+                    The flagship utility of the VixenTools suite. Automates PhysBone architecture management through a two-phase process called <strong>Extraction</strong> and <strong>Injection</strong>, utilizing a blueprint-based approach to ensure perfect physics consistency across different avatars.
+                </p>
+
+                <div class="row w-100" style="gap: 2rem; flex-wrap: wrap;">
+                    <div class="col flex-1">
+                        <h5 class="text-glow-cyan m-0 mb-2">Phase 1: Architecture Extraction</h5>
+                        <p class="caption2 mb-2">Extracts the complete physics setup from a "Source Avatar" to create a Master Blueprint.</p>
+                        <ul class="custom-list m-0 ps-4 caption1" style="line-height: 1.5;">
+                            <li class="mb-2"><strong>Path Mapping:</strong> Uses <code>AnimationUtility.CalculateTransformPath</code> to determine the exact relative skeletal path for every <code>VRCPhysBone</code> component.</li>
+                            <li class="mb-2"><strong>Preset Creation:</strong> Generates a Unity <code>.preset</code> file capturing all tuned parameters (pull, spring, stiffness, gravity).</li>
+                            <li class="mb-2"><strong>Blueprint Generation:</strong> Saves a central manifest linking each skeletal path to its corresponding preset.</li>
+                        </ul>
+                    </div>
+
+                    <div class="col flex-1">
+                        <h5 class="text-glow-cyan m-0 mb-2">Phase 2: Architecture Injection</h5>
+                        <p class="caption2 mb-2">Reconstructs the saved physics matrix onto a "Target Avatar" using the Blueprint.</p>
+                        <ul class="custom-list m-0 ps-4 caption1" style="line-height: 1.5;">
+                            <li class="mb-2"><strong>Automated Reconstruction:</strong> Iterates through blueprint nodes, searching for stored skeletal paths on the new avatar.</li>
+                            <li class="mb-2"><strong>Component Management:</strong> Automatically adds missing <code>VRCPhysBone</code> components to matching bones.</li>
+                            <li class="mb-2"><strong>Parameter Application:</strong> Applies the stored preset data (<code>node.preset.ApplyTo(pb)</code>) for a 1:1 physics match.</li>
+                        </ul>
+                    </div>
                 </div>
+                <div class="mb-4"></div>
             </div>
-        </fluent-card>
+        </fluent-dialog>
 
         <div class="searchBlock">
             <fluent-text-field id="searchInput" placeholder="Search packages..." type="text" autoFocus></fluent-text-field>
