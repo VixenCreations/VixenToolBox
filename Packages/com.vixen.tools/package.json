@@ -1,6 +1,6 @@
 {
   "name": "com.vixencreations.vixens-toolbox",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "displayName": "Vixen Tool Box",
   "description": "Collection of Unity editor utilities and PhysBone automation pipelines hand-crafted for maximum efficiency.",
   "unity": "2022.3",
