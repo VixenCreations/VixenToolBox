@@ -169,14 +169,13 @@ h3, h5 {
         text-shadow: 0 0 10px var(--neon-cyan);
     }
 
-/* Banner Image Setup */
-.bannerImage {
-    aspect-ratio: 5 / 1;
+/* Banner Image Setup - SHRUNK DOWN */
+.bannerImage.slim-banner {
+    height: 100px; /* Forces a tight, sleek vertical limit */
     border-radius: 12px;
-    max-width: 100%;
     width: 100%;
     background-size: cover;
-    background-position: center;
+    background-position: center 25%; /* Keeps the focal point of the artwork visible */
     background-repeat: no-repeat;
     margin-bottom: 1.5rem;
     border: 1px solid var(--glass-border);
