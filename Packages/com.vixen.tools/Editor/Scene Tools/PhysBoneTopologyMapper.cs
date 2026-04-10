@@ -4,21 +4,28 @@ using UnityEditor;
 using UnityEditor.Presets;
 using System.Collections.Generic;
 using System.IO;
+
+// Safely include VRChat namespaces only if the SDK is present
+#if VRC_SDK_VRCSDK3
 using VRC.SDK3.Dynamics.PhysBone.Components;
+#endif
 
 namespace VixenTools.Editor
 {
     /// <summary>
     /// VixenTools Editor: Extracts and Injects complete PhysBone architectures across avatars.
+    /// Safely degrades in non-VRChat Unity environments.
     /// </summary>
     public class PhysBoneTopologyMapper : EditorWindow
     {
+        private Vector2 scrollPos;
+
+#if VRC_SDK_VRCSDK3
         private GameObject sourceAvatar;
         private GameObject targetAvatar;
         private PhysBoneBlueprint loadedBlueprint;
         private string blueprintName = "Novabeast_1.2_MasterTopology";
-        
-        private Vector2 scrollPos;
+#endif
 
         [MenuItem("VixenTools/PhysBone Topology Mapper")]
         public static void ShowWindow()
@@ -36,6 +43,7 @@ namespace VixenTools.Editor
 
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
 
+#if VRC_SDK_VRCSDK3
             // --- PHASE 1: EXTRACTION ---
             EditorGUILayout.LabelField("Phase 1: Architecture Extraction", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox("Select the root of your tuned avatar. This generates a Master Blueprint and all associated Presets.", MessageType.Info);
@@ -67,10 +75,21 @@ namespace VixenTools.Editor
                 InjectTopology();
             }
             GUI.backgroundColor = Color.white;
+#else
+            // --- GRACEFUL DEGRADATION FOR STANDALONE UNITY ---
+            EditorGUILayout.HelpBox("VRChat SDK3 is not detected in this project. The PhysBone Topology Mapper requires the VRChat Avatar SDK to function.", MessageType.Warning);
+            
+            GUI.enabled = false;
+            GUILayout.Button("Extract Master Copy (VRChat SDK Required)", GUILayout.Height(35));
+            GUILayout.Space(10);
+            GUILayout.Button("Inject Blueprint (VRChat SDK Required)", GUILayout.Height(35));
+            GUI.enabled = true;
+#endif
 
             EditorGUILayout.EndScrollView();
         }
 
+#if VRC_SDK_VRCSDK3
         private void ExtractTopology()
         {
             if (sourceAvatar == null)
@@ -155,6 +174,7 @@ namespace VixenTools.Editor
             EditorUtility.SetDirty(targetAvatar);
             Debug.Log($"[VixenTools] Injection Complete! Applied {successCount} presets. Failed/Skipped: {failCount}.");
         }
+#endif
 
         private void EnsureDirectoryExists(string path)
         {
