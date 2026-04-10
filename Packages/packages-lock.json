@@ -93,10 +93,7 @@
       "version": "file:com.vixen.tools",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {
-        "com.vrchat.base": "3.10.2",
-        "com.vrchat.avatars": "3.10.2"
-      }
+      "dependencies": {}
     },
     "com.vrchat.core.bootstrap": {
       "version": "file:com.vrchat.core.bootstrap",

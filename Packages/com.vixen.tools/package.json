@@ -5,19 +5,16 @@
   "description": "Collection of Tools Hand Crafted for Maximum Efficiency",
   "gitDependencies": {},
   "vpmDependencies": {
-    "com.vrchat.avatars": "3.10.3-beta.2"
+    "com.vrchat.avatars": "3.10.2",
+    "com.vrchat.base": "3.10.2"
   },
   "author": {
     "name": "Vixenlicous",
     "email": "Vixenlicious@outlook.com",
-    "url": ""
+    "url": "https://x.com/VixenVRC"
   },
   "legacyFolders": {},
   "legacyFiles": {},
   "localPath": "F:\\Projects\\Code Stuff\\VixenToolBox\\Packages\\com.vixen.tools",
-  "unity": "2022.3",
-  "dependencies": {
-    "com.vrchat.base": "3.10.2",
-    "com.vrchat.avatars": "3.10.2"
-  }
+  "unity": "2022.3"
 }
