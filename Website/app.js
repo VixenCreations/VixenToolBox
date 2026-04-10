@@ -1,9 +1,7 @@
 /**
  * Optimized app.js for VPM Listing
- * Uses DOM-based filtering to preserve server-side HTML templates.
+ * Handles DOM filtering, VCC URI protocols, and Clipboard API.
  */
-
-import { baseLayerLuminance, StandardLuminance } from "https://unpkg.com/@microsoft/fast-components";
 
 // State management
 const state = {
@@ -11,50 +9,57 @@ const state = {
     contextMenuRowId: null,
 };
 
-// Enforce Dark Mode for the Cyberpunk Aesthetic
-const setTheme = () => {
-    try {
-        baseLayerLuminance.setValueFor(document.documentElement, StandardLuminance.DarkMode);
-    } catch (e) {
-        console.warn("FAST components not loaded.", e);
-    }
-};
-
 /**
  * High-performance DOM filter for the search bar
  */
 const handleSearch = (event) => {
     const searchTerm = event.target.value.trim().toLowerCase();
-
-    // Select all rows that are NOT the header
     const rows = document.querySelectorAll('fluent-data-grid-row.grid-row');
 
     rows.forEach(row => {
-        // Grab the text content of the entire row (Name, Description, Author, etc.)
         const rowText = row.textContent.toLowerCase();
-
-        if (rowText.includes(searchTerm)) {
-            row.hidden = false;
-        } else {
-            row.hidden = true;
-        }
+        row.hidden = !rowText.includes(searchTerm);
     });
 };
 
-// Dialog Helpers
-const showDialog = (dialogId, pkg = null) => {
+/**
+ * Copies target text to the system clipboard and provides visual feedback
+ */
+const handleCopyToClipboard = async (textToCopy, buttonElement) => {
+    try {
+        await navigator.clipboard.writeText(textToCopy);
+
+        // Brief visual feedback on the button
+        const originalHtml = buttonElement.innerHTML;
+        buttonElement.innerHTML = `<span style="color: #fff; text-shadow: 0 0 8px #00e5ff;">Copied!</span>`;
+        setTimeout(() => {
+            buttonElement.innerHTML = originalHtml;
+        }, 2000);
+    } catch (err) {
+        console.error('Failed to copy text: ', err);
+    }
+};
+
+/**
+ * Executes the VCC Protocol to add the repository
+ */
+const handleAddToVCC = (repoUrl) => {
+    if (!repoUrl) return;
+    const vccUri = `vcc://vpm/addRepo?url=${encodeURIComponent(repoUrl)}`;
+    window.location.href = vccUri;
+};
+
+// --- Dialog & Menu Helpers ---
+const showDialog = (dialogId) => {
     const dialog = document.getElementById(dialogId);
-    if (!dialog) return;
-    dialog.hidden = false;
+    if (dialog) dialog.hidden = false;
 };
 
 const hideDialog = (dialogId) => {
     const dialog = document.getElementById(dialogId);
-    if (!dialog) return;
-    dialog.hidden = true;
+    if (dialog) dialog.hidden = true;
 };
 
-// Context Menu Helpers
 const showContextMenu = (anchorElement) => {
     const menu = document.getElementById('rowMoreMenu');
     if (!menu || !anchorElement) return;
@@ -70,41 +75,64 @@ const hideContextMenu = () => {
     if (menu) menu.hidden = true;
 };
 
-// Lifecycle Hooks
-(() => {
-    setTheme();
-})();
-
+// --- Initialization & Event Listeners ---
 document.addEventListener("DOMContentLoaded", () => {
-    const searchInput = document.getElementById("searchInput");
 
+    // 1. Search Bar
+    const searchInput = document.getElementById("searchInput");
     if (searchInput) {
         searchInput.addEventListener("input", handleSearch);
     }
 
-    // Modal Close Buttons
+    // 2. Fetch the Master VPM Repository URL from the DOM
+    const mainRepoUrl = document.getElementById('vccUrlField')?.value;
+
+    // 3. Add to VCC Action Buttons
+    document.getElementById('vccAddRepoButton')?.addEventListener('click', () => {
+        handleAddToVCC(mainRepoUrl);
+    });
+
+    // Add to VCC buttons on individual package rows
+    // Note: VPM architecture links the entire *listing/repo*, not an isolated package.
+    document.querySelectorAll('.rowAddToVccButton').forEach(btn => {
+        btn.addEventListener('click', () => {
+            handleAddToVCC(mainRepoUrl);
+        });
+    });
+
+    // 4. Copy to Clipboard Buttons
+    document.getElementById('vccUrlFieldCopy')?.addEventListener('click', (e) => {
+        handleCopyToClipboard(mainRepoUrl, e.currentTarget);
+    });
+
+    document.getElementById('vccListingInfoUrlFieldCopy')?.addEventListener('click', (e) => {
+        const url = document.getElementById('vccListingInfoUrlField')?.value;
+        handleCopyToClipboard(url, e.currentTarget);
+    });
+
+    document.getElementById('packageInfoVccUrlFieldCopy')?.addEventListener('click', (e) => {
+        const url = document.getElementById('packageInfoVccUrlField')?.value;
+        handleCopyToClipboard(url, e.currentTarget);
+    });
+
+    // 5. Modal & Menu Triggers
     document.querySelectorAll('.close-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             hideDialog(e.target.closest('fluent-dialog').id);
         });
     });
 
-    // Info Buttons
     document.querySelectorAll('.rowPackageInfoButton').forEach(btn => {
         btn.addEventListener('click', () => {
             showDialog('packageInfoModal');
         });
     });
 
-    // Help Buttons
     const helpBtn = document.getElementById('urlBarHelp');
     if (helpBtn) {
-        helpBtn.addEventListener('click', () => {
-            showDialog('addListingToVccHelp');
-        });
+        helpBtn.addEventListener('click', () => showDialog('addListingToVccHelp'));
     }
 
-    // Row Menu Buttons (...)
     document.querySelectorAll('.rowMenuButton').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -112,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Hide context menu if clicking outside
+    // Hide context menu on outside click
     document.addEventListener('click', (e) => {
         if (!e.target.closest('#rowMoreMenu') && !e.target.closest('.rowMenuButton')) {
             hideContextMenu();
