@@ -1,7 +1,7 @@
 {
   "name": "com.vixencreations.vixens-toolbox",
   "displayName": "Vixen Tool Box",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Collection of Tools Hand Crafted for Maximum Efficiency",
   "gitDependencies": {},
   "vpmDependencies": {
