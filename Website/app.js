@@ -1,17 +1,32 @@
 /**
  * Optimized app.js for VPM Listing
- * Handles DOM filtering, Data-Bridge Modal Injection, VCC URI protocols, and Clipboard API.
+ * Handles DOM filtering, VCC URI protocols, and Clipboard API.
+ * Safely generates JSON data using Scriban.
  */
 
-// State management
-const state = {
-    selectedPackage: null,
-    contextMenuRowId: null,
+// Dynamically generate the packages metadata object from the Scriban template
+const PACKAGES = {
+{ { ~ for package in packages ~} }
+"{{ package.Name }}": {
+    name: "{{ package.Name }}",
+        displayName: "{{ if package.DisplayName; package.DisplayName; else; package.Name; end; }}",
+            description: "{{ if package.Description; package.Description; else; 'No description provided.'; end; }}",
+                version: "{{ package.Version }}",
+                    author: {
+        name: "{{ if package.Author.Name; package.Author.Name; else; 'Vixenlicous'; end; }}",
+            url: "{{ if package.Author.Url; package.Author.Url; else; '#'; end; }}"
+    },
+    dependencies: {
+        { { ~ for dependency in package.Dependencies ~} }
+        "{{ dependency.Name }}": "{{ dependency.Version }}",
+            {{ ~end ~}
+    }
+},
+license: "{{ if package.License; package.License; else; 'None specified'; end; }}"
+  },
+{ { ~end ~} }
 };
 
-/**
- * High-performance DOM filter for the search bar
- */
 const handleSearch = (event) => {
     const searchTerm = event.target.value.trim().toLowerCase();
     const rows = document.querySelectorAll('fluent-data-grid-row.grid-row');
@@ -22,15 +37,10 @@ const handleSearch = (event) => {
     });
 };
 
-/**
- * Copies target text to the system clipboard and provides visual feedback
- */
 const handleCopyToClipboard = async (textToCopy, buttonElement) => {
     if (!textToCopy) return;
     try {
         await navigator.clipboard.writeText(textToCopy);
-        
-        // Brief visual feedback on the button
         const originalHtml = buttonElement.innerHTML;
         buttonElement.innerHTML = `<span style="color: #fff; text-shadow: 0 0 8px #00e5ff;">Copied!</span>`;
         setTimeout(() => {
@@ -41,23 +51,18 @@ const handleCopyToClipboard = async (textToCopy, buttonElement) => {
     }
 };
 
-/**
- * Executes the VCC Protocol to add the repository
- */
 const handleAddToVCC = (repoUrl) => {
     if (!repoUrl) return;
     const vccUri = `vcc://vpm/addRepo?url=${encodeURIComponent(repoUrl)}`;
     window.location.href = vccUri;
 };
 
-// --- Helper: Safely grab value from Fluent UI Web Components ---
 const getFieldValue = (fieldId) => {
     const field = document.getElementById(fieldId);
     if (!field) return '';
     return field.value || field.getAttribute('value') || '';
 };
 
-// --- Dialog & Menu Helpers ---
 const showDialog = (dialogId) => {
     const dialog = document.getElementById(dialogId);
     if (dialog) dialog.hidden = false;
@@ -83,20 +88,17 @@ const hideContextMenu = () => {
     if (menu) menu.hidden = true;
 };
 
-// --- Initialization & Event Listeners ---
 document.addEventListener("DOMContentLoaded", () => {
-    
+
     // 1. Search Bar
     const searchInput = document.getElementById("searchInput");
-    if (searchInput) {
-        searchInput.addEventListener("input", handleSearch);
-    }
+    if (searchInput) searchInput.addEventListener("input", handleSearch);
 
     // 2. Add to VCC Action Buttons
     document.getElementById('vccAddRepoButton')?.addEventListener('click', () => {
         handleAddToVCC(getFieldValue('vccUrlField'));
     });
-    
+
     document.querySelectorAll('.rowAddToVccButton').forEach(btn => {
         btn.addEventListener('click', () => {
             handleAddToVCC(getFieldValue('vccUrlField'));
@@ -123,37 +125,45 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // 5. PACKAGE INFO MODAL INJECTION (The Data-Bridge Fix)
+    // 5. PACKAGE INFO MODAL (Using the Clean JS Object)
     document.querySelectorAll('.rowPackageInfoButton').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            // Find the parent row and grab our hidden data
-            const row = e.currentTarget.closest('.grid-row');
-            const meta = row.querySelector('.pkg-meta').dataset;
-            const depsHtml = row.querySelector('.pkg-deps').innerHTML;
+            const pkgId = e.currentTarget.dataset.packageId;
+            const meta = PACKAGES[pkgId];
+            if (!meta) return;
 
-            // Inject the data into the modal UI
-            document.getElementById('packageInfoName').textContent = meta.name;
-            document.getElementById('packageInfoId').textContent = meta.id;
+            document.getElementById('packageInfoName').textContent = meta.displayName;
+            document.getElementById('packageInfoId').textContent = meta.name;
             document.getElementById('packageInfoVersion').textContent = 'v' + meta.version;
-            document.getElementById('packageInfoDescription').textContent = meta.desc;
+            document.getElementById('packageInfoDescription').textContent = meta.description;
 
             const authorEl = document.getElementById('packageInfoAuthor');
-            authorEl.textContent = meta.author;
-            authorEl.href = meta.authorUrl !== '#' ? meta.authorUrl : 'javascript:void(0)';
+            authorEl.textContent = meta.author.name;
+            authorEl.href = meta.author.url;
 
             document.getElementById('packageInfoLicense').textContent = meta.license;
-            document.getElementById('packageInfoDependencies').innerHTML = depsHtml;
 
-            // Show the perfectly populated modal
+            const depsContainer = document.getElementById('packageInfoDependencies');
+            depsContainer.innerHTML = '';
+
+            if (Object.keys(meta.dependencies).length > 0) {
+                Object.entries(meta.dependencies).forEach(([name, version]) => {
+                    const li = document.createElement('li');
+                    li.className = 'mb-1';
+                    li.innerHTML = `<code>${name}</code> @ v${version}`;
+                    depsContainer.appendChild(li);
+                });
+            } else {
+                depsContainer.innerHTML = '<li class="mb-1" style="color: #8c73a6;">No external dependencies</li>';
+            }
+
             showDialog('packageInfoModal');
         });
     });
 
     // 6. Help Menu Trigger
     const helpBtn = document.getElementById('urlBarHelp');
-    if (helpBtn) {
-        helpBtn.addEventListener('click', () => showDialog('addListingToVccHelp'));
-    }
+    if (helpBtn) helpBtn.addEventListener('click', () => showDialog('addListingToVccHelp'));
 
     // 7. Context Menu Triggers
     document.querySelectorAll('.rowMenuButton').forEach(btn => {
@@ -163,10 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Hide context menu on outside click
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('#rowMoreMenu') && !e.target.closest('.rowMenuButton')) {
-            hideContextMenu();
-        }
+        if (!e.target.closest('#rowMoreMenu') && !e.target.closest('.rowMenuButton')) hideContextMenu();
     });
 });

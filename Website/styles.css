@@ -10,6 +10,8 @@
     --glass-border: rgba(255, 0, 170, 0.4);
     /* Fluent UI Base Variable Overrides */
     --neutral-foreground-rest: #e0d5eb;
+    --fill-color: #06020a;
+    --base-layer-luminance: 0.15;
 }
 
 * {
@@ -120,18 +122,18 @@ body {
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(255, 0, 170, 0.15);
 }
 
-/* Explicit Glass Panel Class (Fixes the white background on architecture card) */
+/* Fix Fluent Cards (but leave Dialogs alone!) */
+fluent-card {
+    --neutral-layer-card-container: transparent;
+    --neutral-fill-layer-rest: transparent;
+    background-color: transparent !important;
+}
+
 .glass-panel {
     background: rgba(10, 5, 20, 0.7) !important;
     border: 1px solid var(--glass-border) !important;
     border-radius: 12px;
     box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.05);
-}
-
-/* Force Fluent Cards to be transparent so our glass-panel class takes over */
-fluent-card {
-    background-color: transparent !important;
-    color: var(--neutral-foreground-rest) !important;
 }
 
 /* Typography */
@@ -169,7 +171,6 @@ h3, h5 {
     color: #8c73a6;
 }
 
-/* Hyperlinks */
 .neon-link {
     color: var(--neon-cyan);
     text-decoration: none;
@@ -181,19 +182,6 @@ h3, h5 {
         color: #fff;
         text-shadow: 0 0 10px var(--neon-cyan);
     }
-
-/* Banner Image Setup */
-.bannerImage.slim-banner {
-    height: 100px;
-    border-radius: 12px;
-    width: 100%;
-    background-size: cover;
-    background-position: center 25%;
-    background-repeat: no-repeat;
-    margin-bottom: 1.5rem;
-    border: 1px solid var(--glass-border);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-}
 
 /* Badges */
 .badge {
@@ -224,19 +212,20 @@ h3, h5 {
     color: #fff;
 }
 
-/* Fluent Text Fields - PIERCING THE SHADOW DOM */
+/* Fluent Text Fields */
 fluent-text-field {
     width: 100%;
+    --neutral-fill-input-rest: rgba(0,0,0,0.6);
 }
 
     fluent-text-field::part(root) {
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(0, 0, 0, 0.6) !important;
         border: 1px solid rgba(0, 229, 255, 0.3);
         border-radius: 6px;
     }
 
     fluent-text-field::part(control) {
-        color: var(--neon-cyan);
+        color: var(--neon-cyan) !important;
         font-family: 'Consolas', monospace;
     }
 
@@ -246,7 +235,7 @@ fluent-text-field {
     flex-grow: 1;
 }
 
-/* Fluent Buttons - PIERCING THE SHADOW DOM */
+/* Fluent Buttons */
 fluent-button.custom-accent-btn::part(control) {
     background: var(--neon-pink);
     color: #fff;
@@ -291,7 +280,7 @@ fluent-button.close-btn:hover::part(control) {
     padding: 0 12px !important;
 }
 
-/* Packages Grid styling */
+/* Packages Grid */
 .packages {
     margin: 1.5rem 0 1rem 0;
     padding: 0.5rem;
@@ -349,20 +338,28 @@ fluent-data-grid-row.grid-header fluent-data-grid-cell {
     }
 
     .searchBlock fluent-text-field::part(control) {
-        color: #fff;
+        color: #fff !important;
         font-family: inherit;
     }
 
-/* Modals & Menus */
+/* Modals & Menus - FIXING THE BACKDROP AND SQUASHING BUG */
+fluent-dialog::part(overlay) {
+    background: rgba(0, 0, 0, 0.7); /* Darken the background behind the modal */
+}
+
 fluent-dialog::part(control) {
-    background: rgba(10, 5, 20, 0.95);
+    background: rgba(20, 10, 30, 0.95) !important;
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     border: 1px solid var(--neon-cyan);
-    box-shadow: 0 0 40px rgba(0, 229, 255, 0.2);
+    box-shadow: 0 0 40px rgba(0, 229, 255, 0.3);
     border-radius: 16px;
     color: #fff;
-    padding: 1rem;
+    padding: 1.5rem;
+    width: 600px; /* Forces a proper width so it doesn't squash */
+    max-width: 90vw; /* Keeps it responsive */
+    max-height: 80vh;
+    overflow-y: auto; /* Ensures long text scrolls inside the modal */
 }
 
 #addListingToVccHelp, #packageInfoModal {
