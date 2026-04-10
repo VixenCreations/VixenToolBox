@@ -1,20 +1,31 @@
 {
   "name": "com.vixencreations.vixens-toolbox",
+  "version": "1.0.3",
   "displayName": "Vixen Tool Box",
-  "version": "1.0.1.1",
-  "description": "Collection of Tools Hand Crafted for Maximum Efficiency",
-  "gitDependencies": {},
+  "description": "Collection of Unity editor utilities and PhysBone automation pipelines hand-crafted for maximum efficiency.",
+  "unity": "2022.3",
+  "unityRelease": "22f1",
+  "dependencies": {},
   "vpmDependencies": {
-    "com.vrchat.avatars": "3.10.2",
-    "com.vrchat.base": "3.10.2"
+    "com.vrchat.base": "^3.10.0",
+    "com.vrchat.avatars": "^3.10.0"
   },
+  "keywords": [
+    "vrchat",
+    "editor",
+    "avatar",
+    "physbones",
+    "utility",
+    "automation"
+  ],
   "author": {
     "name": "Vixenlicous",
     "email": "Vixenlicious@outlook.com",
     "url": "https://x.com/VixenVRC"
   },
+  "url": "https://github.com/VixenCreations/VixenToolBox",
+  "documentationUrl": "https://vixencreations.github.io/VixenToolBox/",
+  "license": "MIT",
   "legacyFolders": {},
-  "legacyFiles": {},
-  "localPath": "F:\\Projects\\Code Stuff\\VixenToolBox\\Packages\\com.vixen.tools",
-  "unity": "2022.3"
+  "legacyFiles": {}
 }
