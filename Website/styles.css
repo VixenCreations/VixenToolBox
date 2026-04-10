@@ -463,3 +463,13 @@ ul.custom-list li {
 .ps-5 {
     padding-left: 2rem;
 }
+
+/* Architecture Modal Trigger Button Custom Scaling */
+#openToolsBreakdownBtn::part(control) {
+    padding: 12px 28px !important;
+    font-size: 1.1rem;
+    height: auto;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
