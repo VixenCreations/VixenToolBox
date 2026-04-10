@@ -13,9 +13,6 @@
 
     <div class="col align-items-center content">
         <div id="listingInfo" class="col mb-4 w-100 align-items-center">
-            {{~ if listingInfo.BannerImage; ~}}
-            <div class="bannerImage slim-banner" style="background-image: url({{ listingInfo.BannerImageUrl }})"></div>
-            {{~ end; ~}}
             <h1>
                 {{~ listingInfo.Name ~}}
             </h1>
@@ -100,28 +97,29 @@
         </fluent-dialog>
 
         <fluent-card class="glass-panel mt-4 mb-4 p-4" style="width: 100%; box-sizing: border-box;">
-            <h3 class="m-0 mb-2 text-glow-pink">VixenToolBox Architecture</h3>
+            <h3 class="m-0 mb-2 text-glow-pink">VixenTools: PhysBoneTopologyMapper</h3>
             <p class="caption1 mb-4" style="line-height: 1.5;">
-                Welcome to the central, public-facing distribution hub for the <strong>VixenTools ecosystem</strong>. This repository is structured as a VPM-ready package source, serving a suite of Unity editor utilities, automation pipelines, and avatar architecture frameworks designed to eliminate human error and enforce consistency.
+                The flagship utility of the VixenTools suite. Automates PhysBone architecture management through a two-phase process called <strong>Extraction</strong> and <strong>Injection</strong>, utilizing a blueprint-based approach to ensure perfect physics consistency across different avatars.
             </p>
 
             <div class="row w-100" style="gap: 2rem; flex-wrap: wrap;">
                 <div class="col flex-1">
-                    <h5 class="text-glow-cyan m-0 mb-2">Unified Distribution Platform</h5>
-                    <p class="caption2 mb-2">Built on the official VRChat VPM Package Template.</p>
+                    <h5 class="text-glow-cyan m-0 mb-2">Phase 1: Architecture Extraction</h5>
+                    <p class="caption2 mb-2">Extracts the complete physics setup from a "Source Avatar" to create a Master Blueprint.</p>
                     <ul class="custom-list m-0 ps-4 caption1" style="line-height: 1.5;">
-                        <li class="mb-2">The root acts as a full Unity project configured for streamlined VPM development.</li>
-                        <li class="mb-2">The <code>Packages/</code> directory safely isolates your compiled VixenTools packages.</li>
-                        <li class="mb-2">GitHub Pages automatically hosts the VPM-compatible listing, syncing directly with the VRChat Creator Companion.</li>
+                        <li class="mb-2"><strong>Path Mapping:</strong> Uses <code>AnimationUtility.CalculateTransformPath</code> to determine the exact relative skeletal path for every <code>VRCPhysBone</code> component.</li>
+                        <li class="mb-2"><strong>Preset Creation:</strong> Generates a Unity <code>.preset</code> file capturing all tuned parameters (pull, spring, stiffness, gravity).</li>
+                        <li class="mb-2"><strong>Blueprint Generation:</strong> Saves a central manifest linking each skeletal path to its corresponding preset.</li>
                     </ul>
                 </div>
 
                 <div class="col flex-1">
-                    <h5 class="text-glow-cyan m-0 mb-2">Automated Build & Release</h5>
-                    <p class="caption2 mb-2">Every push triggers an automated packaging sequence via GitHub Actions.</p>
+                    <h5 class="text-glow-cyan m-0 mb-2">Phase 2: Architecture Injection</h5>
+                    <p class="caption2 mb-2">Reconstructs the saved physics matrix onto a "Target Avatar" using the Blueprint.</p>
                     <ul class="custom-list m-0 ps-4 caption1" style="line-height: 1.5;">
-                        <li class="mb-2"><strong>Build Release:</strong> Automatically generates the <code>.zip</code>, <code>.unitypackage</code>, and <code>package.json</code> based on your manifest version.</li>
-                        <li class="mb-2"><strong>Repo Listing Regeneration:</strong> Scans all active releases, reconstructs the VPM registry, and deploys this custom Scriban-templated storefront.</li>
+                        <li class="mb-2"><strong>Automated Reconstruction:</strong> Iterates through blueprint nodes, searching for stored skeletal paths on the new avatar.</li>
+                        <li class="mb-2"><strong>Component Management:</strong> Automatically adds missing <code>VRCPhysBone</code> components to matching bones.</li>
+                        <li class="mb-2"><strong>Parameter Application:</strong> Applies the stored preset data (<code>node.preset.ApplyTo(pb)</code>) for a 1:1 physics match.</li>
                     </ul>
                 </div>
             </div>
