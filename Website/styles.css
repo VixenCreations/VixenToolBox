@@ -343,24 +343,29 @@ fluent-data-grid-row.grid-header fluent-data-grid-cell {
     }
 
 /* Modals & Menus */
-fluent-dialog::part(overlay) {
-    background: rgba(0, 0, 0, 0.7);
+fluent-dialog {
+    --dialog-width: 600px;
+    --dialog-height: auto;
 }
 
-fluent-dialog::part(control) {
-    background: rgba(20, 10, 30, 0.95) !important;
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border: 1px solid var(--neon-cyan);
-    box-shadow: 0 0 40px rgba(0, 229, 255, 0.3);
-    border-radius: 16px;
-    color: #fff;
-    padding: 1.5rem;
-    width: 600px;
-    max-width: 90vw;
-    max-height: 80vh;
-    overflow-y: auto;
-}
+    fluent-dialog::part(overlay) {
+        background: rgba(0, 0, 0, 0.7);
+    }
+
+    fluent-dialog::part(control) {
+        background: rgba(20, 10, 30, 0.95) !important;
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid var(--neon-cyan);
+        box-shadow: 0 0 40px rgba(0, 229, 255, 0.3);
+        border-radius: 16px;
+        color: #fff;
+        padding: 1.5rem;
+        width: 600px;
+        max-width: 90vw;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
 
 #addListingToVccHelp, #packageInfoModal, #toolsBreakdownModal {
     z-index: 11;
