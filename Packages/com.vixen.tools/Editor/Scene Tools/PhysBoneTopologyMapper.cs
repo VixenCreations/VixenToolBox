@@ -31,26 +31,39 @@ namespace VixenTools.Editor
         public static void ShowWindow()
         {
             var window = GetWindow<PhysBoneTopologyMapper>("Topology Mapper");
-            window.minSize = new Vector2(400, 450);
+            window.minSize = new Vector2(400, 480);
             window.Show();
         }
 
         private void OnGUI()
         {
-            GUILayout.Space(10);
-            EditorGUILayout.LabelField("VixenTools | Topology Blueprint Engine", EditorStyles.boldLabel);
-            GUILayout.Space(10);
+            // --- HEADER NAVIGATION BAR ---
+            Rect headerRect = EditorGUILayout.GetControlRect(false, 50);
+            EditorGUI.DrawRect(headerRect, new Color(0.08f, 0.04f, 0.12f)); 
+            
+            GUIStyle headerStyle = new GUIStyle(EditorStyles.boldLabel)
+            {
+                richText = true,
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = 20
+            };
+            EditorGUI.LabelField(headerRect, "<color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> TOPOLOGY MAPPER", headerStyle);
 
+            GUILayout.Space(10);
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
 
 #if VRC_SDK_VRCSDK3
+            GUIStyle sectionHeaderStyle = new GUIStyle(EditorStyles.boldLabel) { richText = true, fontSize = 14 };
+
             // --- PHASE 1: EXTRACTION ---
-            EditorGUILayout.LabelField("Phase 1: Architecture Extraction", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("<color=#00e5ff>Phase 1: Architecture Extraction</color>", sectionHeaderStyle);
             EditorGUILayout.HelpBox("Select the root of your tuned avatar. This generates a Master Blueprint and all associated Presets.", MessageType.Info);
+            GUILayout.Space(10);
             
             sourceAvatar = (GameObject)EditorGUILayout.ObjectField("Source Avatar (Root)", sourceAvatar, typeof(GameObject), true);
             blueprintName = EditorGUILayout.TextField("Blueprint Name", blueprintName);
 
+            GUILayout.Space(10);
             GUI.backgroundColor = new Color(0.2f, 0.7f, 0.8f);
             if (GUILayout.Button("Extract Master Copy", GUILayout.Height(35)))
             {
@@ -59,16 +72,18 @@ namespace VixenTools.Editor
             GUI.backgroundColor = Color.white;
 
             GUILayout.Space(20);
-            DrawSeparator();
+            DrawSeparator(new Color(0.5f, 0.5f, 0.5f, 0.3f));
             GUILayout.Space(20);
 
             // --- PHASE 2: INJECTION ---
-            EditorGUILayout.LabelField("Phase 2: Architecture Injection", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("<color=#ff00aa>Phase 2: Architecture Injection</color>", sectionHeaderStyle);
             EditorGUILayout.HelpBox("Select a blank avatar and a Blueprint. This will reconstruct your master physics matrix.", MessageType.Info);
+            GUILayout.Space(10);
 
             targetAvatar = (GameObject)EditorGUILayout.ObjectField("Target Avatar (Root)", targetAvatar, typeof(GameObject), true);
             loadedBlueprint = (PhysBoneBlueprint)EditorGUILayout.ObjectField("Master Blueprint", loadedBlueprint, typeof(PhysBoneBlueprint), false);
 
+            GUILayout.Space(10);
             GUI.backgroundColor = new Color(0.8f, 0.2f, 0.5f);
             if (GUILayout.Button("Inject Blueprint", GUILayout.Height(35)))
             {
@@ -185,10 +200,11 @@ namespace VixenTools.Editor
             }
         }
 
-        private void DrawSeparator()
+        private void DrawSeparator(Color color)
         {
-            Rect rect = EditorGUILayout.GetControlRect(false, 2);
-            EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
+            Rect rect = EditorGUILayout.GetControlRect(false, 1);
+            rect.height = 1;
+            EditorGUI.DrawRect(rect, color);
         }
     }
 }

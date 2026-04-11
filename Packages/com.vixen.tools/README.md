@@ -1,38 +1,23 @@
-# VixenTools Executive Summary
+***
 
-VixenTools is a comprehensive, centralized suite of Unity Editor utilities designed to streamline avatar development, world creation, and asset optimization pipelines for VRChat creators.
+# VixenTools Ecosystem
 
-### **1. Core Infrastructure & Hub**
+VixenTools is a comprehensive suite of Unity Editor utilities and automation pipelines focused specifically on **Avatar Pipeline & Topology Architecture**. Designed to eliminate human error and enforce strict consistency, this toolset streamlines complex VRChat avatar development and asset optimization.
 
-  * **VixenTools Hub**: A centralized developer dashboard providing quick access to documentation, video guides, and community repositories.
-  * **Pipeline Preset Manager**: Handles bulk extraction of configuration presets from existing assets and the programmatic authoring of standardized importer settings (e.g., 4K texture standards) using a "Phantom Asset" architecture.
-  * **Animation Workbench Pro**: An advanced visual workspace for staging, easing, and sampling complex animation curves and material property bindings.
+### **1. Distribution & Infrastructure**
+* **VPM-Native Architecture:** Distributed exclusively via a custom VRChat Creator Companion (VCC) repository.
+* **Strict Compiler Safeguards:** Assembly Definitions (`.asmdef`) and `#if UNITY_EDITOR` directives deeply isolate all editor-only scripts, ensuring zero compiler bleed-over when users build their avatars or worlds for runtime.
 
-### **2. Avatar Physics & Topology**
+### **2. Core Infrastructure & Utilities**
+* **VixenTools Hub:** A centralized developer dashboard providing quick access to documentation, updates, and community routing.
+  * [GitHub Repository](https://github.com/VixenCreations)
+  * [YouTube Channel](https://www.youtube.com/@vixenlicous)
+  * [X (Twitter)](https://x.com/VixenVRC)
+* **Animation Workbench Pro:** An advanced visual workspace for staging, easing, and sampling complex animation curves and material property bindings. Features interactive timeline ribbons, a real-time preview engine, and a heavily optimized, runtime-safe math library (`EasingFunctions.cs`) for flawless curve generation.
+* **Pipeline Preset Manager:** Handles bulk extraction of configuration presets from existing assets and the programmatic authoring of standardized importer settings using a "Phantom Asset" architecture.
+* **Fix Scene Data:** A dedicated utility for repairing, standardizing, and maintaining active scene integrity.
+* **In-Editor Changelog:** A custom Markdown parser that renders the package's `CHANGELOG.md` directly inside Unity with native rich-text and ecosystem branding.
 
-  * **PhysBone Topology Mapper**: Automates the extraction and injection of complete PhysBone architectures.
-  * **PhysBone Blueprints**: Scriptable assets that store exact skeletal paths and presets, allowing developers to reconstruct master physics matrices across different avatar versions or models.
-
-### **3. Map & Environment Generation**
-
-  * **Procedural Architecture**:
-      * **Modular Room Builder**: A procedural generator for world-space interiors featuring customizable dimensions, door/window configurations, and style profile blending.
-      * **Victorian Prefab Factory & Mansion Architect**: Specialized tools for generating complete Victorian-style estate kits and generating entire mansions on a modular grid.
-  * **Natural Terrain**:
-      * **Realistic Mesh Terrain**: A voxel-based generator using 3D Perlin noise to create organic landscapes with caves, boulders, and scatter-growth trees.
-      * **Roof Builder**: Calculates and generates sloped roof panels with adjustable pitch, overhang, and thickness for existing house bases.
-  * **Advanced Shape Generators**: Includes a Filler Shape Generator for creating randomized structural variants like pillars, slabs, arches, and "chaos blends".
-
-### **4. Rendering & Material Suite**
-
-  * **Vixen Realistic Suite**: High-performance PBR and Glass shaders integrated with the Redsim LightVolumes API.
-  * **Volumetric Systems**:
-      * **Raycaster Generator**: Automates the creation of raymarched volumetric light shafts linked to directional lights.
-      * **Light Matrix Binder**: A script-driven utility that syncs light-space projection matrices for real-time volumetric rendering.
-  * **Keyword Optimization**: Includes build-time postprocessors that automatically strip unused shader keywords to optimize material performance and texture memory.
-
-### **5. VRChat Optimization & Porting**
-
-  * **World Texture Optimizer**: Applies platform-specific resolution and compression policies (PC vs. Quest) based on texture roles (e.g., Albedo, Normal, Mask).
-  * **Quest Shader Replacer**: Automatically swaps non-compatible materials for optimized mobile variants while attempting to preserve common properties.
-  * **GI & Scene Prep**: Tools for forcing lightmap-only GI rendering and preparing active scenes for Light Volume usage on PC and Quest.
+### **3. Avatar Physics & Topology**
+* **PhysBone Topology Mapper:** The flagship utility for physics management. Automates PhysBone architecture through a two-phase **Extraction** and **Injection** process.
+* **Master Blueprints:** Utilizes `AnimationUtility.CalculateTransformPath` and Unity `.preset` files to bypass native prefab constraints, allowing developers to map and reconstruct complex physics matrices seamlessly across different avatar versions or base models.
