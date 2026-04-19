@@ -10,6 +10,10 @@ using UnityEngine.UIElements;
 
 namespace Vixenlicious.AnimationWorkbench
 {
+    /// <summary>
+    /// VixenTools Editor: Advanced Animation Curve editor with programmatic 
+    /// easing generation, property discovery, and bulk management.
+    /// </summary>
     public class AnimationWorkbenchWindow : EditorWindow
     {
         // UI root
@@ -54,16 +58,15 @@ namespace Vixenlicious.AnimationWorkbench
         // time / sampling
         private float startTime = 0f;
         private float endTime = 1f;
-        private bool sampleStart = true;
-        private bool sampleEnd = true;
-        private float overrideStartValue = 1f;
-        private float overrideEndValue = 0f;
+        private bool sampleStart = false;
+        private bool sampleEnd = false;
+        private float overrideStartValue = 0f;
+        private float overrideEndValue = 1f;
 
         [MenuItem("VixenTools/Animation Workbench Pro")]
         public static void ShowWindow()
         {
-            var w = GetWindow<AnimationWorkbenchWindow>();
-            w.titleContent = new GUIContent("Workbench Pro");
+            var w = GetWindow<AnimationWorkbenchWindow>("Workbench Pro");
             w.minSize = new Vector2(900, 600);
             w.Show();
         }
@@ -95,7 +98,7 @@ namespace Vixenlicious.AnimationWorkbench
             else
             {
                 Debug.LogWarning(
-                    "[AnimationWorkbench] Stylesheet not found. Expected at: " +
+                    "[VixenTools] Stylesheet not found. Expected at: " +
                     "Packages/com.vixencreations.vixens-toolbox/Editor/Avatar Tools/AnimationWorkbench/Editor/Resources/AnimationWorkbenchStyles.uss");
             }
         }
@@ -105,6 +108,24 @@ namespace Vixenlicious.AnimationWorkbench
             root.Clear();
 
             // --------------------------------------------------------------------
+            // SIGNATURE BRANDING HEADER
+            // --------------------------------------------------------------------
+            var headerRect = new VisualElement();
+            headerRect.style.height = 50;
+            headerRect.style.backgroundColor = new Color(0.08f, 0.04f, 0.12f); // Deep dark purple
+            headerRect.style.justifyContent = Justify.Center;
+            headerRect.style.alignItems = Align.Center;
+            headerRect.style.borderBottomWidth = 2;
+            headerRect.style.borderBottomColor = new Color(1f, 0f, 0.66f, 0.5f); // Pink underline accent
+
+            var headerLabel = new Label("<color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> ANIMATION WORKBENCH");
+            headerLabel.enableRichText = true;
+            headerLabel.style.fontSize = 20;
+            headerLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
+            headerRect.Add(headerLabel);
+            root.Add(headerRect);
+
+            // --------------------------------------------------------------------
             // TOP TOOLBAR
             // --------------------------------------------------------------------
             var topToolbar = new VisualElement { name = "top-toolbar" };
@@ -112,6 +133,7 @@ namespace Vixenlicious.AnimationWorkbench
             topToolbar.style.alignItems = Align.Center;
             topToolbar.style.paddingLeft = 4;
             topToolbar.style.paddingRight = 4;
+            topToolbar.style.backgroundColor = new Color(0.12f, 0.12f, 0.14f); // Charcoal
 
             clipField = new ObjectField("Animation Clip")
             {
@@ -128,10 +150,7 @@ namespace Vixenlicious.AnimationWorkbench
                 RefreshBindings();
             });
 
-            newClipBtn = new Button(CreateNewClip)
-            {
-                text = "New Clip"
-            };
+            newClipBtn = new Button(CreateNewClip) { text = "New Clip" };
             newClipBtn.tooltip = "Create a new AnimationClip asset and load it into the workbench.";
 
             previewTargetField = new ObjectField("Preview Target")
@@ -158,10 +177,7 @@ namespace Vixenlicious.AnimationWorkbench
             // --------------------------------------------------------------------
             // MAIN SCROLL AREA
             // --------------------------------------------------------------------
-            var mainScroll = new ScrollView(ScrollViewMode.Vertical)
-            {
-                name = "main-scroll"
-            };
+            var mainScroll = new ScrollView(ScrollViewMode.Vertical) { name = "main-scroll" };
             mainScroll.style.flexGrow = 1f;
 
             var scrollContent = new VisualElement();
@@ -185,10 +201,10 @@ namespace Vixenlicious.AnimationWorkbench
             selectionBox.style.width = 300;
             selectionBox.style.flexDirection = FlexDirection.Column;
 
-            selectionBox.Add(new Label("Selection / Range")
-            {
-                style = { unityFontStyleAndWeight = FontStyle.Bold }
-            });
+            var selectionHeader = new Label("Selection / Range") { style = { unityFontStyleAndWeight = FontStyle.Bold } };
+            selectionHeader.enableRichText = true;
+            selectionHeader.text = "<color=#00e5ff>■</color> Selection / Range";
+            selectionBox.Add(selectionHeader);
 
             var sRow = new VisualElement();
             sRow.style.flexDirection = FlexDirection.Row;
@@ -199,7 +215,6 @@ namespace Vixenlicious.AnimationWorkbench
             startField.RegisterValueChangedCallback(e =>
             {
                 startTime = Mathf.Max(0f, e.newValue);
-
                 timelineRibbon?.SetRange(startTime, endTime);
                 graphView?.SetRange(startTime, endTime);
                 graphView?.SetZoomFactor(zoomPercent / 100f);
@@ -211,7 +226,6 @@ namespace Vixenlicious.AnimationWorkbench
             endField.RegisterValueChangedCallback(e =>
             {
                 endTime = Mathf.Max(0f, e.newValue);
-
                 timelineRibbon?.SetRange(startTime, endTime);
                 graphView?.SetRange(startTime, endTime);
                 graphView?.SetZoomFactor(zoomPercent / 100f);
@@ -257,10 +271,10 @@ namespace Vixenlicious.AnimationWorkbench
             bindingBox.style.marginLeft = 6;
             bindingBox.style.flexDirection = FlexDirection.Column;
 
-            bindingBox.Add(new Label("Bindings")
-            {
-                style = { unityFontStyleAndWeight = FontStyle.Bold }
-            });
+            var bindingsHeader = new Label("Bindings") { style = { unityFontStyleAndWeight = FontStyle.Bold } };
+            bindingsHeader.enableRichText = true;
+            bindingsHeader.text = "<color=#ff00aa>■</color> Bindings Matrix";
+            bindingBox.Add(bindingsHeader);
 
             var bindingToolbar = new VisualElement();
             bindingToolbar.style.flexDirection = FlexDirection.Row;
@@ -270,8 +284,7 @@ namespace Vixenlicious.AnimationWorkbench
 
             var selectAllBtn = new Button(() =>
             {
-                foreach (var p in bindingProfiles)
-                    p.selected = true;
+                foreach (var p in bindingProfiles) p.selected = true;
                 RebuildBindingsUI();
             })
             { text = "Select All" };
@@ -279,12 +292,18 @@ namespace Vixenlicious.AnimationWorkbench
 
             var deselectAllBtn = new Button(() =>
             {
-                foreach (var p in bindingProfiles)
-                    p.selected = false;
+                foreach (var p in bindingProfiles) p.selected = false;
                 RebuildBindingsUI();
             })
             { text = "None" };
             bindingToolbar.Add(deselectAllBtn);
+
+            // DESTRUCTIVE ACTION: Delete Selected Bindings
+            var deleteSelectedBtn = new Button(DeleteSelectedBindings) { text = "Delete Selected" };
+            deleteSelectedBtn.style.backgroundColor = new Color(0.6f, 0.1f, 0.1f); // Deep warning red
+            deleteSelectedBtn.style.color = Color.white;
+            deleteSelectedBtn.style.marginLeft = 10;
+            bindingToolbar.Add(deleteSelectedBtn);
 
             bindingBox.Add(bindingToolbar);
 
@@ -304,7 +323,7 @@ namespace Vixenlicious.AnimationWorkbench
             {
                 if (materialEntries.Count == 0)
                 {
-                    statusLabel.text = "No material float properties found.";
+                    statusLabel.text = "[VixenTools] No material float properties found.";
                     return;
                 }
 
@@ -317,8 +336,9 @@ namespace Vixenlicious.AnimationWorkbench
             })
             { text = "Choose…" };
 
-            addMaterialBindingBtn = new Button(AddBindingFromMaterialProperty)
-            { text = "Add Binding" };
+            addMaterialBindingBtn = new Button(AddBindingFromMaterialProperty) { text = "Add Binding" };
+            addMaterialBindingBtn.style.backgroundColor = new Color(0.2f, 0.7f, 0.8f); // Cyan accent
+            addMaterialBindingBtn.style.color = Color.black;
             addMaterialBindingBtn.SetEnabled(false);
 
             materialRow.Add(materialLabel);
@@ -332,7 +352,7 @@ namespace Vixenlicious.AnimationWorkbench
             bindingsListContainer.style.maxHeight = 180;
             bindingBox.Add(bindingsListContainer);
 
-            // Defaults row (Intermediate keys + Easing dropdown)
+            // Defaults row
             var defaultsRow = new VisualElement();
             defaultsRow.style.flexDirection = FlexDirection.Row;
             defaultsRow.style.marginTop = 4;
@@ -340,58 +360,51 @@ namespace Vixenlicious.AnimationWorkbench
             intermediateDefaultField = new IntegerField("Default Intermediate Keys") { value = 4 };
             intermediateDefaultField.style.width = 210;
 
-            // --- Custom Easing Dropdown ---
             var easingDropdown = new EasingDropdown(EasingFunctions.EaseType.SmoothStep);
             easingDropdown.tooltip = "Default easing used when generating intermediate keys.";
             easingDropdown.style.width = 180;
             easingDropdown.style.maxWidth = 190;
-
             easingDropdown.OnValueChanged += val =>
             {
-                foreach (var p in bindingProfiles)
-                    p.easing = val;
+                foreach (var p in bindingProfiles) p.easing = val;
             };
 
             defaultsRow.Add(intermediateDefaultField);
             defaultsRow.Add(easingDropdown);
             bindingBox.Add(defaultsRow);
 
-            var generateButton = new Button(BuildStagedForSelection)
-            {
-                text = "Generate Keys (Selection)"
-            };
+            var generateButton = new Button(BuildStagedForSelection) { text = "Generate Keys (Selection)" };
             bindingBox.Add(generateButton);
 
             controlRow.Add(bindingBox);
 
             // ---------------------------
-            // ACTION PANEL
+            // ACTION PANEL (VixenTools Styled)
             // ---------------------------
             var actionBox = new VisualElement();
             actionBox.style.width = 260;
             actionBox.style.marginLeft = 6;
             actionBox.style.flexDirection = FlexDirection.Column;
 
-            applyBtn = new Button(ApplyStagedToClip)
-            {
-                text = "Apply (Stage → Clip)"
-            };
-            revertBtn = new Button(RevertStaged)
-            {
-                text = "Revert Staged"
-            };
-            commitBtn = new Button(CommitChanges)
-            {
-                text = "Commit + Save"
-            };
+            applyBtn = new Button(ApplyStagedToClip) { text = "Apply (Stage → Clip)" };
+            applyBtn.style.backgroundColor = new Color(0.2f, 0.7f, 0.8f); // Cyan
+            applyBtn.style.color = Color.black;
+            applyBtn.style.unityFontStyleAndWeight = FontStyle.Bold;
 
-            var previewLabel = new Label("Preview");
+            revertBtn = new Button(RevertStaged) { text = "Revert Staged" };
+
+            commitBtn = new Button(CommitChanges) { text = "Commit + Save" };
+            commitBtn.style.backgroundColor = new Color(0.8f, 0.2f, 0.5f); // Pink
+            commitBtn.style.color = Color.white;
+            commitBtn.style.unityFontStyleAndWeight = FontStyle.Bold;
+
+            var previewLabel = new Label("Engine Preview") { style = { unityFontStyleAndWeight = FontStyle.Bold, marginTop = 10 } };
 
             var previewBtn = new Button(() =>
             {
                 if (currentClip == null || previewTarget == null)
                 {
-                    statusLabel.text = "Cannot preview: missing clip or preview target.";
+                    statusLabel.text = "[VixenTools] Cannot preview: missing clip or preview target.";
                     return;
                 }
 
@@ -399,14 +412,14 @@ namespace Vixenlicious.AnimationWorkbench
                     AnimationUtility.SetEditorCurve(currentClip, kv.Key, kv.Value);
 
                 previewEngine?.StartPreview(currentClip, startTime);
-                statusLabel.text = $"Preview started.";
+                statusLabel.text = $"[VixenTools] Preview running.";
             })
             { text = "Start Preview" };
 
             var stopPreviewBtn = new Button(() =>
             {
                 previewEngine?.StopPreview();
-                statusLabel.text = "Preview stopped.";
+                statusLabel.text = "[VixenTools] Preview halted.";
             })
             { text = "Stop Preview" };
 
@@ -418,7 +431,6 @@ namespace Vixenlicious.AnimationWorkbench
             actionBox.Add(stopPreviewBtn);
 
             controlRow.Add(actionBox);
-
             scrollContent.Add(controlRow);
 
             // --------------------------------------------------------------------
@@ -430,10 +442,7 @@ namespace Vixenlicious.AnimationWorkbench
             zoomRow.style.marginLeft = 6;
             zoomRow.style.marginRight = 6;
 
-            zoomSlider = new SliderInt("Zoom %", 25, 400)
-            {
-                value = zoomPercent
-            };
+            zoomSlider = new SliderInt("Zoom %", 25, 400) { value = zoomPercent };
             zoomSlider.style.flexGrow = 1;
             zoomSlider.RegisterValueChangedCallback(e =>
             {
@@ -482,33 +491,24 @@ namespace Vixenlicious.AnimationWorkbench
             bottomRow.style.marginTop = 6;
             bottomRow.style.paddingLeft = 6;
             bottomRow.style.paddingRight = 6;
+            bottomRow.style.backgroundColor = new Color(0.08f, 0.08f, 0.10f);
 
-            statusLabel = new Label("Ready");
+            statusLabel = new Label("[VixenTools] Systems Online.");
+            statusLabel.style.color = new Color(0.5f, 0.5f, 0.5f);
             bottomRow.Add(statusLabel);
 
-            // Final assembly
             root.Add(mainScroll);
             root.Add(bottomRow);
 
-            // --------------------------------------------------------------------
-            // CRITICAL: Refresh AFTER UI is completely constructed
-            // --------------------------------------------------------------------
             RefreshBindings();
         }
 
-        // ------------------------------------------------------------------------
-        // New Clip creation
-        // ------------------------------------------------------------------------
+        #region Execution Logic
+
         private void CreateNewClip()
         {
-            string path = EditorUtility.SaveFilePanelInProject(
-                "Create Animation Clip",
-                "NewAnimation",
-                "anim",
-                "Select where to create the new animation clip.");
-
-            if (string.IsNullOrEmpty(path))
-                return;
+            string path = EditorUtility.SaveFilePanelInProject("Create Animation Clip", "NewAnimation", "anim", "Select where to create the new animation clip.");
+            if (string.IsNullOrEmpty(path)) return;
 
             var clip = new AnimationClip();
             AssetDatabase.CreateAsset(clip, path);
@@ -520,12 +520,35 @@ namespace Vixenlicious.AnimationWorkbench
             timelineRibbon.SetClip(currentClip);
             RefreshBindings();
 
-            statusLabel.text = $"Created new clip at: {path}";
+            statusLabel.text = $"[VixenTools] Authored new clip: {path}";
         }
 
-        // ------------------------------------------------------------------------
-        // Material property discovery + binding creation
-        // ------------------------------------------------------------------------
+        private void DeleteSelectedBindings()
+        {
+            if (currentClip == null) return;
+
+            var toRemove = bindingProfiles.Where(p => p.selected).Select(p => p.binding).ToList();
+            if (toRemove.Count == 0)
+            {
+                statusLabel.text = "[VixenTools] Warning: No bindings selected for deletion.";
+                return;
+            }
+
+            Undo.RecordObject(currentClip, "Delete Animation Bindings");
+
+            foreach (var b in toRemove)
+            {
+                // Passing null to SetEditorCurve natively destroys the property track in Unity
+                AnimationUtility.SetEditorCurve(currentClip, b, null);
+            }
+
+            EditorUtility.SetDirty(currentClip);
+            AssetDatabase.SaveAssets();
+
+            statusLabel.text = $"[VixenTools] Successfully purged {toRemove.Count} bindings from clip matrix.";
+            RefreshBindings();
+        }
+
         private void BuildMaterialPropertyList()
         {
             materialEntries.Clear();
@@ -533,8 +556,7 @@ namespace Vixenlicious.AnimationWorkbench
             materialSelectedLabel.text = "<None Selected>";
             addMaterialBindingBtn?.SetEnabled(false);
 
-            if (previewTarget == null)
-                return;
+            if (previewTarget == null) return;
 
             var renderers = previewTarget.GetComponentsInChildren<Renderer>(true);
 
@@ -545,10 +567,7 @@ namespace Vixenlicious.AnimationWorkbench
                 var mats = rend.sharedMaterials;
                 if (mats == null) continue;
 
-                string path = AnimationUtility.CalculateTransformPath(
-                    rend.transform,
-                    previewTarget.transform
-                );
+                string path = AnimationUtility.CalculateTransformPath(rend.transform, previewTarget.transform);
 
                 foreach (var mat in mats)
                 {
@@ -561,60 +580,70 @@ namespace Vixenlicious.AnimationWorkbench
                     {
                         ShaderPropertyType propType = mat.shader.GetPropertyType(i);
 
-                        bool supported =
-                               propType == ShaderPropertyType.Float
-                            || propType == ShaderPropertyType.Range
-                            || propType == ShaderPropertyType.Color
-                            || propType == ShaderPropertyType.Vector;
+                        bool supported = propType == ShaderPropertyType.Float || 
+                                         propType == ShaderPropertyType.Range || 
+                                         propType == ShaderPropertyType.Color || 
+                                         propType == ShaderPropertyType.Vector;
 
-                        if (!supported)
-                            continue;
+                        if (!supported) continue;
 
                         string shaderProp = mat.shader.GetPropertyName(i);
-
                         string category = MaterialPropertySearchPopup_DetectCategory(shaderProp);
 
-                        string display = $"{mName}  ▸  {category}  ▸  {shaderProp}";
-
-                        materialEntries.Add(new MaterialPropertySearchPopup.Entry
+                        // Safely expand multidimensional properties into animatable float channels
+                        if (propType == ShaderPropertyType.Float || propType == ShaderPropertyType.Range)
                         {
-                            displayName = display,
-                            materialName = mName,
-                            category = category,
-                            shaderProperty = shaderProp,
-                            path = path,
-                            type = typeof(Renderer)
-                        });
+                            AddMaterialEntry(mName, category, shaderProp, shaderProp, path);
+                        }
+                        else if (propType == ShaderPropertyType.Color)
+                        {
+                            AddMaterialEntry(mName, category, shaderProp + ".r", $"{shaderProp} (R)", path);
+                            AddMaterialEntry(mName, category, shaderProp + ".g", $"{shaderProp} (G)", path);
+                            AddMaterialEntry(mName, category, shaderProp + ".b", $"{shaderProp} (B)", path);
+                            AddMaterialEntry(mName, category, shaderProp + ".a", $"{shaderProp} (A)", path);
+                        }
+                        else if (propType == ShaderPropertyType.Vector)
+                        {
+                            AddMaterialEntry(mName, category, shaderProp + ".x", $"{shaderProp} (X)", path);
+                            AddMaterialEntry(mName, category, shaderProp + ".y", $"{shaderProp} (Y)", path);
+                            AddMaterialEntry(mName, category, shaderProp + ".z", $"{shaderProp} (Z)", path);
+                            AddMaterialEntry(mName, category, shaderProp + ".w", $"{shaderProp} (W)", path);
+                        }
                     }
                 }
             }
 
-            var sorted = materialEntries
-                .OrderBy(e => e.materialName)
-                .ThenBy(e => e.category)
-                .ThenBy(e => e.shaderProperty)
-                .ToList();
-
+            var sorted = materialEntries.OrderBy(e => e.materialName).ThenBy(e => e.category).ThenBy(e => e.shaderProperty).ToList();
             materialEntries.Clear();
             materialEntries.AddRange(sorted);
+        }
+
+        private void AddMaterialEntry(string mName, string category, string shaderProp, string displayLabel, string path)
+        {
+            string display = $"{mName}  ▸  {category}  ▸  {displayLabel}";
+            materialEntries.Add(new MaterialPropertySearchPopup.Entry
+            {
+                displayName = display,
+                materialName = mName,
+                category = category,
+                shaderProperty = shaderProp,
+                path = path,
+                type = typeof(Renderer)
+            });
         }
 
         private string MaterialPropertySearchPopup_DetectCategory(string prop)
         {
             string p = prop.ToLowerInvariant();
-
             if (p.Contains("emis")) return "Emission";
             if (p.Contains("dissolv")) return "Dissolve";
             if (p.Contains("rim")) return "Rim";
-            if (p.Contains("hue") || p.Contains("sat") || p.Contains("color"))
-                return "Color";
+            if (p.Contains("hue") || p.Contains("sat") || p.Contains("color")) return "Color";
             if (p.Contains("outline")) return "Outline";
             if (p.StartsWith("al") || p.Contains("audio")) return "AudioLink";
             if (p.Contains("sdf")) return "SDF";
             if (p.Contains("mask")) return "Masking";
-            if (p.Contains("smooth") || p.Contains("brdf") || p.Contains("light"))
-                return "Shading";
-
+            if (p.Contains("smooth") || p.Contains("brdf") || p.Contains("light")) return "Shading";
             return "General";
         }
 
@@ -622,18 +651,13 @@ namespace Vixenlicious.AnimationWorkbench
         {
             if (currentClip == null)
             {
-                statusLabel.text = "Cannot add binding: no clip assigned.";
+                statusLabel.text = "[VixenTools] Cannot append binding: clip asset missing.";
                 return;
             }
 
-            if (currentMaterialEntry == null)
-            {
-                statusLabel.text = "No material property selected.";
-                return;
-            }
+            if (currentMaterialEntry == null) return;
 
             var opt = currentMaterialEntry;
-
             var binding = new EditorCurveBinding
             {
                 path = opt.path,
@@ -643,7 +667,7 @@ namespace Vixenlicious.AnimationWorkbench
 
             if (AnimationUtility.GetEditorCurve(currentClip, binding) != null)
             {
-                statusLabel.text = "Binding already exists on this clip.";
+                statusLabel.text = "[VixenTools] Binding logic halted: Track already exists on clip.";
                 return;
             }
 
@@ -655,13 +679,12 @@ namespace Vixenlicious.AnimationWorkbench
             AssetDatabase.SaveAssets();
 
             RefreshBindings();
-            statusLabel.text = $"Added binding: {binding.path} → {binding.propertyName}";
+            statusLabel.text = $"[VixenTools] Injected target path: {binding.path} → {binding.propertyName}";
         }
 
         private AnimationCurve CreateDefaultTwoKeyCurve(EditorCurveBinding binding)
         {
             float clipLen = (currentClip != null && currentClip.length > 0f) ? currentClip.length : 1f;
-
             float sTime = Mathf.Clamp(startTime, 0f, clipLen);
             float eTime = Mathf.Clamp(endTime, 0f, clipLen);
 
@@ -670,22 +693,16 @@ namespace Vixenlicious.AnimationWorkbench
 
             if (previewTarget != null && binding.type == typeof(Renderer))
             {
-                Transform t = string.IsNullOrEmpty(binding.path)
-                    ? previewTarget.transform
-                    : previewTarget.transform.Find(binding.path);
-
+                Transform t = string.IsNullOrEmpty(binding.path) ? previewTarget.transform : previewTarget.transform.Find(binding.path);
                 if (t != null)
                 {
                     var r = t.GetComponent<Renderer>();
-                    if (r != null && r.sharedMaterial != null)
+            
+                    // Route through the new fail-safe method
+                    if (TryGetMaterialFloat(r, binding.propertyName, out float matValue))
                     {
-                        string raw = binding.propertyName.Replace("material.", string.Empty);
-                        if (r.sharedMaterial.HasProperty(raw))
-                        {
-                            float matValue = r.sharedMaterial.GetFloat(raw);
-                            if (sampleStart) sampledStart = matValue;
-                            if (sampleEnd) sampledEnd = matValue;
-                        }
+                        if (sampleStart) sampledStart = matValue;
+                        if (sampleEnd) sampledEnd = matValue;
                     }
                 }
             }
@@ -693,28 +710,19 @@ namespace Vixenlicious.AnimationWorkbench
             float sVal = sampleStart ? sampledStart : overrideStartValue;
             float eVal = sampleEnd ? sampledEnd : overrideEndValue;
 
-            var c = new AnimationCurve(
-                new Keyframe(sTime, sVal),
-                new Keyframe(eTime, eVal)
-            );
+            var c = new AnimationCurve(new Keyframe(sTime, sVal), new Keyframe(eTime, eVal));
 
             for (int i = 0; i < c.keys.Length; i++)
             {
                 AnimationUtility.SetKeyLeftTangentMode(c, i, AnimationUtility.TangentMode.Auto);
                 AnimationUtility.SetKeyRightTangentMode(c, i, AnimationUtility.TangentMode.Auto);
             }
-
             return c;
         }
 
-        // ------------------------------------------------------------------------
-        // Binding / curve management
-        // ------------------------------------------------------------------------
         private void RefreshBindings()
         {
-            // If the UI isn't fully constructed yet, bail out safely.
-            if (bindingsListContainer == null || graphView == null || timelineRibbon == null || statusLabel == null)
-                return;
+            if (bindingsListContainer == null || graphView == null || timelineRibbon == null || statusLabel == null) return;
 
             allBindings.Clear();
             bindingProfiles.Clear();
@@ -722,33 +730,26 @@ namespace Vixenlicious.AnimationWorkbench
 
             if (currentClip == null)
             {
-                statusLabel.text = "No clip assigned.";
+                statusLabel.text = "[VixenTools] Standby. No clip assigned.";
                 bindingsListContainer.Clear();
                 graphView.SetCurveSet(new Dictionary<EditorCurveBinding, AnimationCurve>());
                 timelineRibbon.SetClip(null);
                 return;
             }
 
-            // Pull all curve bindings from the clip
             var bindings = AnimationUtility.GetCurveBindings(currentClip);
             allBindings.AddRange(bindings);
 
-            // Resolve default intermediate key count
             int defaultIntermediate = 4;
-            if (intermediateDefaultField != null)
-                defaultIntermediate = Mathf.Max(0, intermediateDefaultField.value);
+            if (intermediateDefaultField != null) defaultIntermediate = Mathf.Max(0, intermediateDefaultField.value);
 
-            // Resolve default easing from the EnumField if present
             EasingFunctions.EaseType defaultEase = EasingFunctions.EaseType.SmoothStep;
-            if (easingDefaultField != null && easingDefaultField.value is Enum ev)
-                defaultEase = (EasingFunctions.EaseType)ev;
+            if (easingDefaultField != null && easingDefaultField.value is Enum ev) defaultEase = (EasingFunctions.EaseType)ev;
 
-            // Build profiles + staged curves
             foreach (var b in allBindings)
             {
                 var curve = AnimationUtility.GetEditorCurve(currentClip, b);
-                AnimationCurve originalCurve =
-                    curve != null ? new AnimationCurve(curve.keys) : new AnimationCurve();
+                AnimationCurve originalCurve = curve != null ? new AnimationCurve(curve.keys) : new AnimationCurve();
 
                 var profile = new BindingProfile
                 {
@@ -757,29 +758,19 @@ namespace Vixenlicious.AnimationWorkbench
                     easing = defaultEase,
                     intermediateKeys = defaultIntermediate,
                     originalCurve = originalCurve,
-                    currentCurve = originalCurve != null
-                        ? new AnimationCurve(originalCurve.keys)
-                        : new AnimationCurve()
+                    currentCurve = originalCurve != null ? new AnimationCurve(originalCurve.keys) : new AnimationCurve()
                 };
 
                 bindingProfiles.Add(profile);
-
-                // Staged curve starts as a deep copy of original
-                stagedCurves[b] = originalCurve != null
-                    ? new AnimationCurve(originalCurve.keys)
-                    : new AnimationCurve();
+                stagedCurves[b] = originalCurve != null ? new AnimationCurve(originalCurve.keys) : new AnimationCurve();
             }
 
-            // Rebuild the bindings list UI
             RebuildBindingsUI();
-
-            // Wire timeline + graph to this clip
             timelineRibbon.SetClip(currentClip);
-            statusLabel.text = $"Loaded {bindingProfiles.Count} bindings.";
+            statusLabel.text = $"[VixenTools] Indexed {bindingProfiles.Count} binding nodes.";
 
             graphView.SetCurveSet(stagedCurves);
 
-            // Ensure we have a sensible visible range
             float clipLen = Mathf.Max(currentClip.length, 1f);
             if (endTime <= startTime)
             {
@@ -790,7 +781,6 @@ namespace Vixenlicious.AnimationWorkbench
             graphView.SetRange(startTime, endTime);
             graphView.SetZoomFactor(Mathf.Max(0.01f, zoomPercent) / 100f);
 
-            // Let the helper tighten the view around actual keys
             TryAutoFitGraph();
         }
 
@@ -818,22 +808,16 @@ namespace Vixenlicious.AnimationWorkbench
                 var inter = new IntegerField { value = p.intermediateKeys };
                 inter.style.width = 80;
                 inter.tooltip = "Number of intermediate keys generated inside the selected range.";
-                inter.RegisterValueChangedCallback(evt =>
-                    p.intermediateKeys = Mathf.Max(0, evt.newValue));
+                inter.RegisterValueChangedCallback(evt => p.intermediateKeys = Mathf.Max(0, evt.newValue));
 
-                var easingChoices = new List<EasingFunctions.EaseType>(
-                    (EasingFunctions.EaseType[])Enum.GetValues(typeof(EasingFunctions.EaseType)));
+                var easingChoices = new List<EasingFunctions.EaseType>((EasingFunctions.EaseType[])Enum.GetValues(typeof(EasingFunctions.EaseType)));
 
                 var ease = new PopupField<EasingFunctions.EaseType>(easingChoices, p.easing);
                 ease.style.width = 110;
                 ease.style.maxWidth = 120;
                 ease.label = "";
                 ease.tooltip = "Easing profile applied when generating intermediate keys.";
-
-                ease.RegisterValueChangedCallback(evt =>
-                {
-                    p.easing = evt.newValue;
-                });
+                ease.RegisterValueChangedCallback(evt => { p.easing = evt.newValue; });
 
                 var sampleBtn = new Button(() =>
                 {
@@ -841,13 +825,11 @@ namespace Vixenlicious.AnimationWorkbench
                     {
                         overrideStartValue = c.Evaluate(startTime);
                         overrideEndValue = c.Evaluate(endTime);
-                        statusLabel.text =
-                            $"Sampled {p.binding.propertyName} start={overrideStartValue:0.000} end={overrideEndValue:0.000}";
+                        statusLabel.text = $"[VixenTools] Vector Sampled: {p.binding.propertyName} start={overrideStartValue:0.000} end={overrideEndValue:0.000}";
                     }
                 })
                 { text = "Sample" };
-                sampleBtn.tooltip =
-                    "Sample this curve at Start / End Time and push the values into the override fields.";
+                sampleBtn.tooltip = "Sample this curve at Start / End Time and push the values into the override fields.";
 
                 row.Add(toggle);
                 row.Add(label);
@@ -861,21 +843,16 @@ namespace Vixenlicious.AnimationWorkbench
         private void OnGraphKeyChanged(Dictionary<EditorCurveBinding, AnimationCurve> curves)
         {
             if (curves == null) return;
-
-            foreach (var kv in curves)
-                stagedCurves[kv.Key] = kv.Value;
-
-            statusLabel.text = "Staged curves updated from graph edits.";
+            foreach (var kv in curves) stagedCurves[kv.Key] = kv.Value;
+            statusLabel.text = "[VixenTools] Staged matrix updated via graph node edit.";
         }
 
         private AnimationCurve EnsureCurveExistsForBinding(AnimationClip clip, EditorCurveBinding binding)
         {
             var existing = AnimationUtility.GetEditorCurve(clip, binding);
-            if (existing != null)
-                return existing;
+            if (existing != null) return existing;
 
             var c = CreateDefaultTwoKeyCurve(binding);
-
             AnimationUtility.SetEditorCurve(clip, binding, c);
             return c;
         }
@@ -884,7 +861,6 @@ namespace Vixenlicious.AnimationWorkbench
         {
             if (currentClip == null) return;
 
-            // Fix: Respect user input entirely. Do not clamp to clip.length.
             float sTime = startTime;
             float eTime = endTime;
 
@@ -905,21 +881,12 @@ namespace Vixenlicious.AnimationWorkbench
                 float sVal = sampleStart ? baseCurve.Evaluate(sTime) : overrideStartValue;
                 float eVal = sampleEnd ? baseCurve.Evaluate(eTime) : overrideEndValue;
 
-                AnimationCurve newCurve = CurveOperations.BuildStretchedCurve(
-                    baseCurve,
-                    sTime,
-                    eTime,
-                    sVal,
-                    eVal,
-                    p.intermediateKeys,
-                    p.easing
-                );
-
+                AnimationCurve newCurve = CurveOperations.BuildStretchedCurve(baseCurve, sTime, eTime, sVal, eVal, p.intermediateKeys, p.easing);
                 stagedCurves[p.binding] = newCurve;
             }
 
             graphView.SetCurveSet(stagedCurves);
-            statusLabel.text = "Generated staged curves for selected bindings.";
+            statusLabel.text = "[VixenTools] Mathematical easing applied to staged curves.";
             timelineRibbon.SetRange(sTime, eTime);
             graphView.SetRange(sTime, eTime);
             graphView.SetZoomFactor(zoomPercent / 100f);
@@ -927,11 +894,7 @@ namespace Vixenlicious.AnimationWorkbench
 
         private void ApplyStagedToClip()
         {
-            if (currentClip == null)
-            {
-                statusLabel.text = "No clip assigned.";
-                return;
-            }
+            if (currentClip == null) return;
 
             Undo.RecordObject(currentClip, "Apply Staged Curves");
 
@@ -941,7 +904,7 @@ namespace Vixenlicious.AnimationWorkbench
             EditorUtility.SetDirty(currentClip);
             AssetDatabase.SaveAssets();
 
-            statusLabel.text = $"Applied {stagedCurves.Count} staged curves to clip.";
+            statusLabel.text = $"[VixenTools] Push successful. Applied {stagedCurves.Count} curve datasets to active clip.";
 
             foreach (var p in bindingProfiles)
                 p.currentCurve = AnimationUtility.GetEditorCurve(currentClip, p.binding);
@@ -958,23 +921,18 @@ namespace Vixenlicious.AnimationWorkbench
             foreach (var p in bindingProfiles)
             {
                 stagedCurves[p.binding] = new AnimationCurve(p.originalCurve.keys);
-                AnimationUtility.SetEditorCurve(currentClip, p.binding,
-                    new AnimationCurve(p.originalCurve.keys));
+                AnimationUtility.SetEditorCurve(currentClip, p.binding, new AnimationCurve(p.originalCurve.keys));
             }
 
             graphView.SetCurveSet(stagedCurves);
             AssetDatabase.SaveAssets();
-            statusLabel.text = "Reverted staged curves to original.";
+            statusLabel.text = "[VixenTools] Changes reverted. Restored original timeline states.";
             TryAutoFitGraph();
         }
 
         private void CommitChanges()
         {
-            if (currentClip == null)
-            {
-                statusLabel.text = "No clip to commit.";
-                return;
-            }
+            if (currentClip == null) return;
 
             Undo.RecordObject(currentClip, "Commit Animation Workbench Changes");
 
@@ -983,14 +941,11 @@ namespace Vixenlicious.AnimationWorkbench
 
             EditorUtility.SetDirty(currentClip);
             AssetDatabase.SaveAssets();
-            statusLabel.text = "Committed changes. Use Undo to roll back.";
+            statusLabel.text = "[VixenTools] Core data saved successfully.";
         }
 
         [ContextMenu("Generate Staged")]
-        public void GenerateStaged()
-        {
-            BuildStagedForSelection();
-        }
+        public void GenerateStaged() => BuildStagedForSelection();
 
         private void TryAutoFitGraph()
         {
@@ -1009,11 +964,9 @@ namespace Vixenlicious.AnimationWorkbench
                 }
             }
 
-            if (minT == float.MaxValue || maxT == float.MinValue)
-                return;
+            if (minT == float.MaxValue || maxT == float.MinValue) return;
 
-            //the span calculation to enforce a minimum readable width:
-            float span = Mathf.Max(1f, maxT - minT);    // Changed from 0.001f to 1f
+            float span = Mathf.Max(1f, maxT - minT);
             float padding = span * 0.08f;
 
             startTime = Mathf.Max(0f, minT - padding);
@@ -1030,6 +983,71 @@ namespace Vixenlicious.AnimationWorkbench
             {
                 Repaint();
             }
+        }
+
+        #endregion
+
+        private bool TryGetMaterialFloat(Renderer r, string propertyName, out float value)
+        {
+            value = 0f;
+            if (r == null || r.sharedMaterials == null) return false;
+
+            string raw = propertyName.Replace("material.", string.Empty);
+
+            // Decompose Vector/Color channels (e.g., "_Color.r" -> base="_Color", channel="r")
+            string baseProp = raw;
+            string channel = "";
+            int dotIdx = raw.LastIndexOf('.');
+            if (dotIdx != -1)
+            {
+                baseProp = raw.Substring(0, dotIdx);
+                channel = raw.Substring(dotIdx + 1).ToLower();
+            }
+
+            foreach (var mat in r.sharedMaterials)
+            {
+                if (mat == null) continue;
+
+                if (mat.HasProperty(baseProp))
+                {
+                    if (!string.IsNullOrEmpty(channel))
+                    {
+                        if (channel == "r" || channel == "g" || channel == "b" || channel == "a")
+                        {
+                            Color c = mat.GetColor(baseProp);
+                            if (channel == "r") value = c.r;
+                            else if (channel == "g") value = c.g;
+                            else if (channel == "b") value = c.b;
+                            else if (channel == "a") value = c.a;
+                            return true;
+                        }
+                        else if (channel == "x" || channel == "y" || channel == "z" || channel == "w")
+                        {
+                            Vector4 v = mat.GetVector(baseProp);
+                            if (channel == "x") value = v.x;
+                            else if (channel == "y") value = v.y;
+                            else if (channel == "z") value = v.z;
+                            else if (channel == "w") value = v.w;
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        // Standard Float or Range. 
+                        // Wrapped in a try-catch as a final safety net for heavily obfuscated/locked shaders.
+                        try
+                        {
+                            value = mat.GetFloat(baseProp);
+                            return true;
+                        }
+                        catch
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         private class BindingProfile
