@@ -2,6 +2,17 @@
 
 All notable changes to the VixenToolBox project will be documented in this file.
 
+## [1.1.1] - 2026-04-18
+### Added
+- **Destructive Pipeline Operations:** Integrated a "Delete Selected" function within the Animation Workbench bindings matrix. This allows for the safe pruning of dead or unused property tracks, preventing asset bloat and VRChat SDK validation errors.
+
+### Changed
+- **UI/UX Ecosystem Integration:** Overhauled the Animation Workbench's UI Toolkit construction to natively inject the signature VixenTools "cyber-noir" aesthetic. The tool now features the persistent branded header and color-coded action buttons without requiring core stylesheet rewrites.
+- **Explicit Intent Paradigm:** Flipped the default states for "Sample Start Value" and "Sample End Value" to `false`. The pipeline now safely defaults to manual override values (`1` and `0`) when generating curves, preventing the tool from destructively hijacking live scene data unless explicitly commanded.
+
+### Fixed
+- **Multidimensional Property Extraction:** Resolved a critical native API crash when attempting to bind Vector/Color properties (e.g., `_AudioLinkEmission0CenterOut`) on locked Poiyomi shaders. The discovery engine now safely decomposes these properties into their individually animatable float channels (`.r`, `.x`, etc.) and routes them through a robust `TryGetMaterialFloat` fail-safe protocol.
+
 ## [1.1.0] - 2026-04-10
 ### Added
 - **Animation Workbench Pro:** Officially migrated into the VixenTools package ecosystem. Features advanced curve operations, easing dropdowns, timeline ribbons, and a real-time preview engine.
