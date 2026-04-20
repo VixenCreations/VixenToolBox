@@ -478,3 +478,23 @@ ul.custom-list li {
     text-transform: uppercase;
     font-weight: 600;
 }
+
+/* --- Changelog Specific Typography --- */
+.changelog-body h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+    border-bottom: 1px solid rgba(0, 229, 255, 0.3);
+    padding-bottom: 5px;
+}
+
+.changelog-body h4 {
+    margin-bottom: 0.25rem;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.changelog-body strong {
+    color: #fff;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}

@@ -2,6 +2,21 @@
 
 All notable changes to the VixenToolBox project will be documented in this file.
 
+## [1.2.0] - 2026-04-20
+### Added
+- **Vixen Hub Integration:** Merged the standalone documentation and changelog parsers into a unified, tabbed Editor dashboard. Features a custom UV-framing engine for dynamic banner scaling and persistent ecosystem routing.
+- **Ecosystem Discovery Engine:** The Badge Studio now passively scans the project hierarchy to detect installed Furality SDKs (Luma, Somna, Sylva, Umbra). Automatically indexes available convention tiers and dynamically routes output paths.
+- **Universal Shader Targeting:** Built a heuristic material engine that natively detects and configures target shaders. Automatically routes diffuse/emission maps and activates required toggle parameters across Poiyomi, lilToon, VRChat Mobile, and all legacy Furality shaders.
+- **Dynamic UV Auto-Layout:** The generator now intercepts convention selections and automatically adjusts localized text bounds, rotations, and signature neon hex colors to perfectly match the specific year's mesh layout.
+
+### Changed
+- **Template Authoring Pipeline:** Upgraded the procedural base generator to support raw Asset Ingestion. The tool can now swallow empty convention `.jpg` files, transcode them, and perfectly adapt its internal compilation resolution to match the source file.
+
+### Fixed
+- **Furality SDK Plurality & Obfuscation:** Engineered a recursive deep-scan discovery protocol to bypass Furality's erratic year-to-year folder restructuring. The engine now aggressively hunts down target assets regardless of missing subfolders or `Texture`/`Textures` plurality variations.
+- **Magick.NET Dimension Casting:** Resolved implicit `uint` to `int` conversion deadlocks during dynamic resolution matching.
+- **Emission Blackout Safeguard:** Added a failsafe to detect and override black or transparent `_EmissionColor` multipliers on legacy convention materials, preventing generated emission masks from multiplying to zero and rendering invisibly.
+
 ## [1.1.1] - 2026-04-18
 ### Added
 - **Destructive Pipeline Operations:** Integrated a "Delete Selected" function within the Animation Workbench bindings matrix. This allows for the safe pruning of dead or unused property tracks, preventing asset bloat and VRChat SDK validation errors.

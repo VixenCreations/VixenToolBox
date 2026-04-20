@@ -34,93 +34,81 @@ const handleAddToVCC = (repoUrl) => {
     window.location.href = vccUri;
 };
 
-const getFieldValue = (fieldId) => {
-    const field = document.getElementById(fieldId);
-    if (!field) return '';
-    return field.value || field.getAttribute('value') || '';
-};
-
-const showDialog = (dialogId) => {
-    const dialog = document.getElementById(dialogId);
+// --- Modal & Menu Management ---
+const showDialog = (id) => {
+    const dialog = document.getElementById(id);
     if (dialog) dialog.hidden = false;
 };
 
-const hideDialog = (dialogId) => {
-    const dialog = document.getElementById(dialogId);
+const hideDialog = (id) => {
+    const dialog = document.getElementById(id);
     if (dialog) dialog.hidden = true;
 };
 
-const showContextMenu = (anchorElement) => {
+let currentMenuPkg = null;
+const showContextMenu = (btnEl) => {
     const menu = document.getElementById('rowMoreMenu');
-    if (!menu || !anchorElement) return;
+    currentMenuPkg = btnEl.dataset.pkg;
 
-    const rect = anchorElement.getBoundingClientRect();
-    menu.style.top = `${rect.bottom + window.scrollY}px`;
-    menu.style.left = `${rect.left + window.scrollX}px`;
+    const rect = btnEl.getBoundingClientRect();
+    // Position slightly below and to the left of the button
+    menu.style.top = `${rect.bottom + window.scrollY + 5}px`;
+    menu.style.left = `${rect.left + window.scrollX - 120}px`;
     menu.hidden = false;
 };
 
 const hideContextMenu = () => {
-    const menu = document.getElementById('rowMoreMenu');
-    if (menu) menu.hidden = true;
+    document.getElementById('rowMoreMenu').hidden = true;
+    currentMenuPkg = null;
 };
 
-document.addEventListener("DOMContentLoaded", () => {
+// --- Initialization ---
+document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Search Bar
-    const searchInput = document.getElementById("searchInput");
-    if (searchInput) searchInput.addEventListener("input", handleSearch);
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.addEventListener('input', handleSearch);
 
-    // 2. Add to VCC Action Buttons
-    document.getElementById('vccAddRepoButton')?.addEventListener('click', () => {
-        handleAddToVCC(getFieldValue('vccUrlField'));
+    // 2. Context Menu Actions
+    document.getElementById('menuCopyId')?.addEventListener('click', () => {
+        if (currentMenuPkg) {
+            navigator.clipboard.writeText(currentMenuPkg);
+            hideContextMenu();
+        }
     });
 
-    document.querySelectorAll('.rowAddToVccButton').forEach(btn => {
-        btn.addEventListener('click', () => {
-            handleAddToVCC(getFieldValue('vccUrlField'));
+    document.getElementById('menuDownloadZip')?.addEventListener('click', () => {
+        if (currentMenuPkg && window.VPM_PACKAGES[currentMenuPkg]) {
+            const url = window.VPM_PACKAGES[currentMenuPkg].url;
+            if (url) window.location.href = url;
+            hideContextMenu();
+        }
+    });
+
+    // 3. Modal Close Buttons
+    document.querySelectorAll('.close-dialog').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const dialog = e.target.closest('fluent-dialog');
+            if (dialog) dialog.hidden = true;
         });
     });
 
-    // 3. Copy to Clipboard Buttons
-    document.getElementById('vccUrlFieldCopy')?.addEventListener('click', (e) => {
-        handleCopyToClipboard(getFieldValue('vccUrlField'), e.currentTarget);
-    });
-
-    document.getElementById('vccListingInfoUrlFieldCopy')?.addEventListener('click', (e) => {
-        handleCopyToClipboard(getFieldValue('vccListingInfoUrlField'), e.currentTarget);
-    });
-
-    document.getElementById('packageInfoVccUrlFieldCopy')?.addEventListener('click', (e) => {
-        handleCopyToClipboard(getFieldValue('packageInfoVccUrlField'), e.currentTarget);
-    });
-
-    // 4. Close Modal Triggers
-    document.querySelectorAll('.close-btn').forEach(btn => {
+    // 4. Details Buttons (Package Info)
+    document.querySelectorAll('.info-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            hideDialog(e.target.closest('fluent-dialog').id);
-        });
-    });
-
-    // 5. PACKAGE INFO MODAL
-    document.querySelectorAll('.rowPackageInfoButton').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const pkgId = e.currentTarget.dataset.packageId;
+            const pkgId = e.currentTarget.dataset.pkg;
             const meta = window.VPM_PACKAGES[pkgId];
             if (!meta) return;
 
-            document.getElementById('packageInfoName').textContent = meta.displayName;
-            document.getElementById('packageInfoId').textContent = meta.name;
-            document.getElementById('packageInfoVersion').textContent = 'v' + meta.version;
-            document.getElementById('packageInfoDescription').textContent = meta.description;
+            document.getElementById('modalPkgTitle').textContent = meta.displayName;
+            document.getElementById('modalPkgId').textContent = meta.name;
 
-            const authorEl = document.getElementById('packageInfoAuthor');
-            authorEl.textContent = meta.author.name;
-            authorEl.href = meta.author.url !== '#' ? meta.author.url : 'javascript:void(0)';
+            const authorLink = meta.author.url !== '#'
+                ? `<a href="${meta.author.url}" target="_blank" style="color: var(--neon-cyan);">${meta.author.name}</a>`
+                : meta.author.name;
+            document.getElementById('modalPkgAuthor').innerHTML = authorLink;
 
-            document.getElementById('packageInfoLicense').textContent = meta.license;
-
-            const depsContainer = document.getElementById('packageInfoDependencies');
+            const depsContainer = document.getElementById('modalPkgDeps');
             depsContainer.innerHTML = '';
 
             if (Object.keys(meta.dependencies).length > 0) {
@@ -138,11 +126,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // 6. Help Menu Trigger
+    // 5. Help Menu Trigger
     const helpBtn = document.getElementById('urlBarHelp');
     if (helpBtn) helpBtn.addEventListener('click', () => showDialog('addListingToVccHelp'));
 
-    // 7. Context Menu Triggers
+    // 6. Context Menu Triggers
     document.querySelectorAll('.rowMenuButton').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -154,7 +142,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!e.target.closest('#rowMoreMenu') && !e.target.closest('.rowMenuButton')) hideContextMenu();
     });
 
-    // 8. Architecture Modal Trigger
+    // 7. Architecture Modal Trigger
     const toolsBreakdownBtn = document.getElementById('openToolsBreakdownBtn');
     if (toolsBreakdownBtn) toolsBreakdownBtn.addEventListener('click', () => showDialog('toolsBreakdownModal'));
+
+    // 8. Changelog Modal Trigger (NEW)
+    const changelogBtn = document.getElementById('openChangelogBtn');
+    if (changelogBtn) changelogBtn.addEventListener('click', () => showDialog('changelogModal'));
 });
