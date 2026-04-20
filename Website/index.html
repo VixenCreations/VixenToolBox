@@ -28,7 +28,9 @@
 </head>
 <body class="vixen-theme">
 
-    <div class="glass-container">
+    <div class="background-art"></div>
+
+    <div class="content glass-container">
         <header class="header">
             <div class="header-content">
                 <div class="header-logo-container">
@@ -71,7 +73,7 @@
         </div>
 
         <main class="package-list-container">
-            <fluent-data-grid id="packageGrid" generate-header="none">
+            <fluent-data-grid id="packageGrid" generate-header="none" grid-template-columns="1fr auto">
             </fluent-data-grid>
         </main>
     </div>
@@ -196,7 +198,7 @@
         <fluent-menu-item id="menuDownloadZip">
             <svg slot="start" width="16" height="16" viewBox="0 0 20 20" fill="var(--neon-pink)">
                 <path d="M10.5 2.50181C10.5 2.22567 10.2761 2.00181 10 2.00181C9.72386 2.00181 9.5 2.22567 9.5 2.50181V13.5908L6.14645 10.2373C5.95118 10.042 5.6346 10.042 5.43934 10.2373C5.24408 10.4325 5.24408 10.7491 5.43934 10.9444L9.64645 15.1515C9.84171 15.3467 10.1583 15.3467 10.3536 15.1515L14.5607 10.9444C14.7559 10.7491 14.7559 10.4325 14.5607 10.2373C14.3654 10.042 14.0488 10.042 13.8536 10.2373L10.5 13.5908V2.50181Z" />
-                <path d="M2 17.5C2 17.2239 2.22386 17 2.5 17H17.5C17.7761 17 18 17.2239 18 17.5C18 17.7761 17.7761 18 17.5 18H2.5C2.22386 18 2 17.7761 2 17.5Z" />
+                <path d="M2 17.5C2 17.2239 2.22386 17 2.5 17H17.5C17.7761 17 18 17.5C18 17.7761 17.7761 18 17.5 18H2.5C2.22386 18 2 17.7761 2 17.5Z" />
             </svg>
             <div>Download .ZIP</div>
         </fluent-menu-item>

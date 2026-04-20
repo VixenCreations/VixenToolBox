@@ -236,7 +236,7 @@ fluent-text-field {
 }
 
 /* Fluent Buttons */
-fluent-button.custom-accent-btn::part(control) {
+fluent-button.btn-neon-pink::part(control) {
     background: var(--neon-pink);
     color: #fff;
     border: 1px solid #ff33bb;
@@ -245,12 +245,12 @@ fluent-button.custom-accent-btn::part(control) {
     border-radius: 6px;
 }
 
-fluent-button.custom-accent-btn:hover::part(control) {
+fluent-button.btn-neon-pink:hover::part(control) {
     background: #d900ff;
     box-shadow: 0 0 25px var(--neon-pink);
 }
 
-fluent-button.custom-stealth-btn::part(control) {
+fluent-button.btn-neon-cyan::part(control) {
     background: rgba(0, 229, 255, 0.1);
     color: var(--neon-cyan);
     border: 1px solid rgba(0, 229, 255, 0.4);
@@ -258,7 +258,7 @@ fluent-button.custom-stealth-btn::part(control) {
     border-radius: 6px;
 }
 
-fluent-button.custom-stealth-btn:hover::part(control) {
+fluent-button.btn-neon-cyan:hover::part(control) {
     background: rgba(0, 229, 255, 0.25);
     color: #fff;
     box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
@@ -497,4 +497,118 @@ ul.custom-list li {
 .changelog-body strong {
     color: #fff;
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+/* --- Utility Typography --- */
+.text-cyan {
+    color: var(--neon-cyan);
+}
+
+.text-pink {
+    color: var(--neon-pink);
+}
+
+/* --- Header & Spatial Layout --- */
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.header-logo-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.header-title {
+    margin: 0;
+}
+
+.header-subtitle {
+    margin: 0.25rem 0 0 0;
+    color: #bfa8d2;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+/* --- Info Bar Layout --- */
+.info-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-bar-left, .info-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.repo-url {
+    font-family: 'Consolas', monospace;
+    color: #fff;
+    background: rgba(255, 0, 170, 0.1);
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 0, 170, 0.3);
+}
+
+/* --- Injected DOM Styling (from app.js) --- */
+.pkg-info-cell {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+.pkg-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+}
+
+.pkg-title {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #fff;
+    text-shadow: 0 0 8px var(--neon-pink-glow);
+}
+
+.pkg-version {
+    color: var(--neon-cyan);
+    font-size: 0.9rem;
+    font-family: 'Consolas', monospace;
+}
+
+.pkg-desc {
+    margin: 0;
+    color: #bfa8d2;
+    font-size: 0.95rem;
+}
+
+.pkg-meta {
+    font-size: 0.85rem;
+    color: #8c73a6;
+    margin-top: 4px;
+}
+
+.row-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
 }
