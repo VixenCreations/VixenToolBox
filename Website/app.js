@@ -1,16 +1,58 @@
 /**
  * Optimized app.js for VPM Listing
- * Handles DOM filtering, VCC URI protocols, and Clipboard API.
- * 100% Pure JavaScript (No Scriban tags in this file).
+ * Handles DOM filtering, VCC URI protocols, Clipboard API, and Listing Hydration.
  */
 
+// 1. Core DOM Hydration (Restored)
+const hydratePackages = () => {
+    const grid = document.getElementById('packageGrid');
+    if (!grid || !window.VPM_PACKAGES) return;
+
+    Object.values(window.VPM_PACKAGES).forEach(pkg => {
+        const row = document.createElement('fluent-data-grid-row');
+        row.className = 'grid-row';
+        row.innerHTML = `
+            <fluent-data-grid-cell grid-column="1" class="pkg-info-cell">
+                <div class="pkg-header">
+                    <h3 class="pkg-title">${pkg.displayName}</h3>
+                    <span class="pkg-version">v${pkg.version}</span>
+                </div>
+                <p class="pkg-desc">${pkg.description}</p>
+                <div class="pkg-meta">
+                    <code>${pkg.name}</code>
+                    <span style="color: #6c5b7b;">|</span>
+                    <span>${pkg.author.name}</span>
+                </div>
+            </fluent-data-grid-cell>
+            
+            <fluent-data-grid-cell grid-column="2" class="pkg-actions-cell">
+                <div class="row-actions">
+                    <fluent-button class="info-btn btn-neon-cyan" data-pkg="${pkg.name}" appearance="outline">
+                        <svg slot="start" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        Details
+                    </fluent-button>
+                    <fluent-button class="rowMenuButton btn-neon-pink" data-pkg="${pkg.name}" appearance="stealth">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+                    </fluent-button>
+                </div>
+            </fluent-data-grid-cell>
+        `;
+        grid.appendChild(row);
+    });
+};
+
+// 2. Standard Utilities
 const handleSearch = (event) => {
     const searchTerm = event.target.value.trim().toLowerCase();
     const rows = document.querySelectorAll('fluent-data-grid-row.grid-row');
 
     rows.forEach(row => {
         const rowText = row.textContent.toLowerCase();
-        row.hidden = !rowText.includes(searchTerm);
+        if (rowText.includes(searchTerm)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
     });
 };
 
@@ -34,7 +76,7 @@ const handleAddToVCC = (repoUrl) => {
     window.location.href = vccUri;
 };
 
-// --- Modal & Menu Management ---
+// 3. Modal & Menu Management
 const showDialog = (id) => {
     const dialog = document.getElementById(id);
     if (dialog) dialog.hidden = false;
@@ -51,41 +93,50 @@ const showContextMenu = (btnEl) => {
     currentMenuPkg = btnEl.dataset.pkg;
 
     const rect = btnEl.getBoundingClientRect();
-    // Position slightly below and to the left of the button
     menu.style.top = `${rect.bottom + window.scrollY + 5}px`;
     menu.style.left = `${rect.left + window.scrollX - 120}px`;
     menu.hidden = false;
 };
 
 const hideContextMenu = () => {
-    document.getElementById('rowMoreMenu').hidden = true;
+    const menu = document.getElementById('rowMoreMenu');
+    if (menu) menu.hidden = true;
     currentMenuPkg = null;
 };
 
-// --- Initialization ---
+// 4. Initialization & Event Binding
 document.addEventListener('DOMContentLoaded', () => {
 
-    // 1. Search Bar
+    // Crucial step: Build the DOM first!
+    hydratePackages();
+
+    // Search Bar
     const searchInput = document.getElementById('searchInput');
     if (searchInput) searchInput.addEventListener('input', handleSearch);
 
-    // 2. Context Menu Actions
-    document.getElementById('menuCopyId')?.addEventListener('click', () => {
-        if (currentMenuPkg) {
-            navigator.clipboard.writeText(currentMenuPkg);
-            hideContextMenu();
-        }
-    });
+    // Context Menu Actions
+    const copyIdBtn = document.getElementById('menuCopyId');
+    if (copyIdBtn) {
+        copyIdBtn.addEventListener('click', () => {
+            if (currentMenuPkg) {
+                navigator.clipboard.writeText(currentMenuPkg);
+                hideContextMenu();
+            }
+        });
+    }
 
-    document.getElementById('menuDownloadZip')?.addEventListener('click', () => {
-        if (currentMenuPkg && window.VPM_PACKAGES[currentMenuPkg]) {
-            const url = window.VPM_PACKAGES[currentMenuPkg].url;
-            if (url) window.location.href = url;
-            hideContextMenu();
-        }
-    });
+    const downloadZipBtn = document.getElementById('menuDownloadZip');
+    if (downloadZipBtn) {
+        downloadZipBtn.addEventListener('click', () => {
+            if (currentMenuPkg && window.VPM_PACKAGES[currentMenuPkg]) {
+                const url = window.VPM_PACKAGES[currentMenuPkg].url;
+                if (url) window.location.href = url;
+                hideContextMenu();
+            }
+        });
+    }
 
-    // 3. Modal Close Buttons
+    // Modal Close Buttons
     document.querySelectorAll('.close-dialog').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const dialog = e.target.closest('fluent-dialog');
@@ -93,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 4. Details Buttons (Package Info)
+    // Details Buttons (Package Info)
     document.querySelectorAll('.info-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const pkgId = e.currentTarget.dataset.pkg;
@@ -126,11 +177,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 5. Help Menu Trigger
+    // Help Menu Trigger
     const helpBtn = document.getElementById('urlBarHelp');
     if (helpBtn) helpBtn.addEventListener('click', () => showDialog('addListingToVccHelp'));
 
-    // 6. Context Menu Triggers
+    // Context Menu Triggers
     document.querySelectorAll('.rowMenuButton').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -142,11 +193,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!e.target.closest('#rowMoreMenu') && !e.target.closest('.rowMenuButton')) hideContextMenu();
     });
 
-    // 7. Architecture Modal Trigger
+    // Architecture Modal Trigger
     const toolsBreakdownBtn = document.getElementById('openToolsBreakdownBtn');
     if (toolsBreakdownBtn) toolsBreakdownBtn.addEventListener('click', () => showDialog('toolsBreakdownModal'));
 
-    // 8. Changelog Modal Trigger (NEW)
+    // Changelog Modal Trigger
     const changelogBtn = document.getElementById('openChangelogBtn');
     if (changelogBtn) changelogBtn.addEventListener('click', () => showDialog('changelogModal'));
 });

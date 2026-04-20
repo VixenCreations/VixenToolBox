@@ -72,34 +72,6 @@
 
         <main class="package-list-container">
             <fluent-data-grid id="packageGrid" generate-header="none">
-                {{~ for package in packages ~}}
-                <fluent-data-grid-row class="grid-row">
-                    <fluent-data-grid-cell grid-column="1" class="pkg-info-cell">
-                        <div class="pkg-header">
-                            <h3 class="pkg-title">{{ if package.DisplayName; package.DisplayName; else; package.Name; end; }}</h3>
-                            <span class="pkg-version">v{{ package.Version }}</span>
-                        </div>
-                        <p class="pkg-desc">{{ if package.Description; package.Description; else; 'No description provided.'; end; }}</p>
-                        <div class="pkg-meta">
-                            <code>{{ package.Name }}</code>
-                            <span style="color: #6c5b7b;">|</span>
-                            <span>{{ if package.Author.Name; package.Author.Name; else; 'Vixenlicous'; end; }}</span>
-                        </div>
-                    </fluent-data-grid-cell>
-
-                    <fluent-data-grid-cell grid-column="2" class="pkg-actions-cell">
-                        <div class="row-actions">
-                            <fluent-button class="info-btn btn-neon-cyan" data-pkg="{{ package.Name }}" appearance="outline">
-                                <svg slot="start" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                                Details
-                            </fluent-button>
-                            <fluent-button class="rowMenuButton btn-neon-pink" data-pkg="{{ package.Name }}" appearance="stealth">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
-                            </fluent-button>
-                        </div>
-                    </fluent-data-grid-cell>
-                </fluent-data-grid-row>
-                {{~ end ~}}
             </fluent-data-grid>
         </main>
     </div>
