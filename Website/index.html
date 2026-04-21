@@ -207,30 +207,48 @@
             </div>
 
             <p class="caption1 mb-4" style="line-height: 1.5;">
-                A comprehensive, VPM-native suite of Unity Editor utilities and automation pipelines designed to eliminate human error, enforce strict consistency, and push Unity to its technical limits.
+                A comprehensive suite of Unity Editor utilities and automation pipelines focused specifically on <strong>Avatar Pipeline & Topology Architecture</strong>. Designed to eliminate human error and enforce strict consistency, this toolset streamlines complex VRChat avatar development and asset optimization.
             </p>
 
             <div class="col w-100" style="gap: 1.5rem;">
                 <div class="col">
-                    <h5 class="text-glow-cyan m-0 mb-2">Avatar Physics & Topology</h5>
+                    <h5 class="text-glow-cyan m-0 mb-2">1. Distribution & Infrastructure</h5>
                     <ul class="custom-list m-0 ps-4 caption1" style="line-height: 1.5;">
-                        <li class="mb-2"><strong>PhysBone Topology Mapper:</strong> The flagship utility for physics management. Automates PhysBone architecture through a two-phase <strong>Extraction</strong> and <strong>Injection</strong> process.</li>
-                        <li class="mb-2"><strong>Master Blueprints:</strong> Utilizes <code>AnimationUtility.CalculateTransformPath</code> and Unity <code>.preset</code> files to bypass native prefab constraints, seamlessly mapping complex physics matrices across different avatar base models.</li>
+                        <li class="mb-2"><strong>VPM-Native Architecture:</strong> Distributed exclusively via a custom VRChat Creator Companion (VCC) repository.</li>
+                        <li class="mb-2"><strong>Strict Compiler Safeguards:</strong> Assembly Definitions (<code>.asmdef</code>) and <code>#if UNITY_EDITOR</code> directives deeply isolate all editor-only scripts, ensuring zero compiler bleed-over when users build their avatars or worlds for runtime.</li>
                     </ul>
                 </div>
+
                 <div class="col">
-                    <h5 class="text-glow-cyan m-0 mb-2">Core Infrastructure & Utilities</h5>
+                    <h5 class="text-glow-cyan m-0 mb-2">2. Core Infrastructure & Utilities</h5>
                     <ul class="custom-list m-0 ps-4 caption1" style="line-height: 1.5;">
-                        <li class="mb-2"><strong>Animation Workbench Pro:</strong> An advanced visual workspace for staging, easing, and sampling complex animation curves and material bindings. Features a real-time preview engine and a runtime-safe math library (<code>EasingFunctions.cs</code>).</li>
-                        <li class="mb-2"><strong>Pipeline Preset Manager:</strong> Handles bulk extraction of configuration presets and the programmatic authoring of standardized importer settings using a "Phantom Asset" architecture.</li>
+                        <li class="mb-2"><strong>Vixen Hub:</strong> A centralized, tabbed developer dashboard unifying ecosystem documentation and the native <code>CHANGELOG.md</code> parser into a single interface. Features a custom UV-framing engine for dynamic header scaling and quick community routing.</li>
+                        <li class="mb-2"><strong>Animation Workbench Pro:</strong> An advanced visual workspace for staging, easing, and sampling complex animation curves and material property bindings. Features interactive timeline ribbons, a real-time preview engine, and a heavily optimized, runtime-safe math library (<code>EasingFunctions.cs</code>) for flawless curve generation.</li>
+                        <li class="mb-2"><strong>Pipeline Preset Manager:</strong> Handles bulk extraction of configuration presets from existing assets and the programmatic authoring of standardized importer settings using a "Phantom Asset" architecture.</li>
                         <li class="mb-2"><strong>Fix Scene Data:</strong> A dedicated utility for repairing, standardizing, and maintaining active scene integrity.</li>
                     </ul>
                 </div>
+
                 <div class="col">
-                    <h5 class="text-glow-cyan m-0 mb-2">Hub & Documentation</h5>
+                    <h5 class="text-glow-cyan m-0 mb-2">3. Avatar Physics & Topology</h5>
                     <ul class="custom-list m-0 ps-4 caption1" style="line-height: 1.5;">
-                        <li class="mb-2"><strong>VixenTools Hub:</strong> A centralized developer dashboard providing quick access to documentation, video guides, and ecosystem routing.</li>
-                        <li class="mb-2"><strong>In-Editor Changelog:</strong> A custom Markdown parser that dynamically renders the package's <code>CHANGELOG.md</code> directly inside Unity with native rich-text and ecosystem branding.</li>
+                        <li class="mb-2"><strong>PhysBone Topology Mapper:</strong> The flagship utility for physics management. Automates PhysBone architecture through a two-phase <strong>Extraction</strong> and <strong>Injection</strong> process.</li>
+                        <li class="mb-2"><strong>Master Blueprints:</strong> Utilizes <code>AnimationUtility.CalculateTransformPath</code> and Unity <code>.preset</code> files to bypass native prefab constraints, allowing developers to map and reconstruct complex physics matrices seamlessly across different avatar versions or base models.</li>
+                    </ul>
+                </div>
+
+                <div class="col">
+                    <h5 class="text-glow-cyan m-0 mb-2">4. Convention & Identity Pipelines</h5>
+                    <ul class="custom-list m-0 ps-4 caption1" style="line-height: 1.5;">
+                        <li class="mb-2">
+                            <strong>Vixen Badge Studio:</strong> A high-fidelity, procedural generation engine for authoring and compositing VRChat convention badges (natively supporting Furality Luma, Somna, Sylva, and Umbra).
+                            <ul class="custom-list mt-2 mb-0">
+                                <li class="mb-2"><strong>Ecosystem Discovery Engine:</strong> Utilizes recursive deep-scanning to dynamically locate Furality SDK assets, bypassing inconsistent year-to-year folder restructuring or missing directories.</li>
+                                <li class="mb-2"><strong>Universal Shader Targeting:</strong> A heuristic material engine that automatically detects and configures targets across Poiyomi Toon, lilToon, VRChat Mobile, and legacy convention shaders. It seamlessly manages emission map injection and intercepts blackout override multipliers.</li>
+                                <li class="mb-2"><strong>Programmatic Template Authoring:</strong> Allows users to ingest raw convention <code>.jpg</code> textures or generate procedural bases, automatically transcoding assets and scaffolding the required directory and material architecture.</li>
+                                <li class="mb-2"><strong>Dynamic UV Auto-Layout:</strong> Intercepts convention selections and automatically snaps internal text bounds, rotational math, and signature neon hex colors to perfectly map onto the specific year's 3D mesh.</li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -251,31 +269,104 @@
                 </fluent-button>
             </div>
 
-            <div class="col w-100 mb-4" style="overflow-y: auto; max-height: 50vh; padding-right: 10px;">
+            <div class="col w-100 mb-4" style="overflow-y: auto; max-height: 55vh; padding-right: 10px;">
                 <h5 class="text-glow-cyan m-0 mb-1">v1.2.0 - 2026-04-20</h5>
-                <p class="caption1 m-0 mb-2"><strong>Added</strong></p>
-                <ul class="custom-list m-0 ps-4 caption1" style="line-height: 1.5;">
-                    <li class="mb-2"><strong>Vixen Hub Integration:</strong> Merged standalone parsers into a unified, tabbed Editor dashboard.</li>
-                    <li class="mb-2"><strong>Ecosystem Discovery Engine:</strong> Badge Studio passively scans the project hierarchy to detect Furality SDKs, bypassing year-to-year folder restructuring.</li>
-                    <li class="mb-2"><strong>Universal Shader Targeting:</strong> Heuristic engine automatically detects and configures targets across Poiyomi, lilToon, VRChat Mobile, and legacy convention shaders.</li>
-                    <li class="mb-2"><strong>Dynamic UV Auto-Layout:</strong> Badge Studio automatically adjusts localized text bounds, rotations, and signature neon hex colors to match specific convention years.</li>
+
+                <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                    <li class="mb-2"><strong>Vixen Hub Integration:</strong> Merged the standalone documentation and changelog parsers into a unified, tabbed Editor dashboard. Features a custom UV-framing engine for dynamic banner scaling and persistent ecosystem routing.</li>
+                    <li class="mb-2"><strong>Ecosystem Discovery Engine:</strong> The Badge Studio now passively scans the project hierarchy to detect installed Furality SDKs (Luma, Somna, Sylva, Umbra). Automatically indexes available convention tiers and dynamically routes output paths.</li>
+                    <li class="mb-2"><strong>Universal Shader Targeting:</strong> Built a heuristic material engine that natively detects and configures target shaders. Automatically routes diffuse/emission maps and activates required toggle parameters across Poiyomi, lilToon, VRChat Mobile, and all legacy Furality shaders.</li>
+                    <li class="mb-2"><strong>Dynamic UV Auto-Layout:</strong> The generator now intercepts convention selections and automatically adjusts localized text bounds, rotations, and signature neon hex colors to perfectly match the specific year's mesh layout.</li>
                 </ul>
+
+                <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                    <li class="mb-2"><strong>Template Authoring Pipeline:</strong> Upgraded the procedural base generator to support raw Asset Ingestion. The tool can now swallow empty convention <code>.jpg</code> files, transcode them, and perfectly adapt its internal compilation resolution to match the source file.</li>
+                </ul>
+
                 <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                 <ul class="custom-list m-0 ps-4 caption1 mb-4" style="line-height: 1.5;">
-                    <li class="mb-2"><strong>Emission Blackout Safeguard:</strong> Added failsafe to detect and override black or transparent <code>_EmissionColor</code> multipliers on legacy materials.</li>
+                    <li class="mb-2"><strong>Furality SDK Plurality & Obfuscation:</strong> Engineered a recursive deep-scan discovery protocol to bypass Furality's erratic year-to-year folder restructuring. The engine now aggressively hunts down target assets regardless of missing subfolders or <code>Texture</code>/<code>Textures</code> plurality variations.</li>
+                    <li class="mb-2"><strong>Magick.NET Dimension Casting:</strong> Resolved implicit <code>uint</code> to <code>int</code> conversion deadlocks during dynamic resolution matching.</li>
+                    <li class="mb-2"><strong>Emission Blackout Safeguard:</strong> Added a failsafe to detect and override black or transparent <code>_EmissionColor</code> multipliers on legacy convention materials, preventing generated emission masks from multiplying to zero and rendering invisibly.</li>
                 </ul>
 
                 <hr style="border-color: rgba(255,0,170,0.2); margin: 10px 0 20px 0;">
 
                 <h5 class="text-glow-cyan m-0 mb-1">v1.1.1 - 2026-04-18</h5>
-                <p class="caption1 m-0 mb-2"><strong>Added</strong></p>
-                <ul class="custom-list m-0 ps-4 caption1" style="line-height: 1.5;">
-                    <li class="mb-2"><strong>Destructive Pipeline Operations:</strong> Integrated "Delete Selected" function within Animation Workbench to prune dead property tracks safely.</li>
+
+                <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                    <li class="mb-2"><strong>Destructive Pipeline Operations:</strong> Integrated a "Delete Selected" function within the Animation Workbench bindings matrix. This allows for the safe pruning of dead or unused property tracks, preventing asset bloat and VRChat SDK validation errors.</li>
                 </ul>
+
+                <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                    <li class="mb-2"><strong>UI/UX Ecosystem Integration:</strong> Overhauled the Animation Workbench's UI Toolkit construction to natively inject the signature VixenTools "cyber-noir" aesthetic. The tool now features the persistent branded header and color-coded action buttons without requiring core stylesheet rewrites.</li>
+                    <li class="mb-2"><strong>Explicit Intent Paradigm:</strong> Flipped the default states for "Sample Start Value" and "Sample End Value" to <code>false</code>. The pipeline now safely defaults to manual override values (<code>1</code> and <code>0</code>) when generating curves, preventing the tool from destructively hijacking live scene data unless explicitly commanded.</li>
+                </ul>
+
+                <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                <ul class="custom-list m-0 ps-4 caption1 mb-4" style="line-height: 1.5;">
+                    <li class="mb-2"><strong>Multidimensional Property Extraction:</strong> Resolved a critical native API crash when attempting to bind Vector/Color properties (e.g., <code>_AudioLinkEmission0CenterOut</code>) on locked Poiyomi shaders. The discovery engine now safely decomposes these properties into their individually animatable float channels (<code>.r</code>, <code>.x</code>, etc.) and routes them through a robust <code>TryGetMaterialFloat</code> fail-safe protocol.</li>
+                </ul>
+
+                <hr style="border-color: rgba(255,0,170,0.2); margin: 10px 0 20px 0;">
+
+                <h5 class="text-glow-cyan m-0 mb-1">v1.1.0 - 2026-04-10</h5>
+
+                <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                    <li class="mb-2"><strong>Animation Workbench Pro:</strong> Officially migrated into the VixenTools package ecosystem. Features advanced curve operations, easing dropdowns, timeline ribbons, and a real-time preview engine.</li>
+                    <li class="mb-2"><strong>Runtime Math Library:</strong> Established the <code>Runtime</code> assembly by migrating <code>EasingFunctions.cs</code> to handle pure mathematical logic (Linear, SmoothStep, Cubic, etc.) safely in-game.</li>
+                    <li class="mb-2"><strong>Dynamic Hub Engine:</strong> Upgraded the VixenTools Hub to autonomously parse and render the package <code>README.md</code> using a custom Regex-driven Markdown-to-IMGUI pipeline.</li>
+                    <li class="mb-2"><strong>Ecosystem Routing:</strong> Integrated a persistent, stylized navigation bar into the Hub for direct access to the GitHub repository, YouTube video guides, and X (Twitter) announcements.</li>
+                </ul>
+
                 <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
                 <ul class="custom-list m-0 ps-4 caption1 mb-4" style="line-height: 1.5;">
-                    <li class="mb-2"><strong>Explicit Intent Paradigm:</strong> Flipped default states for "Sample Start/End Value" to false, preventing destructive scene data overrides.</li>
+                    <li class="mb-2"><strong>UI/UX Standardization:</strong> Overhauled the Editor interfaces for <code>PhysBoneTopologyMapper</code> and the <code>Pipeline Preset Manager</code> to perfectly mirror the VixenTools ecosystem aesthetic. Implemented custom IMGUI headers, neon-tinted rich text, and standardized action buttons.</li>
+                    <li class="mb-2"><strong>Compiler Safeguards:</strong> Wrapped all Animation Workbench Editor scripts (<code>AnimationWorkbenchWindow</code>, <code>CurveGraphView</code>, <code>PreviewEngine</code>, etc.) in strict <code>#if UNITY_EDITOR</code> directives to prevent runtime build crashes.</li>
+                    <li class="mb-2"><strong>UI Toolkit Pathing:</strong> Updated stylesheet loading paths to be strictly VPM-compliant, ensuring <code>.uss</code> files resolve correctly from the <code>Packages/</code> directory instead of the local <code>Assets/</code> folder.</li>
+                    <li class="mb-2"><strong>Markdown Sanitization:</strong> The in-editor Markdown parser now actively strips VPM/GitHub web badges to prevent IMGUI rendering errors while converting standard hyperlinks into clean, stylized rich text.</li>
                 </ul>
+
+                <hr style="border-color: rgba(255,0,170,0.2); margin: 10px 0 20px 0;">
+
+                <h5 class="text-glow-cyan m-0 mb-1">v1.0.3 - 2026-04-10</h5>
+                <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                <ul class="custom-list m-0 ps-4 caption1 mb-4" style="line-height: 1.5;">
+                    <li class="mb-2"><strong>VPM Dependency Resolver:</strong> Replaced strict greater-than inequality (<code>>=</code>) with caret operators (<code>^</code>) in <code>package.json</code> to prevent the VRChat Creator Companion from aggressively fetching unstable beta SDKs.</li>
+                    <li class="mb-2"><strong>Listing Hydration:</strong> Repaired the VCC listing frontend by migrating Scriban JSON data generation out of the client-side JavaScript and into a protected DOM bridge, preventing IDE auto-formatters from shattering the build pipeline.</li>
+                </ul>
+
+                <hr style="border-color: rgba(255,0,170,0.2); margin: 10px 0 20px 0;">
+
+                <h5 class="text-glow-cyan m-0 mb-1">v1.0.2 - 2026-04-10</h5>
+                <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                <ul class="custom-list m-0 ps-4 caption1 mb-4" style="line-height: 1.5;">
+                    <li class="mb-2"><strong>Compiler Bleed-Over:</strong> Injected a strictly configured Assembly Definition (<code>.asmdef</code>) into the <code>Editor</code> directory. This hard-locks compilation boundaries, preventing the <code>PhysBoneTopologyMapper</code> from crashing Unity when users attempt to build their avatars for runtime.</li>
+                </ul>
+
+                <hr style="border-color: rgba(255,0,170,0.2); margin: 10px 0 20px 0;">
+
+                <h5 class="text-glow-cyan m-0 mb-1">v1.0.1 - 2026-04-10</h5>
+                <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                <ul class="custom-list m-0 ps-4 caption1 mb-4" style="line-height: 1.5;">
+                    <li class="mb-2"><strong>CI/CD Pipeline:</strong> Established fully automated GitHub Actions workflows for generating <code>.zip</code> releases, <code>.unitypackage</code> fallbacks, and VPM-compliant registry manifests.</li>
+                    <li class="mb-2"><strong>VCC Storefront:</strong> Deployed a glassmorphic, cyberpunk-styled VPM package listing using Fluent UI web components and FAST Design tokens.</li>
+                </ul>
+
+                <hr style="border-color: rgba(255,0,170,0.2); margin: 10px 0 20px 0;">
+
+                <h5 class="text-glow-cyan m-0 mb-1">v1.0.0 - 2026-04-09</h5>
+                <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                    <li class="mb-2"><strong>PhysBoneTopologyMapper:</strong> Initial release of the flagship extraction and injection engine.</li>
+                    <li class="mb-2"><strong>Master Blueprints:</strong> Added functionality to utilize <code>AnimationUtility.CalculateTransformPath</code> and Unity <code>.preset</code> files to bypass native prefab constraints and map complex topologies (e.g., Novabeast Master Topology) seamlessly across compatible avatar roots.</li>
+                </ul>
+
             </div>
         </div>
     </fluent-dialog>
