@@ -45,7 +45,7 @@ body {
     min-width: 100vw;
     min-height: 100vh;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: var(--neutral-foreground-rest);
@@ -66,10 +66,6 @@ body {
 }
 
 /* Layout Utilities */
-.hidden {
-    display: none !important;
-}
-
 .row {
     display: flex;
     flex-direction: row;
@@ -104,307 +100,6 @@ body {
     width: 100%;
 }
 
-.flex-1 {
-    flex: 1;
-}
-
-/* Main Glassmorphism Container */
-.content {
-    max-width: 1000px;
-    width: 95%;
-    margin: 2rem auto;
-    padding: 2rem;
-    background: var(--glass-bg);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(255, 0, 170, 0.15);
-}
-
-/* Fix Fluent Cards (but leave Dialogs alone!) */
-fluent-card {
-    --neutral-layer-card-container: transparent;
-    --neutral-fill-layer-rest: transparent;
-    background-color: transparent !important;
-}
-
-.glass-panel {
-    background: rgba(10, 5, 20, 0.7) !important;
-    border: 1px solid var(--glass-border) !important;
-    border-radius: 12px;
-    box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.05);
-}
-
-/* Typography */
-h1 {
-    margin-bottom: 0.5rem;
-    font-size: 2.5rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: #fff;
-    text-shadow: 0 0 15px var(--neon-pink-glow), 0 0 30px var(--neon-pink-glow);
-}
-
-h3, h5 {
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    color: #fff;
-}
-
-.text-glow-pink {
-    text-shadow: 0 0 10px var(--neon-pink-glow);
-}
-
-.text-glow-cyan {
-    text-shadow: 0 0 10px var(--neon-cyan-glow);
-}
-
-.caption1 {
-    font-size: 1rem;
-    color: #bfa8d2;
-}
-
-.caption2 {
-    font-size: 0.8rem;
-    margin-top: 0.25rem;
-    color: #8c73a6;
-}
-
-.neon-link {
-    color: var(--neon-cyan);
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.2s ease;
-}
-
-    .neon-link:hover {
-        color: #fff;
-        text-shadow: 0 0 10px var(--neon-cyan);
-    }
-
-/* Badges */
-.badge {
-    border-radius: 4px;
-    padding: 0.25rem 0.5rem;
-    background-color: rgba(0, 229, 255, 0.15);
-    border: 1px solid rgba(0, 229, 255, 0.4);
-    color: var(--neon-cyan);
-    font-size: 0.85rem;
-    text-shadow: 0 0 5px rgba(0, 229, 255, 0.5);
-}
-
-.id-badge {
-    font-family: 'Consolas', monospace;
-    background: rgba(0,0,0,0.4);
-    padding: 2px 6px;
-    border-radius: 4px;
-    display: inline-block;
-    margin-top: 4px;
-}
-
-.type-badge {
-    background: linear-gradient(45deg, rgba(255,0,170,0.2), rgba(0,229,255,0.2));
-    border: 1px solid rgba(255,255,255,0.1);
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    color: #fff;
-}
-
-/* Fluent Text Fields */
-fluent-text-field {
-    width: 100%;
-    --neutral-fill-input-rest: rgba(0,0,0,0.6);
-}
-
-    fluent-text-field::part(root) {
-        background: rgba(0, 0, 0, 0.6) !important;
-        border: 1px solid rgba(0, 229, 255, 0.3);
-        border-radius: 6px;
-    }
-
-    fluent-text-field::part(control) {
-        color: var(--neon-cyan) !important;
-        font-family: 'Consolas', monospace;
-    }
-
-.vccUrlField {
-    min-width: 400px;
-    max-width: 70%;
-    flex-grow: 1;
-}
-
-/* Fluent Buttons */
-fluent-button.btn-neon-pink::part(control) {
-    background: var(--neon-pink);
-    color: #fff;
-    border: 1px solid #ff33bb;
-    box-shadow: 0 0 15px var(--neon-pink-glow);
-    transition: all 0.2s ease;
-    border-radius: 6px;
-}
-
-fluent-button.btn-neon-pink:hover::part(control) {
-    background: #d900ff;
-    box-shadow: 0 0 25px var(--neon-pink);
-}
-
-fluent-button.btn-neon-cyan::part(control) {
-    background: rgba(0, 229, 255, 0.1);
-    color: var(--neon-cyan);
-    border: 1px solid rgba(0, 229, 255, 0.4);
-    transition: all 0.2s ease;
-    border-radius: 6px;
-}
-
-fluent-button.btn-neon-cyan:hover::part(control) {
-    background: rgba(0, 229, 255, 0.25);
-    color: #fff;
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
-}
-
-fluent-button.close-btn::part(control) {
-    background: transparent;
-    border: none;
-    color: var(--neon-pink);
-}
-
-fluent-button.close-btn:hover::part(control) {
-    background: rgba(255, 0, 170, 0.15);
-    color: #fff;
-}
-
-.small-btn::part(control) {
-    min-width: 32px !important;
-    padding: 0 12px !important;
-}
-
-/* Packages Grid */
-.packages {
-    margin: 1.5rem 0 1rem 0;
-    padding: 0.5rem;
-    display: flex;
-    flex: 1;
-}
-
-#packageGrid {
-    overflow-y: auto;
-    width: 100%;
-    max-height: 40rem;
-    background: rgba(0,0,0,0.4);
-    border-radius: 12px;
-    border: 1px solid rgba(0, 229, 255, 0.2);
-}
-
-.packages .packageName {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin: 0.25rem 0;
-    color: #fff;
-    text-shadow: 0 0 8px rgba(255, 0, 170, 0.4);
-}
-
-fluent-data-grid-row {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-    background: transparent !important;
-}
-
-    fluent-data-grid-row:hover {
-        background: rgba(255, 0, 170, 0.1) !important;
-    }
-
-fluent-data-grid-cell {
-    color: var(--neutral-foreground-rest) !important;
-    padding: 12px 16px !important;
-}
-
-fluent-data-grid-row.grid-header fluent-data-grid-cell {
-    color: var(--neon-cyan) !important;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* Search Block */
-.searchBlock {
-    margin-top: 1.5rem;
-    width: 100%;
-    max-width: 100%;
-}
-
-    .searchBlock fluent-text-field::part(root) {
-        border-color: var(--neon-pink);
-    }
-
-    .searchBlock fluent-text-field::part(control) {
-        color: #fff !important;
-        font-family: inherit;
-    }
-
-/* Modals & Menus */
-fluent-dialog {
-    --dialog-width: 600px;
-    --dialog-height: auto;
-}
-
-    fluent-dialog::part(overlay) {
-        background: rgba(0, 0, 0, 0.7);
-    }
-
-    fluent-dialog::part(control) {
-        background: rgba(20, 10, 30, 0.95) !important;
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
-        border: 1px solid var(--neon-cyan);
-        box-shadow: 0 0 40px rgba(0, 229, 255, 0.3);
-        border-radius: 16px;
-        color: #fff;
-        padding: 1.5rem;
-        width: 600px;
-        max-width: 90vw;
-        max-height: 80vh;
-        overflow-y: auto;
-    }
-
-#addListingToVccHelp, #packageInfoModal, #toolsBreakdownModal {
-    z-index: 11;
-}
-
-#rowMoreMenu {
-    top: 0;
-    left: 0;
-    position: absolute;
-    z-index: 10;
-}
-
-fluent-menu {
-    background: rgba(10, 5, 20, 0.95) !important;
-    border: 1px solid var(--neon-pink) !important;
-    box-shadow: 0 4px 20px rgba(255, 0, 170, 0.3) !important;
-    border-radius: 8px !important;
-}
-
-fluent-menu-item {
-    color: #e0d5eb !important;
-    transition: background 0.2s ease;
-}
-
-    fluent-menu-item:hover {
-        background: rgba(255, 0, 170, 0.2) !important;
-        color: #fff !important;
-    }
-
-/* Lists & Spacing */
-ul.custom-list li {
-    color: #bfa8d2;
-    position: relative;
-}
-
-    ul.custom-list li::marker {
-        color: var(--neon-cyan);
-    }
-
 .m-0 {
     margin: 0;
 }
@@ -415,10 +110,6 @@ ul.custom-list li {
 
 .m-2 {
     margin: 0.5rem;
-}
-
-.m-4 {
-    margin: 1rem;
 }
 
 .mt-1 {
@@ -434,7 +125,7 @@ ul.custom-list li {
 }
 
 .mt-4 {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
 }
 
 .mb-1 {
@@ -446,169 +137,330 @@ ul.custom-list li {
 }
 
 .mb-4 {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .ms-2 {
     margin-left: 0.5rem;
 }
 
-.p-4 {
-    padding: 1rem;
+.ms-4 {
+    margin-left: 1.5rem;
+}
+
+.me-2 {
+    margin-right: 0.5rem;
 }
 
 .ps-4 {
-    padding-left: 1rem;
+    padding-left: 1.5rem;
 }
 
 .pe-4 {
-    padding-right: 1rem;
+    padding-right: 1.5rem;
 }
 
 .ps-5 {
     padding-left: 2rem;
 }
 
-/* Architecture Modal Trigger Button Custom Scaling */
-#openToolsBreakdownBtn::part(control) {
-    padding: 12px 28px !important;
-    font-size: 1.1rem;
-    height: auto;
-    letter-spacing: 1px;
+/* Main Container */
+.content {
+    max-width: 900px;
+    width: 95%;
+    margin: 4rem auto;
+    padding: 2.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(255, 0, 170, 0.15);
+}
+
+/* Typography */
+h1 {
+    margin: 0;
+    font-size: 2.5rem;
     text-transform: uppercase;
-    font-weight: 600;
-}
-
-/* --- Changelog Specific Typography --- */
-.changelog-body h3 {
-    margin-bottom: 0.5rem;
-    font-size: 1.3rem;
-    border-bottom: 1px solid rgba(0, 229, 255, 0.3);
-    padding-bottom: 5px;
-}
-
-.changelog-body h4 {
-    margin-bottom: 0.25rem;
-    font-size: 1.1rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
-
-.changelog-body strong {
+    letter-spacing: 2px;
     color: #fff;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+    text-shadow: 0 0 15px var(--neon-pink-glow), 0 0 30px var(--neon-pink-glow);
 }
 
-/* --- Utility Typography --- */
-.text-cyan {
-    color: var(--neon-cyan);
+h3, h5 {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #fff;
 }
 
-.text-pink {
+.caption1 {
+    font-size: 0.95rem;
+    color: #bfa8d2;
+}
+
+.caption2 {
+    font-size: 0.8rem;
+    color: #8c73a6;
+}
+
+.text-glow-pink {
+    text-shadow: 0 0 10px var(--neon-pink-glow);
     color: var(--neon-pink);
 }
 
-/* --- Header & Spatial Layout --- */
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--glass-border);
-    padding-bottom: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.header-logo-container {
-    display: flex;
-    flex-direction: column;
-}
-
-.header-title {
-    margin: 0;
-}
-
-.header-subtitle {
-    margin: 0.25rem 0 0 0;
-    color: #bfa8d2;
-    font-size: 1.1rem;
-    letter-spacing: 1px;
-}
-
-.header-actions {
-    display: flex;
-    gap: 1rem;
-}
-
-/* --- Info Bar Layout --- */
-.info-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(0, 229, 255, 0.2);
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.info-bar-left, .info-bar-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.repo-url {
-    font-family: 'Consolas', monospace;
-    color: #fff;
-    background: rgba(255, 0, 170, 0.1);
-    padding: 6px 10px;
-    border-radius: 4px;
-    border: 1px solid rgba(255, 0, 170, 0.3);
-}
-
-/* --- Injected DOM Styling (from app.js) --- */
-.pkg-info-cell {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.25rem;
-}
-
-.pkg-header {
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
-}
-
-.pkg-title {
-    margin: 0;
-    font-size: 1.25rem;
-    color: #fff;
-    text-shadow: 0 0 8px var(--neon-pink-glow);
-}
-
-.pkg-version {
+.text-glow-cyan {
+    text-shadow: 0 0 10px var(--neon-cyan-glow);
     color: var(--neon-cyan);
-    font-size: 0.9rem;
+}
+
+.neon-icon-cyan {
+    color: var(--neon-cyan);
+    filter: drop-shadow(0 0 5px var(--neon-cyan-glow));
+}
+
+.neon-link {
+    color: var(--neon-cyan);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+    .neon-link:hover {
+        color: #fff;
+        text-shadow: 0 0 10px var(--neon-cyan);
+    }
+
+/* Badges & Package Specifics */
+.packageName {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 2px;
+    text-shadow: 0 0 5px rgba(255,0,170,0.3);
+}
+
+.id-badge {
     font-family: 'Consolas', monospace;
-}
-
-.pkg-desc {
-    margin: 0;
-    color: #bfa8d2;
-    font-size: 0.95rem;
-}
-
-.pkg-meta {
-    font-size: 0.85rem;
-    color: #8c73a6;
+    background: rgba(0,0,0,0.4);
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
     margin-top: 4px;
 }
 
-.row-actions {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    justify-content: flex-end;
-    height: 100%;
+.type-badge {
+    background: linear-gradient(45deg, rgba(255,0,170,0.2), rgba(0,229,255,0.2));
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #fff;
 }
+
+.badge {
+    background: rgba(0, 229, 255, 0.15);
+    border: 1px solid rgba(0, 229, 255, 0.4);
+    color: var(--neon-cyan);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+/* Fluent Form Controls */
+fluent-text-field::part(root) {
+    background: rgba(0, 0, 0, 0.6) !important;
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    border-radius: 6px;
+}
+
+fluent-text-field::part(control) {
+    color: var(--neon-cyan) !important;
+    font-family: 'Consolas', monospace;
+}
+
+.vccUrlField {
+    width: 100%;
+    max-width: 500px;
+    flex-grow: 1;
+}
+
+.searchBlock {
+    width: 100%;
+}
+
+    .searchBlock fluent-text-field {
+        width: 100%;
+    }
+
+        .searchBlock fluent-text-field::part(root) {
+            border-color: var(--neon-pink);
+            border-width: 2px;
+        }
+
+        .searchBlock fluent-text-field::part(control) {
+            color: #fff !important;
+            font-family: inherit;
+        }
+
+/* Custom Button Mapping */
+.custom-accent-btn::part(control) {
+    background: var(--neon-pink);
+    color: #fff;
+    border: 1px solid #ff33bb;
+    border-radius: 6px;
+    box-shadow: 0 0 15px var(--neon-pink-glow);
+    transition: all 0.2s ease;
+}
+
+.custom-accent-btn:hover::part(control) {
+    background: #d900ff;
+    box-shadow: 0 0 25px var(--neon-pink);
+}
+
+.custom-stealth-btn::part(control) {
+    background: rgba(0, 229, 255, 0.05);
+    color: var(--neon-cyan);
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.custom-stealth-btn:hover::part(control) {
+    background: rgba(0, 229, 255, 0.2);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+}
+
+.close-btn::part(control) {
+    background: transparent;
+    border: none;
+    color: var(--neon-pink);
+    box-shadow: none;
+}
+
+.close-btn:hover::part(control) {
+    background: rgba(255, 0, 170, 0.15);
+    color: #fff;
+    box-shadow: none;
+}
+
+.small-btn::part(control) {
+    min-width: 32px !important;
+    padding: 0 10px !important;
+    height: 32px;
+}
+
+/* Grid & Cards */
+fluent-card {
+    --neutral-layer-card-container: transparent;
+    --neutral-fill-layer-rest: transparent;
+    background-color: transparent !important;
+}
+
+.glass-panel {
+    width: 100%;
+    margin-top: 1rem;
+    background: rgba(10, 5, 20, 0.7) !important;
+    border: 1px solid rgba(0, 229, 255, 0.2) !important;
+    border-radius: 12px;
+    box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.05);
+    overflow: hidden;
+}
+
+#packageGrid {
+    overflow-y: auto;
+    width: 100%;
+    max-height: 40rem;
+}
+
+fluent-data-grid-row {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    background: transparent !important;
+}
+
+    fluent-data-grid-row:hover {
+        background: rgba(255, 0, 170, 0.1) !important;
+    }
+
+fluent-data-grid-cell {
+    color: var(--neutral-foreground-rest) !important;
+    padding: 16px !important;
+}
+
+fluent-data-grid-row.grid-header fluent-data-grid-cell {
+    color: var(--neon-cyan) !important;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+}
+
+/* Modals & Dialogs */
+fluent-dialog::part(overlay) {
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(5px);
+}
+
+fluent-dialog::part(control) {
+    background: transparent !important;
+    border: none;
+    box-shadow: none;
+    overflow: visible;
+    width: auto;
+    height: auto;
+}
+
+.glass-dialog {
+    background: rgba(20, 10, 30, 0.95);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--neon-cyan);
+    box-shadow: 0 0 40px rgba(0, 229, 255, 0.3);
+    border-radius: 16px;
+    color: #fff;
+    padding: 1.5rem 2rem;
+    width: 650px;
+    max-width: 90vw;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+/* Context Menus */
+#rowMoreMenu {
+    position: absolute;
+    z-index: 100;
+}
+
+.glass-menu {
+    background: rgba(10, 5, 20, 0.95) !important;
+    border: 1px solid var(--neon-pink) !important;
+    box-shadow: 0 4px 20px rgba(255, 0, 170, 0.4) !important;
+    border-radius: 8px !important;
+    backdrop-filter: blur(10px);
+}
+
+.glass-menu-item {
+    color: #e0d5eb !important;
+    transition: background 0.2s ease;
+}
+
+    .glass-menu-item:hover {
+        background: rgba(255, 0, 170, 0.25) !important;
+        color: #fff !important;
+    }
+
+/* Lists */
+ul.custom-list {
+    padding-left: 1.2rem;
+}
+
+    ul.custom-list li {
+        color: #bfa8d2;
+        position: relative;
+        margin-bottom: 8px;
+    }
+
+        ul.custom-list li::marker {
+            color: var(--neon-cyan);
+        }
