@@ -27,7 +27,7 @@ namespace VixenTools.Editor
         private string blueprintName = "Novabeast_1.2_MasterTopology";
 #endif
 
-        [MenuItem("VixenTools/PhysBone Topology Mapper")]
+        [MenuItem("VixenTools/Avatars/PhysBone Topology Mapper")]
         public static void ShowWindow()
         {
             var window = GetWindow<PhysBoneTopologyMapper>("Topology Mapper");

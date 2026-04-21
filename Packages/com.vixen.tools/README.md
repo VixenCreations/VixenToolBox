@@ -1,6 +1,8 @@
+***
+
 # VixenTools Ecosystem
 
-VixenTools is a comprehensive suite of Unity Editor utilities and automation pipelines focused specifically on **Avatar Pipeline & Topology Architecture**. Designed to eliminate human error and enforce strict consistency, this toolset streamlines complex VRChat avatar development and asset optimization.
+VixenTools is a comprehensive suite of Unity Editor utilities and automation pipelines focused specifically on **Avatar Pipeline & Topology Architecture**. Designed to eliminate human error and enforce strict consistency, this toolset streamlines complex VRChat avatar development, high-fidelity asset optimization, and cross-platform architecture.
 
 ### **1. Distribution & Infrastructure**
 * **VPM-Native Architecture:** Distributed exclusively via a custom VRChat Creator Companion (VCC) repository.
@@ -10,12 +12,17 @@ VixenTools is a comprehensive suite of Unity Editor utilities and automation pip
 * **Vixen Hub:** A centralized, tabbed developer dashboard unifying ecosystem documentation and the native `CHANGELOG.md` parser into a single interface. Features a custom UV-framing engine for dynamic header scaling and quick community routing.
   * [GitHub Repository](https://github.com/VixenCreations)
   * [YouTube Channel](https://www.youtube.com/@vixenlicous)
-  * [X (Twitter)](https://x.com/VixenVRC)
 * **Animation Workbench Pro:** An advanced visual workspace for staging, easing, and sampling complex animation curves and material property bindings. Features interactive timeline ribbons, a real-time preview engine, and a heavily optimized, runtime-safe math library (`EasingFunctions.cs`) for flawless curve generation.
 * **Pipeline Preset Manager:** Handles bulk extraction of configuration presets from existing assets and the programmatic authoring of standardized importer settings using a "Phantom Asset" architecture.
-* **Fix Scene Data:** A dedicated utility for repairing, standardizing, and maintaining active scene integrity.
+* **Live Surface Snapping:** An enterprise-grade scene utility that utilizes Unity's native `Transform.hasChanged` matrix tracking for low-overhead drag detection. Features a recursive bounding algorithm to snap objects perfectly by their geometric "feet," self-collision immunity, and a discrete `Ctrl+Alt+S` hotkey for one-shot drops.
+* **Fix Scene Data:** A dedicated utility for repairing, standardizing, and maintaining active scene integrity by forcefully serializing unlinked lightmap references.
 
-### **3. Avatar Physics & Topology**
+### **3. Avatar Physics & Cross-Platform Topology**
+* **Quest Conversion Engine:** A fully non-destructive, high-fidelity pipeline for converting PC avatars to Android/Quest. 
+  * **ImageMagick Lanczos Pipeline:** Intercepts Unity's native texture importer to route PC textures through a high-fidelity Magick.NET downsampling pass before forcefully applying Android ASTC compression, preserving crisp details within strict VRAM limits.
+  * **Heuristic PhysBone Culling:** Mathematically calculates skeletal depth to aggressively cull deep leaf bones while preserving vital root-level physics based on targeted Mobile Performance Ranks.
+  * **Interactive Topology Matrix:** A dynamic UI matrix that automatically applies heuristic culling limits and allows the creator to manually override which physics components survive the Quest conversion.
+  * **High-Fidelity Material Translation:** Natively defaults to `VRChat/Mobile/Toon Standard`, hunting for PC-side metallic, gloss, normal, and emission properties across third-party shaders (Poiyomi, lilToon) and injecting them into the mobile shader to preserve maximum visual depth.
 * **PhysBone Topology Mapper:** The flagship utility for physics management. Automates PhysBone architecture through a two-phase **Extraction** and **Injection** process.
 * **Master Blueprints:** Utilizes `AnimationUtility.CalculateTransformPath` and Unity `.preset` files to bypass native prefab constraints, allowing developers to map and reconstruct complex physics matrices seamlessly across different avatar versions or base models.
 

@@ -91,7 +91,7 @@ namespace VixenTools.Editor
         private Texture2D _sourceDiffuse;
         private Texture2D _sourceEmission;
 
-        [MenuItem("VixenTools/Badge Studio")]
+        [MenuItem("VixenTools/Avatars/Badge Studio")]
         public static void ShowWindow()
         {
             var window = GetWindow<VixenBadgeMaker>("Badge Studio");

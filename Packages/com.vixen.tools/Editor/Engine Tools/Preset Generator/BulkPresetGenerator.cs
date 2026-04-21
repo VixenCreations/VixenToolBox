@@ -36,7 +36,7 @@ namespace VixenTools.Editor
         private bool registerAuthoringToManager = true;
         private string authoringFilter = ""; 
 
-        [MenuItem("VixenTools/Pipeline Preset Manager")]
+        [MenuItem("VixenTools/Unity Engine/Pipeline Preset Manager")]
         public static void ShowWindow()
         {
             var window = GetWindow<BulkPresetGenerator>("Preset Manager");

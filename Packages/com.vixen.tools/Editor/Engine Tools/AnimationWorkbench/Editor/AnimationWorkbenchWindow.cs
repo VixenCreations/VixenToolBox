@@ -63,7 +63,7 @@ namespace Vixenlicious.AnimationWorkbench
         private float overrideStartValue = 0f;
         private float overrideEndValue = 1f;
 
-        [MenuItem("VixenTools/Animation Workbench Pro")]
+        [MenuItem("VixenTools/Unity Engine/Animation Workbench Pro")]
         public static void ShowWindow()
         {
             var w = GetWindow<AnimationWorkbenchWindow>("Workbench Pro");

@@ -1,6 +1,26 @@
+***
+
 # VixenTools Ecosystem Changelog
 
 All notable changes to the VixenToolBox project will be documented in this file.
+
+## [1.3.0] - 2026-04-21
+### Added
+- **Quest Conversion Engine:** Engineered a fully non-destructive, enterprise-grade pipeline for converting PC avatars to Android/Quest. The engine generates an isolated prefab sandbox, mathematically clones materials into a unique ecosystem, and maps dependencies without ever mutating the master PC hierarchy.
+- **ImageMagick Lanczos Pipeline:** Intercepted Unity's native texture importer. The engine now routes PC textures through a high-fidelity Magick.NET downsampling pass before forcefully applying Android ASTC compression. This guarantees "Glossy Girl" neon aesthetics and high-contrast maps remain crisp even when crushed to meet VRChat's strict VRAM limits (10MB/18MB/40MB).
+- **Heuristic PhysBone Culling:** Integrated a topology scanner that mathematically calculates skeletal depth. When an avatar exceeds the targeted Mobile Performance Rank (e.g., 8 PhysBones for Poor), the engine heuristically culls deep leaf bones while preserving vital root-level physics.
+- **Interactive Topology Matrix:** Added a massive, scrollable pre-execution control panel. The matrix parses the entire skeletal hierarchy, automatically applies heuristic culling limits, and allows the creator to manually override which physics components survive the Quest conversion.
+- **High-Fidelity Material Translation:** The conversion engine now defaults to `VRChat/Mobile/Toon Standard` and actively hunts for PC-side metallic, gloss, normal, and emission properties across third-party shaders (Poiyomi, lilToon), natively mapping them into the mobile shader to preserve maximum depth.
+
+### Changed
+- **Ecosystem Architecture Re-route:** Completely refactored the global `MenuItem` domain structure. Scripts are now strictly isolated into `VixenTools/Avatars`, `VixenTools/Unity Engine`, and `VixenTools/Scene` to establish a highly scalable foundation for future toolsets.
+- **Live Surface Snapping (Engine Upgrade):** Overhauled the legacy update loop. Replaced brittle GUI `Event.current` dragging with Unity's native, low-overhead `Transform.hasChanged` flag. Also integrated a dedicated `Ctrl+Alt+S` hotkey for discrete, one-shot surface dropping.
+- **Matrix UI/UX:** Transformed the Interactive Topology Matrix from a cramped text dump into a highly readable control panel. Parent hierarchy paths are now dimmed, while target leaf bones are highlighted in high-contrast neon green (`#00ff66`). 
+
+### Fixed
+- **Pivot-Clipping (Surface Snap):** Objects no longer incorrectly snap by their center pivot. A new recursive algorithm dynamically calculates true geometric bounds across all child colliders and renderers, ensuring meshes always sit perfectly flush on their "feet."
+- **Self-Collision Loops (Surface Snap):** Injected an execution micro-state that temporarily pushes the target object to the `IgnoreRaycast` layer during raycasting, completely preventing meshes from snapping to their own internal colliders.
+- **HelpBox Rich Text Stripping:** Bypassed Unity's default EditorGUI stripping by constructing a custom HelpBox layout wrapper, restoring full HTML/Rich Text formatting to the Quest Engine's results dashboard.
 
 ## [1.2.0] - 2026-04-20
 ### Added

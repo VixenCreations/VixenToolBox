@@ -207,7 +207,7 @@
             </div>
 
             <p class="caption1 mb-4" style="line-height: 1.5;">
-                A comprehensive suite of Unity Editor utilities and automation pipelines focused specifically on <strong>Avatar Pipeline & Topology Architecture</strong>. Designed to eliminate human error and enforce strict consistency, this toolset streamlines complex VRChat avatar development and asset optimization.
+                A comprehensive suite of Unity Editor utilities and automation pipelines focused specifically on <strong>Avatar Pipeline & Topology Architecture</strong>. Designed to eliminate human error and enforce strict consistency, this toolset streamlines complex VRChat avatar development, high-fidelity asset optimization, and cross-platform architecture.
             </p>
 
             <div class="col w-100" style="gap: 1.5rem;">
@@ -225,13 +225,23 @@
                         <li class="mb-2"><strong>Vixen Hub:</strong> A centralized, tabbed developer dashboard unifying ecosystem documentation and the native <code>CHANGELOG.md</code> parser into a single interface. Features a custom UV-framing engine for dynamic header scaling and quick community routing.</li>
                         <li class="mb-2"><strong>Animation Workbench Pro:</strong> An advanced visual workspace for staging, easing, and sampling complex animation curves and material property bindings. Features interactive timeline ribbons, a real-time preview engine, and a heavily optimized, runtime-safe math library (<code>EasingFunctions.cs</code>) for flawless curve generation.</li>
                         <li class="mb-2"><strong>Pipeline Preset Manager:</strong> Handles bulk extraction of configuration presets from existing assets and the programmatic authoring of standardized importer settings using a "Phantom Asset" architecture.</li>
-                        <li class="mb-2"><strong>Fix Scene Data:</strong> A dedicated utility for repairing, standardizing, and maintaining active scene integrity.</li>
+                        <li class="mb-2"><strong>Live Surface Snapping:</strong> An enterprise-grade scene utility that utilizes Unity's native <code>Transform.hasChanged</code> matrix tracking for low-overhead drag detection. Features a recursive bounding algorithm to snap objects perfectly by their geometric "feet," self-collision immunity, and a discrete <code>Ctrl+Alt+S</code> hotkey for one-shot drops.</li>
+                        <li class="mb-2"><strong>Fix Scene Data:</strong> A dedicated utility for repairing, standardizing, and maintaining active scene integrity by forcefully serializing unlinked lightmap references.</li>
                     </ul>
                 </div>
 
                 <div class="col">
-                    <h5 class="text-glow-cyan m-0 mb-2">3. Avatar Physics & Topology</h5>
+                    <h5 class="text-glow-cyan m-0 mb-2">3. Avatar Physics & Cross-Platform Topology</h5>
                     <ul class="custom-list m-0 ps-4 caption1" style="line-height: 1.5;">
+                        <li class="mb-2">
+                            <strong>Quest Conversion Engine:</strong> A fully non-destructive, high-fidelity pipeline for converting PC avatars to Android/Quest.
+                            <ul class="custom-list mt-2 mb-0">
+                                <li class="mb-2"><strong>ImageMagick Lanczos Pipeline:</strong> Intercepts Unity's native texture importer to route PC textures through a high-fidelity Magick.NET downsampling pass before forcefully applying Android ASTC compression, preserving crisp details within strict VRAM limits.</li>
+                                <li class="mb-2"><strong>Heuristic PhysBone Culling:</strong> Mathematically calculates skeletal depth to aggressively cull deep leaf bones while preserving vital root-level physics based on targeted Mobile Performance Ranks.</li>
+                                <li class="mb-2"><strong>Interactive Topology Matrix:</strong> A dynamic UI matrix that automatically applies heuristic culling limits and allows the creator to manually override which physics components survive the Quest conversion.</li>
+                                <li class="mb-2"><strong>High-Fidelity Material Translation:</strong> Natively defaults to <code>VRChat/Mobile/Toon Standard</code>, hunting for PC-side metallic, gloss, normal, and emission properties across third-party shaders (Poiyomi, lilToon) and injecting them into the mobile shader to preserve maximum visual depth.</li>
+                            </ul>
+                        </li>
                         <li class="mb-2"><strong>PhysBone Topology Mapper:</strong> The flagship utility for physics management. Automates PhysBone architecture through a two-phase <strong>Extraction</strong> and <strong>Injection</strong> process.</li>
                         <li class="mb-2"><strong>Master Blueprints:</strong> Utilizes <code>AnimationUtility.CalculateTransformPath</code> and Unity <code>.preset</code> files to bypass native prefab constraints, allowing developers to map and reconstruct complex physics matrices seamlessly across different avatar versions or base models.</li>
                     </ul>
@@ -270,6 +280,33 @@
             </div>
 
             <div class="col w-100 mb-4" style="overflow-y: auto; max-height: 55vh; padding-right: 10px;">
+                <h5 class="text-glow-cyan m-0 mb-1">v1.3.0 - 2026-04-21</h5>
+
+                <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                    <li class="mb-2"><strong>Quest Conversion Engine:</strong> Engineered a fully non-destructive, enterprise-grade pipeline for converting PC avatars to Android/Quest. The engine generates an isolated prefab sandbox, mathematically clones materials into a unique ecosystem, and maps dependencies without ever mutating the master PC hierarchy.</li>
+                    <li class="mb-2"><strong>ImageMagick Lanczos Pipeline:</strong> Intercepted Unity's native texture importer. The engine now routes PC textures through a high-fidelity Magick.NET downsampling pass before forcefully applying Android ASTC compression. This guarantees "Glossy Girl" neon aesthetics and high-contrast maps remain crisp even when crushed to meet VRChat's strict VRAM limits (10MB/18MB/40MB).</li>
+                    <li class="mb-2"><strong>Heuristic PhysBone Culling:</strong> Integrated a topology scanner that mathematically calculates skeletal depth. When an avatar exceeds the targeted Mobile Performance Rank (e.g., 8 PhysBones for Poor), the engine heuristically culls deep leaf bones while preserving vital root-level physics.</li>
+                    <li class="mb-2"><strong>Interactive Topology Matrix:</strong> Added a massive, scrollable pre-execution control panel. The matrix parses the entire skeletal hierarchy, automatically applies heuristic culling limits, and allows the creator to manually override which physics components survive the Quest conversion.</li>
+                    <li class="mb-2"><strong>High-Fidelity Material Translation:</strong> The conversion engine now defaults to <code>VRChat/Mobile/Toon Standard</code> and actively hunts for PC-side metallic, gloss, normal, and emission properties across third-party shaders (Poiyomi, lilToon), natively mapping them into the mobile shader to preserve maximum depth.</li>
+                </ul>
+
+                <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                    <li class="mb-2"><strong>Ecosystem Architecture Re-route:</strong> Completely refactored the global <code>MenuItem</code> domain structure. Scripts are now strictly isolated into <code>VixenTools/Avatars</code>, <code>VixenTools/Unity Engine</code>, and <code>VixenTools/Scene</code> to establish a highly scalable foundation for future toolsets.</li>
+                    <li class="mb-2"><strong>Live Surface Snapping (Engine Upgrade):</strong> Overhauled the legacy update loop. Replaced brittle GUI <code>Event.current</code> dragging with Unity's native, low-overhead <code>Transform.hasChanged</code> flag. Also integrated a dedicated <code>Ctrl+Alt+S</code> hotkey for discrete, one-shot surface dropping.</li>
+                    <li class="mb-2"><strong>Matrix UI/UX:</strong> Transformed the Interactive Topology Matrix from a cramped text dump into a highly readable control panel. Parent hierarchy paths are now dimmed, while target leaf bones are highlighted in high-contrast neon green (<code>#00ff66</code>).</li>
+                </ul>
+
+                <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                <ul class="custom-list m-0 ps-4 caption1 mb-4" style="line-height: 1.5;">
+                    <li class="mb-2"><strong>Pivot-Clipping (Surface Snap):</strong> Objects no longer incorrectly snap by their center pivot. A new recursive algorithm dynamically calculates true geometric bounds across all child colliders and renderers, ensuring meshes always sit perfectly flush on their "feet."</li>
+                    <li class="mb-2"><strong>Self-Collision Loops (Surface Snap):</strong> Injected an execution micro-state that temporarily pushes the target object to the <code>IgnoreRaycast</code> layer during raycasting, completely preventing meshes from snapping to their own internal colliders.</li>
+                    <li class="mb-2"><strong>HelpBox Rich Text Stripping:</strong> Bypassed Unity's default EditorGUI stripping by constructing a custom HelpBox layout wrapper, restoring full HTML/Rich Text formatting to the Quest Engine's results dashboard.</li>
+                </ul>
+
+                <hr style="border-color: rgba(255,0,170,0.2); margin: 10px 0 20px 0;">
+
                 <h5 class="text-glow-cyan m-0 mb-1">v1.2.0 - 2026-04-20</h5>
 
                 <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>

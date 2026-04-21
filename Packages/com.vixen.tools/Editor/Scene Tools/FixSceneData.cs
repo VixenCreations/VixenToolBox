@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.SceneManagement;
@@ -12,7 +13,7 @@ namespace VixenTools.Editor
     public class FixSceneData
     {
         // Placed at the root of the VixenTools menu for immediate access
-        [MenuItem("VixenTools/Fix Scene Data")]
+        [MenuItem("VixenTools/Scene/Fix Scene Data")]
         public static void FixLightingDataAssignment()
         {
             Scene currentScene = SceneManager.GetActiveScene();
@@ -53,3 +54,4 @@ namespace VixenTools.Editor
         }
     }
 }
+#endif
