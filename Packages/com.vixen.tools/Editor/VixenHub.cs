@@ -225,6 +225,7 @@ namespace VixenTools.Editor
             DrawSeparator(new Color(0f, 0.9f, 1f, 0.3f));
             GUILayout.Space(10);
 
+            DrawLinkAction("VixenTools Discord", "https://discord.gg/3vbJCKcPtJ", "Join the central matrix for live pipeline support, architectural upgrades, and community troubleshooting.");
             DrawLinkAction("Report an Issue", "https://github.com/VixenCreations/VixenToolBox/issues", "Encountered a bug or an anomaly in the matrix? File a diagnostic report here.");
             DrawLinkAction("Request a Feature", "https://github.com/VixenCreations/VixenToolBox/issues", "Have an idea for a new architectural upgrade? Submit a feature request.");
             DrawLinkAction("Ecosystem Wiki", "https://github.com/VixenCreations/VixenToolBox/wiki", "Deep-dive into the advanced mechanics and documentation of the VixenTools pipelines.");
