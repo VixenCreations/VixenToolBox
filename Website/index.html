@@ -216,13 +216,15 @@
                     <ul class="custom-list m-0 ps-4 caption1" style="line-height: 1.5;">
                         <li class="mb-2"><strong>VPM-Native Architecture:</strong> Distributed exclusively via a custom VRChat Creator Companion (VCC) repository.</li>
                         <li class="mb-2"><strong>Strict Compiler Safeguards:</strong> Assembly Definitions (<code>.asmdef</code>) and <code>#if UNITY_EDITOR</code> directives deeply isolate all editor-only scripts, ensuring zero compiler bleed-over when users build their avatars or worlds for runtime.</li>
+                        <li class="mb-2"><strong>CI/CD Telemetry Matrix:</strong> A fully isolated, asynchronous Discord webhook bot (<code>VixenGitListener.py</code>) utilizing an outbound Server-Sent Events (SSE) stream via Smee to intercept GitHub payloads natively, bypassing the need for port-forwarding.</li>
+                        <li class="mb-2"><strong>Heuristic AutoMod Security:</strong> A rigorously tuned Rust regex engine deployed within the VixenTools community Discord to proactively intercept VRChat-targeted malware (<code>.rar</code>/<code>.zip</code> trojans) and phishing attempts.</li>
                     </ul>
                 </div>
 
                 <div class="col">
                     <h5 class="text-glow-cyan m-0 mb-2">2. Core Infrastructure & Utilities</h5>
                     <ul class="custom-list m-0 ps-4 caption1" style="line-height: 1.5;">
-                        <li class="mb-2"><strong>Vixen Hub:</strong> A centralized, tabbed developer dashboard unifying ecosystem documentation and the native <code>CHANGELOG.md</code> parser into a single interface. Features a custom UV-framing engine for dynamic header scaling and quick community routing.</li>
+                        <li class="mb-2"><strong>Vixen Hub:</strong> A centralized, 5-tab developer dashboard featuring an autonomous <code>[InitializeOnLoadMethod]</code> update prompter that passively detects new VPM releases. Unifies ecosystem documentation, <code>CHANGELOG.md</code>, <code>SUPPORT.md</code>, and direct triage routing. Features a custom UV-framing engine for dynamic header scaling.</li>
                         <li class="mb-2"><strong>Animation Workbench Pro:</strong> An advanced visual workspace for staging, easing, and sampling complex animation curves and material property bindings. Features interactive timeline ribbons, a real-time preview engine, and a heavily optimized, runtime-safe math library (<code>EasingFunctions.cs</code>) for flawless curve generation.</li>
                         <li class="mb-2"><strong>Pipeline Preset Manager:</strong> Handles bulk extraction of configuration presets from existing assets and the programmatic authoring of standardized importer settings using a "Phantom Asset" architecture.</li>
                         <li class="mb-2"><strong>Live Surface Snapping:</strong> An enterprise-grade scene utility that utilizes Unity's native <code>Transform.hasChanged</code> matrix tracking for low-overhead drag detection. Features a recursive bounding algorithm to snap objects perfectly by their geometric "feet," self-collision immunity, and a discrete <code>Ctrl+Alt+S</code> hotkey for one-shot drops.</li>
@@ -280,6 +282,30 @@
             </div>
 
             <div class="col w-100 mb-4" style="overflow-y: auto; max-height: 55vh; padding-right: 10px;">
+
+                <h5 class="text-glow-cyan m-0 mb-1">v1.4.0 - 2026-04-23</h5>
+
+                <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                    <li class="mb-2"><strong>Autonomous Update Prompter:</strong> The Vixen Hub now features an <code>[InitializeOnLoadMethod]</code> that passively reads the VPM <code>package.json</code> in the background during Unity compilation. If it detects a version discrepancy against the local <code>VersionIs.asset</code>, it automatically opens the Hub to immediately display the latest release notes.</li>
+                    <li class="mb-2"><strong>Extended Hub Architecture:</strong> Expanded the Vixen Hub into a 5-tab control matrix (Documentation, Changelog, Donation, Social Media, Get Support). Added an internal Markdown parser for the new <code>SUPPORT.md</code> file and integrated stylized action buttons for external ecosystem routing.</li>
+                    <li class="mb-2"><strong>VixenGitListener (CI/CD Telemetry):</strong> Engineered a fully isolated, asynchronous Discord webhook bot (<code>aiohttp</code>). It utilizes an outbound Server-Sent Events (SSE) stream via Smee to intercept GitHub payloads natively, bypassing the need for port-forwarding and keeping the host IP 100% invisible.</li>
+                    <li class="mb-2"><strong>Deep Payload Parsing:</strong> The Git listener now calculates exact file architecture changes (added, modified, removed) per commit and renders them into the Discord channel using cyber-terminal branch styling. It also intercepts and blockquotes commit and issue comments directly into the matrix.</li>
+                    <li class="mb-2"><strong>Heuristic AutoMod Matrix:</strong> Deployed a battle-tested Rust regex engine to the community Discord. It is aggressively tuned to intercept and nuke VRChat developer-targeted RATs (disguised as <code>.rar</code>/<code>.zip</code> game tests), typosquatted domains, and fake Steam login phishing attempts.</li>
+                </ul>
+
+                <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                    <li class="mb-2"><strong>Triage Routing:</strong> The Hub's "Get Support" tab has been overhauled to inject a direct invite to the VixenTools community Discord, establishing a streamlined funnel for live pipeline troubleshooting and architectural upgrades.</li>
+                </ul>
+
+                <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                <ul class="custom-list m-0 ps-4 caption1 mb-4" style="line-height: 1.5;">
+                    <li class="mb-2"><strong>Gateway Race Condition (Git Listener):</strong> Injected an <code>await self.wait_until_ready()</code> execution lock into the webhook background task. This prevents the Smee SSE stream from prematurely intercepting GitHub payloads before the bot has successfully cached the Discord server's channel architecture.</li>
+                </ul>
+
+                <hr style="border-color: rgba(255,0,170,0.2); margin: 10px 0 20px 0;">
+
                 <h5 class="text-glow-cyan m-0 mb-1">v1.3.0 - 2026-04-21</h5>
 
                 <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>

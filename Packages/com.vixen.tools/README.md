@@ -7,11 +7,15 @@ VixenTools is a comprehensive suite of Unity Editor utilities and automation pip
 ### **1. Distribution & Infrastructure**
 * **VPM-Native Architecture:** Distributed exclusively via a custom VRChat Creator Companion (VCC) repository.
 * **Strict Compiler Safeguards:** Assembly Definitions (`.asmdef`) and `#if UNITY_EDITOR` directives deeply isolate all editor-only scripts, ensuring zero compiler bleed-over when users build their avatars or worlds for runtime.
+* **CI/CD Telemetry Matrix:** A fully isolated, asynchronous Discord webhook bot (`VixenGitListener.py`) utilizing an outbound Server-Sent Events (SSE) stream via Smee to intercept GitHub payloads natively, bypassing the need for port-forwarding.
+* **Heuristic AutoMod Security:** A rigorously tuned Rust regex engine deployed within the VixenTools community Discord to proactively intercept VRChat-targeted malware (`.rar`/`.zip` trojans) and phishing attempts.
 
 ### **2. Core Infrastructure & Utilities**
-* **Vixen Hub:** A centralized, tabbed developer dashboard unifying ecosystem documentation and the native `CHANGELOG.md` parser into a single interface. Features a custom UV-framing engine for dynamic header scaling and quick community routing.
+* **Vixen Hub:** A centralized, 5-tab developer dashboard featuring an autonomous `[InitializeOnLoadMethod]` update prompter that passively detects new VPM releases. Unifies ecosystem documentation, `CHANGELOG.md`, `SUPPORT.md`, and direct triage routing. Features a custom UV-framing engine for dynamic header scaling.
   * [GitHub Repository](https://github.com/VixenCreations)
+  * [Community Discord](https://discord.gg/3vbJCKcPtJ)
   * [YouTube Channel](https://www.youtube.com/@vixenlicous)
+  * [Gumroad Storefront](https://vixencreations.gumroad.com/)
 * **Animation Workbench Pro:** An advanced visual workspace for staging, easing, and sampling complex animation curves and material property bindings. Features interactive timeline ribbons, a real-time preview engine, and a heavily optimized, runtime-safe math library (`EasingFunctions.cs`) for flawless curve generation.
 * **Pipeline Preset Manager:** Handles bulk extraction of configuration presets from existing assets and the programmatic authoring of standardized importer settings using a "Phantom Asset" architecture.
 * **Live Surface Snapping:** An enterprise-grade scene utility that utilizes Unity's native `Transform.hasChanged` matrix tracking for low-overhead drag detection. Features a recursive bounding algorithm to snap objects perfectly by their geometric "feet," self-collision immunity, and a discrete `Ctrl+Alt+S` hotkey for one-shot drops.

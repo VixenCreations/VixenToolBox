@@ -4,6 +4,20 @@
 
 All notable changes to the VixenToolBox project will be documented in this file.
 
+## [1.3.1] - 2026-04-23
+### Added
+- **Autonomous Update Prompter:** The Vixen Hub now features an `[InitializeOnLoadMethod]` that passively reads the VPM `package.json` in the background during Unity compilation. If it detects a version discrepancy against the local `VersionIs.asset`, it automatically opens the Hub to immediately display the latest release notes.
+- **Extended Hub Architecture:** Expanded the Vixen Hub into a 5-tab control matrix (Documentation, Changelog, Donation, Social Media, Get Support). Added an internal Markdown parser for the new `SUPPORT.md` file and integrated stylized action buttons for external ecosystem routing.
+- **VixenGitListener (CI/CD Telemetry):** Engineered a fully isolated, asynchronous Discord webhook bot (`aiohttp`). It utilizes an outbound Server-Sent Events (SSE) stream via Smee to intercept GitHub payloads natively, bypassing the need for port-forwarding and keeping the host IP 100% invisible.
+- **Deep Payload Parsing:** The Git listener now calculates exact file architecture changes (added, modified, removed) per commit and renders them into the Discord channel using cyber-terminal branch styling. It also intercepts and blockquotes commit and issue comments directly into the matrix.
+- **Heuristic AutoMod Matrix:** Deployed a battle-tested Rust regex engine to the community Discord. It is aggressively tuned to intercept and nuke VRChat developer-targeted RATs (disguised as `.rar`/`.zip` game tests), typosquatted domains, and fake Steam login phishing attempts.
+
+### Changed
+- **Triage Routing:** The Hub's "Get Support" tab has been overhauled to inject a direct invite to the VixenTools community Discord, establishing a streamlined funnel for live pipeline troubleshooting and architectural upgrades.
+
+### Fixed
+- **Gateway Race Condition (Git Listener):** Injected an `await self.wait_until_ready()` execution lock into the webhook background task. This prevents the Smee SSE stream from prematurely intercepting GitHub payloads before the bot has successfully cached the Discord server's channel architecture.
+
 ## [1.3.0] - 2026-04-21
 ### Added
 - **Quest Conversion Engine:** Engineered a fully non-destructive, enterprise-grade pipeline for converting PC avatars to Android/Quest. The engine generates an isolated prefab sandbox, mathematically clones materials into a unique ecosystem, and maps dependencies without ever mutating the master PC hierarchy.
