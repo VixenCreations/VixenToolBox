@@ -464,3 +464,33 @@ ul.custom-list {
         ul.custom-list li::marker {
             color: var(--neon-cyan);
         }
+
+/* ==========================================================================
+   FLUENT UI SHADOW DOM OVERRIDES
+   ========================================================================== */
+
+/* 1. Fix: Package Description Trailing Off (Data Grid Wrapping) */
+fluent-data-grid-row {
+    height: auto !important; /* Override Fluent's strict row height calculations */
+    min-height: 64px;
+}
+
+fluent-data-grid-cell {
+    white-space: normal !important; /* Force text to break onto the next line */
+    word-wrap: break-word !important;
+    align-items: flex-start !important; /* Ensure content aligns to the top when wrapping */
+}
+
+/* 2. Fix: Tooltip Trailing Off (Hover Text Bounds) */
+fluent-tooltip {
+    white-space: nowrap !important; /* Keep short sentences on one line */
+    width: max-content !important;
+    max-width: none !important;
+    z-index: 99999 !important; /* Force it above all modal layers */
+}
+
+    fluent-tooltip::part(tooltip) {
+        width: max-content !important;
+        max-width: none !important;
+        white-space: nowrap !important;
+    }

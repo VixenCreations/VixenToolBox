@@ -116,7 +116,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('packageInfoModalClose')?.addEventListener('click', () => hideDialog('packageInfoModal'));
-    document.getElementById('packageInfoListingHelp')?.addEventListener('click', () => showDialog('addListingToVccHelp'));
+    document.getElementById('packageInfoListingHelp')?.addEventListener('click', () => {
+        // Gracefully dismiss the active matrix before spawning the secondary help dialog
+        hideDialog('packageInfoModal');
+        showDialog('addListingToVccHelp');
+    });
 
     document.getElementById('packageInfoVccUrlFieldCopy')?.addEventListener('click', function () {
         const url = document.getElementById('packageInfoVccUrlField')?.value;
