@@ -1,0 +1,176 @@
+/* Vixen Quest Conversion Engine USS — Native UI Toolkit Integration */
+
+:root {
+    --bg-dark: #141414;
+    --bg-panel: #1e1e1e;
+    
+    --color-cyan: #00e5ff;
+    --color-pink: #ff00aa;
+    
+    --text-main: #e5e5e5;
+    --text-muted: #aaaaaa;
+}
+
+/* =======================================================
+   Base Overrides
+   ======================================================= */
+.unity-base-field,
+.unity-object-field,
+.unity-button,
+.unity-label,
+.unity-toggle,
+.unity-enum-field {
+    font-size: 13px;
+    color: var(--text-main);
+}
+
+.unity-base-field__label {
+    min-width: 175px; /* Slightly wider to accommodate longer labels */
+    -unity-text-align: middle-left;
+}
+
+.unity-base-field__input {
+    background-color: var(--bg-panel);
+    border-color: #2f2f2f;
+    border-width: 1px;
+    border-radius: 4px;
+    padding-left: 4px;
+}
+
+#quest-engine-root {
+    background-color: var(--bg-dark);
+    flex-grow: 1;
+}
+
+/* =======================================================
+   Header Banner
+   ======================================================= */
+#tool-header {
+    height: 60px;
+    background-color: #0c0612;
+    border-bottom-width: 2px;
+    border-bottom-color: rgba(255, 0, 170, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+/* =======================================================
+   Scroll Area & Panels
+   ======================================================= */
+#main-scroll {
+    flex-grow: 1;
+    padding: 10px;
+}
+
+.cyber-panel {
+    background-color: rgba(200, 200, 200, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.panel-header {
+    font-size: 16px;
+    -unity-font-style: bold;
+    margin-bottom: 5px;
+}
+
+.panel-separator {
+    height: 1px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* =======================================================
+   Help Boxes, Results, & Info
+   ======================================================= */
+.info-box-styled {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-left-width: 4px;
+    border-left-color: var(--color-cyan);
+    padding: 10px;
+    margin-bottom: 15px;
+    -unity-font-style: italic;
+    color: var(--text-muted);
+    white-space: normal;
+}
+
+.results-box {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 15px;
+}
+
+/* =======================================================
+   Interactive Topology Matrix (Phase 1.5)
+   ======================================================= */
+.bold-foldout > .unity-foldout__toggle > .unity-toggle__text {
+    -unity-font-style: bold;
+    font-size: 14px;
+}
+
+.topology-scroll-view {
+    background-color: #1a1a1a;
+    border-width: 1px;
+    border-color: #2a2a2a;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+.topology-row {
+    flex-direction: row;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.02);
+    border-radius: 3px;
+    padding: 4px;
+    margin-bottom: 2px;
+}
+
+.topology-row:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.topology-label {
+    flex-grow: 1;
+    margin-left: 8px;
+    font-size: 12px;
+}
+
+/* =======================================================
+   Execution Buttons
+   ======================================================= */
+.cyber-action-btn {
+    font-size: 16px;
+    -unity-font-style: bold;
+    height: 45px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.cyan-btn {
+    background-color: #0b3d4f;
+    color: var(--color-cyan);
+    border-color: var(--color-cyan);
+    border-width: 1px;
+}
+.cyan-btn:hover { background-color: #125b75; }
+
+.pink-btn {
+    background-color: #4a0d2f;
+    color: var(--color-pink);
+    border-color: var(--color-pink);
+    border-width: 1px;
+}
+.pink-btn:hover { background-color: #6e1346; }
+
+.disabled-btn {
+    background-color: #222222;
+    color: #555555;
+    border-color: #333333;
+    border-width: 1px;
+}

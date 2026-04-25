@@ -2,6 +2,8 @@
 using UnityEditor;
 using UnityEditor.Presets;
 using UnityEngine;
+using UnityEngine.UIElements;
+using UnityEditor.UIElements;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,120 +18,236 @@ namespace VixenTools.Editor
     public class BulkPresetGenerator : EditorWindow
     {
         private enum ToolMode { Extraction, Authoring }
-        private ToolMode currentMode = ToolMode.Extraction;
+        private ToolMode _currentMode = ToolMode.Extraction;
+
+        // Centralized styling paths
+        private const string FontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
+        private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/BulkPresetGeneratorStyles.uss";
+
+        private Font _cyberFont;
 
         // --- Shared Configuration ---
-        private string outputDirectory = "Assets/VixenTools/GeneratedPresets";
+        private string _outputDirectory = "Assets/VixenTools/GeneratedPresets";
 
         // --- Extraction Variables ---
-        private bool ignoreTransforms = true;
-        private bool includeChildren = false;
-        private bool registerExtractionToManager = true;
-        private string extractionFilter = "";
+        private bool _ignoreTransforms = true;
+        private bool _includeChildren = false;
+        private bool _registerExtractionToManager = true;
+        private string _extractionFilter = "";
 
         // --- Authoring Variables (Texture Standards) ---
-        private string authoringPresetName = "Global_4K_Texture_Standard";
-        private int maxTextureSize = 4096;
-        private TextureImporterType textureType = TextureImporterType.Default;
-        private bool enableMipMaps = true;
-        private bool isReadable = false;
-        private bool registerAuthoringToManager = true;
-        private string authoringFilter = ""; 
+        private string _authoringPresetName = "Global_4K_Texture_Standard";
+        private int _maxTextureSize = 4096;
+        private TextureImporterType _textureType = TextureImporterType.Default;
+        private bool _enableMipMaps = true;
+        private bool _isReadable = false;
+        private bool _registerAuthoringToManager = true;
+        private string _authoringFilter = ""; 
+
+        // --- UI Elements ---
+        private Button _btnExtractionTab;
+        private Button _btnAuthoringTab;
+        private VisualElement _extractionContainer;
+        private VisualElement _authoringContainer;
+
+        private List<string> _texSizeLabels = new List<string> { "1024", "2048", "4096", "8192" };
+        private int[] _texSizeValues = { 1024, 2048, 4096, 8192 };
 
         [MenuItem("VixenTools/Unity Engine/Pipeline Preset Manager")]
         public static void ShowWindow()
         {
             var window = GetWindow<BulkPresetGenerator>("Preset Manager");
-            window.minSize = new Vector2(450, 500);
+            window.minSize = new Vector2(450, 600);
             window.Show();
         }
 
-        private void OnGUI()
+        private void OnEnable()
         {
-            // --- HEADER NAVIGATION BAR ---
-            Rect headerRect = EditorGUILayout.GetControlRect(false, 50);
-            EditorGUI.DrawRect(headerRect, new Color(0.08f, 0.04f, 0.12f)); 
+            _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
+        }
+
+        private void CreateGUI()
+        {
+            VisualElement root = rootVisualElement;
+            root.name = "preset-manager-root";
+
+            // Load USS
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath);
+            if (styleSheet != null) root.styleSheets.Add(styleSheet);
+            else Debug.LogWarning($"[VixenTools] Could not load Stylesheet at {UssPath}");
+
+            // --- HEADER ---
+            var headerRect = new VisualElement { name = "tool-header" };
+            var titleLabel = new Label("<color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> PRESET MANAGER") { enableRichText = true };
+            if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
+            headerRect.Add(titleLabel);
+            root.Add(headerRect);
+
+            // --- TABS ---
+            var tabContainer = new VisualElement { name = "tab-toolbar" };
             
-            GUIStyle headerStyle = new GUIStyle(EditorStyles.boldLabel)
+            _btnExtractionTab = new Button(() => SwitchMode(ToolMode.Extraction)) { text = "EXTRACTION PIPELINE" };
+            _btnAuthoringTab = new Button(() => SwitchMode(ToolMode.Authoring)) { text = "AUTHORING ENGINE" };
+            
+            tabContainer.Add(_btnExtractionTab);
+            tabContainer.Add(_btnAuthoringTab);
+            root.Add(tabContainer);
+
+            // --- SCROLL CONTENT ---
+            var scrollContainer = new ScrollView(ScrollViewMode.Vertical) { name = "main-scroll" };
+            var scrollContent = new VisualElement();
+            scrollContainer.Add(scrollContent);
+            root.Add(scrollContainer);
+
+            // --- BUILD UI CONTAINERS ---
+            _extractionContainer = new VisualElement();
+            BuildExtractionUI(_extractionContainer);
+            scrollContent.Add(_extractionContainer);
+
+            _authoringContainer = new VisualElement();
+            BuildAuthoringUI(_authoringContainer);
+            scrollContent.Add(_authoringContainer);
+
+            SwitchMode(_currentMode);
+        }
+
+        private void SwitchMode(ToolMode mode)
+        {
+            _currentMode = mode;
+            
+            if (mode == ToolMode.Extraction)
             {
-                richText = true,
-                alignment = TextAnchor.MiddleCenter,
-                fontSize = 20
-            };
-            EditorGUI.LabelField(headerRect, "<color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> PRESET MANAGER", headerStyle);
+                _btnExtractionTab.AddToClassList("tab-btn-active");
+                _btnExtractionTab.RemoveFromClassList("tab-btn-inactive");
+                _btnAuthoringTab.AddToClassList("tab-btn-inactive");
+                _btnAuthoringTab.RemoveFromClassList("tab-btn-active");
 
-            GUILayout.Space(10);
-
-            // --- MODE SWITCHER ---
-            currentMode = (ToolMode)GUILayout.Toolbar((int)currentMode, new string[] { "Extraction Pipeline", "Authoring Engine" }, GUILayout.Height(30));
-            GUILayout.Space(15);
-
-            GUIStyle sectionHeaderStyle = new GUIStyle(EditorStyles.boldLabel) { richText = true, fontSize = 14 };
-
-            if (currentMode == ToolMode.Extraction)
-            {
-                DrawExtractionUI(sectionHeaderStyle);
+                _extractionContainer.style.display = DisplayStyle.Flex;
+                _authoringContainer.style.display = DisplayStyle.None;
             }
             else
             {
-                DrawAuthoringUI(sectionHeaderStyle);
+                _btnAuthoringTab.AddToClassList("tab-btn-active");
+                _btnAuthoringTab.RemoveFromClassList("tab-btn-inactive");
+                _btnExtractionTab.AddToClassList("tab-btn-inactive");
+                _btnExtractionTab.RemoveFromClassList("tab-btn-active");
+
+                _extractionContainer.style.display = DisplayStyle.None;
+                _authoringContainer.style.display = DisplayStyle.Flex;
             }
         }
 
-        private void DrawExtractionUI(GUIStyle headerStyle)
+        private void BuildExtractionUI(VisualElement container)
         {
-            EditorGUILayout.LabelField("<color=#00e5ff>Bulk Preset Extraction</color>", headerStyle);
-            EditorGUILayout.HelpBox("Select objects in your hierarchy or project. This tool will rip their component configurations into reusable Unity Presets.", MessageType.Info);
-            GUILayout.Space(10);
+            var panel = CreateCyberPanel("Bulk Preset Extraction", "#00e5ff");
 
-            outputDirectory = EditorGUILayout.TextField("Output Directory", outputDirectory);
-            extractionFilter = EditorGUILayout.TextField(new GUIContent("Preset Filter (Optional)", "Filter string applied in the Preset Manager. Leave blank to apply to all."), extractionFilter);
-            
-            GUILayout.Space(5);
-            ignoreTransforms = EditorGUILayout.Toggle("Ignore Transforms", ignoreTransforms);
-            includeChildren = EditorGUILayout.Toggle("Include Children", includeChildren);
-            registerExtractionToManager = EditorGUILayout.Toggle("Auto-Register to Manager", registerExtractionToManager);
+            var infoLabel = new Label("Select objects in your hierarchy or project. This tool will rip their component configurations into reusable Unity Presets.");
+            infoLabel.AddToClassList("info-box-styled");
+            panel.Add(infoLabel);
 
-            GUILayout.Space(20);
-            DrawSeparator(new Color(0f, 0.9f, 1f, 0.3f)); // Cyan separator
-            GUILayout.Space(20);
+            var outDirField = new TextField("Output Directory") { value = _outputDirectory };
+            outDirField.RegisterValueChangedCallback(e => _outputDirectory = e.newValue);
+            panel.Add(outDirField);
 
-            GUI.backgroundColor = new Color(0.2f, 0.7f, 0.8f);
-            if (GUILayout.Button("Extract Presets from Selection", GUILayout.Height(40)))
-            {
-                ExecuteExtraction();
-            }
-            GUI.backgroundColor = Color.white;
+            var filterField = new TextField("Preset Filter (Optional)") { value = _extractionFilter, tooltip = "Filter string applied in the Preset Manager. Leave blank to apply to all." };
+            filterField.RegisterValueChangedCallback(e => _extractionFilter = e.newValue);
+            panel.Add(filterField);
+
+            var paramHeader = new Label("Pipeline Parameters") { style = { unityFontStyleAndWeight = FontStyle.Bold, marginTop = 10, marginBottom = 5 } };
+            panel.Add(paramHeader);
+
+            var ignoreToggle = new Toggle("Ignore Transforms") { value = _ignoreTransforms };
+            ignoreToggle.RegisterValueChangedCallback(e => _ignoreTransforms = e.newValue);
+            panel.Add(ignoreToggle);
+
+            var childToggle = new Toggle("Include Children") { value = _includeChildren };
+            childToggle.RegisterValueChangedCallback(e => _includeChildren = e.newValue);
+            panel.Add(childToggle);
+
+            var regToggle = new Toggle("Auto-Register to Manager") { value = _registerExtractionToManager };
+            regToggle.RegisterValueChangedCallback(e => _registerExtractionToManager = e.newValue);
+            panel.Add(regToggle);
+
+            container.Add(panel);
+
+            var execBtn = new Button(ExecuteExtraction) { text = "Extract Presets from Selection" };
+            execBtn.AddToClassList("cyber-action-btn");
+            execBtn.AddToClassList("cyan-btn");
+            container.Add(execBtn);
         }
 
-        private void DrawAuthoringUI(GUIStyle headerStyle)
+        private void BuildAuthoringUI(VisualElement container)
         {
-            EditorGUILayout.LabelField("<color=#ff00aa>Programmatic Asset Authoring</color>", headerStyle);
-            EditorGUILayout.HelpBox("Defines strict import standards (e.g., 4K texture caps, mip-map rules) and generates a master preset without needing a source asset.", MessageType.Info);
-            GUILayout.Space(10);
+            var panel = CreateCyberPanel("Programmatic Asset Authoring", "#ff00aa");
 
-            outputDirectory = EditorGUILayout.TextField("Output Directory", outputDirectory);
-            authoringPresetName = EditorGUILayout.TextField("Preset Name", authoringPresetName);
-            authoringFilter = EditorGUILayout.TextField(new GUIContent("Preset Filter (Glob)", "Example: glob:\"**/*_BaseColor.png\""), authoringFilter);
+            var infoLabel = new Label("Defines strict import standards (e.g., 4K texture caps, mip-map rules) and generates a master preset without needing a source asset.");
+            infoLabel.AddToClassList("info-box-styled");
+            panel.Add(infoLabel);
 
-            GUILayout.Space(10);
-            EditorGUILayout.LabelField("Texture Import Rules", EditorStyles.boldLabel);
-            textureType = (TextureImporterType)EditorGUILayout.EnumPopup("Texture Type", textureType);
-            maxTextureSize = EditorGUILayout.IntPopup("Max Texture Size", maxTextureSize, new[] { "1024", "2048", "4096", "8192" }, new[] { 1024, 2048, 4096, 8192 });
-            enableMipMaps = EditorGUILayout.Toggle("Generate Mip Maps", enableMipMaps);
-            isReadable = EditorGUILayout.Toggle("Read/Write Enabled", isReadable);
-            registerAuthoringToManager = EditorGUILayout.Toggle("Auto-Register to Manager", registerAuthoringToManager);
+            var outDirField = new TextField("Output Directory") { value = _outputDirectory };
+            outDirField.RegisterValueChangedCallback(e => _outputDirectory = e.newValue);
+            panel.Add(outDirField);
 
-            GUILayout.Space(20);
-            DrawSeparator(new Color(1f, 0f, 0.66f, 0.3f)); // Pink separator
-            GUILayout.Space(20);
+            var nameField = new TextField("Preset Name") { value = _authoringPresetName };
+            nameField.RegisterValueChangedCallback(e => _authoringPresetName = e.newValue);
+            panel.Add(nameField);
 
-            GUI.backgroundColor = new Color(0.8f, 0.2f, 0.5f);
-            if (GUILayout.Button("Author Texture Standard Preset", GUILayout.Height(40)))
+            var filterField = new TextField("Preset Filter (Glob)") { value = _authoringFilter, tooltip = "Example: glob:\"**/*_BaseColor.png\"" };
+            filterField.RegisterValueChangedCallback(e => _authoringFilter = e.newValue);
+            panel.Add(filterField);
+
+            var rulesHeader = new Label("Texture Import Rules") { style = { unityFontStyleAndWeight = FontStyle.Bold, marginTop = 10, marginBottom = 5 } };
+            panel.Add(rulesHeader);
+
+            var typeEnum = new EnumField("Texture Type", _textureType);
+            typeEnum.RegisterValueChangedCallback(e => _textureType = (TextureImporterType)e.newValue);
+            panel.Add(typeEnum);
+
+            int initialSizeIndex = System.Array.IndexOf(_texSizeValues, _maxTextureSize);
+            if (initialSizeIndex == -1) initialSizeIndex = 2; // Default to 4096
+            var sizeDropdown = new DropdownField("Max Texture Size", _texSizeLabels, initialSizeIndex);
+            sizeDropdown.RegisterValueChangedCallback(e => _maxTextureSize = _texSizeValues[_texSizeLabels.IndexOf(e.newValue)]);
+            panel.Add(sizeDropdown);
+
+            var mipToggle = new Toggle("Generate Mip Maps") { value = _enableMipMaps };
+            mipToggle.RegisterValueChangedCallback(e => _enableMipMaps = e.newValue);
+            panel.Add(mipToggle);
+
+            var readToggle = new Toggle("Read/Write Enabled") { value = _isReadable };
+            readToggle.RegisterValueChangedCallback(e => _isReadable = e.newValue);
+            panel.Add(readToggle);
+
+            var regToggle = new Toggle("Auto-Register to Manager") { value = _registerAuthoringToManager };
+            regToggle.RegisterValueChangedCallback(e => _registerAuthoringToManager = e.newValue);
+            panel.Add(regToggle);
+
+            container.Add(panel);
+
+            var execBtn = new Button(ExecuteTextureAuthoring) { text = "Author Texture Standard Preset" };
+            execBtn.AddToClassList("cyber-action-btn");
+            execBtn.AddToClassList("pink-btn");
+            container.Add(execBtn);
+        }
+
+        private VisualElement CreateCyberPanel(string title, string accentColorHex)
+        {
+            var panel = new VisualElement();
+            panel.AddToClassList("cyber-panel");
+
+            if (!string.IsNullOrEmpty(title))
             {
-                ExecuteTextureAuthoring();
+                var lbl = new Label($"<color={accentColorHex}>{title}</color>") { enableRichText = true };
+                lbl.AddToClassList("panel-header");
+                panel.Add(lbl);
+
+                var sep = new VisualElement();
+                sep.AddToClassList("panel-separator");
+                ColorUtility.TryParseHtmlString(accentColorHex, out Color c);
+                c.a = 0.3f;
+                sep.style.backgroundColor = c;
+                panel.Add(sep);
             }
-            GUI.backgroundColor = Color.white;
+            return panel;
         }
 
         #region Execution Logic
@@ -142,39 +260,39 @@ namespace VixenTools.Editor
                 return;
             }
 
-            EnsureDirectoryExists(outputDirectory);
+            EnsureDirectoryExists(_outputDirectory);
             int count = 0;
 
             foreach (var obj in selectedObjects)
             {
-                Component[] components = includeChildren ? obj.GetComponentsInChildren<Component>(true) : obj.GetComponents<Component>();
+                Component[] components = _includeChildren ? obj.GetComponentsInChildren<Component>(true) : obj.GetComponents<Component>();
                 
                 foreach (var comp in components)
                 {
-                    if (comp == null || (ignoreTransforms && comp is Transform)) continue;
+                    if (comp == null || (_ignoreTransforms && comp is Transform)) continue;
                     
                     Preset preset = new Preset(comp);
                     string typeName = comp.GetType().Name;
-                    string path = AssetDatabase.GenerateUniqueAssetPath($"{outputDirectory}/{obj.name}_{typeName}.preset");
+                    string path = AssetDatabase.GenerateUniqueAssetPath($"{_outputDirectory}/{obj.name}_{typeName}.preset");
                     
                     AssetDatabase.CreateAsset(preset, path);
                     count++;
 
-                    if (registerExtractionToManager)
+                    if (_registerExtractionToManager)
                     {
-                        InjectIntoPresetManager(preset, extractionFilter);
+                        InjectIntoPresetManager(preset, _extractionFilter);
                     }
                 }
             }
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log($"[VixenTools] Extracted {count} presets to {outputDirectory}.");
+            Debug.Log($"[VixenTools] Extracted {count} presets to {_outputDirectory}.");
         }
 
         private void ExecuteTextureAuthoring()
         {
-            EnsureDirectoryExists(outputDirectory);
+            EnsureDirectoryExists(_outputDirectory);
 
             // 1. Create a "Phantom Asset" (Temporary file to base the importer on)
             string phantomPath = "Assets/VixenTools_PhantomTexture.png";
@@ -185,20 +303,20 @@ namespace VixenTools.Editor
             TextureImporter importer = AssetImporter.GetAtPath(phantomPath) as TextureImporter;
             if (importer != null)
             {
-                importer.textureType = textureType;
-                importer.maxTextureSize = maxTextureSize;
-                importer.mipmapEnabled = enableMipMaps;
-                importer.isReadable = isReadable;
+                importer.textureType = _textureType;
+                importer.maxTextureSize = _maxTextureSize;
+                importer.mipmapEnabled = _enableMipMaps;
+                importer.isReadable = _isReadable;
                 importer.SaveAndReimport();
 
                 // 3. Rip the configuration into a permanent Preset
                 Preset newPreset = new Preset(importer);
-                string presetPath = AssetDatabase.GenerateUniqueAssetPath($"{outputDirectory}/{authoringPresetName}.preset");
+                string presetPath = AssetDatabase.GenerateUniqueAssetPath($"{_outputDirectory}/{_authoringPresetName}.preset");
                 AssetDatabase.CreateAsset(newPreset, presetPath);
 
-                if (registerAuthoringToManager)
+                if (_registerAuthoringToManager)
                 {
-                    InjectIntoPresetManager(newPreset, authoringFilter);
+                    InjectIntoPresetManager(newPreset, _authoringFilter);
                 }
 
                 Debug.Log($"[VixenTools] Authored Master Texture Preset: {presetPath}");
@@ -236,13 +354,6 @@ namespace VixenTools.Editor
                 Directory.CreateDirectory(path);
                 AssetDatabase.Refresh();
             }
-        }
-
-        private void DrawSeparator(Color color)
-        {
-            Rect rect = EditorGUILayout.GetControlRect(false, 1);
-            rect.height = 1;
-            EditorGUI.DrawRect(rect, color);
         }
         #endregion
     }

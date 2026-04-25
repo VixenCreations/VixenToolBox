@@ -1,0 +1,206 @@
+/* Vixen Hub USS — Native UI Toolkit Integration */
+
+:root {
+    --bg-dark: #141414;
+    --bg-panel: #1e1e1e;
+    --bg-card: rgba(255, 255, 255, 0.05);
+    --bg-card-hover: rgba(255, 255, 255, 0.1);
+    
+    --color-cyan: #00e5ff;
+    --color-pink: #ff00aa;
+    
+    --text-main: #e5e5e5;
+    --text-muted: #aaaaaa;
+}
+
+#hub-root {
+    background-color: var(--bg-dark);
+    flex-grow: 1;
+}
+
+/* =======================================================
+   Header Banner
+   ======================================================= */
+#hub-header {
+    min-height: 120px;
+    border-bottom-width: 2px;
+    border-bottom-color: rgba(255, 0, 170, 0.8);
+    background-color: #0c0612;
+}
+
+.hub-header-image {
+    -unity-background-scale-mode: scale-and-crop;
+}
+
+.hub-header-text-container {
+    justify-content: center;
+    align-items: center;
+}
+
+.hub-header-title {
+    font-size: 32px;
+    -unity-font-style: bold;
+}
+
+/* =======================================================
+   Tabs Navigation
+   ======================================================= */
+#tab-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px;
+    background-color: #1a1a1a;
+    border-bottom-width: 1px;
+    border-bottom-color: #2a2a2a;
+}
+
+.tab-btn {
+    height: 35px;
+    min-width: 130px;
+    margin: 4px;
+    border-radius: 4px;
+    font-size: 13px;
+    -unity-font-style: bold;
+    border-width: 1px;
+    transition-duration: 0.15s;
+}
+
+.tab-btn-active {
+    background-color: #2c2c2c;
+    color: var(--color-cyan);
+    border-color: rgba(0, 229, 255, 0.4);
+}
+
+.tab-btn-inactive {
+    background-color: #1e1e1e;
+    color: #888888;
+    border-color: transparent;
+}
+
+.tab-btn-inactive:hover {
+    background-color: #2a2a2a;
+    color: #bbbbbb;
+}
+
+/* =======================================================
+   Tab Description
+   ======================================================= */
+#desc-container {
+    padding: 10px;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 10px;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.tab-desc-label {
+    color: var(--text-muted);
+    font-size: 13px;
+    -unity-text-align: middle-center;
+}
+
+/* =======================================================
+   Content Area & Markdown Engine
+   ======================================================= */
+#main-scroll {
+    flex-grow: 1;
+    padding: 15px 20px 30px 20px;
+}
+
+.md-h1 {
+    font-size: 22px;
+    color: var(--color-cyan);
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.md-h2 {
+    font-size: 18px;
+    color: var(--color-pink);
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+.md-h3 {
+    font-size: 14px;
+    -unity-font-style: bold;
+    color: #ffffff;
+    margin-top: 15px;
+    margin-bottom: 2px;
+}
+
+.md-p {
+    font-size: 13px;
+    color: var(--text-main);
+    white-space: normal; /* Enables line wrapping */
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.md-bullet {
+    font-size: 13px;
+    margin-right: 10px;
+    margin-left: 15px;
+    margin-top: 2px;
+}
+
+.md-separator {
+    height: 1px;
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+/* =======================================================
+   Interactive Link Cards (Donation / Social / Support)
+   ======================================================= */
+.link-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-top: 10px;
+}
+
+.link-card {
+    background-color: var(--bg-card);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    margin: 6px;
+    padding: 12px;
+    flex-grow: 1;
+    min-width: 220px;
+    flex-basis: 220px;
+    align-items: center;
+}
+
+.link-card-btn {
+    height: 35px;
+    width: 100%;
+    font-size: 14px;
+    -unity-font-style: bold;
+    background-color: #2a2a2a;
+    color: var(--color-cyan);
+    border-radius: 4px;
+    border-width: 1px;
+    border-color: rgba(0, 229, 255, 0.2);
+    transition-duration: 0.15s;
+}
+
+.link-card-btn:hover {
+    background-color: #333333;
+    color: var(--color-pink);
+    border-color: rgba(255, 0, 170, 0.4);
+}
+
+.link-card-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: normal;
+    -unity-text-align: upper-center;
+    margin-top: 8px;
+}

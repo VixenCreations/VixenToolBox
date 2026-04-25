@@ -1,0 +1,18 @@
+{
+    "nameX": 375,
+    "nameY": 700,
+    "nameW": 610,
+    "nameH": 150,
+    "nameRotation": 0.0,
+    "titleX": 450,
+    "titleY": 810,
+    "titleW": 449,
+    "titleH": 75,
+    "titleRotation": 0.0,
+    "neonColor": {
+        "r": 1.0,
+        "g": 0.9333333373069763,
+        "b": 0.6784313917160034,
+        "a": 1.0
+    }
+}

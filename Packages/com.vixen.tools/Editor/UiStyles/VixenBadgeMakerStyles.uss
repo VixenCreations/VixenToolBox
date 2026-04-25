@@ -1,0 +1,194 @@
+/* Vixen Badge Maker USS — Native UI Toolkit Integration */
+
+:root {
+    --bg-dark: #141414;
+    --bg-panel: #1e1e1e;
+    
+    --color-cyan: #00e5ff;
+    --color-pink: #ff00aa;
+    
+    --text-main: #e5e5e5;
+    --text-muted: #aaaaaa;
+}
+
+/* =======================================================
+   Base Overrides
+   ======================================================= */
+.unity-base-field,
+.unity-object-field,
+.unity-button,
+.unity-label,
+.unity-toggle,
+.unity-enum-field {
+    font-size: 13px;
+    color: var(--text-main);
+}
+
+.unity-base-field__label {
+    min-width: 145px;
+    -unity-text-align: middle-left;
+}
+
+.unity-base-field__input {
+    background-color: var(--bg-panel);
+    border-color: #2f2f2f;
+    border-width: 1px;
+    border-radius: 4px;
+    padding-left: 4px;
+}
+
+#badge-root {
+    background-color: var(--bg-dark);
+    flex-grow: 1;
+}
+
+/* =======================================================
+   Header Banner
+   ======================================================= */
+#tool-header {
+    height: 60px;
+    background-color: #0c0612;
+    border-bottom-width: 2px;
+    border-bottom-color: rgba(255, 0, 170, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+/* =======================================================
+   Tabs Navigation
+   ======================================================= */
+#tab-toolbar {
+    flex-direction: row;
+    padding: 10px;
+    background-color: #1a1a1a;
+    border-bottom-width: 1px;
+    border-bottom-color: #2a2a2a;
+}
+
+.tab-btn {
+    height: 35px;
+    flex-grow: 1;
+    margin: 4px;
+    border-radius: 4px;
+    font-size: 13px;
+    -unity-font-style: bold;
+    border-width: 1px;
+    transition-duration: 0.15s;
+}
+
+.tab-btn-active {
+    background-color: #2c2c2c;
+    color: var(--color-cyan);
+    border-color: rgba(0, 229, 255, 0.4);
+}
+
+.tab-btn-inactive {
+    background-color: #1e1e1e;
+    color: #888888;
+    border-color: transparent;
+}
+
+.tab-btn-inactive:hover {
+    background-color: #2a2a2a;
+    color: #bbbbbb;
+}
+
+/* =======================================================
+   Scroll Area & Panels
+   ======================================================= */
+#main-scroll {
+    flex-grow: 1;
+    padding: 10px;
+}
+
+.cyber-panel {
+    background-color: rgba(200, 200, 200, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.panel-header {
+    font-size: 16px;
+    -unity-font-style: bold;
+    margin-bottom: 5px;
+}
+
+.panel-separator {
+    height: 1px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* =======================================================
+   Help Boxes & Info
+   ======================================================= */
+.help-box-styled {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.info-box-styled {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-left-width: 4px;
+    border-left-color: var(--color-cyan); /* Matches your cyan/pink variable setup */
+    padding: 10px;
+    margin-bottom: 15px;
+    -unity-font-style: italic; 
+    color: var(--text-muted);
+    white-space: normal; /* <--- THIS FIXES THE CLIPPING */
+}
+
+/* =======================================================
+   Foldout Fix
+   ======================================================= */
+.bold-foldout > .unity-foldout__toggle > .unity-toggle__text {
+    -unity-font-style: bold;
+    font-size: 14px;
+}
+
+/* =======================================================
+   Execution Buttons
+   ======================================================= */
+.cyber-action-btn {
+    font-size: 18px;
+    -unity-font-style: bold;
+    height: 55px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.cyan-btn {
+    background-color: #0b3d4f;
+    color: var(--color-cyan);
+    border-color: var(--color-cyan);
+    border-width: 1px;
+}
+.cyan-btn:hover { background-color: #125b75; }
+
+.pink-btn {
+    background-color: #4a0d2f;
+    color: var(--color-pink);
+    border-color: var(--color-pink);
+    border-width: 1px;
+}
+.pink-btn:hover { background-color: #6e1346; }
+
+/* =======================================================
+   UV Mapper Coordinate Boxes
+   ======================================================= */
+.coord-box {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 15px;
+    flex-grow: 1;
+    margin: 0 5px;
+    align-items: center;
+}

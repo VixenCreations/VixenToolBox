@@ -1,18 +1,57 @@
 ﻿#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.UIElements;
+using UnityEditor.UIElements;
 using System.IO;
 using System.Text.RegularExpressions;
 
 namespace VixenTools.Editor
 {
-    /// <summary>
-    /// VixenTools Core: A lightweight ScriptableObject used to track the currently installed version
-    /// and trigger the Hub popup when an update is detected.
-    /// </summary>
-    public class VixenVersionAsset : ScriptableObject
+    // --- AUTONOMOUS SCENE HUD NOTIFIER ---
+    [InitializeOnLoad]
+    public static class VixenUpdateNotifier
     {
-        public string currentVersion = "0.0.0";
+        static VixenUpdateNotifier()
+        {
+            SceneView.duringSceneGui += OnSceneGUI;
+        }
+
+        private static void OnSceneGUI(SceneView sceneView)
+        {
+            if (!EditorPrefs.GetBool("VixenTools_UpdatePending", false)) return;
+
+            Handles.BeginGUI();
+            
+            float width = 240f;
+            float height = 36f;
+            Rect r = new Rect(sceneView.position.width - width - 20, sceneView.position.height - height - 20, width, height);
+            
+            EditorGUI.DrawRect(r, new Color(0.05f, 0.05f, 0.08f, 0.95f)); 
+            EditorGUI.DrawRect(new Rect(r.x, r.y, 4, r.height), new Color(1f, 0f, 0.66f)); 
+            EditorGUI.DrawRect(new Rect(r.x, r.y + r.height - 1, r.width, 1), new Color(0f, 0.9f, 1f, 0.3f)); 
+
+            Font cyberFont = AssetDatabase.LoadAssetAtPath<Font>("Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf");
+
+            GUIStyle btnStyle = new GUIStyle(GUI.skin.button)
+            {
+                normal = { textColor = new Color(0f, 0.9f, 1f) },
+                hover = { textColor = new Color(1f, 0f, 0.66f) },
+                fontStyle = cyberFont != null ? FontStyle.Normal : FontStyle.Bold,
+                fontSize = cyberFont != null ? 14 : 12,
+                alignment = TextAnchor.MiddleCenter,
+                font = cyberFont
+            };
+
+            // Replaced the emoji with terminal syntax
+            if (GUI.Button(r, ">> VIXENTOOLS UPDATE", btnStyle))
+            {
+                EditorPrefs.SetBool("VixenTools_UpdatePending", false);
+                VixenHub.ShowWindow();
+            }
+
+            Handles.EndGUI();
+        }
     }
 
     public class VixenHub : EditorWindow
@@ -25,26 +64,28 @@ namespace VixenTools.Editor
         private const string README_PATH = "Packages/com.vixencreations.vixens-toolbox/README.md";
         private const string CHANGELOG_PATH = "Packages/com.vixencreations.vixens-toolbox/CHANGELOG.md";
         private const string SUPPORT_PATH = "Packages/com.vixencreations.vixens-toolbox/SUPPORT.md";
-        private const string HEADER_IMAGE_PATH = "Packages/com.vixencreations.vixens-toolbox/Editor/Assets/New Tool Art.png";
+        private const string HEADER_IMAGE_PATH = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/New Tool Art.png";
+        private const string CYBER_FONT_PATH = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
+        private const string USS_PATH = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/VixenHubStyles.uss"; 
 
-        // --- ARTWORK FRAMING ---
-        private const float HeaderImagePanY = 0.65f; 
-        private const float HeaderHeight = 120f;
-
-        // GUI State
-        private Vector2 _scrollPosition;
+        // Data Models
         private string[] _readmeLines;
         private string[] _changelogLines;
         private string[] _supportLines;
-        private GUIStyle _richTextStyle;
-        private GUIStyle _socialButtonStyle;
         private Texture2D _headerTexture;
+        private Font _cyberFont;
+
+        // UI Elements
+        private VisualElement _contentContainer;
+        private Label _tabDescriptionLabel;
+        private VisualElement _tabContainer;
 
         [MenuItem("VixenTools/Vixen Hub", priority = 0)]
         public static void ShowWindow()
         {
             var window = GetWindow<VixenHub>("Vixen Hub");
             window.minSize = new Vector2(550, 650);
+            EditorPrefs.SetBool("VixenTools_UpdatePending", false);
             window.Show();
         }
 
@@ -61,31 +102,14 @@ namespace VixenTools.Editor
                 if (!match.Success) return;
                 
                 string newVersion = match.Groups[1].Value;
+                string projectPath = Application.dataPath.Replace('/', '_').Replace(':', '_');
+                string prefsKey = "VixenTools_InstalledVersion_" + projectPath;
+                string savedVersion = EditorPrefs.GetString(prefsKey, "0.0.0");
                 
-                string dir = "Assets/VixenTools/VersionCheck";
-                if (!Directory.Exists(dir))
+                if (savedVersion == "0.0.0" || savedVersion != newVersion)
                 {
-                    Directory.CreateDirectory(dir);
-                    AssetDatabase.Refresh();
-                }
-                
-                string assetPath = $"{dir}/VersionIs.asset";
-                VixenVersionAsset versionAsset = AssetDatabase.LoadAssetAtPath<VixenVersionAsset>(assetPath);
-                
-                if (versionAsset == null)
-                {
-                    versionAsset = ScriptableObject.CreateInstance<VixenVersionAsset>();
-                    versionAsset.currentVersion = newVersion;
-                    AssetDatabase.CreateAsset(versionAsset, assetPath);
-                    AssetDatabase.SaveAssets();
-                    ShowWindow(); // Prompt on fresh install
-                }
-                else if (versionAsset.currentVersion != newVersion)
-                {
-                    versionAsset.currentVersion = newVersion;
-                    EditorUtility.SetDirty(versionAsset);
-                    AssetDatabase.SaveAssets();
-                    ShowWindow(); // Prompt on package update
+                    EditorPrefs.SetString(prefsKey, newVersion);
+                    EditorPrefs.SetBool("VixenTools_UpdatePending", true);
                 }
             };
         }
@@ -102,6 +126,7 @@ namespace VixenTools.Editor
             _changelogLines = LoadMarkdownFile(CHANGELOG_PATH, "CHANGELOG.md");
             _supportLines = LoadMarkdownFile(SUPPORT_PATH, "SUPPORT.md");
             _headerTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(HEADER_IMAGE_PATH);
+            _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(CYBER_FONT_PATH);
         }
 
         private string[] LoadMarkdownFile(string path, string name)
@@ -110,75 +135,88 @@ namespace VixenTools.Editor
             return asset != null ? asset.text.Split('\n') : new string[] { $"<color=#ff00aa>Error: {name} not found at package root.</color>" };
         }
 
-        private void InitializeStyles()
+        private void CreateGUI()
         {
-            if (_richTextStyle == null)
+            VisualElement root = rootVisualElement;
+            root.name = "hub-root";
+
+            // Load USS
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(USS_PATH);
+            if (styleSheet != null) root.styleSheets.Add(styleSheet);
+            else Debug.LogWarning($"[VixenTools] Could not load VixenHubStyles.uss at {USS_PATH}");
+
+            // --- HEADER ---
+            var headerRect = new VisualElement { name = "hub-header" };
+            if (_headerTexture != null)
             {
-                _richTextStyle = new GUIStyle(EditorStyles.label)
-                {
-                    richText = true,
-                    wordWrap = true,
-                    fontSize = 13,
-                    margin = new RectOffset(10, 10, 2, 2)
-                };
+                headerRect.style.backgroundImage = new StyleBackground(_headerTexture);
+                headerRect.AddToClassList("hub-header-image");
+            }
+            else
+            {
+                headerRect.AddToClassList("hub-header-text-container");
+                var titleLabel = new Label("<color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> HUB");
+                titleLabel.enableRichText = true;
+                titleLabel.AddToClassList("hub-header-title");
+                if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
+                headerRect.Add(titleLabel);
+            }
+            root.Add(headerRect);
+
+            // --- TABS ---
+            _tabContainer = new VisualElement { name = "tab-container" };
+            root.Add(_tabContainer);
+
+            string[] tabNames = { "Documentation", "Changelog", "Donation", "Social Media", "Get Support" };
+            for (int i = 0; i < tabNames.Length; i++)
+            {
+                int index = i;
+                var btn = new Button(() => SwitchTab((HubMode)index)) { text = tabNames[i] };
+                btn.AddToClassList("tab-btn");
+                _tabContainer.Add(btn);
             }
 
-            if (_socialButtonStyle == null)
-            {
-                _socialButtonStyle = new GUIStyle(GUI.skin.button)
-                {
-                    fontSize = 14,
-                    fontStyle = FontStyle.Bold,
-                    richText = true,
-                    padding = new RectOffset(10, 10, 10, 10),
-                    normal = { textColor = new Color(0f, 0.9f, 1f) }, 
-                    hover = { textColor = new Color(1f, 0f, 0.66f) }  
-                };
-            }
+            // --- TAB DESCRIPTION ---
+            var descContainer = new VisualElement { name = "desc-container" };
+            _tabDescriptionLabel = new Label();
+            _tabDescriptionLabel.enableRichText = true;
+            _tabDescriptionLabel.AddToClassList("tab-desc-label");
+            descContainer.Add(_tabDescriptionLabel);
+            root.Add(descContainer);
+
+            // --- SCROLL CONTENT ---
+            var scrollContainer = new ScrollView(ScrollViewMode.Vertical) { name = "main-scroll" };
+            _contentContainer = new VisualElement();
+            scrollContainer.Add(_contentContainer);
+            root.Add(scrollContainer);
+
+            SwitchTab(_currentMode);
         }
 
-        private void OnGUI()
+        private void SwitchTab(HubMode newMode)
         {
-            InitializeStyles();
-            DrawHeaderUI();
-            GUILayout.Space(10);
+            _currentMode = newMode;
 
-            // --- TAB MATRIX ---
-            string[] tabs = { "Documentation", "Changelog", "Donation", "Social Media", "Get Support" };
-            _currentMode = (HubMode)GUILayout.SelectionGrid((int)_currentMode, tabs, 3, GUILayout.Height(65));
-            
-            DrawTabDescription();
-
-            // --- CONTENT SCROLL AREA ---
-            _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
-            
-            switch (_currentMode)
+            // Update tab button styles
+            for (int i = 0; i < _tabContainer.childCount; i++)
             {
-                case HubMode.Documentation:
-                    DrawMarkdownEngine(_readmeLines);
-                    break;
-                case HubMode.Changelog:
-                    DrawMarkdownEngine(_changelogLines);
-                    break;
-                case HubMode.Donation:
-                    DrawMarkdownEngine(_supportLines);
-                    DrawDonationLinks();
-                    break;
-                case HubMode.SocialMedia:
-                    DrawSocialMediaLinks();
-                    break;
-                case HubMode.GetSupport:
-                    DrawGetSupportLinks();
-                    break;
+                var btn = _tabContainer[i] as Button;
+                if (btn != null)
+                {
+                    if (i == (int)_currentMode)
+                    {
+                        btn.AddToClassList("tab-btn-active");
+                        btn.RemoveFromClassList("tab-btn-inactive");
+                    }
+                    else
+                    {
+                        btn.AddToClassList("tab-btn-inactive");
+                        btn.RemoveFromClassList("tab-btn-active");
+                    }
+                }
             }
 
-            GUILayout.EndScrollView();
-        }
-
-        private void DrawTabDescription()
-        {
-            GUILayout.Space(5);
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            // Update description
             string desc = "";
             switch (_currentMode)
             {
@@ -188,143 +226,148 @@ namespace VixenTools.Editor
                 case HubMode.SocialMedia: desc = "Connect with the developer and stay updated on new releases."; break;
                 case HubMode.GetSupport: desc = "Report anomalies, request features, or consult the Wiki."; break;
             }
-            EditorGUILayout.LabelField($"<color=#00e5ff>■</color> <i>{desc}</i>", new GUIStyle(EditorStyles.label) { richText = true, alignment = TextAnchor.MiddleCenter });
-            EditorGUILayout.EndVertical();
-            GUILayout.Space(10);
-        }
+            _tabDescriptionLabel.text = $"<color=#00e5ff>::</color> <i>{desc}</i>";
 
-        #region Link Renderers
-        private void DrawDonationLinks()
-        {
-            GUILayout.Space(20);
-            EditorGUILayout.LabelField("<size=18><color=#ff00aa><b>Direct Support Links</b></color></size>", _richTextStyle);
-            DrawSeparator(new Color(1f, 0f, 0.66f, 0.3f));
-            GUILayout.Space(10);
-
-            DrawLinkAction("Ko-Fi", "https://ko-fi.com/vixenlicous", "Support the developer with a one-time coffee tip.");
-            DrawLinkAction("Gumroad Store", "https://vixencreations.gumroad.com/", "Explore all available tools, assets, and support tiers.");
-            DrawLinkAction("Gumroad Donation", "https://vixencreations.gumroad.com/coffee", "Fuel the engine directly via the Gumroad ecosystem.");
-        }
-
-        private void DrawSocialMediaLinks()
-        {
-            GUILayout.Space(10);
-            EditorGUILayout.LabelField("<size=18><color=#00e5ff><b>VixenTools Network</b></color></size>", _richTextStyle);
-            DrawSeparator(new Color(0f, 0.9f, 1f, 0.3f));
-            GUILayout.Space(10);
-
-            DrawLinkAction("Twitter (X)", "https://x.com/VixenVRC", "Follow for the latest pipeline updates, architectural teases, and VRChat development.");
-            DrawLinkAction("YouTube", "https://www.youtube.com/@vixenlicous", "In-depth video documentation, pipeline tutorials, and visual guides.");
-            DrawLinkAction("GitHub", "https://github.com/VixenCreations/VixenToolBox", "The core code repository and automated VPM distribution hub.");
-        }
-
-        private void DrawGetSupportLinks()
-        {
-            GUILayout.Space(10);
-            EditorGUILayout.LabelField("<size=18><color=#00e5ff><b>Diagnostic & Expansion Triage</b></color></size>", _richTextStyle);
-            DrawSeparator(new Color(0f, 0.9f, 1f, 0.3f));
-            GUILayout.Space(10);
-
-            DrawLinkAction("VixenTools Discord", "https://discord.gg/3vbJCKcPtJ", "Join the central matrix for live pipeline support, architectural upgrades, and community troubleshooting.");
-            DrawLinkAction("Report an Issue", "https://github.com/VixenCreations/VixenToolBox/issues", "Encountered a bug or an anomaly in the matrix? File a diagnostic report here.");
-            DrawLinkAction("Request a Feature", "https://github.com/VixenCreations/VixenToolBox/issues", "Have an idea for a new architectural upgrade? Submit a feature request.");
-            DrawLinkAction("Ecosystem Wiki", "https://github.com/VixenCreations/VixenToolBox/wiki", "Deep-dive into the advanced mechanics and documentation of the VixenTools pipelines.");
-        }
-
-        private void DrawLinkAction(string label, string url, string subtext)
-        {
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            GUILayout.Space(5);
-            if (GUILayout.Button(label, _socialButtonStyle, GUILayout.Height(35)))
+            // Rebuild Content
+            _contentContainer.Clear();
+            switch (_currentMode)
             {
-                Application.OpenURL(url);
-            }
-            GUILayout.Space(2);
-            EditorGUILayout.LabelField(subtext, new GUIStyle(EditorStyles.miniLabel) { wordWrap = true, alignment = TextAnchor.MiddleCenter });
-            GUILayout.Space(5);
-            EditorGUILayout.EndVertical();
-            GUILayout.Space(5);
-        }
-        #endregion
-
-        private void DrawHeaderUI()
-        {
-            if (_headerTexture != null)
-            {
-                Rect headerRect = GUILayoutUtility.GetRect(0, HeaderHeight, GUILayout.ExpandWidth(true));
-                float screenAspect = headerRect.width / headerRect.height;
-                float texAspect = (float)_headerTexture.width / _headerTexture.height;
-                Rect texCoords = new Rect(0, 0, 1, 1);
-
-                if (texAspect > screenAspect)
-                {
-                    float cropWidth = screenAspect / texAspect;
-                    texCoords.width = cropWidth;
-                    texCoords.x = (1f - cropWidth) * 0.5f; 
-                }
-                else
-                {
-                    float cropHeight = texAspect / screenAspect;
-                    texCoords.height = cropHeight;
-                    texCoords.y = (1f - cropHeight) * HeaderImagePanY; 
-                }
-                GUI.DrawTextureWithTexCoords(headerRect, _headerTexture, texCoords, true);
-            }
-            else
-            {
-                Rect headerRect = EditorGUILayout.GetControlRect(false, 50);
-                EditorGUI.DrawRect(headerRect, new Color(0.08f, 0.04f, 0.12f));
-                GUIStyle hubTitleStyle = new GUIStyle(EditorStyles.boldLabel) { richText = true, alignment = TextAnchor.MiddleCenter, fontSize = 20 };
-                EditorGUI.LabelField(headerRect, "<color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> HUB", hubTitleStyle);
+                case HubMode.Documentation: RenderMarkdown(_readmeLines); break;
+                case HubMode.Changelog: RenderMarkdown(_changelogLines); break;
+                case HubMode.Donation: 
+                    RenderMarkdown(_supportLines); 
+                    RenderLinkCards("Direct Support Links", "#ff00aa", new[] {
+                        ("Ko-Fi", "https://ko-fi.com/vixenlicous", "Support the developer with a one-time coffee tip."),
+                        ("Gumroad Store", "https://vixencreations.gumroad.com/", "Explore all available tools, assets, and support tiers."),
+                        ("Gumroad Donation", "https://vixencreations.gumroad.com/coffee", "Fuel the engine directly via the Gumroad ecosystem.")
+                    });
+                    break;
+                case HubMode.SocialMedia: 
+                    RenderLinkCards("VixenTools Network", "#00e5ff", new[] {
+                        ("Twitter (X)", "https://x.com/VixenVRC", "Follow for the latest pipeline updates, architectural teases, and VRChat development."),
+                        ("YouTube", "https://www.youtube.com/@vixenlicous", "In-depth video documentation, pipeline tutorials, and visual guides."),
+                        ("GitHub", "https://github.com/VixenCreations/VixenToolBox", "The core code repository and automated VPM distribution hub.")
+                    });
+                    break;
+                case HubMode.GetSupport: 
+                    RenderLinkCards("Diagnostic & Expansion Triage", "#00e5ff", new[] {
+                        ("VixenTools Discord", "https://discord.gg/3vbJCKcPtJ", "Join the central matrix for live pipeline support, architectural upgrades, and community troubleshooting."),
+                        ("Report an Issue", "https://github.com/VixenCreations/VixenToolBox/issues", "Encountered a bug or an anomaly in the matrix? File a diagnostic report here."),
+                        ("Request a Feature", "https://github.com/VixenCreations/VixenToolBox/issues", "Have an idea for a new architectural upgrade? Submit a feature request."),
+                        ("Ecosystem Wiki", "https://github.com/VixenCreations/VixenToolBox/wiki", "Deep-dive into the advanced mechanics and documentation of the VixenTools pipelines.")
+                    });
+                    break;
             }
         }
 
-        private void DrawMarkdownEngine(string[] lines)
+        private void RenderMarkdown(string[] lines)
         {
             foreach (string line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line))
                 {
-                    GUILayout.Space(10);
+                    var spacer = new VisualElement();
+                    spacer.style.height = 10;
+                    _contentContainer.Add(spacer);
                     continue;
                 }
 
                 if (line.StartsWith("---") || line.StartsWith("***"))
                 {
-                    DrawSeparator(new Color(1f, 0f, 0.66f, 0.3f)); 
+                    var sep = new VisualElement();
+                    sep.AddToClassList("md-separator");
+                    sep.style.backgroundColor = new Color(1f, 0f, 0.66f, 0.3f);
+                    _contentContainer.Add(sep);
                     continue;
                 }
 
                 if (line.StartsWith("# "))
                 {
-                    GUILayout.Space(10);
-                    EditorGUILayout.LabelField($"<size=18><color=#00e5ff><b>{ParseMarkdownFormatting(line.Substring(2))}</b></color></size>", _richTextStyle);
-                    DrawSeparator(new Color(0f, 0.9f, 1f, 0.3f)); 
-                    GUILayout.Space(5);
+                    var lbl = new Label(ParseMarkdownFormatting(line.Substring(2))) { enableRichText = true };
+                    lbl.AddToClassList("md-h1");
+                    if (_cyberFont != null) lbl.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
+                    _contentContainer.Add(lbl);
+
+                    var sep = new VisualElement();
+                    sep.AddToClassList("md-separator");
+                    sep.style.backgroundColor = new Color(0f, 0.9f, 1f, 0.3f);
+                    _contentContainer.Add(sep);
                 }
                 else if (line.StartsWith("## "))
                 {
-                    GUILayout.Space(10);
-                    EditorGUILayout.LabelField($"<size=16><color=#ff00aa><b>{ParseMarkdownFormatting(line.Substring(3))}</b></color></size>", _richTextStyle);
+                    var lbl = new Label(ParseMarkdownFormatting(line.Substring(3))) { enableRichText = true };
+                    lbl.AddToClassList("md-h2");
+                    if (_cyberFont != null) lbl.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
+                    _contentContainer.Add(lbl);
                 }
                 else if (line.StartsWith("### "))
                 {
-                    GUILayout.Space(5);
-                    EditorGUILayout.LabelField($"<size=14><color=#ffffff><b>{ParseMarkdownFormatting(line.Substring(4))}</b></color></size>", _richTextStyle);
+                    var lbl = new Label(ParseMarkdownFormatting(line.Substring(4))) { enableRichText = true };
+                    lbl.AddToClassList("md-h3");
+                    _contentContainer.Add(lbl);
                 }
                 else if (line.StartsWith("- ") || line.StartsWith("* "))
                 {
-                    string parsedLine = ParseMarkdownFormatting(line.Substring(2));
-                    EditorGUILayout.BeginHorizontal();
-                    GUILayout.Space(20);
-                    EditorGUILayout.LabelField($"<color=#00e5ff>■</color>  {parsedLine}", _richTextStyle);
-                    EditorGUILayout.EndHorizontal();
+                    var row = new VisualElement();
+                    row.style.flexDirection = FlexDirection.Row;
+                    
+                    var bullet = new Label("<color=#00e5ff>></color>") { enableRichText = true };
+                    bullet.AddToClassList("md-bullet");
+                    
+                    var lbl = new Label(ParseMarkdownFormatting(line.Substring(2))) { enableRichText = true };
+                    lbl.AddToClassList("md-p");
+                    
+                    row.Add(bullet);
+                    row.Add(lbl);
+                    _contentContainer.Add(row);
                 }
                 else
                 {
-                    EditorGUILayout.LabelField(ParseMarkdownFormatting(line), _richTextStyle);
+                    var lbl = new Label(ParseMarkdownFormatting(line)) { enableRichText = true };
+                    lbl.AddToClassList("md-p");
+                    _contentContainer.Add(lbl);
                 }
             }
+        }
+
+        private void RenderLinkCards(string headerTitle, string accentHex, (string title, string url, string desc)[] links)
+        {
+            var spacer = new VisualElement();
+            spacer.style.height = 20;
+            _contentContainer.Add(spacer);
+
+            var header = new Label($"<color={accentHex}>{headerTitle}</color>") { enableRichText = true };
+            header.AddToClassList("md-h2");
+            if (_cyberFont != null) header.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
+            _contentContainer.Add(header);
+
+            var sep = new VisualElement();
+            sep.AddToClassList("md-separator");
+            ColorUtility.TryParseHtmlString(accentHex, out Color c);
+            c.a = 0.3f;
+            sep.style.backgroundColor = c;
+            _contentContainer.Add(sep);
+
+            var grid = new VisualElement();
+            grid.AddToClassList("link-grid");
+
+            foreach (var link in links)
+            {
+                var card = new VisualElement();
+                card.AddToClassList("link-card");
+
+                var btn = new Button(() => Application.OpenURL(link.url)) { text = link.title };
+                btn.AddToClassList("link-card-btn");
+
+                var desc = new Label(link.desc) { enableRichText = true };
+                desc.AddToClassList("link-card-desc");
+
+                card.Add(btn);
+                card.Add(desc);
+                grid.Add(card);
+            }
+
+            _contentContainer.Add(grid);
         }
 
         private string ParseMarkdownFormatting(string text)
@@ -332,15 +375,8 @@ namespace VixenTools.Editor
             text = Regex.Replace(text, @"\*\*(.*?)\*\*", "<b>$1</b>");
             text = Regex.Replace(text, @"\*(.*?)\*", "<i>$1</i>");
             text = Regex.Replace(text, @"\`(.*?)\`", "<color=#00e5ff>$1</color>");
-            text = Regex.Replace(text, @"\[(.*?)\]\(.*?\)", "<color=#00e5ff>$1</color>");
+            text = Regex.Replace(text, @"\[(.*?)\]\(.*?\)", "<b><color=#00e5ff>$1</color></b>");
             return text;
-        }
-
-        private void DrawSeparator(Color color)
-        {
-            Rect rect = EditorGUILayout.GetControlRect(false, 1);
-            rect.height = 1;
-            EditorGUI.DrawRect(rect, color);
         }
     }
 }

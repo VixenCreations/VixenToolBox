@@ -18,6 +18,8 @@ namespace Vixenlicious.AnimationWorkbench
     {
         // UI root
         private VisualElement root;
+        private Font _cyberFont;
+        private const string PackageFontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
 
         // Models
         private AnimationClip currentClip;
@@ -67,7 +69,7 @@ namespace Vixenlicious.AnimationWorkbench
         public static void ShowWindow()
         {
             var w = GetWindow<AnimationWorkbenchWindow>("Workbench Pro");
-            w.minSize = new Vector2(900, 600);
+            w.minSize = new Vector2(500, 600); // Lowered minimum size to allow deep resizing
             w.Show();
         }
 
@@ -75,6 +77,7 @@ namespace Vixenlicious.AnimationWorkbench
         {
             root = rootVisualElement;
             root.name = "workbench-root";
+            _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(PackageFontPath);
 
             LoadStyles();
             ConstructUI();
@@ -111,17 +114,21 @@ namespace Vixenlicious.AnimationWorkbench
             // SIGNATURE BRANDING HEADER
             // --------------------------------------------------------------------
             var headerRect = new VisualElement();
-            headerRect.style.height = 50;
-            headerRect.style.backgroundColor = new Color(0.08f, 0.04f, 0.12f); // Deep dark purple
+            headerRect.style.height = 60;
+            headerRect.style.backgroundColor = new Color(0.08f, 0.04f, 0.12f); 
             headerRect.style.justifyContent = Justify.Center;
             headerRect.style.alignItems = Align.Center;
             headerRect.style.borderBottomWidth = 2;
-            headerRect.style.borderBottomColor = new Color(1f, 0f, 0.66f, 0.5f); // Pink underline accent
+            headerRect.style.borderBottomColor = new Color(1f, 0f, 0.66f, 0.8f); 
 
             var headerLabel = new Label("<color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> ANIMATION WORKBENCH");
             headerLabel.enableRichText = true;
-            headerLabel.style.fontSize = 20;
-            headerLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
+            headerLabel.style.fontSize = 24;
+            if (_cyberFont != null)
+            {
+                headerLabel.style.unityFont = _cyberFont;
+                headerLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
+            }
             headerRect.Add(headerLabel);
             root.Add(headerRect);
 
@@ -130,10 +137,11 @@ namespace Vixenlicious.AnimationWorkbench
             // --------------------------------------------------------------------
             var topToolbar = new VisualElement { name = "top-toolbar" };
             topToolbar.style.flexDirection = FlexDirection.Row;
+            topToolbar.style.flexWrap = Wrap.Wrap; // FIX: Allow toolbar to wrap
             topToolbar.style.alignItems = Align.Center;
-            topToolbar.style.paddingLeft = 4;
-            topToolbar.style.paddingRight = 4;
-            topToolbar.style.backgroundColor = new Color(0.12f, 0.12f, 0.14f); // Charcoal
+            topToolbar.style.paddingLeft = 6;
+            topToolbar.style.paddingRight = 6;
+            topToolbar.style.backgroundColor = new Color(0.12f, 0.12f, 0.14f); 
 
             clipField = new ObjectField("Animation Clip")
             {
@@ -141,6 +149,7 @@ namespace Vixenlicious.AnimationWorkbench
                 allowSceneObjects = false
             };
             clipField.tooltip = "The animation clip currently being edited.";
+            clipField.style.minWidth = 200; // Flex constraints
             clipField.style.flexGrow = 1;
             clipField.RegisterValueChangedCallback(evt =>
             {
@@ -159,7 +168,8 @@ namespace Vixenlicious.AnimationWorkbench
                 allowSceneObjects = true
             };
             previewTargetField.tooltip = "Scene GameObject used for material discovery and animated preview.";
-            previewTargetField.style.width = 280;
+            previewTargetField.style.minWidth = 200; // Flex constraints
+            previewTargetField.style.flexGrow = 1;
             previewTargetField.RegisterValueChangedCallback(evt =>
             {
                 previewTarget = evt.newValue as GameObject;
@@ -186,10 +196,11 @@ namespace Vixenlicious.AnimationWorkbench
             mainScroll.Add(scrollContent);
 
             // --------------------------------------------------------------------
-            // CONTROLS ROW (3-column layout)
+            // CONTROLS ROW (Responsive 3-column layout)
             // --------------------------------------------------------------------
             var controlRow = new VisualElement();
             controlRow.style.flexDirection = FlexDirection.Row;
+            controlRow.style.flexWrap = Wrap.Wrap; // FIX: This allows panels to stack if the window is crushed
             controlRow.style.marginTop = 6;
             controlRow.style.paddingLeft = 6;
             controlRow.style.paddingRight = 6;
@@ -198,16 +209,19 @@ namespace Vixenlicious.AnimationWorkbench
             // Selection Panel
             // ---------------------------
             var selectionBox = new VisualElement { name = "selection-panel" };
-            selectionBox.style.width = 300;
+            selectionBox.AddToClassList("cyber-panel");
+            selectionBox.style.minWidth = 280; // FIX: Baseline width
+            selectionBox.style.flexGrow = 1;   // FIX: Expand to fill dead space
             selectionBox.style.flexDirection = FlexDirection.Column;
 
-            var selectionHeader = new Label("Selection / Range") { style = { unityFontStyleAndWeight = FontStyle.Bold } };
+            var selectionHeader = new Label("Selection / Range") { style = { unityFontStyleAndWeight = FontStyle.Bold, fontSize = 14 } };
             selectionHeader.enableRichText = true;
-            selectionHeader.text = "<color=#00e5ff>■</color> Selection / Range";
+            selectionHeader.text = "<color=#00e5ff>Selection / Range</color>";
             selectionBox.Add(selectionHeader);
 
             var sRow = new VisualElement();
             sRow.style.flexDirection = FlexDirection.Row;
+            sRow.style.marginTop = 10;
 
             var startField = new FloatField("Start Time");
             startField.tooltip = "Start of the selected time range.";
@@ -237,6 +251,7 @@ namespace Vixenlicious.AnimationWorkbench
 
             var sampRow = new VisualElement();
             sampRow.style.flexDirection = FlexDirection.Row;
+            sampRow.style.marginTop = 5;
 
             var sampleStartToggle = new Toggle("Sample Start Value") { value = sampleStart };
             sampleStartToggle.RegisterValueChangedCallback(e => sampleStart = e.newValue);
@@ -250,6 +265,7 @@ namespace Vixenlicious.AnimationWorkbench
 
             var overrideRow = new VisualElement();
             overrideRow.style.flexDirection = FlexDirection.Row;
+            overrideRow.style.marginTop = 5;
 
             var startOverrideField = new FloatField("Start Value (override)") { value = overrideStartValue };
             startOverrideField.RegisterValueChangedCallback(e => overrideStartValue = e.newValue);
@@ -267,19 +283,21 @@ namespace Vixenlicious.AnimationWorkbench
             // BINDINGS PANEL
             // ---------------------------
             var bindingBox = new VisualElement { name = "bindings-panel" };
-            bindingBox.style.flexGrow = 1;
-            bindingBox.style.marginLeft = 6;
+            bindingBox.AddToClassList("cyber-panel");
+            bindingBox.style.minWidth = 350; // FIX: Baseline width
+            bindingBox.style.flexGrow = 2;   // FIX: Give this panel 2x priority when stretching horizontally
             bindingBox.style.flexDirection = FlexDirection.Column;
 
-            var bindingsHeader = new Label("Bindings") { style = { unityFontStyleAndWeight = FontStyle.Bold } };
+            var bindingsHeader = new Label("Bindings Matrix") { style = { unityFontStyleAndWeight = FontStyle.Bold, fontSize = 14 } };
             bindingsHeader.enableRichText = true;
-            bindingsHeader.text = "<color=#ff00aa>■</color> Bindings Matrix";
+            bindingsHeader.text = "<color=#ff00aa>Bindings Matrix</color>";
             bindingBox.Add(bindingsHeader);
 
             var bindingToolbar = new VisualElement();
             bindingToolbar.style.flexDirection = FlexDirection.Row;
+            bindingToolbar.style.marginTop = 10;
 
-            refreshBindingsBtn = new Button(RefreshBindings) { text = "Refresh" };
+            refreshBindingsBtn = new Button(RefreshBindings) { text = "Refresh Matrix" };
             bindingToolbar.Add(refreshBindingsBtn);
 
             var selectAllBtn = new Button(() =>
@@ -298,9 +316,9 @@ namespace Vixenlicious.AnimationWorkbench
             { text = "None" };
             bindingToolbar.Add(deselectAllBtn);
 
-            // DESTRUCTIVE ACTION: Delete Selected Bindings
+            // DESTRUCTIVE ACTION
             var deleteSelectedBtn = new Button(DeleteSelectedBindings) { text = "Delete Selected" };
-            deleteSelectedBtn.style.backgroundColor = new Color(0.6f, 0.1f, 0.1f); // Deep warning red
+            deleteSelectedBtn.style.backgroundColor = new Color(0.6f, 0.1f, 0.1f); 
             deleteSelectedBtn.style.color = Color.white;
             deleteSelectedBtn.style.marginLeft = 10;
             bindingToolbar.Add(deleteSelectedBtn);
@@ -310,7 +328,7 @@ namespace Vixenlicious.AnimationWorkbench
             // Material property row
             var materialRow = new VisualElement();
             materialRow.style.flexDirection = FlexDirection.Row;
-            materialRow.style.marginTop = 4;
+            materialRow.style.marginTop = 10;
             materialRow.style.alignItems = Align.Center;
 
             var materialLabel = new Label("Material Property");
@@ -337,7 +355,7 @@ namespace Vixenlicious.AnimationWorkbench
             { text = "Choose…" };
 
             addMaterialBindingBtn = new Button(AddBindingFromMaterialProperty) { text = "Add Binding" };
-            addMaterialBindingBtn.style.backgroundColor = new Color(0.2f, 0.7f, 0.8f); // Cyan accent
+            addMaterialBindingBtn.style.backgroundColor = new Color(0.2f, 0.7f, 0.8f); 
             addMaterialBindingBtn.style.color = Color.black;
             addMaterialBindingBtn.SetEnabled(false);
 
@@ -355,7 +373,8 @@ namespace Vixenlicious.AnimationWorkbench
             // Defaults row
             var defaultsRow = new VisualElement();
             defaultsRow.style.flexDirection = FlexDirection.Row;
-            defaultsRow.style.marginTop = 4;
+            defaultsRow.style.flexWrap = Wrap.Wrap; // Allow wrapping inside the box
+            defaultsRow.style.marginTop = 10;
 
             intermediateDefaultField = new IntegerField("Default Intermediate Keys") { value = 4 };
             intermediateDefaultField.style.width = 210;
@@ -374,6 +393,7 @@ namespace Vixenlicious.AnimationWorkbench
             bindingBox.Add(defaultsRow);
 
             var generateButton = new Button(BuildStagedForSelection) { text = "Generate Keys (Selection)" };
+            generateButton.style.marginTop = 10;
             bindingBox.Add(generateButton);
 
             controlRow.Add(bindingBox);
@@ -382,23 +402,23 @@ namespace Vixenlicious.AnimationWorkbench
             // ACTION PANEL (VixenTools Styled)
             // ---------------------------
             var actionBox = new VisualElement();
-            actionBox.style.width = 260;
-            actionBox.style.marginLeft = 6;
+            actionBox.AddToClassList("cyber-panel");
+            actionBox.style.minWidth = 220; // FIX: Baseline width
+            actionBox.style.flexGrow = 1;   // FIX: Expand to fill dead space
             actionBox.style.flexDirection = FlexDirection.Column;
 
             applyBtn = new Button(ApplyStagedToClip) { text = "Apply (Stage → Clip)" };
-            applyBtn.style.backgroundColor = new Color(0.2f, 0.7f, 0.8f); // Cyan
-            applyBtn.style.color = Color.black;
-            applyBtn.style.unityFontStyleAndWeight = FontStyle.Bold;
-
-            revertBtn = new Button(RevertStaged) { text = "Revert Staged" };
+            applyBtn.AddToClassList("cyber-action-btn");
+            applyBtn.AddToClassList("cyan-btn");
 
             commitBtn = new Button(CommitChanges) { text = "Commit + Save" };
-            commitBtn.style.backgroundColor = new Color(0.8f, 0.2f, 0.5f); // Pink
-            commitBtn.style.color = Color.white;
-            commitBtn.style.unityFontStyleAndWeight = FontStyle.Bold;
+            commitBtn.AddToClassList("cyber-action-btn");
+            commitBtn.AddToClassList("pink-btn");
 
-            var previewLabel = new Label("Engine Preview") { style = { unityFontStyleAndWeight = FontStyle.Bold, marginTop = 10 } };
+            revertBtn = new Button(RevertStaged) { text = "Revert Staged" };
+            revertBtn.style.marginTop = 10;
+
+            var previewLabel = new Label("Engine Preview") { style = { unityFontStyleAndWeight = FontStyle.Bold, marginTop = 20, fontSize = 14 } };
 
             var previewBtn = new Button(() =>
             {
@@ -424,8 +444,8 @@ namespace Vixenlicious.AnimationWorkbench
             { text = "Stop Preview" };
 
             actionBox.Add(applyBtn);
-            actionBox.Add(revertBtn);
             actionBox.Add(commitBtn);
+            actionBox.Add(revertBtn);
             actionBox.Add(previewLabel);
             actionBox.Add(previewBtn);
             actionBox.Add(stopPreviewBtn);
@@ -538,7 +558,6 @@ namespace Vixenlicious.AnimationWorkbench
 
             foreach (var b in toRemove)
             {
-                // Passing null to SetEditorCurve natively destroys the property track in Unity
                 AnimationUtility.SetEditorCurve(currentClip, b, null);
             }
 
@@ -590,7 +609,6 @@ namespace Vixenlicious.AnimationWorkbench
                         string shaderProp = mat.shader.GetPropertyName(i);
                         string category = MaterialPropertySearchPopup_DetectCategory(shaderProp);
 
-                        // Safely expand multidimensional properties into animatable float channels
                         if (propType == ShaderPropertyType.Float || propType == ShaderPropertyType.Range)
                         {
                             AddMaterialEntry(mName, category, shaderProp, shaderProp, path);
@@ -698,7 +716,6 @@ namespace Vixenlicious.AnimationWorkbench
                 {
                     var r = t.GetComponent<Renderer>();
             
-                    // Route through the new fail-safe method
                     if (TryGetMaterialFloat(r, binding.propertyName, out float matValue))
                     {
                         if (sampleStart) sampledStart = matValue;
@@ -994,7 +1011,6 @@ namespace Vixenlicious.AnimationWorkbench
 
             string raw = propertyName.Replace("material.", string.Empty);
 
-            // Decompose Vector/Color channels (e.g., "_Color.r" -> base="_Color", channel="r")
             string baseProp = raw;
             string channel = "";
             int dotIdx = raw.LastIndexOf('.');
@@ -1033,8 +1049,6 @@ namespace Vixenlicious.AnimationWorkbench
                     }
                     else
                     {
-                        // Standard Float or Range. 
-                        // Wrapped in a try-catch as a final safety net for heavily obfuscated/locked shaders.
                         try
                         {
                             value = mat.GetFloat(baseProp);

@@ -59,12 +59,11 @@ sysinfo.txt
 crashlytics-build.properties
 
 .idea/.idea.vpm-package-maker/.idea
-Assets/PackageMakerWindowData.asset*
 .idea
 .vscode
+*.meta
 /UserSettings
-UserSettings/Layouts/default-2022.dwlt
-Assets/VixenTools/VersionCheck/VersionIs.asset
-Assets/VixenTools/VersionCheck.meta
-Assets/VixenTools/VersionCheck/VersionIs.asset.meta
-/UserSettings
+/Assets/VixenTools/Badges/Template Files/Custom_Base
+Assets/Default.unity
+Assets/NewAnimation.anim
+Assets/PackageMakerWindowData.asset

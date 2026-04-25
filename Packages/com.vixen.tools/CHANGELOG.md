@@ -1,8 +1,34 @@
 ***
 
-# VixenTools Ecosystem Changelog
+# VixenTools - Changelog
 
 All notable changes to the VixenToolBox project will be documented in this file.
+
+***
+
+## [1.4.0] - 2026-04-24
+### Added
+- **Enterprise UI Toolkit Architecture:** Completely eradicated legacy IMGUI constraints across the entire ecosystem. Vixen Hub, Badge Studio, Animation Workbench Pro, Quest Conversion Engine, PhysBone Topology Mapper, and Preset Manager now operate natively on Unity's high-performance UI Toolkit DOM tree.
+- **Centralized Styling Matrix:** Established a master `UiStyles` repository (`Packages/.../Editor/UiStyles/`) to house the `Cyberpunk-Regular.ttf` font and all `.uss` CSS design tokens. This guarantees absolute visual consistency across all windows and provides a single-point maintenance hub for future UI scaling.
+- **Dynamic Flex Layouts:** Engineered highly responsive, flex-wrapping grid architectures for data-heavy tools (Animation Workbench, Preset Manager). The interfaces now mathematically scale and stack panels gracefully upon window resize, completely eliminating clipped text and overlapping bounds.
+- **Dynamic DOM Bridge (Quest Engine & Badge Studio):** Replaced the volatile `OnGUI` redraw loops with persistent UI Toolkit state injectors. Interfaces now seamlessly sync variable states and spawn interactive matrices instantly without triggering Editor-wide lag spikes.
+- **Dynamic JSON Layout Engine (Badge Studio):** Replaced hardcoded badge layout coordinates with a persistent `layout.json` system. The tool now automatically saves and loads advanced UV bounds, text rotations, and neon hex overrides directly into custom template directories.
+- **Furality Layout Generator:** Built a dedicated developer utility natively integrated into Badge Studio to autonomously scaffold directories and format perfect `layout.json` boundary configurations for all Furality convention templates.
+- **Autonomous Scene View HUD Notifier:** Eradicated the workflow-breaking update popup window. The engine now silently detects version discrepancies and injects a sleek, non-blocking, neon-accented `>> VIXENTOOLS UPDATE` button directly into the corner of the active Unity Scene View.
+- **Live Scene UV Mapper (Badge Studio):** Integrated a 3D coordinate mapper that temporarily suspends Unity's default gizmos (`Tools.current = Tool.None`) to hijack Scene View clicks. It raycasts against the badge mesh, mathematically inverts UVs to ImageMagick pixel space, and draws a neon pink debug indicator at the exact intersection point.
+
+### Changed
+- **Magick.NET Font Engine Upgrade (Badge Studio):** Ripped out unstable, Windows-only `Gdi32.dll` OS-level font installation hacks. Migrated to modern Magick.NET direct file pathing (`@font.ttf`), ensuring cross-platform stability and significantly faster text-plate rendering.
+- **Cyber-Noir Aesthetic Standardization:** Unified the visual language across the entire VixenTools suite. Deployed tinted glass `.cyber-panel` wrappers, high-contrast neon headers, and massive, deeply saturated action buttons (`.cyan-btn`, `.pink-btn`) to clearly delineate execution phases.
+- **Markdown Engine Sanitization:** Upgraded the Hub's internal Markdown parser to natively generate `VisualElements`. Actively stripped all volatile unicode emojis—which inherently conflict with Unity's TextCore rendering engine—and replaced them with stable, terminal-compliant chevron syntax (`>>`, `::`, `>`).
+- **Graceful Degradation States:** Overhauled error-handling UIs (such as missing VRChat SDK warnings) to utilize the new enterprise styling, deploying amber `.warning-box-styled` elements to keep the interface looking premium even in failure states.
+- **Skinned Mesh Raycasting (UV Mapper):** The mapping engine now automatically detects and bakes `SkinnedMeshRenderer` data into a static `MeshCollider`, allowing accurate raycasting on dynamically weighted Furality attendee badges.
+
+### Fixed
+- **Ecosystem Scanner Bleed-Over:** Fixed a directory routing bug where the VixenTools source network was blindly indexing nested Furality template assets. Injected strict exclusion filters so Furality assets correctly populate via the dedicated SDK parser instead of crowding the custom template dropdown.
+- **UI Toolkit Constraint Clipping:** Addressed a layout violation where nested flex-containers would clip their content. Mathematically adjusted root `min-width` parameters across the matrix and injected `white-space: normal;` into info-box CSS to ensure text descriptions properly wrap and stack horizontally.
+- **CSS Prefix Validation:** Sanitized the newly migrated `.uss` files to strictly adhere to Unity's TextCore engine, replacing standard CSS tags with required `-unity-` prefixes to eliminate console UI warnings.
+- **Raycast Piercing (UV Mapper):** Upgraded the mapper to use `Physics.RaycastAll()` with `MouseDrag` support. The tool now successfully pierces through invisible avatar capsule colliders that were previously eating `MouseDown` events and blocking the raycast.
 
 ## [1.3.1] - 2026-04-23
 ### Added
@@ -74,10 +100,6 @@ All notable changes to the VixenToolBox project will be documented in this file.
 - **Compiler Safeguards:** Wrapped all Animation Workbench Editor scripts (`AnimationWorkbenchWindow`, `CurveGraphView`, `PreviewEngine`, etc.) in strict `#if UNITY_EDITOR` directives to prevent runtime build crashes.
 - **UI Toolkit Pathing:** Updated stylesheet loading paths to be strictly VPM-compliant, ensuring `.uss` files resolve correctly from the `Packages/` directory instead of the local `Assets/` folder.
 - **Markdown Sanitization:** The in-editor Markdown parser now actively strips VPM/GitHub web badges to prevent IMGUI rendering errors while converting standard hyperlinks into clean, stylized rich text.
-
-### Changed
-- **Compiler Safeguards:** Wrapped all Animation Workbench Editor scripts (`AnimationWorkbenchWindow`, `CurveGraphView`, `PreviewEngine`, etc.) in strict `#if UNITY_EDITOR` directives to prevent runtime build crashes.
-- **UI Toolkit Pathing:** Updated stylesheet loading paths to be strictly VPM-compliant, ensuring `.uss` files resolve correctly from the `Packages/` directory instead of the local `Assets/` folder.
 
 ## [1.0.3] - 2026-04-10
 ### Fixed

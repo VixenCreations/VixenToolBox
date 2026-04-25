@@ -1,0 +1,18 @@
+{
+    "nameX": 2258,
+    "nameY": 1224,
+    "nameW": 2538,
+    "nameH": 855,
+    "nameRotation": 0.0,
+    "titleX": 2701,
+    "titleY": 1677,
+    "titleW": 1554,
+    "titleH": 257,
+    "titleRotation": 0.0,
+    "neonColor": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0
+    }
+}

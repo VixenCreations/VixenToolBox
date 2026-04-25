@@ -64,26 +64,55 @@
    ============================ */
 #workbench-root {
     flex-direction: column;
-    min-width: 640px;
+    min-width: 450px; /* FIX: Lowered significantly so it can shrink */
     min-height: 420px;
     background-color: var(--bg-dark);
-    padding: 4px;
 }
+
+/* ============================
+   VixenTools Cyber Panels
+   ============================ */
+.cyber-panel {
+    background-color: rgba(200, 200, 200, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-radius: 6px;
+    padding: 12px;
+    margin: 6px;
+    flex-basis: auto; /* FIX: Allows mathematical resizing */
+}
+
+.cyber-action-btn {
+    font-size: 16px;
+    -unity-font-style: bold;
+    height: 45px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.cyan-btn {
+    background-color: #33b5e5;
+    color: #000000;
+}
+.cyan-btn:hover { background-color: #55cbf9; }
+
+.pink-btn {
+    background-color: #cc3380;
+    color: #ffffff;
+}
+.pink-btn:hover { background-color: #e65c9c; }
 
 /* ============================
    Top Toolbar
    ============================ */
 #top-toolbar {
-    height: 34px;
+    min-height: 38px; /* FIX: Allows toolbar to grow if items wrap */
     background-color: var(--bg-toolbar);
     border-bottom-width: 1px;
     border-bottom-color: var(--color-border);
 
     padding-left: 6px;
     padding-right: 6px;
-
-    flex-direction: row;
-    align-items: center;
 }
 
 #top-toolbar .unity-object-field,
@@ -104,17 +133,6 @@
 /* ============================
    Bindings Panel
    ============================ */
-#bindings-panel {
-    background-color: var(--bg-panel);
-    border-width: 1px;
-    border-color: var(--color-border);
-    border-radius: var(--radius);
-
-    padding: 10px;
-    flex-direction: column;
-}
-
-/* Binding row */
 .binding-row {
     flex-direction: row;
     align-items: center;

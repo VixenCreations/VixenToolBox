@@ -1,23 +1,25 @@
-# Fuel the VixenTools Engine 🦊⚡
+***
 
-Building an enterprise-grade pipeline doesn't happen overnight. 
+# Fuel the VixenTools Engine
 
-The **VixenTools Ecosystem** was engineered to eliminate human error, enforce strict consistency, and push Unity to its absolute technical limits. From the Quest Conversion Engine to the PhysBone Topology Mapper, every line of code is designed to save VRChat creators hundreds of hours of tedious, repetitive workflow.
+I didn't just wake up one day and decide to build a massive ecosystem. VixenTools started for one simple reason: I was sick of doing the exact same mind-numbing setups in Unity over and over again. 
 
-I build these tools because I believe the avatar creation pipeline should be flawless, fast, and high-fidelity. But maintaining this architecture—researching undocumented Unity APIs, adapting to sudden VRChat SDK updates, and keeping the automated VPM distribution running—requires serious time, energy, and late-night coding sessions.
+Now, it's grown into an entire suite of tools. From the Quest Conversion Engine to the PhysBone Topology Mapper, everything here is built to save us hundreds of hours of grinding so we can actually get back to creating.
 
-### 💖 Support the Architecture
-If VixenTools has saved your scene from a Unity crash, optimized your avatar for Quest in under 10 seconds, or made your animation workflow seamlessly 4D, consider dropping a tip in the jar:
+I want the VRChat avatar pipeline to be as flawless as possible. But maintaining this architecture is a grind. Between ripping apart undocumented Unity APIs, fixing things every time an SDK update breaks the pipeline unannounced, and keeping the automated VPM distribution alive, this project eats up a massive amount of my time (and late-night sanity).
+
+### Support the Architecture
+If my code has ever saved your scene from completely bricking, optimized your Quest fallback in under 10 seconds, or just made your workflow suck a little bit less... consider throwing a coffee my way:
 
 * **[Ko-Fi: One-Time Support](https://ko-fi.com/vixenlicous)**
-* **[Gumroad: Ecosystem Donations](https://vixencreations.gumroad.com/coffee)**
+* **[Gumroad: Donations](https://vixencreations.gumroad.com/coffee)**
 * **[Gumroad: Full Storefront](https://vixencreations.gumroad.com/)**
 
-### ⚙️ What Your Support Fuels
-* **Late-Night R&D:** Deep-diving into Unity's UI Toolkit, ImageMagick integration, and advanced shader math.
-* **Ecosystem Expansion:** Developing massive new architectural upgrades for the Animation Workbench, Badge Studio, and Core Pipeline.
-* **Infrastructure & Maintenance:** Keeping the GitHub Actions CI/CD pipelines and VPM-native storefront running flawlessly.
+### What Your Support Actually Does
+* **Keeps the R&D Alive:** So I can keep fighting with Unity's UI Toolkit, ImageMagick, and complex shader math so you don't have to.
+* **Builds the Next Generation:** Fueling the massive architectural upgrades I'm writing for the Animation Workbench, Badge Studio, and the core pipelines.
+* **Pays the Server Bills:** Keeping the GitHub Actions CI/CD pipelines and the VPM-native storefront up and running flawlessly.
 
-> *This is a pure donation/support ecosystem. You aren't buying a paywalled feature—you are directly fueling the ongoing development of the ultimate VRChat pipeline architecture and keeping it accessible to the community.*
+> *Just to be crystal clear: This is purely a tip jar. You aren't buying a paywalled feature or a locked script. You are directly supporting a solo dev trying to build the best VRChat pipeline possible and keeping it free for the community.*
 
-Stay glossy. ✨
+Stay glossy.
