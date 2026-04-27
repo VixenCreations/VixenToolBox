@@ -36,8 +36,3 @@ A CSS-driven procedural generation engine for authoring and compositing VRChat c
 * **Universal Shader Targeting:** A heuristic material engine that automatically detects and injects generated parameters into Poiyomi Toon, lilToon, VRChat Mobile, and legacy convention shaders.
 
 ***
-
-### [ Network Links ]
-* [GitHub Repository](https://github.com/VixenCreations)
-* [YouTube Channel](https://www.youtube.com/@vixenlicous)
-* [Gumroad Storefront](https://vixencreations.gumroad.com/)
