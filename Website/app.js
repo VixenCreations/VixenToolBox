@@ -62,20 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('urlBarHelp')?.addEventListener('click', () => showDialog('addListingToVccHelp'));
     document.getElementById('addListingToVccHelpClose')?.addEventListener('click', () => hideDialog('addListingToVccHelp'));
 
-    // 3. Middle Section Modals
-    document.getElementById('openToolsBreakdownBtn')?.addEventListener('click', () => showDialog('toolsBreakdownModal'));
-    document.getElementById('toolsBreakdownModalClose')?.addEventListener('click', () => hideDialog('toolsBreakdownModal'));
-
-    document.getElementById('openChangelogBtn')?.addEventListener('click', () => showDialog('changelogModal'));
-    document.getElementById('changelogModalClose')?.addEventListener('click', () => hideDialog('changelogModal'));
-
     // 4. Package Grid Interactions
     // Add Buttons
     document.querySelectorAll('.rowAddToVccButton').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            const pkgId = e.currentTarget.getAttribute('data-package-id');
-            // Usually, adding a specific package still just adds the repo, or uses a specific VCC protocol if supported.
-            // Defaulting to adding the main repo url for safety.
             handleAddToVCC(vccUrlField?.value);
         });
     });
@@ -117,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('packageInfoModalClose')?.addEventListener('click', () => hideDialog('packageInfoModal'));
     document.getElementById('packageInfoListingHelp')?.addEventListener('click', () => {
-        // Gracefully dismiss the active matrix before spawning the secondary help dialog
         hideDialog('packageInfoModal');
         showDialog('addListingToVccHelp');
     });
@@ -127,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
         handleCopyToClipboard(url, this);
     });
 
-    // Modal Copy Buttons inside Add to VCC Help
     document.getElementById('vccListingInfoUrlFieldCopy')?.addEventListener('click', function () {
         const url = document.getElementById('vccListingInfoUrlField')?.value;
         handleCopyToClipboard(url, this);
@@ -160,4 +148,138 @@ document.addEventListener('DOMContentLoaded', () => {
             if (rowMenu) rowMenu.hidden = true;
         }
     });
+
+    // 6. Lightbox System
+    const lightbox = document.getElementById('lightboxOverlay');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
+
+    if (lightbox && lightboxImg && lightboxClose) {
+        // Open Lightbox when an image with .preview-trigger is clicked
+        document.querySelectorAll('.preview-trigger').forEach(img => {
+            img.addEventListener('click', (e) => {
+                lightboxImg.src = e.target.src;
+                lightbox.classList.add('active');
+            });
+        });
+
+        // Function to close Lightbox gracefully
+        const closeLightbox = () => {
+            lightbox.classList.remove('active');
+            // Clear the src after the CSS fade transition completes (300ms)
+            setTimeout(() => {
+                lightboxImg.src = '';
+            }, 300);
+        };
+
+        // Close via X button
+        lightboxClose.addEventListener('click', closeLightbox);
+
+        // Close via clicking the blurred background
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+
+        // Close via Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                closeLightbox();
+            }
+        });
+    }
+
+    // 7. Changelog Pagination System
+    const changelogEntries = Array.from(document.querySelectorAll('.changelog-entry'));
+    const versionSelect = document.getElementById('versionSelect');
+    const prevVersionBtn = document.getElementById('prevVersionBtn');
+    const nextVersionBtn = document.getElementById('nextVersionBtn');
+
+    if (changelogEntries.length > 0 && versionSelect && prevVersionBtn && nextVersionBtn) {
+        let currentVersionIndex = 0; // 0 = Newest Version
+
+        const updateChangelogView = (index) => {
+            // Hide all, show targeted
+            changelogEntries.forEach((entry, i) => {
+                if (i === index) {
+                    entry.hidden = false;
+                    // Trigger CSS reflow to replay the fade-in animation
+                    entry.classList.remove('changelog-fade');
+                    void entry.offsetWidth;
+                    entry.classList.add('changelog-fade');
+                } else {
+                    entry.hidden = true;
+                }
+            });
+
+            // Sync the dropdown menu value
+            versionSelect.value = changelogEntries[index].getAttribute('data-version');
+
+            // Manage Button States (Disabled if at the edge of the array)
+            if (index === 0) {
+                prevVersionBtn.setAttribute('disabled', 'true');
+            } else {
+                prevVersionBtn.removeAttribute('disabled');
+            }
+
+            if (index === changelogEntries.length - 1) {
+                nextVersionBtn.setAttribute('disabled', 'true');
+            } else {
+                nextVersionBtn.removeAttribute('disabled');
+            }
+        };
+
+        // Event: Dropdown Selection Changed
+        versionSelect.addEventListener('change', (e) => {
+            const targetVersion = e.target.value;
+            const targetIndex = changelogEntries.findIndex(entry => entry.getAttribute('data-version') === targetVersion);
+
+            if (targetIndex !== -1) {
+                currentVersionIndex = targetIndex;
+                updateChangelogView(currentVersionIndex);
+            }
+        });
+
+        // Event: Clicked 'Newer Updates'
+        prevVersionBtn.addEventListener('click', () => {
+            if (currentVersionIndex > 0) {
+                currentVersionIndex--;
+                updateChangelogView(currentVersionIndex);
+            }
+        });
+
+        // Event: Clicked 'Older Updates'
+        nextVersionBtn.addEventListener('click', () => {
+            if (currentVersionIndex < changelogEntries.length - 1) {
+                currentVersionIndex++;
+                updateChangelogView(currentVersionIndex);
+            }
+        });
+
+        // Initialize view on load
+        updateChangelogView(0);
+    }
+
+    // 8. Jump to Top Button Logic
+    const jumpToTopBtn = document.getElementById('jumpToTopBtn');
+
+    if (jumpToTopBtn) {
+        // Monitor scroll depth
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 200) {
+                jumpToTopBtn.classList.add('visible');
+            } else {
+                jumpToTopBtn.classList.remove('visible');
+            }
+        });
+
+        // Smooth scroll to top on click
+        jumpToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
 });

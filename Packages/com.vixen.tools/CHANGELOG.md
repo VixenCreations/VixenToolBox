@@ -6,6 +6,27 @@ All notable changes to the VixenToolBox project will be documented in this file.
 
 ***
 
+## [1.4.4] - 2026-04-27
+
+### Added
+- **[Website] Support Ecosystem Hub:** Created a dedicated support page featuring interactive, glass-morphic tip-jar cards to transparently fund development without paywalling features.
+- **[Website] Network & Media Matrix:** Deployed a new social routing hub featuring a mathematically enforced 16:9 responsive YouTube iframe for the Master Class video, accompanied by a 6-card creator network grid.
+- **[Website] Changelog Pagination Engine:** Built a JavaScript-driven pagination system for the changelog. Replaced infinite scrolling with isolated version views, seamless CSS fade animations, and "Newer/Older" step routing.
+- **[Website] Version Jump Dropdown:** Integrated a native `<fluent-select>` dropdown to instantly route users to specific historical releases.
+- **[Website] Scroll Tracking UX:** Engineered a dynamic "Jump to Top" button that monitors viewport depth and gracefully fades into the UI to prevent endless scrolling on lengthy matrices.
+- **[Website] Interactive Lightbox Engine:** Engineered a native, zero-dependency lightbox system allowing users to dynamically expand UI Toolkit previews into high-resolution cinematic viewports on the Architecture matrix.
+- **[Website] SaaS-Grade Competitive Matrix:** Completely eradicated the legacy HTML data table on the comparison page. Replaced it with a responsive, flex-wrapping feature grid using high-contrast neon styling to directly pit VixenTools against fragmented industry standards.
+- **[Website] Visual Architecture Showcase:** Overhauled the Suite Architecture page from a text-heavy bulleted list into a high-fidelity image grid showcasing the actual custom Editor inspectors and utilities.
+
+### Changed
+- **[Website] Shadow DOM Styling:** Pierced the Fluent UI `<fluent-select>` Shadow DOM using `::part(listbox)` to force native dropdowns to respect the dark cyber-noir aesthetic and enforce scrollbar constraints.
+- **[Website] Registry Template Sanitization:** Stripped deprecated modal structures from the core `index.html` VPM registry and secured the Scriban templating engine (e.g., `{{~ for package in packages ~}}`) for safe backend hydration during CI/CD deployment.
+- **[Website] Enterprise Navigation Matrix:** Scrapped the horizontal top-row navigation. Implemented a persistent, fixed-position vertical sidebar to create a true desktop application feel, utilizing full-width block interaction states and cyan active-border tracking.
+- **[Website] Cinematic Image Cropping:** Deployed `object-fit: cover` logic to the Quest vs PC Comparison banner to safely lock its height and prevent it from infinitely scaling and hogging the viewport.
+
+### Fixed
+- **[Tool] SDK Dependency Resolution:** Bumped ecosystem manifest to `v1.4.4` and strictly enforced VRChat SDK requirements (`com.vrchat.base` and `com.vrchat.avatars` mapped to `^3.10.3`). This resolves critical missing assembly references required by the newly integrated Live Scene UV Mapper's raycasting components.
+- 
 ## [1.4.3] - 2026-04-26
 
 ### Added

@@ -39,17 +39,19 @@
         background: var(--neon-cyan);
     }
 
+/* === FISH! TOOLS LAYOUT: HORIZONTAL SPLIT === */
 body {
     padding: 0;
     margin: 0;
     min-width: 100vw;
     min-height: 100vh;
     display: flex;
+    flex-direction: row; /* Forces horizontal split: Sidebar left, Main right */
     align-items: flex-start;
-    justify-content: center;
+    background-color: var(--dark-void);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: var(--neutral-foreground-rest);
-    background-color: var(--dark-void);
+    overflow-x: hidden;
 }
 
 .background-art {
@@ -63,6 +65,105 @@ body {
     background-position: center;
     filter: blur(8px) brightness(0.4);
     z-index: -1;
+}
+
+/* === FISH! TOOLS STYLE SIDEBAR === */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    background: rgba(11, 16, 26, 0.95); /* Deeper navy/void color */
+    border-right: 1px solid rgba(0, 229, 255, 0.2);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+}
+
+.sidebar-brand {
+    padding: 2rem 1.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+    .sidebar-brand h2 {
+        font-size: 1.5rem;
+        margin: 0;
+        letter-spacing: 2px;
+    }
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Override Fluent Button Shadow DOM */
+.nav-item {
+    width: 100%;
+    margin-bottom: 2px;
+}
+
+    .nav-item::part(control) {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; /* Left align icons and text */
+        width: 100%;
+        padding: 1.25rem 1.5rem;
+        background: transparent;
+        border: none;
+        border-left: 4px solid transparent; /* Prep for active state highlight */
+        border-radius: 0;
+        color: #a0aabf; /* Muted gray/blue */
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+    .nav-item:hover::part(control) {
+        background: rgba(0, 229, 255, 0.05);
+        color: #fff;
+    }
+
+    /* Active State (Cyan left border and text) */
+    .nav-item.active::part(control) {
+        border-left: 4px solid var(--neon-cyan);
+        background: rgba(0, 229, 255, 0.1);
+        color: var(--neon-cyan);
+    }
+
+    .nav-item svg {
+        margin-right: 15px; /* Space between icon and text */
+    }
+
+/* === MAIN CONTENT WRAPPER === */
+.main-wrapper {
+    margin-left: 260px; /* Must perfectly match sidebar width */
+    width: calc(100vw - 260px);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 2rem;
+    box-sizing: border-box;
+}
+
+/* Ensure the inner content box spans correctly */
+.content {
+    max-width: 1100px;
+    width: 100%;
+    margin: 0;
+    padding: 2.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(255, 0, 170, 0.15);
 }
 
 /* Layout Utilities */
@@ -162,20 +263,6 @@ body {
 
 .ps-5 {
     padding-left: 2rem;
-}
-
-/* Main Container */
-.content {
-    max-width: 900px;
-    width: 95%;
-    margin: 4rem auto;
-    padding: 2.5rem;
-    background: var(--glass-bg);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(255, 0, 170, 0.15);
 }
 
 /* Typography */
@@ -465,32 +552,518 @@ ul.custom-list {
             color: var(--neon-cyan);
         }
 
-/* ==========================================================================
-   FLUENT UI SHADOW DOM OVERRIDES
-   ========================================================================== */
-
-/* 1. Fix: Package Description Trailing Off (Data Grid Wrapping) */
+/* Fluent UI Shadow DOM Overrides */
 fluent-data-grid-row {
-    height: auto !important; /* Override Fluent's strict row height calculations */
+    height: auto !important;
     min-height: 64px;
 }
 
 fluent-data-grid-cell {
-    white-space: normal !important; /* Force text to break onto the next line */
+    white-space: normal !important;
     word-wrap: break-word !important;
-    align-items: flex-start !important; /* Ensure content aligns to the top when wrapping */
+    align-items: flex-start !important;
 }
 
-/* 2. Fix: Tooltip Trailing Off (Hover Text Bounds) */
 fluent-tooltip {
-    white-space: nowrap !important; /* Keep short sentences on one line */
+    white-space: nowrap !important;
     width: max-content !important;
     max-width: none !important;
-    z-index: 99999 !important; /* Force it above all modal layers */
+    z-index: 99999 !important;
 }
 
     fluent-tooltip::part(tooltip) {
         width: max-content !important;
         max-width: none !important;
         white-space: nowrap !important;
+    }
+
+
+/* ==========================================================================
+   SUPPORT PAGE GRID & CARDS
+   ========================================================================== */
+.support-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.support-card {
+    background: rgba(15, 8, 25, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    color: #fff;
+    box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.05);
+}
+
+    .support-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0, 229, 255, 0.15), inset 0 0 20px rgba(0, 229, 255, 0.1);
+        border-color: var(--neon-cyan);
+    }
+
+    .support-card svg {
+        width: 34px;
+        height: 34px;
+        margin-right: 1.25rem;
+        color: var(--neon-cyan);
+        filter: drop-shadow(0 0 5px var(--neon-cyan-glow));
+        transition: all 0.2s ease;
+    }
+
+    .support-card:hover svg {
+        color: #fff;
+        filter: drop-shadow(0 0 10px var(--neon-cyan));
+        transform: scale(1.1);
+    }
+
+    .support-card .title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 3px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .support-card .desc {
+        font-size: 0.9rem;
+        color: #bfa8d2;
+    }
+
+.support-blockquote {
+    background: linear-gradient(90deg, rgba(255, 0, 170, 0.1) 0%, rgba(255, 0, 170, 0.02) 100%);
+    border-left: 4px solid var(--neon-pink);
+    padding: 1.5rem 2rem;
+    border-radius: 0 8px 8px 0;
+    margin-top: 2.5rem;
+    font-style: italic;
+    color: #e0d5eb;
+    line-height: 1.7;
+    font-size: 1.05rem;
+    box-shadow: inset 20px 0 30px -20px rgba(255, 0, 170, 0.2);
+}
+
+/* ==========================================================================
+   COMPETITIVE CARD SYSTEM
+   ========================================================================== */
+.competitive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.comp-card {
+    background: rgba(15, 8, 25, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 0, 170, 0.2);
+    border-radius: 12px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+    .comp-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(255, 0, 170, 0.15), inset 0 0 20px rgba(0, 229, 255, 0.05);
+        border-color: rgba(255, 0, 170, 0.5);
+    }
+
+    /* Glowing accent line at the top of each card */
+    .comp-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--neon-pink), var(--neon-cyan));
+    }
+
+.comp-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 1rem;
+}
+
+    .comp-header svg {
+        color: var(--neon-cyan);
+        filter: drop-shadow(0 0 5px var(--neon-cyan-glow));
+        margin-right: 12px;
+    }
+
+    .comp-header h3 {
+        margin: 0;
+        font-size: 1.3rem;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+.comp-section {
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
+    border-left: 2px solid;
+    flex-grow: 1;
+}
+
+    .comp-section:last-child {
+        margin-bottom: 0;
+    }
+
+/* The VixenTools Advantage Block */
+.comp-vixen {
+    border-left-color: var(--neon-pink);
+    background: linear-gradient(90deg, rgba(255, 0, 170, 0.08) 0%, transparent 100%);
+    padding: 1.25rem 1rem;
+    border-radius: 0 8px 8px 0;
+    box-shadow: inset 2px 0 0 var(--neon-pink);
+}
+
+    .comp-vixen h4 {
+        margin: 0 0 0.5rem 0;
+        color: var(--neon-pink);
+        text-shadow: 0 0 8px var(--neon-pink-glow);
+        text-transform: uppercase;
+        font-size: 0.95rem;
+        letter-spacing: 1px;
+    }
+
+    .comp-vixen .comp-text {
+        color: #fff;
+        font-weight: 500;
+    }
+
+/* The Competitor Block */
+.comp-standard {
+    border-left-color: rgba(0, 229, 255, 0.3);
+    padding: 0.5rem 1rem;
+}
+
+    .comp-standard h4 {
+        margin: 0 0 0.5rem 0;
+        color: var(--neon-cyan);
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        opacity: 0.8;
+    }
+
+    .comp-standard .comp-text {
+        color: #a0aabf;
+        font-size: 0.9rem;
+    }
+
+.comp-text {
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ==========================================================================
+   TOOL SHOWCASE CARDS (Suite Architecture)
+   ========================================================================== */
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 2.5rem;
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.tool-card {
+    background: rgba(15, 8, 25, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+    .tool-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 229, 255, 0.15), inset 0 0 20px rgba(0, 229, 255, 0.05);
+        border-color: rgba(0, 229, 255, 0.5);
+    }
+
+.tool-image-container {
+    width: 100%;
+    height: 260px; /* Locked height for uniformity */
+    border-bottom: 2px solid var(--neon-pink);
+    position: relative;
+    overflow: hidden;
+    background: var(--dark-void);
+}
+
+    .tool-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top left;
+        opacity: 0.85;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+.tool-card:hover .tool-image-container img {
+    opacity: 1;
+    transform: scale(1.02);
+}
+
+/* Specific adjustment for the side-by-side comparison image */
+.comparison-banner {
+    width: 100%;
+    max-width: 1100px;
+    height: 350px;
+    border-radius: 12px;
+    border: 1px solid var(--neon-cyan);
+    box-shadow: 0 10px 30px rgba(0, 229, 255, 0.1);
+    margin: 2rem 0 1rem 0;
+    overflow: hidden;
+    background: var(--dark-void);
+}
+
+    .comparison-banner img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 20%;
+        display: block;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .comparison-banner:hover img {
+        transform: scale(1.02);
+        opacity: 0.9;
+    }
+
+.tool-content {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+    .tool-content h3 {
+        margin: 0 0 1rem 0;
+        font-size: 1.4rem;
+    }
+
+    .tool-content p {
+        margin: 0 0 1.25rem 0;
+        line-height: 1.5;
+        color: #bfa8d2;
+    }
+
+.tool-card ul.custom-list li {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+/* ==========================================================================
+   LIGHTBOX PREVIEW SYSTEM
+   ========================================================================== */
+
+/* Add pointer cursor to signify images are clickable */
+.preview-trigger {
+    cursor: pointer;
+}
+
+.lightbox-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(6, 2, 10, 0.9);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+    .lightbox-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+.lightbox-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    border: 2px solid var(--neon-cyan);
+    border-radius: 8px;
+    box-shadow: 0 0 40px rgba(0, 229, 255, 0.3);
+    background: var(--dark-void);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.lightbox-img {
+    max-width: 100%;
+    max-height: 85vh; /* Prevents the image from overflowing the viewport */
+    display: block;
+    border-radius: 6px;
+    object-fit: contain;
+}
+
+/* The neon pink close button */
+.lightbox-close {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    background: var(--dark-void);
+    border: 2px solid var(--neon-pink);
+    color: var(--neon-pink);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 100000;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+    .lightbox-close:hover {
+        background: var(--neon-pink);
+        color: #fff;
+        box-shadow: 0 0 20px var(--neon-pink-glow);
+        transform: scale(1.1);
+    }
+
+/* ==========================================================================
+   CHANGELOG PAGINATION & DROPDOWN OVERRIDES
+   ========================================================================== */
+
+/* Fade-in Animation for smooth page turns */
+.changelog-fade {
+    animation: fadeInVersion 0.3s ease-in-out;
+}
+
+@keyframes fadeInVersion {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fluent UI Select (Dropdown) Overrides */
+fluent-select {
+    color-scheme: dark;
+}
+
+    /* Targets the hidden dropdown container */
+    fluent-select::part(listbox) {
+        background: rgba(10, 5, 20, 0.95) !important;
+        backdrop-filter: blur(15px);
+        border: 1px solid var(--neon-cyan) !important;
+        box-shadow: 0 10px 30px rgba(0, 229, 255, 0.2) !important;
+        border-radius: 8px !important;
+        max-height: 250px !important; /* Limits height and forces the scrollbar */
+        padding: 4px;
+    }
+
+fluent-option {
+    background: transparent;
+    color: #bfa8d2;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 2px;
+    transition: all 0.2s ease;
+}
+
+    fluent-option:hover, fluent-option[aria-selected="true"] {
+        background: rgba(0, 229, 255, 0.15) !important;
+        color: #fff !important;
+    }
+
+/* ==========================================================================
+   JUMP TO TOP BUTTON
+   ========================================================================== */
+.jump-to-top {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: rgba(6, 2, 10, 0.8);
+    border: 2px solid var(--neon-pink);
+    color: var(--neon-pink);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(255, 0, 170, 0.2);
+}
+
+    .jump-to-top.visible {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+
+    .jump-to-top:hover {
+        background: var(--neon-pink);
+        color: #fff;
+        box-shadow: 0 0 25px var(--neon-pink-glow);
+        transform: translateY(-5px);
+    }
+
+/* ==========================================================================
+   RESPONSIVE VIDEO EMBED
+   ========================================================================== */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* mathematically enforces a 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid var(--neon-cyan);
+    box-shadow: 0 10px 30px rgba(0, 229, 255, 0.15), 0 0 15px rgba(0, 229, 255, 0.1);
+    background: var(--dark-void);
+}
+
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
     }
