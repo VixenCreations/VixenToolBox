@@ -432,10 +432,20 @@ fluent-text-field::part(control) {
     box-shadow: none;
 }
 
-.small-btn::part(control) {
+.add-btn::part(control) {
+    min-width: 60px !important;
+    padding: 0 16px !important;
+    height: 32px !important;
+}
+
+.icon-btn::part(control) {
     min-width: 32px !important;
-    padding: 0 10px !important;
-    height: 32px;
+    width: 32px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Grid & Cards */
