@@ -7,115 +7,116 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.Animations;
 using ImageMagick;
 
 #if VRC_SDK_VRCSDK3
 using VRC.SDK3.Dynamics.PhysBone.Components;
+using VRC.SDK3.Dynamics.Contact.Components;
+using VRC.SDK3.Avatars.Components;
 #endif
 
 namespace VixenTools.Editor
 {
     /// <summary>
     /// VixenTools Core: Non-destructive Quest material and hierarchy conversion engine.
-    /// Features ImageMagick Lanczos downsampling for high-fidelity mobile textures,
-    /// and an Interactive Topology Matrix allowing creators to manually override 
-    /// heuristic PhysBone culling prior to execution.
+    /// Maps 100% of VRChat Mobile Performance Limits natively.
     /// </summary>
     public class QuestConversionEngine : EditorWindow
     {
-        // Centralized styling paths
         private const string FontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/QuestConversionEngineStyles.uss";
 
         private Font _cyberFont;
-
         private GameObject _sourceAvatar;
         
-        // Scan Data
-        private int _rendererCount = 0;
+        // --- Deep Matrix Scan Data ---
+        private int _totalTriangles = 0;
+        private int _skinnedMeshCount = 0;
+        private int _basicMeshCount = 0;
+        private int _materialSlotCount = 0;
         private int _uniqueMaterialCount = 0;
         private int _uniqueTextureCount = 0;
         private bool _hasScanned = false;
 
-        private enum TargetQuestShader
-        {
-            VRCMobileToonStandard, 
-            VRCMobileToonLit,
-            VRCMobileStandard,
-            VRCMobileMatcap,
-            UnityMobileStandard
-        }
+        private enum TargetQuestShader { VRCMobileToonStandard, VRCMobileToonLit, VRCMobileStandard, VRCMobileMatcap, UnityMobileStandard }
         private TargetQuestShader _selectedTargetShader = TargetQuestShader.VRCMobileToonStandard;
 
-        // Texture Memory Caps for Mobile
-        private List<string> _textureSizeLabels = new List<string> { 
-            "256 (Aggressive - 10MB Excellent Limit)", 
-            "512 (Balanced - 18MB Good Limit)", 
-            "1024 (Standard - 40MB Poor Limit)", 
-            "2048 (Heavy - Very Poor/Unoptimized)" 
-        };
+        private List<string> _textureSizeLabels = new List<string> { "256 (Aggressive - 10MB)", "512 (Balanced - 18MB)", "1024 (Standard - 40MB)", "2048 (Heavy - Very Poor)" };
         private int[] _textureSizeOptions = { 256, 512, 1024, 2048 };
         private int _selectedTextureSizeIndex = 2;
 
-        // VRChat Mobile Performance Ranks
         private enum MobilePerformanceRank { Excellent, Good, Medium, Poor }
         private MobilePerformanceRank _targetPerformanceRank = MobilePerformanceRank.Poor;
 
         private const string BASE_OUTPUT_DIR = "Assets/VixenTools/QuestConversion";
-        
-        // Runtime execution caches
         private Dictionary<Texture, Texture> _textureCache = new Dictionary<Texture, Texture>();
         private string _activeTexturesDir;
 
-#if VRC_SDK_VRCSDK3
-        // Interactive Topology Matrix State
+        // --- Interactive Topology Matrix State ---
         private class TopologyNode
         {
             public Component component;
             public string relativePath;
             public int depth;
             public bool keep;
+            public bool isLocked;
         }
+
+        // --- Interactive Texture Processing Matrix State ---
+        private class TextureNode
+        {
+            public Texture texture;
+            public bool processTexture;
+            public string name;
+            public int width;
+            public int height;
+        }
+
+        private List<TopologyNode> _scannedAnimators = new List<TopologyNode>();
+        
         private List<TopologyNode> _scannedPhysBones = new List<TopologyNode>();
         private List<TopologyNode> _scannedColliders = new List<TopologyNode>();
-#endif
+        private List<TopologyNode> _scannedContacts = new List<TopologyNode>();
+        private List<TopologyNode> _scannedConstraints = new List<TopologyNode>();
+        private List<TopologyNode> _scannedRaycasts = new List<TopologyNode>();
+        
+        private List<TopologyNode> _scannedParticles = new List<TopologyNode>();
+        private List<TopologyNode> _scannedTrails = new List<TopologyNode>();
+        private List<TopologyNode> _scannedLines = new List<TopologyNode>();
+        private List<TopologyNode> _scannedIncompatible = new List<TopologyNode>();
+
+        private List<TextureNode> _scannedTextures = new List<TextureNode>();
 
         // UI Elements
         private VisualElement _dynamicContainer;
-        private ScrollView _topologyScrollView;
-        private Label _topologyCountLabel;
+        private ScrollView _pbScroll, _colScroll, _contactScroll, _constraintScroll, _raycastScroll, _animatorScroll, _particleScroll, _trailScroll, _lineScroll, _incompatibleScroll, _textureScroll;
+        private Label _pbLabel, _colLabel, _contactLabel, _constraintLabel, _raycastLabel, _animatorLabel, _particleLabel, _trailLabel, _lineLabel, _incompatibleLabel, _textureLabel;
 
         [MenuItem("VixenTools/Avatars/Quest Conversion Engine")]
         public static void ShowWindow()
         {
             var window = GetWindow<QuestConversionEngine>("Quest Engine");
-            window.minSize = new Vector2(500, 650);
+            window.minSize = new Vector2(500, 750);
             window.Show();
         }
 
-        private void OnEnable()
-        {
-            _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
-        }
+        private void OnEnable() => _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
 
         private void CreateGUI()
         {
             VisualElement root = rootVisualElement;
             root.name = "quest-engine-root";
 
-            // Load USS
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath);
             if (styleSheet != null) root.styleSheets.Add(styleSheet);
-            else Debug.LogWarning($"[VixenTools] Could not load Stylesheet at {UssPath}");
 
-            // --- HEADER ---
             var headerRect = new VisualElement { name = "tool-header" };
             var titleLabel = new Label("<color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> QUEST ENGINE") { enableRichText = true };
             if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             headerRect.Add(titleLabel);
             root.Add(headerRect);
 
-            // --- SCROLL CONTENT ---
             var mainScroll = new ScrollView(ScrollViewMode.Vertical) { name = "main-scroll" };
             var scrollContent = new VisualElement();
             mainScroll.Add(scrollContent);
@@ -123,7 +124,6 @@ namespace VixenTools.Editor
 
             BuildPhase1UI(scrollContent);
 
-            // Container for everything that spawns AFTER clicking "Scan Matrix"
             _dynamicContainer = new VisualElement();
             scrollContent.Add(_dynamicContainer);
         }
@@ -132,7 +132,7 @@ namespace VixenTools.Editor
         {
             var panel = CreateCyberPanel("Phase 1: Deep Matrix Scanning", "#00e5ff");
 
-            var infoLabel = new Label("Select the root of your PC Avatar. This process is 100% non-destructive. The original will be disabled, and a Quest-isolated clone will be generated.");
+            var infoLabel = new Label("Select the root of your PC Avatar. The engine maps 100% of VRChat Mobile Performance caps and non-destructively isolates a Quest clone.");
             infoLabel.AddToClassList("info-box-styled");
             panel.Add(infoLabel);
 
@@ -159,10 +159,8 @@ namespace VixenTools.Editor
                 _targetPerformanceRank = (MobilePerformanceRank)e.newValue;
                 if (_hasScanned)
                 {
-#if VRC_SDK_VRCSDK3
                     ApplyHeuristicCullingRules();
                     RefreshTopologyUI();
-#endif
                 }
             });
             panel.Add(rankEnum);
@@ -179,31 +177,39 @@ namespace VixenTools.Editor
         {
             _dynamicContainer.Clear();
 
-            // --- RESULTS BOX ---
             var resultsBox = new VisualElement();
             resultsBox.AddToClassList("results-box");
 
-            string resultsText = $"<b><color=#00e5ff>■</color> MATRIX SCAN RESULTS:</b>\n\n" +
-                             $"  • Renderers Detected: <b><color=#ff00aa>{_rendererCount}</color></b>\n" +
-                             $"  • Unique Materials: <b><color=#ff00aa>{_uniqueMaterialCount}</color></b>\n" +
-                             $"  • Unique Textures: <b><color=#ff00aa>{_uniqueTextureCount}</color></b>";
+            string triColor = _totalTriangles > 20000 ? "#ff0044" : "#00ff66";
+            string smrColor = _skinnedMeshCount > 2 ? "#ff0044" : "#00ff66";
+            string matColor = _materialSlotCount > 4 ? "#ff0044" : "#00ff66";
+
+            string resultsText = $"<b><color=#00e5ff>■</color> HARD CAP ANALYSIS:</b>\n" +
+                             $"  • Total Triangles: <color={triColor}><b>{_totalTriangles:N0}</b></color> {(_totalTriangles > 20000 ? "(Exceeds Mobile 'Poor' Limit)" : "")}\n" +
+                             $"  • Skinned Meshes: <color={smrColor}><b>{_skinnedMeshCount}</b></color>\n" +
+                             $"  • Basic Meshes: <b><color=#00ff66>{_basicMeshCount}</color></b>\n" +
+                             $"  • Material Slots: <color={matColor}><b>{_materialSlotCount}</b></color>\n\n" +
+                             $"<b><color=#ff00aa>■</color> COMPONENT SCANNERS:</b>\n" +
+                             $"  • Unique PC Materials: <b><color=#ff00aa>{_uniqueMaterialCount}</color></b>\n" +
+                             $"  • Unique PC Textures: <b><color=#ff00aa>{_uniqueTextureCount}</color></b>\n" +
+                             $"  • Animators: <b><color=#ff00aa>{_scannedAnimators.Count}</color></b>\n";
 
 #if VRC_SDK_VRCSDK3
-            resultsText += $"\n  • PhysBones Found: <b><color=#ff00aa>{_scannedPhysBones.Count}</color></b>\n" +
-                           $"  • PhysBone Colliders: <b><color=#ff00aa>{_scannedColliders.Count}</color></b>";
+            resultsText += $"  • PhysBones: <b><color=#ff00aa>{_scannedPhysBones.Count}</color></b>  |  Colliders: <b><color=#ff00aa>{_scannedColliders.Count}</color></b>\n" +
+                           $"  • Contacts: <b><color=#ff00aa>{_scannedContacts.Count}</color></b>  |  Constraints: <b><color=#ff00aa>{_scannedConstraints.Count}</color></b>\n" +
+                           $"  • Raycasts: <b><color=#ff00aa>{_scannedRaycasts.Count}</color></b>\n";
 #endif
-            
+
+            resultsText += $"  • Particles/Trails: <b><color=#ff00aa>{_scannedParticles.Count + _scannedTrails.Count + _scannedLines.Count}</color></b>\n" +
+                           $"  • Incompatible Mobile Objects: <b><color=#ff0044>{_scannedIncompatible.Count}</color></b>";
+
             var resultsLabel = new Label(resultsText) { enableRichText = true };
             resultsBox.Add(resultsLabel);
             _dynamicContainer.Add(resultsBox);
 
-#if VRC_SDK_VRCSDK3
             BuildTopologyUI(_dynamicContainer);
-#endif
 
-            // --- PHASE 2 EXECUTION ---
             var execPanel = CreateCyberPanel("Phase 2: Deep Conversion Pipeline", "#ff00aa");
-            
             var execBtn = new Button(ExecuteConversion) { text = "Execute Full Quest Conversion" };
             execBtn.AddToClassList("cyber-action-btn");
             execBtn.AddToClassList("pink-btn");
@@ -219,88 +225,199 @@ namespace VixenTools.Editor
             _dynamicContainer.Add(execPanel);
         }
 
-#if VRC_SDK_VRCSDK3
         private void BuildTopologyUI(VisualElement container)
         {
             var panel = CreateCyberPanel("Phase 1.5: Interactive Topology Matrix", "#00e5ff");
 
-            var infoLabel = new Label("Heuristic limits have been applied based on your Target Performance Rank. You may manually override which physics components survive the Quest conversion.");
+            var infoLabel = new Label("VRChat limits are mathematically applied based on Target Rank. You may override kept nodes. ImageMagick conversions can be individually disabled to save time.");
             infoLabel.AddToClassList("info-box-styled");
             panel.Add(infoLabel);
 
-            var foldout = new Foldout { text = "Topology Culling Matrix (PhysBones)", value = true };
+            BuildTextureSection(panel, "Matrix: Texture Map Selection", true, out _textureScroll, out _textureLabel);
+
+            BuildTopologySection(panel, "Matrix: Animators", false, out _animatorScroll, out _animatorLabel);
+
+#if VRC_SDK_VRCSDK3
+            BuildTopologySection(panel, "Matrix: PhysBones", false, out _pbScroll, out _pbLabel);
+            BuildTopologySection(panel, "Matrix: Colliders", false, out _colScroll, out _colLabel);
+            BuildTopologySection(panel, "Matrix: Contacts", false, out _contactScroll, out _contactLabel);
+            BuildTopologySection(panel, "Matrix: Constraints", false, out _constraintScroll, out _constraintLabel);
+            BuildTopologySection(panel, "Matrix: Raycasts", false, out _raycastScroll, out _raycastLabel);
+#endif
+            BuildTopologySection(panel, "Matrix: Particle Systems", false, out _particleScroll, out _particleLabel);
+            BuildTopologySection(panel, "Matrix: Trail Renderers", false, out _trailScroll, out _trailLabel);
+            BuildTopologySection(panel, "Matrix: Line Renderers", false, out _lineScroll, out _lineLabel);
+            BuildTopologySection(panel, "Incompatible Mobile Components (Auto-Culled)", false, out _incompatibleScroll, out _incompatibleLabel);
+
+            container.Add(panel);
+            RefreshTopologyUI();
+            RefreshTextureUI();
+        }
+
+        private void BuildTopologySection(VisualElement parent, string title, bool startOpen, out ScrollView scrollView, out Label countLabel)
+        {
+            var foldout = new Foldout { text = title, value = startOpen };
             foldout.AddToClassList("bold-foldout");
 
-            _topologyCountLabel = new Label() { enableRichText = true };
-            _topologyCountLabel.style.fontSize = 14;
-            _topologyCountLabel.style.marginBottom = 10;
-            foldout.Add(_topologyCountLabel);
+            countLabel = new Label() { enableRichText = true };
+            countLabel.style.fontSize = 14;
+            countLabel.style.marginBottom = 10;
+            foldout.Add(countLabel);
 
-            _topologyScrollView = new ScrollView(ScrollViewMode.Vertical);
-            _topologyScrollView.style.height = 300;
-            _topologyScrollView.AddToClassList("topology-scroll-view");
-            foldout.Add(_topologyScrollView);
+            scrollView = new ScrollView(ScrollViewMode.Vertical);
+            scrollView.style.maxHeight = 200;
+            scrollView.AddToClassList("topology-scroll-view");
+            foldout.Add(scrollView);
 
-            panel.Add(foldout);
-            container.Add(panel);
+            parent.Add(foldout);
+        }
 
-            RefreshTopologyUI();
+        private void BuildTextureSection(VisualElement parent, string title, bool startOpen, out ScrollView scrollView, out Label countLabel)
+        {
+            var foldout = new Foldout { text = title, value = startOpen };
+            foldout.AddToClassList("bold-foldout");
+
+            countLabel = new Label() { enableRichText = true };
+            countLabel.style.fontSize = 14;
+            countLabel.style.marginBottom = 10;
+            foldout.Add(countLabel);
+
+            var controlRow = new VisualElement { style = { flexDirection = FlexDirection.Row, marginBottom = 5 } };
+            var btnSelectAll = new Button(() => { _scannedTextures.ForEach(t => t.processTexture = true); RefreshTextureUI(); }) { text = "Select All", style = { flexGrow = 1 } };
+            var btnDeselectAll = new Button(() => { _scannedTextures.ForEach(t => t.processTexture = false); RefreshTextureUI(); }) { text = "Deselect All", style = { flexGrow = 1 } };
+            controlRow.Add(btnSelectAll); controlRow.Add(btnDeselectAll);
+            foldout.Add(controlRow);
+
+            scrollView = new ScrollView(ScrollViewMode.Vertical);
+            scrollView.style.maxHeight = 250;
+            scrollView.AddToClassList("topology-scroll-view");
+            foldout.Add(scrollView);
+
+            parent.Add(foldout);
         }
 
         private void RefreshTopologyUI()
         {
-            if (_topologyScrollView == null || _topologyCountLabel == null) return;
+            UpdateTopologyList(_scannedAnimators, GetMaxAnimators(), _animatorScroll, _animatorLabel);
+#if VRC_SDK_VRCSDK3
+            UpdateTopologyList(_scannedPhysBones, GetMaxPhysBones(), _pbScroll, _pbLabel);
+            UpdateTopologyList(_scannedColliders, GetMaxColliders(), _colScroll, _colLabel);
+            UpdateTopologyList(_scannedContacts, GetMaxContacts(), _contactScroll, _contactLabel);
+            UpdateTopologyList(_scannedConstraints, GetMaxConstraints(), _constraintScroll, _constraintLabel);
+            UpdateTopologyList(_scannedRaycasts, GetMaxRaycasts(), _raycastScroll, _raycastLabel);
+#endif
+            UpdateTopologyList(_scannedParticles, GetMaxParticles(), _particleScroll, _particleLabel);
+            UpdateTopologyList(_scannedTrails, GetMaxTrails(), _trailScroll, _trailLabel);
+            UpdateTopologyList(_scannedLines, GetMaxLines(), _lineScroll, _lineLabel);
+            UpdateTopologyList(_scannedIncompatible, 0, _incompatibleScroll, _incompatibleLabel);
+        }
 
-            int pbKept = _scannedPhysBones.Count(n => n.keep);
-            int limit = GetMaxPhysBones();
-            Color countColor = pbKept > limit ? Color.red : new Color(0.2f, 0.8f, 0.2f);
+        private void RefreshTextureUI()
+        {
+            if (_textureScroll == null || _textureLabel == null) return;
+
+            int activeCount = _scannedTextures.Count(t => t.processTexture);
+            _textureLabel.text = $"Queued for ImageMagick Processing: <b><color=#00ff66>{activeCount} / {_scannedTextures.Count}</color></b>";
+
+            _textureScroll.Clear();
+
+            if (_scannedTextures.Count == 0)
+            {
+                _textureScroll.Add(new Label("  <i>No textures detected.</i>") { style = { color = new Color(0.5f, 0.5f, 0.5f) } });
+                return;
+            }
+
+            foreach (var node in _scannedTextures)
+            {
+                var row = new VisualElement();
+                row.AddToClassList("topology-row");
+
+                var toggle = new Toggle { value = node.processTexture };
+                toggle.RegisterValueChangedCallback(e => 
+                {
+                    node.processTexture = e.newValue;
+                    int newCount = _scannedTextures.Count(t => t.processTexture);
+                    _textureLabel.text = $"Queued for ImageMagick Processing: <b><color=#00ff66>{newCount} / {_scannedTextures.Count}</color></b>";
+                });
+                row.Add(toggle);
+
+                string displayInfo = $"<b><color=#00e5ff>{node.name}</color></b> <color=#aaaaaa><i>({node.width}x{node.height})</i></color>";
+                
+                var label = new Label(displayInfo) { enableRichText = true };
+                label.AddToClassList("topology-label");
+                row.Add(label);
+
+                _textureScroll.Add(row);
+            }
+        }
+
+        private void UpdateTopologyList(List<TopologyNode> nodes, int limit, ScrollView scrollView, Label countLabel)
+        {
+            if (scrollView == null || countLabel == null) return;
+
+            int kept = nodes.Count(n => n.keep);
+            Color countColor = kept > limit ? Color.red : new Color(0.2f, 0.8f, 0.2f);
             
-            _topologyCountLabel.text = $"Selected: <color=#{ColorUtility.ToHtmlStringRGB(countColor)}><b>{pbKept} / {limit}</b></color> Allowed";
+            if (limit == 0 && nodes.Count > 0 && nodes[0].isLocked && !nodes[0].keep)
+                countLabel.text = $"Selected: <color=#ff0044><b>0 / 0</b></color> (Hard Mobile Limitation)";
+            else
+                countLabel.text = $"Selected: <color=#{ColorUtility.ToHtmlStringRGB(countColor)}><b>{kept} / {limit}</b></color> Allowed";
 
-            _topologyScrollView.Clear();
+            scrollView.Clear();
+            if (nodes.Count == 0)
+            {
+                scrollView.Add(new Label("  <i>No components detected in this category.</i>") { style = { color = new Color(0.5f, 0.5f, 0.5f) } });
+                return;
+            }
 
-            foreach (var node in _scannedPhysBones)
+            foreach (var node in nodes)
             {
                 var row = new VisualElement();
                 row.AddToClassList("topology-row");
 
                 var toggle = new Toggle { value = node.keep };
-                toggle.RegisterValueChangedCallback(e => 
+                if (node.isLocked) 
                 {
-                    node.keep = e.newValue;
-                    // Dynamically update the ratio string without full rebuild
-                    int currentKept = _scannedPhysBones.Count(n => n.keep);
-                    Color c = currentKept > limit ? Color.red : new Color(0.2f, 0.8f, 0.2f);
-                    _topologyCountLabel.text = $"Selected: <color=#{ColorUtility.ToHtmlStringRGB(c)}><b>{currentKept} / {limit}</b></color> Allowed";
-                });
+                    toggle.SetEnabled(false);
+                    if (!node.keep) toggle.AddToClassList("locked-culled-toggle");
+                    else toggle.AddToClassList("locked-kept-toggle"); // Used for Root Animators so they look safe
+                }
+                else
+                {
+                    toggle.RegisterValueChangedCallback(e => 
+                    {
+                        node.keep = e.newValue;
+                        int currentKept = nodes.Count(n => n.keep);
+                        Color c = currentKept > limit ? Color.red : new Color(0.2f, 0.8f, 0.2f);
+                        countLabel.text = $"Selected: <color=#{ColorUtility.ToHtmlStringRGB(c)}><b>{currentKept} / {limit}</b></color> Allowed";
+                    });
+                }
                 row.Add(toggle);
 
                 string displayPath = node.relativePath;
                 int lastSlash = displayPath.LastIndexOf('/');
                 
+                string hexColor = (node.isLocked && !node.keep) ? "#ff0044" : "#00ff66";
+
                 if (lastSlash >= 0 && lastSlash < displayPath.Length - 1)
                 {
                     string baseDir = displayPath.Substring(0, lastSlash + 1);
                     string boneName = displayPath.Substring(lastSlash + 1);
-                    displayPath = $"<color=#00ff66>{baseDir}</color><b><color=#00ff66>{boneName}</color></b>";
+                    displayPath = $"<color={hexColor}>{baseDir}</color><b><color={hexColor}>{boneName}</color></b>";
                 }
-                else if (string.IsNullOrEmpty(displayPath))
-                {
-                    displayPath = "<b><color=#00e5ff>[Avatar Root]</color></b>";
-                }
-                else
-                {
-                    displayPath = $"<b><color=#00ff66>{displayPath}</color></b>";
-                }
+                else if (string.IsNullOrEmpty(displayPath)) displayPath = $"<b><color={hexColor}>[Avatar Root]</color></b>";
+                else displayPath = $"<b><color={hexColor}>{displayPath}</color></b>";
+
+                string typeName = node.component != null ? node.component.GetType().Name : "Unknown";
+                displayPath += $" <color=#aaaaaa><i>({typeName})</i></color>";
 
                 var label = new Label(displayPath) { enableRichText = true };
                 label.AddToClassList("topology-label");
                 row.Add(label);
 
-                _topologyScrollView.Add(row);
+                scrollView.Add(row);
             }
         }
-#endif
 
         private VisualElement CreateCyberPanel(string title, string accentColorHex)
         {
@@ -325,17 +442,39 @@ namespace VixenTools.Editor
 
         private void AnalyzeHierarchy()
         {
-            if (_sourceAvatar == null)
+            if (_sourceAvatar == null) return;
+
+            _totalTriangles = 0;
+            _skinnedMeshCount = 0;
+            _basicMeshCount = 0;
+            _materialSlotCount = 0;
+
+            foreach (var smr in _sourceAvatar.GetComponentsInChildren<SkinnedMeshRenderer>(true))
             {
-                Debug.LogWarning("[VixenTools] No Source Avatar selected for scanning.");
-                return;
+                _skinnedMeshCount++;
+                _materialSlotCount += smr.sharedMaterials.Length;
+                if (smr.sharedMesh != null) _totalTriangles += smr.sharedMesh.triangles.Length / 3;
+            }
+
+            foreach (var mf in _sourceAvatar.GetComponentsInChildren<MeshFilter>(true))
+            {
+                _basicMeshCount++;
+                Renderer rend = mf.GetComponent<Renderer>();
+                if (rend != null) _materialSlotCount += rend.sharedMaterials.Length;
+                if (mf.sharedMesh != null) _totalTriangles += mf.sharedMesh.triangles.Length / 3;
             }
 
             Renderer[] renderers = _sourceAvatar.GetComponentsInChildren<Renderer>(true);
-            _rendererCount = renderers.Length;
-            
             HashSet<Material> uniqueMats = new HashSet<Material>();
             HashSet<Texture> uniqueTexs = new HashSet<Texture>();
+
+            // Expanded heuristic to catch Normal, Detail, Data, and Mochie maps
+            string[] texPropsToScan = { 
+                "_MainTex", "_BaseMap", "_EmissionMap", 
+                "_BumpMap", "_DetailNormalMap", 
+                "_MetallicGlossMap", "_MetallicMap", "_SpecGlossMap", 
+                "_MochieMetallicMap", "_MochieMetallicMaps" 
+            };
 
             foreach (var rend in renderers)
             {
@@ -345,9 +484,11 @@ namespace VixenTools.Editor
                     if (mat != null) 
                     {
                         uniqueMats.Add(mat);
-                        if (mat.HasProperty("_MainTex") && mat.GetTexture("_MainTex") != null) uniqueTexs.Add(mat.GetTexture("_MainTex"));
-                        if (mat.HasProperty("_BaseMap") && mat.GetTexture("_BaseMap") != null) uniqueTexs.Add(mat.GetTexture("_BaseMap"));
-                        if (mat.HasProperty("_EmissionMap") && mat.GetTexture("_EmissionMap") != null) uniqueTexs.Add(mat.GetTexture("_EmissionMap"));
+                        foreach (var prop in texPropsToScan)
+                        {
+                            if (mat.HasProperty(prop) && mat.GetTexture(prop) != null) 
+                                uniqueTexs.Add(mat.GetTexture(prop));
+                        }
                     }
                 }
             }
@@ -355,92 +496,136 @@ namespace VixenTools.Editor
             _uniqueMaterialCount = uniqueMats.Count;
             _uniqueTextureCount = uniqueTexs.Count;
 
+            _scannedTextures.Clear();
+            foreach(var tex in uniqueTexs)
+            {
+                _scannedTextures.Add(new TextureNode {
+                    texture = tex,
+                    name = tex.name,
+                    width = tex.width,
+                    height = tex.height,
+                    processTexture = true // Default to true
+                });
+            }
+
+            _scannedAnimators.Clear(); _scannedParticles.Clear(); _scannedTrails.Clear(); _scannedLines.Clear(); _scannedIncompatible.Clear();
+
+            foreach (var anim in _sourceAvatar.GetComponentsInChildren<Animator>(true)) 
+            {
+                bool isRoot = anim.transform == _sourceAvatar.transform;
+                _scannedAnimators.Add(new TopologyNode {
+                    component = anim,
+                    relativePath = AnimationUtility.CalculateTransformPath(anim.transform, _sourceAvatar.transform),
+                    depth = GetHierarchyDepth(anim.transform),
+                    keep = true, 
+                    isLocked = isRoot 
+                });
+            }
+
+            foreach (var ps in _sourceAvatar.GetComponentsInChildren<ParticleSystem>(true)) _scannedParticles.Add(CreateNode(ps, false));
+            foreach (var tr in _sourceAvatar.GetComponentsInChildren<TrailRenderer>(true)) _scannedTrails.Add(CreateNode(tr, false));
+            foreach (var lr in _sourceAvatar.GetComponentsInChildren<LineRenderer>(true)) _scannedLines.Add(CreateNode(lr, false));
+
+            foreach (var l in _sourceAvatar.GetComponentsInChildren<Light>(true)) _scannedIncompatible.Add(CreateNode(l, true));
+            foreach (var c in _sourceAvatar.GetComponentsInChildren<Cloth>(true)) _scannedIncompatible.Add(CreateNode(c, true));
+            foreach (var r in _sourceAvatar.GetComponentsInChildren<Rigidbody>(true)) _scannedIncompatible.Add(CreateNode(r, true));
+            foreach (var a in _sourceAvatar.GetComponentsInChildren<AudioSource>(true)) _scannedIncompatible.Add(CreateNode(a, true));
+            foreach (var cam in _sourceAvatar.GetComponentsInChildren<Camera>(true)) _scannedIncompatible.Add(CreateNode(cam, true));
+            foreach (var col in _sourceAvatar.GetComponentsInChildren<Collider>(true)) _scannedIncompatible.Add(CreateNode(col, true));
+
 #if VRC_SDK_VRCSDK3
-            _scannedPhysBones.Clear();
-            _scannedColliders.Clear();
+            _scannedPhysBones.Clear(); _scannedColliders.Clear(); _scannedContacts.Clear(); _scannedConstraints.Clear(); _scannedRaycasts.Clear();
 
-            VRCPhysBone[] pbs = _sourceAvatar.GetComponentsInChildren<VRCPhysBone>(true);
-            foreach (var pb in pbs)
+            foreach (var pb in _sourceAvatar.GetComponentsInChildren<VRCPhysBone>(true)) _scannedPhysBones.Add(CreateNode(pb, false));
+            foreach (var col in _sourceAvatar.GetComponentsInChildren<VRCPhysBoneCollider>(true)) _scannedColliders.Add(CreateNode(col, false));
+            foreach (var sender in _sourceAvatar.GetComponentsInChildren<VRCContactSender>(true)) _scannedContacts.Add(CreateNode(sender, false));
+            foreach (var receiver in _sourceAvatar.GetComponentsInChildren<VRCContactReceiver>(true)) _scannedContacts.Add(CreateNode(receiver, false));
+            foreach (var raycast in _sourceAvatar.GetComponentsInChildren<VRCRaycast>(true)) _scannedRaycasts.Add(CreateNode(raycast, false));
+            foreach (var constraint in _sourceAvatar.GetComponentsInChildren<IConstraint>(true))
             {
-                _scannedPhysBones.Add(new TopologyNode {
-                    component = pb,
-                    relativePath = AnimationUtility.CalculateTransformPath(pb.transform, _sourceAvatar.transform),
-                    depth = GetHierarchyDepth(pb.transform),
-                    keep = true
-                });
+                if (constraint as Component != null) _scannedConstraints.Add(CreateNode(constraint as Component, false));
             }
-
-            VRCPhysBoneCollider[] cols = _sourceAvatar.GetComponentsInChildren<VRCPhysBoneCollider>(true);
-            foreach (var col in cols)
-            {
-                _scannedColliders.Add(new TopologyNode {
-                    component = col,
-                    relativePath = AnimationUtility.CalculateTransformPath(col.transform, _sourceAvatar.transform),
-                    depth = GetHierarchyDepth(col.transform),
-                    keep = true
-                });
-            }
+#endif
 
             ApplyHeuristicCullingRules();
-#endif
 
             _hasScanned = true;
             BuildDynamicResultsUI();
             Debug.Log($"[VixenTools] Matrix Scan Complete.");
         }
 
-#if VRC_SDK_VRCSDK3
+        private TopologyNode CreateNode(Component comp, bool lockedPurge)
+        {
+            return new TopologyNode {
+                component = comp,
+                relativePath = AnimationUtility.CalculateTransformPath(comp.transform, _sourceAvatar.transform),
+                depth = GetHierarchyDepth(comp.transform),
+                keep = !lockedPurge,
+                isLocked = lockedPurge
+            };
+        }
+
         private void ApplyHeuristicCullingRules()
         {
-            int maxPB = GetMaxPhysBones();
-            int maxCol = GetMaxColliders();
-
-            _scannedPhysBones = _scannedPhysBones.OrderBy(n => n.depth).ToList();
-            for (int i = 0; i < _scannedPhysBones.Count; i++)
-            {
-                _scannedPhysBones[i].keep = (i < maxPB);
-            }
-
-            _scannedColliders = _scannedColliders.OrderBy(n => n.depth).ToList();
-            for (int i = 0; i < _scannedColliders.Count; i++)
-            {
-                _scannedColliders[i].keep = (i < maxCol);
-            }
+            ApplyDepthCulling(_scannedAnimators, GetMaxAnimators());
+#if VRC_SDK_VRCSDK3
+            ApplyDepthCulling(_scannedPhysBones, GetMaxPhysBones());
+            ApplyDepthCulling(_scannedColliders, GetMaxColliders());
+            ApplyDepthCulling(_scannedContacts, GetMaxContacts());
+            ApplyDepthCulling(_scannedConstraints, GetMaxConstraints());
+            ApplyDepthCulling(_scannedRaycasts, GetMaxRaycasts());
+#endif
+            ApplyDepthCulling(_scannedParticles, GetMaxParticles());
+            ApplyDepthCulling(_scannedTrails, GetMaxTrails());
+            ApplyDepthCulling(_scannedLines, GetMaxLines());
+            ApplyDepthCulling(_scannedIncompatible, 0); // Hard enforcement
         }
 
-        private int GetMaxPhysBones()
+        private void ApplyDepthCulling(List<TopologyNode> nodes, int maxAllowed)
         {
-            switch (_targetPerformanceRank)
+            nodes.Sort((a, b) => a.depth.CompareTo(b.depth));
+            int currentKept = 0;
+            
+            for (int i = 0; i < nodes.Count; i++)
             {
-                case MobilePerformanceRank.Excellent: return 0;
-                case MobilePerformanceRank.Good: return 4;
-                case MobilePerformanceRank.Medium: return 6;
-                default: return 8;
+                if (nodes[i].isLocked)
+                {
+                    if (nodes[i].keep) currentKept++;
+                }
+                else
+                {
+                    if (currentKept < maxAllowed)
+                    {
+                        nodes[i].keep = true;
+                        currentKept++;
+                    }
+                    else
+                    {
+                        nodes[i].keep = false;
+                    }
+                }
             }
         }
 
-        private int GetMaxColliders()
-        {
-            switch (_targetPerformanceRank)
-            {
-                case MobilePerformanceRank.Excellent: return 0;
-                case MobilePerformanceRank.Good: return 4;
-                case MobilePerformanceRank.Medium: return 8;
-                default: return 16;
-            }
-        }
+        private int GetMaxAnimators() => _targetPerformanceRank == MobilePerformanceRank.Poor ? 2 : 1;
+        private int GetMaxParticles() => _targetPerformanceRank == MobilePerformanceRank.Poor ? 2 : 0;
+        private int GetMaxTrails() => _targetPerformanceRank == MobilePerformanceRank.Poor ? 1 : 0;
+        private int GetMaxLines() => _targetPerformanceRank == MobilePerformanceRank.Poor ? 1 : 0;
+
+#if VRC_SDK_VRCSDK3
+        private int GetMaxPhysBones() { switch (_targetPerformanceRank) { case MobilePerformanceRank.Excellent: return 0; case MobilePerformanceRank.Good: return 4; case MobilePerformanceRank.Medium: return 6; default: return 8; } }
+        private int GetMaxColliders() { switch (_targetPerformanceRank) { case MobilePerformanceRank.Excellent: return 0; case MobilePerformanceRank.Good: return 4; case MobilePerformanceRank.Medium: return 8; default: return 16; } }
+        private int GetMaxContacts() { switch (_targetPerformanceRank) { case MobilePerformanceRank.Excellent: return 2; case MobilePerformanceRank.Good: return 4; case MobilePerformanceRank.Medium: return 8; default: return 16; } }
+        private int GetMaxConstraints() { switch (_targetPerformanceRank) { case MobilePerformanceRank.Excellent: return 30; case MobilePerformanceRank.Good: return 60; case MobilePerformanceRank.Medium: return 120; default: return 150; } }
+        private int GetMaxRaycasts() { switch (_targetPerformanceRank) { case MobilePerformanceRank.Excellent: return 1; case MobilePerformanceRank.Good: return 2; case MobilePerformanceRank.Medium: return 4; default: return 8; } }
+#endif
 
         private int GetHierarchyDepth(Transform t)
         {
             int depth = 0;
-            while (t.parent != null)
-            {
-                depth++;
-                t = t.parent;
-            }
+            while (t.parent != null) { depth++; t = t.parent; }
             return depth;
         }
-#endif
 
         private void ExecuteConversion()
         {
@@ -520,10 +705,20 @@ namespace VixenTools.Editor
                     EditorUtility.SetDirty(rend);
                 }
 
-#if VRC_SDK_VRCSDK3
                 EditorUtility.DisplayProgressBar("VixenTools Quest Engine", "Applying Matrix Topology Overrides...", 0.8f);
-                ApplyTopologyOverrides(questClone);
+                
+                ProcessDestruction(_scannedAnimators, questClone);
+#if VRC_SDK_VRCSDK3
+                ProcessDestruction(_scannedPhysBones, questClone);
+                ProcessDestruction(_scannedColliders, questClone);
+                ProcessDestruction(_scannedContacts, questClone);
+                ProcessDestruction(_scannedConstraints, questClone);
+                ProcessDestruction(_scannedRaycasts, questClone);
 #endif
+                ProcessDestruction(_scannedParticles, questClone);
+                ProcessDestruction(_scannedTrails, questClone);
+                ProcessDestruction(_scannedLines, questClone);
+                ProcessDestruction(_scannedIncompatible, questClone);
 
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
@@ -540,36 +735,22 @@ namespace VixenTools.Editor
             }
         }
 
-#if VRC_SDK_VRCSDK3
-        private void ApplyTopologyOverrides(GameObject clone)
+        private void ProcessDestruction(List<TopologyNode> nodes, GameObject clone)
         {
-            foreach (var node in _scannedPhysBones)
+            foreach (var node in nodes)
             {
                 if (!node.keep)
                 {
                     Transform targetTransform = string.IsNullOrEmpty(node.relativePath) ? clone.transform : clone.transform.Find(node.relativePath);
                     if (targetTransform != null)
                     {
-                        VRCPhysBone pb = targetTransform.GetComponent<VRCPhysBone>();
-                        if (pb != null) DestroyImmediate(pb, true);
-                    }
-                }
-            }
-
-            foreach (var node in _scannedColliders)
-            {
-                if (!node.keep)
-                {
-                    Transform targetTransform = string.IsNullOrEmpty(node.relativePath) ? clone.transform : clone.transform.Find(node.relativePath);
-                    if (targetTransform != null)
-                    {
-                        VRCPhysBoneCollider col = targetTransform.GetComponent<VRCPhysBoneCollider>();
-                        if (col != null) DestroyImmediate(col, true);
+                        Type compType = node.component.GetType();
+                        Component comp = targetTransform.GetComponent(compType);
+                        if (comp != null) DestroyImmediate(comp, true);
                     }
                 }
             }
         }
-#endif
 
         private Shader GetShaderForEnum(TargetQuestShader target)
         {
@@ -590,46 +771,64 @@ namespace VixenTools.Editor
 
         private void TransferProperties(Material source, Material target)
         {
+            // 1. Albedo / Main Texture
             if (source.HasProperty("_MainTex") && target.HasProperty("_MainTex"))
-                target.SetTexture("_MainTex", ProcessAndCloneTexture(source.GetTexture("_MainTex")));
+                target.SetTexture("_MainTex", ProcessAndCloneTexture(source.GetTexture("_MainTex"), false, false));
             else if (source.HasProperty("_BaseMap") && target.HasProperty("_MainTex")) 
-                target.SetTexture("_MainTex", ProcessAndCloneTexture(source.GetTexture("_BaseMap")));
+                target.SetTexture("_MainTex", ProcessAndCloneTexture(source.GetTexture("_BaseMap"), false, false));
 
+            // 2. Base Color
             if (source.HasProperty("_Color") && target.HasProperty("_Color"))
                 target.SetColor("_Color", source.GetColor("_Color"));
             else if (source.HasProperty("_BaseColor") && target.HasProperty("_Color"))
                 target.SetColor("_Color", source.GetColor("_BaseColor"));
 
+            // 3. Emission 
             if (source.HasProperty("_EmissionMap") && target.HasProperty("_EmissionMap"))
-                target.SetTexture("_EmissionMap", ProcessAndCloneTexture(source.GetTexture("_EmissionMap")));
+                target.SetTexture("_EmissionMap", ProcessAndCloneTexture(source.GetTexture("_EmissionMap"), false, false));
             
             if (source.HasProperty("_EmissionColor") && target.HasProperty("_EmissionColor"))
                 target.SetColor("_EmissionColor", source.GetColor("_EmissionColor"));
 
+            // 4. Normal Map
             if (source.HasProperty("_BumpMap") && target.HasProperty("_BumpMap"))
             {
-                target.SetTexture("_BumpMap", ProcessAndCloneTexture(source.GetTexture("_BumpMap")));
-                
+                target.SetTexture("_BumpMap", ProcessAndCloneTexture(source.GetTexture("_BumpMap"), true, true));
                 if (source.HasProperty("_BumpScale") && target.HasProperty("_BumpScale"))
                     target.SetFloat("_BumpScale", source.GetFloat("_BumpScale"));
             }
 
-            if (target.HasProperty("_MetallicMap"))
+            // 5. Metallic / Smoothness (Standard + Mochie Translation)
+            if (target.HasProperty("_MetallicGlossMap") || target.HasProperty("_MetallicMap"))
             {
-                if (source.HasProperty("_MetallicGlossMap"))
-                    target.SetTexture("_MetallicMap", ProcessAndCloneTexture(source.GetTexture("_MetallicGlossMap")));
+                string sourceMetProp = null;
                 
-                if (source.HasProperty("_Metallic") && target.HasProperty("_MetallicStrength"))
-                    target.SetFloat("_MetallicStrength", source.GetFloat("_Metallic"));
+                if (source.HasProperty("_MetallicGlossMap")) sourceMetProp = "_MetallicGlossMap";
+                else if (source.HasProperty("_MetallicMap")) sourceMetProp = "_MetallicMap";
+                else if (source.HasProperty("_MochieMetallicMaps")) sourceMetProp = "_MochieMetallicMaps";
+                else if (source.HasProperty("_MochieMetallicMap")) sourceMetProp = "_MochieMetallicMap";
+
+                string targetMetProp = target.HasProperty("_MetallicGlossMap") ? "_MetallicGlossMap" : "_MetallicMap";
+
+                if (sourceMetProp != null && targetMetProp != null && source.GetTexture(sourceMetProp) != null)
+                    target.SetTexture(targetMetProp, ProcessAndCloneTexture(source.GetTexture(sourceMetProp), false, true));
                 
-                if (source.HasProperty("_Glossiness") && target.HasProperty("_GlossStrength"))
-                    target.SetFloat("_GlossStrength", source.GetFloat("_Glossiness"));
+                if (source.HasProperty("_Metallic") && target.HasProperty("_Metallic"))
+                    target.SetFloat("_Metallic", source.GetFloat("_Metallic"));
+                
+                if (source.HasProperty("_Glossiness") && target.HasProperty("_Glossiness"))
+                    target.SetFloat("_Glossiness", source.GetFloat("_Glossiness"));
             }
         }
 
-        private Texture ProcessAndCloneTexture(Texture sourceTex)
+        private Texture ProcessAndCloneTexture(Texture sourceTex, bool isNormalMap = false, bool isLinear = false)
         {
             if (sourceTex == null) return null;
+
+            // Check if user disabled processing for this specific texture in Phase 1.5
+            var node = _scannedTextures.FirstOrDefault(t => t.texture == sourceTex);
+            if (node != null && !node.processTexture) return sourceTex;
+
             if (_textureCache.TryGetValue(sourceTex, out Texture cachedTex)) return cachedTex;
 
             string sourcePath = AssetDatabase.GetAssetPath(sourceTex);
@@ -650,9 +849,15 @@ namespace VixenTools.Editor
                     {
                         MagickGeometry size = new MagickGeometry((uint)targetSize, (uint)targetSize);
                         size.IgnoreAspectRatio = false;
-                        img.FilterType = FilterType.Lanczos; 
+
+                        if (!isNormalMap && !isLinear) img.ColorSpace = ImageMagick.ColorSpace.RGB; 
+                        img.FilterType = FilterType.Lanczos;
                         img.Resize(size);
+                        if (!isNormalMap && !isLinear) img.ColorSpace = ImageMagick.ColorSpace.sRGB; 
+                        
+                        img.UnsharpMask(0.0, 0.5, 1.0, 0.05);
                     }
+                    img.Quality = 100;
                     img.Write(newPath);
                 }
             }
@@ -668,6 +873,10 @@ namespace VixenTools.Editor
             if (importer != null)
             {
                 importer.maxTextureSize = targetSize;
+                
+                if (isNormalMap) importer.textureType = TextureImporterType.NormalMap;
+                else if (isLinear) importer.sRGBTexture = false; 
+                else importer.sRGBTexture = true; 
                 
                 TextureImporterPlatformSettings androidSettings = new TextureImporterPlatformSettings
                 {

@@ -6,6 +6,7 @@
     
     --color-cyan: #00e5ff;
     --color-pink: #ff00aa;
+    --color-danger: #ff0044; /* Added for hard cap warnings */
     
     --text-main: #e5e5e5;
     --text-muted: #aaaaaa;
@@ -25,7 +26,7 @@
 }
 
 .unity-base-field__label {
-    min-width: 175px; /* Slightly wider to accommodate longer labels */
+    min-width: 175px; 
     -unity-text-align: middle-left;
 }
 
@@ -109,9 +110,14 @@
 /* =======================================================
    Interactive Topology Matrix (Phase 1.5)
    ======================================================= */
+.bold-foldout {
+    margin-bottom: 15px; /* Spacing between the matrix categories */
+}
+
 .bold-foldout > .unity-foldout__toggle > .unity-toggle__text {
     -unity-font-style: bold;
     font-size: 14px;
+    color: var(--color-cyan); /* High-contrast header for each matrix */
 }
 
 .topology-scroll-view {
@@ -120,6 +126,7 @@
     border-color: #2a2a2a;
     border-radius: 4px;
     padding: 4px;
+    margin-top: 5px;
 }
 
 .topology-row {
@@ -137,8 +144,29 @@
 
 .topology-label {
     flex-grow: 1;
+    flex-shrink: 1; 
     margin-left: 8px;
     font-size: 12px;
+    white-space: normal; /* Safely wraps extremely deep hierarchy paths */
+}
+
+/* --- Auto-Culled / Locked Checkbox Styling --- */
+.topology-row .unity-toggle:disabled {
+    opacity: 0.85;
+}
+
+/* Red styling for hard-capped Mobile components (Cameras, Lights, etc.) */
+.locked-culled-toggle > .unity-toggle__input > .unity-toggle__checkmark {
+    -unity-background-image-tint-color: var(--color-danger);
+    background-color: rgba(255, 0, 68, 0.15);
+    border-color: var(--color-danger);
+}
+
+/* Neon cyan/green styling for protected core components (Root Animator) */
+.locked-kept-toggle > .unity-toggle__input > .unity-toggle__checkmark {
+    -unity-background-image-tint-color: var(--color-cyan);
+    background-color: rgba(0, 229, 255, 0.15);
+    border-color: var(--color-cyan);
 }
 
 /* =======================================================
@@ -173,4 +201,19 @@
     color: #555555;
     border-color: #333333;
     border-width: 1px;
+}
+
+/* =======================================================
+   Texture Matrix Controls
+   ======================================================= */
+.bold-foldout > .unity-button {
+    font-size: 11px;
+    height: 22px;
+    margin: 2px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+.bold-foldout > .unity-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }

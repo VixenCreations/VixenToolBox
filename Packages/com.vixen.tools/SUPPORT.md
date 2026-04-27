@@ -12,8 +12,10 @@ I want the VRChat avatar pipeline to be as flawless as possible. But maintaining
 If my code has ever saved your scene from completely bricking, optimized your Quest fallback in under 10 seconds, or just made your workflow suck a little bit less... consider throwing a coffee my way:
 
 * **[Ko-Fi: One-Time Support](https://ko-fi.com/vixenlicous)**
-* **[Gumroad: Donations](https://vixencreations.gumroad.com/coffee)**
-* **[Gumroad: Full Storefront](https://vixencreations.gumroad.com/)**
+* **[Gumroad: Donations](https://vixenlicous.gumroad.com/coffee)**
+* **[CashApp: Direct Donation](https://cash.app/$VixenVRC)**
+* **[Patreon: Full Storefront](https://www.patreon.com/cw/Vixenlicious)**
+* **[Jinxxy: Full Storefront](https://jinxxy.com/Vixenlicious)**
 
 ### What Your Support Actually Does
 * **Keeps the R&D Alive:** So I can keep fighting with Unity's UI Toolkit, ImageMagick, and complex shader math so you don't have to.

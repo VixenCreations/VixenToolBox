@@ -19,7 +19,8 @@
 .unity-button,
 .unity-label,
 .unity-toggle,
-.unity-enum-field {
+.unity-enum-field,
+.unity-color-field { /* Added ColorField to inherit base styling */
     font-size: 13px;
     color: var(--text-main);
 }
@@ -65,7 +66,8 @@
     border-bottom-color: #2a2a2a;
 }
 
-.tab-btn {
+/* Automatically style all buttons inside the tab toolbar */
+#tab-toolbar > .unity-button {
     height: 35px;
     flex-grow: 1;
     margin: 4px;
@@ -136,12 +138,12 @@
 .info-box-styled {
     background-color: rgba(255, 255, 255, 0.05);
     border-left-width: 4px;
-    border-left-color: var(--color-cyan); /* Matches your cyan/pink variable setup */
+    border-left-color: var(--color-cyan);
     padding: 10px;
     margin-bottom: 15px;
     -unity-font-style: italic; 
     color: var(--text-muted);
-    white-space: normal; /* <--- THIS FIXES THE CLIPPING */
+    white-space: normal; /* Safely wraps long text */
 }
 
 /* =======================================================

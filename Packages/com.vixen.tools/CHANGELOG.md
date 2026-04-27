@@ -6,6 +6,32 @@ All notable changes to the VixenToolBox project will be documented in this file.
 
 ***
 
+## [1.4.3] - 2026-04-26
+
+### Added
+- **Full Mobile Performance Heuristics (Quest Engine):** The scanner now mathematically calculates 100% of VRChat's Android Performance limits. Added native topology parsing for Triangles, Skinned Meshes, Material Slots, `VRCRaycast`, `ParticleSystem`, `TrailRenderer`, and `LineRenderer`.
+- **Incompatible Mobile Component Purge:** The Quest Engine now actively hunts down objects globally banned on VRChat mobile (Cameras, Lights, AudioSources, Cloth, Rigidbodies, and standard Unity Colliders). These populate in a new "Auto-Culled" UI matrix featuring locked, neon-red danger toggles to guarantee their removal.
+- **Root Animator Protection:** Developed a recursive depth scanner that detects the avatar's core root Animator. This component is now hard-locked into a "Kept" state (visualized with a protected neon-cyan toggle) to ensure heuristic culling never accidentally shatters the avatar's base functionality.
+- **High-Fidelity Linear Downsampling Pipeline:** Upgraded the ImageMagick Lanczos resize method to perform gamma-correct scaling. Textures are temporarily moved into `ColorSpace.RGB` (Linear) during the downsample, preventing the mathematical darkening/crushing of highlights typical in standard sRGB scaling.
+- **Micro-Contrast Texture Recovery:** Injected a mathematically calculated `UnsharpMask(0.0, 0.5, 1.0, 0.05)` into the ImageMagick pipeline post-resize to recover high-frequency material details (fur, fabric weaves) naturally destroyed by downsampling.
+- **Interactive Texture Culling Matrix:** Added a dedicated DOM matrix displaying all parsed textures and their resolutions prior to conversion. Creators can now selectively disable ImageMagick processing on a per-texture basis to massively reduce compile times on highly redundant avatars.
+- **Mochie Shader Support:** The Quest Engine scanner now inherently recognizes custom third-party property routing, specifically mapping `_MochieMetallicMaps` and `_MochieMetallicMap` down to the VRChat Mobile Standard `_MetallicMap` slot.
+- **Emissive Mask Color Control (Badge Studio):** Injected a new `ColorField` to give creators absolute control over the generation of the `_EMI` emission mask. This allows for multi-channel emission blending without blowing out VRChat's bloom. Saved natively to the `layout.json` matrix.
+- **Material Parameter Injection (Badge Studio):** The engine now physically reaches into the compiled material to forcefully write user-selected colors (Material Base Color, Emissive Mask Color) directly into the `_Color` / `_BaseColor` and `_EmissionColor` shader properties, overriding legacy states.
+- **Targeted Emission Routing (Badge Studio):** Decoupled the text rendering pipelines, adding explicit UI toggles to independently choose whether the Display Name or the Pronouns get injected into the emissive mask.
+
+### Changed
+- **Topology Matrix CSS Partitioning:** Separated the massive Quest Engine topology readout into distinct, collapsible DOM foldouts (PhysBones, Colliders, Contacts, Constraints, etc.) to prevent UI bloat on highly complex avatars. 
+- **Texture Importer Asset Enforcement:** The Quest Engine no longer blindly imports all processed files as standard sRGB maps. The pipeline now detects if a texture is a Normal Map or a Metallic/Gloss data map, directly injecting the `TextureImporterType.NormalMap` and `sRGBTexture = false` flags to prevent washed-out shading on the Quest clone.
+- **ColorField USS Integration:** Updated the core `.uss` stylesheets to natively target `.unity-color-field`, ensuring newly spawned color pickers inherit the custom cyber-noir text scaling, panel backgrounds, and border alignments.
+
+### Fixed
+- **Alpha-Channel Emission Blowout (Badge Studio):** Fixed a critical bug where ImageMagick's transparent text backgrounds were saving as `(255,255,255,0)` (Transparent White). Because Unity's Standard shader emission strictly reads RGB and ignores Alpha, this caused the entire badge to glow blindingly white and override the diffuse map. The engine now mathematically flattens the final `_EMI` composite onto a pure `MagickColors.Black` background and permanently strips the Alpha channel to guarantee zero-bleed emission.
+- **Temporary MeshCollider Memory Leak (Badge Studio):** Built a garbage-collection tracker (`_tempCollider`) for the Live Scene UV Mapper. The tool now safely executes `DestroyImmediate` on the auto-generated MeshCollider if the user disables mapping, swaps targets, or closes the window.
+- **Emissive Mask Darkening (Badge Studio):** Fixed a compositing math error where the text plate on the generated `_EMI` map was adopting the user's Neon Color, which artificially darkened the shader's target `_EmissionStrength`. Text on the mask now strictly utilizes the new Emissive Mask Color (defaulting to pure white).
+- **Quest Engine Compiler Warnings:** Purged a dangling `_rendererCount` variable assignment and eliminated a structurally impossible type-check against `VRCPhysBoneCollider` inside the incompatible components loop. 
+- **Legacy JSON Fallback:** Fortified the Badge Studio `layout.json` parser to gracefully handle older template configs. If an older JSON file lacks the newly added `emiMaskColor` parameter, the system safely falls back to `Color.white` instead of defaulting to a transparent/black mask.
+
 ## [1.4.0] - 2026-04-24
 ### Added
 - **Enterprise UI Toolkit Architecture:** Completely eradicated legacy IMGUI constraints across the entire ecosystem. Vixen Hub, Badge Studio, Animation Workbench Pro, Quest Conversion Engine, PhysBone Topology Mapper, and Preset Manager now operate natively on Unity's high-performance UI Toolkit DOM tree.
