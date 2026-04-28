@@ -6,6 +6,22 @@ All notable changes to the VixenToolBox project will be documented in this file.
 
 ***
 
+## [1.4.5] - 2026-04-28
+
+### Added
+- **Dynamic Version Extraction (Vixen Hub):** Engineered a lightweight Regex parser that autonomously reads the ecosystem's `package.json` during initialization to extract and display the active VixenTools and VRCSDK versions in the header, completely eliminating hardcoded strings and race conditions.
+- **Changelog Pagination Engine (Vixen Hub):** Completely overhauled the changelog markdown parser. Replaced infinite vertical scrolling with a structured, memory-efficient data dictionary and a native `DropdownField` to dynamically isolate and render individual release histories.
+- **Physics Joint Heuristics (Quest Engine):** Expanded the deep matrix scan to actively hunt and isolate unsupported Unity physics constraints (`SpringJoint`, `FixedJoint`, `HingeJoint`).
+- **Dedicated Joint UI Topology (Quest Engine):** Physics joints now populate in a dedicated phase 1.5 Interactive Topology matrix section, equipped with mathematically locked (limit 0), neon-red danger toggles to guarantee they are auto-culled during the conversion pipeline.
+- **Native Style Hijacking (UI Ecosystem):** Injected base Unity class overrides (e.g., `.unity-base-popup-field__input`) into the core `.uss` stylesheets. Standard Unity fields now automatically inherit the VixenTools cyber-noir dark panels and cyan-tinted borders without requiring clunky inline C# modifications.
+
+### Changed
+- **Destruction Pipeline Routing (Quest Engine):** Re-routed the `ProcessDestruction` sequence so that physics joints are securely stripped from the prefab sandbox before unpack, preventing VRChat SDK mobile validation errors.
+
+### Fixed
+- **UI Toolkit Flex Boundaries (Vixen Hub):** Repaired a critical layout quirk where the markdown `ScrollView` lacked strict flex limits, causing the viewport to bleed off the bottom of the Editor window. Enforced `flex-shrink: 1` and applied aerodynamic padding buffers to restore full scroll depth.
+- **Regex Verbatim Escaping (Vixen Hub):** Resolved `CS1026` and `CS8997` compile errors caused by double-escaped quotes during the manifest parsing sequence.
+
 ## [1.4.4] - 2026-04-27
 
 ### Added
@@ -26,7 +42,7 @@ All notable changes to the VixenToolBox project will be documented in this file.
 
 ### Fixed
 - **[Tool] SDK Dependency Resolution:** Bumped ecosystem manifest to `v1.4.4` and strictly enforced VRChat SDK requirements (`com.vrchat.base` and `com.vrchat.avatars` mapped to `^3.10.3`). This resolves critical missing assembly references required by the newly integrated Live Scene UV Mapper's raycasting components.
-- 
+
 ## [1.4.3] - 2026-04-26
 
 ### Added

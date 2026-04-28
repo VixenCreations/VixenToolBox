@@ -57,6 +57,7 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
+                        <fluent-option value="v1.4.5">v1.4.5</fluent-option>
                         <fluent-option value="v1.4.4">v1.4.4</fluent-option>
                         <fluent-option value="v1.4.3">v1.4.3</fluent-option>
                         <fluent-option value="v1.4.0">v1.4.0</fluent-option>
@@ -74,6 +75,30 @@
             </div>
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
+
+                <div class="changelog-entry" data-version="v1.4.5">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v1.4.5 - 2026-04-28</h5>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Dynamic Version Extraction (Vixen Hub):</strong> Engineered a lightweight Regex parser that autonomously reads the ecosystem's <code>package.json</code> during initialization to extract and display the active VixenTools and VRCSDK versions in the header, completely eliminating hardcoded strings and race conditions.</li>
+                        <li class="mb-2"><strong>Changelog Pagination Engine (Vixen Hub):</strong> Completely overhauled the changelog markdown parser. Replaced infinite vertical scrolling with a structured, memory-efficient data dictionary and a native <code>DropdownField</code> to dynamically isolate and render individual release histories.</li>
+                        <li class="mb-2"><strong>Physics Joint Heuristics (Quest Engine):</strong> Expanded the deep matrix scan to actively hunt and isolate unsupported Unity physics constraints (<code>SpringJoint</code>, <code>FixedJoint</code>, <code>HingeJoint</code>).</li>
+                        <li class="mb-2"><strong>Dedicated Joint UI Topology (Quest Engine):</strong> Physics joints now populate in a dedicated phase 1.5 Interactive Topology matrix section, equipped with mathematically locked (limit 0), neon-red danger toggles to guarantee they are auto-culled during the conversion pipeline.</li>
+                        <li class="mb-2"><strong>Native Style Hijacking (UI Ecosystem):</strong> Injected base Unity class overrides (e.g., <code>.unity-base-popup-field__input</code>) into the core <code>.uss</code> stylesheets. Standard Unity fields now automatically inherit the VixenTools cyber-noir dark panels and cyan-tinted borders without requiring clunky inline C# modifications.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Destruction Pipeline Routing (Quest Engine):</strong> Re-routed the <code>ProcessDestruction</code> sequence so that physics joints are securely stripped from the prefab sandbox before unpack, preventing VRChat SDK mobile validation errors.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>UI Toolkit Flex Boundaries (Vixen Hub):</strong> Repaired a critical layout quirk where the markdown <code>ScrollView</code> lacked strict flex limits, causing the viewport to bleed off the bottom of the Editor window. Enforced <code>flex-shrink: 1</code> and applied aerodynamic padding buffers to restore full scroll depth.</li>
+                        <li class="mb-2"><strong>Regex Verbatim Escaping (Vixen Hub):</strong> Resolved <code>CS1026</code> and <code>CS8997</code> compile errors caused by double-escaped quotes during the manifest parsing sequence.</li>
+                    </ul>
+                </div>
 
                 <div class="changelog-entry" data-version="v1.4.4">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v1.4.4 - 2026-04-27</h5>
