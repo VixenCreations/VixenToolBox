@@ -1,0 +1,372 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>VixenTools | Extended Projects & Architecture</title>
+    <meta name="title" content="VixenTools | Extended Projects & Architecture">
+    <meta name="description" content="The central VPM-native distribution hub for the VixenTools ecosystem. Advanced Unity editor utilities, PhysBone automation pipelines, and procedural generators for VRChat.">
+    <meta name="keywords" content="VRChat, VPM, Unity, Editor Tools, PhysBones, VixenTools, Vixenlicous, Avatar Architecture, Procedural Generation">
+    <meta name="author" content="Vixenlicous">
+    <meta name="theme-color" content="#ff00aa">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/">
+    <meta property="og:title" content="VixenTools | Extended Projects & Architecture">
+    <meta property="og:description" content="The central VPM-native distribution hub for the VixenTools ecosystem. Advanced Unity editor utilities, PhysBone automation pipelines, and procedural generators for VRChat.">
+    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/">
+    <meta property="twitter:title" content="VixenTools | Extended Projects & Architecture">
+    <meta property="twitter:description" content="The central VPM-native distribution hub for the VixenTools ecosystem. Advanced Unity editor utilities, PhysBone automation pipelines, and procedural generators for VRChat.">
+    <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <meta property="twitter:site" content="@VixenVRC">
+
+    <link rel="icon" href="./favicon.ico">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+
+    <script type="module" src="https://unpkg.com/@fluentui/web-components"></script>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        .arch-code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 3px solid var(--neon-pink);
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            color: #bfa8d2;
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+            .arch-code-block span.highlight {
+                color: var(--neon-cyan);
+                font-weight: bold;
+            }
+
+            .arch-code-block span.string {
+                color: #ffaa00;
+            }
+
+        .tool-badge {
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--neon-cyan);
+            margin-right: 5px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+
+        .manifesto-quote {
+            border-left: 4px solid var(--neon-pink);
+            padding-left: 1rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            color: #e0d5eb;
+            background: rgba(255, 0, 170, 0.05);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-art"></div>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <h2 class="text-glow-cyan">VIXENTOOLS</h2>
+            <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">Ecosystem Matrix</div>
+        </div>
+
+        <div class="nav-links">
+            <fluent-anchor href="index.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2.5L2 8.5H4V16.5H8V11.5H12V16.5H16V8.5H18L10 2.5Z" /></svg>
+                VPM Registry
+            </fluent-anchor>
+
+            <fluent-anchor href="tools.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2ZM11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14V10C9 9.44772 9.44772 9 10 9C10.5523 9 11 9.44772 11 10V14ZM10 8C9.44772 8 9 7.55228 9 7C9 6.44772 9.44772 6 10 6C10.5523 6 11 6.44772 11 7C11 7.55228 10.5523 8 10 8Z" /></svg>
+                Suite Architecture
+            </fluent-anchor>
+
+            <fluent-anchor href="docs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Deep-Dive Docs
+            </fluent-anchor>
+
+            <fluent-anchor href="compare.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                Competitive Matrix
+            </fluent-anchor>
+
+            <fluent-anchor href="changelog.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Changelog
+            </fluent-anchor>
+
+            <fluent-anchor href="support.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                Support Ecosystem
+            </fluent-anchor>
+
+            <fluent-anchor href="social.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                Network & Media
+            </fluent-anchor>
+
+            <fluent-anchor href="projects.html" class="nav-item active">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                Extended Projects
+            </fluent-anchor>
+        </div>
+    </nav>
+
+    <main class="main-wrapper">
+        <div class="col align-items-center content" style="max-width: 1200px;">
+
+            <div class="col w-100 text-center mb-4">
+                <h1 class="text-glow-cyan">Extended Projects & Architecture</h1>
+                <p class="caption1 mt-2" style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
+                    Beyond the core Editor ecosystem. A central hub mapping out the scalable standalone applications, web bridges, and community utilities engineered under the VixenCreations banner.
+                </p>
+            </div>
+
+            <div class="row w-100 mb-5" style="gap: 20px; flex-wrap: wrap;">
+
+                <div class="glass-panel" style="flex: 1 1 48%; padding: 2rem; display: flex; flex-direction: column;">
+                    <div class="row justify-content-between align-items-center mb-3">
+                        <h2 class="text-glow-pink m-0">VixenLens</h2>
+                        <a href="https://github.com/VixenCreations/VixenLens" target="_blank" class="badge" style="text-decoration: none; cursor: pointer;">Repository</a>
+                    </div>
+                    <p class="caption1 mb-4" style="color: #bfa8d2; line-height: 1.6; flex-grow: 1;">
+                        A standalone, high-performance metadata indexing and retrieval engine. Built utilizing a <strong>Rust backend</strong> and a <strong>Tauri frontend</strong>, VixenLens is engineered to autonomously traverse and index thousands of VRChat snapshots, providing 4D-chess-level organization for massive historical archives.
+                    </p>
+                    <div class="row" style="gap: 10px;">
+                        <span class="tool-badge">Rust</span>
+                        <span class="tool-badge">Tauri</span>
+                        <span class="tool-badge">Metadata Parsing</span>
+                    </div>
+                </div>
+
+                <div class="glass-panel" style="flex: 1 1 48%; padding: 2rem; display: flex; flex-direction: column;">
+                    <div class="row justify-content-between align-items-center mb-3">
+                        <h2 class="text-glow-pink m-0">Fish Validator</h2>
+                        <a href="https://github.com/VixenCreations/Fish-Appraiser-Engine" target="_blank" class="badge" style="text-decoration: none; cursor: pointer;">Repository</a>
+                    </div>
+                    <p class="caption1 mb-4" style="color: #bfa8d2; line-height: 1.6; flex-grow: 1;">
+                        A robust, community-focused validation engine designed to seamlessly appraise and validate structured data within specialized environments. Backed by a fully flushed-out ecosystem wiki for transparent documentation.
+                    </p>
+                    <div class="row" style="gap: 10px;">
+                        <span class="tool-badge">Data Validation</span>
+                        <span class="tool-badge">Community Tool</span>
+                        <span class="tool-badge">Wiki Documented</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col w-100 text-center mb-4 mt-5">
+                <hr style="border-color: rgba(0, 229, 255, 0.2); margin-bottom: 2rem;">
+                <h1 class="text-glow-cyan">Stream Connector v6.3.0: The Manifesto</h1>
+                <p class="caption1 mt-2" style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
+                    A comprehensive technical breakdown of the Stream Connector orchestration engine. This system acts as an ultra-low latency, multi-threaded bridge routing raw broadcast events directly into physical hardware states. Not a gimmick. A real control layer with teeth.
+                </p>
+                <div class="mt-3">
+                    <a href="https://github.com/VixenCreations/Stream-Connector" target="_blank" class="badge" style="text-decoration: none; display: inline-block;">View Official Repository</a>
+                </div>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-pink m-0">1. Philosophy & Reality Check</h2>
+                    <div class="badge">No Telemetry | Full Control</div>
+                </div>
+                <div class="manifesto-quote">
+                    "This project doesn’t exist to be polite. It exists to give you control. Not platform control. Not corporate control. Your control."
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    Stream Connector is built for intimacy, high-control use, and uncompromised power dynamics. It does not judge, and it does not use training wheels.
+                </p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li><strong>Why Tiering Died:</strong> Locking power behind paywalls helps nobody. If you are trusted to run this software, you are trusted to use all of it. Platforms change rules overnight; this app is yours to keep.</li>
+                    <li><strong>Privacy by Default:</strong> No telemetry. No cloud dependency. No accounts. No hidden behavior. Everything is deliberate, reversible, and stops when you say stop.</li>
+                    <li><strong>VRChat Avatar Control:</strong> Your avatar stops being decorative and becomes reactive. Toggle clothing, chain visual states, and keep everything deterministic via OSC.</li>
+                </ul>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem; border-color: rgba(255, 0, 170, 0.2);">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">2. Security & Network Architecture</h2>
+                    <div class="badge">Local-First | Fail-Closed</div>
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    If you’re paranoid: good. This architecture is designed to be fully auditable. Stream Connector is local-first, explicit-by-design, and has zero inbound internet exposure.
+                </p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li><strong>Fails Closed, Not Open:</strong> Includes global execution locks, busy-state enforcement, rate limiting, and hard stop paths. If the engine cannot validate state, it stops. It does not enter infinite spam loops.</li>
+                    <li><strong>Antivirus Trust:</strong> All builds are cryptographically signed. There is no obfuscation, no remote scanning, and no hidden updaters. If your AV complains, it is because this software controls real hardware and opens sockets, not because it is malicious.</li>
+                    <li><strong>Outbound Only (PiShock):</strong> PiShock requires internet because it is a brokered platform. However, the app only utilizes outbound HTTPS/WSS to the broker. No inbound ports are opened on your machine.</li>
+                </ul>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-pink m-0">3. Local File Structure (saved/)</h2>
+                    <div class="badge">JSON Configuration | Logging</div>
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    You own your install and your data. The entire state of the application is maintained locally within the <code>saved/</code> directory schema.
+                </p>
+                <div class="arch-code-block mb-3">
+                    saved/<br>
+                    ├── <span class="highlight">config/</span>     <span class="string"># osc_config.json, noisy_parameters.json, nuclear.json</span><br>
+                    ├── <span class="highlight">controls/</span>   <span class="string"># User-defined chains, exported logic, OWO suit mappings</span><br>
+                    ├── <span class="highlight">logs/</span>       <span class="string"># Segmented routing (core, controls, haptics, webhook)</span><br>
+                    └── <span class="highlight">userdata/</span>   <span class="string"># Encrypted/local user preferences</span>
+                </div>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">4. Tri-State Concurrency Engine</h2>
+                    <div class="badge">asyncio | ThreadPoolExecutor | Tkinter</div>
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    Engineered to survive massive broadcast payloads (10,000+ viewer raid alerts) without causing the UI thread to stall or dropping execution packets.
+                </p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li><strong>The Capture Buffer:</strong> Incoming events are piped into a thread-safe <code>collections.deque(maxlen=5000)</code>. This acts as a shock absorber. Instead of locking the OS socket, the app processes the queue sequentially.</li>
+                    <li><strong>Hardware Offloading:</strong> Blocking REST calls and heavy logic are forcefully punted to a <code>ThreadPoolExecutor(max_workers=6)</code>, guaranteeing the Tkinter mainloop never hangs.</li>
+                </ul>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem; border-color: rgba(255, 0, 170, 0.2);">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-pink m-0">5. Developer Integrations (Streamer.bot & API)</h2>
+                    <div class="badge">Port 8080 (WS) | Port 8840 (HTTP)</div>
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    Because walls are for people afraid of power. The connector exposes rigorous, typed endpoints allowing third-party integration without compromising the security model.
+                </p>
+                <div class="arch-code-block mb-3">
+                    <span class="string">// The Core Execution Hook routing all external events</span><br>
+                    <span class="highlight">execute_external_hook</span>(provider, command_id, context)
+                </div>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li><strong>Streamer.bot (WS):</strong> Connects via <code>ws://127.0.0.1:8080/</code>. Uses an <code>Example Sub Action.cs</code> script to fire valid, perfectly-escaped JSON over the internal WebSocket without expecting a callback, ensuring zero execution drag on the broadcast software.</li>
+                    <li><strong>External HTTP API:</strong> Waitress WSGI server listening on <code>http://127.0.0.1:8840</code>. Accepts strictly typed JSON at <code>/api/external/exec</code>. Payloads are passed through untouched—no eval, no execution, just safe structured data routing. Errors always return HTTP 200 to avoid breaking bots.</li>
+                </ul>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">6. Haptic Abstraction Layer (HAL)</h2>
+                    <div class="badge">PiShock | Intiface (v3) | OWO Suit | OSC</div>
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    The connector normalizes vastly different hardware protocols into a single, unified internal schema, allowing users to map one chat event to multiple discrete devices simultaneously.
+                </p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li><strong>Intiface (Buttplug.io):</strong> Directly parses the Buttplug v3 JSON schema. Autonomously listens to <code>DeviceAdded</code> messages and natively maps capabilities (<code>VibrateCmd</code>, <code>LinearCmd</code>).</li>
+                    <li><strong>PiShock REST Dispatch:</strong> Bypasses local network restrictions by serializing payloads directly to the PiShock API.</li>
+                    <li><strong>OWO BLE Integration:</strong> Intercepts the official <code>OWO.dll</code> via <code>pythonnet</code>. Maps abstract arrays (e.g. <code>[Pectoral_R, Abdominal_L]</code>) to raw sensation strings.</li>
+                    <li><strong>OSC Translation:</strong> Native UDP implementation routing standardized float values seamlessly into VRChat avatar parameter spaces.</li>
+                </ul>
+            </div>
+
+            <div class="col w-100 text-center mb-4 mt-5">
+                <hr style="border-color: rgba(255, 0, 170, 0.2); margin-bottom: 2rem;">
+                <h1 class="text-glow-pink">Development & Diagnostics Suite</h1>
+                <p class="caption1 mt-2" style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
+                    The complete set of standalone reconnaissance tools, packet sniffers, and CI/CD harnesses engineered during the R&D phase to reverse-engineer hardware protocols and validate bridge stability.
+                </p>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem; border-color: rgba(0, 229, 255, 0.2);">
+                <h2 class="text-glow-cyan mb-2">Hardware Reverse-Engineering & Reconnaissance</h2>
+                <div class="row mt-4" style="gap: 20px; flex-wrap: wrap;">
+
+                    <div class="col" style="flex: 1 1 45%; background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 8px;">
+                        <div class="badge mb-2" style="background: rgba(255,0,170,0.2); border-color: var(--neon-pink);">BLE-DeepProbe.py</div>
+                        <p class="caption1" style="color: #bfa8d2;">Utilizes <code>bleak</code> to map OWO Suit GATT characteristics. Autonomously negotiates the <code>0*AUTH*</code> handshake, maintains a strict 0.5s <code>0*PING*</code> keepalive loop, and writes raw sensation vectors directly to the Write UUID to eliminate native driver latency.</p>
+                    </div>
+
+                    <div class="col" style="flex: 1 1 45%; background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 8px;">
+                        <div class="badge mb-2" style="background: rgba(255,0,170,0.2); border-color: var(--neon-pink);">Process.py (Socket Ripper)</div>
+                        <p class="caption1" style="color: #bfa8d2;">When local UDP discovery fails, this uses <code>psutil</code> to hunt for the proprietary <code>myowo_flutter.exe</code> process natively. It violently rips its active TCP/UDP bindings to forcefully establish connection lines.</p>
+                    </div>
+
+                    <div class="col" style="flex: 1 1 45%; background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 8px;">
+                        <div class="badge mb-2" style="background: rgba(255,0,170,0.2); border-color: var(--neon-pink);">ServiceSpy.py</div>
+                        <p class="caption1" style="color: #bfa8d2;">Implements a <code>zeroconf</code> browser that passively monitors the local network for DNS-SD broadcasts. Used to decrypt mDNS routing and dynamically map service properties and IPv4 locations of headless haptic nodes.</p>
+                    </div>
+
+                    <div class="col" style="flex: 1 1 45%; background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 8px;">
+                        <div class="badge mb-2" style="background: rgba(255,0,170,0.2); border-color: var(--neon-pink);">BLE-OWOTest.py & BLE-PacketTest.py</div>
+                        <p class="caption1" style="color: #bfa8d2;">Twin stability harnesses. <code>OWOTest.py</code> maintains the asynchronous keepalive and 8-second re-auth loops, while <code>PacketTest.py</code> focuses entirely on verifying the structural integrity of the <code>0*GAMEAVAILABLE*</code> payload drops.</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem; border-color: rgba(0, 229, 255, 0.2);">
+                <h2 class="text-glow-cyan mb-2">API, WebSocket, & Schema Validation</h2>
+                <div class="row mt-4" style="gap: 20px; flex-wrap: wrap;">
+
+                    <div class="col" style="flex: 1 1 45%; background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 8px;">
+                        <div class="badge mb-2">TestPayload.py</div>
+                        <p class="caption1" style="color: #bfa8d2;">The official CI/CD REST test harness. Generates UUIDs for every dispatched request against port <code>8840</code>. Tests multi-step command chains and verifies HTTP status codes to ensure the internal <code>Waitress</code> server remains stable under attack.</p>
+                    </div>
+
+                    <div class="col" style="flex: 1 1 45%; background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 8px;">
+                        <div class="badge mb-2">TestPayloadStreamerBot.py</div>
+                        <p class="caption1" style="color: #bfa8d2;">A direct WebSocket injector for Streamer.bot (Port <code>8080</code>). Autonomously fires <code>GetActions</code> and <code>GetGlobalVariables</code> frames to dump and map Streamer.bot's internal data structures, verifying the bridge has complete bi-directional context.</p>
+                    </div>
+
+                    <div class="col" style="flex: 1 1 45%; background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 8px;">
+                        <div class="badge mb-2">ProbeSchema.py</div>
+                        <p class="caption1" style="color: #bfa8d2;">A Buttplug.io v3 specification stress-tester. Systematically hits the Intiface Central socket with Object-Keyed, Array-Keyed, and Explicit Type payloads to determine the exact parser logic required for integration.</p>
+                    </div>
+
+                    <div class="col" style="flex: 1 1 45%; background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 8px;">
+                        <div class="badge mb-2">TestIntiface.py</div>
+                        <p class="caption1" style="color: #bfa8d2;">Demonstrates the core <code>asyncio</code> client isolated from the GUI. Connects to <code>ws://127.0.0.1:12345</code>, actively listens for <code>DeviceList</code>, <code>DeviceAdded</code>, and <code>DeviceRemoved</code> events, dynamically mapping capabilities like VibrateCmd to a local dictionary.</p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <button id="jumpToTopBtn" class="jump-to-top" title="Back to top">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+            </svg>
+        </button>
+
+    </main>
+
+    <script type="module" src="app.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                if (item.getAttribute('href') === 'projects.html') {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

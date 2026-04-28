@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>VixenTools | Deep-Dive Documentation</title>
+    <meta name="title" content="VixenTools | Deep-Dive Documentation">
+    <meta name="description" content="The central VPM-native distribution hub for the VixenTools ecosystem. Advanced Unity editor utilities, PhysBone automation pipelines, and procedural generators for VRChat.">
+    <meta name="keywords" content="VRChat, VPM, Unity, Editor Tools, PhysBones, VixenTools, Vixenlicous, Avatar Architecture, Procedural Generation">
+    <meta name="author" content="Vixenlicous">
+    <meta name="theme-color" content="#ff00aa">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/">
+    <meta property="og:title" content="VixenTools | Deep-Dive Documentation">
+    <meta property="og:description" content="The central VPM-native distribution hub for the VixenTools ecosystem. Advanced Unity editor utilities, PhysBone automation pipelines, and procedural generators for VRChat.">
+    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/">
+    <meta property="twitter:title" content="VixenTools | Deep-Dive Documentation">
+    <meta property="twitter:description" content="The central VPM-native distribution hub for the VixenTools ecosystem. Advanced Unity editor utilities, PhysBone automation pipelines, and procedural generators for VRChat.">
+    <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <meta property="twitter:site" content="@VixenVRC">
+
+    <link rel="icon" href="./favicon.ico">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+
+    <script type="module" src="https://unpkg.com/@fluentui/web-components"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="background-art"></div>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <h2 class="text-glow-cyan">VIXENTOOLS</h2>
+            <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">Ecosystem Matrix</div>
+        </div>
+
+        <div class="nav-links">
+            <fluent-anchor href="index.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2.5L2 8.5H4V16.5H8V11.5H12V16.5H16V8.5H18L10 2.5Z" /></svg>
+                VPM Registry
+            </fluent-anchor>
+
+            <fluent-anchor href="tools.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2ZM11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14V10C9 9.44772 9.44772 9 10 9C10.5523 9 11 9.44772 11 10V14ZM10 8C9.44772 8 9 7.55228 9 7C9 6.44772 9.44772 6 10 6C10.5523 6 11 6.44772 11 7C11 7.55228 10.5523 8 10 8Z" /></svg>
+                Suite Architecture
+            </fluent-anchor>
+
+            <fluent-anchor href="docs.html" class="nav-item active">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Deep-Dive Docs
+            </fluent-anchor>
+
+            <fluent-anchor href="compare.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                Competitive Matrix
+            </fluent-anchor>
+
+            <fluent-anchor href="changelog.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Changelog
+            </fluent-anchor>
+
+            <fluent-anchor href="support.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                Support Ecosystem
+            </fluent-anchor>
+
+            <fluent-anchor href="social.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                Network & Media
+            </fluent-anchor>
+
+            <fluent-anchor href="projects.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                Extended Projects
+            </fluent-anchor>
+        </div>
+    </nav>
+
+    <main class="main-wrapper">
+        <div class="col align-items-center content" style="max-width: 1200px;">
+
+            <div class="col w-100 text-center mb-4">
+                <h1 class="text-glow-pink">Core Documentation</h1>
+                <p class="caption1 mt-2" style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
+                    Under the hood of the VixenTools ecosystem. A technical breakdown of the heuristics, math libraries, procedural pipelines, and real-world implementation driving the editor utilities.
+                </p>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Vixen Hub & DOM Bridging</h2>
+                    <div class="badge">VixenHub.cs</div>
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    The flagship entry point. Engineered to entirely bypass legacy <code>OnGUI</code> redraw lag, the Hub utilizes a custom <strong>Markdown-to-UIToolkit Parser</strong>. It autonomously reads repository manifests and dynamically spawns native <code>VisualElements</code>, maintaining layout stability without locking the Editor thread.
+                </p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li><strong>Autonomous Scene HUD:</strong> Injects a sleek, non-blocking <code>&gt;&gt; VIXENTOOLS UPDATE</code> notifier directly into the Unity Scene View via <code>Handles.BeginGUI()</code>. This passively monitors state via an <code>[InitializeOnLoad]</code> hook, completely preventing workflow-breaking popups.</li>
+                    <li><strong>Action Delegate Routing:</strong> Overhauls markdown rendering by parsing <code>[text](url)</code> syntax mid-paragraph. It dynamically spawns transparent <code>Button</code> elements inline, mapping standard URLs to <code>Application.OpenURL</code> and custom internal commands directly to C# <code>System.Action</code> delegates.</li>
+                </ul>
+
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
+                <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
+                    <li><strong>Interface Execution:</strong> Accessible via <code>VixenTools > Hub Dashboard</code>, the interface successfully translates the web's neon-pink/cyan aesthetic into Unity's native Editor styling.</li>
+                    <li><strong>Live Parsing:</strong> The tool autonomously extracts the exact ecosystem version natively from <code>package.json</code> and parses <code>CHANGELOG.md</code> into highly readable UI toolkit sections without horizontal scrolling constraints.</li>
+                </ul>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Quest Conversion Engine</h2>
+                    <div class="badge">QuestConversionEngine.cs</div>
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    A highly optimized, non-destructive pipeline built to intercept and mathematically calculate VRChat Mobile Performance ranks natively. It isolates the prefab into a temporary conversion sandbox to ensure your base PC avatar is never irreversibly altered.
+                </p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li><strong>Magick.NET Linear Downsampling:</strong> Intercepts textures and processes them through a Lanczos filter natively. Textures are temporarily shifted into <code>ColorSpace.RGB</code> (Linear) to prevent highlight crushing during scaling, followed by a mathematically calculated <code>UnsharpMask(0.0, 0.5, 1.0, 0.05)</code> to recover high-frequency material details lost in standard Android ASTC compression.</li>
+                    <li><strong>Heuristic Culling Matrix:</strong> Executes a recursive deep-scan to isolate and forcefully purge globally banned mobile components (Cameras, AudioSources, Cloth, Unity Constraints, etc.). Integrates skeletal depth calculation to cull deep leaf bones based on performance targets.</li>
+                    <li><strong>Root Animator Protection:</strong> Employs a recursive depth scanner that detects the avatar's core root Animator, hard-locking it to a protected state so heuristic culling never accidentally shatters base functionality.</li>
+                </ul>
+
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
+                <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
+                    <li><strong>Selective Culling:</strong> Upon initiating a scan, the interactive topology matrix populates. Creators can manually intervene before generation, such as intentionally keeping the tail, ears, and mane, while discarding expensive chest fluff to save geometry.</li>
+                    <li><strong>Post-Conversion Material Tweaks:</strong> The engine defaults materials to target specific mobile shaders like <code>VRChat/Mobile/ToonLit</code>. After the clone is generated, minor adjustments bring it to parity (e.g., setting particle lenses to <em>Multiply</em>, resetting emission maps, and utilizing <em>Additive</em> rendering on visors to recover transparency).</li>
+                    <li><strong>Bypassing Artificial Blocks:</strong> The engine accurately flags when a "Very Poor" ranking is caused strictly by the immutable 20,000 triangle limit rather than actual unoptimized components. It provides a bypass to compile the avatar anyway, allowing publication for showcase purposes.</li>
+                    <li><strong>VRC Fury Integration:</strong> Designed to stack with other optimization tools. Post-conversion, users can inject a <em>VRC Fury Blend Shape Optimizer</em> to aggressively purge unused blendshapes and drag Android performance overhead even lower.</li>
+                </ul>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">PhysBone Topology Mapper</h2>
+                    <div class="badge">PhysBoneTopologyMapper.cs | PhysBoneBlueprint.cs</div>
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    Designed to eliminate the human error of manually dragging, dropping, and configuring colliders across avatar iterations. This engine entirely decouples the physics matrix from the mesh hierarchy.
+                </p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li><strong>Master Blueprints:</strong> Utilizes <code>AnimationUtility.CalculateTransformPath</code> to generate relative skeletal paths. Saves targeted physics components as serialized Unity <code>Preset</code> objects mapped securely to a custom ScriptableObject schema.</li>
+                    <li><strong>Flawless Injection:</strong> Safely searches the target avatar's hierarchy by relative path and re-injects the Presets perfectly. Features "Graceful Degradation," safely falling back to visual error states if the VRChat SDK goes missing from the environment.</li>
+                </ul>
+
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
+                <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
+                    <li><strong>Creating the Blueprint:</strong> A creator selects their master PC avatar root and runs "Extract Master Copy". This recursively catalogs every physics script and saves it to a structured blueprint (e.g., <code>Assets/VixenTools/Blueprints/NovaBeast_1.2_MasterTopology</code>).</li>
+                    <li><strong>Restoring Stripped Physics:</strong> If an avatar has had its components stripped (such as during manual Quest conversion or destructive optimization), the user selects the stripped avatar and hits "Inject". The mapper autonomously traverses the skeletal structure and reapplies the data. For instance, injecting the blueprint perfectly restores 14 distinct physics presets accurately across the entire rig in a single click.</li>
+                </ul>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Animation Workbench Pro</h2>
+                    <div class="badge">AnimationWorkbenchWindow.cs | PreviewEngine.cs | CurveOperations.cs</div>
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    An advanced visual workspace for staging, easing, and sampling complex animation curves, built to bypass Unity's clunky default Animation window interface completely.
+                </p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li><strong>Runtime Math Library & Easing:</strong> Mathematical keyframe generation driven by <code>EasingFunctions.cs</code>. Supports programmatic interpolation (EaseInOutCubic, SmoothStep) seamlessly via <code>CurveOperations.BuildStretchedCurve</code>. Keys before the edit region are preserved, while intermediate keys are calculated and injected dynamically.</li>
+                    <li><strong>Live Preview Engine:</strong> Hooks into <code>AnimationMode.StartAnimationMode()</code> to dynamically sample targeted GameObjects, allowing real-time timeline scrubbing directly via the custom <code>TimelineRibbon</code> UI Component without altering actual scene states.</li>
+                    <li><strong>Multidimensional Material Extraction:</strong> Safely deconstructs Vector and Color properties on compiled shaders (like locked Poiyomi materials) into individually animatable float tracks to prevent native API crashes during curve bindings.</li>
+                </ul>
+
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
+                <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
+                    <li><strong>Hidden Property Discovery:</strong> The <code>MaterialPropertySearchPopup</code> is utilized to read directly from a shader's active parameters. For example, it allows a creator to easily locate an obscure third-party property like <code>_LumaFlowSpeed</code> and extract its exact resting value (e.g., <code>0.00121</code>).</li>
+                    <li><strong>Mathematical Smoothing:</strong> Rather than manually dragging bezier curves, a creator inputs the exact start and end values, selects a mathematical easing profile (e.g., <code>SmoothStep</code>), and defines key density. Generating 40 keys over 3 seconds creates a perfectly smooth stepped curve instantly.</li>
+                    <li><strong>Iterative Prototyping:</strong> The timeline can be scrubbed live via the <code>PreviewEngine</code>. If the animation feels too fast, the user can instantly re-generate the curve with 80 keys spread over 6 seconds, visually verifying the ultra-smooth transition directly in the editor without launching Play mode.</li>
+                </ul>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Vixen Badge Studio</h2>
+                    <div class="badge">VixenBadgeMaker.cs</div>
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    A high-fidelity, CSS-driven procedural generation matrix utilizing a native JSON layout engine (<code>layout.json</code>) to architect multi-channel convention badges dynamically, specifically heavily targeting Furality templates.
+                </p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li><strong>Emissive Compositing Math:</strong> Fixes native Unity Standard Shader bloom blowouts. ImageMagick renders the generated text onto a pure <code>MagickColors.Black</code> background and mathematically flattens the output, permanently stripping the alpha channel before exporting the <code>_EMI</code> map to guarantee zero-bleed emission.</li>
+                    <li><strong>Universal Shader Injection:</strong> Automatically detects target shaders (Poiyomi, lilToon, VRC Mobile) and physically reaches into the compiled material to force-write user-selected Base and Emissive colors directly into the <code>_Color</code> and <code>_EmissionColor</code> slots.</li>
+                    <li><strong>Interactive Raycasting (UV Mapper):</strong> Temporarily suspends Unity gizmos and hijacks the Scene View. Raycasts against the <code>MeshCollider</code>, mathematically inverting 3D hits into 2D ImageMagick pixel space for perfect custom coordinate mapping.</li>
+                </ul>
+
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
+                <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
+                    <li><strong>Automated Ingestion:</strong> After downloading the Furality SDK, the "Generate Furality JSON Layouts" button runs a Regex search algorithm to detect all convention badge components and builds strict spatial boundary rules (JSONs) for text injection autonomously.</li>
+                    <li><strong>Dynamic Shader Swap:</strong> Allows real-time transition of underlying shader properties. Switching a badge from a Standard shader to "Furality Aqua" recompiles the material on the fly, accurately placing the generated Diffuse and Emission textures into the new proprietary shader slots.</li>
+                    <li><strong>Live UV Repositioning:</strong> If a creator needs to adjust text placement, they don't need Photoshop. Activating the "Scene Mapping" raycaster attaches a temporary Mesh Collider. The user simply clicks on the badge in 3D space, which copies the X/Y intersection. Modifying the Width/Height bounds and recompiling uses ImageMagick to instantly expand and move the generated text.</li>
+                </ul>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Core Scene Utilities</h2>
+                    <div class="badge">BulkPresetGenerator.cs | SnapToSurface.cs | FixSceneData.cs</div>
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    Background operations that maintain structural integrity and optimization standards across the Unity workspace.
+                </p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li><strong>Phantom Asset Architecture:</strong> <code>BulkPresetGenerator.cs</code> generates temporary "Phantom" textures, forces specific metadata onto them (like ASTC compression caps or <code>NormalMap</code> flags), extracts the configuration as a <code>Preset</code>, and injects it directly into Unity's Preset Manager to enforce global project consistency.</li>
+                    <li><strong>Geometric Surface Snapping:</strong> <code>SnapToSurface.cs</code> tracks <code>Transform.hasChanged</code> and mathematically calculates the absolute lowest boundary box across all child <code>MeshRenderers</code> and <code>Colliders</code>, dropping objects perfectly to the floor based on their physical geometric limits rather than an arbitrary center pivot.</li>
+                    <li><strong>Lightmap Serialization:</strong> <code>FixSceneData.cs</code> actively forces Unity to re-serialize the <code>lightingDataAsset</code> reference within the <code>EditorSceneManager</code>, fixing the notorious issue of missing or black lightmaps when transferring scenes between systems via VPM.</li>
+                </ul>
+
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
+                <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
+                    <li><strong>Enforcing Rules:</strong> The Pipeline Preset Manager is used to dictate exactly how Unity handles newly ingested files. By establishing a phantom preset mapped to default resolution limits (e.g., max size 1024, Read/Write Enabled), the tool forcefully injects these rules directly into <code>Edit > Project Settings > Preset Manager</code>. Every subsequent file imported into the project automatically conforms to these boundaries, preventing accidental memory bloat from 4K/8K uncompressed textures.</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <button id="jumpToTopBtn" class="jump-to-top" title="Back to top">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+            </svg>
+        </button>
+
+    </main>
+
+    <script type="module" src="app.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                if (item.getAttribute('href') === 'docs.html') {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
