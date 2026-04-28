@@ -13,6 +13,39 @@
     --text-muted: #aaaaaa;
 }
 
+/* =======================================================
+   Base Unity Overrides (Hijacking Default Grey Styles)
+   ======================================================= */
+.unity-base-field,
+.unity-button,
+.unity-label,
+.unity-popup-field {
+    color: var(--text-main);
+}
+
+.unity-base-popup-field__input {
+    background-color: var(--bg-panel);
+    border-color: rgba(0, 229, 255, 0.4);
+    border-width: 1px;
+    border-radius: 4px;
+    padding: 3px 5px;
+    transition-duration: 0.15s;
+}
+
+.unity-base-popup-field__input:hover {
+    background-color: #2a2a2a;
+    border-color: var(--color-cyan);
+}
+
+.unity-base-popup-field__text {
+    color: var(--text-main);
+    -unity-font-style: bold;
+}
+
+.unity-base-popup-field__arrow {
+    -unity-background-image-tint-color: var(--color-cyan);
+}
+
 #hub-root {
     background-color: var(--bg-dark);
     flex-grow: 1;

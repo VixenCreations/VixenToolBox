@@ -64,6 +64,19 @@ namespace VixenTools.Editor
         
         private Font _cyberFont;
         
+        // --- Dynamic Version States ---
+        private string _packageVersion = "1.4.5"; 
+        private string _sdkVersion = "Unknown";
+        
+        // --- Changelog Pagination State ---
+        private class ChangelogEntry
+        {
+            public string VersionTitle;
+            public string Content;
+        }
+        private List<ChangelogEntry> _changelogEntries = new List<ChangelogEntry>();
+        private int _selectedChangelogIndex = 0;
+
         private Button _btnDashboard;
         private Button _btnCoreModules;
         private Button _btnNetwork;
@@ -85,6 +98,51 @@ namespace VixenTools.Editor
         private void OnEnable()
         {
             _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
+            LoadVersionData();
+        }
+
+        private void LoadVersionData()
+        {
+            string path = Path.GetFullPath(PackageRoot + "package.json");
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                
+                Match vMatch = Regex.Match(json, @"""version""\s*:\s*""([^""]+)""");
+                if (vMatch.Success) _packageVersion = vMatch.Groups[1].Value;
+
+                Match sdkMatch = Regex.Match(json, @"""com\.vrchat\.avatars""\s*:\s*""([^""]+)""");
+                if (sdkMatch.Success) _sdkVersion = sdkMatch.Groups[1].Value.Replace("^", "").Replace("~", "");
+            }
+        }
+
+        private void ParseChangelogData()
+        {
+            _changelogEntries.Clear();
+            string rawText = LoadMarkdownFile("CHANGELOG.md");
+            string[] lines = rawText.Split('\n');
+
+            ChangelogEntry currentEntry = null;
+
+            foreach (string rawLine in lines)
+            {
+                string line = rawLine.TrimEnd();
+                
+                // Trigger a new version block when we hit the H2 tags (e.g., ## [1.4.4] - 2026-04-27)
+                if (line.StartsWith("## ["))
+                {
+                    currentEntry = new ChangelogEntry { 
+                        VersionTitle = line.Replace("## ", "").Trim(), 
+                        Content = "" 
+                    };
+                    _changelogEntries.Add(currentEntry);
+                }
+                else if (currentEntry != null)
+                {
+                    // Accumulate lines for the active version block
+                    currentEntry.Content += line + "\n";
+                }
+            }
         }
 
         private void CreateGUI()
@@ -105,7 +163,8 @@ namespace VixenTools.Editor
             titleLabel.AddToClassList("hub-header-title");
             if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             
-            var versionLabel = new Label("v1.4.3 • System Online") { style = { color = new Color(0.6f, 0.6f, 0.6f) } };
+            string sdkText = _sdkVersion != "Unknown" ? $" • VRCSDK {_sdkVersion}" : "";
+            var versionLabel = new Label($"v{_packageVersion}{sdkText} • System Online") { style = { color = new Color(0.6f, 0.6f, 0.6f) } };
             
             textContainer.Add(titleLabel);
             textContainer.Add(versionLabel);
@@ -143,10 +202,14 @@ namespace VixenTools.Editor
 
             // --- CONTENT AREA ---
             _contentScroll = new ScrollView(ScrollViewMode.Vertical) { name = "main-scroll" };
-            _contentContainer = new VisualElement();
             
+            _contentScroll.style.flexGrow = 1;
+            _contentScroll.style.flexShrink = 1;
+            
+            _contentContainer = new VisualElement();
             _contentContainer.style.flexShrink = 1;
             _contentContainer.style.flexGrow = 1;
+            _contentContainer.style.paddingBottom = 40; 
             
             _contentScroll.Add(_contentContainer);
             root.Add(_contentScroll);
@@ -191,7 +254,60 @@ namespace VixenTools.Editor
                 case TabMode.Changelog:
                     _btnChangelog.RemoveFromClassList("tab-btn-inactive"); _btnChangelog.AddToClassList("tab-btn-active");
                     _tabDescription.text = "Review version history, architecture upgrades, and pipeline fixes.";
-                    ParseMarkdownAndInject(LoadMarkdownFile("CHANGELOG.md"), _contentContainer);
+                    
+                    if (_changelogEntries.Count == 0) ParseChangelogData();
+
+                    if (_changelogEntries.Count > 0)
+                    {
+                        // --- Build the Dropdown Header ---
+                        var controlRow = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 15, marginTop = 10, paddingLeft = 5, paddingRight = 5 } };
+                        
+                        var dropLabel = new Label("Target Release:") { style = { color = new Color(0.67f, 0.67f, 0.67f), marginRight = 10, fontSize = 14 } };
+                        if (_cyberFont != null) dropLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
+                        controlRow.Add(dropLabel);
+
+                        List<string> versionNames = new List<string>();
+                        foreach (var log in _changelogEntries) versionNames.Add(log.VersionTitle);
+
+                        // Ensure index doesn't exceed bounds if changelog shrinks
+                        if (_selectedChangelogIndex >= versionNames.Count) _selectedChangelogIndex = 0;
+
+                        var dropdown = new DropdownField(versionNames, _selectedChangelogIndex);
+                        dropdown.style.flexGrow = 1;
+                        
+                        // Cyberpunk styling for the native dropdown
+                        dropdown.style.backgroundColor = new Color(0.12f, 0.12f, 0.12f);
+                        dropdown.style.borderTopColor = new Color(0f, 0.898f, 1f, 0.4f);
+                        dropdown.style.borderBottomColor = new Color(0f, 0.898f, 1f, 0.4f);
+                        dropdown.style.borderLeftColor = new Color(0f, 0.898f, 1f, 0.4f);
+                        dropdown.style.borderRightColor = new Color(0f, 0.898f, 1f, 0.4f);
+                        dropdown.style.color = new Color(0.9f, 0.9f, 0.9f);
+
+                        var logContentContainer = new VisualElement();
+                        
+                        dropdown.RegisterValueChangedCallback(e => {
+                            _selectedChangelogIndex = versionNames.IndexOf(e.newValue);
+                            logContentContainer.Clear();
+                            ParseMarkdownAndInject(_changelogEntries[_selectedChangelogIndex].Content, logContentContainer);
+                        });
+
+                        controlRow.Add(dropdown);
+                        _contentContainer.Add(controlRow);
+
+                        var sep = new VisualElement();
+                        sep.AddToClassList("md-separator");
+                        sep.style.backgroundColor = new Color(0f, 0.9f, 1f, 0.3f);
+                        _contentContainer.Add(sep);
+
+                        _contentContainer.Add(logContentContainer);
+
+                        // Render the initially selected version
+                        ParseMarkdownAndInject(_changelogEntries[_selectedChangelogIndex].Content, logContentContainer);
+                    }
+                    else
+                    {
+                        ParseMarkdownAndInject("### Error\nCould not parse changelog versions from `CHANGELOG.md`.", _contentContainer);
+                    }
                     break;
             }
         }
@@ -230,7 +346,7 @@ namespace VixenTools.Editor
         {
             var list = new List<(System.Action action, string title, string desc)>
             {
-                (() => Application.OpenURL("https://github.com/VixenCreations"), "GitHub Repository", "Core ecosystem source code and release tracking."),
+                (() => Application.OpenURL("https://github.com/VixenCreations/VixenToolBox"), "GitHub Repository", "Core ecosystem source code and release tracking."),
                 (() => Application.OpenURL("https://x.com/VixenVRC"), "Twitter", "Where I post All Kinds of things and Interact with the community."),
                 (() => Application.OpenURL("https://discord.com/invite/3vbJCKcPtJ"), "Discord", "My Official Community to get help with things."),
                 (() => Application.OpenURL("https://github.com/VixenCreations/VixenToolBox/issues"), "Report An Issue", "Report an Issue or Request a new feature."),
@@ -242,7 +358,6 @@ namespace VixenTools.Editor
 
         private void RenderSupport()
         {
-            // Adding a small context header using the Markdown parser before the grid
             string markdown = @"
 If my code has ever saved your scene from completely bricking, optimized your Quest fallback in under 10 seconds, or just made your workflow suck a little bit less... consider throwing a coffee my way:
 ";
@@ -310,7 +425,6 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
                 string line = rawLine.TrimEnd();
                 if (string.IsNullOrWhiteSpace(line)) continue;
 
-                // Stop parsing the README if it reaches the Network Links section (handled by the Network Tab)
                 if (line.Contains("[ Network Links ]") || line.Contains("Network Links")) break;
 
                 // Handle Page Breaks
@@ -355,7 +469,6 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
                     var row = new VisualElement(); 
                     row.AddToClassList("md-row"); 
                     
-                    // Strict flex constraints to stop horizontal scrollbar
                     row.style.width = new StyleLength(Length.Percent(100)); 
                     row.style.maxWidth = new StyleLength(Length.Percent(100)); 
                     row.style.flexShrink = 1;
@@ -367,7 +480,6 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
                     var lbl = new Label(pText) { enableRichText = true };
                     lbl.AddToClassList("md-p");
                     
-                    // Force the label to wrap and shrink
                     lbl.style.whiteSpace = WhiteSpace.Normal; 
                     lbl.style.flexShrink = 1; 
                     lbl.style.flexGrow = 1;   
@@ -386,7 +498,6 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
                     var lbl = new Label(pText) { enableRichText = true };
                     lbl.AddToClassList("md-p");
                     
-                    // Strict flex constraints to stop horizontal scrollbar
                     lbl.style.whiteSpace = WhiteSpace.Normal;
                     lbl.style.flexShrink = 1;
                     lbl.style.width = new StyleLength(Length.Percent(100));

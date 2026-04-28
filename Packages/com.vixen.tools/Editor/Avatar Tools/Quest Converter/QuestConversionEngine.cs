@@ -84,14 +84,15 @@ namespace VixenTools.Editor
         private List<TopologyNode> _scannedParticles = new List<TopologyNode>();
         private List<TopologyNode> _scannedTrails = new List<TopologyNode>();
         private List<TopologyNode> _scannedLines = new List<TopologyNode>();
+        private List<TopologyNode> _scannedJoints = new List<TopologyNode>(); // --> ADDED THIS
         private List<TopologyNode> _scannedIncompatible = new List<TopologyNode>();
 
         private List<TextureNode> _scannedTextures = new List<TextureNode>();
 
         // UI Elements
         private VisualElement _dynamicContainer;
-        private ScrollView _pbScroll, _colScroll, _contactScroll, _constraintScroll, _raycastScroll, _animatorScroll, _particleScroll, _trailScroll, _lineScroll, _incompatibleScroll, _textureScroll;
-        private Label _pbLabel, _colLabel, _contactLabel, _constraintLabel, _raycastLabel, _animatorLabel, _particleLabel, _trailLabel, _lineLabel, _incompatibleLabel, _textureLabel;
+        private ScrollView _pbScroll, _colScroll, _contactScroll, _constraintScroll, _raycastScroll, _animatorScroll, _particleScroll, _trailScroll, _lineScroll, _jointScroll, _incompatibleScroll, _textureScroll; // --> ADDED _jointScroll
+        private Label _pbLabel, _colLabel, _contactLabel, _constraintLabel, _raycastLabel, _animatorLabel, _particleLabel, _trailLabel, _lineLabel, _jointLabel, _incompatibleLabel, _textureLabel; // --> ADDED _jointLabel
 
         [MenuItem("VixenTools/Avatars/Quest Conversion Engine")]
         public static void ShowWindow()
@@ -201,6 +202,7 @@ namespace VixenTools.Editor
 #endif
 
             resultsText += $"  • Particles/Trails: <b><color=#ff00aa>{_scannedParticles.Count + _scannedTrails.Count + _scannedLines.Count}</color></b>\n" +
+                           $"  • Physics Joints (Auto-Culled): <b><color=#ff0044>{_scannedJoints.Count}</color></b>\n" + // --> ADDED THIS
                            $"  • Incompatible Mobile Objects: <b><color=#ff0044>{_scannedIncompatible.Count}</color></b>";
 
             var resultsLabel = new Label(resultsText) { enableRichText = true };
@@ -247,6 +249,7 @@ namespace VixenTools.Editor
             BuildTopologySection(panel, "Matrix: Particle Systems", false, out _particleScroll, out _particleLabel);
             BuildTopologySection(panel, "Matrix: Trail Renderers", false, out _trailScroll, out _trailLabel);
             BuildTopologySection(panel, "Matrix: Line Renderers", false, out _lineScroll, out _lineLabel);
+            BuildTopologySection(panel, "Matrix: Physics Joints (Auto-Culled)", false, out _jointScroll, out _jointLabel); // --> ADDED THIS
             BuildTopologySection(panel, "Incompatible Mobile Components (Auto-Culled)", false, out _incompatibleScroll, out _incompatibleLabel);
 
             container.Add(panel);
@@ -309,6 +312,7 @@ namespace VixenTools.Editor
             UpdateTopologyList(_scannedParticles, GetMaxParticles(), _particleScroll, _particleLabel);
             UpdateTopologyList(_scannedTrails, GetMaxTrails(), _trailScroll, _trailLabel);
             UpdateTopologyList(_scannedLines, GetMaxLines(), _lineScroll, _lineLabel);
+            UpdateTopologyList(_scannedJoints, 0, _jointScroll, _jointLabel); // --> ADDED THIS (0 limit enforces the red text and auto-cull styling)
             UpdateTopologyList(_scannedIncompatible, 0, _incompatibleScroll, _incompatibleLabel);
         }
 
@@ -508,7 +512,7 @@ namespace VixenTools.Editor
                 });
             }
 
-            _scannedAnimators.Clear(); _scannedParticles.Clear(); _scannedTrails.Clear(); _scannedLines.Clear(); _scannedIncompatible.Clear();
+            _scannedAnimators.Clear(); _scannedParticles.Clear(); _scannedTrails.Clear(); _scannedLines.Clear(); _scannedJoints.Clear(); _scannedIncompatible.Clear(); // --> ADDED _scannedJoints.Clear() 04/28
 
             foreach (var anim in _sourceAvatar.GetComponentsInChildren<Animator>(true)) 
             {
@@ -525,10 +529,12 @@ namespace VixenTools.Editor
             foreach (var ps in _sourceAvatar.GetComponentsInChildren<ParticleSystem>(true)) _scannedParticles.Add(CreateNode(ps, false));
             foreach (var tr in _sourceAvatar.GetComponentsInChildren<TrailRenderer>(true)) _scannedTrails.Add(CreateNode(tr, false));
             foreach (var lr in _sourceAvatar.GetComponentsInChildren<LineRenderer>(true)) _scannedLines.Add(CreateNode(lr, false));
-
             foreach (var l in _sourceAvatar.GetComponentsInChildren<Light>(true)) _scannedIncompatible.Add(CreateNode(l, true));
             foreach (var c in _sourceAvatar.GetComponentsInChildren<Cloth>(true)) _scannedIncompatible.Add(CreateNode(c, true));
             foreach (var r in _sourceAvatar.GetComponentsInChildren<Rigidbody>(true)) _scannedIncompatible.Add(CreateNode(r, true));
+
+            // --> ADDED THIS LINE TO CATCH ALL PHYSICS JOINTS (SpringJoint, FixedJoint, etc.) <--
+            foreach (var j in _sourceAvatar.GetComponentsInChildren<Joint>(true)) _scannedJoints.Add(CreateNode(j, true));
             foreach (var a in _sourceAvatar.GetComponentsInChildren<AudioSource>(true)) _scannedIncompatible.Add(CreateNode(a, true));
             foreach (var cam in _sourceAvatar.GetComponentsInChildren<Camera>(true)) _scannedIncompatible.Add(CreateNode(cam, true));
             foreach (var col in _sourceAvatar.GetComponentsInChildren<Collider>(true)) _scannedIncompatible.Add(CreateNode(col, true));
@@ -578,6 +584,7 @@ namespace VixenTools.Editor
             ApplyDepthCulling(_scannedParticles, GetMaxParticles());
             ApplyDepthCulling(_scannedTrails, GetMaxTrails());
             ApplyDepthCulling(_scannedLines, GetMaxLines());
+            ApplyDepthCulling(_scannedJoints, 0); // --> ADDED THIS (Hard enforcement)
             ApplyDepthCulling(_scannedIncompatible, 0); // Hard enforcement
         }
 
@@ -718,6 +725,7 @@ namespace VixenTools.Editor
                 ProcessDestruction(_scannedParticles, questClone);
                 ProcessDestruction(_scannedTrails, questClone);
                 ProcessDestruction(_scannedLines, questClone);
+                ProcessDestruction(_scannedJoints, questClone); // --> ADDED THIS
                 ProcessDestruction(_scannedIncompatible, questClone);
 
                 AssetDatabase.SaveAssets();
