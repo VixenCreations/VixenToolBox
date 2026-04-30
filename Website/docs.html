@@ -47,7 +47,7 @@
 
             <fluent-anchor href="tools.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2ZM11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14V10C9 9.44772 9.44772 9 10 9C10.5523 9 11 9.44772 11 10V14ZM10 8C9.44772 8 9 7.55228 9 7C9 6.44772 9.44772 6 10 6C10.5523 6 11 6.44772 11 7C11 7.55228 10.5523 8 10 8Z" /></svg>
-                Suite Architecture
+                List of Tools
             </fluent-anchor>
 
             <fluent-anchor href="docs.html" class="nav-item active">
@@ -57,7 +57,7 @@
 
             <fluent-anchor href="compare.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                Competitive Matrix
+                Why Choose Us?
             </fluent-anchor>
 
             <fluent-anchor href="changelog.html" class="nav-item">
@@ -114,6 +114,29 @@
 
             <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Avatar Optimization Suite</h2>
+                    <div class="badge">VixenAvatarValidator.cs | VixenMeshPatcher.cs</div>
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    A multi-threaded, highly destructive execution matrix designed to violently crush PC avatar polycounts and physics limits. It dynamically analyzes your hardware footprint and deploys a custom spatial hashing algorithm to decimate geometry while mathematically protecting high-fidelity facial topology.
+                </p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li><strong>5D Spatial Hash Welder:</strong> Fuses co-located vertices on excessively heavy meshes (>15,000 polygons) by generating a proprietary 5-dimensional coordinate key. By mapping XYZ position natively alongside U and V coordinates, it drastically crushes raw polycounts while mathematically guaranteeing the survival of critical texture seams.</li>
+                    <li><strong>Dual-Shielding Exclusion Matrix:</strong> Automatically scans submesh material slots for high-detail keywords (e.g., <em>eyes, visor, face</em>) AND actively queries the active Humanoid Armature for <code>HumanBodyBones.Neck</code>. Any vertex influenced by these kinematics is locked entirely out of the decimation grid.</li>
+                    <li><strong>BlendShape Memory Recovery:</strong> Executing a destructive mesh wipe inherently annihilates Unity's blendshape delta arrays. The Welder caches all 175+ frames (visemes, facial expressions) prior to execution and mathematically averages the delta offsets across the newly fused vertices, allowing animations to perfectly survive aggressive topology meltdowns.</li>
+                    <li><strong>Kinematic Bounding Box Stabilization:</strong> Solves the bounding-box disappearance bug by encapsulating all 8 corners of the <code>sharedMesh.bounds</code> into absolute World Space, then projecting them backward into root-bone Local Space for a mathematically perfect, tight-fit bounds calculation.</li>
+                </ul>
+
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
+                <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
+                    <li><strong>Dynamic PC Target Rank Matrix:</strong> Eradicates static culling limits. Creators explicitly target specific VRChat Performance Ranks (Excellent, Good, Medium, Poor) via a native dropdown. The deep-scanning heuristics instantly recalibrate execution thresholds for Animators, Contacts, and PhysBones based on the selected hardware constraints.</li>
+                    <li><strong>Interactive Physics Executioner:</strong> Replaces invisible auto-cull algorithms with a surgical UI Toolkit panel. Spawns an interactive matrix mapping every physics component sorted by hierarchy depth. Creators manually select and eradicate expendable leaf-node physics (tail fluff, hair tips) while visually protecting structural roots.</li>
+                    <li><strong>Deep Material Inspector Spider:</strong> Pierces through the Unity Inspector using <code>EditorUtility.CollectDependencies</code>. It spiders through Animator controllers and VRCFury outfit toggles, aggressively hunting down and caching nested textures to ensure the VRAM calculator and ImageMagick downsampler capture 100% of the avatar's actual memory footprint.</li>
+                </ul>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">Quest Conversion Engine</h2>
                     <div class="badge">QuestConversionEngine.cs</div>
                 </div>
@@ -122,16 +145,17 @@
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li><strong>Magick.NET Linear Downsampling:</strong> Intercepts textures and processes them through a Lanczos filter natively. Textures are temporarily shifted into <code>ColorSpace.RGB</code> (Linear) to prevent highlight crushing during scaling, followed by a mathematically calculated <code>UnsharpMask(0.0, 0.5, 1.0, 0.05)</code> to recover high-frequency material details lost in standard Android ASTC compression.</li>
-                    <li><strong>Heuristic Culling Matrix:</strong> Executes a recursive deep-scan to isolate and forcefully purge globally banned mobile components (Cameras, AudioSources, Cloth, Unity Constraints, etc.). Integrates skeletal depth calculation to cull deep leaf bones based on performance targets.</li>
-                    <li><strong>Root Animator Protection:</strong> Employs a recursive depth scanner that detects the avatar's core root Animator, hard-locking it to a protected state so heuristic culling never accidentally shatters base functionality.</li>
+                    <li><strong>Base-Class Heuristic Culling:</strong> Scans the foundational <code>&lt;VRCPhysBoneBase&gt;</code> classes to capture 100% of internal physics variations (VRCFury auto-conversions, legacy migrations). Executes a recursive deep-scan to forcefully purge globally banned mobile components (Cameras, AudioSources, Constraints).</li>
+                    <li><strong>IgnoreTransform Shield Piercing:</strong> Actively parses every <code>ignoreTransforms</code> array inside PhysBone components. If a bone is explicitly listed on that array, the heuristic shield is forcefully dropped, allowing the Culler to properly identify and melt dead leaf bones.</li>
+                    <li><strong>Deep Material VRCFury Cloning:</strong> Weaponizes <code>SerializedObject</code> data streams to hunt down hidden materials inside VRCFury toggles and state behaviors. Re-maps all hidden references to the newly generated Android material variants to prevent pink shader errors at runtime.</li>
                 </ul>
 
                 <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
                 <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
-                    <li><strong>Selective Culling:</strong> Upon initiating a scan, the interactive topology matrix populates. Creators can manually intervene before generation, such as intentionally keeping the tail, ears, and mane, while discarding expensive chest fluff to save geometry.</li>
+                    <li><strong>Selective Macro Culling:</strong> Upon initiating a scan, the interactive topology matrix populates. Utilizing new global "Keep All" and "Cull All" macro buttons, creators can rapidly triage massive arrays, manually protecting core structural bones while discarding expensive fluff.</li>
                     <li><strong>Post-Conversion Material Tweaks:</strong> The engine defaults materials to target specific mobile shaders like <code>VRChat/Mobile/ToonLit</code>. After the clone is generated, minor adjustments bring it to parity (e.g., setting particle lenses to <em>Multiply</em>, resetting emission maps, and utilizing <em>Additive</em> rendering on visors to recover transparency).</li>
                     <li><strong>Bypassing Artificial Blocks:</strong> The engine accurately flags when a "Very Poor" ranking is caused strictly by the immutable 20,000 triangle limit rather than actual unoptimized components. It provides a bypass to compile the avatar anyway, allowing publication for showcase purposes.</li>
-                    <li><strong>VRC Fury Integration:</strong> Designed to stack with other optimization tools. Post-conversion, users can inject a <em>VRC Fury Blend Shape Optimizer</em> to aggressively purge unused blendshapes and drag Android performance overhead even lower.</li>
+                    <li><strong>Root Animator Protection:</strong> Employs a recursive depth scanner that detects the avatar's core root Animator, hard-locking it to a protected state so heuristic culling never accidentally shatters base locomotion or toggle functionality.</li>
                 </ul>
             </div>
 

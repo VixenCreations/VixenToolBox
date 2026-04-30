@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+﻿#if UNITY_EDITOR && VRC_SDK_VRCSDK3 && !UDON
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -51,6 +51,7 @@ namespace VixenTools.Editor
 
         private const string BASE_OUTPUT_DIR = "Assets/VixenTools/QuestConversion";
         private Dictionary<Texture, Texture> _textureCache = new Dictionary<Texture, Texture>();
+        private HashSet<Material> _scannedMaterials = new HashSet<Material>(); // Deep Mat Cache
         private string _activeTexturesDir;
 
         // --- Interactive Topology Matrix State ---
@@ -84,17 +85,17 @@ namespace VixenTools.Editor
         private List<TopologyNode> _scannedParticles = new List<TopologyNode>();
         private List<TopologyNode> _scannedTrails = new List<TopologyNode>();
         private List<TopologyNode> _scannedLines = new List<TopologyNode>();
-        private List<TopologyNode> _scannedJoints = new List<TopologyNode>(); // --> ADDED THIS
+        private List<TopologyNode> _scannedJoints = new List<TopologyNode>(); 
         private List<TopologyNode> _scannedIncompatible = new List<TopologyNode>();
 
         private List<TextureNode> _scannedTextures = new List<TextureNode>();
 
         // UI Elements
         private VisualElement _dynamicContainer;
-        private ScrollView _pbScroll, _colScroll, _contactScroll, _constraintScroll, _raycastScroll, _animatorScroll, _particleScroll, _trailScroll, _lineScroll, _jointScroll, _incompatibleScroll, _textureScroll; // --> ADDED _jointScroll
-        private Label _pbLabel, _colLabel, _contactLabel, _constraintLabel, _raycastLabel, _animatorLabel, _particleLabel, _trailLabel, _lineLabel, _jointLabel, _incompatibleLabel, _textureLabel; // --> ADDED _jointLabel
+        private ScrollView _pbScroll, _colScroll, _contactScroll, _constraintScroll, _raycastScroll, _animatorScroll, _particleScroll, _trailScroll, _lineScroll, _jointScroll, _incompatibleScroll, _textureScroll; 
+        private Label _pbLabel, _colLabel, _contactLabel, _constraintLabel, _raycastLabel, _animatorLabel, _particleLabel, _trailLabel, _lineLabel, _jointLabel, _incompatibleLabel, _textureLabel; 
 
-        [MenuItem("VixenTools/Avatars/Quest Conversion Engine")]
+        [MenuItem("VixenTools/Avatars/Quest Conversion Engine", priority = 41)]
         public static void ShowWindow()
         {
             var window = GetWindow<QuestConversionEngine>("Quest Engine");
@@ -202,7 +203,7 @@ namespace VixenTools.Editor
 #endif
 
             resultsText += $"  • Particles/Trails: <b><color=#ff00aa>{_scannedParticles.Count + _scannedTrails.Count + _scannedLines.Count}</color></b>\n" +
-                           $"  • Physics Joints (Auto-Culled): <b><color=#ff0044>{_scannedJoints.Count}</color></b>\n" + // --> ADDED THIS
+                           $"  • Physics Joints (Auto-Culled): <b><color=#ff0044>{_scannedJoints.Count}</color></b>\n" + 
                            $"  • Incompatible Mobile Objects: <b><color=#ff0044>{_scannedIncompatible.Count}</color></b>";
 
             var resultsLabel = new Label(resultsText) { enableRichText = true };
@@ -249,7 +250,7 @@ namespace VixenTools.Editor
             BuildTopologySection(panel, "Matrix: Particle Systems", false, out _particleScroll, out _particleLabel);
             BuildTopologySection(panel, "Matrix: Trail Renderers", false, out _trailScroll, out _trailLabel);
             BuildTopologySection(panel, "Matrix: Line Renderers", false, out _lineScroll, out _lineLabel);
-            BuildTopologySection(panel, "Matrix: Physics Joints (Auto-Culled)", false, out _jointScroll, out _jointLabel); // --> ADDED THIS
+            BuildTopologySection(panel, "Matrix: Physics Joints (Auto-Culled)", false, out _jointScroll, out _jointLabel); 
             BuildTopologySection(panel, "Incompatible Mobile Components (Auto-Culled)", false, out _incompatibleScroll, out _incompatibleLabel);
 
             container.Add(panel);
@@ -312,7 +313,7 @@ namespace VixenTools.Editor
             UpdateTopologyList(_scannedParticles, GetMaxParticles(), _particleScroll, _particleLabel);
             UpdateTopologyList(_scannedTrails, GetMaxTrails(), _trailScroll, _trailLabel);
             UpdateTopologyList(_scannedLines, GetMaxLines(), _lineScroll, _lineLabel);
-            UpdateTopologyList(_scannedJoints, 0, _jointScroll, _jointLabel); // --> ADDED THIS (0 limit enforces the red text and auto-cull styling)
+            UpdateTopologyList(_scannedJoints, 0, _jointScroll, _jointLabel); 
             UpdateTopologyList(_scannedIncompatible, 0, _incompatibleScroll, _incompatibleLabel);
         }
 
@@ -384,7 +385,7 @@ namespace VixenTools.Editor
                 {
                     toggle.SetEnabled(false);
                     if (!node.keep) toggle.AddToClassList("locked-culled-toggle");
-                    else toggle.AddToClassList("locked-kept-toggle"); // Used for Root Animators so they look safe
+                    else toggle.AddToClassList("locked-kept-toggle"); 
                 }
                 else
                 {
@@ -452,27 +453,62 @@ namespace VixenTools.Editor
             _skinnedMeshCount = 0;
             _basicMeshCount = 0;
             _materialSlotCount = 0;
+            _scannedMaterials.Clear(); // Reset deep cache
 
+            // --- 1. GATHER MATERIALS FROM RENDERERS ---
             foreach (var smr in _sourceAvatar.GetComponentsInChildren<SkinnedMeshRenderer>(true))
             {
                 _skinnedMeshCount++;
                 _materialSlotCount += smr.sharedMaterials.Length;
                 if (smr.sharedMesh != null) _totalTriangles += smr.sharedMesh.triangles.Length / 3;
+                foreach (var mat in smr.sharedMaterials) if (mat != null) _scannedMaterials.Add(mat);
             }
 
             foreach (var mf in _sourceAvatar.GetComponentsInChildren<MeshFilter>(true))
             {
                 _basicMeshCount++;
                 Renderer rend = mf.GetComponent<Renderer>();
-                if (rend != null) _materialSlotCount += rend.sharedMaterials.Length;
+                if (rend != null) 
+                {
+                    _materialSlotCount += rend.sharedMaterials.Length;
+                    foreach (var mat in rend.sharedMaterials) if (mat != null) _scannedMaterials.Add(mat);
+                }
                 if (mf.sharedMesh != null) _totalTriangles += mf.sharedMesh.triangles.Length / 3;
             }
 
-            Renderer[] renderers = _sourceAvatar.GetComponentsInChildren<Renderer>(true);
-            HashSet<Material> uniqueMats = new HashSet<Material>();
-            HashSet<Texture> uniqueTexs = new HashSet<Texture>();
+            // --- 2. GATHER NESTED MATERIALS FROM ANIMATORS ---
+            foreach (var animator in _sourceAvatar.GetComponentsInChildren<Animator>(true))
+            {
+                if (animator.runtimeAnimatorController != null)
+                {
+                    // CollectDependencies forces Unity to dig through the Animator, extracting all 
+                    // attached AnimationClips, and subsequently any Materials referenced by those clips.
+                    var deps = EditorUtility.CollectDependencies(new UnityEngine.Object[] { animator.runtimeAnimatorController });
+                    foreach (var dep in deps)
+                    {
+                        if (dep is Material mat) _scannedMaterials.Add(mat);
+                    }
+                }
+            }
 
-            // Expanded heuristic to catch Normal, Detail, Data, and Mochie maps
+            // --- 3. GATHER NESTED MATERIALS FROM VRCFURY ---
+            foreach (var mono in _sourceAvatar.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                if (mono != null && mono.GetType().Name.Contains("VRCFury"))
+                {
+                    // Extracts Materials hiding inside VRCFury Toggles and State Swaps
+                    var deps = EditorUtility.CollectDependencies(new UnityEngine.Object[] { mono });
+                    foreach (var dep in deps)
+                    {
+                        if (dep is Material mat) _scannedMaterials.Add(mat);
+                    }
+                }
+            }
+
+            _uniqueMaterialCount = _scannedMaterials.Count;
+
+            // --- 4. EXTRACT TEXTURES FROM ALL COLLECTED MATERIALS ---
+            HashSet<Texture> uniqueTexs = new HashSet<Texture>();
             string[] texPropsToScan = { 
                 "_MainTex", "_BaseMap", "_EmissionMap", 
                 "_BumpMap", "_DetailNormalMap", 
@@ -480,24 +516,15 @@ namespace VixenTools.Editor
                 "_MochieMetallicMap", "_MochieMetallicMaps" 
             };
 
-            foreach (var rend in renderers)
+            foreach (var mat in _scannedMaterials)
             {
-                if (rend == null) continue;
-                foreach (var mat in rend.sharedMaterials)
+                foreach (var prop in texPropsToScan)
                 {
-                    if (mat != null) 
-                    {
-                        uniqueMats.Add(mat);
-                        foreach (var prop in texPropsToScan)
-                        {
-                            if (mat.HasProperty(prop) && mat.GetTexture(prop) != null) 
-                                uniqueTexs.Add(mat.GetTexture(prop));
-                        }
-                    }
+                    if (mat.HasProperty(prop) && mat.GetTexture(prop) != null) 
+                        uniqueTexs.Add(mat.GetTexture(prop));
                 }
             }
 
-            _uniqueMaterialCount = uniqueMats.Count;
             _uniqueTextureCount = uniqueTexs.Count;
 
             _scannedTextures.Clear();
@@ -508,11 +535,12 @@ namespace VixenTools.Editor
                     name = tex.name,
                     width = tex.width,
                     height = tex.height,
-                    processTexture = true // Default to true
+                    processTexture = true
                 });
             }
 
-            _scannedAnimators.Clear(); _scannedParticles.Clear(); _scannedTrails.Clear(); _scannedLines.Clear(); _scannedJoints.Clear(); _scannedIncompatible.Clear(); // --> ADDED _scannedJoints.Clear() 04/28
+            // --- COMPONENT SCANNING ---
+            _scannedAnimators.Clear(); _scannedParticles.Clear(); _scannedTrails.Clear(); _scannedLines.Clear(); _scannedJoints.Clear(); _scannedIncompatible.Clear(); 
 
             foreach (var anim in _sourceAvatar.GetComponentsInChildren<Animator>(true)) 
             {
@@ -532,8 +560,6 @@ namespace VixenTools.Editor
             foreach (var l in _sourceAvatar.GetComponentsInChildren<Light>(true)) _scannedIncompatible.Add(CreateNode(l, true));
             foreach (var c in _sourceAvatar.GetComponentsInChildren<Cloth>(true)) _scannedIncompatible.Add(CreateNode(c, true));
             foreach (var r in _sourceAvatar.GetComponentsInChildren<Rigidbody>(true)) _scannedIncompatible.Add(CreateNode(r, true));
-
-            // --> ADDED THIS LINE TO CATCH ALL PHYSICS JOINTS (SpringJoint, FixedJoint, etc.) <--
             foreach (var j in _sourceAvatar.GetComponentsInChildren<Joint>(true)) _scannedJoints.Add(CreateNode(j, true));
             foreach (var a in _sourceAvatar.GetComponentsInChildren<AudioSource>(true)) _scannedIncompatible.Add(CreateNode(a, true));
             foreach (var cam in _sourceAvatar.GetComponentsInChildren<Camera>(true)) _scannedIncompatible.Add(CreateNode(cam, true));
@@ -557,7 +583,7 @@ namespace VixenTools.Editor
 
             _hasScanned = true;
             BuildDynamicResultsUI();
-            Debug.Log($"[VixenTools] Matrix Scan Complete.");
+            Debug.Log($"[VixenTools] Deep Matrix Scan Complete. {_scannedMaterials.Count} unique materials extracted including hidden nodes.");
         }
 
         private TopologyNode CreateNode(Component comp, bool lockedPurge)
@@ -584,8 +610,8 @@ namespace VixenTools.Editor
             ApplyDepthCulling(_scannedParticles, GetMaxParticles());
             ApplyDepthCulling(_scannedTrails, GetMaxTrails());
             ApplyDepthCulling(_scannedLines, GetMaxLines());
-            ApplyDepthCulling(_scannedJoints, 0); // --> ADDED THIS (Hard enforcement)
-            ApplyDepthCulling(_scannedIncompatible, 0); // Hard enforcement
+            ApplyDepthCulling(_scannedJoints, 0); 
+            ApplyDepthCulling(_scannedIncompatible, 0); 
         }
 
         private void ApplyDepthCulling(List<TopologyNode> nodes, int maxAllowed)
@@ -670,46 +696,76 @@ namespace VixenTools.Editor
                 questClone.transform.rotation = _sourceAvatar.transform.rotation;
                 questClone.transform.parent = _sourceAvatar.transform.parent;
 
-                EditorUtility.DisplayProgressBar("VixenTools Quest Engine", "Cloning and Converting Materials...", 0.4f);
-                Renderer[] cloneRenderers = questClone.GetComponentsInChildren<Renderer>(true);
+                EditorUtility.DisplayProgressBar("VixenTools Quest Engine", "Cloning and Converting ALL Matrix Materials...", 0.4f);
                 Dictionary<Material, Material> materialCache = new Dictionary<Material, Material>();
                 Shader targetShader = GetShaderForEnum(_selectedTargetShader);
 
-                for (int r = 0; r < cloneRenderers.Length; r++)
+                int matIndex = 0;
+                foreach (Material originalMat in _scannedMaterials)
                 {
-                    Renderer rend = cloneRenderers[r];
+                    if (originalMat == null) continue;
+                    
+                    EditorUtility.DisplayProgressBar("VixenTools Quest Engine", $"Processing Material Cache ({matIndex}/{_scannedMaterials.Count})...", 0.4f + (0.2f * ((float)matIndex / _scannedMaterials.Count)));
+
+                    Material questMat = new Material(targetShader);
+                    questMat.name = $"{originalMat.name}_Quest";
+
+                    TransferProperties(originalMat, questMat);
+
+                    string matPath = AssetDatabase.GenerateUniqueAssetPath($"{materialsDir}/{questMat.name}.mat");
+                    AssetDatabase.CreateAsset(questMat, matPath);
+                    
+                    materialCache.Add(originalMat, questMat);
+                    matIndex++;
+                }
+
+                EditorUtility.DisplayProgressBar("VixenTools Quest Engine", "Deep Re-Mapping Component References...", 0.65f);
+                
+                // 1. Swap Standard Renderers
+                Renderer[] cloneRenderers = questClone.GetComponentsInChildren<Renderer>(true);
+                foreach (var rend in cloneRenderers)
+                {
                     if (rend == null) continue;
-
-                    EditorUtility.DisplayProgressBar("VixenTools Quest Engine", $"Processing Materials ({r}/{cloneRenderers.Length})...", 0.4f + (0.3f * ((float)r / cloneRenderers.Length)));
-
                     Material[] currentMats = rend.sharedMaterials;
                     Material[] newMats = new Material[currentMats.Length];
-
                     for (int i = 0; i < currentMats.Length; i++)
                     {
-                        Material originalMat = currentMats[i];
-                        if (originalMat == null) continue;
-
-                        if (materialCache.TryGetValue(originalMat, out Material cachedNewMat))
-                        {
-                            newMats[i] = cachedNewMat;
-                            continue;
-                        }
-
-                        Material questMat = new Material(targetShader);
-                        questMat.name = $"{originalMat.name}_Quest";
-
-                        TransferProperties(originalMat, questMat);
-
-                        string matPath = AssetDatabase.GenerateUniqueAssetPath($"{materialsDir}/{questMat.name}.mat");
-                        AssetDatabase.CreateAsset(questMat, matPath);
-                        
-                        materialCache.Add(originalMat, questMat);
-                        newMats[i] = questMat;
+                        if (currentMats[i] != null && materialCache.TryGetValue(currentMats[i], out Material qMat))
+                            newMats[i] = qMat;
+                        else
+                            newMats[i] = currentMats[i];
                     }
-
                     rend.sharedMaterials = newMats;
                     EditorUtility.SetDirty(rend);
+                }
+
+                // 2. Deep Reference Swapper for VRCFury scripts via SerializedObject streams
+                Component[] allComponents = questClone.GetComponentsInChildren<Component>(true);
+                foreach (Component comp in allComponents)
+                {
+                    if (comp == null || comp is Transform || comp is Renderer) continue;
+                    
+                    if (comp is MonoBehaviour && comp.GetType().Name.Contains("VRCFury"))
+                    {
+                        SerializedObject so = new SerializedObject(comp);
+                        SerializedProperty prop = so.GetIterator();
+                        bool modified = false;
+                        
+                        // Next(true) dives into all nested [SerializeReference] structures VRCFury uses
+                        while (prop.Next(true)) 
+                        {
+                            if (prop.propertyType == SerializedPropertyType.ObjectReference && prop.objectReferenceValue is Material)
+                            {
+                                Material oldMat = prop.objectReferenceValue as Material;
+                                if (oldMat != null && materialCache.TryGetValue(oldMat, out Material qMat))
+                                {
+                                    prop.objectReferenceValue = qMat;
+                                    modified = true;
+                                }
+                            }
+                        }
+                        if (modified) so.ApplyModifiedProperties();
+                    }
                 }
 
                 EditorUtility.DisplayProgressBar("VixenTools Quest Engine", "Applying Matrix Topology Overrides...", 0.8f);
@@ -725,7 +781,7 @@ namespace VixenTools.Editor
                 ProcessDestruction(_scannedParticles, questClone);
                 ProcessDestruction(_scannedTrails, questClone);
                 ProcessDestruction(_scannedLines, questClone);
-                ProcessDestruction(_scannedJoints, questClone); // --> ADDED THIS
+                ProcessDestruction(_scannedJoints, questClone); 
                 ProcessDestruction(_scannedIncompatible, questClone);
 
                 AssetDatabase.SaveAssets();
@@ -734,7 +790,7 @@ namespace VixenTools.Editor
                 PrefabUtility.UnpackPrefabInstance(questClone, PrefabUnpackMode.OutermostRoot, InteractionMode.AutomatedAction);
                 Selection.activeGameObject = questClone;
                 
-                Debug.Log($"[VixenTools] Quest Conversion Complete! {materialCache.Count} materials and {_textureCache.Count} high-fidelity textures processed.");
+                Debug.Log($"[VixenTools] Quest Conversion Complete! {materialCache.Count} total materials and {_textureCache.Count} high-fidelity textures processed.");
             }
             finally
             {
@@ -779,26 +835,22 @@ namespace VixenTools.Editor
 
         private void TransferProperties(Material source, Material target)
         {
-            // 1. Albedo / Main Texture
             if (source.HasProperty("_MainTex") && target.HasProperty("_MainTex"))
                 target.SetTexture("_MainTex", ProcessAndCloneTexture(source.GetTexture("_MainTex"), false, false));
             else if (source.HasProperty("_BaseMap") && target.HasProperty("_MainTex")) 
                 target.SetTexture("_MainTex", ProcessAndCloneTexture(source.GetTexture("_BaseMap"), false, false));
 
-            // 2. Base Color
             if (source.HasProperty("_Color") && target.HasProperty("_Color"))
                 target.SetColor("_Color", source.GetColor("_Color"));
             else if (source.HasProperty("_BaseColor") && target.HasProperty("_Color"))
                 target.SetColor("_Color", source.GetColor("_BaseColor"));
 
-            // 3. Emission 
             if (source.HasProperty("_EmissionMap") && target.HasProperty("_EmissionMap"))
                 target.SetTexture("_EmissionMap", ProcessAndCloneTexture(source.GetTexture("_EmissionMap"), false, false));
             
             if (source.HasProperty("_EmissionColor") && target.HasProperty("_EmissionColor"))
                 target.SetColor("_EmissionColor", source.GetColor("_EmissionColor"));
 
-            // 4. Normal Map
             if (source.HasProperty("_BumpMap") && target.HasProperty("_BumpMap"))
             {
                 target.SetTexture("_BumpMap", ProcessAndCloneTexture(source.GetTexture("_BumpMap"), true, true));
@@ -806,7 +858,6 @@ namespace VixenTools.Editor
                     target.SetFloat("_BumpScale", source.GetFloat("_BumpScale"));
             }
 
-            // 5. Metallic / Smoothness (Standard + Mochie Translation)
             if (target.HasProperty("_MetallicGlossMap") || target.HasProperty("_MetallicMap"))
             {
                 string sourceMetProp = null;
@@ -833,7 +884,6 @@ namespace VixenTools.Editor
         {
             if (sourceTex == null) return null;
 
-            // Check if user disabled processing for this specific texture in Phase 1.5
             var node = _scannedTextures.FirstOrDefault(t => t.texture == sourceTex);
             if (node != null && !node.processTexture) return sourceTex;
 

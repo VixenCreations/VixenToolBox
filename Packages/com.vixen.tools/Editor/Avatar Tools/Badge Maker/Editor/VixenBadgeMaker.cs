@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+#if UNITY_EDITOR && VRC_SDK_VRCSDK3 && !UDON
 using System;
 using System.Collections.Generic;
 using System.IO;

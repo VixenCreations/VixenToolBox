@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+﻿#if UNITY_EDITOR && VRC_SDK_VRCSDK3
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
@@ -13,6 +13,8 @@ namespace VixenTools.Editor
     [InitializeOnLoad]
     public static class VixenUpdateNotifier
     {
+        private const string BADGE_NAME = "vixen-update-badge";
+
         static VixenUpdateNotifier()
         {
             SceneView.duringSceneGui += OnSceneGUI;
@@ -20,36 +22,92 @@ namespace VixenTools.Editor
 
         private static void OnSceneGUI(SceneView sceneView)
         {
-            if (!EditorPrefs.GetBool("VixenTools_UpdatePending", false)) return;
+            // 1. Grab the root VisualElement of the active SceneView
+            var root = sceneView.rootVisualElement;
+            if (root == null) return;
 
-            Handles.BeginGUI();
-            
-            float width = 240f;
-            float height = 36f;
-            Rect r = new Rect(sceneView.position.width - width - 20, sceneView.position.height - height - 20, width, height);
-            
-            EditorGUI.DrawRect(r, new Color(0.05f, 0.05f, 0.08f, 0.95f)); 
-            EditorGUI.DrawRect(new Rect(r.x, r.y, 4, r.height), new Color(1f, 0f, 0.66f)); 
-            EditorGUI.DrawRect(new Rect(r.x, r.y + r.height - 1, r.width, 1), new Color(0f, 0.9f, 1f, 0.3f)); 
+            bool updatePending = EditorPrefs.GetBool("VixenTools_UpdatePending", false);
+            var existingBadge = root.Q<Button>(BADGE_NAME);
 
-            Font cyberFont = AssetDatabase.LoadAssetAtPath<Font>("Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf");
-            GUIStyle style = new GUIStyle(GUI.skin.label)
+            // 2. Safely remove or hide the badge if no update is pending
+            if (!updatePending)
             {
-                richText = true,
-                alignment = TextAnchor.MiddleCenter,
-                fontSize = 14
-            };
-            if (cyberFont != null) style.font = cyberFont;
+                if (existingBadge != null)
+                {
+                    existingBadge.style.display = DisplayStyle.None;
+                }
+                return;
+            }
 
-            GUI.Label(r, ">> <color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> UPDATE", style);
+            // 3. Inject the UI Toolkit element if it doesn't exist yet (survives domain reloads)
+            if (existingBadge == null)
+            {
+                existingBadge = BuildCyberBadge();
+                root.Add(existingBadge);
+            }
 
-            if (GUI.Button(r, GUIContent.none, GUIStyle.none))
+            existingBadge.style.display = DisplayStyle.Flex;
+        }
+
+        private static Button BuildCyberBadge()
+        {
+            var badge = new Button(() => 
             {
                 EditorPrefs.SetBool("VixenTools_UpdatePending", false);
                 VixenHub.ShowWindow();
-            }
+            }) 
+            { 
+                name = BADGE_NAME 
+            };
 
-            Handles.EndGUI();
+            // --- LAYOUT & POSITIONING ---
+            badge.style.position = Position.Absolute;
+            badge.style.bottom = 20;
+            badge.style.right = 20;
+            badge.style.width = 240;
+            badge.style.height = 36;
+
+            // --- CYBERPUNK STYLING ---
+            badge.style.backgroundColor = new Color(0.05f, 0.05f, 0.08f, 0.95f);
+            
+            // Strip Unity's default button borders and apply our custom ones
+            badge.style.borderTopWidth = 0;
+            badge.style.borderRightWidth = 0;
+            badge.style.borderBottomWidth = 1;
+            badge.style.borderLeftWidth = 4;
+            
+            badge.style.borderLeftColor = new Color(1f, 0f, 0.66f); // Hot Pink
+            badge.style.borderBottomColor = new Color(0f, 0.9f, 1f, 0.3f); // Cyan Glow
+            
+            // Strip Unity's default button margins/padding
+            badge.style.marginLeft = 0;
+            badge.style.marginRight = 0;
+            badge.style.marginTop = 0;
+            badge.style.marginBottom = 0;
+            badge.style.paddingLeft = 0;
+            badge.style.paddingRight = 0;
+            badge.style.paddingTop = 0;
+            badge.style.paddingBottom = 0;
+
+            // Flex center the text
+            badge.style.alignItems = Align.Center;
+            badge.style.justifyContent = Justify.Center;
+
+            // --- INTERACTIVITY (Smooth Hover State) ---
+            badge.style.transitionDuration = new List<TimeValue> { new TimeValue(0.15f) };
+            badge.RegisterCallback<PointerEnterEvent>(e => badge.style.backgroundColor = new Color(0.12f, 0.12f, 0.18f, 0.95f));
+            badge.RegisterCallback<PointerLeaveEvent>(e => badge.style.backgroundColor = new Color(0.05f, 0.05f, 0.08f, 0.95f));
+
+            // --- TYPOGRAPHY ---
+            var label = new Label(">> <color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> UPDATE") { enableRichText = true };
+            label.style.fontSize = 14;
+            
+            Font cyberFont = AssetDatabase.LoadAssetAtPath<Font>("Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf");
+            if (cyberFont != null) label.style.unityFontDefinition = new StyleFontDefinition(cyberFont);
+
+            badge.Add(label);
+
+            return badge;
         }
     }
 
@@ -330,16 +388,43 @@ namespace VixenTools.Editor
 
         private void RenderCoreModules()
         {
-            var list = new List<(System.Action action, string title, string desc)>
+            // --- UNIVERSAL TOOLS (Always visible regardless of Udon state) ---
+            var universalList = new List<(System.Action action, string title, string desc)>
             {
-                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Badge Studio"), "Vixen Badge Studio", "High-fidelity procedural generation engine for VRChat convention badges."),
-                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Quest Conversion Engine"), "Quest Conversion Engine", "Non-destructive, high-fidelity pipeline mapping 100% of Android performance limits."),
-                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/PhysBone Topology Mapper"), "PhysBone Topology Mapper", "Automates PhysBone extraction and injection bypassing native prefab constraints."),
                 (() => EditorApplication.ExecuteMenuItem("VixenTools/Unity Engine/Animation Workbench Pro"), "Animation Workbench Pro", "Visual workspace for staging, easing, and sampling complex animation curves."),
                 (() => EditorApplication.ExecuteMenuItem("VixenTools/Unity Engine/Pipeline Preset Manager"), "Pipeline Preset Manager", "Bulk extraction and programmatic authoring of standardized importer settings.")
             };
 
-            RenderActionGrid("Flagship Toolsets", "#00e5ff", list);
+            RenderActionGrid("Universal Utilities", "#00e5ff", universalList);
+
+            // --- SDK-AWARE FLAGSHIP TOOLS ---
+#if !UDON
+            var avatarList = new List<(System.Action action, string title, string desc)>
+            {
+                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Badge Studio"), "Vixen Badge Studio", "High-fidelity procedural generation engine for VRChat convention badges."),
+                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Quest Conversion Engine"), "Quest Conversion Engine", "Non-destructive, high-fidelity pipeline mapping 100% of Android performance limits."),
+                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/PhysBone Topology Mapper"), "PhysBone Topology Mapper", "Automates PhysBone extraction and injection bypassing native prefab constraints."),
+                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Optimization Suite"), "Optimization Suite", "Advanced dual-pipeline validation and automated optimization engine with ImageMagick VRAM resolution.")
+            };
+
+            RenderActionGrid("Avatar Pipeline Tools", "#ff00aa", avatarList);
+#elif UDON
+            // Read the live state directly from EditorPrefs
+            bool isSnapActive = EditorPrefs.GetBool("VixenTools/Scene/Live Surface Snapping", false);
+            string snapTitle = isSnapActive ? "Snap To Surface [ ACTIVE ]" : "Snap To Surface [ OFF ]";
+
+            var worldList = new List<(System.Action action, string title, string desc)>
+            {
+                (() => 
+                {
+                    EditorApplication.ExecuteMenuItem("VixenTools/Scene/Live Surface Snapping");
+                    // Force the UIElements layout to refresh so the button text updates instantly
+                    SwitchMode(TabMode.CoreModules);
+                }, snapTitle, "Enterprise-grade surface snapping tool. Calculates true mesh/collider bounds and safely dirties Udon components.")
+            };
+
+            RenderActionGrid("World Pipeline Tools", "#ff00aa", worldList);
+#endif
         }
 
         private void RenderNetwork()

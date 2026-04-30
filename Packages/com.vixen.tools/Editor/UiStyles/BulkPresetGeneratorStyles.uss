@@ -12,29 +12,63 @@
 }
 
 /* =======================================================
-   Base Overrides
+   Base Unity Overrides (Native Style Hijacking)
    ======================================================= */
 .unity-base-field,
 .unity-object-field,
 .unity-button,
 .unity-label,
 .unity-toggle,
-.unity-enum-field {
+.unity-enum-field,
+.unity-color-field,
+.unity-popup-field {
     font-size: 13px;
     color: var(--text-main);
 }
 
+/* Standardize label widths so forms align perfectly across all tools */
 .unity-base-field__label {
-    min-width: 175px; /* Ensures labels align perfectly across tools */
+    min-width: 150px; 
     -unity-text-align: middle-left;
 }
 
+/* Base text, object, and color fields */
 .unity-base-field__input {
     background-color: var(--bg-panel);
     border-color: #2f2f2f;
     border-width: 1px;
     border-radius: 4px;
     padding-left: 4px;
+    transition-duration: 0.15s;
+}
+
+.unity-base-field__input:hover {
+    background-color: #2a2a2a;
+    border-color: rgba(0, 229, 255, 0.4); /* Subtle cyan glow on hover */
+}
+
+/* Deep Dropdown/Enum Popup Field Hijacking */
+.unity-base-popup-field__input {
+    background-color: var(--bg-panel);
+    border-color: rgba(0, 229, 255, 0.4);
+    border-width: 1px;
+    border-radius: 4px;
+    padding: 3px 5px;
+    transition-duration: 0.15s;
+}
+
+.unity-base-popup-field__input:hover {
+    background-color: #2a2a2a;
+    border-color: var(--color-cyan); /* Full cyan on hover */
+}
+
+.unity-base-popup-field__text {
+    color: var(--text-main);
+    -unity-font-style: bold;
+}
+
+.unity-base-popup-field__arrow {
+    -unity-background-image-tint-color: var(--color-cyan);
 }
 
 #preset-manager-root {

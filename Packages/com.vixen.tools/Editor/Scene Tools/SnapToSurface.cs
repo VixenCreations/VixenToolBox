@@ -1,13 +1,15 @@
-#if UNITY_EDITOR
+#if UNITY_EDITOR && VRC_SDK_VRCSDK3 && UDON
 using UnityEditor;
 using UnityEngine;
+using VRC.Udon;
 
 namespace VixenTools.Editor
 {
     /// <summary>
-    /// VixenTools Utility: Enterprise-grade surface snapping. Resolves the Event.current null-ref 
-    /// from legacy Update loops by utilizing Transform.hasChanged, and calculates true mesh/collider 
-    /// bounds to snap objects by their "feet" rather than their pivot.
+    /// VixenTools Utility: Enterprise-grade surface snapping, locked to the VRChat Worlds SDK.
+    /// Resolves the Event.current null-ref from legacy Update loops, calculates true mesh/collider 
+    /// bounds to snap objects by their "feet", respects VRChat layer matrices, and safely 
+    /// dirties UdonBehaviours.
     /// </summary>
     [InitializeOnLoad]
     public static class SnapToSurface
@@ -16,6 +18,10 @@ namespace VixenTools.Editor
         private const string DROP_MENU_PATH = "VixenTools/Scene/Drop to Surface %&s"; // Ctrl+Alt+S
 
         private static bool _liveSnappingEnabled;
+
+        // VRChat specific layer mask: Ignore PlayerLocal (10), Player (9), UI (5), UiMenu (12)
+        // We want to snap primarily to Default (0), Environment (11), Walkthrough (17)
+        private const int VRC_SNAP_LAYER_MASK = ~((1 << 5) | (1 << 9) | (1 << 10) | (1 << 12));
 
         static SnapToSurface()
         {
@@ -88,7 +94,8 @@ namespace VixenTools.Editor
             int originalLayer = t.gameObject.layer;
             t.gameObject.layer = 2; // 2 is the built-in Ignore Raycast layer
 
-            if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 1000f))
+            // Execute raycast utilizing the VRChat-safe layer mask
+            if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 1000f, VRC_SNAP_LAYER_MASK))
             {
                 Vector3 targetPos = hit.point + (Vector3.up * bottomOffset);
                 
@@ -96,6 +103,14 @@ namespace VixenTools.Editor
                 if (Vector3.Distance(t.position, targetPos) > 0.005f)
                 {
                     t.position = targetPos;
+
+                    // 4D Chess: If this is an Udon-driven object, notify the Udon compiler/manager 
+                    // that the transform has changed so the serialized program asset remains in sync.
+                    var udonBehaviour = t.GetComponent<UdonBehaviour>();
+                    if (udonBehaviour != null)
+                    {
+                        EditorUtility.SetDirty(udonBehaviour);
+                    }
                 }
             }
 
@@ -118,6 +133,7 @@ namespace VixenTools.Editor
             {
                 foreach (var col in colliders)
                 {
+                    // Ignore triggers and VRC spatial audio/trigger layers
                     if (col.isTrigger) continue;
                     if (col.bounds.min.y < lowestPoint)
                     {

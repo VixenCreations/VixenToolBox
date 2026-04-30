@@ -1,13 +1,12 @@
 {
   "name": "com.vixencreations.vixens-toolbox",
-  "version": "1.4.5",
+  "version": "1.5.0",
   "displayName": "Vixen Tool Box",
   "description": "Collection of Tools Hand Made to make creators lives easier and make everyone's lives better!",
   "unity": "2022.3",
   "unityRelease": "22f1",
   "vpmDependencies": {
-    "com.vrchat.base": "^3.10.3",
-    "com.vrchat.avatars": "^3.10.3"
+    "com.vrchat.base": "^3.10.3"
   },
   "keywords": [
     "vrchat",

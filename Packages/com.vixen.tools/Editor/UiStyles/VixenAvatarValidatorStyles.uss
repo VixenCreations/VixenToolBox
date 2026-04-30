@@ -1,0 +1,359 @@
+/* Vixen Avatar Validator USS — Native UI Toolkit Integration */
+
+:root {
+    --bg-dark: #141414;
+    --bg-panel: #1e1e1e;
+    
+    --color-cyan: #00e5ff;
+    --color-pink: #ff00aa;
+    --color-amber: #ffaa00; /* Specifically for pipeline warnings */
+    --color-danger: #ff0033; /* HIGH HAZARD: Bright Neon Red for destructive purges */
+    
+    --text-main: #e5e5e5;
+    --text-muted: #aaaaaa;
+}
+
+/* =======================================================
+   Base Unity Overrides (Native Style Hijacking)
+   ======================================================= */
+.unity-base-field,
+.unity-object-field,
+.unity-button,
+.unity-label,
+.unity-toggle,
+.unity-enum-field,
+.unity-color-field,
+.unity-popup-field,
+.unity-slider-int {
+    font-size: 13px;
+    color: var(--text-main);
+}
+
+.unity-base-field__label {
+    min-width: 150px; 
+    -unity-text-align: middle-left;
+}
+
+/* Text & Object Input Fields */
+.unity-base-field__input,
+.unity-integer-field__input {
+    background-color: var(--bg-panel);
+    border-color: #2f2f2f;
+    border-width: 1px;
+    border-radius: 4px;
+    padding-left: 4px;
+    transition-duration: 0.15s;
+}
+
+.unity-base-field__input:hover,
+.unity-integer-field__input:hover {
+    background-color: #2a2a2a;
+    border-color: rgba(0, 229, 255, 0.4);
+}
+
+/* Dropdowns & Enum Fields (Target Rank Matrix) */
+.unity-base-popup-field__input,
+.unity-enum-field__input {
+    background-color: var(--bg-panel);
+    border-color: rgba(0, 229, 255, 0.4);
+    border-width: 1px;
+    border-radius: 4px;
+    padding: 3px 5px;
+    transition-duration: 0.15s;
+}
+
+.unity-base-popup-field__input:hover,
+.unity-enum-field__input:hover {
+    background-color: #2a2a2a;
+    border-color: var(--color-cyan);
+}
+
+.unity-base-popup-field__text,
+.unity-enum-field__text {
+    color: var(--text-main);
+    -unity-font-style: bold;
+}
+
+.unity-base-popup-field__arrow,
+.unity-enum-field__arrow {
+    -unity-background-image-tint-color: var(--color-cyan);
+}
+
+/* Sliders (Texture Target) */
+.unity-slider-int .unity-base-slider__tracker {
+    background-color: #2f2f2f;
+    border-color: #111111;
+    border-width: 1px;
+    border-radius: 2px;
+}
+
+.unity-slider-int .unity-base-slider__dragger {
+    background-color: var(--color-cyan);
+    border-width: 0;
+    border-radius: 2px;
+    width: 12px;
+    height: 16px;
+    margin-top: -8px;
+    transition-duration: 0.15s;
+}
+
+.unity-slider-int .unity-base-slider__dragger:hover {
+    background-color: #ffffff;
+    box-shadow: 0 0 8px var(--color-cyan);
+}
+
+/* Custom Toggle Checkboxes for the Optimization Matrix */
+.unity-toggle__checkmark {
+    background-color: var(--bg-dark);
+    border-color: #2f2f2f;
+    border-width: 1px;
+    border-radius: 3px;
+    transition-duration: 0.15s;
+}
+
+.unity-toggle > .unity-toggle__input:checked > .unity-toggle__checkmark {
+    -unity-background-image-tint-color: var(--color-cyan);
+    background-color: rgba(0, 229, 255, 0.15);
+    border-color: var(--color-cyan);
+}
+
+.unity-toggle:hover .unity-toggle__checkmark {
+    border-color: rgba(0, 229, 255, 0.5);
+}
+
+/* =======================================================
+   Tool Root & Header
+   ======================================================= */
+#hub-root {
+    background-color: var(--bg-dark);
+    flex-grow: 1;
+}
+
+#hub-header {
+    background-color: #0c0612;
+    border-bottom-width: 2px;
+    border-bottom-color: rgba(0, 229, 255, 0.8);
+}
+
+.hub-header-title {
+    font-size: 26px;
+    -unity-font-style: bold;
+}
+
+/* =======================================================
+   Panels & Structural
+   ======================================================= */
+.cyber-panel {
+    background-color: rgba(200, 200, 200, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.panel-header {
+    font-size: 16px;
+    -unity-font-style: bold;
+    margin-bottom: 15px;
+    color: var(--text-main);
+}
+
+/* =======================================================
+   Action Buttons (Macro)
+   ======================================================= */
+.cyber-action-btn {
+    font-size: 16px;
+    -unity-font-style: bold;
+    height: 45px;
+    border-radius: 4px;
+    margin-top: 15px;
+    transition-duration: 0.15s;
+}
+
+.cyan-btn {
+    background-color: #0b3d4f;
+    color: var(--color-cyan);
+    border-color: var(--color-cyan);
+    border-width: 1px;
+}
+
+.cyan-btn:hover { 
+    background-color: #125b75; 
+    border-color: #00ffff;
+}
+
+.pink-btn {
+    background-color: #4a0d2f;
+    color: var(--color-pink);
+    border-color: var(--color-pink);
+    border-width: 1px;
+}
+
+.pink-btn:hover {
+    background-color: #6e1346;
+    border-color: #ff33bb;
+}
+
+/* DESTRUCTIVE ACTION BUTTON */
+.danger-btn {
+    background-color: #2a0005; /* Deep void red */
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+    border-width: 1px;
+    text-shadow: 0px 0px 5px rgba(255, 0, 51, 0.5); /* Slight neon glow */
+}
+
+.danger-btn:hover {
+    background-color: #4d000a;
+    border-color: #ff3355;
+    color: #ffffff; /* Text pops to white on hover */
+    text-shadow: 0px 0px 8px rgba(255, 0, 51, 0.8);
+}
+
+/* =======================================================
+   Data Tags (Micro-Buttons for Locate/Optimize)
+   ======================================================= */
+.data-tag-btn {
+    background-color: #1e1e1e;
+    border-width: 1px;
+    border-radius: 3px;
+    height: 20px;
+    margin-left: 10px;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 10px;
+    -unity-font-style: bold;
+    transition-duration: 0.15s;
+}
+
+.data-tag-locate {
+    color: var(--color-cyan);
+    border-color: var(--color-cyan);
+}
+
+.data-tag-locate:hover {
+    background-color: rgba(0, 229, 255, 0.15);
+}
+
+.data-tag-optimize {
+    color: var(--color-pink);
+    border-color: var(--color-pink);
+    background-color: rgba(255, 0, 170, 0.1);
+}
+
+.data-tag-optimize:hover {
+    background-color: rgba(255, 0, 170, 0.3);
+}
+
+.data-tag-warning {
+    color: var(--color-amber);
+    border-color: var(--color-amber);
+    background-color: rgba(255, 170, 0, 0.1);
+}
+
+.data-tag-warning:hover {
+    background-color: rgba(255, 170, 0, 0.3);
+}
+
+/* DESTRUCTIVE MICRO-TAG (Component Culling) */
+.data-tag-destructive {
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+    background-color: rgba(255, 0, 51, 0.1);
+}
+
+.data-tag-destructive:hover {
+    background-color: rgba(255, 0, 51, 0.3);
+    color: #ffffff;
+}
+
+/* =======================================================
+   Validation Results Matrix (Dynamic Topology)
+   ======================================================= */
+.md-h1 {
+    font-size: 18px;
+    -unity-font-style: bold;
+    margin-bottom: 5px;
+    white-space: normal;
+}
+
+.md-h2 {
+    font-size: 15px;
+    color: var(--color-pink);
+    margin-top: 15px;
+    margin-bottom: 8px;
+    white-space: normal;
+    -unity-font-style: bold;
+}
+
+.md-separator {
+    height: 1px;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.md-row {
+    flex-direction: row;
+    align-items: flex-start;
+    margin-bottom: 6px;
+    background-color: rgba(255, 255, 255, 0.02);
+    padding: 4px;
+    border-radius: 4px;
+    transition-duration: 0.15s;
+}
+
+.md-row:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.md-bullet {
+    font-size: 14px;
+    margin-right: 10px;
+    margin-left: 5px;
+    margin-top: 1px;
+    flex-shrink: 0;
+    -unity-font-style: bold;
+}
+
+.md-p {
+    font-size: 13px;
+    color: var(--text-main);
+    white-space: normal;
+    flex-shrink: 1;
+    flex-grow: 1;
+    margin-top: 1px;
+}
+
+/* =======================================================
+   Optimization Task Matrix
+   ======================================================= */
+.opt-task-row {
+    flex-direction: row;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    padding: 6px;
+    border-radius: 4px;
+    flex-shrink: 1;
+    transition-duration: 0.15s;
+    background-color: transparent;
+}
+
+.opt-task-row:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.opt-task-desc {
+    white-space: normal;
+    flex-shrink: 1;
+    flex-grow: 1;
+    margin-left: 10px;
+    margin-top: 2px;
+}
+
+/* Destructive Task Description Highlight */
+.text-danger {
+    color: var(--color-danger);
+    -unity-font-style: bold;
+}
