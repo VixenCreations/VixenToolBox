@@ -285,8 +285,8 @@ namespace VixenTools.Editor
                 report.OptimizationSuite.Add(new OptimizationTask
                 {
                     ID = "WELD_VERTICES",
-                    Label = $"<color=#ff0033>Decimate {heavyMeshes.Count} Heavy Meshes (>15k Polys)</color>",
-                    Description = "Destructive Topology: Deploys a Spatial Hash matrix. <color=#00ff66>Automatically shields high-detail submeshes AND isolates Kinematic Head/Neck bone weights from decimation.</color>",
+                    Label = $"<color=#00e5ff>Precision Multi-Pass Microweld ({heavyMeshes.Count} Meshes)</color>",
+                    Description = "Safe Topology Optimization: Iteratively seals sub-millimeter seams. <color=#00ff66><b>STRICTLY LOCKS UVs.</b></color> Visually preserves the avatar, but will intentionally halt before reaching extreme Quest limits to protect geometry.",
                     Execute = () => {
                         int originalTotal = 0;
                         int newTotal = 0;
@@ -299,7 +299,15 @@ namespace VixenTools.Editor
                             
                             if (shieldRoot != null)
                             {
-                                foreach (var t in shieldRoot.GetComponentsInChildren<Transform>(true)) protectedBoneTransforms.Add(t);
+                                foreach (var t in shieldRoot.GetComponentsInChildren<Transform>(true)) 
+                                {
+                                    string n = t.name.ToLower();
+                                    // Protects the face, but explicitly leaves hair/fluff vulnerable to the Decimator
+                                    if (!n.Contains("hair") && !n.Contains("ear") && !n.Contains("fluff"))
+                                    {
+                                        protectedBoneTransforms.Add(t);
+                                    }
+                                }
                             }
                         }
 
@@ -325,10 +333,20 @@ namespace VixenTools.Editor
                                 }
                             }
 
-                            VixenMeshPatcher.WeldVertices(smr, 0.005f, protectedSlots, protectedBoneIndices); 
+                            // Engage the Multipass Microwelder (EXTREME PRECISION)
+                            VixenMeshPatcher.MultipassTargetedWeld(
+                                smr, 
+                                targetTriangles: 14500, 
+                                startThreshold: 0.0001f, 
+                                maxThreshold: 0.005f, // HARD CAP at 5mm. Absolute visual safety.
+                                step: 0.0005f, 
+                                protectedSubmeshes: protectedSlots, 
+                                protectedBones: protectedBoneIndices
+                            );
+                            
                             newTotal += smr.sharedMesh.vertexCount;
                         }
-                        Debug.Log($"[VixenTools] Topology Welded: Erased {originalTotal - newTotal} vertices. Kinematic Head/Neck shielding active.");
+                        Debug.Log($"[VixenTools] Topology Welded: Erased {originalTotal - newTotal} vertices. Kinematic shielding active.");
                     }
                 });
             }
@@ -554,6 +572,9 @@ namespace VixenTools.Editor
             int count = 0;
             foreach (var tex in textures)
             {
+                // THE FIX: Prevent ImageMagick from trying to decode active RenderTextures
+                if (tex is RenderTexture) continue;
+
                 string path = AssetDatabase.GetAssetPath(tex);
                 if (string.IsNullOrEmpty(path) || !path.StartsWith("Assets/")) continue;
                 try

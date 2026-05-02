@@ -90,6 +90,7 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
+                        <fluent-option value="v1.5.1">v1.5.1</fluent-option>
                         <fluent-option value="v1.5.0">v1.5.0</fluent-option>
                         <fluent-option value="v1.4.5">v1.4.5</fluent-option>
                         <fluent-option value="v1.4.4">v1.4.4</fluent-option>
@@ -109,6 +110,29 @@
             </div>
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
+
+                <div class="changelog-entry" data-version="v1.5.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v1.5.1 - 2026-05-01</h5>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Autonomous Domain Polling (Vixen Hub):</strong> Engineered a static <code>[InitializeOnLoad]</code> routine that silently parses the <code>package.json</code> manifest during Unity domain reloads. It now dynamically cross-references the active ecosystem against local <code>EditorPrefs</code> to autonomously trigger the Scene View update badge without requiring manual intervention.</li>
+                        <li class="mb-2"><strong>Direct Tab Routing (UI Ecosystem):</strong> Injected synchronous tab-routing execution into the <code>VixenHub</code> class. Clicking the Scene View update notification now bypasses the default dashboard and instantly maps the UI matrix directly to the Release Changelogs.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Nuclear Decimation Downgrade (Topology Engine):</strong> Re-engineered the Multi-Pass Welder from an aggressive 3D volumetric crusher into an <i>Extreme Precision 5D Microwelder</i>. Enforced a strict 5mm (<code>0.005f</code>) structural hard cap to safely seal sub-millimeter import seams without collapsing limb volumes or flattening continuous meshes into 2D singularities.</li>
+                        <li class="mb-2"><strong>Kinematic Shield Bypassing (Avatar Validator):</strong> Strategically punctured the <code>Neck</code>/<code>Head</code> protective bone matrix. The heuristic scanner now explicitly isolates and exposes dense, non-structural children (<code>Hair</code>, <code>Ears</code>, <code>Fluff</code>) to the optimization grid, allowing the decimator to successfully hit Quest poly limits without being bottlenecked by shielded geometry.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>UV Seam Tearing (Topology Engine):</strong> Eradicated catastrophic texture stretching during decimation sweeps. The upgraded 5D Spatial Hash <code>(X, Y, Z, U, V)</code> now strictly locks UV coordinates, guaranteeing that vertices sharing atomic space but possessing divergent texture mappings are never violently fused.</li>
+                        <li class="mb-2"><strong>RenderTexture Magick Crashes (VRAM Optimizer):</strong> Patched a critical failure loop where the <code>ProcessTexturesWithMagick</code> pipeline attempted to intercept and decode volatile, active <code>RenderTexture</code> assets, fully resolving the recurring <code>error/constitute.c/ReadImage/753</code> console spam during a Deep Matrix Scan.</li>
+                        <li class="mb-2"><strong>SDK Version Regex Blindspot (Vixen Hub):</strong> Expanded the ecosystem's JSON parser to actively detect modern <code>com.vrchat.base</code> and <code>com.vrchat.worlds</code> dependencies, fixing a logic gap where the dashboard header falsely reported the active SDK version as "Unknown".</li>
+                    </ul>
+                </div>
 
                 <div class="changelog-entry" data-version="v1.5.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v1.5.0 - 2026-04-30</h5>

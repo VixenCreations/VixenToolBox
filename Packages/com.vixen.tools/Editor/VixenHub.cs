@@ -14,32 +14,59 @@ namespace VixenTools.Editor
     public static class VixenUpdateNotifier
     {
         private const string BADGE_NAME = "vixen-update-badge";
+        private const string PREF_STORED_VER = "VixenTools_StoredVersion";
+        private const string PREF_UPDATE_PENDING = "VixenTools_UpdatePending";
+        private const string PKG_PATH = "Packages/com.vixencreations.vixens-toolbox/package.json";
 
         static VixenUpdateNotifier()
         {
+            // 1. Autonomous Version Detection on Domain Reload
+            CheckForPackageChanges();
+            
+            // 2. Bind the UI injector
             SceneView.duringSceneGui += OnSceneGUI;
+        }
+
+        private static void CheckForPackageChanges()
+        {
+            try
+            {
+                string path = Path.GetFullPath(PKG_PATH);
+                if (File.Exists(path))
+                {
+                    string json = File.ReadAllText(path);
+                    Match vMatch = Regex.Match(json, @"""version""\s*:\s*""([^""]+)""");
+                    if (vMatch.Success)
+                    {
+                        string currentVersion = vMatch.Groups[1].Value;
+                        string storedVersion = EditorPrefs.GetString(PREF_STORED_VER, "");
+
+                        // If the version changed (or it's a fresh install), trigger the HUD
+                        if (string.IsNullOrEmpty(storedVersion) || storedVersion != currentVersion)
+                        {
+                            EditorPrefs.SetBool(PREF_UPDATE_PENDING, true);
+                            EditorPrefs.SetString(PREF_STORED_VER, currentVersion);
+                        }
+                    }
+                }
+            }
+            catch { /* Fail silently to prevent disrupting editor loads if package is migrating */ }
         }
 
         private static void OnSceneGUI(SceneView sceneView)
         {
-            // 1. Grab the root VisualElement of the active SceneView
             var root = sceneView.rootVisualElement;
             if (root == null) return;
 
-            bool updatePending = EditorPrefs.GetBool("VixenTools_UpdatePending", false);
+            bool updatePending = EditorPrefs.GetBool(PREF_UPDATE_PENDING, false);
             var existingBadge = root.Q<Button>(BADGE_NAME);
 
-            // 2. Safely remove or hide the badge if no update is pending
             if (!updatePending)
             {
-                if (existingBadge != null)
-                {
-                    existingBadge.style.display = DisplayStyle.None;
-                }
+                if (existingBadge != null) existingBadge.style.display = DisplayStyle.None;
                 return;
             }
 
-            // 3. Inject the UI Toolkit element if it doesn't exist yet (survives domain reloads)
             if (existingBadge == null)
             {
                 existingBadge = BuildCyberBadge();
@@ -53,8 +80,8 @@ namespace VixenTools.Editor
         {
             var badge = new Button(() => 
             {
-                EditorPrefs.SetBool("VixenTools_UpdatePending", false);
-                VixenHub.ShowWindow();
+                EditorPrefs.SetBool(PREF_UPDATE_PENDING, false);
+                VixenHub.ShowChangelogWindow();
             }) 
             { 
                 name = BADGE_NAME 
@@ -70,7 +97,6 @@ namespace VixenTools.Editor
             // --- CYBERPUNK STYLING ---
             badge.style.backgroundColor = new Color(0.05f, 0.05f, 0.08f, 0.95f);
             
-            // Strip Unity's default button borders and apply our custom ones
             badge.style.borderTopWidth = 0;
             badge.style.borderRightWidth = 0;
             badge.style.borderBottomWidth = 1;
@@ -79,7 +105,6 @@ namespace VixenTools.Editor
             badge.style.borderLeftColor = new Color(1f, 0f, 0.66f); // Hot Pink
             badge.style.borderBottomColor = new Color(0f, 0.9f, 1f, 0.3f); // Cyan Glow
             
-            // Strip Unity's default button margins/padding
             badge.style.marginLeft = 0;
             badge.style.marginRight = 0;
             badge.style.marginTop = 0;
@@ -89,11 +114,10 @@ namespace VixenTools.Editor
             badge.style.paddingTop = 0;
             badge.style.paddingBottom = 0;
 
-            // Flex center the text
             badge.style.alignItems = Align.Center;
             badge.style.justifyContent = Justify.Center;
 
-            // --- INTERACTIVITY (Smooth Hover State) ---
+            // --- INTERACTIVITY ---
             badge.style.transitionDuration = new List<TimeValue> { new TimeValue(0.15f) };
             badge.RegisterCallback<PointerEnterEvent>(e => badge.style.backgroundColor = new Color(0.12f, 0.12f, 0.18f, 0.95f));
             badge.RegisterCallback<PointerLeaveEvent>(e => badge.style.backgroundColor = new Color(0.05f, 0.05f, 0.08f, 0.95f));
@@ -123,7 +147,7 @@ namespace VixenTools.Editor
         private Font _cyberFont;
         
         // --- Dynamic Version States ---
-        private string _packageVersion = "1.4.5"; 
+        private string _packageVersion = "Unknown"; 
         private string _sdkVersion = "Unknown";
         
         // --- Changelog Pagination State ---
@@ -153,6 +177,26 @@ namespace VixenTools.Editor
             window.Show();
         }
 
+        // --- NEW: Dedicated Changelog Launcher ---
+        public static void ShowChangelogWindow()
+        {
+            var window = GetWindow<VixenHub>("Vixen Hub");
+            window.minSize = new Vector2(450, 600);
+            window.Show();
+            
+            // Force the UI to route to the changelog tab after initialization
+            window.OpenChangelogTab(); 
+        }
+
+        // --- NEW: Public accessor to bypass private enumerators ---
+        public void OpenChangelogTab()
+        {
+            if (_contentContainer != null) // Safety check to ensure GUI is initialized
+            {
+                SwitchMode(TabMode.Changelog);
+            }
+        }
+
         private void OnEnable()
         {
             _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
@@ -169,7 +213,8 @@ namespace VixenTools.Editor
                 Match vMatch = Regex.Match(json, @"""version""\s*:\s*""([^""]+)""");
                 if (vMatch.Success) _packageVersion = vMatch.Groups[1].Value;
 
-                Match sdkMatch = Regex.Match(json, @"""com\.vrchat\.avatars""\s*:\s*""([^""]+)""");
+                // THE FIX: Expanding the regex to catch com.vrchat.base, avatars, or worlds.
+                Match sdkMatch = Regex.Match(json, @"""com\.vrchat\.(?:base|avatars|worlds)""\s*:\s*""([^""]+)""");
                 if (sdkMatch.Success) _sdkVersion = sdkMatch.Groups[1].Value.Replace("^", "").Replace("~", "");
             }
         }
@@ -186,7 +231,6 @@ namespace VixenTools.Editor
             {
                 string line = rawLine.TrimEnd();
                 
-                // Trigger a new version block when we hit the H2 tags (e.g., ## [1.4.4] - 2026-04-27)
                 if (line.StartsWith("## ["))
                 {
                     currentEntry = new ChangelogEntry { 
@@ -197,7 +241,6 @@ namespace VixenTools.Editor
                 }
                 else if (currentEntry != null)
                 {
-                    // Accumulate lines for the active version block
                     currentEntry.Content += line + "\n";
                 }
             }
@@ -317,7 +360,6 @@ namespace VixenTools.Editor
 
                     if (_changelogEntries.Count > 0)
                     {
-                        // --- Build the Dropdown Header ---
                         var controlRow = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 15, marginTop = 10, paddingLeft = 5, paddingRight = 5 } };
                         
                         var dropLabel = new Label("Target Release:") { style = { color = new Color(0.67f, 0.67f, 0.67f), marginRight = 10, fontSize = 14 } };
@@ -327,13 +369,11 @@ namespace VixenTools.Editor
                         List<string> versionNames = new List<string>();
                         foreach (var log in _changelogEntries) versionNames.Add(log.VersionTitle);
 
-                        // Ensure index doesn't exceed bounds if changelog shrinks
                         if (_selectedChangelogIndex >= versionNames.Count) _selectedChangelogIndex = 0;
 
                         var dropdown = new DropdownField(versionNames, _selectedChangelogIndex);
                         dropdown.style.flexGrow = 1;
                         
-                        // Cyberpunk styling for the native dropdown
                         dropdown.style.backgroundColor = new Color(0.12f, 0.12f, 0.12f);
                         dropdown.style.borderTopColor = new Color(0f, 0.898f, 1f, 0.4f);
                         dropdown.style.borderBottomColor = new Color(0f, 0.898f, 1f, 0.4f);
@@ -359,7 +399,6 @@ namespace VixenTools.Editor
 
                         _contentContainer.Add(logContentContainer);
 
-                        // Render the initially selected version
                         ParseMarkdownAndInject(_changelogEntries[_selectedChangelogIndex].Content, logContentContainer);
                     }
                     else
@@ -388,7 +427,6 @@ namespace VixenTools.Editor
 
         private void RenderCoreModules()
         {
-            // --- UNIVERSAL TOOLS (Always visible regardless of Udon state) ---
             var universalList = new List<(System.Action action, string title, string desc)>
             {
                 (() => EditorApplication.ExecuteMenuItem("VixenTools/Unity Engine/Animation Workbench Pro"), "Animation Workbench Pro", "Visual workspace for staging, easing, and sampling complex animation curves."),
@@ -397,7 +435,6 @@ namespace VixenTools.Editor
 
             RenderActionGrid("Universal Utilities", "#00e5ff", universalList);
 
-            // --- SDK-AWARE FLAGSHIP TOOLS ---
 #if !UDON
             var avatarList = new List<(System.Action action, string title, string desc)>
             {
@@ -409,7 +446,6 @@ namespace VixenTools.Editor
 
             RenderActionGrid("Avatar Pipeline Tools", "#ff00aa", avatarList);
 #elif UDON
-            // Read the live state directly from EditorPrefs
             bool isSnapActive = EditorPrefs.GetBool("VixenTools/Scene/Live Surface Snapping", false);
             string snapTitle = isSnapActive ? "Snap To Surface [ ACTIVE ]" : "Snap To Surface [ OFF ]";
 
@@ -418,7 +454,6 @@ namespace VixenTools.Editor
                 (() => 
                 {
                     EditorApplication.ExecuteMenuItem("VixenTools/Scene/Live Surface Snapping");
-                    // Force the UIElements layout to refresh so the button text updates instantly
                     SwitchMode(TabMode.CoreModules);
                 }, snapTitle, "Enterprise-grade surface snapping tool. Calculates true mesh/collider bounds and safely dirties Udon components.")
             };
@@ -512,7 +547,6 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
 
                 if (line.Contains("[ Network Links ]") || line.Contains("Network Links")) break;
 
-                // Handle Page Breaks
                 if (line.StartsWith("---") || line.StartsWith("***"))
                 {
                     var sep = new VisualElement();
@@ -520,7 +554,6 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
                     sep.style.backgroundColor = new Color(1f, 0f, 0.66f, 0.3f);
                     container.Add(sep);
                 }
-                // Handle Headers
                 else if (line.StartsWith("# ") || line.StartsWith("## ") || line.StartsWith("### "))
                 {
                     int hashes = 0;
@@ -545,7 +578,6 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
                         container.Add(sep);
                     }
                 }
-                // Handle Bullet Points
                 else if (line.StartsWith("- ") || line.StartsWith("* "))
                 {
                     string pText = line.Substring(2).Trim();
@@ -575,7 +607,6 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
                     row.Add(lbl);
                     container.Add(row);
                 }
-                // Handle Blockquotes (>)
                 else if (line.StartsWith("> "))
                 {
                     string pText = line.Substring(2).Trim();
@@ -597,7 +628,6 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
                     lbl.style.marginBottom = 5;
                     container.Add(lbl);
                 }
-                // Standard Paragraphs
                 else
                 {
                     string pText = ParseMarkdownFormatting(line);

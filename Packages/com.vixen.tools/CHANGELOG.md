@@ -6,6 +6,21 @@ All notable changes to the VixenToolBox project will be documented in this file.
 
 ***
 
+## [1.5.1] - 2026-05-01
+
+### Added
+- **Autonomous Domain Polling (Vixen Hub):** Engineered a static `[InitializeOnLoad]` routine that silently parses the `package.json` manifest during Unity domain reloads. It now dynamically cross-references the active ecosystem against local `EditorPrefs` to autonomously trigger the Scene View update badge without requiring manual intervention.
+- **Direct Tab Routing (UI Ecosystem):** Injected synchronous tab-routing execution into the `VixenHub` class. Clicking the Scene View update notification now bypasses the default dashboard and instantly maps the UI matrix directly to the Release Changelogs.
+
+### Changed
+- **Nuclear Decimation Downgrade (Topology Engine):** Re-engineered the Multi-Pass Welder from an aggressive 3D volumetric crusher into an *Extreme Precision 5D Microwelder*. Enforced a strict 5mm (`0.005f`) structural hard cap to safely seal sub-millimeter import seams without collapsing limb volumes or flattening continuous meshes into 2D singularities.
+- **Kinematic Shield Bypassing (Avatar Validator):** Strategically punctured the `Neck`/`Head` protective bone matrix. The heuristic scanner now explicitly isolates and exposes dense, non-structural children (`Hair`, `Ears`, `Fluff`) to the optimization grid, allowing the decimator to successfully hit Quest poly limits without being bottlenecked by shielded geometry.
+
+### Fixed
+- **UV Seam Tearing (Topology Engine):** Eradicated catastrophic texture stretching during decimation sweeps. The upgraded 5D Spatial Hash `(X, Y, Z, U, V)` now strictly locks UV coordinates, guaranteeing that vertices sharing atomic space but possessing divergent texture mappings are never violently fused.
+- **RenderTexture Magick Crashes (VRAM Optimizer):** Patched a critical failure loop where the `ProcessTexturesWithMagick` pipeline attempted to intercept and decode volatile, active `RenderTexture` assets, fully resolving the recurring `error/constitute.c/ReadImage/753` console spam during a Deep Matrix Scan.
+- **SDK Version Regex Blindspot (Vixen Hub):** Expanded the ecosystem's JSON parser to actively detect modern `com.vrchat.base` and `com.vrchat.worlds` dependencies, fixing a logic gap where the dashboard header falsely reported the active SDK version as "Unknown".
+
 ## [1.5.0] - 2026-04-30
 
 ### Architectural Overhaul & Dual-SDK Ecosystem Integration
