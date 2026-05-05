@@ -434,7 +434,6 @@ namespace VixenTools.Editor
             };
 
             RenderActionGrid("Universal Utilities", "#00e5ff", universalList);
-
 #if !UDON
             var avatarList = new List<(System.Action action, string title, string desc)>
             {
@@ -466,13 +465,28 @@ namespace VixenTools.Editor
                     EditorApplication.ExecuteMenuItem("VixenTools/Scene/Live Surface Snapping");
                     // Force the UIElements layout to flush and rebuild to catch the new EditorPrefs state
                     SwitchMode(TabMode.CoreModules);
-                }, snapTitle, "Enterprise-grade gravity snapper. Automatically drops selected objects to the nearest floor or shelf when moved."),
+                }, 
+                snapTitle, 
+                "Enterprise-grade gravity snapper. Automatically drops selected objects to the nearest floor or shelf when moved."),
                 
                 (() => 
                 {
                     EditorApplication.ExecuteMenuItem("VixenTools/Scene/Precision Click-to-Place");
                     SwitchMode(TabMode.CoreModules);
-                }, precisionTitle, "Sniper-rifle camera raycaster. Click anywhere in the Scene View to instantly teleport objects to complex shelf polygons.")
+                }, 
+                precisionTitle, 
+                "Sniper-rifle camera raycaster. Click anywhere in the Scene View to instantly teleport objects to complex shelf polygons."),
+
+                // -------------------------
+                // NEW: World Engine entry
+                // -------------------------
+                (() =>
+                {
+                    EditorApplication.ExecuteMenuItem("VixenTools/Scene/Vixen World Engine");
+                    SwitchMode(TabMode.CoreModules);
+                },
+                "<color=#00e5ff>Vixen World Engine</color>",
+                "Omni-Matrix diagnostic spider. Full ecosystem audits for ProTV, TXL, IwaSync3, video pipelines, Udon persistence, and shader replacement matrices.")
             };
 
             // Assuming RenderActionGrid supports rich text on the generated buttons (enableRichText = true on the label)
