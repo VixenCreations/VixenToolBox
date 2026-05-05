@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -57,7 +56,7 @@ namespace VixenTools.Editor
             public string Description;
             public string HexColor;
             public UnityEngine.Object Context;
-            public bool IsSelected = true;
+            public bool IsSelected = false; // FIX 1: Default to unchecked
             public Action FixPayload; 
         }
         private List<EngineDiagnostic> _diagnosticsDb = new List<EngineDiagnostic>();
@@ -237,7 +236,7 @@ namespace VixenTools.Editor
             _mainScroll.Add(_matrixContainer);
         }
 
-        private void EnsureDictionariesExist()
+        private void EnsureDictionariesExist(bool forceRebuild = false)
         {
             string targetPath = Path.GetFullPath(TargetDictPath); 
             string targetDir = Path.GetDirectoryName(targetPath);
@@ -246,6 +245,16 @@ namespace VixenTools.Editor
             string whitelistPath = Path.GetFullPath(WhitelistDictPath); 
             string whitelistDir = Path.GetDirectoryName(whitelistPath);
             if (!Directory.Exists(whitelistDir)) Directory.CreateDirectory(whitelistDir);
+
+            // THE NUKE: Delete existing files if a rebuild is triggered
+            if (forceRebuild)
+            {
+                AssetDatabase.DeleteAsset(TargetDictPath);
+                AssetDatabase.DeleteAsset(WhitelistDictPath);
+                _targetShaderAsset = null;
+                _shaderWhitelistAsset = null;
+                Debug.Log("[Vixen System] Previous dictionaries purged. Rebuilding from fresh schema...");
+            }
 
             _targetShaderAsset = AssetDatabase.LoadAssetAtPath<ShaderDictionaryAsset>(TargetDictPath);
             if (_targetShaderAsset == null)
@@ -262,6 +271,9 @@ namespace VixenTools.Editor
                 AssetDatabase.CreateAsset(_shaderWhitelistAsset, WhitelistDictPath);
                 ShaderDictionaryAsset.AutoPopulateWhitelist(_shaderWhitelistAsset); 
             }
+
+            // Force Unity to acknowledge the new files immediately so the UI doesn't hitch
+            if (forceRebuild) AssetDatabase.Refresh(); 
         }
 
         private void RefreshCustomDropdown()
@@ -494,9 +506,7 @@ namespace VixenTools.Editor
             return null;
         }
 
-        // --- SUB-SCANNERS ---
-
-private void AuditNativeVideoPipelines()
+        private void AuditNativeVideoPipelines()
         {
             var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
@@ -697,7 +707,6 @@ private void AuditNativeVideoPipelines()
         {
             var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
-            // --- TV MANAGER ---
             Type proTvType = GetTypeSafe("ArchiTech.ProTV.TVManager");
             if (proTvType != null)
             {
@@ -749,7 +758,6 @@ private void AuditNativeVideoPipelines()
                         }
                     }
 
-                    // --- PROTV CUSTOM TEXTURE VRAM SINK ---
                     var customTextureField = proTvType.GetField("customTexture", flags);
                     if (customTextureField != null)
                     {
@@ -770,7 +778,6 @@ private void AuditNativeVideoPipelines()
                 }
             }
 
-            // --- MEDIA CONTROLS ---
             Type mediaControlsType = GetTypeSafe("ArchiTech.ProTV.MediaControls");
             if (mediaControlsType != null)
             {
@@ -790,7 +797,6 @@ private void AuditNativeVideoPipelines()
                 }
             }
 
-            // --- PLAYLIST DATA ---
             Type playlistDataType = GetTypeSafe("ArchiTech.ProTV.PlaylistData");
             if (playlistDataType != null)
             {
@@ -810,7 +816,6 @@ private void AuditNativeVideoPipelines()
                 }
             }
 
-            // --- PLAYLIST SEARCH ---
             Type playlistSearchType = GetTypeSafe("ArchiTech.ProTV.PlaylistSearch");
             if (playlistSearchType != null)
             {
@@ -833,7 +838,6 @@ private void AuditNativeVideoPipelines()
                 }
             }
 
-            // --- RTGI UPDATER ---
             Type rtgiType = GetTypeSafe("ArchiTech.ProTV.RTGIUpdater");
             if (rtgiType != null)
             {
@@ -852,7 +856,6 @@ private void AuditNativeVideoPipelines()
                 }
             }
 
-            // --- QUEUE SPAMMER / RATE LIMIT RISK ---
             Type queueType = GetTypeSafe("ArchiTech.ProTV.Queue");
             if (queueType != null)
             {
@@ -880,7 +883,6 @@ private void AuditNativeVideoPipelines()
                 }
             }
 
-            // --- TV TOGGLES MASSIVE ARRAY SINK ---
             Type tvTogglesType = GetTypeSafe("ArchiTech.ProTV.TVToggles");
             if (tvTogglesType != null)
             {
@@ -903,7 +905,6 @@ private void AuditNativeVideoPipelines()
                 }
             }
 
-            // --- VPMANAGER GI SINK ---
             Type vpManagerType = GetTypeSafe("ArchiTech.ProTV.VPManager");
             if (vpManagerType != null)
             {
@@ -942,7 +943,6 @@ private void AuditNativeVideoPipelines()
                 }
             }
 
-            // --- ROOT CANVAS CASCADES ---
             Type queueUiType = GetTypeSafe("ArchiTech.ProTV.QueueUI");
             Type historyUiType = GetTypeSafe("ArchiTech.ProTV.HistoryUI");
             Type playlistUiType = GetTypeSafe("ArchiTech.ProTV.PlaylistUI"); 
@@ -966,11 +966,6 @@ private void AuditNativeVideoPipelines()
         {
             var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
-            // ==========================================
-            // PART 1: EDITOR-SIDE HEURISTICS
-            // ==========================================
-
-            // 1. IwaSync3 Core (Resolution Throttling)
             Type iwaType = GetTypeSafe("HoshinoLabs.IwaSync3.IwaSync3");
             if (iwaType != null)
             {
@@ -995,7 +990,6 @@ private void AuditNativeVideoPipelines()
                 }
             }
 
-            // 2. Playlists (Fetch Throttling)
             Type playlistType = GetTypeSafe("HoshinoLabs.IwaSync3.Playlist");
             if (playlistType != null)
             {
@@ -1020,7 +1014,6 @@ private void AuditNativeVideoPipelines()
                 }
             }
 
-            // 3. Speakers (Spatialization Blowout)
             Type speakerType = GetTypeSafe("HoshinoLabs.IwaSync3.Speaker");
             if (speakerType != null)
             {
@@ -1045,7 +1038,6 @@ private void AuditNativeVideoPipelines()
                 }
             }
 
-            // 4. Screens (Realtime GI Sink)
             Type screenType = GetTypeSafe("HoshinoLabs.IwaSync3.Screen");
             if (screenType != null)
             {
@@ -1053,11 +1045,11 @@ private void AuditNativeVideoPipelines()
                 {
                     var component = (Component)scr;
                     var matIndexField = screenType.GetField("materialIndex", flags);
-                    var screenRendererField = screenType.GetField("screen", flags); // <-- FIXED: Target the serialized field
+                    var screenRendererField = screenType.GetField("screen", flags); 
                     
                     if (screenRendererField != null && matIndexField != null)
                     {
-                        var renderer = screenRendererField.GetValue(scr) as Renderer; // <-- FIXED: Extract the actual targeted Renderer
+                        var renderer = screenRendererField.GetValue(scr) as Renderer; 
                         if (renderer != null)
                         {
                             int idx = (int)matIndexField.GetValue(scr);
@@ -1080,11 +1072,6 @@ private void AuditNativeVideoPipelines()
                 }
             }
 
-            // ==========================================
-            // PART 2: UDON RUNTIME HEURISTICS
-            // ==========================================
-
-            // 5. VideoCore (Aggressive Network Sync)
             Type videoCoreType = GetTypeSafe("HoshinoLabs.IwaSync3.Udon.VideoCore");
             if (videoCoreType != null)
             {
@@ -1101,7 +1088,7 @@ private void AuditNativeVideoPipelines()
                                 $"'{component.gameObject.name}' has a sync frequency of {freq}s. Syncing video state this rapidly consumes severe network bandwidth and causes player IK to lag.",
                                 "#ffaa00", component, () => {
                                     Undo.RecordObject(component, "Throttle Sync Frequency");
-                                    syncFreqField.SetValue(core, 9.2f); // IwaSync3 Default
+                                    syncFreqField.SetValue(core, 9.2f); 
                                     PrefabUtility.RecordPrefabInstancePropertyModifications(component);
                                 });
                         }
@@ -1109,7 +1096,6 @@ private void AuditNativeVideoPipelines()
                 }
             }
 
-            // 6. VideoScreen (Bloom/Emissive Blowout)
             Type udonScreenType = GetTypeSafe("HoshinoLabs.IwaSync3.Udon.VideoScreen");
             if (udonScreenType != null)
             {
@@ -1134,7 +1120,6 @@ private void AuditNativeVideoPipelines()
                 }
             }
 
-            // 7. CustomEventInvoker (Runtime Instantiation GC Sink)
             Type eventInvokerType = GetTypeSafe("HoshinoLabs.IwaSync3.Udon.CustomEventInvoker");
             if (eventInvokerType != null)
             {
@@ -1157,11 +1142,9 @@ private void AuditNativeVideoPipelines()
 
             foreach (var udon in FindObjectsOfType<UdonBehaviour>(true))
             {
-                // Section 1: Continuous Sync
                 if (udon.SyncMethod == VRC.SDKBase.Networking.SyncType.Continuous)
                     LogDiagnostic("UDON BANDWIDTH: CONTINUOUS SYNC", "Continuous Sync Active", $"'{udon.gameObject.name}' consumes high bandwidth. Verify if manual sync is possible.", "#ff00aa", udon.gameObject);
 
-                // Section 2: Heavy UASM Compute
                 if (udon.programSource is UdonSharpProgramAsset uAsset && getUasm != null && cache != null)
                 {
                     string uasm = (string)getUasm.Invoke(cache, new object[] { uAsset });
@@ -1173,7 +1156,6 @@ private void AuditNativeVideoPipelines()
                 }
             }
 
-            // Section 3: VRC Object Sync Physics
             foreach (var objSync in FindObjectsOfType<VRCObjectSync>(true))
             {
                 LogDiagnostic("UDON PHYSICS: OBJECT SYNC", "VRC Object Sync", $"'{objSync.gameObject.name}' transmits physics state over network.", "#00ff88", objSync.gameObject);
@@ -1274,6 +1256,11 @@ private void AuditNativeVideoPipelines()
                 }
                 else
                 {
+                    // Circuit Breaker: If the material is ALREADY using the selected replacement shader, 
+                    // it is inherently compliant. Skip further diagnostic checks.
+                    if (_targetReplacementShader != null && mat.shader == _targetReplacementShader) continue;
+                    // ---------------
+
                     // Protection Check: Skip Video Players, AudioLink, etc.
                     if (ShaderDictionaryAsset.IsGloballyProtected(mat.shader)) continue; 
                     
@@ -1300,7 +1287,6 @@ private void AuditNativeVideoPipelines()
                 string path = AssetDatabase.GetAssetPath(mat);
                 if (string.IsNullOrEmpty(path)) continue;
                 
-                // FIXED: Loading as Texture instead of Texture2D to match the HashSet
                 var deps = AssetDatabase.GetDependencies(path, true)
                     .Select(AssetDatabase.LoadAssetAtPath<Texture>) 
                     .Where(t => t != null);
@@ -1309,7 +1295,6 @@ private void AuditNativeVideoPipelines()
             }
         }
 
-        // Helper to extract textures from material property blocks
         private void ScrapeTexturesFromMaterial(Material mat)
         {
             Shader shader = mat.shader;
@@ -1333,11 +1318,9 @@ private void AuditNativeVideoPipelines()
                 if (tex == null) continue;
 
                 string path = AssetDatabase.GetAssetPath(tex);
-                // Get actual GPU memory footprint
                 long bytes = Profiler.GetRuntimeMemorySizeLong(tex);
                 float mb = bytes / 1048576f;
 
-                // Handle textures that don't exist as assets (Instanced/Procedural)
                 if (string.IsNullOrEmpty(path))
                 {
                     if (tex.width > _targetTextureResolution || mb > 5f)
@@ -1352,7 +1335,6 @@ private void AuditNativeVideoPipelines()
                 TextureImporter imp = AssetImporter.GetAtPath(path) as TextureImporter;
                 if (imp == null) continue;
 
-                // 1. Oversized Check (The "VRAM Nuke" detection)
                 if (tex.width > _targetTextureResolution || tex.height > _targetTextureResolution)
                 {
                     LogDiagnostic("TEXTURE MEMORY (VRAM)", "Oversized Textures", 
@@ -1365,7 +1347,6 @@ private void AuditNativeVideoPipelines()
                     });
                 }
                 
-                // 2. Read/Write Check
                 if (imp.isReadable)
                 {
                     LogDiagnostic("TEXTURE MEMORY (VRAM)", "Read/Write Enabled", 
@@ -1375,7 +1356,6 @@ private void AuditNativeVideoPipelines()
                     });
                 }
 
-                // 3. Uncompressed Check
                 if (imp.textureCompression == TextureImporterCompression.Uncompressed)
                 {
                     LogDiagnostic("TEXTURE MEMORY (VRAM)", "Uncompressed Asset", 
@@ -1409,7 +1389,6 @@ private void AuditNativeVideoPipelines()
                         });
                     }
 
-                    // VRChat UI Shape Check (Bonus VRC Protocol)
                     if (canvas.GetComponent<VRC.SDKBase.VRC_UiShape>() == null && canvas.GetComponent<VRC.SDK3.Components.VRCUiShape>() == null)
                     {
                          LogDiagnostic("UI & CANVAS OPTIMIZATION", "Missing VRC UI Shape", $"'{canvas.name}' is World Space but lacks a VRCUiShape. VRChat laser pointers will ignore it.", "#ff00aa", canvas, () => {
@@ -1418,7 +1397,6 @@ private void AuditNativeVideoPipelines()
                     }
                 }
 
-                // Unity Missing Event Camera Heuristic
                 if ((canvas.renderMode == RenderMode.WorldSpace || canvas.renderMode == RenderMode.ScreenSpaceCamera) && canvas.worldCamera == null)
                 {
                     var raycaster = canvas.GetComponent<UnityEngine.UI.GraphicRaycaster>();
@@ -1437,10 +1415,10 @@ private void AuditNativeVideoPipelines()
                                 GameObject camObj = new GameObject("Vixen UI Event Camera");
                                 eventCam = camObj.AddComponent<Camera>();
                                 eventCam.clearFlags = CameraClearFlags.Nothing;
-                                eventCam.cullingMask = 0; // Render absolutely nothing
+                                eventCam.cullingMask = 0; 
                                 eventCam.useOcclusionCulling = false;
                                 eventCam.stereoTargetEye = StereoTargetEyeMask.None; 
-                                eventCam.enabled = false; // Disable rendering completely, used only for UI matrix calculations
+                                eventCam.enabled = false; 
                                 Undo.RegisterCreatedObjectUndo(camObj, "Create UI Event Camera");
                             }
                             canvas.worldCamera = eventCam;
@@ -1549,7 +1527,6 @@ private void AuditNativeVideoPipelines()
         {
             var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
-            // 1. VRCPlayerObject Configuration Checks
             Type playerObjectType = GetTypeSafe("VRC.SDK3.Persistence.VRCPlayerObject");
             if (playerObjectType != null)
             {
@@ -1560,7 +1537,6 @@ private void AuditNativeVideoPipelines()
                     var objSync = component.GetComponent<VRC.SDK3.Components.VRCObjectSync>();
                     var udon = component.GetComponent<UdonBehaviour>();
 
-                    // Check for hollow objects
                     if (objSync == null && udon == null)
                     {
                         LogDiagnostic("UDON PERSISTENCE", "Empty Player Object", 
@@ -1568,7 +1544,6 @@ private void AuditNativeVideoPipelines()
                             "#ff00aa", component.gameObject);
                     }
 
-                    // Check for bandwidth nukes
                     if (udon != null && udon.SyncMethod == VRC.SDKBase.Networking.SyncType.Continuous)
                     {
                         LogDiagnostic("UDON PERSISTENCE", "Continuous Player Object Sync", 
@@ -1582,7 +1557,6 @@ private void AuditNativeVideoPipelines()
                 }
             }
 
-            // 2. PlayerData Script Analysis via Raw UASM Scrape
             Assembly editorAsm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "UdonSharp.Editor");
             Type cacheType = editorAsm?.GetType("UdonSharp.UdonSharpEditorCache");
             var cache = cacheType?.GetProperty("Instance", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)?.GetValue(null);
@@ -1603,17 +1577,13 @@ private void AuditNativeVideoPipelines()
                         if (!string.IsNullOrEmpty(uasm))
                         {
                             bool usesPlayerData = uasm.Contains("Persistence") && uasm.Contains("PlayerData");
-                            
-                            // We check the raw assembly instructions to see what events the script is hooked into
                             bool hasUpdate = uasm.Contains("_update") || uasm.Contains("_lateUpdate") || uasm.Contains("_fixedUpdate");
                             bool usesOnPlayerDataUpdated = uasm.Contains("_onPlayerDataUpdated");
-                            
                             bool usesSet = uasm.Contains("PlayerData.__Set");
                             bool usesGet = uasm.Contains("PlayerData.__Get");
 
                             if (usesPlayerData)
                             {
-                                // The Rate-Limit Nuke
                                 if (usesSet && hasUpdate)
                                 {
                                     LogDiagnostic("UDON PERSISTENCE", "PlayerData in Update Loop", 
@@ -1621,7 +1591,6 @@ private void AuditNativeVideoPipelines()
                                         "#ff00aa", udon.gameObject);
                                 }
                                 
-                                // The Desync Trap
                                 if (usesGet && !usesOnPlayerDataUpdated) 
                                 {
                                     LogDiagnostic("UDON PERSISTENCE", "Unmonitored PlayerData", 
@@ -1665,7 +1634,6 @@ private void AuditNativeVideoPipelines()
             }
         }
 
-        // --- CUSTOM UI TOOLKIT ADVANCED DROPDOWN ---
         private class ShaderDropdownItem : AdvancedDropdownItem
         {
             public string fullShaderName;
@@ -1725,155 +1693,6 @@ private void AuditNativeVideoPipelines()
                     _onItemSelected?.Invoke(shaderItem.fullShaderName);
                 }
             }
-        }
-    }
-
-    // --- UNIFIED SCRIPTABLE OBJECT DICTIONARY ---
-    [CreateAssetMenu(fileName = "VixenShaderDictionary", menuName = "VixenTools/Shader Dictionary")]
-    public class ShaderDictionaryAsset : ScriptableObject
-    {
-        [Header("Contained Shaders")]
-        public List<Shader> shaders = new List<Shader>();
-
-        public static void AutoPopulateTargets(ShaderDictionaryAsset dict)
-        {
-            if (dict == null) return;
-            int addedCount = 0;
-            string[] targetPaths = new string[] {
-                "Packages/com.vrchat.base/Runtime/VRCSDK/Sample Assets/Shaders/Mobile/ToonStandard/ToonStandard.shader",
-                "Packages/com.vrchat.base/Runtime/VRCSDK/Sample Assets/Shaders/Mobile/ToonStandard/ToonStandardOutline.shader",
-                "Packages/com.vrchat.base/Runtime/VRCSDK/Sample Assets/Shaders/Mobile/VRChat-Mobile-StandardLite.shader",
-                "Packages/com.vrchat.base/Runtime/VRCSDK/Sample Assets/Shaders/Mobile/VRChat-Mobile-ToonLit.shader",
-                "Packages/s-ilent.filamented/Filamented/Standard.shader",
-                "Packages/s-ilent.filamented/Filamented/StandardCloth.shader",
-                "Packages/s-ilent.filamented/Filamented/StandardRoughness.shader",
-                "Packages/s-ilent.filamented/Filamented/StandardSpecular.shader"
-            };
-
-            foreach (var path in targetPaths)
-            {
-                Shader s = AssetDatabase.LoadAssetAtPath<Shader>(path);
-                if (s == null) s = Shader.Find(path);
-
-                if (s != null && !dict.shaders.Contains(s))
-                {
-                    dict.shaders.Add(s);
-                    addedCount++;
-                }
-            }
-
-            if (addedCount > 0)
-            {
-                EditorUtility.SetDirty(dict);
-                AssetDatabase.SaveAssets();
-                Debug.Log($"[Vixen System] Auto-Populated Target Dictionary with {addedCount} PBR/Toon shaders.");
-            }
-        }
-
-        public static bool IsGloballyProtected(Shader s)
-        {
-            if (s == null) return false;
-            
-            string name = s.name;
-            if (name == "Particles/Standard Unlit" || name == "Unlit/Color") return true;
-
-            string path = AssetDatabase.GetAssetPath(s);
-            if (string.IsNullOrEmpty(path)) return false;
-
-            path = path.Replace("\\", "/"); 
-
-            string[] protectedPaths = new string[]
-            {
-                "Packages/com.llealloo.audiolink/",
-                "Packages/idv.jlchntoz.vvmw/",
-                "Packages/com.texelsaur.video/",
-                "Packages/red.sim.lightvolumes/",
-                "Packages/red.sim.particlevolumes/",
-                "Packages/jp.lilxyzw.editortoolbox/",
-                "Packages/dev.architech.protv/",
-                "Packages/com.vrcbilliards.vrcbce2/Shaders",
-                "Packages/com.vrchat.base/Runtime/VRCSDK/Sample Assets/Shaders",
-                "Assets/HoshinoLabs/iwaSync3/",
-                "Assets/AVProVideo/",
-                "Assets/TextMesh Pro/",
-                "/OptimizedShaders/" 
-            };
-
-            foreach (var p in protectedPaths)
-            {
-                if (path.Contains(p)) return true;
-            }
-
-            if (Regex.IsMatch(path, @"Packages/com\.acchosen\.vr-stage-lighting/Runtime/Shaders/.*"))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public static void AutoPopulateWhitelist(ShaderDictionaryAsset dict)
-        {
-            if (dict == null) return;
-            
-            int addedCount = 0;
-            var allShaders = ShaderUtil.GetAllShaderInfo();
-
-            foreach (var info in allShaders)
-            {
-                Shader s = Shader.Find(info.name);
-                
-                if (s != null && IsGloballyProtected(s) && !dict.shaders.Contains(s))
-                {
-                    dict.shaders.Add(s);
-                    addedCount++;
-                }
-            }
-
-            if (addedCount > 0)
-            {
-                EditorUtility.SetDirty(dict);
-                AssetDatabase.SaveAssets();
-                Debug.Log($"[Vixen System] Discovered and populated Whitelist Dictionary with {addedCount} globally protected shaders.");
-            }
-        }
-    }
-
-    [CustomEditor(typeof(ShaderDictionaryAsset))]
-    public class ShaderDictionaryAssetEditor : UnityEditor.Editor
-    {
-        public override void OnInspectorGUI()
-        {
-            DrawDefaultInspector();
-
-            ShaderDictionaryAsset dict = (ShaderDictionaryAsset)target;
-
-            GUILayout.Space(15);
-            
-            GUIStyle targetBtnStyle = new GUIStyle(GUI.skin.button);
-            targetBtnStyle.fontStyle = FontStyle.Bold;
-            targetBtnStyle.normal.textColor = ColorUtility.TryParseHtmlString("#00e5ff", out Color c1) ? c1 : Color.cyan;
-            
-            if (GUILayout.Button("Populate PBR Replacement Targets", targetBtnStyle, GUILayout.Height(30)))
-            {
-                Undo.RecordObject(dict, "Populate Targets");
-                ShaderDictionaryAsset.AutoPopulateTargets(dict);
-            }
-
-            GUILayout.Space(5);
-
-            GUIStyle whitelistBtnStyle = new GUIStyle(GUI.skin.button);
-            whitelistBtnStyle.fontStyle = FontStyle.Bold;
-            whitelistBtnStyle.normal.textColor = ColorUtility.TryParseHtmlString("#ff00aa", out Color c2) ? c2 : Color.magenta;
-
-            if (GUILayout.Button("Discover & Populate Protected Whitelist", whitelistBtnStyle, GUILayout.Height(30)))
-            {
-                Undo.RecordObject(dict, "Populate Whitelist");
-                ShaderDictionaryAsset.AutoPopulateWhitelist(dict);
-            }
-            
-            GUILayout.Space(5);
-            EditorGUILayout.HelpBox("Use the Cyan button for your Target Dictionary (PBR Shaders).\nUse the Pink button for your Whitelist Dictionary (Video/AudioLink).", MessageType.Info);
         }
     }
 }
