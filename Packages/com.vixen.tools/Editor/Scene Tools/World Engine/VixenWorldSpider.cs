@@ -22,8 +22,8 @@ namespace VixenTools.Editor
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/VixenWorldSpider.uss";
         private const string FontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
         
-        private const string TargetDictPath = "Packages/com.vixencreations.vixens-toolbox/Editor/Scene Tools/World Engine/VixenReplacementTargets.asset";
-        private const string WhitelistDictPath = "Packages/com.vixencreations.vixens-toolbox/Editor/Scene Tools/World Engine/VixenShaderWhitelist.asset";
+        private const string TargetDictPath = "Assets/VixenTools/Asset Database/World Engine/VixenReplacementTargets.asset";
+        private const string WhitelistDictPath = "Assets/VixenTools/Asset Database/World Engine/VixenShaderWhitelist.asset";
 
         private ScrollView _mainScroll;
         private VisualElement _dashboardContainer;

@@ -6,6 +6,19 @@ All notable changes to the VixenToolBox project will be documented in this file.
 
 ***
 
+## [1.6.1] - 2026-05-05
+
+### Added
+- **Factory Reset Protocol (Shader Dictionaries):** Engineered a safe "Soft Nuke" execution button into the `ShaderDictionaryAssetEditor`. Bypassing standard `AssetDatabase.DeleteAsset` calls to prevent GUI null-reference collapses, the protocol clears the internal array and uses smart file-path parsing to autonomously rebuild either the PBR Target schema or the Protected Whitelist schema from scratch.
+
+### Changed
+- **Non-Destructive Asset Relocation (Data Safety):** Migrated the default initialization paths for `ShaderDictionaryAsset` files out of the volatile `Packages/` directory. Dictionaries now securely generate within `Assets/VixenTools/Asset Database/World Engine/`. This permanently isolates custom user shader entries from VPM, ensuring they are shielded from being overwritten or wiped during future package version bumps.
+- **Diagnostic Execution Safety (World Engine):** Restructured the Engine Diagnostic matrix to default all heuristic fixes to an opt-in state (`IsSelected = false`). This prevents the automated Action protocols from accidentally mass-purging or modifying volatile hierarchy data without explicit user confirmation.
+
+### Fixed
+- **Serialization Deadlock & CS0246 (Architecture):** Radically decoupled the `ShaderDictionaryAsset` and its `[CustomEditor]` class from the primary `VixenWorldEngine` window space into distinct scripts. This forces Unity's AssetDatabase to index the custom inspector immediately upon compilation, obliterating the deferred-loading bug and resolving the `CS0246` namespace missing errors.
+- **Infinite Replacement Loop (Shader Pipeline):** Injected an $O(1)$ circuit breaker into the Geometry & Materials auditor. The heuristic scanner now explicitly recognizes the active `_targetReplacementShader` as inherently compliant, preventing the engine from falsely flagging—and attempting to recursively convert—materials that have already achieved their optimized target state.
+
 ## [1.6.0] - 2026-05-04
 
 ### Added

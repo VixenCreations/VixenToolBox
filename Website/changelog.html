@@ -90,6 +90,7 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
+                        <fluent-option value="v1.6.1">v1.6.1</fluent-option>
                         <fluent-option value="v1.6.0">v1.6.0</fluent-option>
                         <fluent-option value="v1.5.1">v1.5.1</fluent-option>
                         <fluent-option value="v1.5.0">v1.5.0</fluent-option>
@@ -111,6 +112,27 @@
             </div>
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
+
+                <div class="changelog-entry" data-version="v1.6.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v1.6.1 - 2026-05-05</h5>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Factory Reset Protocol (Shader Dictionaries):</strong> Engineered a safe "Soft Nuke" execution button into the <code>ShaderDictionaryAssetEditor</code>. Bypassing standard <code>AssetDatabase.DeleteAsset</code> calls to prevent GUI null-reference collapses, the protocol clears the internal array and uses smart file-path parsing to autonomously rebuild either the PBR Target schema or the Protected Whitelist schema from scratch.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Non-Destructive Asset Relocation (Data Safety):</strong> Migrated the default initialization paths for <code>ShaderDictionaryAsset</code> files out of the volatile <code>Packages/</code> directory. Dictionaries now securely generate within <code>Assets/VixenTools/Asset Database/World Engine/</code>. This permanently isolates custom user shader entries from VPM, ensuring they are shielded from being overwritten or wiped during future package version bumps.</li>
+                        <li class="mb-2"><strong>Diagnostic Execution Safety (World Engine):</strong> Restructured the Engine Diagnostic matrix to default all heuristic fixes to an opt-in state (<code>IsSelected = false</code>). This prevents the automated Action protocols from accidentally mass-purging or modifying volatile hierarchy data without explicit user confirmation.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Serialization Deadlock & CS0246 (Architecture):</strong> Radically decoupled the <code>ShaderDictionaryAsset</code> and its <code>[CustomEditor]</code> class from the primary <code>VixenWorldEngine</code> window space into distinct scripts. This forces Unity's AssetDatabase to index the custom inspector immediately upon compilation, obliterating the deferred-loading bug and resolving the <code>CS0246</code> namespace missing errors.</li>
+                        <li class="mb-2"><strong>Infinite Replacement Loop (Shader Pipeline):</strong> Injected an O(1) circuit breaker into the Geometry & Materials auditor. The heuristic scanner now explicitly recognizes the active <code>_targetReplacementShader</code> as inherently compliant, preventing the engine from falsely flagging—and attempting to recursively convert—materials that have already achieved their optimized target state.</li>
+                    </ul>
+                </div>
 
                 <div class="changelog-entry" data-version="v1.6.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v1.6.0 - 2026-05-04</h5>
