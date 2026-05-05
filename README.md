@@ -4,86 +4,174 @@
 
 -----
 
-# VixenToolBox 🦊⚡
-
+# VixenToolBox 🦊⚡  
 **The central distribution hub and automated CI/CD pipeline for the VixenTools ecosystem.**
 
-VixenToolBox is a comprehensive, VPM-native suite of Unity Editor utilities and automation pipelines designed to eliminate human error, enforce strict consistency, and push Unity to its technical limits. This repository serves as a first-class, auto-updating VPM package source for VRChat creators.
+VixenToolBox is a VPM-native, cyber‑noir suite of Unity Editor utilities engineered to eliminate human error, enforce strict project consistency, and push Unity to its technical limits.  
+This repository acts as the **first‑class VPM package source**, powering the entire VixenTools ecosystem with automated updates, documentation, and infrastructure.
 
 -----
 
 ## 🛠️ The VixenTools Ecosystem
 
-### 1\. Core Infrastructure & Utilities
+### 1. Core Infrastructure & Hub Architecture
 
-  * **Vixen Hub:** A centralized, tabbed developer dashboard unifying ecosystem documentation, network routing, and release history. 
-      * **Dynamic Version Extraction:** Engineered with a lightweight Regex parser that autonomously reads the ecosystem's `package.json` to extract and display real-time versioning without hardcoded strings.
-      * **Changelog Pagination Engine:** Replaces infinite scrolling with a memory-efficient data dictionary and a native UI Toolkit dropdown to dynamically isolate and render individual release histories.
-      * **Native Style Hijacking:** Enforces the signature "cyber-noir" aesthetic across the entire VixenTools ecosystem by actively hijacking and overriding base Unity UI Toolkit classes.
-  * **Animation Workbench Pro:** An advanced visual workspace for staging, easing, and sampling complex animation curves and material property bindings. Features interactive timeline ribbons, a real-time preview engine, and a heavily optimized, runtime-safe math library (`EasingFunctions.cs`).
-  * **Pipeline Preset Manager:** Handles bulk extraction of configuration presets from existing assets and the programmatic authoring of standardized importer settings using a "Phantom Asset" architecture.
-  * **Live Surface Snapping:** An enterprise-grade scene utility utilizing Unity's native `Transform.hasChanged` matrix tracking for low-overhead drag detection. Features a recursive bounding algorithm to snap objects perfectly by their geometric "feet," self-collision immunity, and a discrete `Ctrl+Alt+S` hotkey.
-  * **Fix Scene Data:** A dedicated utility for repairing, standardizing, and maintaining active scene integrity by forcefully serializing unlinked lightmap references.
+**Vixen Hub** — the command center of the ecosystem.  
+A fully UI Toolkit–driven dashboard with tabs for:
 
-### 2\. Avatar Physics & Cross-Platform Topology
+- **Ecosystem Architecture**  
+- **Core Modules**  
+- **Network Routing**  
+- **Support**  
+- **Release Changelogs** (with version selector)
 
-  * **Quest Conversion Engine:** A fully non-destructive, high-fidelity pipeline for converting PC avatars to Android/Quest.
-      * **ImageMagick Lanczos Pipeline:** Routes PC textures through a high-fidelity Magick.NET downsampling pass before forcefully applying Android ASTC compression, preserving crisp details within strict VRAM limits.
-      * **Heuristic PhysBone Culling:** Mathematically calculates skeletal depth to aggressively cull deep leaf bones while preserving vital root-level physics based on targeted Mobile Performance Ranks.
-      * **Physics Joint Heuristics:** Actively hunts down and isolates unsupported Unity physics constraints (`SpringJoint`, `FixedJoint`, `HingeJoint`) into a dedicated interactive matrix, mathematically locking them for removal to guarantee 0 SDK validation errors.
-      * **Interactive Topology Matrix:** A dynamic UI matrix that automatically applies heuristic culling limits and allows the creator to manually override which physics components survive the Quest conversion.
-      * **High-Fidelity Material Translation:** Defaults to `VRChat/Mobile/Toon Standard`, hunting for PC-side metallic, gloss, normal, and emission properties across third-party shaders (Poiyomi, lilToon) and injecting them into the mobile shader to preserve maximum visual depth.
-  * **PhysBone Topology Mapper:** The flagship utility for physics management. Automates PhysBone architecture through a two-phase **Extraction** and **Injection** process.
-  * **Master Blueprints:** Utilizes `AnimationUtility.CalculateTransformPath` and Unity `.preset` files to bypass native prefab constraints, mapping complex physics matrices seamlessly across different avatar versions or base models (e.g., Novabeast Master Topology).
+Key Hub features:
 
-### 3\. Convention & Identity Pipelines
+- **Dynamic Version Extraction:**  
+  Reads `package.json` directly to display live package + SDK versions without hardcoded strings.
 
-  * **Vixen Badge Studio:** A high-fidelity, procedural generation engine for authoring and compositing VRChat convention badges (natively supporting Furality Luma, Somna, Sylva, and Umbra).
-      * **Ecosystem Discovery Engine:** Utilizes recursive deep-scanning to dynamically locate Furality SDK assets, bypassing inconsistent year-to-year folder restructuring.
-      * **Universal Shader Targeting:** A heuristic material engine that automatically detects and configures targets across Poiyomi Toon, lilToon, VRChat Mobile, and legacy convention shaders.
-      * **Programmatic Template Authoring:** Allows users to ingest raw convention `.jpg` textures or generate procedural bases, automatically transcoding assets and scaffolding the required directory and material architecture.
-      * **Dynamic UV Auto-Layout:** Intercepts convention selections and automatically snaps internal text bounds, rotational math, and signature neon hex colors to perfectly map onto the specific year's 3D mesh.
+- **Changelog Pagination Engine:**  
+  Parses `CHANGELOG.md` into isolated entries with a native dropdown selector.
+
+- **Autonomous Scene HUD Notifier:**  
+  Injects a neon cyber badge into the Scene View when updates are detected, routing directly to the Hub’s changelog tab.
+
+- **Native Style Hijacking:**  
+  Overrides Unity’s base UI Toolkit classes to enforce the signature neon‑cyber aesthetic across all tools.
+
+- **Reactive Scene State Routing:**  
+  Tools launched from the Hub instantly update their UI state using synchronous layout flushing — no domain reloads required.
+
+### 2. World Engine — Omni-Matrix Diagnostic Spider
+
+A full-spectrum, multi‑ecosystem world auditor built for VRChat creators who need **real‑time diagnostics, topology forensics, and automated repair protocols**.
+
+Capabilities:
+
+- **ProTV Auditor:**  
+  Detects GSV conflicts, emissive GI blowouts, HDR VRAM nukes, RTGI sinks, playlist recursion, and queue UI rebuild storms.
+
+- **TXL Auditor:**  
+  Flags starvation-level polling, collapsed translation tables, forced collider checks, orphaned Udon behaviours, and cryptographic sinks.
+
+- **IwaSync3 Auditor:**  
+  Detects 1080p+ video blowouts, unbounded playlists, global non‑spatialized audio, emissive screen overdrive, and GC-heavy event invokers.
+
+- **Native Video Pipeline Catchers:**  
+  Auto-detects and fixes “Unlimited (0)” resolution bandwidth nukes and low-latency instability in AVPro/Unity video players.
+
+- **Raw UASM Bytecode Scraper:**  
+  Intercepts the `UdonSharpEditorCache` to detect `PlayerData.Set` calls inside Update loops — catching rate‑limit bombs before they detonate.
+
+- **World Profiler Dashboard:**  
+  Aggregates VRAM, mesh, audio, and UI memory; estimates draw calls; and computes a threat score with OPTIMAL/MODERATE/SEVERE classification.
+
+- **Shader Replacement Matrix:**  
+  Uses dictionary assets + whitelist to bulk-replace unsafe desktop shaders with mobile-safe targets.
+
+### 3. Avatar Optimization & Cross-Platform Topology
+
+**Optimization Suite** — a destructive, multi-threaded execution matrix for PC avatars.
+
+- **5D Spatial Hash Welder:**  
+  Fuses vertices using XYZ + UV coordinates to preserve seams while crushing polycounts.
+
+- **Dual-Shielding Exclusion Matrix:**  
+  Protects facial topology using material keyword scanning + humanoid bone weight analysis.
+
+- **Deep Material Inspector Spider:**  
+  Hunts down hidden materials inside Animator controllers and VRCFury toggles.
+
+- **Hardware-Level VRAM Profiling:**  
+  Reads GPU memory directly via `Profiler.GetRuntimeMemorySizeLong()`.
+
+### 4. Quest Conversion Engine — Non-Destructive Android Pipeline
+
+A fully isolated, high-fidelity Quest conversion system.
+
+- **Biometric Matrix Purge (Hunter-Killer):**  
+  Removes all PC-VR face tracking templates (adjerry91, VRCFury, VF_UE_VRCFT).
+
+- **Magick.NET Lanczos Pipeline:**  
+  Linear downsampling + UnsharpMask recovery before ASTC compression.
+
+- **ASTC Pipeline Sync:**  
+  Fixes sRGB/Linear mismatches to prevent corrupted normals.
+
+- **Interactive Topology Matrix:**  
+  PhysBones, colliders, contacts, constraints, raycasts, particles, trails, lines, joints, incompatible components — all categorized with per-node toggles.
+
+- **Texture Processing Matrix:**  
+  Per-texture toggles for ImageMagick processing with resolution metadata.
+
+### 5. Scene Tools & QA Protocol
+
+- **Precision Click-to-Place Raycaster:**  
+  A sniper-grade Scene View raycaster with cyan/magenta UV projection disc and VRChat-aware layer masking.
+
+- **Live Surface Snapping:**  
+  Uses `Transform.hasChanged` to drop objects flush to geometry with surgical collider shielding.
+
+- **Disjointed Pivot Alignment:**  
+  Computes true lowest bounds across colliders/renderers for perfect floor alignment.
+
+- **Omni-Chaos Generator:**  
+  Builds a dedicated `Stress Test.unity` scene with dynamic “Nightmare Pods” for ProTV, TXL, IwaSync3, VRAM nukes, UI voids, and more.
+
+### 6. Convention & Identity Pipelines
+
+**Vixen Badge Studio** — procedural badge generation for VRChat conventions.
+
+- **Ecosystem Discovery Engine:**  
+  Auto-detects Furality SDK assets across inconsistent folder structures.
+
+- **Universal Shader Targeting:**  
+  Supports Poiyomi, lilToon, VRChat Mobile, and legacy badge shaders.
+
+- **Programmatic Template Authoring:**  
+  Generates directory structures, materials, and emissive maps automatically.
+
+- **Dynamic UV Auto-Layout:**  
+  Snaps text bounds and neon hex accents to each year’s badge mesh.
 
 -----
 
 ## 🚀 Architecture & Strategic Value
 
-This repository goes beyond hosting code; it acts as a bulletproof, automated infrastructure backbone:
+### 1. Strict Compiler Safeguards
+All editor-only scripts are isolated via `.asmdef` and `#if UNITY_EDITOR` directives, preventing runtime bleed-over and catastrophic build failures.
 
-### 1\. Strict Compiler Safeguards
+### 2. Automated Build & Release Pipeline
+Powered by GitHub Actions:
 
-Assembly Definitions (`.asmdef`) and `#if UNITY_EDITOR` directives deeply isolate all editor-only scripts. This guarantees zero compiler bleed-over, preventing catastrophic errors when users build their avatars or worlds for runtime.
+- **Build Release:**  
+  Compiles the package, generates `.zip` + `.unitypackage`, constructs `package.json`, and publishes to Releases.
 
-### 2\. Automated Build & Release Pipeline
+- **Build Repo Listing:**  
+  Reconstructs the VPM repository listing and deploys the cyberpunk storefront to GitHub Pages.
 
-Powered by heavily customized GitHub Actions and an enterprise-grade CI/CD telemetry matrix:
+- **VixenGitWatch Telemetry:**  
+  A Python SSE bot that monitors releases, PRs, issues, and workflow runs, routing formatted telemetry to Discord.
 
-  * **Build Release:** Automatically compiles the package, generates both `.zip` and `.unitypackage` formats, constructs the `package.json`, and publishes to GitHub Releases.
-  * **Build Repo Listing:** Scans all releases, reconstructs the VPM repository listing, applies custom Scriban templating, and deploys the glassmorphic, cyberpunk-styled storefront to GitHub Pages.
-  * **VixenGitWatch Telemetry:** A fully autonomous, self-healing Python bot running via Server-Sent Events (SSE) that natively intercepts over 15 GitHub lifecycle events (releases, PRs, workflow runs, issue tracking) and routes formatted telemetry directly to the community Discord.
-
-### 3\. Unified Distribution Platform
-
-Built on the official VRChat VPM Package Template, this repo allows users to seamlessly add the VixenTools ecosystem directly to their VRChat Creator Companion (VCC). It guarantees seamless versioning, dependency management, and instant updates.
+### 3. Unified Distribution Platform
+Built on the official VRChat VPM template — add the repo to VCC and receive instant updates.
 
 -----
 
 ## 📦 Installation (VRChat Creator Companion)
 
-To integrate the VixenTools suite into your Unity environment:
-
-1.  Navigate to our [VixenToolBox Storefront](https://vixencreations.github.io/VixenToolBox/).
-2.  Click **Add to VCC**.
-3.  Open your VRChat Creator Companion, select your project, and add the VixenTools packages from your newly linked repository.
+1. Visit the **[VixenToolBox Storefront](https://vixencreations.github.io/VixenToolBox/)**  
+2. Click **Add to VCC**  
+3. Open VCC → your project → add VixenTools packages
 
 -----
 
 ## 💻 Development & Contribution
 
-  * **Primary Language:** C# (Unity Editor Scripting)
-  * **Target Environment:** Unity 2022.3.22f1 / VRChat SDK
+- **Language:** C# (Unity Editor Scripting)  
+- **Target Environment:** Unity 2022.3.22f1 / VRChat SDK  
 
-If you encounter topology edge-cases or wish to request specific pipeline automations, please open an Issue. Ensure you provide relevant console outputs and hierarchy structures.
+Open an Issue for topology edge cases, world diagnostic anomalies, or feature requests.
 
 -----
 

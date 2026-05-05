@@ -446,19 +446,37 @@ namespace VixenTools.Editor
 
             RenderActionGrid("Avatar Pipeline Tools", "#ff00aa", avatarList);
 #elif UDON
+            // Read the live state directly from EditorPrefs for both tools
             bool isSnapActive = EditorPrefs.GetBool("VixenTools/Scene/Live Surface Snapping", false);
-            string snapTitle = isSnapActive ? "Snap To Surface [ ACTIVE ]" : "Snap To Surface [ OFF ]";
+            // Injecting Cyan rich text for the active state to pop against the UI
+            string snapTitle = isSnapActive 
+                ? "<color=#00e5ff>Live Surface Snapping [ ACTIVE ]</color>" 
+                : "Live Surface Snapping [ OFF ]";
+
+            bool isPrecisionActive = EditorPrefs.GetBool("VixenTools/Scene/Precision Click-to-Place", false);
+            string precisionTitle = isPrecisionActive 
+                ? "<color=#00e5ff>Precision Click-to-Place [ ACTIVE ]</color>" 
+                : "Precision Click-to-Place [ OFF ]";
 
             var worldList = new List<(System.Action action, string title, string desc)>
             {
                 (() => 
                 {
+                    // Execute the core logic
                     EditorApplication.ExecuteMenuItem("VixenTools/Scene/Live Surface Snapping");
+                    // Force the UIElements layout to flush and rebuild to catch the new EditorPrefs state
                     SwitchMode(TabMode.CoreModules);
-                }, snapTitle, "Enterprise-grade surface snapping tool. Calculates true mesh/collider bounds and safely dirties Udon components.")
+                }, snapTitle, "Enterprise-grade gravity snapper. Automatically drops selected objects to the nearest floor or shelf when moved."),
+                
+                (() => 
+                {
+                    EditorApplication.ExecuteMenuItem("VixenTools/Scene/Precision Click-to-Place");
+                    SwitchMode(TabMode.CoreModules);
+                }, precisionTitle, "Sniper-rifle camera raycaster. Click anywhere in the Scene View to instantly teleport objects to complex shelf polygons.")
             };
 
-            RenderActionGrid("World Pipeline Tools", "#ff00aa", worldList);
+            // Assuming RenderActionGrid supports rich text on the generated buttons (enableRichText = true on the label)
+            RenderActionGrid("WORLD PIPELINE TOOLS", "#ff00aa", worldList);
 #endif
         }
 

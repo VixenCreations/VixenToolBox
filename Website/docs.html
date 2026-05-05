@@ -85,164 +85,591 @@
     <main class="main-wrapper">
         <div class="col align-items-center content" style="max-width: 1200px;">
 
+            <!-- HEADER -->
             <div class="col w-100 text-center mb-4">
                 <h1 class="text-glow-pink">Core Documentation</h1>
                 <p class="caption1 mt-2" style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
-                    Under the hood of the VixenTools ecosystem. A technical breakdown of the heuristics, math libraries, procedural pipelines, and real-world implementation driving the editor utilities.
+                    Under the hood of the VixenTools ecosystem. A technical breakdown of the heuristics, math libraries,
+                    procedural pipelines, and real-world implementation driving the editor utilities.
                 </p>
             </div>
 
+            <!-- VIXEN HUB & DOM BRIDGING -->
             <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">Vixen Hub & DOM Bridging</h2>
                     <div class="badge">VixenHub.cs</div>
                 </div>
                 <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
-                    The flagship entry point. Engineered to entirely bypass legacy <code>OnGUI</code> redraw lag, the Hub utilizes a custom <strong>Markdown-to-UIToolkit Parser</strong>. It autonomously reads repository manifests and dynamically spawns native <code>VisualElements</code>, maintaining layout stability without locking the Editor thread.
+                    The flagship entry point. Engineered to entirely bypass legacy <code>OnGUI</code> redraw lag, the Hub
+                    utilizes a custom <strong>Markdown-to-UIToolkit Parser</strong>. It autonomously reads repository
+                    manifests and dynamically spawns native <code>VisualElements</code>, maintaining layout stability
+                    without locking the Editor thread.
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li><strong>Autonomous Scene HUD:</strong> Injects a sleek, non-blocking <code>&gt;&gt; VIXENTOOLS UPDATE</code> notifier directly into the Unity Scene View via <code>Handles.BeginGUI()</code>. This passively monitors state via an <code>[InitializeOnLoad]</code> hook, completely preventing workflow-breaking popups.</li>
-                    <li><strong>Action Delegate Routing:</strong> Overhauls markdown rendering by parsing <code>[text](url)</code> syntax mid-paragraph. It dynamically spawns transparent <code>Button</code> elements inline, mapping standard URLs to <code>Application.OpenURL</code> and custom internal commands directly to C# <code>System.Action</code> delegates.</li>
+                    <li>
+                        <strong>Autonomous Scene HUD:</strong> Injects a sleek, non-blocking
+                        <code>&gt;&gt; VIXENTOOLS UPDATE</code> notifier directly into the Unity Scene View via
+                        <code>Handles.BeginGUI()</code>. This passively monitors state via an
+                        <code>[InitializeOnLoad]</code> hook, completely preventing workflow-breaking popups.
+                    </li>
+                    <li>
+                        <strong>Action Delegate Routing:</strong> Overhauls markdown rendering by parsing
+                        <code>[text](url)</code> syntax mid-paragraph. It dynamically spawns transparent
+                        <code>Button</code> elements inline, mapping standard URLs to <code>Application.OpenURL</code> and
+                        custom internal commands directly to C# <code>System.Action</code> delegates.
+                    </li>
                 </ul>
 
                 <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
                 <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
-                    <li><strong>Interface Execution:</strong> Accessible via <code>VixenTools > Hub Dashboard</code>, the interface successfully translates the web's neon-pink/cyan aesthetic into Unity's native Editor styling.</li>
-                    <li><strong>Live Parsing:</strong> The tool autonomously extracts the exact ecosystem version natively from <code>package.json</code> and parses <code>CHANGELOG.md</code> into highly readable UI toolkit sections without horizontal scrolling constraints.</li>
+                    <li>
+                        <strong>Interface Execution:</strong> Accessible via <code>VixenTools &gt; Hub Dashboard</code>,
+                        the interface successfully translates the web's neon-pink/cyan aesthetic into Unity's native
+                        Editor styling.
+                    </li>
+                    <li>
+                        <strong>Live Parsing:</strong> The tool autonomously extracts the exact ecosystem version natively
+                        from <code>package.json</code> and parses <code>CHANGELOG.md</code> into highly readable UI Toolkit
+                        sections without horizontal scrolling constraints.
+                    </li>
                 </ul>
             </div>
 
+            <!-- AVATAR OPTIMIZATION SUITE -->
             <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">Avatar Optimization Suite</h2>
                     <div class="badge">VixenAvatarValidator.cs | VixenMeshPatcher.cs</div>
                 </div>
                 <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
-                    A multi-threaded, highly destructive execution matrix designed to violently crush PC avatar polycounts and physics limits. It dynamically analyzes your hardware footprint and deploys a custom spatial hashing algorithm to decimate geometry while mathematically protecting high-fidelity facial topology.
+                    A multi-threaded, highly destructive execution matrix designed to violently crush PC avatar polycounts
+                    and physics limits. It dynamically analyzes your hardware footprint and deploys a custom spatial hashing
+                    algorithm to decimate geometry while mathematically protecting high-fidelity facial topology.
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li><strong>5D Spatial Hash Welder:</strong> Fuses co-located vertices on excessively heavy meshes (>15,000 polygons) by generating a proprietary 5-dimensional coordinate key. By mapping XYZ position natively alongside U and V coordinates, it drastically crushes raw polycounts while mathematically guaranteeing the survival of critical texture seams.</li>
-                    <li><strong>Dual-Shielding Exclusion Matrix:</strong> Automatically scans submesh material slots for high-detail keywords (e.g., <em>eyes, visor, face</em>) AND actively queries the active Humanoid Armature for <code>HumanBodyBones.Neck</code>. Any vertex influenced by these kinematics is locked entirely out of the decimation grid.</li>
-                    <li><strong>BlendShape Memory Recovery:</strong> Executing a destructive mesh wipe inherently annihilates Unity's blendshape delta arrays. The Welder caches all 175+ frames (visemes, facial expressions) prior to execution and mathematically averages the delta offsets across the newly fused vertices, allowing animations to perfectly survive aggressive topology meltdowns.</li>
-                    <li><strong>Kinematic Bounding Box Stabilization:</strong> Solves the bounding-box disappearance bug by encapsulating all 8 corners of the <code>sharedMesh.bounds</code> into absolute World Space, then projecting them backward into root-bone Local Space for a mathematically perfect, tight-fit bounds calculation.</li>
+                    <li>
+                        <strong>5D Spatial Hash Welder:</strong> Fuses co-located vertices on excessively heavy meshes
+                        (&gt;15,000 polygons) by generating a proprietary 5-dimensional coordinate key. By mapping XYZ
+                        position natively alongside U and V coordinates, it drastically crushes raw polycounts while
+                        mathematically guaranteeing the survival of critical texture seams.
+                    </li>
+                    <li>
+                        <strong>Dual-Shielding Exclusion Matrix:</strong> Automatically scans submesh material slots for
+                        high-detail keywords (e.g., <em>eyes, visor, face</em>) AND actively queries the active Humanoid
+                        Armature for <code>HumanBodyBones.Neck</code>. Any vertex influenced by these kinematics is locked
+                        entirely out of the decimation grid.
+                    </li>
+                    <li>
+                        <strong>BlendShape Memory Recovery:</strong> Executing a destructive mesh wipe inherently
+                        annihilates Unity's blendshape delta arrays. The Welder caches all 175+ frames (visemes, facial
+                        expressions) prior to execution and mathematically averages the delta offsets across the newly fused
+                        vertices, allowing animations to perfectly survive aggressive topology meltdowns.
+                    </li>
+                    <li>
+                        <strong>Kinematic Bounding Box Stabilization:</strong> Solves the bounding-box disappearance bug by
+                        encapsulating all 8 corners of the <code>sharedMesh.bounds</code> into absolute World Space, then
+                        projecting them backward into root-bone Local Space for a mathematically perfect, tight-fit bounds
+                        calculation.
+                    </li>
                 </ul>
 
                 <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
                 <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
-                    <li><strong>Dynamic PC Target Rank Matrix:</strong> Eradicates static culling limits. Creators explicitly target specific VRChat Performance Ranks (Excellent, Good, Medium, Poor) via a native dropdown. The deep-scanning heuristics instantly recalibrate execution thresholds for Animators, Contacts, and PhysBones based on the selected hardware constraints.</li>
-                    <li><strong>Interactive Physics Executioner:</strong> Replaces invisible auto-cull algorithms with a surgical UI Toolkit panel. Spawns an interactive matrix mapping every physics component sorted by hierarchy depth. Creators manually select and eradicate expendable leaf-node physics (tail fluff, hair tips) while visually protecting structural roots.</li>
-                    <li><strong>Deep Material Inspector Spider:</strong> Pierces through the Unity Inspector using <code>EditorUtility.CollectDependencies</code>. It spiders through Animator controllers and VRCFury outfit toggles, aggressively hunting down and caching nested textures to ensure the VRAM calculator and ImageMagick downsampler capture 100% of the avatar's actual memory footprint.</li>
+                    <li>
+                        <strong>Dynamic PC Target Rank Matrix:</strong> Eradicates static culling limits. Creators
+                        explicitly target specific VRChat Performance Ranks (Excellent, Good, Medium, Poor) via a native
+                        dropdown. The deep-scanning heuristics instantly recalibrate execution thresholds for Animators,
+                        Contacts, and PhysBones based on the selected hardware constraints.
+                    </li>
+                    <li>
+                        <strong>Interactive Physics Executioner:</strong> Replaces invisible auto-cull algorithms with a
+                        surgical UI Toolkit panel. Spawns an interactive matrix mapping every physics component sorted by
+                        hierarchy depth. Creators manually select and eradicate expendable leaf-node physics (tail fluff,
+                        hair tips) while visually protecting structural roots.
+                    </li>
+                    <li>
+                        <strong>Deep Material Inspector Spider:</strong> Pierces through the Unity Inspector using
+                        <code>EditorUtility.CollectDependencies</code>. It spiders through Animator controllers and VRCFury
+                        outfit toggles, aggressively hunting down and caching nested textures to ensure the VRAM calculator
+                        and ImageMagick downsampler capture 100% of the avatar's actual memory footprint.
+                    </li>
                 </ul>
             </div>
 
+            <!-- QUEST CONVERSION ENGINE -->
             <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">Quest Conversion Engine</h2>
                     <div class="badge">QuestConversionEngine.cs</div>
                 </div>
+
                 <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
-                    A highly optimized, non-destructive pipeline built to intercept and mathematically calculate VRChat Mobile Performance ranks natively. It isolates the prefab into a temporary conversion sandbox to ensure your base PC avatar is never irreversibly altered.
+                    A highly optimized, non-destructive pipeline engineered to mathematically evaluate and map VRChat Mobile
+                    Performance ranks natively. The system isolates your avatar into a temporary conversion sandbox, ensuring
+                    your original PC prefab is never mutated or irreversibly altered.
                 </p>
+
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li><strong>Magick.NET Linear Downsampling:</strong> Intercepts textures and processes them through a Lanczos filter natively. Textures are temporarily shifted into <code>ColorSpace.RGB</code> (Linear) to prevent highlight crushing during scaling, followed by a mathematically calculated <code>UnsharpMask(0.0, 0.5, 1.0, 0.05)</code> to recover high-frequency material details lost in standard Android ASTC compression.</li>
-                    <li><strong>Base-Class Heuristic Culling:</strong> Scans the foundational <code>&lt;VRCPhysBoneBase&gt;</code> classes to capture 100% of internal physics variations (VRCFury auto-conversions, legacy migrations). Executes a recursive deep-scan to forcefully purge globally banned mobile components (Cameras, AudioSources, Constraints).</li>
-                    <li><strong>IgnoreTransform Shield Piercing:</strong> Actively parses every <code>ignoreTransforms</code> array inside PhysBone components. If a bone is explicitly listed on that array, the heuristic shield is forcefully dropped, allowing the Culler to properly identify and melt dead leaf bones.</li>
-                    <li><strong>Deep Material VRCFury Cloning:</strong> Weaponizes <code>SerializedObject</code> data streams to hunt down hidden materials inside VRCFury toggles and state behaviors. Re-maps all hidden references to the newly generated Android material variants to prevent pink shader errors at runtime.</li>
+                    <li>
+                        <strong>Magick.NET Linear Downsampling:</strong>
+                        Intercepts all detected textures and processes them through a high‑fidelity Lanczos filter. Textures are
+                        temporarily shifted into <code>ColorSpace.RGB</code> (Linear) to prevent highlight crushing during scaling,
+                        followed by a precision-tuned <code>UnsharpMask(0.0, 0.5, 1.0, 0.05)</code> pass to restore micro‑detail
+                        typically lost in Android ASTC compression.
+                    </li>
+
+                    <li>
+                        <strong>Base‑Class Heuristic Culling:</strong>
+                        Deep‑scans all <code>&lt;VRCPhysBoneBase&gt;</code> derivatives to capture 100% of physics variants,
+                        including VRCFury auto‑conversions and legacy migrations. The engine recursively purges globally banned
+                        mobile components such as Cameras, AudioSources, and Constraints.
+                    </li>
+
+                    <li>
+                        <strong>IgnoreTransform Shield Piercing:</strong>
+                        Reads and interprets every <code>ignoreTransforms</code> array inside PhysBone components. If a bone is
+                        explicitly listed, the shield is dropped, allowing the culling matrix to correctly identify and remove
+                        dead leaf‑node bones that would otherwise survive heuristic filtering.
+                    </li>
+
+                    <li>
+                        <strong>Deep Material VRCFury Cloning:</strong>
+                        Uses <code>SerializedObject</code> stream traversal to locate hidden materials inside VRCFury toggles,
+                        blend‑trees, and state behaviors. All discovered references are remapped to newly generated Android‑safe
+                        material variants, preventing pink‑shader failures at runtime.
+                    </li>
                 </ul>
 
                 <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
+
                 <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
-                    <li><strong>Selective Macro Culling:</strong> Upon initiating a scan, the interactive topology matrix populates. Utilizing new global "Keep All" and "Cull All" macro buttons, creators can rapidly triage massive arrays, manually protecting core structural bones while discarding expensive fluff.</li>
-                    <li><strong>Post-Conversion Material Tweaks:</strong> The engine defaults materials to target specific mobile shaders like <code>VRChat/Mobile/ToonLit</code>. After the clone is generated, minor adjustments bring it to parity (e.g., setting particle lenses to <em>Multiply</em>, resetting emission maps, and utilizing <em>Additive</em> rendering on visors to recover transparency).</li>
-                    <li><strong>Bypassing Artificial Blocks:</strong> The engine accurately flags when a "Very Poor" ranking is caused strictly by the immutable 20,000 triangle limit rather than actual unoptimized components. It provides a bypass to compile the avatar anyway, allowing publication for showcase purposes.</li>
-                    <li><strong>Root Animator Protection:</strong> Employs a recursive depth scanner that detects the avatar's core root Animator, hard-locking it to a protected state so heuristic culling never accidentally shatters base locomotion or toggle functionality.</li>
+                    <li>
+                        <strong>Selective Macro Culling:</strong>
+                        After scanning, the interactive topology matrix populates with all detected components. Global
+                        <em>Keep All</em> and <em>Cull All</em> macros allow creators to rapidly triage large arrays, preserving
+                        structural bones while discarding expensive fluff such as tail tips and hair strands.
+                    </li>
+
+                    <li>
+                        <strong>Post‑Conversion Material Tweaks:</strong>
+                        The engine defaults all materials to mobile‑safe shaders such as
+                        <code>VRChat/Mobile/ToonLit</code>. After cloning, minor adjustments restore visual parity—resetting
+                        emission maps, applying <em>Multiply</em> blending to particle lenses, and enabling <em>Additive</em>
+                        rendering on visors to recover transparency.
+                    </li>
+
+                    <li>
+                        <strong>Bypassing Artificial Blocks:</strong>
+                        When a “Very Poor” rating is caused solely by the immutable 20,000‑triangle cap rather than actual
+                        optimization issues, the engine exposes a bypass allowing creators to compile the avatar anyway for
+                        showcase or testing purposes.
+                    </li>
+
+                    <li>
+                        <strong>Root Animator Protection:</strong>
+                        A recursive depth scanner identifies the avatar’s core root Animator and hard‑locks it, ensuring heuristic
+                        culling never destroys locomotion controllers, FX layers, or toggle logic.
+                    </li>
                 </ul>
             </div>
 
+            <!-- PHYSBONE TOPOLOGY MAPPER -->
             <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">PhysBone Topology Mapper</h2>
                     <div class="badge">PhysBoneTopologyMapper.cs | PhysBoneBlueprint.cs</div>
                 </div>
                 <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
-                    Designed to eliminate the human error of manually dragging, dropping, and configuring colliders across avatar iterations. This engine entirely decouples the physics matrix from the mesh hierarchy.
+                    Designed to eliminate the human error of manually dragging, dropping, and configuring colliders across
+                    avatar iterations. This engine entirely decouples the physics matrix from the mesh hierarchy by
+                    snapshotting your PhysBone architecture into reusable blueprints.
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li><strong>Master Blueprints:</strong> Utilizes <code>AnimationUtility.CalculateTransformPath</code> to generate relative skeletal paths. Saves targeted physics components as serialized Unity <code>Preset</code> objects mapped securely to a custom ScriptableObject schema.</li>
-                    <li><strong>Flawless Injection:</strong> Safely searches the target avatar's hierarchy by relative path and re-injects the Presets perfectly. Features "Graceful Degradation," safely falling back to visual error states if the VRChat SDK goes missing from the environment.</li>
+                    <li>
+                        <strong>Master Blueprints:</strong> Utilizes <code>AnimationUtility.CalculateTransformPath</code>
+                        to generate relative skeletal paths from a chosen avatar root. Each <code>VRCPhysBone</code> is
+                        serialized into a Unity <code>Preset</code> and stored in a custom <code>PhysBoneBlueprint</code>
+                        ScriptableObject, mapping <code>bonePath</code> → <code>Preset</code> with surgical precision.
+                    </li>
+                    <li>
+                        <strong>Two-Phase Architecture:</strong> Phase 1 ("Extract Master Copy") walks the source avatar,
+                        generates presets under <code>Assets/VixenTools/Blueprints/&lt;Name&gt;/Presets</code>, and writes a
+                        master <code>.asset</code> blueprint. Phase 2 ("Inject Blueprint") traverses a target avatar by
+                        relative path, auto-adding <code>VRCPhysBone</code> components where missing and applying the stored
+                        presets.
+                    </li>
+                    <li>
+                        <strong>Graceful Degradation:</strong> When the VRChat SDK is not present, the window falls back to
+                        a safe visual state. All destructive buttons are disabled and clearly labeled as SDK-dependent,
+                        preventing accidental misuse in non-VRChat projects.
+                    </li>
                 </ul>
 
                 <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
                 <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
-                    <li><strong>Creating the Blueprint:</strong> A creator selects their master PC avatar root and runs "Extract Master Copy". This recursively catalogs every physics script and saves it to a structured blueprint (e.g., <code>Assets/VixenTools/Blueprints/NovaBeast_1.2_MasterTopology</code>).</li>
-                    <li><strong>Restoring Stripped Physics:</strong> If an avatar has had its components stripped (such as during manual Quest conversion or destructive optimization), the user selects the stripped avatar and hits "Inject". The mapper autonomously traverses the skeletal structure and reapplies the data. For instance, injecting the blueprint perfectly restores 14 distinct physics presets accurately across the entire rig in a single click.</li>
+                    <li>
+                        <strong>Creating the Blueprint:</strong> A creator selects their master PC avatar root and runs
+                        "Extract Master Copy". This recursively catalogs every physics script and saves it to a structured
+                        blueprint (e.g., <code>Assets/VixenTools/Blueprints/NovaBeast_1.2_MasterTopology</code>).
+                    </li>
+                    <li>
+                        <strong>Restoring Stripped Physics:</strong> If an avatar has had its components stripped (such as
+                        during manual Quest conversion or destructive optimization), the user selects the stripped avatar
+                        and hits "Inject". The mapper autonomously traverses the skeletal structure and reapplies the data.
+                        For instance, injecting the blueprint can perfectly restore dozens of distinct physics presets
+                        accurately across the entire rig in a single click.
+                    </li>
                 </ul>
             </div>
 
+            <!-- ANIMATION WORKBENCH PRO -->
             <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">Animation Workbench Pro</h2>
-                    <div class="badge">AnimationWorkbenchWindow.cs | PreviewEngine.cs | CurveOperations.cs</div>
+                    <div class="badge">
+                        AnimationWorkbenchWindow.cs |
+                        PreviewEngine.cs |
+                        CurveGraphView.cs |
+                        CurveOperations.cs |
+                        EasingFunctions.cs |
+                        MaterialPropertySearchPopup.cs |
+                        EasingDropdown.cs |
+                        TimelineRibbon.cs
+                    </div>
                 </div>
                 <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
-                    An advanced visual workspace for staging, easing, and sampling complex animation curves, built to bypass Unity's clunky default Animation window interface completely.
+                    An advanced visual workspace for staging, easing, and sampling complex animation curves, built to bypass
+                    Unity's clunky default Animation window completely. The Workbench treats curves, bindings, and material
+                    properties as a programmable matrix instead of a fragile hand-drawn timeline.
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li><strong>Runtime Math Library & Easing:</strong> Mathematical keyframe generation driven by <code>EasingFunctions.cs</code>. Supports programmatic interpolation (EaseInOutCubic, SmoothStep) seamlessly via <code>CurveOperations.BuildStretchedCurve</code>. Keys before the edit region are preserved, while intermediate keys are calculated and injected dynamically.</li>
-                    <li><strong>Live Preview Engine:</strong> Hooks into <code>AnimationMode.StartAnimationMode()</code> to dynamically sample targeted GameObjects, allowing real-time timeline scrubbing directly via the custom <code>TimelineRibbon</code> UI Component without altering actual scene states.</li>
-                    <li><strong>Multidimensional Material Extraction:</strong> Safely deconstructs Vector and Color properties on compiled shaders (like locked Poiyomi materials) into individually animatable float tracks to prevent native API crashes during curve bindings.</li>
+                    <li>
+                        <strong>Runtime Math Library & Easing:</strong> Mathematical keyframe generation driven by
+                        <code>EasingFunctions.cs</code>. <code>CurveOperations.BuildStretchedCurve</code> rebuilds a curve
+                        between <code>[sTime, eTime]</code>, preserving keys before the region while injecting intermediate
+                        keys using selectable easing (Linear, SmoothStep, EaseInOutCubic, etc.). Keys after the region are
+                        intentionally dropped, letting the generated segment define the tail.
+                    </li>
+                    <li>
+                        <strong>CurveGraphView Engine:</strong> A custom <code>VisualElement</code> graph powered by
+                        <code>IMGUIContainer</code>. Supports zooming, panning, double-click key insertion, and right-click
+                        key deletion with per-binding color hashing. It computes dynamic value ranges and renders both
+                        continuous curves and discrete key markers.
+                    </li>
+                    <li>
+                        <strong>Live Preview Engine:</strong> <code>PreviewEngine</code> hooks into
+                        <code>AnimationMode.StartAnimationMode()</code> and <code>EditorApplication.update</code> to sample
+                        clips directly on a target GameObject. It plays back at adjustable speed, stops automatically at
+                        clip end, and never dirties the scene hierarchy.
+                    </li>
+                    <li>
+                        <strong>TimelineRibbon Range Control:</strong> A dedicated IMGUI ribbon that exposes start/end
+                        sliders for the active clip. It prevents zero-length collapse, supports expanding beyond clip
+                        length, and broadcasts range changes back into the graph and generation logic.
+                    </li>
+                    <li>
+                        <strong>Multidimensional Material Extraction:</strong> The Workbench walks all renderers on a
+                        preview target, inspects shader properties, and explodes Color/Vector fields into per-channel float
+                        tracks (R/G/B/A, X/Y/Z/W). This prevents native API crashes and makes even locked Poiyomi properties
+                        fully animatable.
+                    </li>
+                    <li>
+                        <strong>MaterialPropertySearchPopup:</strong> A dedicated search window that groups properties by
+                        Material → Category → Property. It supports fuzzy search, nested foldouts, and click-to-bind
+                        behavior, returning a structured entry back to the Workbench.
+                    </li>
+                    <li>
+                        <strong>EasingDropdown Selector:</strong> A lightweight UI Toolkit control backed by
+                        <code>GenericMenu</code>. It renders textual previews of easing shapes and broadcasts changes via
+                        <code>OnValueChanged</code>, allowing global default easing to be applied across all selected
+                        bindings.
+                    </li>
                 </ul>
 
                 <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
                 <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
-                    <li><strong>Hidden Property Discovery:</strong> The <code>MaterialPropertySearchPopup</code> is utilized to read directly from a shader's active parameters. For example, it allows a creator to easily locate an obscure third-party property like <code>_LumaFlowSpeed</code> and extract its exact resting value (e.g., <code>0.00121</code>).</li>
-                    <li><strong>Mathematical Smoothing:</strong> Rather than manually dragging bezier curves, a creator inputs the exact start and end values, selects a mathematical easing profile (e.g., <code>SmoothStep</code>), and defines key density. Generating 40 keys over 3 seconds creates a perfectly smooth stepped curve instantly.</li>
-                    <li><strong>Iterative Prototyping:</strong> The timeline can be scrubbed live via the <code>PreviewEngine</code>. If the animation feels too fast, the user can instantly re-generate the curve with 80 keys spread over 6 seconds, visually verifying the ultra-smooth transition directly in the editor without launching Play mode.</li>
+                    <li>
+                        <strong>Hidden Property Discovery:</strong> The <code>MaterialPropertySearchPopup</code> is utilized
+                        to read directly from a shader's active parameters. For example, it allows a creator to easily
+                        locate an obscure third-party property like <code>_LumaFlowSpeed</code> and extract its exact
+                        resting value (e.g., <code>0.00121</code>).
+                    </li>
+                    <li>
+                        <strong>Mathematical Smoothing:</strong> Rather than manually dragging bezier curves, a creator
+                        inputs the exact start and end values, selects a mathematical easing profile (e.g.,
+                        <code>SmoothStep</code>), and defines key density. Generating 40 keys over 3 seconds creates a
+                        perfectly smooth stepped curve instantly.
+                    </li>
+                    <li>
+                        <strong>Iterative Prototyping:</strong> The timeline can be scrubbed live via the
+                        <code>PreviewEngine</code>. If the animation feels too fast, the user can instantly re-generate the
+                        curve with 80 keys spread over 6 seconds, visually verifying the ultra-smooth transition directly in
+                        the editor without launching Play mode.
+                    </li>
+                    <li>
+                        <strong>Explicit Intent Safeguards:</strong> Staged curves are held in an internal dictionary until
+                        the user explicitly applies or commits them. This prevents accidental destructive writes to live
+                        clips and keeps experimentation reversible.
+                    </li>
                 </ul>
             </div>
 
+            <!-- VIXEN BADGE STUDIO -->
             <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">Vixen Badge Studio</h2>
                     <div class="badge">VixenBadgeMaker.cs</div>
                 </div>
                 <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
-                    A high-fidelity, CSS-driven procedural generation matrix utilizing a native JSON layout engine (<code>layout.json</code>) to architect multi-channel convention badges dynamically, specifically heavily targeting Furality templates.
+                    A high-fidelity, CSS-driven procedural generation matrix utilizing a native JSON layout engine
+                    (<code>layout.json</code>) to architect multi-channel convention badges dynamically, specifically
+                    heavily targeting Furality templates.
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li><strong>Emissive Compositing Math:</strong> Fixes native Unity Standard Shader bloom blowouts. ImageMagick renders the generated text onto a pure <code>MagickColors.Black</code> background and mathematically flattens the output, permanently stripping the alpha channel before exporting the <code>_EMI</code> map to guarantee zero-bleed emission.</li>
-                    <li><strong>Universal Shader Injection:</strong> Automatically detects target shaders (Poiyomi, lilToon, VRC Mobile) and physically reaches into the compiled material to force-write user-selected Base and Emissive colors directly into the <code>_Color</code> and <code>_EmissionColor</code> slots.</li>
-                    <li><strong>Interactive Raycasting (UV Mapper):</strong> Temporarily suspends Unity gizmos and hijacks the Scene View. Raycasts against the <code>MeshCollider</code>, mathematically inverting 3D hits into 2D ImageMagick pixel space for perfect custom coordinate mapping.</li>
+                    <li>
+                        <strong>Emissive Compositing Math:</strong> Fixes native Unity Standard Shader bloom blowouts.
+                        ImageMagick renders the generated text onto a pure <code>MagickColors.Black</code> background and
+                        mathematically flattens the output, permanently stripping the alpha channel before exporting the
+                        <code>_EMI</code> map to guarantee zero-bleed emission.
+                    </li>
+                    <li>
+                        <strong>Universal Shader Injection:</strong> Automatically detects target shaders (Poiyomi, lilToon,
+                        VRC Mobile) and physically reaches into the compiled material to force-write user-selected Base and
+                        Emissive colors directly into the <code>_Color</code> and <code>_EmissionColor</code> slots.
+                    </li>
+                    <li>
+                        <strong>Interactive Raycasting (UV Mapper):</strong> Temporarily suspends Unity gizmos and hijacks
+                        the Scene View. Raycasts against the <code>MeshCollider</code>, mathematically inverting 3D hits
+                        into 2D ImageMagick pixel space for perfect custom coordinate mapping.
+                    </li>
                 </ul>
 
                 <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
                 <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
-                    <li><strong>Automated Ingestion:</strong> After downloading the Furality SDK, the "Generate Furality JSON Layouts" button runs a Regex search algorithm to detect all convention badge components and builds strict spatial boundary rules (JSONs) for text injection autonomously.</li>
-                    <li><strong>Dynamic Shader Swap:</strong> Allows real-time transition of underlying shader properties. Switching a badge from a Standard shader to "Furality Aqua" recompiles the material on the fly, accurately placing the generated Diffuse and Emission textures into the new proprietary shader slots.</li>
-                    <li><strong>Live UV Repositioning:</strong> If a creator needs to adjust text placement, they don't need Photoshop. Activating the "Scene Mapping" raycaster attaches a temporary Mesh Collider. The user simply clicks on the badge in 3D space, which copies the X/Y intersection. Modifying the Width/Height bounds and recompiling uses ImageMagick to instantly expand and move the generated text.</li>
+                    <li>
+                        <strong>Automated Ingestion:</strong> After downloading the Furality SDK, the "Generate Furality
+                        JSON Layouts" button runs a Regex search algorithm to detect all convention badge components and
+                        builds strict spatial boundary rules (JSONs) for text injection autonomously.
+                    </li>
+                    <li>
+                        <strong>Dynamic Shader Swap:</strong> Allows real-time transition of underlying shader properties.
+                        Switching a badge from a Standard shader to "Furality Aqua" recompiles the material on the fly,
+                        accurately placing the generated Diffuse and Emission textures into the new proprietary shader
+                        slots.
+                    </li>
+                    <li>
+                        <strong>Live UV Repositioning:</strong> If a creator needs to adjust text placement, they don't need
+                        Photoshop. Activating the "Scene Mapping" raycaster attaches a temporary Mesh Collider. The user
+                        simply clicks on the badge in 3D space, which copies the X/Y intersection. Modifying the
+                        Width/Height bounds and recompiling uses ImageMagick to instantly expand and move the generated
+                        text.
+                    </li>
                 </ul>
             </div>
 
+            <!-- CORE SCENE UTILITIES & PIPELINE PRESET MANAGER -->
             <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">Core Scene Utilities</h2>
                     <div class="badge">BulkPresetGenerator.cs | SnapToSurface.cs | FixSceneData.cs</div>
                 </div>
-                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
-                    Background operations that maintain structural integrity and optimization standards across the Unity workspace.
+                <p class="mb-4" style="line-height: 1.6; color: #e0d5eb;">
+                    A high-performance suite of background operations and spatial automation scripts engineered to enforce
+                    structural integrity, optimization standards, and geometric precision across the Unity workspace.
                 </p>
-                <ul class="custom-list m-0 ps-4 mb-4">
-                    <li><strong>Phantom Asset Architecture:</strong> <code>BulkPresetGenerator.cs</code> generates temporary "Phantom" textures, forces specific metadata onto them (like ASTC compression caps or <code>NormalMap</code> flags), extracts the configuration as a <code>Preset</code>, and injects it directly into Unity's Preset Manager to enforce global project consistency.</li>
-                    <li><strong>Geometric Surface Snapping:</strong> <code>SnapToSurface.cs</code> tracks <code>Transform.hasChanged</code> and mathematically calculates the absolute lowest boundary box across all child <code>MeshRenderers</code> and <code>Colliders</code>, dropping objects perfectly to the floor based on their physical geometric limits rather than an arbitrary center pivot.</li>
-                    <li><strong>Lightmap Serialization:</strong> <code>FixSceneData.cs</code> actively forces Unity to re-serialize the <code>lightingDataAsset</code> reference within the <code>EditorSceneManager</code>, fixing the notorious issue of missing or black lightmaps when transferring scenes between systems via VPM.</li>
-                </ul>
 
-                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
+                <div class="matrix-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <div class="matrix-column">
+                        <h4 class="text-glow-pink caption1 mb-3">SPATIAL TOPOLOGY TOOLS</h4>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                            <li class="mb-3">
+                                <strong>Live Surface Snapping (Dual-Matrix Gravity):</strong> Utilizes low-overhead
+                                <code>Transform.hasChanged</code> tracking to simulate autonomous gravity for objects moved
+                                via the transform gizmo. It calculates bounding-box nadirs on the fly to drop assets
+                                perfectly flush with underlying geometry the moment the mouse is released.
+                            </li>
+                            <li class="mb-3">
+                                <strong>Precision Click-to-Place Raycaster:</strong> A sniper-rifle camera raycaster
+                                enabling creators to paint/teleport objects onto complex shelf polygons or terrain. Guided
+                                by a cyan/magenta UV projection disc, it calculates surface normals to instantly align
+                                selected assets with 100% geometric accuracy.
+                            </li>
+                            <li class="mb-3">
+                                <strong>Surgical Shielding &amp; VRC-Layer Masking:</strong> Features a bitwise layer mask
+                                <code>(~((1 &lt;&lt; 2) | (1 &lt;&lt; 4)...))</code> to explicitly ignore VRChat-specific
+                                utility layers (Water, UI, Pickup, etc.). It autonomously caches and disables child
+                                colliders during execution to prevent self-occlusion deadlocks.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="matrix-column">
+                        <h4 class="text-glow-pink caption1 mb-3">INFRASTRUCTURE &amp; RECOVERY</h4>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                            <li class="mb-3">
+                                <strong>Pipeline Preset Manager (BulkPresetGenerator.cs):</strong> A unified pipeline tool
+                                that handles both bulk extraction of presets from existing assets and programmatic authoring
+                                of standardized importer presets using a Phantom Asset architecture. It exposes two modes:
+                                <em>Extraction Pipeline</em> and <em>Authoring Engine</em>, switchable via neon-styled tabs.
+                            </li>
+                            <li class="mb-3">
+                                <strong>Bulk Preset Extraction:</strong> Rips component configurations from selected
+                                GameObjects (optionally including children) into reusable <code>Preset</code> assets. It can
+                                ignore <code>Transform</code> components, auto-register new presets into Unity's
+                                <code>Preset Manager</code>, and names files by object and component type for instant
+                                traceability.
+                            </li>
+                            <li class="mb-3">
+                                <strong>Phantom Asset Authoring:</strong> Programmatically authors standardized texture
+                                importer presets without needing a source asset. It generates a temporary PNG "Phantom"
+                                texture, configures <code>TextureImporter</code> (type, max size, mipmaps, readability),
+                                then rips that configuration into a permanent <code>Preset</code> and injects it into the
+                                Preset Manager with an optional glob filter (e.g., <code>glob:"**/*_BaseColor.png"</code>).
+                            </li>
+                            <li class="mb-3">
+                                <strong>Preset Manager Injection:</strong> Uses <code>Preset.GetDefaultPresetsForType</code>
+                                and <code>Preset.SetDefaultPresetsForType</code> to prepend new defaults, ensuring newly
+                                imported assets automatically conform to your global standards (NormalMap flags, ASTC caps,
+                                mip rules) without manual configuration.
+                            </li>
+                            <li class="mb-3">
+                                <strong>Udon State Serialization:</strong> Snapping logic is tied directly into the Udon
+                                Virtual Machine via <code>EditorUtility.SetDirty</code>. This ensures that snapped objects
+                                hosting <code>UdonBehaviour</code> components correctly register hierarchical changes,
+                                preventing catastrophic position rollbacks during world builds or network syncs.
+                            </li>
+                            <li class="mb-3">
+                                <strong>Lightmap Serialization Engine:</strong> <code>FixSceneData.cs</code> actively forces
+                                the re-serialization of <code>lightingDataAsset</code> references within the
+                                <code>EditorSceneManager</code>, fixing the notorious issue of black or missing lightmaps
+                                when transferring scenes between systems via VPM.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Automated Workflow</h3>
                 <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
-                    <li><strong>Enforcing Rules:</strong> The Pipeline Preset Manager is used to dictate exactly how Unity handles newly ingested files. By establishing a phantom preset mapped to default resolution limits (e.g., max size 1024, Read/Write Enabled), the tool forcefully injects these rules directly into <code>Edit > Project Settings > Preset Manager</code>. Every subsequent file imported into the project automatically conforms to these boundaries, preventing accidental memory bloat from 4K/8K uncompressed textures.</li>
+                    <li>
+                        <strong>Spatial Triage:</strong> By establishing a 1024px ASTC phantom preset, the tool forcefully
+                        injects memory boundaries into <code>Edit &gt; Project Settings &gt; Preset Manager</code>. Every
+                        subsequent file conforms to these rules. Simultaneously, <code>SnapToSurface.cs</code> ensures that
+                        every asset spawned into the scene conforms to the environment's physical limits, using dynamic
+                        iteration to locate the absolute minimum global Y-bound across all mesh renderers and child
+                        colliders.
+                    </li>
                 </ul>
             </div>
 
+            <!-- VIXEN WORLD ENGINE -->
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Vixen World Engine</h2>
+                    <div class="badge">VixenWorldSpider.cs • UdonSharpEditorCache.cs • VixenEngineStressTest.cs</div>
+                </div>
+
+                <p class="mb-4" style="line-height: 1.6; color: #e0d5eb;">
+                    The Vixen World Engine is a full-spectrum scene auditor built for VRChat creators who need
+                    <strong>real‑time diagnostics, topology forensics, and automated repair protocols</strong>.
+                    Operating on a deep-reflection layer, the engine pierces Unity, Udon, and third‑party assemblies
+                    to expose hidden performance traps long before they detonate in a live instance.
+                </p>
+
+                <div class="matrix-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+
+                    <!-- LEFT COLUMN -->
+                    <div class="matrix-column">
+                        <h4 class="text-glow-pink caption1 mb-3">ECOSYSTEM &amp; TOPOLOGY AUDITORS</h4>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+
+                            <li class="mb-2">
+                                <strong>ProTV Guard:</strong>
+                                Detects HDR VRAM bloat, conflicting Global Shader Variable (GSV) baking,
+                                realtime emissive GI blowouts, playlist search aggression, and RTGI mobile sinks.
+                                Automatically throttles unsafe fields via reflection.
+                            </li>
+
+                            <li class="mb-2">
+                                <strong>IwaSync3 Matrix:</strong>
+                                Flags 1080p+ video blowouts, unbounded playlist growth, global non‑spatialized audio,
+                                aggressive sync frequencies, emissive screen overdrive, and GC‑heavy event invokers.
+                            </li>
+
+                            <li class="mb-2">
+                                <strong>TXL Logic Scraper:</strong>
+                                Detects starvation‑level polling (<code>monitorTriggerInterval = 0.01f</code>),
+                                collapsed translation tables, forced collider checks, orphaned Udon behaviours,
+                                and cryptographic sinks from DigestValidator.
+                            </li>
+
+                            <li class="mb-2">
+                                <strong>Mesh &amp; Geometry Hunter:</strong>
+                                Identifies 66k+ vertex meshes, missing LOD chains, non‑convex MeshCollider drag,
+                                realtime reflection probes, and physics sinks that destabilize frame pacing.
+                            </li>
+
+                            <li class="mb-2">
+                                <strong>Stress Test Fabricator:</strong>
+                                Generates a full Omni‑Chaos environment with realtime lights, reflection probes,
+                                VRAM nukes, 4K textures, heavy meshes, network sync storms, and video pipeline overloads.
+                            </li>
+
+                            <li class="mb-2">
+                                <strong>Lighting &amp; Camera Auditor:</strong>
+                                Ensures world descriptors, spawn points, and baseline lighting exist,
+                                preventing SDK validation failures and broken world boot sequences.
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <!-- RIGHT COLUMN -->
+                    <div class="matrix-column">
+                        <h4 class="text-glow-pink caption1 mb-3">UI, SECURITY &amp; MEMORY SENSORS</h4>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+
+                            <li class="mb-2">
+                                <strong>Raw UASM Scraper:</strong>
+                                Intercepts <code>UdonSharpEditorCache</code> to analyze raw Udon assembly.
+                                Detects lethal <code>PlayerData.Set</code> calls inside <code>Update()</code>,
+                                infinite sync loops, and network‑rate‑limit bombs before they reach a build.
+                            </li>
+
+                            <li class="mb-2">
+                                <strong>UI &amp; Font Integrity:</strong>
+                                Flags deprecated <code>Arial.ttf</code>, mismatched TMP assets,
+                                missing shader channels, and world‑space canvases that trigger rebuild cascades.
+                            </li>
+
+                            <li class="mb-2">
+                                <strong>Shader &amp; Asset Whitelist:</strong>
+                                Protects core SDK shaders, IwaSync internals, ProTV internals,
+                                and VRC Billiards materials from the autonomous shader replacer.
+                            </li>
+
+                            <li class="mb-2">
+                                <strong>Hardware‑Level VRAM Security:</strong>
+                                Uses <code>Profiler.GetRuntimeMemorySizeLong()</code> to capture true GPU footprint,
+                                exposing procedural 4K RenderTextures, TMP atlases, UI masks, and hidden memory hogs.
+                            </li>
+
+                            <li class="mb-2">
+                                <strong>Canvas Rebuild Tracker:</strong>
+                                Detects layout‑modifying elements on root canvases,
+                                preventing catastrophic rebuild storms in playlist UIs and queue systems.
+                            </li>
+
+                            <li class="mb-2">
+                                <strong>Video Pipeline Throttling:</strong>
+                                Monitors video players, sync frequencies, and networked playback logic to prevent
+                                runaway bandwidth usage and frame pacing collapse in high-traffic instances.
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <button id="jumpToTopBtn" class="jump-to-top" title="Back to top">

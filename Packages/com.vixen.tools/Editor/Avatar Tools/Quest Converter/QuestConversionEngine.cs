@@ -87,13 +87,14 @@ namespace VixenTools.Editor
         private List<TopologyNode> _scannedLines = new List<TopologyNode>();
         private List<TopologyNode> _scannedJoints = new List<TopologyNode>(); 
         private List<TopologyNode> _scannedIncompatible = new List<TopologyNode>();
+        private List<TopologyNode> _scannedFaceTracking = new List<TopologyNode>();
 
         private List<TextureNode> _scannedTextures = new List<TextureNode>();
 
         // UI Elements
         private VisualElement _dynamicContainer;
-        private ScrollView _pbScroll, _colScroll, _contactScroll, _constraintScroll, _raycastScroll, _animatorScroll, _particleScroll, _trailScroll, _lineScroll, _jointScroll, _incompatibleScroll, _textureScroll; 
-        private Label _pbLabel, _colLabel, _contactLabel, _constraintLabel, _raycastLabel, _animatorLabel, _particleLabel, _trailLabel, _lineLabel, _jointLabel, _incompatibleLabel, _textureLabel; 
+        private ScrollView _pbScroll, _colScroll, _contactScroll, _constraintScroll, _raycastScroll, _animatorScroll, _particleScroll, _trailScroll, _lineScroll, _jointScroll, _incompatibleScroll, _textureScroll, _ftScroll; 
+        private Label _pbLabel, _colLabel, _contactLabel, _constraintLabel, _raycastLabel, _animatorLabel, _particleLabel, _trailLabel, _lineLabel, _jointLabel, _incompatibleLabel, _textureLabel, _ftLabel; 
 
         [MenuItem("VixenTools/Avatars/Quest Conversion Engine", priority = 41)]
         public static void ShowWindow()
@@ -204,7 +205,8 @@ namespace VixenTools.Editor
 
             resultsText += $"  • Particles/Trails: <b><color=#ff00aa>{_scannedParticles.Count + _scannedTrails.Count + _scannedLines.Count}</color></b>\n" +
                            $"  • Physics Joints (Auto-Culled): <b><color=#ff0044>{_scannedJoints.Count}</color></b>\n" + 
-                           $"  • Incompatible Mobile Objects: <b><color=#ff0044>{_scannedIncompatible.Count}</color></b>";
+                           $"  • Incompatible Mobile Objects: <b><color=#ff0044>{_scannedIncompatible.Count}</color></b>\n" +
+                           $"  • Face Tracking Nodes (Auto-Culled): <b><color=#ff0044>{_scannedFaceTracking.Count}</color></b>";
 
             var resultsLabel = new Label(resultsText) { enableRichText = true };
             resultsBox.Add(resultsLabel);
@@ -250,6 +252,7 @@ namespace VixenTools.Editor
             BuildTopologySection(panel, "Matrix: Particle Systems", false, out _particleScroll, out _particleLabel);
             BuildTopologySection(panel, "Matrix: Trail Renderers", false, out _trailScroll, out _trailLabel);
             BuildTopologySection(panel, "Matrix: Line Renderers", false, out _lineScroll, out _lineLabel);
+            BuildTopologySection(panel, "Matrix: Face Tracking & VRCFT (Auto-Culled)", false, out _ftScroll, out _ftLabel);
             BuildTopologySection(panel, "Matrix: Physics Joints (Auto-Culled)", false, out _jointScroll, out _jointLabel); 
             BuildTopologySection(panel, "Incompatible Mobile Components (Auto-Culled)", false, out _incompatibleScroll, out _incompatibleLabel);
 
@@ -313,6 +316,7 @@ namespace VixenTools.Editor
             UpdateTopologyList(_scannedParticles, GetMaxParticles(), _particleScroll, _particleLabel);
             UpdateTopologyList(_scannedTrails, GetMaxTrails(), _trailScroll, _trailLabel);
             UpdateTopologyList(_scannedLines, GetMaxLines(), _lineScroll, _lineLabel);
+            UpdateTopologyList(_scannedFaceTracking, 0, _ftScroll, _ftLabel);
             UpdateTopologyList(_scannedJoints, 0, _jointScroll, _jointLabel); 
             UpdateTopologyList(_scannedIncompatible, 0, _incompatibleScroll, _incompatibleLabel);
         }
@@ -481,8 +485,6 @@ namespace VixenTools.Editor
             {
                 if (animator.runtimeAnimatorController != null)
                 {
-                    // CollectDependencies forces Unity to dig through the Animator, extracting all 
-                    // attached AnimationClips, and subsequently any Materials referenced by those clips.
                     var deps = EditorUtility.CollectDependencies(new UnityEngine.Object[] { animator.runtimeAnimatorController });
                     foreach (var dep in deps)
                     {
@@ -496,7 +498,6 @@ namespace VixenTools.Editor
             {
                 if (mono != null && mono.GetType().Name.Contains("VRCFury"))
                 {
-                    // Extracts Materials hiding inside VRCFury Toggles and State Swaps
                     var deps = EditorUtility.CollectDependencies(new UnityEngine.Object[] { mono });
                     foreach (var dep in deps)
                     {
@@ -540,7 +541,67 @@ namespace VixenTools.Editor
             }
 
             // --- COMPONENT SCANNING ---
-            _scannedAnimators.Clear(); _scannedParticles.Clear(); _scannedTrails.Clear(); _scannedLines.Clear(); _scannedJoints.Clear(); _scannedIncompatible.Clear(); 
+            _scannedAnimators.Clear(); _scannedParticles.Clear(); _scannedTrails.Clear(); _scannedLines.Clear(); 
+            _scannedJoints.Clear(); _scannedIncompatible.Clear(); _scannedFaceTracking.Clear();
+
+            // --- VRCFT & VRCFURY HUNTER-KILLER ---
+            foreach (var t in _sourceAvatar.GetComponentsInChildren<Transform>(true))
+            {
+                bool isFaceTracking = false;
+
+                // 1. Path-based Detection (Standard VRCFT Templates)
+#if UNITY_EDITOR
+                // FIXED: Standard Unity 2022.3 API for retrieving prefab asset paths
+                string prefabPath = AssetDatabase.GetAssetPath(PrefabUtility.GetCorrespondingObjectFromSource(t.gameObject));
+                if (!string.IsNullOrEmpty(prefabPath) && prefabPath.Contains("adjerry91.vrcft.templates"))
+                {
+                    isFaceTracking = true;
+                }
+#endif
+
+                // 2. Name-based Detection (VRCFury Specific Branches)
+                if (!isFaceTracking)
+                {
+                    string goName = t.gameObject.name;
+                    if (goName.Contains("VRCFury - Face Tracking") || goName.Contains("VF_UE_VRCFT"))
+                    {
+                        isFaceTracking = true;
+                    }
+                }
+
+                // 3. Component-based Detection (Class & Namespace check)
+                if (!isFaceTracking)
+                {
+                    foreach (var comp in t.GetComponents<MonoBehaviour>())
+                    {
+                        if (comp == null) continue;
+                        string typeName = comp.GetType().Name.ToLower();
+                        string nameSpace = comp.GetType().Namespace?.ToLower() ?? "";
+                        
+                        // Targeted check for VRCFT, FaceTracking, or adjerry91 namespaces/classes
+                        if (typeName.Contains("vrcft") || 
+                            typeName.Contains("facetracking") || 
+                            typeName.Contains("vf_ue_vrcft") || // Target internal VF nodes
+                            nameSpace.Contains("adjerry91"))
+                        {
+                            isFaceTracking = true;
+                            break;
+                        }
+                    }
+                }
+
+                // If flagged, add to the structural purge matrix
+                if (isFaceTracking)
+                {
+                    _scannedFaceTracking.Add(new TopologyNode {
+                        component = t, 
+                        relativePath = AnimationUtility.CalculateTransformPath(t, _sourceAvatar.transform),
+                        depth = GetHierarchyDepth(t),
+                        keep = false, 
+                        isLocked = true 
+                    });
+                }
+            }
 
             foreach (var anim in _sourceAvatar.GetComponentsInChildren<Animator>(true)) 
             {
@@ -610,6 +671,7 @@ namespace VixenTools.Editor
             ApplyDepthCulling(_scannedParticles, GetMaxParticles());
             ApplyDepthCulling(_scannedTrails, GetMaxTrails());
             ApplyDepthCulling(_scannedLines, GetMaxLines());
+            ApplyDepthCulling(_scannedFaceTracking, 0);
             ApplyDepthCulling(_scannedJoints, 0); 
             ApplyDepthCulling(_scannedIncompatible, 0); 
         }
@@ -751,7 +813,6 @@ namespace VixenTools.Editor
                         SerializedProperty prop = so.GetIterator();
                         bool modified = false;
                         
-                        // Next(true) dives into all nested [SerializeReference] structures VRCFury uses
                         while (prop.Next(true)) 
                         {
                             if (prop.propertyType == SerializedPropertyType.ObjectReference && prop.objectReferenceValue is Material)
@@ -783,6 +844,9 @@ namespace VixenTools.Editor
                 ProcessDestruction(_scannedLines, questClone);
                 ProcessDestruction(_scannedJoints, questClone); 
                 ProcessDestruction(_scannedIncompatible, questClone);
+                
+                // Execute Structural Purge for Face Tracking
+                ProcessGameObjectPurge(_scannedFaceTracking, questClone);
 
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
@@ -812,6 +876,24 @@ namespace VixenTools.Editor
                         Component comp = targetTransform.GetComponent(compType);
                         if (comp != null) DestroyImmediate(comp, true);
                     }
+                }
+            }
+        }
+
+        private void ProcessGameObjectPurge(List<TopologyNode> nodes, GameObject clone)
+        {
+            // Crucial Architecture: Sort descending by depth. 
+            // Obliterate leaf nodes before their parents to prevent NullReferenceExceptions mid-loop.
+            var sortedNodes = nodes.Where(n => !n.keep).OrderByDescending(n => n.depth).ToList();
+            
+            foreach (var node in sortedNodes)
+            {
+                Transform targetTransform = string.IsNullOrEmpty(node.relativePath) ? clone.transform : clone.transform.Find(node.relativePath);
+                
+                // Absolute safety protocol: Never nuke the root avatar object
+                if (targetTransform != null && targetTransform.gameObject != clone)
+                {
+                    DestroyImmediate(targetTransform.gameObject, true);
                 }
             }
         }
@@ -890,7 +972,20 @@ namespace VixenTools.Editor
             if (_textureCache.TryGetValue(sourceTex, out Texture cachedTex)) return cachedTex;
 
             string sourcePath = AssetDatabase.GetAssetPath(sourceTex);
-            if (string.IsNullOrEmpty(sourcePath)) return sourceTex; 
+            
+            // Bypass empty paths and Unity's built-in virtual assets.
+            // Built-in assets ("Resources/unity_builtin_extra", etc.) are already cross-platform optimized.
+            if (string.IsNullOrEmpty(sourcePath) || sourcePath.StartsWith("Resources/") || sourcePath.StartsWith("Library/"))
+            {
+                return sourceTex;
+            }
+
+            // Absolute sanity check: Ensure the file actually exists on disk before we feed it to ImageMagick
+            if (!File.Exists(sourcePath))
+            {
+                Debug.LogWarning($"[VixenTools] Bypassing virtual or missing texture: {sourceTex.name} at path {sourcePath}.");
+                return sourceTex;
+            }
 
             string texName = sourceTex.name;
             string extension = Path.GetExtension(sourcePath);
@@ -922,7 +1017,17 @@ namespace VixenTools.Editor
             catch (Exception ex)
             {
                 Debug.LogWarning($"[VixenTools] ImageMagick processing failed for {texName}, falling back to Unity Copy. Error: {ex.Message}");
-                AssetDatabase.CopyAsset(sourcePath, newPath);
+                
+                // Hardened fallback: Prevent the Unity GUI popup crash if the file is locked or phantom
+                if (File.Exists(sourcePath))
+                {
+                    AssetDatabase.CopyAsset(sourcePath, newPath);
+                }
+                else
+                {
+                    Debug.LogError($"[VixenTools] Fallback copy failed. Source path does not exist on disk: {sourcePath}. Passing original reference.");
+                    return sourceTex;
+                }
             }
 
             AssetDatabase.ImportAsset(newPath, ImportAssetOptions.ForceUpdate);
@@ -953,7 +1058,7 @@ namespace VixenTools.Editor
             _textureCache[sourceTex] = newTex;
             return newTex;
         }
-
+        
         private void EnsureDirectoryExists(string path)
         {
             if (!Directory.Exists(path))

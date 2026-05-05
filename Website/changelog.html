@@ -90,6 +90,7 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
+                        <fluent-option value="v1.6.0">v1.6.0</fluent-option>
                         <fluent-option value="v1.5.1">v1.5.1</fluent-option>
                         <fluent-option value="v1.5.0">v1.5.0</fluent-option>
                         <fluent-option value="v1.4.5">v1.4.5</fluent-option>
@@ -110,6 +111,64 @@
             </div>
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
+
+                <div class="changelog-entry" data-version="v1.6.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v1.6.0 - 2026-05-04</h5>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <!-- NEW WEBSITE + DOCS EXPANSION ITEMS -->
+                        <li class="mb-2"><strong>Full Website & Documentation Expansion:</strong> Rebuilt the entire documentation portal with a unified neon‑cyber aesthetic, expanded technical breakdowns, and a fully rewritten Core Documentation page covering every subsystem in the VixenTools ecosystem.</li>
+                        <li class="mb-2"><strong>Tool‑Specific Deep‑Dive Pages:</strong> Authored complete documentation for Quest Conversion Engine, Badge Studio, Animation Workbench Pro, PhysBone Topology Mapper, Preset Manager, Scene Utilities, and the World Engine auditors.</li>
+                        <li class="mb-2"><strong>Interactive DOM‑Driven Layout System:</strong> Implemented a modular HTML layout grid with glass‑panel containers, badge headers, multi‑column matrices, and stable UIToolkit‑inspired spacing rules.</li>
+                        <li class="mb-2"><strong>Expanded Workflow Guides:</strong> Added step‑by‑step “In Practice” workflow sections for every major tool, including real‑world usage patterns, optimization strategies, and cross‑tool integration notes.</li>
+                        <li class="mb-2"><strong>New Visual Identity System:</strong> Introduced standardized glow headers, badge markers, preview cards, and consistent typography across all documentation pages.</li>
+                        <li class="mb-2"><strong>Changelog Archive Overhaul:</strong> Rebuilt the changelog index with improved readability, version‑indexed navigation, and expanded historical entries.</li>
+                        <li class="mb-2"><strong>Developer‑Facing Architecture Notes:</strong> Added internal logic explanations for heuristics, math libraries, reflection systems, VRAM analyzers, and topology forensics used across the ecosystem.</li>
+                        <li class="mb-2"><strong>Mobile‑Optimized Documentation Layout:</strong> Rewrote responsive CSS rules to ensure all panels, matrices, and code blocks render cleanly on mobile and tablet devices.</li>
+                        <li class="mb-2"><strong>New “Under the Hood” Section:</strong> Added a full technical deep‑dive into DOM bridging, shader injection, VRAM heuristics, and the internal architecture powering VixenTools.</li>
+
+                        <!-- HUB + WORLD ENGINE + QUEST ENGINE EXPANSION -->
+                        <li class="mb-2"><strong>Vixen Hub Dashboard & Changelog Router:</strong> Introduced a centralized Hub window with ecosystem overview, core module launcher, network routing, support links, and a markdown‑driven changelog tab with version selector.</li>
+                        <li class="mb-2"><strong>Autonomous Scene HUD Update Badge:</strong> Added an in‑SceneView cyber badge that automatically appears when the package version changes and jumps directly into the Hub changelog view.</li>
+                        <li class="mb-2"><strong>World Engine Heuristics Dashboard:</strong> Implemented a live VRAM and compute profiler that aggregates texture, mesh, audio, and UI memory, estimates draw calls, and surfaces a threat‑level readout for the active world.</li>
+                        <li class="mb-2"><strong>World Engine Shader Replacement Matrix:</strong> Added target and whitelist shader dictionary assets, a custom shader selection dropdown, and bulk replacement protocols for unsafe desktop shaders.</li>
+                        <li class="mb-2"><strong>World Engine Third‑Party Auditors:</strong> Deployed dedicated scanners for ProTV, TXL, IwaSync3, native video players, Udon persistence, and UI memory sinks, each with categorized diagnostics and one‑click fix payloads.</li>
+                        <li class="mb-2"><strong>Quest Conversion Engine Topology Matrix:</strong> Added an interactive matrix for Animators, PhysBones, Colliders, Contacts, Constraints, Raycasts, Particles, Trails, Lines, Joints, and incompatible components with per‑node keep/culled toggles.</li>
+                        <li class="mb-2"><strong>Quest Conversion Engine Texture Processing Matrix:</strong> Introduced a dedicated texture queue that enumerates all unique materials, exposes resolution metadata, and lets users selectively opt textures into ImageMagick downsampling.</li>
+                        <li class="mb-2"><strong>Quest Conversion Engine VRCFT Hunter‑Killer:</strong> Implemented path‑, name‑, and component‑based detection for VRCFT and adjerry91 templates, auto‑routing all face‑tracking branches into a locked purge matrix for Quest safety.</li>
+                        <li class="mb-2"><strong>Quest Conversion Engine Deep Material Harvesting:</strong> Extended material discovery to Animator controllers and VRCFury behaviours, ensuring hidden and runtime‑driven materials are captured for Quest conversion.</li>
+                        <li class="mb-2"><strong>Quest Conversion Engine Performance Rank Heuristics:</strong> Wired the topology limits directly into a target Mobile Performance Rank selector, allowing the matrix to auto‑enforce caps for Excellent/Good/Medium/Poor profiles.</li>
+                        <li class="mb-2"><strong>World Engine Font & UI Normalization:</strong> Added global TMP and legacy font swap controls plus UI texture tracking to reduce canvas memory fragmentation and unify world typography.</li>
+
+                        <!-- WORLD TOOLS: SURFACE SNAP & QA -->
+                        <li class="mb-2"><strong>Live Surface Snapping Engine (Scene Tools):</strong> Added an enterprise‑grade gravity snapper that continuously drops selected objects to the nearest valid surface using a VRChat‑aware layer mask and terrain‑aware sampling.</li>
+                        <li class="mb-2"><strong>Precision Click-to-Place Raycaster (Topology Tools):</strong> Injected a sniper-rifle camera raycaster for the Scene View, enabling creators to teleport objects onto complex polygons using a real-time cyan/magenta UV projection disc.</li>
+                        <li class="mb-2"><strong>Omni-Matrix Diagnostic Spider (World Engine):</strong> Deployed a lethal heuristic auditing matrix explicitly mapped to ProTV, TXL, and IwaSync3 to hunt down architectural anti-patterns like GSV texture conflicts and Realtime GI emission blowouts.</li>
+                        <li class="mb-2"><strong>Raw UASM Code Scraper (Udon Persistence):</strong> Engineered a bytecode parser that intercepts the <code>UdonSharpEditorCache</code> to detect <code>PlayerData.Set</code> calls trapped inside <code>Update()</code> loops, preventing network rate-limit nukes.</li>
+                        <li class="mb-2"><strong>Autonomous Omni-Chaos Generator (QA Protocol):</strong> Upgraded the stress tester into an isolated environment constructor that quarantines execution into a dedicated <code>Stress Test.unity</code> scene with dynamically spawned "Nightmare Pods".</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Hardware-Level VRAM Footprint Extraction:</strong> Decoupled the memory auditor from the <code>AssetDatabase</code> to capture the <code>Base Texture</code> class directly from GPU registers, unmasking unmanaged 4K <code>RenderTexture</code> nukes.</li>
+                        <li class="mb-2"><strong>Reactive Scene State Routing (Vixen Hub):</strong> Re-engineered the <code>RenderActionGrid</code> to utilize synchronous layout flushing, allowing the UI Toolkit visual tree to reflect <code>EditorPrefs</code> badge states instantly without a domain reload.</li>
+                        <li class="mb-2"><strong>VRChat-Optimized Snapping Matrix (Topology Tools):</strong> Hardcoded a custom bitwise layer mask <code>(~((1 << 2) | (1 << 4)...))</code> into the gravity engine to explicitly ignore VRChat utility layers like <code>Water</code>, <code>UI</code>, and <code>Pickup</code>.</li>
+                        <li class="mb-2"><strong>Asset Protection Whitelist Expansion:</strong> Injected critical community dependencies (VRC Billiards, IwaSync3 Internal) into the global protection matrix to shield logic-driven materials from the autonomous PBR replacer.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Full Website Comb Over:</strong> Fixed multiple outstanding issues with missing documentation, buttons, etc.</li>
+                        <li class="mb-2"><strong>Missing “Jump to Top” Button (Documentation):</strong> Restored the global scroll-to-top control across all documentation pages after a regression removed it from several layouts.</li>
+                        <li class="mb-2"><strong>Discord Bot Embed Truncation:</strong> Patched the VixenGitWatch telemetry bot to prevent aggressive truncation of release notes and commit bodies. Updated the embed engine to use safer limits and improved formatting for long-form content.</li>
+                        <li class="mb-2"><strong>Biometric Matrix Purge (Quest Conversion):</strong> Eradicated compilation blockages by deploying a targeted sweep to strip out PC-VR Face Tracking parameters, including <code>adjerry91</code> templates and internal <code>VF_UE_VRCFT</code> nodes.</li>
+                        <li class="mb-2"><strong>Prefab API Deadlock Correction:</strong> Patched a critical error by migrating from <code>GetPrefabAssetPathOfNearestInstance</code> to a standard 2022.3 compliant <code>AssetDatabase.GetAssetPath(PrefabUtility.GetCorrespondingObjectFromSource())</code> routine.</li>
+                        <li class="mb-2"><strong>ASTC Texture Pipeline Desync (Quest Conversion):</strong> Fixed a catastrophic compression loop by rigidly forcing correct sRGB/Linear format serialization before applying <code>ASTC_6x6</code> crunching.</li>
+                        <li class="mb-2"><strong>Self-Occlusion Snapping Deadlocks:</strong> Implemented a "Surgical Shielding" loop that caches and disables all child colliders on a selected transform before raycasting to prevent objects from colliding with their own geometry.</li>
+                        <li class="mb-2"><strong>Legacy Font Thread Death (World Engine):</strong> Purged all hardcoded references to <code>Arial.ttf</code>, successfully migrating the UI Void diagnostic to the Unity 2022+ compliant <code>LegacyRuntime.ttf</code>.</li>
+                    </ul>
+                </div>
 
                 <div class="changelog-entry" data-version="v1.5.1">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v1.5.1 - 2026-05-01</h5>

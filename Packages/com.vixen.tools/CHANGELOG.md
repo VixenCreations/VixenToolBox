@@ -6,6 +6,45 @@ All notable changes to the VixenToolBox project will be documented in this file.
 
 ***
 
+## [1.6.0] - 2026-05-04
+
+### Added
+- **Full Website & Documentation Expansion:** Rebuilt the entire documentation portal with a unified neon‑cyber aesthetic, expanded technical breakdowns, and a fully rewritten Core Documentation page covering every subsystem in the VixenTools ecosystem.
+- **Tool‑Specific Deep‑Dive Pages:** Authored complete documentation for Quest Conversion Engine, Badge Studio, Animation Workbench Pro, PhysBone Topology Mapper, Preset Manager, Scene Utilities, and the World Engine auditors.
+- **Interactive DOM‑Driven Layout System:** Implemented a modular HTML layout grid with glass‑panel containers, badge headers, multi‑column matrices, and stable UIToolkit‑inspired spacing rules.
+- **Expanded Workflow Guides:** Added step‑by‑step “In Practice” workflow sections for every major tool, including real‑world usage patterns, optimization strategies, and cross‑tool integration notes.
+- **New Visual Identity System:** Introduced standardized glow headers, badge markers, preview cards, and consistent typography across all documentation pages.
+- **Changelog Archive Overhaul:** Rebuilt the changelog index with improved readability, version‑indexed navigation, and expanded historical entries.
+- **Developer‑Facing Architecture Notes:** Added internal logic explanations for heuristics, math libraries, reflection systems, VRAM analyzers, and topology forensics used across the ecosystem.
+- **Mobile‑Optimized Documentation Layout:** Rewrote responsive CSS rules to ensure all panels, matrices, and code blocks render cleanly on mobile and tablet devices.
+- **New “Under the Hood” Section:** Added a full technical deep‑dive into DOM bridging, shader injection, VRAM heuristics, and the internal architecture powering VixenTools.
+- **Omni-Matrix Diagnostic Spider (World Engine):** Deployed a lethal, 4D-chess-level heuristic auditing matrix explicitly mapped to VRChat's most dominant third-party ecosystems (ProTV, TXL, and IwaSync3). The engine now autonomously hunts down 25+ specific architectural anti-patterns, including GSV texture conflicts, Realtime GI emission blowouts, aggressive polling starvations, and unbounded UI Canvas rebuild cascades.
+- **Native Video Pipeline Catchers (World Engine):** Integrated dedicated heuristics for base `VRCAVProVideoPlayer` and `VRCUnityVideoPlayer` components. The engine now detects and offers auto-fixes for "Unlimited (0)" resolution bandwidth nukes and low-latency configurations that destabilize mobile instances.
+- **Raw UASM Code Scraper (Udon Persistence):** Bypassed standard Unity component checks by directly intercepting the `UdonSharpEditorCache`. The engine now parses raw Udon Assembly (UASM) instructions to detect `PlayerData.Set` calls trapped inside Update loops—autonomously catching network rate-limit nukes before they can cause cloud data loss.
+- **Autonomous Omni-Chaos Generator (QA Protocol):** Upgraded the engine stress tester from a basic script into an isolated environment constructor. It now autonomously quarantines execution into a dedicated `Stress Test.unity` scene, builds the foundational VRChat world architecture (VRCSceneDescriptor, Spawn points, Floor), and uses Reflection to dynamically spawn 8 discrete "Nightmare Pods" (only if target SDK addons are detected) to validate heuristic catch-rates.
+- **Precision Click-to-Place Raycaster (Topology Tools):** Engineered a sniper-rifle camera raycaster for the Scene View. Enables creators to visually paint/teleport objects onto complex shelf polygons using click-or-drag mechanics, guided by a real-time, cyber-aesthetic (Cyan/Magenta) UV projection disc that adheres to surface normals.
+- **Dynamic Action Grid Polling (Vixen Hub):** Engineered real-time state polling for Scene View tools. The dashboard now autonomously reads `EditorPrefs` to inject rich-text hex formatting (`<color=#00e5ff>[ ACTIVE ]</color>`) directly into Hub buttons, providing instant visual feedback on tool toggles.
+
+### Changed
+- **Hardware-Level VRAM Footprint Extraction:** Decoupled the texture memory auditor from the Unity `AssetDatabase`. The Spider now captures the `Base Texture` class directly from the GPU registers via `Profiler.GetRuntimeMemorySizeLong()`, successfully unmasking procedural, unmanaged, and 64MB 4K RenderTexture "VRAM Nukes" that hide from standard project scanners.
+- **Aggressive Compute Threat Matrix:** Re-calibrated the engine's compute scoring algorithm to strictly penalize mobile frame-killers. Real-time Shadow Casters are now assigned a massive 80.0x threat weight, ensuring that dynamic lighting in unbaked scenes instantly flags as a `SEVERE` compute hazard.
+- **Reactive Scene State Routing (Vixen Hub):** Re-engineered the World Pipeline Tools dashboard integration. Executing a tool from the Hub now triggers a synchronous UI layout flush (`SwitchMode`), forcing the UI Toolkit visual tree to rebuild and reflect badge states instantly without requiring a domain reload.
+- **VRChat-Optimized Snapping Matrix (Topology Tools):** Hardcoded a custom bitwise layer mask `(~((1 << 2) | (1 << 4) | (1 << 5) | (1 << 9) | (1 << 10) | (1 << 12) | (1 << 13)))` into the gravity snapping engine. The raycaster now explicitly ignores VRChat-specific utility layers (Ignore Raycast, Water, UI, Player, PlayerLocal, UiMenu, Pickup), ensuring props snap exclusively to physical environmental geometry.
+- **Asset Protection Whitelist Expansion:** Injected critical community dependencies into the global protection matrix. The engine now rigidly ignores shaders from `VRC Billiards`, `VRChat SDK Samples`, and `IwaSync3 Internal` to prevent the autonomous PBR replacer from breaking logic-driven materials.
+
+### Fixed
+- **Full Website Comb Over:** Fixed multiple outstanding issues with missing documentation, buttons, etc.
+- **Missing “Jump to Top” Button (Documentation):** Restored the global scroll-to-top control across all documentation pages after a regression removed it from several layouts.
+- **Discord Bot Embed Truncation:** Patched the VixenGitWatch telemetry bot to prevent aggressive truncation of release notes and commit bodies. Updated the embed engine to use safer limits and improved formatting for long-form content.
+- **Biometric Matrix Purge (Quest Conversion):** Eradicated compilation blockages caused by unsupported PC-VR Face Tracking parameters. The Conversion Engine now deploys a targeted heuristic sweep to aggressively strip out localized OSC/Blendshape-driven eye and jaw tracking components before initiating the Android build pipeline.
+- **VRCFury Face-Tracking "Hunter-Killer" Expansion:** Hardened the hierarchy purge logic to completely eradicate specialized face-tracking branches including `VRCFury - Face Tracking Prefabs`, `VRCFury - Face Tracking - Ears`, and `VF_UE_VRCFT` internal nodes.
+- **Prefab API Deadlock Correction:** Patched a critical compilation error where `PrefabUtility.GetPrefabAssetPathOfNearestInstance` was unrecognized in Unity 2022.3. The logic now utilizes `AssetDatabase.GetAssetPath(PrefabUtility.GetCorrespondingObjectFromSource())` to safely identify external template dependencies.
+- **ASTC Texture Pipeline Desync (Quest Conversion):** Patched a catastrophic compression loop where Unity's internal texture importer mismatched sRGB/Linear color spaces on certain custom textures. The engine now rigidly forces correct format serialization before applying `ASTC_6x6` crunching, preventing corrupted normal maps and inverted color outputs.
+- **Component Dependency Deadlocks (QA Protocol):** Resolved an architectural flaw where the Omni-Chaos generator triggered `NullReferenceExceptions` when attempting to spawn ProTV or IwaSync3 screens. The deployment pipeline now strictly honors `[RequireComponent(typeof(Renderer))]` tags, establishing mesh foundations prior to script injection.
+- **Legacy Font Thread Death (World Engine):** Removed all hardcoded references to the deprecated `Arial.ttf` system asset. The UI Void diagnostic and the stress tester now safely interface with the Unity 2022+ compliant `LegacyRuntime.ttf`, preventing hard crashes during font-swap operations.
+- **Self-Occlusion Snapping Deadlocks (Topology Tools):** Patched a severe raycasting failure in the Precision Snapping tool where the target object would collide with its own geometry, freezing it mid-air. Implemented a "Surgical Shielding" loop that caches and disables all child colliders on the selected transform *before* the raycast, and cleanly restores them post-execution.
+- **Disjointed Pivot Alignment (Topology Tools):** Re-engineered the `CalculateFeetOffset` logic to dynamically iterate through all child colliders or mesh bounds. This ensures objects with offset pivots or complex prefab hierarchies snap flush to the floor rather than floating or sinking into the floor polygons.
+
 ## [1.5.1] - 2026-05-01
 
 ### Added

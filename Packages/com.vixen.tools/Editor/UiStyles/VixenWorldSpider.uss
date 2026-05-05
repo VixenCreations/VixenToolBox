@@ -1,0 +1,252 @@
+/* VIXEN WORLD SPIDER : UNIQUE NEURAL INTERFACE */
+:root {
+    --vixen-pink: #ff00aa;
+    --vixen-cyan: #00e5ff;
+    --vixen-orange: #ffaa00;
+    --vixen-dark: #0a0a0f;
+    --vixen-panel: #14141b;
+}
+
+#world-spider-root {
+    background-color: var(--vixen-dark);
+    flex-grow: 1;
+}
+
+#tool-header {
+    height: 65px;
+    background-color: #050508;
+    border-bottom-width: 2px;
+    border-bottom-color: var(--vixen-pink);
+    justify-content: center;
+    padding-left: 15px;
+}
+
+.panel-header {
+    font-size: 18px;
+    -unity-font-style: bold;
+    color: var(--vixen-pink);
+}
+
+#main-scroll {
+    flex-grow: 1;
+}
+
+.spider-panel {
+    background-color: var(--vixen-panel);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    margin: 10px;
+    padding: 10px;
+}
+
+/* ---------------------------------------------------- */
+/* CATEGORY FOLDOUTS & MATRIX TOPOLOGY                  */
+/* ---------------------------------------------------- */
+
+.matrix-foldout {
+    margin-bottom: 12px;
+}
+
+.matrix-foldout > .unity-foldout__toggle > .unity-toggle__text {
+    -unity-font-style: bold;
+    font-size: 14px;
+    color: var(--vixen-cyan);
+    letter-spacing: 1px;
+}
+
+.topology-container {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    padding: 6px;
+    margin-top: 5px;
+}
+
+.issue-subheader {
+    font-size: 11px;
+    -unity-font-style: bold;
+    color: #888899;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    margin-left: 2px;
+    padding-bottom: 2px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+    letter-spacing: 0.5px;
+}
+
+/* ---------------------------------------------------- */
+/* SPIDER RESULT ROWS                                   */
+/* ---------------------------------------------------- */
+
+.spider-row {
+    flex-direction: row;
+    align-items: center;
+    padding: 8px;
+    margin-bottom: 3px;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 3px;
+}
+
+.spider-row:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.indicator-bar {
+    width: 4px;
+    height: 20px;
+    margin-right: 12px;
+}
+
+.spider-label {
+    flex-grow: 1;
+    flex-shrink: 1;
+    font-size: 12px;
+    color: #e0e0e0;
+    white-space: normal;
+}
+
+/* ---------------------------------------------------- */
+/* ACTION CONTROLS & OMNI-HEURISTICS DASHBOARD          */
+/* ---------------------------------------------------- */
+
+.spider-action-btn {
+    height: 40px;
+    flex-grow: 1;
+    font-size: 14px;
+    -unity-font-style: bold;
+    border-radius: 4px;
+    margin: 5px;
+    background-color: #1a1a24;
+}
+
+.btn-cyan { color: var(--vixen-cyan); border-color: var(--vixen-cyan); border-width: 1px; }
+.btn-pink { color: var(--vixen-pink); border-color: var(--vixen-pink); border-width: 1px; }
+
+.info-box-styled {
+    background-color: rgba(0, 229, 255, 0.1);
+    color: var(--vixen-cyan);
+    padding: 8px;
+    margin: 10px;
+    border-left-width: 3px;
+    border-left-color: var(--vixen-cyan);
+    font-size: 11px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+}
+
+.dashboard-panel {
+    background-color: rgba(0, 229, 255, 0.05);
+    border-width: 1px;
+    border-color: var(--vixen-cyan);
+    border-radius: 4px;
+    margin: 10px;
+    padding: 12px;
+}
+
+#dash-header {
+    font-size: 14px;
+    -unity-font-style: bold;
+    color: var(--vixen-cyan);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(0, 229, 255, 0.3);
+    padding-bottom: 4px;
+}
+
+/* ---------------------------------------------------- */
+/* FORM INPUTS & ARCHITECTURAL ELEMENTS                 */
+/* ---------------------------------------------------- */
+
+.control-label {
+    font-size: 12px;
+    -unity-font-style: bold;
+    color: var(--vixen-cyan);
+    white-space: nowrap; 
+    flex-shrink: 0;      
+}
+
+/* Unified Dropdown Styling: Targets both Unity Dropdowns and Custom Button-based Advanced Dropdowns */
+.vixen-dropdown {
+    flex-grow: 1;
+    flex-shrink: 1; 
+    min-width: 0;   
+    margin-left: 10px;
+}
+
+.vixen-dropdown > .unity-popup-field__input,
+Button.vixen-dropdown {
+    background-color: #0a0a0f;
+    border-color: var(--vixen-cyan);
+    border-width: 1px;
+    border-radius: 3px;
+    color: #e0e0e0;
+    font-size: 13px;
+    padding: 4px;
+    margin: 0; 
+}
+
+Button.vixen-dropdown {
+    -unity-text-align: middle-left;
+    padding-left: 6px;
+}
+
+.vixen-dropdown > .unity-popup-field__input:hover,
+Button.vixen-dropdown:hover {
+    background-color: rgba(0, 229, 255, 0.1);
+}
+
+.vixen-object-field {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    margin-left: 10px;
+}
+
+.vixen-object-field > .unity-object-field__input {
+    background-color: #0a0a0f;
+    border-color: var(--vixen-cyan);
+    border-width: 1px;
+    border-radius: 3px;
+    color: #e0e0e0;
+}
+
+.vixen-textfield {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    margin-left: 10px;
+}
+
+.vixen-textfield > .unity-base-text-field__input {
+    background-color: #0a0a0f;
+    border-color: var(--vixen-cyan);
+    border-width: 1px;
+    border-radius: 3px;
+    color: #e0e0e0;
+    padding: 4px;
+}
+
+.vixen-textfield > .unity-base-text-field__input:hover {
+    background-color: rgba(0, 229, 255, 0.1);
+}
+
+/* Diagnostics Toggle Styling */
+.vixen-toggle {
+    margin-right: 8px;
+    margin-left: 2px;
+    align-self: center;
+}
+
+.vixen-toggle > .unity-toggle__input > .unity-toggle__checkmark {
+    background-color: #0a0a0f;
+    border-color: var(--vixen-pink);
+    border-width: 1px;
+    border-radius: 2px;
+}
+
+.vixen-toggle > .unity-toggle__input:checked > .unity-toggle__checkmark {
+    background-color: rgba(255, 0, 170, 0.4); 
+    border-color: var(--vixen-pink);
+}
