@@ -124,14 +124,42 @@ namespace VixenTools.Editor
                 Handles.DrawWireDisc(bestHit.point, bestHit.normal, 0.04f);
                 sceneView.Repaint();
 
-                // If user clicks or click-drags (paint mode), snap the object instantly
-                if ((e.type == EventType.MouseDown || e.type == EventType.MouseDrag) && e.button == 0 && e.modifiers == EventModifiers.None)
+                // If user clicks or click-drags (paint mode). Allow Shift to bypass rotation alignment
+                if ((e.type == EventType.MouseDown || e.type == EventType.MouseDrag) && e.button == 0 && 
+                    (e.modifiers == EventModifiers.None || e.modifiers == EventModifiers.Shift))
                 {
+                    bool alignRotation = (e.modifiers != EventModifiers.Shift);
+
                     Undo.RecordObjects(Selection.transforms, "VixenTools: Precision Place");
                     foreach (var t in Selection.transforms)
                     {
-                        float bottomOffset = CalculateFeetOffset(t);
-                        t.position = new Vector3(bestHit.point.x, bestHit.point.y + bottomOffset, bestHit.point.z);
+                        float bottomOffset = 0f;
+
+                        if (alignRotation)
+                        {
+                            // Temporarily reset rotation/position to calculate the pure local Y bottom offset
+                            Vector3 originalPos = t.position;
+                            Quaternion originalRot = t.rotation;
+                            
+                            t.position = Vector3.zero;
+                            t.rotation = Quaternion.identity;
+                            bottomOffset = CalculateFeetOffset(t);
+                            
+                            t.position = originalPos;
+                            t.rotation = originalRot;
+
+                            // Tilt the object to match the surface normal while preserving its local spin (yaw)
+                            t.rotation = Quaternion.FromToRotation(t.up, bestHit.normal) * t.rotation;
+
+                            // Snap to point and push out along the normal by the bottom offset
+                            t.position = bestHit.point + (bestHit.normal * bottomOffset);
+                        }
+                        else
+                        {
+                            // Legacy vertical-only drop
+                            bottomOffset = CalculateFeetOffset(t);
+                            t.position = new Vector3(bestHit.point.x, bestHit.point.y + bottomOffset, bestHit.point.z);
+                        }
 
                         t.hasChanged = false; // Prevent Live Snapping from fighting the Precision Snapping
 

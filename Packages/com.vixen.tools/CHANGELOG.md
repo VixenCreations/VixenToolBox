@@ -6,6 +6,47 @@ All notable changes to the VixenToolBox project will be documented in this file.
 
 ***
 
+## [2.0.0] - 2026-05-12
+
+### Added
+
+* **4D-Chess Scene Caching & Heuristics Profiler (World Engine):** Engineered a persistent O(1) lookup architecture utilizing `_sceneObjectCache`, `_textureRecoveryCache`, and a dedicated reflection `_fieldCache`. Includes a standalone World Profiler window that calculates real-time granular VRAM footprints and CPU overhead across Textures & Materials, Meshes & Geometry, Terrain & Environment, UI & Canvases, Lightmaps & Global Illumination, Volumetrics (Light Volumes), AudioLink, LTCGI, Video Players, Audio Objects, Udon & Network Persistence, Physics, and the Rinvo Search Ecosystem. Outputs a compute threat score with color-coded severity.
+* **Persistent JSON Lookup Cache & I/O Pipeline:** Deployed the new `WorldEngineCache` and `AssetRecord` versioning system. Tracks texture/mesh hashes, last-known resolutions, and failure states to automatically skip previously processed assets. Handled by a background `_workQueue` utilizing per-frame processing and `AssetDatabase.StartAssetEditing()` batching.
+* **Omni-Chaos Environment Generator (QA):** Introduced `VixenEngineStressTest.cs`, establishing an extreme edge-case stress test scene designed to push VRAM, polygon limits, and hierarchy depth to their absolute breaking points to rigorously validate pipeline resilience.
+* **Proprietary Shader Integration:** Deployed native ecosystem support, validation, and global matrix protection for `Shader "VixenTools/Latex Suit Ultra"`.
+* **Proprietary Shader Integration:** Deployed new HLSL Latex `Shader "VixenTools/Latex Suit Ultra"`.
+* **Ecosystem Integration (Hub):** Added a dedicated "Supported Modules" tab to the VixenHub. The architecture now actively audits, scans, and intrinsically protects the following third-party infrastructure:
+* **ProTV (Techanon):** Comprehensive pipeline auditing, GSV conflict resolution, and AudioLink topology handshakes.
+* **AudioLink:** Reflective extraction of internal FFT textures, orphan detection, and global whitelist protection.
+* **LTCGI:** Real-time polygonal area lighting matrices, ghost screen eradication, and bake cache deadlock resolution.
+* **VizVid (VVMW):** Comprehensive video pipeline analysis, interface decoupling checks, and Quest fallback validation.
+* **Video TXL:** CRT render ecosystem validation, GC sink detection, and Playlist Queue access control integration.
+* **iwaSync3:** Network sync frequency tuning, blinding emissive bounds detection, and global 2D audio isolation.
+* **YouTube Search (Rinvo):** Autonomous video player target linking, UI architectural decoupling, and API pool size validation.
+* **VRC Light Volumes:** Compute load detection, sphere threshold optimization, and TVGI/AudioLink strobe safety enforcement.
+* **VR Stage Lighting:** Regex-based heuristic protection and DMX audit support.
+* **Global Protection Rules & Auto-Population (Shader Dictionaries):** `AutoPopulateTargets()` and `AutoPopulateWhitelist()` now automatically inject VRChat Mobile Toon, Filamented, and Mochie shaders while securing protected assets project-wide.
+* **Three-Button Utility Panel & Smart Reset (UI/UX):** Added rapid-access controls for *Populate Targets*, *Populate Whitelist*, and *Factory Reset (Nuke & Rebuild)* to the Shader Dictionary Editor, alongside smart autonomous detection of active dictionary types based on filenames.
+* **Advanced Ecosystem Audits & Scanners:** Actively scans Light Volumes (reads atlas/3D textures and custom arrays) and Rinvo Search. Maps ProTV, TXL, IwaSync3, and standard Unity/AVPro players while isolating unique screens across all video systems.
+* **Precision Surface Snapping (Scene Tools):** Added an enterprise-grade SceneView raycaster featuring a UV-style neon placement disc. Users can Shift-click to bypass standard rotation alignment, utilize live gravity snapping that respects terrain topology, and leverage automated collider shielding.
+
+### Changed
+
+* **Neon Cyberpunk UI Overhaul (UI/UX):** Rolled out new dropdowns, object fields, shader selectors, and deep magenta, pink, and cyan styling. The resolution dropdown now perfectly syncs with the live runtime value.
+* **Lazy-Loaded Diagnostic (UI/UX):** `_expandedCategories` now stores open UI states. Heavy diagnostic foldouts only execute and populate their respective matrices when actively expanded, drastically cutting down on wasted Editor overhead.
+* **Shader Dictionary Auto-Repair:** `EnsureDictionariesExist()` upgraded to support force-rebuilding, dynamically auto-populating both target and whitelist dictionaries if missing or corrupted.
+* **Bone Collapse Engine:** Intelligently folds terminal vertex weights directly into parent bone structures during topology optimization.
+
+### Fixed
+
+* **TMPro Harvester Crashes:** Wrapped the Omni-Harvester's TextMeshPro material scraper in a fail-safe execution block, resolving thread-killing `NullReferenceExceptions` caused by missing font assets on corrupted UI elements.
+* **ImageMagick Crash Loops (VRAM Downscaler):** Eliminated a queue crash condition triggered by ImageMagick execution failures. Added a bypass for active `RenderTexture` objects to prevent decoding halts on unreadable formats.
+* **State Desyncs (World Engine):** Fixed shader dropdown state desyncs occurring when dictionary values change. Resolved an issue where category foldouts collapsed unexpectedly after a system refresh.
+* **Font Fallback Failures:** Patched TMP/Legacy font fallback logic across the ecosystem.
+* **Mesh Structural Corruption (Topology):** Resolved severe triangle collapse and bone index mapping errors that occurred during high-aggression vertex welding. Fixed mathematical miscalculations in the blendshape frame averaging logic, and engineered a dynamic recursive Kinematic Protection Matrix into the microwelder to flawlessly shield delicate avatar hierarchies (e.g., Novabeast facial fluff, ears, and phalanges) from destructive vertex merging.
+* **AppDomain Sweep Bottlenecks (Reflection):** The static reflection cache completely eliminates the massive AppDomain assembly sweeps that previously caused multi-second stutters during UI construction and FFT extraction.
+* **Quest Shader Whitelist Anomalies (Validator):** Fixed an edge-case logic failure in the Quest conversion pipeline where mobile shader detection failed to accurately parse the `VRC.SDKBase.Validation` whitelist.
+
 ## [1.6.1] - 2026-05-05
 
 ### Added

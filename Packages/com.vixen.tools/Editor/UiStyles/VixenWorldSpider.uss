@@ -55,6 +55,11 @@
     letter-spacing: 1px;
 }
 
+/* Tint the foldout arrow to match the neon cyan text */
+.matrix-foldout > .unity-foldout__toggle > .unity-toggle__input > .unity-toggle__checkmark {
+    -unity-background-image-tint-color: var(--vixen-cyan);
+}
+
 .topology-container {
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 4px;
@@ -62,11 +67,28 @@
     margin-top: 5px;
 }
 
+/* "Toggle All Fixes" Button Styling */
+.topology-container Button {
+    background-color: var(--vixen-dark);
+    border-color: var(--vixen-pink);
+    border-width: 1px;
+    border-radius: 3px;
+    color: var(--vixen-pink);
+    margin: 0px 0px 2px 0px;
+    padding: 4px 10px;
+    -unity-font-style: bold;
+    transition: background-color 0.15s;
+}
+
+.topology-container Button:hover {
+    background-color: rgba(255, 0, 170, 0.15);
+}
+
 .issue-subheader {
     font-size: 11px;
     -unity-font-style: bold;
     color: #888899;
-    margin-top: 12px;
+    margin-top: 4px; /* <--- CRITICAL: Dropped from 12px to crush the dead space */
     margin-bottom: 4px;
     margin-left: 2px;
     padding-bottom: 2px;
@@ -111,17 +133,20 @@
 /* ---------------------------------------------------- */
 
 .spider-action-btn {
-    height: 40px;
+    height: 35px;
     flex-grow: 1;
-    font-size: 14px;
+    font-size: 13px;
     -unity-font-style: bold;
-    border-radius: 4px;
-    margin: 5px;
-    background-color: #1a1a24;
+    border-radius: 3px;
+    margin: 12px 4px 0px 4px;
+    background-color: #0a0a0f; 
 }
 
 .btn-cyan { color: var(--vixen-cyan); border-color: var(--vixen-cyan); border-width: 1px; }
+.btn-cyan:hover { background-color: rgba(0, 229, 255, 0.1); }
+
 .btn-pink { color: var(--vixen-pink); border-color: var(--vixen-pink); border-width: 1px; }
+.btn-pink:hover { background-color: rgba(255, 0, 170, 0.1); }
 
 .info-box-styled {
     background-color: rgba(0, 229, 255, 0.1);
@@ -142,6 +167,8 @@
     border-radius: 4px;
     margin: 10px;
     padding: 12px;
+    flex-grow: 0; 
+    flex-shrink: 0;
 }
 
 #dash-header {
@@ -167,7 +194,6 @@
     flex-shrink: 0;      
 }
 
-/* Unified Dropdown Styling: Targets both Unity Dropdowns and Custom Button-based Advanced Dropdowns */
 .vixen-dropdown {
     flex-grow: 1;
     flex-shrink: 1; 
@@ -232,7 +258,10 @@ Button.vixen-dropdown:hover {
     background-color: rgba(0, 229, 255, 0.1);
 }
 
-/* Diagnostics Toggle Styling */
+/* ---------------------------------------------------- */
+/* ROW CHECKBOXES                                       */
+/* ---------------------------------------------------- */
+
 .vixen-toggle {
     margin-right: 8px;
     margin-left: 2px;
@@ -249,4 +278,5 @@ Button.vixen-dropdown:hover {
 .vixen-toggle > .unity-toggle__input:checked > .unity-toggle__checkmark {
     background-color: rgba(255, 0, 170, 0.4); 
     border-color: var(--vixen-pink);
+    -unity-background-image-tint-color: #ffffff; /* Make the actual check icon pop */
 }

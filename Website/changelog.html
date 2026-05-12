@@ -90,6 +90,7 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
+                        <fluent-option value="v2.0.0">v2.0.0</fluent-option>
                         <fluent-option value="v1.6.1">v1.6.1</fluent-option>
                         <fluent-option value="v1.6.0">v1.6.0</fluent-option>
                         <fluent-option value="v1.5.1">v1.5.1</fluent-option>
@@ -112,6 +113,97 @@
             </div>
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
+
+                <div class="changelog-entry" data-version="v2.0.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.0.0 - 2026-05-12</h5>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>4D-Chess Scene Caching & Heuristics Profiler (World Engine):</strong> Engineered a persistent O(1) lookup architecture utilizing <code>_sceneObjectCache</code>, <code>_textureRecoveryCache</code>, and a dedicated reflection <code>_fieldCache</code>. Includes a standalone World Profiler window that calculates real-time granular VRAM footprints and CPU overhead across Textures & Materials, Meshes & Geometry, Terrain & Environment, UI & Canvases, Lightmaps & Global Illumination, Volumetrics (Light Volumes), AudioLink, LTCGI, Video Players, Audio Objects, Udon & Network Persistence, Physics, and the Rinvo Search Ecosystem. Outputs a compute threat score with color-coded severity.</li>
+                        <li class="mb-2"><strong>Persistent JSON Lookup Cache & I/O Pipeline:</strong> Deployed the new <code>WorldEngineCache</code> and <code>AssetRecord</code> versioning system. Tracks texture/mesh hashes, last-known resolutions, and failure states to automatically skip previously processed assets. Handled by a background <code>_workQueue</code> utilizing per-frame processing and <code>AssetDatabase.StartAssetEditing()</code> batching.</li>
+                        <li class="mb-2"><strong>Precision Microwelder & 5D Hash Matrix (Mesh Topology):</strong> Deployed a multi-pass destructive mesh patcher with a full memory cloning and serialization pipeline (<code>Assets/VixenTools/Meshes/Patched/</code>). By evaluating a strict <code>(X, Y, Z, U, V)</code> tuple, the microwelder guarantees UV texture seams physically cannot collapse. Includes full Blendshape memory extraction/remap recovery and recursive Kinematic Protection Matrices to structurally lock down complex, nested hierarchies (essential for Novabeast facial fluff, ears, and phalanges).</li>
+                        <li class="mb-2"><strong>Destructive Optimization Suite (Avatar Validator):</strong> Integrated a dual-pipeline PC/Quest validation system capable of violently purging orphaned transforms, stripping hard-disabled components, collapsing dead-end leaf bones, calculating tight-fit spatial bounding overrides, and destructively downscaling VRAM via ImageMagick. Includes deep Physics Node Extraction for the targeted eradication of PhysBones, Colliders, Contacts, and Constraints.</li>
+                        <li class="mb-2"><strong>Omni-Chaos Environment Generator (QA):</strong> Introduced <code>VixenEngineStressTest.cs</code>, establishing an extreme edge-case stress test scene designed to push VRAM, polygon limits, and hierarchy depth to their absolute breaking points to rigorously validate pipeline resilience.</li>
+                        <li class="mb-2"><strong>Proprietary Shader Integration:</strong> Deployed new HLSL High Gloss Reflective Near Raytracing Latex Shader "VixenTools/Latex Suit Ultra". (See setup documentation below).</li>
+                        <li class="mb-2">
+                            <strong>Ecosystem Integration Matrix (Hub):</strong> Added a dedicated "Supported Modules" tab to the VixenHub. The architecture now actively audits, scans, and intrinsically protects the following third-party infrastructure:
+                            <ul class="custom-list m-0 ps-4 caption1 mt-1 mb-1" style="line-height: 1.5;">
+                                <li><strong>ProTV (Techanon):</strong> Comprehensive pipeline auditing, GSV conflict resolution, and AudioLink topology handshakes.</li>
+                                <li><strong>AudioLink:</strong> Reflective extraction of internal FFT textures, orphan detection, and global whitelist protection.</li>
+                                <li><strong>LTCGI:</strong> Real-time polygonal area lighting matrices, ghost screen eradication, and bake cache deadlock resolution.</li>
+                                <li><strong>VizVid (VVMW):</strong> Comprehensive video pipeline analysis, interface decoupling checks, and Quest fallback validation.</li>
+                                <li><strong>Video TXL:</strong> CRT render ecosystem validation, GC sink detection, and Playlist Queue access control integration.</li>
+                                <li><strong>iwaSync3:</strong> Network sync frequency tuning, blinding emissive bounds detection, and global 2D audio isolation.</li>
+                                <li><strong>YouTube Search (Rinvo):</strong> Autonomous video player target linking, UI architectural decoupling, and API pool size validation.</li>
+                                <li><strong>VRC Light Volumes:</strong> Compute load detection, sphere threshold optimization, and TVGI/AudioLink strobe safety enforcement.</li>
+                                <li><strong>VR Stage Lighting:</strong> Regex-based heuristic protection and DMX audit support.</li>
+                            </ul>
+                        </li>
+                        <li class="mb-2"><strong>Global Protection Rules & Auto-Population (Shader Dictionaries):</strong> <code>AutoPopulateTargets()</code> and <code>AutoPopulateWhitelist()</code> now automatically inject VRChat Mobile Toon, Filamented, and Mochie shaders while securing protected assets project-wide.</li>
+                        <li class="mb-2"><strong>Three-Button Utility Panel & Smart Reset (UI/UX):</strong> Added rapid-access controls for <em>Populate Targets</em>, <em>Populate Whitelist</em>, and <em>Factory Reset (Nuke & Rebuild)</em> to the Shader Dictionary Editor, alongside smart autonomous detection of active dictionary types based on filenames.</li>
+                        <li class="mb-2"><strong>Advanced Ecosystem Audits & Scanners:</strong> Actively scans Light Volumes (reads atlas/3D textures and custom arrays) and Rinvo Search. Maps ProTV, TXL, IwaSync3, and standard Unity/AVPro players while isolating unique screens across all video systems.</li>
+                        <li class="mb-2"><strong>Precision Surface Snapping (Scene Tools):</strong> Added an enterprise-grade SceneView raycaster featuring a UV-style neon placement disc. Users can Shift-click to bypass standard rotation alignment, utilize live gravity snapping that respects terrain topology, and leverage automated collider shielding.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Neon Cyberpunk UI Overhaul (UI/UX):</strong> Rolled out new dropdowns, object fields, shader selectors, and deep magenta, pink, and cyan styling. The resolution dropdown now perfectly syncs with the live runtime value.</li>
+                        <li class="mb-2"><strong>Lazy-Loaded Diagnostic Matrix (UI/UX):</strong> <code>_expandedCategories</code> now stores open UI states. Heavy diagnostic foldouts only execute and populate their respective matrices when actively expanded, drastically cutting down on wasted Editor overhead.</li>
+                        <li class="mb-2"><strong>Shader Dictionary Auto-Repair:</strong> <code>EnsureDictionariesExist()</code> upgraded to support force-rebuilding, dynamically auto-populating both target and whitelist dictionaries if missing or corrupted.</li>
+                        <li class="mb-2"><strong>Bone Collapse Engine:</strong> Intelligently folds terminal vertex weights directly into parent bone structures during topology optimization.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>TMPro Harvester Crashes:</strong> Wrapped the Omni-Harvester's TextMeshPro material scraper in a fail-safe execution block, resolving thread-killing <code>NullReferenceExceptions</code> caused by missing font assets on corrupted UI elements.</li>
+                        <li class="mb-2"><strong>ImageMagick Crash Loops (VRAM Downscaler):</strong> Eliminated a queue crash condition triggered by ImageMagick execution failures. Added a bypass for active <code>RenderTexture</code> objects to prevent decoding halts on unreadable formats.</li>
+                        <li class="mb-2"><strong>Matrix State Desyncs (World Engine):</strong> Fixed shader dropdown state desyncs occurring when dictionary values change. Resolved an issue where category foldouts collapsed unexpectedly after a system refresh.</li>
+                        <li class="mb-2"><strong>Font Fallback Failures:</strong> Patched TMP/Legacy font fallback logic across the ecosystem.</li>
+                        <li class="mb-2"><strong>Mesh Structural Corruption (Topology):</strong> Resolved severe triangle collapse and bone index mapping errors that occurred during high-aggression vertex welding. Fixed mathematical miscalculations in the blendshape frame averaging logic, and engineered a dynamic recursive Kinematic Protection Matrix into the microwelder to flawlessly shield delicate avatar hierarchies (e.g., Novabeast facial fluff, ears, and phalanges) from destructive vertex merging.</li>
+                        <li class="mb-2"><strong>AppDomain Sweep Bottlenecks (Reflection):</strong> The static reflection cache completely eliminates the massive AppDomain assembly sweeps that previously caused multi-second stutters during UI construction and FFT extraction.</li>
+                        <li class="mb-2"><strong>Quest Shader Whitelist Anomalies (Validator):</strong> Fixed an edge-case logic failure in the Quest conversion pipeline where mobile shader detection failed to accurately parse the <code>VRC.SDKBase.Validation</code> whitelist.</li>
+                    </ul>
+
+                    <hr style="border-top: 1px solid rgba(0, 229, 255, 0.2); margin: 2rem 0 1.5rem 0;" />
+
+                    <h5 class="text-glow-pink m-0 mb-2 mt-3" style="font-size: 1.15rem;">🎨 VixenTools/Latex Suit Ultra: Substance Painter Workflow & Setup</h5>
+                    <p class="caption1 mb-3">To achieve the intended high-fidelity raymarched depth, clearcoat iridescence, and micro-shadowing, your PBR textures must be packed correctly before importing to Unity.</p>
+
+                    <p class="caption1 m-0 mb-1 mt-2"><strong>1. Substance Painter Export Setup (The Packed PBR Map)</strong></p>
+                    <p class="caption1 mb-1">The <code>_MetallicGlossMap</code> slot requires a highly specific 4-channel texture packing to optimize VRAM and shader instruction counts:</p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-3" style="line-height: 1.5;">
+                        <li><strong>Red Channel (R):</strong> Metallic</li>
+                        <li><strong>Green Channel (G):</strong> Ambient Occlusion (AO)</li>
+                        <li><strong>Blue Channel (B):</strong> Height / Displacement (Used for Tessellation and Parallax Raymarching)</li>
+                        <li><strong>Alpha Channel (A):</strong> Smoothness (Inverted Roughness / Glossiness)</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-1 mt-2"><strong>How to configure the Export Template in Substance Painter:</strong></p>
+                    <ol class="custom-list m-0 ps-4 caption1 mb-4" style="line-height: 1.5;">
+                        <li>Open <em>Export Textures</em> -&gt; <em>Output Templates</em>.</li>
+                        <li>Create a new <code>R+G+B+A</code> texture map. Name it <code>[TextureSet]_PackedPBR</code>.</li>
+                        <li>Drag the <strong>Metallic</strong> map into the <code>R</code> slot (From Grayscale).</li>
+                        <li>Drag the <strong>Mixed AO</strong> map into the <code>G</code> slot (From Grayscale).</li>
+                        <li>Drag the <strong>Height</strong> map into the <code>B</code> slot (From Grayscale).</li>
+                        <li>Drag the <strong>Glossiness</strong> map into the <code>A</code> slot (From Grayscale). <em>Note: If you use a Roughness workflow, drag Roughness into the A slot and select "Invert"</em>.</li>
+                        <li>Save the template and export your textures.</li>
+                    </ol>
+
+                    <p class="caption1 m-0 mb-1 mt-2"><strong>2. Unity Shader Configuration</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-4" style="line-height: 1.5;">
+                        <li class="mb-1"><strong>Albedo / Alpha:</strong> Slot your Base Color into <code>_MainTex</code>. The Alpha channel controls the <code>_CutOff</code> transparency.</li>
+                        <li class="mb-1"><strong>Packed PBR:</strong> Slot the newly exported <code>[TextureSet]_PackedPBR</code> into the <strong>Packed PBR Map</strong> slot. Ensure the texture in Unity has <strong>sRGB (Color Texture)</strong> <em>unchecked</em> (Linear format).</li>
+                        <li class="mb-1"><strong>Normal Map:</strong> Slot your standard DirectX/OpenGL normal map into <code>_BumpMap</code>.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-1 mt-2"><strong>3. Advanced Features Integration</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-1"><strong>Tessellation & Parallax:</strong> Adjust the <code>_DisplacementStrength</code> (driven by your B channel) and <code>_Parallax</code> to control physical depth and micro-shadowing.</li>
+                        <li class="mb-1"><strong>Thin Film Interference:</strong> Modify <code>_ThinFilmThickness</code> to shift the iridescent pearlescent color tone.</li>
+                        <li class="mb-1"><strong>AudioLink:</strong> Check <strong>Enable AudioLink</strong> to dynamically drive Iridescence via the Bass band (<code>_AudioLinkFilmMod</code>) and Emission via the Treble band.</li>
+                        <li class="mb-1"><strong>LTCGI / Light Volumes:</strong> Check the respective toggles to natively hook the latex material into VRChat dynamic lighting ecosystems.</li>
+                    </ul>
+                </div>
 
                 <div class="changelog-entry" data-version="v1.6.1">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v1.6.1 - 2026-05-05</h5>

@@ -137,7 +137,7 @@ namespace VixenTools.Editor
 
     public class VixenHub : EditorWindow
     {
-        private enum TabMode { Dashboard, CoreModules, Network, Support, Changelog }
+        private enum TabMode { Dashboard, CoreModules, SupportedModules, Network, Support, Changelog }
         private TabMode _currentMode = TabMode.Dashboard;
 
         private const string PackageRoot = "Packages/com.vixencreations.vixens-toolbox/";
@@ -161,6 +161,7 @@ namespace VixenTools.Editor
 
         private Button _btnDashboard;
         private Button _btnCoreModules;
+        private Button _btnSupportedModules;
         private Button _btnNetwork;
         private Button _btnSupport;
         private Button _btnChangelog;
@@ -277,18 +278,21 @@ namespace VixenTools.Editor
             
             _btnDashboard = new Button(() => SwitchMode(TabMode.Dashboard)) { text = "Ecosystem Architecture" };
             _btnCoreModules = new Button(() => SwitchMode(TabMode.CoreModules)) { text = "Core Modules" };
+            _btnSupportedModules = new Button(() => SwitchMode(TabMode.SupportedModules)) { text = "Supported Modules" };
             _btnNetwork = new Button(() => SwitchMode(TabMode.Network)) { text = "Network Routing" };
             _btnSupport = new Button(() => SwitchMode(TabMode.Support)) { text = "Support the Developer" };
             _btnChangelog = new Button(() => SwitchMode(TabMode.Changelog)) { text = "Release Changelogs" };
             
             _btnDashboard.AddToClassList("tab-btn");
             _btnCoreModules.AddToClassList("tab-btn");
+            _btnSupportedModules.AddToClassList("tab-btn");
             _btnNetwork.AddToClassList("tab-btn");
             _btnSupport.AddToClassList("tab-btn");
             _btnChangelog.AddToClassList("tab-btn");
 
             tabContainer.Add(_btnDashboard);
             tabContainer.Add(_btnCoreModules);
+            tabContainer.Add(_btnSupportedModules);
             tabContainer.Add(_btnNetwork);
             tabContainer.Add(_btnSupport);
             tabContainer.Add(_btnChangelog);
@@ -324,6 +328,7 @@ namespace VixenTools.Editor
             
             _btnDashboard.RemoveFromClassList("tab-btn-active"); _btnDashboard.AddToClassList("tab-btn-inactive");
             _btnCoreModules.RemoveFromClassList("tab-btn-active"); _btnCoreModules.AddToClassList("tab-btn-inactive");
+            _btnSupportedModules.RemoveFromClassList("tab-btn-active"); _btnSupportedModules.AddToClassList("tab-btn-inactive");
             _btnNetwork.RemoveFromClassList("tab-btn-active"); _btnNetwork.AddToClassList("tab-btn-inactive");
             _btnSupport.RemoveFromClassList("tab-btn-active"); _btnSupport.AddToClassList("tab-btn-inactive");
             _btnChangelog.RemoveFromClassList("tab-btn-active"); _btnChangelog.AddToClassList("tab-btn-inactive");
@@ -341,6 +346,11 @@ namespace VixenTools.Editor
                     _btnCoreModules.RemoveFromClassList("tab-btn-inactive"); _btnCoreModules.AddToClassList("tab-btn-active");
                     _tabDescription.text = "Direct access to the flagship utilities that power the VixenTools ecosystem.";
                     RenderCoreModules();
+                    break;
+                case TabMode.SupportedModules:
+                    _btnSupportedModules.RemoveFromClassList("tab-btn-inactive"); _btnSupportedModules.AddToClassList("tab-btn-active");
+                    _tabDescription.text = "Explore third-party integrations and assets natively supported and audited by the VixenTools ecosystem.";
+                    RenderSupportedModules();
                     break;
                 case TabMode.Network:
                     _btnNetwork.RemoveFromClassList("tab-btn-inactive"); _btnNetwork.AddToClassList("tab-btn-active");
@@ -422,7 +432,7 @@ namespace VixenTools.Editor
         }
 
         // =========================================================================
-        // BUTTON GRIDS (Core Modules, Network, Support)
+        // BUTTON GRIDS (Core Modules, Network, Support, Supported Modules)
         // =========================================================================
 
         private void RenderCoreModules()
@@ -489,9 +499,57 @@ namespace VixenTools.Editor
                 "Omni-Matrix diagnostic spider. Full ecosystem audits for ProTV, TXL, IwaSync3, video pipelines, Udon persistence, and shader replacement matrices.")
             };
 
-            // Assuming RenderActionGrid supports rich text on the generated buttons (enableRichText = true on the label)
             RenderActionGrid("WORLD PIPELINE TOOLS", "#ff00aa", worldList);
 #endif
+        }
+
+        private void RenderSupportedModules()
+        {
+            string markdown = @"
+The **VixenTools Architecture** is engineered to interoperate flawlessly with industry-standard third-party modules. The World Engine and Avatar Validators actively audit, scan, and protect these ecosystems natively.
+";
+            ParseMarkdownAndInject(markdown, _contentContainer);
+
+            var list = new List<(System.Action action, string title, string desc)>
+            {
+                (() => Application.OpenURL("https://protv.dev/"), 
+                    "ProTV (Techanon)", 
+                    "Comprehensive pipeline auditing, GSV conflict resolution, and AudioLink topology handshakes."),
+
+                (() => Application.OpenURL("https://github.com/llealloo/audiolink"), 
+                    "AudioLink", 
+                    "Reflective extraction of internal FFT textures, orphan detection, and global whitelist protection."),
+
+                (() => Application.OpenURL("https://ltcgi.dev/"), 
+                    "LTCGI", 
+                    "Real-time polygonal area lighting matrices, ghost screen eradication, and bake cache deadlock resolution."),
+
+                (() => Application.OpenURL("https://xtlcdn.github.io/VizVid/"), 
+                    "VizVid (VVMW)", 
+                    "Comprehensive video pipeline analysis, interface decoupling checks, and Quest fallback validation."),
+
+                (() => Application.OpenURL("https://github.com/vrctxl/VideoTXL"), 
+                    "Video TXL", 
+                    "CRT render ecosystem validation, GC sink detection, and Playlist Queue access control integration."),
+
+                (() => Application.OpenURL("https://booth.pm/en/items/2666275"), 
+                    "iwaSync3", 
+                    "Network sync frequency tuning, blinding emissive bounds detection, and global 2D audio isolation."),
+
+                (() => Application.OpenURL("https://rinvo.booth.pm/items/5757644"), 
+                    "YouTube Search (Rinvo)", 
+                    "Autonomous video player target linking, UI architectural decoupling, and API pool size validation."),
+
+                (() => Application.OpenURL("https://github.com/REDSIM/VRCLightVolumes"), 
+                    "VRC Light Volumes", 
+                    "Compute load detection, sphere threshold optimization, and TVGI/AudioLink strobe safety enforcement."),
+
+                (() => Application.OpenURL("https://github.com/AcChosen/VR-Stage-Lighting"), 
+                    "VR Stage Lighting", 
+                    "Regex-based heuristic protection and DMX audit support.")
+            };
+
+            RenderActionGrid("Ecosystem Integrations", "#00e5ff", list);
         }
 
         private void RenderNetwork()

@@ -485,6 +485,69 @@ namespace VixenTools.Editor
             });
         }
 
+        // ====================================================================
+        // KINEMATIC ISOLATION & PROTECTION MATRIX
+        // ====================================================================
+
+        /// <summary>
+        /// Intelligently maps Humanoid Avatar bones (and their entire descendent hierarchies) 
+        /// to specific SMR bone indices. Essential for protecting delicate features like 
+        /// hands, face, and jaw from the welder.
+        /// </summary>
+        public static HashSet<int> GenerateProtectedBoneIndices(Animator animator, SkinnedMeshRenderer smr, params HumanBodyBones[] protectedHumanBones)
+        {
+            HashSet<int> protectedIndices = new HashSet<int>();
+            
+            if (animator == null || !animator.isHuman || smr == null) 
+            {
+                Debug.LogWarning("[VixenTools] Warning: Missing Animator, Non-Humanoid Rig, or missing SMR. Returning empty protection matrix.");
+                return protectedIndices;
+            }
+
+            // 1. Gather all Transforms that need protection (Base bone + all recursive children)
+            HashSet<Transform> protectedTransforms = new HashSet<Transform>();
+
+            foreach (var humanBone in protectedHumanBones)
+            {
+                Transform boneTransform = animator.GetBoneTransform(humanBone);
+                if (boneTransform != null)
+                {
+                    // Traverse and collect the entire hierarchy under this bone
+                    CollectTransformsRecursive(boneTransform, protectedTransforms);
+                }
+                else
+                {
+                    Debug.LogWarning($"[VixenTools] HumanBodyBone {humanBone} not mapped in Animator.");
+                }
+            }
+
+            // 2. Map Physical Transforms to the SMR's internal bone array indices
+            Transform[] smrBones = smr.bones;
+            for (int i = 0; i < smrBones.Length; i++)
+            {
+                if (smrBones[i] != null && protectedTransforms.Contains(smrBones[i]))
+                {
+                    protectedIndices.Add(i);
+                }
+            }
+
+            Debug.Log($"[VixenTools] Kinematic Protection Matrix generated: {protectedIndices.Count} structural bones locked.");
+            return protectedIndices;
+        }
+
+        /// <summary>
+        /// Recursively spiders down a transform hierarchy to ensure all child joints 
+        /// (e.g., finger joints, ear pivots, hair roots) are caught in the protection net.
+        /// </summary>
+        private static void CollectTransformsRecursive(Transform current, HashSet<Transform> collection)
+        {
+            collection.Add(current);
+            foreach (Transform child in current)
+            {
+                CollectTransformsRecursive(child, collection);
+            }
+        }
+
         /// <summary>
         /// Evaluates a BoneWeight struct to determine which bone has the highest 
         /// structural influence over the vertex. Used for kinematic isolation.

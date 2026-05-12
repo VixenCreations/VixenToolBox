@@ -290,33 +290,13 @@ namespace VixenTools.Editor
                     Execute = () => {
                         int originalTotal = 0;
                         int newTotal = 0;
-
-                        HashSet<Transform> protectedBoneTransforms = new HashSet<Transform>();
-                        if (animator != null && animator.isHuman)
-                        {
-                            Transform shieldRoot = animator.GetBoneTransform(HumanBodyBones.Neck);
-                            if (shieldRoot == null) shieldRoot = animator.GetBoneTransform(HumanBodyBones.Head);
-                            
-                            if (shieldRoot != null)
-                            {
-                                foreach (var t in shieldRoot.GetComponentsInChildren<Transform>(true)) 
-                                {
-                                    string n = t.name.ToLower();
-                                    // Protects the face, but explicitly leaves hair/fluff vulnerable to the Decimator
-                                    if (!n.Contains("hair") && !n.Contains("ear") && !n.Contains("fluff"))
-                                    {
-                                        protectedBoneTransforms.Add(t);
-                                    }
-                                }
-                            }
-                        }
-
                         string[] shieldKeywords = { "eye", "visor", "lens", "blush", "face", "mouth", "teeth", "pupil", "iris" };
 
                         foreach (var smr in heavyMeshes)
                         {
                             originalTotal += smr.sharedMesh.vertexCount;
                             
+                            // 1. Map protected material slots
                             HashSet<int> protectedSlots = new HashSet<int>();
                             for (int m = 0; m < smr.sharedMaterials.Length; m++)
                             {
@@ -324,16 +304,21 @@ namespace VixenTools.Editor
                                 if (mat != null && shieldKeywords.Any(k => mat.name.ToLower().Contains(k))) protectedSlots.Add(m);
                             }
 
+                            // 2. Build 4D-Chess Kinematic Protection Matrix
                             HashSet<int> protectedBoneIndices = new HashSet<int>();
-                            if (smr.bones != null)
+                            if (animator != null && animator.isHuman)
                             {
-                                for (int b = 0; b < smr.bones.Length; b++)
-                                {
-                                    if (smr.bones[b] != null && protectedBoneTransforms.Contains(smr.bones[b])) protectedBoneIndices.Add(b);
-                                }
+                                protectedBoneIndices = VixenMeshPatcher.GenerateProtectedBoneIndices(
+                                    animator, 
+                                    smr, 
+                                    HumanBodyBones.Head, 
+                                    HumanBodyBones.Neck,
+                                    HumanBodyBones.LeftHand, 
+                                    HumanBodyBones.RightHand
+                                );
                             }
 
-                            // Engage the Multipass Microwelder (EXTREME PRECISION)
+                            // 3. Engage the Multipass Microwelder (EXTREME PRECISION)
                             VixenMeshPatcher.MultipassTargetedWeld(
                                 smr, 
                                 targetTriangles: 14500, 
