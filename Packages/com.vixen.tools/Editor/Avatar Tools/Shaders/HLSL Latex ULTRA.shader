@@ -76,12 +76,10 @@ Shader "VixenTools/Latex Suit Ultra"
         #pragma shader_feature_local AL_ENABLE
         #pragma shader_feature_local LTCGI_ENABLE
 
-        // Unity includes
         #include "UnityPBSLighting.cginc"
         #include "Tessellation.cginc"
         #include "UnityCG.cginc"
 
-        // Light Volumes include (project/package path)
         #if defined(LIGHTVOLUMES_ENABLE)
             #include "Packages/com.vixencreations.vixens-toolbox/Editor/Avatar Tools/Shaders/cginc/LightVolumes.cginc"
         #endif
@@ -102,7 +100,7 @@ Shader "VixenTools/Latex Suit Ultra"
             float3 LTCGINormal;     
             float3 WorldPos; 
             float2 UV;
-            float3x3 WorldToTangent; // Stored to pass to lighting function
+            float3x3 WorldToTangent;
             
             half3 Emission;
             half3 Matcap;
@@ -153,12 +151,8 @@ Shader "VixenTools/Latex Suit Ultra"
             v.texcoord1.xyz = _WorldSpaceCameraPos.xyz - worldPos;
         }
 
-        // ==========================================
-        // HIGH-FIDELITY GRADIENT RAYMARCHING
-        // ==========================================
         float2 ParallaxRaymarching(float2 uv, float3 viewDirTangent)
         {
-            // Calculate step bounds safely
             float parallaxLimit = -length(viewDirTangent.xy) / max(viewDirTangent.z, 0.001);
             parallaxLimit *= _Parallax;
 
@@ -168,7 +162,6 @@ Shader "VixenTools/Latex Suit Ultra"
             int numSteps = (int)lerp(48.0, 8.0, max(viewDirTangent.z, 0.0));
             float stepSize = 1.0 / (float)numSteps;
 
-            // Extract gradients outside the loop for compiler safety and texture filtering
             float2 dx = ddx(uv);
             float2 dy = ddy(uv);
 
@@ -187,7 +180,6 @@ Shader "VixenTools/Latex Suit Ultra"
                 currentMapHeight = tex2Dgrad(_MetallicGlossMap, uv + currentUVOffset, dx, dy).b;
             }
 
-            // Refine the intersection via interpolation
             float prevLayerHeight = currentLayerHeight + stepSize;
             float prevMapHeight = tex2Dgrad(_MetallicGlossMap, uv + currentUVOffset - stepUVOffset, dx, dy).b;
 
@@ -206,9 +198,9 @@ Shader "VixenTools/Latex Suit Ultra"
             half nv = saturate(dot(s.Normal, viewDir));
             float lh = saturate(dot(light.dir, halfDir));
 
-            // ==========================================
-            // TRUE TANGENT-SPACE MICRO-SHADOWING
-            // ==========================================
+            // Smooth easing of direct light near the light boundary to avoid "popping"
+            half nlSmooth = smoothstep(0.0, 0.15, nl);
+
             float shadowTrace = 1.0;
             if (nl > 0.0) {
                 float3 lightDirTangent = mul(s.WorldToTangent, light.dir);
@@ -219,6 +211,7 @@ Shader "VixenTools/Latex Suit Ultra"
             half normalShadowMask = shadowTrace;
             
             half cc_nl = saturate(dot(s.ClearcoatNormal, light.dir)) * normalShadowMask;
+            half cc_nlSmooth = smoothstep(0.0, 0.15, cc_nl);
             float cc_nh = saturate(dot(s.ClearcoatNormal, halfDir));
             half cc_nv = saturate(dot(s.ClearcoatNormal, viewDir));
 
@@ -255,13 +248,14 @@ Shader "VixenTools/Latex Suit Ultra"
             half ccSurfaceReduction = 1.0 - ccRoughness * ccPerceptualRoughness * (0.6 - 0.08 * ccPerceptualRoughness);
             half3 indirectClearcoatSpec = ccSurfaceReduction * clearcoatEnv * clearcoatFresnel * specOcc;
 
-            matcap = matcap * lerp(float3(1,1,1), saturate(gi.diffuse + light.color * nl), _MatCapLighting) * specOcc;
+            matcap = matcap * lerp(float3(1,1,1), saturate(gi.diffuse + light.color * nlSmooth), _MatCapLighting) * specOcc;
             
-            half3 color =   gi.diffuse * diffColor + diffColor * light.color * nl * normalShadowMask
-                          + specularTerm * specColor * light.color * nl * energyConservation * normalShadowMask
+            half3 color =   gi.diffuse * diffColor
+                          + diffColor * light.color * nlSmooth * normalShadowMask
+                          + specularTerm * specColor * light.color * nlSmooth * energyConservation * normalShadowMask
                           + indirectBaseSpec
                           + saturate(matcap) * energyConservation
-                          + clearcoatTerm * clearcoatFresnel * finalClearcoatColor * light.color * cc_nl
+                          + clearcoatTerm * clearcoatFresnel * finalClearcoatColor * light.color * cc_nlSmooth
                           + indirectClearcoatSpec * finalClearcoatColor; 
 
             return half4(color, 1);
@@ -273,7 +267,6 @@ Shader "VixenTools/Latex Suit Ultra"
             gi = UnityGI_Base(data, s.Occlusion, s.Normal);
 
             #if defined(LIGHTVOLUMES_ENABLE)
-                // Use Light Volumes API: sample SH and evaluate diffuse contribution
                 if (LightVolumesEnabled() > 0.5)
                 {
                     float3 lv_L0 = 0;
@@ -281,13 +274,10 @@ Shader "VixenTools/Latex Suit Ultra"
                     float3 lv_L1g = 0;
                     float3 lv_L1b = 0;
 
-                    // Sample SH (falls back to Unity probes if Light Volumes not present)
                     LightVolumeSH(data.worldPos, lv_L0, lv_L1r, lv_L1g, lv_L1b);
 
-                    // Evaluate color from SH using the surface/world normal (use s.Normal here)
                     float3 lvColor = LightVolumeEvaluate(s.Normal, lv_L0, lv_L1r, lv_L1g, lv_L1b);
 
-                    // Blend into indirect diffuse (optionally multiply by albedo in lighting pass)
                     gi.indirect.diffuse = lerp(gi.indirect.diffuse, lvColor, _LightVolumeIntensity);
                 }
             #endif
@@ -332,7 +322,6 @@ Shader "VixenTools/Latex Suit Ultra"
                 c.rgb += ltcgi_diffuse * _LTCGIIntensity * s.Occlusion * s.Albedo; 
             #endif
 
-            // Add Light Volumes specular and diffuse contributions (if available)
             #if defined(LIGHTVOLUMES_ENABLE)
                 if (LightVolumesEnabled() > 0.5)
                 {
@@ -343,11 +332,9 @@ Shader "VixenTools/Latex Suit Ultra"
 
                     LightVolumeSH(s.WorldPos, lv_L0, lv_L1r, lv_L1g, lv_L1b);
 
-                    // Diffuse: evaluate and add as emission multiplied by albedo (recommended)
                     float3 lvDiffuse = LightVolumeEvaluate(s.Normal, lv_L0, lv_L1r, lv_L1g, lv_L1b);
                     c.rgb += lvDiffuse * s.Albedo * _LightVolumeIntensity;
 
-                    // Specular: add colored speculars (do NOT multiply by albedo)
                     float3 lvSpec = LightVolumeSpecular(s.Albedo, s.Smoothness, s.Metallic, normalize(s.Normal), normalize(viewDir), lv_L0, lv_L1r, lv_L1g, lv_L1b);
                     float lvspecOcc = lerp(1.0, s.Occlusion, _SpecularOcclusion);
                     c.rgb += lvSpec * _LightVolumeIntensity * lvspecOcc;
@@ -362,11 +349,7 @@ Shader "VixenTools/Latex Suit Ultra"
         {
             o.WorldPos = IN.worldPos;
 
-            // ==========================================
-            // THE FIX: Explicit Memory Initialization
-            // ==========================================
-            // We must assign o.Normal before calling WorldNormalVector, 
-            // otherwise it pulls uninitialized garbage memory.
+            // Explicit initialization to avoid garbage before WorldNormalVector
             o.Normal = float3(0, 0, 1);
 
             float3 viewDirWorld = normalize(IN.viewDir);
@@ -377,11 +360,10 @@ Shader "VixenTools/Latex Suit Ultra"
             float3x3 worldToTangent = float3x3(tangentWorld, bitangentWorld, normalWorld);
             float3 viewDirTangent = mul(worldToTangent, viewDirWorld);
             
-            // Store matrix for the Lighting pass
             o.WorldToTangent = worldToTangent;
             
             float2 finalUV = ParallaxRaymarching(IN.uv_MainTex, viewDirTangent);
-            o.UV = finalUV; // Store UV for the Lighting pass
+            o.UV = finalUV;
 
             fixed4 c = tex2D(_MainTex, finalUV) * _Color;
             clip(c.a - _CutOff);
