@@ -6,6 +6,27 @@ All notable changes to the VixenToolBox project will be documented in this file.
 
 ***
 
+## [2.0.1] - 2026-05-12
+
+### Added
+
+* **Dynamic Markdown Architecture (Vixen Hub):** Integrated `HOWITWORKS.md` (Metrics Engine) and `SHADERSETUP.md` (Shader Pipeline) directly into the Vixen Hub. Offloads heavy UI styling by utilizing a custom regex Markdown-to-UIElements parser, allowing real-time documentation updates without triggering C# recompiles.
+* **Serialization Ghost Detection (World Engine):** Engineered a reflection bridge that cross-references physical `UdonBehaviour` components against their underlying C# `[UdonBehaviourSyncMode]` attributes. Automatically detects and offers 1-click fixes for inspector-level "Continuous Sync" ghosts that waste network IDs on explicitly declared `NoVariableSync` scripts.
+* **Context-Aware Network Heuristics:** Upgraded the Udon auditor to cross-reference physics topologies. Unjustified Continuous Sync warnings are now intelligently suppressed if the target object contains physical movement drivers like `Rigidbody` or `VRC_Pickup`.
+
+### Changed
+
+* **Zero-Allocation UASM Parsing:** Refactored Udon compute instruction counting to utilize a memory-safe `StringReader` stream, eliminating massive string array allocations and preventing Garbage Collection (GC) spikes on heavy scripts.
+* **O(1) Program Source Memoization:** Replaced brute-force scene traversal in `GetUdonTypeNameSafe` with a static reflection cache and `AbstractUdonProgramSource` dictionary. Instanced prefabs (e.g., hundreds of toggle buttons sharing the same script) now resolve instantly after the first script analysis, drastically cutting O(N) execution time.
+* **Strict Active-State Compute Filtering (Dashboard):** Hardened the Heuristics Dashboard to strictly enforce `&& object.enabled && object.gameObject.activeInHierarchy` across all compute matrices (Renderers, Lights, LTCGI, AudioLink, Video Players, Probes). Guarantees the Threat Level exactly mirrors the actively rendering pipeline without being skewed by disabled object pooling or hidden rooms.
+* **Isolated Lighting Metrics:** Extracted "Active Scene Lights" into an independent, pre-filtered metric on the Dashboard to provide granular visibility into scene-wide light limits and draw-call multiplication.
+
+### Fixed
+
+* **Cache Poisoning Desyncs (Heuristics Dashboard):** Fixed a critical state-poisoning bug where `_sceneObjectCache` queries for inactive objects would overwrite active queries. Upgraded the dictionary key to a `(Type, bool)` Tuple, guaranteeing perfect mathematical isolation.
+* **AppDomain Execution Freezes:** Completely eliminated Editor thread freezing caused by recursive `AppDomain.CurrentDomain.GetAssemblies()` calls during massive Udon script resolutions.
+* **Disabled Object False Positives (Spider):** Patched the Matrix Spider to properly evaluate `.enabled` states on components. It now silently ignores explicitly disabled Lights and Reflection Probes, perfectly aligning Matrix warnings with the Dashboard's compute math.
+
 ## [2.0.0] - 2026-05-12
 
 ### Added

@@ -771,37 +771,66 @@ namespace VixenTools.Editor
             return null;
         }
 
+        private static System.Reflection.MethodInfo _getUdonTypeMethod;
+        private static bool _udonReflectionInitialized = false;
+
+        // Instance-level cache to deduplicate lookups during a scan
+        private Dictionary<VRC.Udon.AbstractUdonProgramSource, string> _udonTypeNameCache = new Dictionary<VRC.Udon.AbstractUdonProgramSource, string>();
+
         private string GetUdonTypeNameSafe(UdonBehaviour udon)
         {
-            if (udon == null) return string.Empty;
+            // Fast exit if there is no program source to identify
+            if (udon == null || udon.programSource == null) return string.Empty;
 
-            // Attempt 1: Safe reflection into UdonSharpEditorUtility (Scalable, no hard compile dependency)
-            try
+            // 1. O(1) Memoization: Have we already resolved this exact script asset during this scan?
+            // If you have 500 toggle buttons sharing the same script, 499 of them will instantly return here.
+            if (_udonTypeNameCache.TryGetValue(udon.programSource, out string cachedName))
             {
-                var editorAsm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "UdonSharp.Editor");
-                if (editorAsm != null)
+                return cachedName;
+            }
+
+            // 2. Initialize AppDomain reflection exactly ONCE per Unity session.
+            if (!_udonReflectionInitialized)
+            {
+                try
                 {
-                    Type utilityType = editorAsm.GetType("UdonSharp.Editor.UdonSharpEditorUtility");
-                    if (utilityType != null)
+                    var editorAsm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "UdonSharp.Editor");
+                    if (editorAsm != null)
                     {
-                        var getTypeMethod = utilityType.GetMethod("GetUdonSharpBehaviourType", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-                        if (getTypeMethod != null)
-                        {
-                            Type backingType = getTypeMethod.Invoke(null, new object[] { udon }) as Type;
-                            if (backingType != null) return backingType.FullName;
-                        }
+                        Type utilityType = editorAsm.GetType("UdonSharp.Editor.UdonSharpEditorUtility");
+                        _getUdonTypeMethod = utilityType?.GetMethod("GetUdonSharpBehaviourType", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
                     }
                 }
+                catch (Exception) { /* Fail silently */ }
+                finally
+                {
+                    _udonReflectionInitialized = true;
+                }
             }
-            catch (Exception) { /* Fail silently and let the heuristic fallback take over */ }
 
-            // Attempt 2: Fallback to the physical program asset name (Heuristic)
-            if (udon.programSource != null)
+            string resolvedName = string.Empty;
+
+            // 3. Attempt to invoke the statically cached reflection method
+            if (_getUdonTypeMethod != null)
             {
-                return udon.programSource.name;
+                try
+                {
+                    Type backingType = _getUdonTypeMethod.Invoke(null, new object[] { udon }) as Type;
+                    if (backingType != null) resolvedName = backingType.FullName;
+                }
+                catch (Exception) { /* Let the fallback take over if invocation fails */ }
             }
 
-            return string.Empty;
+            // 4. Heuristic Fallback to the physical program asset name
+            if (string.IsNullOrEmpty(resolvedName))
+            {
+                resolvedName = udon.programSource.name;
+            }
+
+            // 5. Cache the final result to protect the CPU on all future iterations
+            _udonTypeNameCache[udon.programSource] = resolvedName;
+
+            return resolvedName;
         }
 
         // Struct to hold the validation results
@@ -2987,26 +3016,106 @@ namespace VixenTools.Editor
             Type cacheType = editorAsm?.GetType("UdonSharp.UdonSharpEditorCache");
             var cache = cacheType?.GetProperty("Instance", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)?.GetValue(null);
             var getUasm = cacheType?.GetMethod("GetUASMStr", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            
+            Type udbSyncModeAttrType = GetTypeSafe("UdonSharp.UdonBehaviourSyncModeAttribute");
 
             foreach (var udon in GetCachedObjects<UdonBehaviour>(true))
             {
-                if (udon.SyncMethod == VRC.SDKBase.Networking.SyncType.Continuous)
-                    LogDiagnostic("UDON BANDWIDTH: CONTINUOUS SYNC", "Continuous Sync Active", $"'{udon.gameObject.name}' consumes high bandwidth. Verify if manual sync is possible.", "#ff00aa", udon.gameObject);
+                // === C# SOURCE-OF-TRUTH CROSS-REFERENCE ===
+                bool isDeclaredNoSync = false;
+                string typeName = GetUdonTypeNameSafe(udon);
+                Type backingType = GetTypeSafe(typeName);
 
+                if (backingType != null && udbSyncModeAttrType != null)
+                {
+                    var attributes = backingType.GetCustomAttributes(udbSyncModeAttrType, true);
+                    if (attributes.Length > 0)
+                    {
+                        var attr = attributes[0];
+                        
+                        // 4D Chess: UdonSharp API volatility protection. 
+                        // We check for both a Property and a Field, as internal implementations shift between SDK versions.
+                        var propInfo = udbSyncModeAttrType.GetProperty("behaviourSyncMode", BindingFlags.Public | BindingFlags.Instance);
+                        var fieldInfo = udbSyncModeAttrType.GetField("behaviourSyncMode", BindingFlags.Public | BindingFlags.Instance);
+                        
+                        string syncModeStr = null;
+
+                        if (propInfo != null)
+                        {
+                            syncModeStr = propInfo.GetValue(attr)?.ToString();
+                        }
+                        else if (fieldInfo != null)
+                        {
+                            syncModeStr = fieldInfo.GetValue(attr)?.ToString();
+                        }
+
+                        if (!string.IsNullOrEmpty(syncModeStr) && (syncModeStr == "NoVariableSync" || syncModeStr == "None"))
+                        {
+                            isDeclaredNoSync = true;
+                        }
+                    }
+                }
+
+                // === CONTINUOUS SYNC HEURISTICS ===
+                if (udon.SyncMethod == VRC.SDKBase.Networking.SyncType.Continuous)
+                {
+                    if (isDeclaredNoSync)
+                    {
+                        LogDiagnostic("UDON BANDWIDTH: SERIALIZATION DESYNC", "Ghost Continuous Sync", 
+                            $"'{udon.gameObject.name}' is set to Continuous in the inspector, but its C# script '{typeName}' explicitly declares NoVariableSync. This is a Unity serialization ghost wasting network IDs. Click Fix to align the inspector to the code.", 
+                            "#ff00aa", udon.gameObject, () => {
+                                Undo.RecordObject(udon, "Align Udon Sync Mode");
+                                // 4 is the integer value for SyncType.None in modern VRChat SDKs. 
+                                // We cast to prevent compiler errors on older SDKs where 'None' didn't exist in the enum.
+                                udon.SyncMethod = (VRC.SDKBase.Networking.SyncType)4; 
+                                PrefabUtility.RecordPrefabInstancePropertyModifications(udon);
+                            });
+                    }
+                    else
+                    {
+                        // Only flag actual Continuous syncs if they lack physical movement components
+                        bool hasPhysics = udon.GetComponent<Rigidbody>() != null;
+                        bool hasPickup = udon.GetComponent<VRC.SDKBase.VRC_Pickup>() != null;
+
+                        if (!hasPhysics && !hasPickup)
+                        {
+                            LogDiagnostic("UDON BANDWIDTH: UNJUSTIFIED CONTINUOUS SYNC", "Continuous Sync Active", 
+                                $"'{udon.gameObject.name}' consumes high bandwidth but lacks a Rigidbody/Pickup. Verify if manual sync is possible.", 
+                                "#ffaa00", udon.gameObject);
+                        }
+                    }
+                }
+
+                // === COMPUTE INSTRUCTION HEURISTICS ===
                 if (udon.programSource is UdonSharpProgramAsset uAsset && getUasm != null && cache != null)
                 {
                     string uasm = (string)getUasm.Invoke(cache, new object[] { uAsset });
                     if (!string.IsNullOrEmpty(uasm))
                     {
-                        int count = uasm.Split('\n').Count(l => l.Contains(",") || l.Trim().EndsWith("EXTERN"));
-                        if (count > 4000) LogDiagnostic("UDON COMPUTE: HEAVY INSTRUCTIONS", "Heavy Instruction Count", $"'{uAsset.name}' executes {count} UASM lines.", "#ffaa00", udon.gameObject);
+                        // Micro-optimization: Avoid .Split allocating a massive string array for heavy scripts
+                        int count = 0;
+                        using (var reader = new System.IO.StringReader(uasm))
+                        {
+                            string line;
+                            while ((line = reader.ReadLine()) != null)
+                            {
+                                if (line.Contains(',') || line.TrimEnd().EndsWith("EXTERN")) count++;
+                            }
+                        }
+                        
+                        if (count > 4000) LogDiagnostic("UDON COMPUTE: HEAVY INSTRUCTIONS", "Heavy Instruction Count", $"'{uAsset.name}' executes ~{count} UASM lines.", "#ffaa00", udon.gameObject);
                     }
                 }
             }
 
             foreach (var objSync in GetCachedObjects<VRCObjectSync>(true))
             {
-                LogDiagnostic("UDON PHYSICS: OBJECT SYNC", "VRC Object Sync", $"'{objSync.gameObject.name}' transmits physics state over network.", "#00ff88", objSync.gameObject);
+                // Ensure we don't flag static objects just because they have VRCObjectSync attached
+                var rb = objSync.GetComponent<Rigidbody>();
+                if (rb == null || rb.isKinematic)
+                {
+                    LogDiagnostic("UDON PHYSICS: STATIC OBJECT SYNC", "Suspicious Object Sync", $"'{objSync.gameObject.name}' transmits physics state but has no active Rigidbody.", "#00ff88", objSync.gameObject);
+                }
             }
         }
 
@@ -3016,6 +3125,9 @@ namespace VixenTools.Editor
             foreach (var light in GetCachedObjects<Light>(true))
             {
                 if (light == null) continue; 
+                
+                // 4D-CHESS FIX: Ignore lights that are explicitly disabled in the hierarchy or component
+                if (!light.enabled || !light.gameObject.activeInHierarchy) continue;
                 
                 var component = (Component)light;
                 
@@ -3053,6 +3165,9 @@ namespace VixenTools.Editor
             foreach (var probe in GetCachedObjects<ReflectionProbe>(true))
             {
                 if (probe == null) continue;
+
+                // 4D-CHESS FIX: Ignore disabled reflection probes to prevent false positives
+                if (!probe.enabled || !probe.gameObject.activeInHierarchy) continue;
 
                 var component = (Component)probe;
 
@@ -4025,7 +4140,7 @@ namespace VixenTools.Editor
                     string fullPathForResize = System.IO.Path.GetFullPath(path);
 
                     LogDiagnostic("TEXTURES & VRAM", $"{targetMax}+ Texture Nuke",
-                        $"'{tex.name}' is {srcWidth}x{srcHeight}. Physically crushing to {targetMax}.",
+                        $"'{tex.name}' is {srcWidth}x{srcHeight}. Image Magick Will Resize to {targetMax}.",
                         "#ff00aa", tex, () =>
                         {
                             EnqueueWork(() => {

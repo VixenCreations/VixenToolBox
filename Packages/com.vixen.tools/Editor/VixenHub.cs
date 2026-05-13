@@ -137,7 +137,7 @@ namespace VixenTools.Editor
 
     public class VixenHub : EditorWindow
     {
-        private enum TabMode { Dashboard, CoreModules, SupportedModules, Network, Support, Changelog }
+        private enum TabMode { Dashboard, CoreModules, SupportedModules, ShaderDocs, MetricsDocs, Network, Support, Changelog }
         private TabMode _currentMode = TabMode.Dashboard;
 
         private const string PackageRoot = "Packages/com.vixencreations.vixens-toolbox/";
@@ -162,6 +162,8 @@ namespace VixenTools.Editor
         private Button _btnDashboard;
         private Button _btnCoreModules;
         private Button _btnSupportedModules;
+        private Button _btnShaderDocs;
+        private Button _btnMetricsDocs;
         private Button _btnNetwork;
         private Button _btnSupport;
         private Button _btnChangelog;
@@ -178,21 +180,18 @@ namespace VixenTools.Editor
             window.Show();
         }
 
-        // --- NEW: Dedicated Changelog Launcher ---
         public static void ShowChangelogWindow()
         {
             var window = GetWindow<VixenHub>("Vixen Hub");
             window.minSize = new Vector2(450, 600);
             window.Show();
             
-            // Force the UI to route to the changelog tab after initialization
             window.OpenChangelogTab(); 
         }
 
-        // --- NEW: Public accessor to bypass private enumerators ---
         public void OpenChangelogTab()
         {
-            if (_contentContainer != null) // Safety check to ensure GUI is initialized
+            if (_contentContainer != null)
             {
                 SwitchMode(TabMode.Changelog);
             }
@@ -214,7 +213,6 @@ namespace VixenTools.Editor
                 Match vMatch = Regex.Match(json, @"""version""\s*:\s*""([^""]+)""");
                 if (vMatch.Success) _packageVersion = vMatch.Groups[1].Value;
 
-                // THE FIX: Expanding the regex to catch com.vrchat.base, avatars, or worlds.
                 Match sdkMatch = Regex.Match(json, @"""com\.vrchat\.(?:base|avatars|worlds)""\s*:\s*""([^""]+)""");
                 if (sdkMatch.Success) _sdkVersion = sdkMatch.Groups[1].Value.Replace("^", "").Replace("~", "");
             }
@@ -275,17 +273,23 @@ namespace VixenTools.Editor
 
             // --- TABS NAVIGATION ---
             var tabContainer = new VisualElement { name = "tab-container" };
+            tabContainer.style.flexWrap = Wrap.Wrap; 
+            tabContainer.style.flexDirection = FlexDirection.Row;
             
-            _btnDashboard = new Button(() => SwitchMode(TabMode.Dashboard)) { text = "Ecosystem Architecture" };
+            _btnDashboard = new Button(() => SwitchMode(TabMode.Dashboard)) { text = "Architecture" };
             _btnCoreModules = new Button(() => SwitchMode(TabMode.CoreModules)) { text = "Core Modules" };
             _btnSupportedModules = new Button(() => SwitchMode(TabMode.SupportedModules)) { text = "Supported Modules" };
-            _btnNetwork = new Button(() => SwitchMode(TabMode.Network)) { text = "Network Routing" };
-            _btnSupport = new Button(() => SwitchMode(TabMode.Support)) { text = "Support the Developer" };
-            _btnChangelog = new Button(() => SwitchMode(TabMode.Changelog)) { text = "Release Changelogs" };
+            _btnShaderDocs = new Button(() => SwitchMode(TabMode.ShaderDocs)) { text = "Shader Pipeline" };
+            _btnMetricsDocs = new Button(() => SwitchMode(TabMode.MetricsDocs)) { text = "Metrics Engine" };
+            _btnNetwork = new Button(() => SwitchMode(TabMode.Network)) { text = "Network" };
+            _btnSupport = new Button(() => SwitchMode(TabMode.Support)) { text = "Support" };
+            _btnChangelog = new Button(() => SwitchMode(TabMode.Changelog)) { text = "Changelogs" };
             
             _btnDashboard.AddToClassList("tab-btn");
             _btnCoreModules.AddToClassList("tab-btn");
             _btnSupportedModules.AddToClassList("tab-btn");
+            _btnShaderDocs.AddToClassList("tab-btn");
+            _btnMetricsDocs.AddToClassList("tab-btn");
             _btnNetwork.AddToClassList("tab-btn");
             _btnSupport.AddToClassList("tab-btn");
             _btnChangelog.AddToClassList("tab-btn");
@@ -293,6 +297,8 @@ namespace VixenTools.Editor
             tabContainer.Add(_btnDashboard);
             tabContainer.Add(_btnCoreModules);
             tabContainer.Add(_btnSupportedModules);
+            tabContainer.Add(_btnShaderDocs);
+            tabContainer.Add(_btnMetricsDocs);
             tabContainer.Add(_btnNetwork);
             tabContainer.Add(_btnSupport);
             tabContainer.Add(_btnChangelog);
@@ -329,6 +335,8 @@ namespace VixenTools.Editor
             _btnDashboard.RemoveFromClassList("tab-btn-active"); _btnDashboard.AddToClassList("tab-btn-inactive");
             _btnCoreModules.RemoveFromClassList("tab-btn-active"); _btnCoreModules.AddToClassList("tab-btn-inactive");
             _btnSupportedModules.RemoveFromClassList("tab-btn-active"); _btnSupportedModules.AddToClassList("tab-btn-inactive");
+            _btnShaderDocs.RemoveFromClassList("tab-btn-active"); _btnShaderDocs.AddToClassList("tab-btn-inactive");
+            _btnMetricsDocs.RemoveFromClassList("tab-btn-active"); _btnMetricsDocs.AddToClassList("tab-btn-inactive");
             _btnNetwork.RemoveFromClassList("tab-btn-active"); _btnNetwork.AddToClassList("tab-btn-inactive");
             _btnSupport.RemoveFromClassList("tab-btn-active"); _btnSupport.AddToClassList("tab-btn-inactive");
             _btnChangelog.RemoveFromClassList("tab-btn-active"); _btnChangelog.AddToClassList("tab-btn-inactive");
@@ -351,6 +359,16 @@ namespace VixenTools.Editor
                     _btnSupportedModules.RemoveFromClassList("tab-btn-inactive"); _btnSupportedModules.AddToClassList("tab-btn-active");
                     _tabDescription.text = "Explore third-party integrations and assets natively supported and audited by the VixenTools ecosystem.";
                     RenderSupportedModules();
+                    break;
+                case TabMode.ShaderDocs:
+                    _btnShaderDocs.RemoveFromClassList("tab-btn-inactive"); _btnShaderDocs.AddToClassList("tab-btn-active");
+                    _tabDescription.text = "Comprehensive architecture breakdown of the Latex Suit Ultra shader pipeline, texture packing, and ecosystem integrations.";
+                    RenderShaderDocs();
+                    break;
+                case TabMode.MetricsDocs:
+                    _btnMetricsDocs.RemoveFromClassList("tab-btn-inactive"); _btnMetricsDocs.AddToClassList("tab-btn-active");
+                    _tabDescription.text = "Transparent breakdown of the 4D-Chess heuristic multipliers powering the World Profiler.";
+                    RenderMetricsDocs();
                     break;
                 case TabMode.Network:
                     _btnNetwork.RemoveFromClassList("tab-btn-inactive"); _btnNetwork.AddToClassList("tab-btn-active");
@@ -429,6 +447,22 @@ namespace VixenTools.Editor
             if (File.Exists(fullPath)) return File.ReadAllText(fullPath);
 
             return $"### Error: File Not Found\nCould not locate `{fileName}` at `{PackageRoot}`. Ensure the VPM package is installed correctly.";
+        }
+
+        // =========================================================================
+        // DOCUMENTATION LOADERS
+        // =========================================================================
+        
+        private void RenderMetricsDocs()
+        {
+            string markdown = LoadMarkdownFile("HOWITWORKS.md");
+            ParseMarkdownAndInject(markdown, _contentContainer);
+        }
+
+        private void RenderShaderDocs()
+        {
+            string markdown = LoadMarkdownFile("SHADERSETUP.md");
+            ParseMarkdownAndInject(markdown, _contentContainer);
         }
 
         // =========================================================================
@@ -622,9 +656,9 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
             _contentContainer.Add(grid);
         }
 
-        // =========================================================================
-        // MARKDOWN PARSER (Dashboard & Changelog)
-        // =========================================================================
+        // ================
+        // MARKDOWN PARSER
+        // ================
 
         private void ParseMarkdownAndInject(string text, VisualElement container)
         {
