@@ -362,7 +362,7 @@ namespace VixenTools.Editor
                     break;
                 case TabMode.ShaderDocs:
                     _btnShaderDocs.RemoveFromClassList("tab-btn-inactive"); _btnShaderDocs.AddToClassList("tab-btn-active");
-                    _tabDescription.text = "Comprehensive architecture breakdown of the Latex Suit Ultra shader pipeline, texture packing, and ecosystem integrations.";
+                    _tabDescription.text = "Comprehensive architecture breakdown of the VixenWear Latex Ultra shader pipeline, texture packing, and ecosystem integrations.";
                     RenderShaderDocs();
                     break;
                 case TabMode.MetricsDocs:

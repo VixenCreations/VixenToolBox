@@ -1,4 +1,4 @@
-/* Vixen Avatar Validator USS � Native UI Toolkit Integration */
+﻿/* Vixen Avatar Validator USS — Native UI Toolkit Integration */
 
 :root {
     --bg-dark: #141414;
@@ -6,15 +6,15 @@
     
     --color-cyan: #00e5ff;
     --color-pink: #ff00aa;
-    --color-amber: #ffaa00; /* Specifically for pipeline warnings */
-    --color-danger: #ff0033; /* HIGH HAZARD: Bright Neon Red for destructive purges */
+    --color-amber: #ffaa00;
+    --color-danger: #ff0033;
     
     --text-main: #e5e5e5;
     --text-muted: #aaaaaa;
 }
 
 /* =======================================================
-   Base Unity Overrides (Native Style Hijacking)
+   Base Unity Overrides
    ======================================================= */
 .unity-base-field,
 .unity-object-field,
@@ -30,7 +30,7 @@
 }
 
 .unity-base-field__label {
-    min-width: 150px; 
+    min-width: 150px;
     -unity-text-align: middle-left;
 }
 
@@ -51,7 +51,7 @@
     border-color: rgba(0, 229, 255, 0.4);
 }
 
-/* Dropdowns & Enum Fields (Target Rank Matrix) */
+/* Dropdowns & Enum Fields */
 .unity-base-popup-field__input,
 .unity-enum-field__input {
     background-color: var(--bg-panel);
@@ -79,7 +79,10 @@
     -unity-background-image-tint-color: var(--color-cyan);
 }
 
-/* Sliders (Texture Target) */
+/* =======================================================
+   Slider (Legal Hover Glow Simulation)
+   ======================================================= */
+
 .unity-slider-int .unity-base-slider__tracker {
     background-color: #2f2f2f;
     border-color: #111111;
@@ -89,20 +92,25 @@
 
 .unity-slider-int .unity-base-slider__dragger {
     background-color: var(--color-cyan);
-    border-width: 0;
-    border-radius: 2px;
+    border-width: 2px;
+    border-color: transparent;
+    border-radius: 3px;
     width: 12px;
     height: 16px;
     margin-top: -8px;
     transition-duration: 0.15s;
 }
 
+/* Hover glow (USS‑legal version) */
 .unity-slider-int .unity-base-slider__dragger:hover {
     background-color: #ffffff;
-    box-shadow: 0 0 8px var(--color-cyan);
+    border-color: rgba(0, 229, 255, 0.6);
+    border-width: 2px;
 }
 
-/* Custom Toggle Checkboxes for the Optimization Matrix */
+/* =======================================================
+   Custom Toggle Checkboxes
+   ======================================================= */
 .unity-toggle__checkmark {
     background-color: var(--bg-dark);
     border-color: #2f2f2f;
@@ -160,7 +168,7 @@
 }
 
 /* =======================================================
-   Action Buttons (Macro)
+   Action Buttons
    ======================================================= */
 .cyber-action-btn {
     font-size: 16px;
@@ -178,8 +186,8 @@
     border-width: 1px;
 }
 
-.cyan-btn:hover { 
-    background-color: #125b75; 
+.cyan-btn:hover {
+    background-color: #125b75;
     border-color: #00ffff;
 }
 
@@ -195,24 +203,23 @@
     border-color: #ff33bb;
 }
 
-/* DESTRUCTIVE ACTION BUTTON */
 .danger-btn {
-    background-color: #2a0005; /* Deep void red */
+    background-color: #2a0005;
     color: var(--color-danger);
     border-color: var(--color-danger);
     border-width: 1px;
-    text-shadow: 0px 0px 5px rgba(255, 0, 51, 0.5); /* Slight neon glow */
+    text-shadow: 0px 0px 5px rgba(255, 0, 51, 0.5);
 }
 
 .danger-btn:hover {
     background-color: #4d000a;
     border-color: #ff3355;
-    color: #ffffff; /* Text pops to white on hover */
+    color: #ffffff;
     text-shadow: 0px 0px 8px rgba(255, 0, 51, 0.8);
 }
 
 /* =======================================================
-   Data Tags (Micro-Buttons for Locate/Optimize)
+   Data Tags
    ======================================================= */
 .data-tag-btn {
     background-color: #1e1e1e;
@@ -256,7 +263,6 @@
     background-color: rgba(255, 170, 0, 0.3);
 }
 
-/* DESTRUCTIVE MICRO-TAG (Component Culling) */
 .data-tag-destructive {
     color: var(--color-danger);
     border-color: var(--color-danger);
@@ -269,7 +275,7 @@
 }
 
 /* =======================================================
-   Validation Results Matrix (Dynamic Topology)
+   Validation Results Matrix
    ======================================================= */
 .md-h1 {
     font-size: 18px;
@@ -352,7 +358,6 @@
     margin-top: 2px;
 }
 
-/* Destructive Task Description Highlight */
 .text-danger {
     color: var(--color-danger);
     -unity-font-style: bold;

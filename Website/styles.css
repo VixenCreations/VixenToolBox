@@ -1077,3 +1077,40 @@ fluent-option {
         width: 100%;
         height: 100%;
     }
+
+/* ==========================================================
+   TOOL MATRIX FLEXBOX FIX
+   ========================================================== */
+.matrix-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+}
+
+/* Each column behaves responsively */
+.matrix-column {
+    flex: 1 1 48%;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+}
+
+    /* Headings and lists spacing */
+    .matrix-column h4 {
+        margin-bottom: 10px;
+    }
+
+    .matrix-column ul {
+        margin: 0;
+        padding-left: 1.25rem;
+    }
+
+/* Responsive collapse for narrow screens */
+@media (max-width: 900px) {
+    .matrix-column {
+        flex: 1 1 100%;
+    }
+}

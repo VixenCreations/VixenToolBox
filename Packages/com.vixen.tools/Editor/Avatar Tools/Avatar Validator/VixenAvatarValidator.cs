@@ -385,6 +385,70 @@ namespace VixenTools.Editor
                 });
             }
 
+            // --- NEW: VIXEN CORE HEURISTICS (TEXTURE OPTIMIZATION & DATA INTEGRITY) ---
+
+            // 1. Mipmap Streaming Validation
+            foreach (var tex in report.UniqueTextures)
+            {
+                if (tex is RenderTexture) continue;
+
+                string texPath = AssetDatabase.GetAssetPath(tex);
+                if (string.IsNullOrEmpty(texPath) || !texPath.StartsWith("Assets/")) continue;
+
+                TextureImporter importer = AssetImporter.GetAtPath(texPath) as TextureImporter;
+                if (importer != null && !importer.streamingMipmaps)
+                {
+                    report.PCPerformanceWarnings.Add(new Anomaly {
+                        Description = $"<b>VRAM Bottleneck:</b> Texture [{tex.name}] lacks Mip Streaming. Causes aggressive VRAM overhead.",
+                        ContextObject = tex,
+                        FixLabel = "ENABLE STREAMING",
+                        AutoFix = () => {
+                            var imp = AssetImporter.GetAtPath(texPath) as TextureImporter;
+                            if (imp != null) { 
+                                imp.streamingMipmaps = true; 
+                                imp.SaveAndReimport(); 
+                            }
+                        }
+                    });
+                }
+            }
+
+            // 2. Deep Shader Inspection: Packed Map sRGB Validation
+            foreach (var mat in allMaterials)
+            {
+                if (mat == null || mat.shader == null) continue;
+
+                if (mat.shader.name == "VixenWear/Latex Ultra")
+                {
+                    Texture packedMap = mat.GetTexture("_MetallicGlossMap");
+                    if (packedMap != null)
+                    {
+                        string texPath = AssetDatabase.GetAssetPath(packedMap);
+                        if (!string.IsNullOrEmpty(texPath))
+                        {
+                            TextureImporter importer = AssetImporter.GetAtPath(texPath) as TextureImporter;
+                            
+                            // Packed PBR maps MUST be linear. sRGB corrupts the structural data.
+                            if (importer != null && importer.sRGBTexture)
+                            {
+                                report.PCPerformanceWarnings.Add(new Anomaly {
+                                    Description = $"<b>Data Corruption:</b> [{mat.name}]'s Packed PBR map ({packedMap.name}) has sRGB enabled. This breaks physical material data.",
+                                    ContextObject = packedMap,
+                                    FixLabel = "FORCE LINEAR",
+                                    AutoFix = () => {
+                                        var imp = AssetImporter.GetAtPath(texPath) as TextureImporter;
+                                        if (imp != null) { 
+                                            imp.sRGBTexture = false; 
+                                            imp.SaveAndReimport(); 
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
             // --- 4. PC PIPELINE MATRIX (RAW DATA & WARNINGS) ---
             var illegalPC = AvatarValidation.FindIllegalComponents(avatarRoot).ToList();
             foreach (var comp in illegalPC)

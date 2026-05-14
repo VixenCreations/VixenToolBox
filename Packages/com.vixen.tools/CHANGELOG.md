@@ -5,6 +5,31 @@
 All notable changes to the VixenToolBox project will be documented in this file.
 
 ***
+## [2.0.3] - 2026-05-14
+
+### Added
+
+* **Semantic Ecosystem Layout (Ecosystem Architecture Page):** Wrapped the entire suite overview in a semantic `<main class="main-wrapper">` container with a dedicated `.page-header`, `.comparison-section`, and `.tools-grid` structure. This creates a clean document outline for crawlers while preserving the cyberpunk glass-panel aesthetic.
+* **World Engine Omni‑Matrix Card (Expanded Matrix Variant):** Introduced the `expanded-matrix-card` variant of `tool-card` with a dedicated `.matrix-grid` and `.matrix-column` flex layout. The Spider’s dual-column feature matrix is now fully responsive, readable, and structurally isolated for both users and search engines.
+
+### Changed
+
+* **SEO‑Optimized Content Hierarchy:** Normalized heading levels (`h1` page title, `h3` tool names, `h4` matrix section headers) and grouped related copy into clearly scoped sections. This improves snippet extraction, rich result eligibility, and ensures search engines can correctly infer feature groupings (Hub, Optimization Suite, Quest Conversion, PhysBone Mapper, Badge Studio, World Engine).
+* **Crawl‑Friendly Tool Cards:** Refactored each tool into a consistent `tool-card` pattern with a single image, a descriptive `h3`, and a tightly scoped feature list. Alt text and card titles now read as human‑legible summaries instead of internal labels, boosting relevance for avatar, Quest, and VRChat‑tooling queries.
+* **Preview & Media SEO Pass:** Converted the Quest vs PC comparison into a `.comparison-banner` with a single, descriptive `<img>` and caption block. The preview trigger is now attached to the container instead of inline styles, reducing DOM noise and making the hero comparison image a clear, high‑value media target for search indexing.
+* **Matrix Grid Flexbox Refactor:** Replaced the ad‑hoc grid styles with a dedicated `.matrix-grid` flexbox system and responsive `.matrix-column` rules. On narrow viewports, the Spider’s ecosystem and UI/security columns collapse into a vertical stack without breaking readability or keyword density.
+
+### Fixed
+
+* **Broken World Engine Card Markup:** Removed the stray closing `<div>` and normalized the World Engine: Omni‑Matrix Diagnostic Spider card structure. The `tool-card → tool-image-container → tool-content → matrix-grid → matrix-column` hierarchy now validates cleanly and no longer corrupts the surrounding tools grid.
+* **Inline Style & Redundant Wrapper Noise:** Stripped unnecessary inline styles and redundant wrapper divs from the Ecosystem Architecture section, reducing DOM bloat that previously diluted keyword signals and harmed Lighthouse/SEO scores.
+* **List & Typography Consistency:** Aligned all feature bullets under a single `ul.custom-list` pattern with consistent font sizes and spacing. This prevents fragmented list structures that confused both assistive tech and search parsers when scanning long capability matrices.
+
+## [2.0.2] - 2026-05-13
+
+### Fixed
+
+* **Vixenwear GI Integration (Baked Lighting):** Resolved a critical precision collapse in the baked lighting evaluation matrix across Vixenwear assets. Re-engineered the indirect illumination and spherical harmonic sampling pathways to correctly decode lightmap data. This eliminates localized light bleeding, stabilizes micro-shadow gradients, and guarantees physically accurate spatial integration when Vixenwear is deployed in heavily baked environments.
 
 ## [2.0.1] - 2026-05-12
 

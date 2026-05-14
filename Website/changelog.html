@@ -4,32 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>VixenTools | Changelog</title>
-    <meta name="title" content="VixenTools | Changelog">
-    <meta name="description" content="The central VPM-native distribution hub for the VixenTools ecosystem. Advanced Unity editor utilities, PhysBone automation pipelines, and procedural generators for VRChat.">
-    <meta name="keywords" content="VRChat, VPM, Unity, Editor Tools, PhysBones, VixenTools, Vixenlicous, Avatar Architecture, Procedural Generation">
-    <meta name="author" content="Vixenlicous">
+    <!-- Primary SEO -->
+    <title>Vixens Toolbox | Changelog, Release Notes & Version History</title>
+    <meta name="title" content="Vixens Toolbox | Changelog, Release Notes & Version History">
+    <meta name="description" content="Track every update to Vixens Toolbox — full release notes, version history, feature additions, bug fixes, performance improvements, and ecosystem evolution for VRChat creators.">
+    <meta name="keywords" content="Vixens Toolbox changelog, VRChat tools updates, VRChat release notes, Unity editor tools changelog, PhysBones automation updates, VRChat creator tools version history, VPM updates, Vixenlicious, VRChat development log">
+    <meta name="author" content="Vixenlicious">
     <meta name="theme-color" content="#ff00aa">
 
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/">
-    <meta property="og:title" content="VixenTools | Changelog">
-    <meta property="og:description" content="The central VPM-native distribution hub for the VixenTools ecosystem. Advanced Unity editor utilities, PhysBone automation pipelines, and procedural generators for VRChat.">
-    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://vixencreations.github.io/VixenToolBox/changelog.html">
 
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/changelog.html">
+    <meta property="og:title" content="Vixens Toolbox | Changelog, Release Notes & Version History">
+    <meta property="og:description" content="Explore the full changelog for Vixens Toolbox — version history, feature updates, bug fixes, and ecosystem improvements for VRChat creators.">
+    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <meta property="og:site_name" content="Vixens Toolbox">
+
+    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/">
-    <meta property="twitter:title" content="VixenTools | Changelog">
-    <meta property="twitter:description" content="The central VPM-native distribution hub for the VixenTools ecosystem. Advanced Unity editor utilities, PhysBone automation pipelines, and procedural generators for VRChat.">
+    <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/changelog.html">
+    <meta property="twitter:title" content="Vixens Toolbox | Changelog, Release Notes & Version History">
+    <meta property="twitter:description" content="See every update to Vixens Toolbox — detailed release notes, version history, and development progress.">
     <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="twitter:site" content="@VixenVRC">
 
+    <!-- Structured Data for Google Rich Results -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "TechArticle",
+          "headline": "Vixens Toolbox Changelog & Release Notes",
+          "description": "A complete version history of Vixens Toolbox, including feature updates, bug fixes, performance improvements, and ecosystem changes for VRChat creators.",
+          "author": {
+            "@type": "Person",
+            "name": "Vixenlicious"
+          },
+          "url": "https://vixencreations.github.io/VixenToolBox/changelog.html",
+          "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
+          "keywords": "Vixens Toolbox changelog, VRChat tools updates, Unity editor tools release notes, PhysBones automation updates, VRChat creator tools version history"
+        }
+    </script>
+
+    <!-- Icons -->
     <link rel="icon" href="./favicon.ico">
     <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 
+    <!-- UI Framework -->
     <script type="module" src="https://unpkg.com/@fluentui/web-components"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="background-art"></div>
 
@@ -55,7 +82,7 @@
                 Deep-Dive Docs
             </fluent-anchor>
 
-            <fluent-anchor href="compare.html" class="nav-item">
+            <fluent-anchor href="why-choose-us.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                 Why Choose Us?
             </fluent-anchor>
@@ -75,7 +102,7 @@
                 Network & Media
             </fluent-anchor>
 
-            <fluent-anchor href="projects.html" class="nav-item">
+            <fluent-anchor href="extended-projects.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
                 Extended Projects
             </fluent-anchor>
@@ -90,6 +117,9 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
+                        <fluent-option value="v2.0.3">v2.0.3</fluent-option>
+                        <fluent-option value="v2.0.2">v2.0.2</fluent-option>
+                        <fluent-option value="v2.0.1">v2.0.1</fluent-option>
                         <fluent-option value="v2.0.0">v2.0.0</fluent-option>
                         <fluent-option value="v1.6.1">v1.6.1</fluent-option>
                         <fluent-option value="v1.6.0">v1.6.0</fluent-option>
@@ -113,6 +143,66 @@
             </div>
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
+
+                <div class="changelog-entry" data-version="v2.0.3">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.0.3 - 2026-05-14</h5>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Semantic Ecosystem Layout (Ecosystem Architecture Page):</strong> Wrapped the entire suite overview in a semantic <code>&lt;main class="main-wrapper"&gt;</code> container with a dedicated <code>.page-header</code>, <code>.comparison-section</code>, and <code>.tools-grid</code> structure. This creates a clean document outline for crawlers while preserving the cyberpunk glass-panel aesthetic.</li>
+                        <li class="mb-2"><strong>World Engine Omni‑Matrix Card (Expanded Matrix Variant):</strong> Introduced the <code>expanded-matrix-card</code> variant of <code>tool-card</code> with a dedicated <code>.matrix-grid</code> and <code>.matrix-column</code> flex layout. The Spider’s dual-column feature matrix is now fully responsive, readable, and structurally isolated for both users and search engines.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>SEO‑Optimized Content Hierarchy:</strong> Normalized heading levels (<code>h1</code> page title, <code>h3</code> tool names, <code>h4</code> matrix section headers) and grouped related copy into clearly scoped sections. This improves snippet extraction, rich result eligibility, and ensures search engines can correctly infer feature groupings (Hub, Optimization Suite, Quest Conversion, PhysBone Mapper, Badge Studio, World Engine).</li>
+                        <li class="mb-2"><strong>Crawl‑Friendly Tool Cards:</strong> Refactored each tool into a consistent <code>tool-card</code> pattern with a single image, a descriptive <code>h3</code>, and a tightly scoped feature list. Alt text and card titles now read as human‑legible summaries instead of internal labels, boosting relevance for avatar, Quest, and VRChat‑tooling queries.</li>
+                        <li class="mb-2"><strong>Preview & Media SEO Pass:</strong> Converted the Quest vs PC comparison into a <code>.comparison-banner</code> with a single, descriptive <code>&lt;img&gt;</code> and caption block. The preview trigger is now attached to the container instead of inline styles, reducing DOM noise and making the hero comparison image a clear, high‑value media target for search indexing.</li>
+                        <li class="mb-2"><strong>Matrix Grid Flexbox Refactor:</strong> Replaced the ad‑hoc grid styles with a dedicated <code>.matrix-grid</code> flexbox system and responsive <code>.matrix-column</code> rules. On narrow viewports, the Spider’s ecosystem and UI/security columns collapse into a vertical stack without breaking readability or keyword density.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Broken World Engine Card Markup:</strong> Removed the stray closing <code>&lt;div&gt;</code> and normalized the World Engine: Omni‑Matrix Diagnostic Spider card structure. The <code>tool-card &rarr; tool-image-container &rarr; tool-content &rarr; matrix-grid &rarr; matrix-column</code> hierarchy now validates cleanly and no longer corrupts the surrounding tools grid.</li>
+                        <li class="mb-2"><strong>Inline Style & Redundant Wrapper Noise:</strong> Stripped unnecessary inline styles and redundant wrapper divs from the Ecosystem Architecture section, reducing DOM bloat that previously diluted keyword signals and harmed Lighthouse/SEO scores.</li>
+                        <li class="mb-2"><strong>List & Typography Consistency:</strong> Aligned all feature bullets under a single <code>ul.custom-list</code> pattern with consistent font sizes and spacing. This prevents fragmented list structures that confused both assistive tech and search parsers when scanning long capability matrices.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="v2.0.2">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.0.2 - 2026-05-13</h5>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Vixenwear GI Integration (Baked Lighting):</strong> Resolved a critical precision collapse in the baked lighting evaluation matrix across Vixenwear assets. Re-engineered the indirect illumination and spherical harmonic sampling pathways to correctly decode lightmap data. This eliminates localized light bleeding, stabilizes micro-shadow gradients, and guarantees physically accurate spatial integration when Vixenwear is deployed in heavily baked environments.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="v2.0.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.0.1 - 2026-05-12</h5>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Dynamic Markdown Architecture (Vixen Hub):</strong> Integrated <code>HOWITWORKS.md</code> (Metrics Engine) and <code>SHADERSETUP.md</code> (Shader Pipeline) directly into the Vixen Hub. Offloads heavy UI styling by utilizing a custom regex Markdown-to-UIElements parser, allowing real-time documentation updates without triggering C# recompiles.</li>
+                        <li class="mb-2"><strong>Serialization Ghost Detection (World Engine):</strong> Engineered a reflection bridge that cross-references physical <code>UdonBehaviour</code> components against their underlying C# <code>[UdonBehaviourSyncMode]</code> attributes. Automatically detects and offers 1-click fixes for inspector-level "Continuous Sync" ghosts that waste network IDs on explicitly declared <code>NoVariableSync</code> scripts.</li>
+                        <li class="mb-2"><strong>Context-Aware Network Heuristics:</strong> Upgraded the Udon auditor to cross-reference physics topologies. Unjustified Continuous Sync warnings are now intelligently suppressed if the target object contains physical movement drivers like <code>Rigidbody</code> or <code>VRC_Pickup</code>.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Zero-Allocation UASM Parsing:</strong> Refactored Udon compute instruction counting to utilize a memory-safe <code>StringReader</code> stream, eliminating massive string array allocations and preventing Garbage Collection (GC) spikes on heavy scripts.</li>
+                        <li class="mb-2"><strong>O(1) Program Source Memoization:</strong> Replaced brute-force scene traversal in <code>GetUdonTypeNameSafe</code> with a static reflection cache and <code>AbstractUdonProgramSource</code> dictionary. Instanced prefabs (e.g., hundreds of toggle buttons sharing the same script) now resolve instantly after the first script analysis, drastically cutting O(N) execution time.</li>
+                        <li class="mb-2"><strong>Strict Active-State Compute Filtering (Dashboard):</strong> Hardened the Heuristics Dashboard to strictly enforce <code>&amp;&amp; object.enabled &amp;&amp; object.gameObject.activeInHierarchy</code> across all compute matrices (Renderers, Lights, LTCGI, AudioLink, Video Players, Probes). Guarantees the Threat Level exactly mirrors the actively rendering pipeline without being skewed by disabled object pooling or hidden rooms.</li>
+                        <li class="mb-2"><strong>Isolated Lighting Metrics:</strong> Extracted "Active Scene Lights" into an independent, pre-filtered metric on the Dashboard to provide granular visibility into scene-wide light limits and draw-call multiplication.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Cache Poisoning Desyncs (Heuristics Dashboard):</strong> Fixed a critical state-poisoning bug where <code>_sceneObjectCache</code> queries for inactive objects would overwrite active queries. Upgraded the dictionary key to a <code>(Type, bool)</code> Tuple, guaranteeing perfect mathematical isolation.</li>
+                        <li class="mb-2"><strong>AppDomain Execution Freezes:</strong> Completely eliminated Editor thread freezing caused by recursive <code>AppDomain.CurrentDomain.GetAssemblies()</code> calls during massive Udon script resolutions.</li>
+                        <li class="mb-2"><strong>Disabled Object False Positives (Spider):</strong> Patched the Matrix Spider to properly evaluate <code>.enabled</code> states on components. It now silently ignores explicitly disabled Lights and Reflection Probes, perfectly aligning Matrix warnings with the Dashboard's compute math.</li>
+                    </ul>
+                </div>
 
                 <div class="changelog-entry" data-version="v2.0.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.0.0 - 2026-05-12</h5>

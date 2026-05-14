@@ -1,6 +1,6 @@
-# LATEX SUIT ULTRA : SHADER ARCHITECTURE
+# VIXENWEAR LATEX ULTRA : SHADER USAGE
 
-The **VixenTools Latex Suit Ultra** is a high-fidelity, dual-lobe PBR surface shader engineered for complex synthetic materials. It bypasses standard Unity lighting models to provide true tangent-space micro-shadowing, hardware tessellation, and dynamic thin-film interference.
+The **VixenWear Latex Ultra** is a high-fidelity, dual-lobe PBR surface shader engineered for complex synthetic materials. It bypasses standard Unity lighting models to provide true tangent-space micro-shadowing, hardware tessellation, and dynamic thin-film interference.
 
 To achieve flawless high-gloss black materials, cyber-noir atmospheric reflections, and reactive neon emissives, you must adhere to this pipeline architecture.
 
@@ -21,7 +21,7 @@ By default, Substance Painter exports standard Unity HDRP or URP maps, which do 
 **Step 1: Setting up the Output Template**
 - Go to `File` > `Export Textures` (or press `Ctrl+Shift+E`).
 - Click the `Output Templates` tab at the top.
-- Click the `+` button to create a new template and name it `Vixen Latex PBR`.
+- Click the `+` button to create a new template and name it `VixenWear PBR`.
 - Under the Output Maps section, click the **`R+G+B+A`** button. This creates a new blank texture file that supports an Alpha channel.
 - Rename the new file structure to something like `$mesh_$textureSet_PackedPBR`.
 
@@ -34,7 +34,7 @@ Drag the correct data maps from the right-side panels into the RGB+A boxes of yo
 
 **Step 3: Export Settings**
 Return to the `Settings` tab in the Export window.
-- **Output Template:** Select your `Vixen Latex PBR` template.
+- **Output Template:** Select your `VixenWear PBR` template.
 - **File Format:** You **MUST** select a format that supports an Alpha channel (**PNG, Targa/TGA, or TIFF**). JPEGs will delete the Alpha channel and destroy your smoothness data.
 - **Bit Depth:** 8-bit is standard. If your displacement looks "stepped" or stair-cased in Unity, export this specific map as **16-bit**.
 

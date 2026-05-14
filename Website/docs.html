@@ -4,32 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>VixenTools | Deep-Dive Documentation</title>
-    <meta name="title" content="VixenTools | Deep-Dive Documentation">
-    <meta name="description" content="The central VPM-native distribution hub for the VixenTools ecosystem. Advanced Unity editor utilities, PhysBone automation pipelines, and procedural generators for VRChat.">
-    <meta name="keywords" content="VRChat, VPM, Unity, Editor Tools, PhysBones, VixenTools, Vixenlicous, Avatar Architecture, Procedural Generation">
-    <meta name="author" content="Vixenlicous">
+    <!-- Primary SEO -->
+    <title>Vixens Toolbox | Documentation, Guides & Technical Reference</title>
+    <meta name="title" content="Vixens Toolbox | Documentation, Guides & Technical Reference">
+    <meta name="description" content="Explore the official documentation for Vixens Toolbox — deep‑dive guides, technical references, workflow tutorials, automation breakdowns, and VRChat creator tooling manuals.">
+    <meta name="keywords" content="Vixens Toolbox documentation, VRChat tools docs, VRChat shader docs, Unity editor tools documentation, PhysBones automation guide, VRChat creator tutorials, VPM documentation, avatar workflow guides, Vixenlicious docs, VRChat technical reference">
+    <meta name="author" content="Vixenlicious">
     <meta name="theme-color" content="#ff00aa">
 
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/">
-    <meta property="og:title" content="VixenTools | Deep-Dive Documentation">
-    <meta property="og:description" content="The central VPM-native distribution hub for the VixenTools ecosystem. Advanced Unity editor utilities, PhysBone automation pipelines, and procedural generators for VRChat.">
-    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://vixencreations.github.io/VixenToolBox/docs.html">
 
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/docs.html">
+    <meta property="og:title" content="Vixens Toolbox | Documentation, Guides & Technical Reference">
+    <meta property="og:description" content="Access deep‑dive documentation for Vixens Toolbox — tutorials, workflow guides, automation systems, and VRChat creator tooling reference material.">
+    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <meta property="og:site_name" content="Vixens Toolbox">
+
+    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/">
-    <meta property="twitter:title" content="VixenTools | Deep-Dive Documentation">
-    <meta property="twitter:description" content="The central VPM-native distribution hub for the VixenTools ecosystem. Advanced Unity editor utilities, PhysBone automation pipelines, and procedural generators for VRChat.">
+    <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/docs.html">
+    <meta property="twitter:title" content="Vixens Toolbox | Documentation, Guides & Technical Reference">
+    <meta property="twitter:description" content="Explore the official Vixens Toolbox documentation — deep‑dive guides, tutorials, and technical references for VRChat creators.">
     <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="twitter:site" content="@VixenVRC">
 
+    <!-- Structured Data for Google Rich Results -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "TechArticle",
+          "headline": "Vixens Toolbox Documentation & Technical Reference",
+          "description": "Deep‑dive documentation for Vixens Toolbox, including tutorials, workflow guides, automation breakdowns, and VRChat creator tooling reference material.",
+          "author": {
+            "@type": "Person",
+            "name": "Vixenlicious"
+          },
+          "url": "https://vixencreations.github.io/VixenToolBox/docs.html",
+          "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
+          "keywords": "Vixens Toolbox documentation, VRChat tools docs, Unity editor tools documentation, PhysBones automation guide, VRChat creator tutorials"
+        }
+    </script>
+
+    <!-- Icons -->
     <link rel="icon" href="./favicon.ico">
     <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 
+    <!-- UI Framework -->
     <script type="module" src="https://unpkg.com/@fluentui/web-components"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="background-art"></div>
 
@@ -55,7 +82,7 @@
                 Deep-Dive Docs
             </fluent-anchor>
 
-            <fluent-anchor href="compare.html" class="nav-item">
+            <fluent-anchor href="why-choose-us.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                 Why Choose Us?
             </fluent-anchor>
@@ -75,7 +102,7 @@
                 Network & Media
             </fluent-anchor>
 
-            <fluent-anchor href="projects.html" class="nav-item">
+            <fluent-anchor href="extended-projects.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
                 Extended Projects
             </fluent-anchor>
@@ -270,6 +297,70 @@
                         <strong>Root Animator Protection:</strong>
                         A recursive depth scanner identifies the avatar’s core root Animator and hard‑locks it, ensuring heuristic
                         culling never destroys locomotion controllers, FX layers, or toggle logic.
+                    </li>
+                </ul>
+            </div>
+
+            <!-- VixenWear Latex Ultra -->
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">VixenWear Latex Ultra Shader</h2>
+                    <div class="badge">VixenWear Latex.shader</div>
+                </div>
+
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    A high-fidelity, dual-lobe PBR surface shader engineered for complex synthetic materials.
+                    It bypasses standard Unity lighting models to provide true tangent-space micro-shadowing,
+                    hardware tessellation, and dynamic thin-film interference for flawless high-gloss black materials and cyber-noir aesthetics.
+                </p>
+
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li>
+                        <strong>Precision Texture Packing (PBR Matrix):</strong>
+                        Maximizes VRAM efficiency via a rigorously packed linear map. Channels are strictly allocated:
+                        <strong>R</strong> (Metallic), <strong>G</strong> (Ambient Occlusion), <strong>B</strong> (Displacement / Height), and <strong>A</strong> (Smoothness).
+                    </li>
+
+                    <li>
+                        <strong>Parallax & Micro-Shadowing:</strong>
+                        Utilizes a 50-step High-Fidelity Gradient Raymarcher mapped to the height channel. It calculates
+                        physical light intersection to create true tangent-space shadows inside recessed geometry seams, backed by DX11 Hardware Tessellation.
+                    </li>
+
+                    <li>
+                        <strong>Clearcoat & Thin-Film Interference:</strong>
+                        Calculates a secondary Clearcoat layer above the base fabric roughness. Features dynamic refractive iridescence
+                        (calculated in nanometers) and Specular AA Variance to suppress aliasing on high-gloss meshes during camera movement.
+                    </li>
+
+                    <li>
+                        <strong>Ecosystem Integrations:</strong>
+                        Natively wired for AudioLink FFT (Bass-driven iridescence pulse, Treble-driven emission),
+                        LTCGI (realtime polygonal area lighting), and VRC Light Volumes. The custom BRDF integrates area lights flawlessly into the Clearcoat lobe.
+                    </li>
+                </ul>
+
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: Export & Import Workflow</h3>
+
+                <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
+                    <li>
+                        <strong>Custom Substance Template:</strong>
+                        Standard HDRP/URP maps are incompatible. You must generate a custom <code>R+G+B+A</code> output template, explicitly mapping <em>Glossiness</em> (not Roughness) to the Alpha channel.
+                    </li>
+
+                    <li>
+                        <strong>Alpha-Safe Export Formats:</strong>
+                        Exports must use formats supporting uncompressed Alpha channels (PNG, TGA, or TIFF). JPEGs will permanently destroy the smoothness data. 16-bit depth is highly recommended to prevent stepping in the displacement map.
+                    </li>
+
+                    <li>
+                        <strong>Linear Data Enforcement (Unity Import):</strong>
+                        Because the packed map contains purely mathematical data, Unity's default gamma correction will warp the displacement and metalness calculations. You <strong>must</strong> uncheck <code>sRGB (Color Texture)</code> in the Unity Inspector.
+                    </li>
+
+                    <li>
+                        <strong>Micro-Detail Layering:</strong>
+                        Use the normal map for physical macro-texturing (leather grain, latex pores) and leverage the <em>Clearcoat Normal Flattening</em> parameter to keep the liquid-like specular finish completely smooth over the rough fabric underneath.
                     </li>
                 </ul>
             </div>

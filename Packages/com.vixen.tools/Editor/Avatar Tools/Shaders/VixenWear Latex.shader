@@ -1,4 +1,4 @@
-Shader "VixenTools/Latex Suit Ultra"
+Shader "VixenWear/Latex Ultra"
 {
     Properties
     {
