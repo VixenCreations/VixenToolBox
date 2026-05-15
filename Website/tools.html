@@ -7,7 +7,7 @@
     <!-- Primary SEO -->
     <title>Vixens Toolbox | Architecture & Automation Systems</title>
     <meta name="title" content="Vixens Toolbox | Architecture & Automation Systems">
-    <meta name="description" content="Explore the architecture behind Vixens Toolbox — the pro-grade VRChat ecosystem powering PhysBone automation, Unity editor extensions, VPM-native pipelines, and advanced avatar tooling.">
+    <meta name="description" content="Explore the architecture behind Vixens Toolbox - the pro-grade VRChat ecosystem powering PhysBone automation, Unity editor extensions, VPM-native pipelines, and advanced avatar tooling.">
     <meta name="keywords" content="Vixens Toolbox, VRChat tools, VRChat automation, PhysBones automation, Unity editor tools, VRChat avatar architecture, VPM packages, procedural generation, avatar pipelines, Vixenlicious, VRChat creator tools">
     <meta name="author" content="Vixenlicious">
     <meta name="theme-color" content="#ff00aa">
@@ -19,7 +19,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/tools.html">
     <meta property="og:title" content="Vixens Toolbox | Architecture & Automation Systems">
-    <meta property="og:description" content="Dive into the architecture powering Vixens Toolbox — Unity editor utilities, PhysBone automation, VPM-native pipelines, and advanced VRChat avatar tooling.">
+    <meta property="og:description" content="A deep dive into Vixens Toolbox - the VRChat ecosystem powering PhysBone automation, Unity editor extensions, Avatar Tooling, and advanced world tooling.">
     <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="og:site_name" content="Vixens Toolbox">
 
@@ -37,7 +37,7 @@
           "@context": "https://schema.org",
           "@type": "TechArticle",
           "headline": "Vixens Toolbox Architecture & Automation Systems",
-          "description": "A deep dive into the architecture of Vixens Toolbox — the VRChat ecosystem powering PhysBone automation, Unity editor extensions, VPM-native pipelines, and advanced avatar tooling.",
+          "description": "A deep dive into Vixens Toolbox - the VRChat ecosystem powering PhysBone automation, Unity editor extensions, Avatar Tooling, and advanced world tooling.",
           "author": {
             "@type": "Person",
             "name": "Vixenlicious"
@@ -70,6 +70,11 @@
             <fluent-anchor href="index.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2.5L2 8.5H4V16.5H8V11.5H12V16.5H16V8.5H18L10 2.5Z" /></svg>
                 VPM Registry
+            </fluent-anchor>
+
+            <fluent-anchor href="ai-transparency.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                AI Transparency
             </fluent-anchor>
 
             <fluent-anchor href="tools.html" class="nav-item active">
@@ -155,8 +160,8 @@
                     <h3 class="text-glow-cyan">Vixen Hub</h3>
 
                     <p class="mb-3">
-                        Your central command nexus. The Vixen Hub is a fully dynamic, 5‑tab developer dashboard powered by a
-                        native Markdown‑to‑UIToolkit parser, autonomous update detection, and a cyberpunk UI layer that
+                        Your central command nexus. The Vixen Hub is a fully dynamic, 8-tab developer dashboard powered by a
+                        native Markdown-to-UIToolkit parser, autonomous update detection, and a cyberpunk UI layer that
                         integrates directly into the Unity Editor.
                     </p>
 
@@ -164,14 +169,14 @@
 
                         <li class="mb-2">
                             <strong>Autonomous Update HUD:</strong>
-                            A SceneView‑injected cyber badge appears automatically whenever the package version changes.
+                            A SceneView-injected cyber badge appears automatically whenever the package version changes.
                             The notifier reads <code>package.json</code>, compares stored versions, and spawns a neon
                             update badge that routes directly to the Changelog tab.
                         </li>
 
                         <li class="mb-2">
                             <strong>Dynamic DOM Bridges:</strong>
-                            Every tab — Dashboard, Core Modules, Network, Support, Changelog — is built using live
+                            Every tab - Dashboard, Core Modules, Network, Support, Changelog - is built using live
                             UIElements containers. Switching modes dynamically rebuilds the DOM without freezing the
                             Editor or triggering layout thrashing.
                         </li>
@@ -180,19 +185,19 @@
                             <strong>Native Markdown Engine:</strong>
                             The Hub parses <code>README.md</code> and <code>CHANGELOG.md</code> directly from the package.
                             Headings, lists, separators, and inline formatting are converted into UIToolkit elements with
-                            cyber‑styled typography and animated separators.
+                            cyber-styled typography and animated separators.
                         </li>
 
                         <li class="mb-2">
                             <strong>Action Delegates:</strong>
                             Every module card in the Hub is backed by a direct C# delegate.
-                            Clicking a button executes the corresponding Unity menu command instantly — no reflection hacks,
-                            no string‑based routing, no fragile editor scripts.
+                            Clicking a button executes the corresponding Unity menu command instantly - no reflection hacks,
+                            no string-based routing, no fragile editor scripts.
                         </li>
 
                         <li class="mb-2">
                             <strong>Core Module Launchpad:</strong>
-                            Provides one‑click access to the entire VixenTools suite:
+                            Provides one-click access to the entire VixenTools suite:
                             Badge Studio, Quest Conversion Engine, Optimization Suite, PhysBone Mapper,
                             Animation Workbench Pro, Pipeline Preset Manager, and more.
                         </li>
@@ -200,31 +205,31 @@
                         <li class="mb-2">
                             <strong>SDK & Package Version Sync:</strong>
                             Automatically extracts the installed VRCSDK version from <code>package.json</code> using
-                            regex‑based detection across <code>com.vrchat.base</code>, <code>avatars</code>, and
+                            regex-based detection across <code>com.vrchat.base</code>, <code>avatars</code>, and
                             <code>worlds</code> packages. Displays live version info in the header banner.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Changelog Pagination Engine:</strong>
+                            <strong>Changelog Markdown Parser:</strong>
                             Parses all version blocks from <code>CHANGELOG.md</code> and exposes them through a dropdown
-                            selector. Each version renders its markdown content into a scrollable cyber‑styled panel.
+                            selector. Each version renders its markdown content into a scrollable cyber-styled panel.
                         </li>
 
                         <li class="mb-2">
                             <strong>Network Routing Panel:</strong>
                             Provides direct links to GitHub, Discord, X/Twitter, YouTube, Issue Tracker, and storefronts.
-                            All links are rendered as cyber‑cards with animated hover states.
+                            All links are rendered as cyber-cards with animated hover states.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Support Matrix:</strong>
-                            A dedicated tab for supporting the developer, complete with Ko‑Fi, Gumroad, Patreon, CashApp,
-                            and storefront links — all rendered through the same markdown‑driven UI pipeline.
+                            <strong>Support Buttons and Links:</strong>
+                            A dedicated tab for supporting the developer, complete with Ko-Fi, Gumroad, Patreon, CashApp,
+                            and storefront links - all rendered through the same markdown-driven UI pipeline.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Zero‑Latency UI:</strong>
-                            The Hub uses flex‑driven UIToolkit layouts, async‑safe initialization, and cached markdown
+                            <strong>Zero-Latency UI:</strong>
+                            The Hub uses flex-driven UIToolkit layouts, async-safe initialization, and cached markdown
                             parsing to ensure instant tab switching even in large Unity projects.
                         </li>
 
@@ -246,20 +251,20 @@
                     <h3 class="text-glow-cyan">Avatar Optimization Suite</h3>
 
                     <p class="mb-3">
-                        A multi-threaded, topology‑aware execution matrix engineered to collapse avatar complexity with surgical precision.
+                        A multi-threaded, topology-aware execution matrix engineered to collapse avatar complexity with surgical precision.
                     </p>
 
                     <ul class="custom-list m-0 ps-4">
 
                         <li class="mb-2">
-                            <strong>5D Spatial Hash Welder:</strong>
-                            Utilizes a UV‑locked XYZ+UV+Normal hash to merge vertices with sub‑millimeter precision.
-                            Automatically extracts and re‑maps all blendshape frames, ensuring facial expressions remain
-                            pixel‑perfect even after aggressive topology collapse.
+                            <strong>Vertice Mesh Welder:</strong>
+                            Utilizes a UV-locked XYZ+UV+Normal hash to merge vertices with sub-millimeter precision.
+                            Automatically extracts and re-maps all blendshape frames, ensuring facial expressions remain
+                            pixel-perfect even after aggressive topology collapse.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Dual‑Shielding Matrix:</strong>
+                            <strong>Dual-Shielding:</strong>
                             Scans material slots, submesh indices, and Humanoid bone weights to isolate protected regions
                             (eyes, visor, jaw, mouth interior, facial decals). These zones are mathematically excluded from
                             the decimation grid, guaranteeing zero distortion to expressive topology.
@@ -267,28 +272,28 @@
 
                         <li class="mb-2">
                             <strong>Multipass Targeted Microweld:</strong>
-                            Iteratively reduces triangle counts using a threshold‑ramping algorithm. Each pass recalculates
+                            Iteratively reduces triangle counts using a threshold-ramping algorithm. Each pass recalculates
                             spatial seams while strictly locking UV coordinates, ensuring no texture tearing even under
                             extreme polygon reduction.
                         </li>
 
                         <li class="mb-2">
                             <strong>Blendshape Memory Engine:</strong>
-                            Captures every delta frame (verts, normals, tangents) before welding, then re‑projects them onto
+                            Captures every delta frame (verts, normals, tangents) before welding, then re-projects them onto
                             the optimized mesh using a master translation map. Guarantees 1:1 expression fidelity after
                             topology collapse.
                         </li>
 
                         <li class="mb-2">
                             <strong>Bone Collapse & Weight Transfer:</strong>
-                            Identifies dead‑end leaf bones and safely transfers their vertex weights to parent transforms.
+                            Identifies dead-end leaf bones and safely transfers their vertex weights to parent transforms.
                             Reduces rig complexity without compromising animation integrity or physics behavior.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Tight‑Fit Bounds Rebuilder:</strong>
-                            Recalculates skinned mesh bounds using 8‑corner world‑to‑root projection, eliminating oversized
-                            bounding boxes that cause off‑screen rendering and GPU overdraw.
+                            <strong>Tight-Fit Bounds Rebuilder:</strong>
+                            Recalculates skinned mesh bounds using 8-corner world-to-root projection, eliminating oversized
+                            bounding boxes that cause off-screen rendering and GPU overdraw.
                         </li>
 
                         <li class="mb-2">
@@ -299,27 +304,27 @@
 
                         <li class="mb-2">
                             <strong>Disabled Component Stripper:</strong>
-                            Automatically removes hard‑disabled Behaviours (excluding Animator) to reduce build size and
+                            Automatically removes hard-disabled Behaviours (excluding Animator) to reduce build size and
                             eliminate dead logic paths.
                         </li>
 
                         <li class="mb-2">
                             <strong>VRAM Reduction Pipeline:</strong>
-                            Uses ImageMagick to downscale all unique textures — including those hidden inside VRCFury
-                            dependencies — while skipping RenderTextures to avoid corruption. Provides deterministic,
+                            Uses ImageMagick to downscale all unique textures - including those hidden inside VRCFury
+                            dependencies - while skipping RenderTextures to avoid corruption. Provides deterministic,
                             offline VRAM control with zero cloud dependency.
                         </li>
 
                         <li class="mb-2">
                             <strong>Physics Node Depth Sorter:</strong>
                             Maps all PhysBones, Colliders, Contacts, and Constraints, then sorts them by hierarchy depth.
-                            Enables safe culling of leaf‑node physics without destabilizing core rig behavior.
+                            Enables safe culling of leaf-node physics without destabilizing core rig behavior.
                         </li>
 
                         <li class="mb-2">
                             <strong>PC & Quest Pipeline Validator:</strong>
-                            Performs full SDK‑level compliance checks, including illegal component detection, shader
-                            whitelist enforcement, joint removal, camera stripping, and performance‑rank‑based warnings.
+                            Performs full SDK-level compliance checks, including illegal component detection, shader
+                            whitelist enforcement, joint removal, camera stripping, and performance-rank-based warnings.
                         </li>
 
                     </ul>
@@ -348,8 +353,8 @@
 
                         <li class="mb-2">
                             <strong>Magick.NET Linear Downsampling:</strong>
-                            Executes gamma‑correct, high‑fidelity texture reduction using ImageMagick’s offline pipeline.
-                            Supports 256–2048px targets, preserves micro‑contrast, and automatically skips RenderTextures
+                            Executes gamma-correct, high-fidelity texture reduction using ImageMagick’s offline pipeline.
+                            Supports 256–2048px targets, preserves micro-contrast, and automatically skips RenderTextures
                             to avoid corruption. Every texture is processed deterministically for perfect VRAM control.
                         </li>
 
@@ -357,44 +362,44 @@
                             <strong>Deep Material Spider:</strong>
                             Traverses <code>SerializedObject</code> streams, Animator controllers, VRCFury components,
                             nested prefabs, and hidden dependency chains to extract every material and texture used by the avatar.
-                            Guarantees 100% accurate VRAM mapping — even for assets buried inside outfit toggles or animation clips.
+                            Guarantees 100% accurate VRAM mapping - even for assets buried inside outfit toggles or animation clips.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Auto‑Cull Purge Matrix:</strong>
-                            Automatically flags and locks mobile‑incompatible components including Cameras, Lights, Cloth,
+                            <strong>Auto-Cull Purge:</strong>
+                            Automatically flags and locks mobile-incompatible components including Cameras, Lights, Cloth,
                             Rigidbodies, Joints, Line/Trail Renderers, Particle Systems, and Raycasts.
-                            Each is displayed with neon‑red, non‑overrideable toggles to prevent accidental inclusion.
+                            Each is displayed with neon-red, non-overrideable toggles to prevent accidental inclusion.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Interactive Topology Matrix:</strong>
+                            <strong>Interactive Topology:</strong>
                             Provides a full UI Toolkit panel for reviewing and overriding Quest limits.
                             PhysBones, Colliders, Contacts, Constraints, Animators, and Particle Systems are sorted by
                             hierarchy depth and capped according to your selected performance rank (Excellent → Poor).
                         </li>
 
                         <li class="mb-2">
-                            <strong>Face Tracking & VRCFT Hunter‑Killer:</strong>
-                            Detects VRCFaceTracking templates, adjerry91 prefabs, VRCFury face‑tracking branches, and
-                            namespace‑based FT components. Automatically locks them for removal to maintain Quest compliance.
+                            <strong>Face Tracking & VRCFT Hunter-Killer:</strong>
+                            Detects VRCFaceTracking templates, adjerry91 prefabs, VRCFury face-tracking branches, and
+                            namespace-based FT components. Automatically locks them for removal to maintain Quest compliance.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Non‑Destructive Prefab Isolation:</strong>
+                            <strong>Non-Destructive Prefab Isolation:</strong>
                             Clones the avatar into a dedicated Quest workspace under <code>Assets/VixenTools/QuestConversion</code>,
                             ensuring your PC avatar remains untouched while the mobile clone undergoes full transformation.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Hard‑Cap Performance Mapping:</strong>
+                            <strong>Hard-Cap Performance Mapping:</strong>
                             Calculates total triangles, skinned meshes, material slots, unique materials, unique textures,
-                            and all physics nodes. Highlights violations using color‑coded severity markers and applies
+                            and all physics nodes. Highlights violations using color-coded severity markers and applies
                             VRChat’s mobile limits mathematically.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Texture Map Selection Matrix:</strong>
+                            <strong>Texture Map Selection:</strong>
                             Displays every detected texture with resolution metadata and toggleable processing flags.
                             Supports “Select All / Deselect All” batch operations for rapid iteration.
                         </li>
@@ -451,12 +456,12 @@
                                 <li>Full Preset snapshot via <code>new Preset(pb)</code></li>
                                 <li>Automatic preset asset creation per bone</li>
                             </ul>
-                            This produces a portable, version‑controlled physics architecture you can reapply forever.
+                            This produces a portable, version-controlled physics architecture you can reapply forever.
                         </li>
 
                         <li class="mb-2">
-                            <strong>One‑Click Architecture Injection:</strong>
-                            Rebuilds your entire physics matrix on a blank avatar.
+                            <strong>One-Click Injection:</strong>
+                            Rebuilds your entire physics blueprint on a blank avatar.
                             The engine:
                             <ul class="custom-list ps-4 mt-2">
                                 <li>Finds each bone by stored path</li>
@@ -464,7 +469,7 @@
                                 <li>Applies the original preset with <code>preset.ApplyTo()</code></li>
                                 <li>Logs missing bones with graceful fallback</li>
                             </ul>
-                            Perfect for re‑rigs, mesh swaps, and multi‑variant avatar pipelines.
+                            Perfect for re-rigs, mesh swaps, and multi-variant avatar pipelines.
                         </li>
 
                         <li class="mb-2">
@@ -474,17 +479,17 @@
                             <ul class="custom-list ps-4 mt-2">
                                 <li>Manual editing in Unity’s Preset Inspector</li>
                                 <li>Version control diffing</li>
-                                <li>Cross‑avatar reuse</li>
+                                <li>Cross-avatar reuse</li>
                                 <li>Bulk preset replacement</li>
                             </ul>
                         </li>
 
                         <li class="mb-2">
-                            <strong>Topology‑Safe Extraction:</strong>
+                            <strong>Topology-Safe Extraction:</strong>
                             The mapper walks the avatar hierarchy using Unity’s transform path system, ensuring:
                             <ul class="custom-list ps-4 mt-2">
                                 <li>No reliance on object names alone</li>
-                                <li>No prefab‑breaking references</li>
+                                <li>No prefab-breaking references</li>
                                 <li>Perfect compatibility with nested rigs</li>
                             </ul>
                         </li>
@@ -497,28 +502,28 @@
                                 <li>Displays a warning panel</li>
                                 <li>Prevents broken editor states</li>
                             </ul>
-                            This ensures the tool never crashes non‑VRChat Unity projects.
+                            This ensures the tool never crashes non-VRChat Unity projects.
                         </li>
 
                         <li class="mb-2">
                             <strong>Cyberpunk UI Toolkit Interface:</strong>
-                            Styled with neon‑accented USS files and custom fonts, the mapper provides:
+                            Styled with neon-accented USS files and custom fonts, the mapper provides:
                             <ul class="custom-list ps-4 mt-2">
-                                <li>Two‑phase workflow panels</li>
+                                <li>Two-phase workflow panels</li>
                                 <li>Live object fields</li>
-                                <li>Preset directory auto‑generation</li>
+                                <li>Preset directory auto-generation</li>
                                 <li>Clear success/failure logs</li>
                             </ul>
                         </li>
 
                         <li class="mb-2">
-                            <strong>Perfect for Multi‑Variant Avatars:</strong>
+                            <strong>Perfect for Multi-Variant Avatars:</strong>
                             Ideal for creators who maintain:
                             <ul class="custom-list ps-4 mt-2">
                                 <li>Quest + PC variants</li>
                                 <li>Seasonal outfits</li>
-                                <li>Body‑type swaps</li>
-                                <li>LOD‑based rigs</li>
+                                <li>Body-type swaps</li>
+                                <li>LOD-based rigs</li>
                             </ul>
                             Your physics system stays consistent across every version.
                         </li>
@@ -541,7 +546,7 @@
                     <h3 class="text-glow-cyan">Vixen Badge Studio</h3>
 
                     <p class="mb-3">
-                        A high‑fidelity, CSS‑driven badge authoring engine built for VRChat creators, convention staff,
+                        A high-fidelity, CSS-driven badge authoring engine built for VRChat creators, convention staff,
                         and avatar artists.
                     </p>
 
@@ -549,30 +554,30 @@
 
                         <li class="mb-2">
                             <strong>Emissive Compositing Pipeline:</strong>
-                            Generates ultra‑clean <code>_EMI</code> masks using ImageMagick’s linear‑light compositor.
-                            Automatically strips alpha channels, clamps bloom‑unsafe values, and prevents recursive
+                            Generates ultra-clean <code>_EMI</code> masks using ImageMagick’s linear-light compositor.
+                            Automatically strips alpha channels, clamps bloom-unsafe values, and prevents recursive
                             emissive blowout loops common in Poiyomi and lilToon bloom stacks.
                         </li>
 
                         <li class="mb-2">
                             <strong>Universal Shader Targeting:</strong>
-                            Auto‑detects the active material and injects badge parameters into:
+                            Auto-detects the active material and injects badge parameters into:
                             <em>Poiyomi Toon, lilToon, VRChat Mobile, Furality shaders, legacy convention shaders,</em>
                             and Standard.
                             The engine dynamically maps diffuse/emissive slots, matcap channels, and custom mask fields.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Ecosystem‑Aware Template Routing:</strong>
+                            <strong>Ecosystem-Aware Template Routing:</strong>
                             Supports both <strong>VixenTools</strong> and <strong>Furality SDK</strong> ecosystems.
-                            Automatically loads JSON layout bounds, assigns tier‑specific templates, and scaffolds
+                            Automatically loads JSON layout bounds, assigns tier-specific templates, and scaffolds
                             directory structures for new conventions.
                         </li>
 
                         <li class="mb-2">
                             <strong>Advanced Layout Bounds Editor:</strong>
                             Full UI Toolkit panel for editing text placement, rotation, and bounding boxes.
-                            Includes live override saving, JSON compatibility flags, and backwards‑compatible
+                            Includes live override saving, JSON compatibility flags, and backwards-compatible
                             layout migration for older template formats.
                         </li>
 
@@ -583,13 +588,13 @@
                         </li>
 
                         <li class="mb-2">
-                            <strong>High‑Fidelity Text Rendering:</strong>
+                            <strong>High-Fidelity Text Rendering:</strong>
                             Uses Unity’s dynamic font rasterizer with your cyberpunk font to produce crisp,
-                            bloom‑safe text at any resolution — including 4096×4096 convention‑grade badges.
+                            bloom-safe text at any resolution - including 4096×4096 convention-grade badges.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Material Auto‑Apply:</strong>
+                            <strong>Material Auto-Apply:</strong>
                             Optionally pushes generated textures directly into your avatar’s material,
                             updating <code>_MainTex</code>, <code>_EmissionMap</code>, <code>_Matcap</code>,
                             or custom shader slots depending on the detected shader.
@@ -613,49 +618,49 @@
                     <h3 class="text-glow-cyan">Live Scene UV Mapper</h3>
 
                     <p class="mb-3">
-                        A real‑time UV coordinate acquisition system that hijacks the Unity Scene View to map badge
-                        coordinates directly onto 3D meshes. Designed for creators who need pixel‑perfect placement
+                        A real-time UV coordinate acquisition system that hijacks the Unity Scene View Camera to map badge
+                        coordinates directly onto 3D meshes using Raycasts. Designed for creators who need pixel-perfect placement
                         of names, pronouns, and titles on curved or irregular badge surfaces.
                     </p>
 
                     <ul class="custom-list m-0 ps-4">
 
                         <li class="mb-2">
-                            <strong>Interactive Raycasting Engine:</strong>
+                            <strong>Interactive Raycasting:</strong>
                             Converts Scene View clicks into precise MeshCollider hit points, then mathematically
                             inverts the barycentric UV coordinates into ImageMagick pixel space.
-                            Supports 1K–4K badge maps with sub‑pixel accuracy.
+                            Supports 1K–4K badge maps with sub-pixel accuracy.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Live Coordinate Telemetry:</strong>
-                            Displays real‑time pixel X/Y values in a neon‑coded dashboard.
-                            Includes one‑click clipboard copying for rapid layout iteration.
+                            <strong>Live Coordinates:</strong>
+                            Displays real-time pixel X/Y values in a neon-coded dashboard.
+                            Includes one-click clipboard copying for rapid layout iteration.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Non‑Destructive Workflow:</strong>
+                            <strong>Non-Destructive Workflow:</strong>
                             Temporarily injects a MeshCollider into your badge object for raycasting,
                             suspends Unity’s native gizmos, and restores everything on exit.
                             No permanent components are added to your scene.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Scene‑Aware Mapping Mode:</strong>
+                            <strong>Scene-Aware Mapping Mode:</strong>
                             Locks the Scene View into a mapping state, intercepting clicks and preventing
                             accidental transform edits while mapping is active.
                         </li>
 
                         <li class="mb-2">
-                            <strong>High‑Resolution UV Projection:</strong>
+                            <strong>High-Resolution UV Projection:</strong>
                             Supports custom texture resolutions (512 → 4096) and automatically clamps
-                            out‑of‑bounds UVs to prevent invalid pixel writes.
+                            out-of-bounds UVs to prevent invalid pixel writes.
                         </li>
 
                         <li class="mb-2">
                             <strong>Perfect for Curved Badges:</strong>
-                            Ideal for Furality‑style curved badge meshes, 3D‑printed badge models,
-                            or any non‑flat surface where 2D layout tools fail.
+                            Ideal for Furality-style curved badge meshes, 3D-printed badge models,
+                            or any non-flat surface where 2D layout tools fail.
                         </li>
 
                     </ul>
@@ -676,9 +681,9 @@
                     <h3 class="text-glow-cyan">Animation Workbench Pro</h3>
 
                     <p class="mb-3">
-                        A next‑generation animation authoring environment engineered for creators who demand precision,
+                        A next-generation animation authoring environment engineered for creators who demand precision,
                         visual clarity, and mathematical control. Workbench Pro merges a custom curve graph engine,
-                        material‑property binding system, and real‑time preview pipeline into a single cyber‑styled
+                        material-property binding system, and real-time preview pipeline into a single cyber-styled
                         workspace that outperforms Unity’s native tools.
                     </p>
 
@@ -686,7 +691,7 @@
 
                         <li class="mb-2">
                             <strong>Explicit Intent Paradigm:</strong>
-                            Every destructive action — binding injection, curve overwrite, staged commit — is gated behind
+                            Every destructive action - binding injection, curve overwrite, staged commit - is gated behind
                             explicit user intent. The Workbench never mutates live scene data unless you deliberately
                             authorize it, preventing accidental corruption of production assets.
                         </li>
@@ -698,7 +703,7 @@
                             (Emission, Rim, AudioLink, Masking, etc.), and exposes them as animatable bindings.
                             Includes:
                             <ul class="custom-list ps-4 mt-2">
-                                <li>Poiyomi‑aware category detection</li>
+                                <li>Poiyomi-aware category detection</li>
                                 <li>Color channel splitting (R/G/B/A)</li>
                                 <li>Vector channel splitting (X/Y/Z/W)</li>
                                 <li>Searchable popup with material → category → property hierarchy</li>
@@ -719,28 +724,28 @@
                         </li>
 
                         <li class="mb-2">
-                            <strong>CurveGraphView Rendering Engine:</strong>
-                            A custom IMGUI‑driven graph renderer with:
+                            <strong>CurveGraphView Rendering:</strong>
+                            A custom IMGUI-driven graph renderer with:
                             <ul class="custom-list ps-4 mt-2">
                                 <li>Zoomable time domain</li>
-                                <li>Pan‑based navigation</li>
-                                <li>Double‑click keyframe insertion</li>
-                                <li>Right‑click keyframe deletion</li>
-                                <li>Color‑coded curves per binding</li>
-                                <li>Dynamic value‑range detection</li>
+                                <li>Pan-based navigation</li>
+                                <li>Double-click keyframe insertion</li>
+                                <li>Right-click keyframe deletion</li>
+                                <li>Color-coded curves per binding</li>
+                                <li>Dynamic value-range detection</li>
                             </ul>
-                            Designed for high‑density animation editing without Unity’s native Timeline overhead.
+                            Designed for high-density animation editing without Unity’s native Timeline overhead.
                         </li>
 
                         <li class="mb-2">
                             <strong>Timeline Ribbon:</strong>
-                            A dedicated time‑range controller that defines:
+                            A dedicated time-range controller that defines:
                             <ul class="custom-list ps-4 mt-2">
                                 <li>Visible window in the graph</li>
                                 <li>Key generation range</li>
-                                <li>Clip‑length‑aware bounds</li>
+                                <li>Clip-length-aware bounds</li>
                             </ul>
-                            Prevents 0‑length slider collapse and supports extended ranges beyond clip length.
+                            Prevents 0-length slider collapse and supports extended ranges beyond clip length.
                         </li>
 
                         <li class="mb-2">
@@ -749,46 +754,46 @@
                             This includes:
                             <ul class="custom-list ps-4 mt-2">
                                 <li>Intermediate key generation</li>
-                                <li>Easing‑based interpolation</li>
-                                <li>Tail‑dropping and region rebuilding</li>
-                                <li>Non‑destructive previewing</li>
+                                <li>Easing-based interpolation</li>
+                                <li>Tail-dropping and region rebuilding</li>
+                                <li>Non-destructive previewing</li>
                             </ul>
                             Powered by <code>CurveOperations.BuildStretchedCurve()</code>.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Real‑Time Preview Engine:</strong>
+                            <strong>Real-Time Preview:</strong>
                             The <code>PreviewEngine</code> plays your staged animation directly on a scene object using
                             <code>AnimationMode.SampleAnimationClip</code>.
                             Features:
                             <ul class="custom-list ps-4 mt-2">
                                 <li>Speed control</li>
-                                <li>Start‑time offsets</li>
+                                <li>Start-time offsets</li>
                                 <li>Automatic stop at clip end</li>
                                 <li>SceneView repaint synchronization</li>
                             </ul>
                         </li>
 
                         <li class="mb-2">
-                            <strong>Binding Matrix:</strong>
+                            <strong>Binding:</strong>
                             A full inspector for all animation bindings in the clip:
                             <ul class="custom-list ps-4 mt-2">
                                 <li>Select / deselect / delete bindings</li>
                                 <li>Bulk refresh</li>
                                 <li>Material property injection</li>
-                                <li>Path‑aware binding creation</li>
+                                <li>Path-aware binding creation</li>
                             </ul>
                             Designed for large clips with dozens or hundreds of animated properties.
                         </li>
 
                         <li class="mb-2">
                             <strong>Cyberpunk UI Toolkit Interface:</strong>
-                            The entire Workbench is wrapped in a neon‑accented, flex‑responsive UI:
+                            The entire Workbench is wrapped in a neon-accented, flex-responsive UI:
                             <ul class="custom-list ps-4 mt-2">
-                                <li>Three‑column adaptive layout</li>
+                                <li>Three-column adaptive layout</li>
                                 <li>Collapsible panels</li>
                                 <li>Custom USS styling</li>
-                                <li>High‑contrast graph container</li>
+                                <li>High-contrast graph container</li>
                             </ul>
                         </li>
 
@@ -810,30 +815,30 @@
                     <h3 class="text-glow-cyan">Pipeline Preset Manager</h3>
 
                     <p class="mb-3">
-                        A dual‑mode import automation engine that enforces project‑wide consistency by extracting,
+                        A dual-mode import automation engine that enforces project-wide consistency by extracting,
                         generating, and globally registering Unity Presets with surgical precision. Designed for
-                        large‑scale avatar, world, and asset pipelines where manual importer configuration becomes
+                        large-scale avatar, world, and asset pipelines where manual importer configuration becomes
                         a catastrophic time sink.
                     </p>
 
                     <ul class="custom-list m-0 ps-4">
 
                         <li class="mb-2">
-                            <strong>Phantom Asset Architecture:</strong>
+                            <strong>Phantom Asset Detection:</strong>
                             The Authoring Engine creates a temporary “phantom” PNG on disk, injects your import rules
-                            (texture type, mip‑maps, readability, max resolution), then rips the importer state into a
+                            (texture type, mip-maps, readability, max resolution), then rips the importer state into a
                             permanent Preset. This allows you to author standardized presets without needing a real
                             source asset.
                         </li>
 
                         <li class="mb-2">
                             <strong>Bulk Extraction Pipeline:</strong>
-                            Select any object — or entire hierarchies — and the engine will:
+                            Select any object - or entire hierarchies - and the engine will:
                             <ul class="custom-list ps-4 mt-2">
                                 <li>Traverse components (optionally including children)</li>
                                 <li>Ignore Transform components for clean preset sets</li>
                                 <li>Generate a Preset for every component type</li>
-                                <li>Auto‑name and serialize them into your chosen directory</li>
+                                <li>Auto-name and serialize them into your chosen directory</li>
                             </ul>
                             Perfect for ripping PhysBone settings, Renderer configs, AudioSource profiles, and more.
                         </li>
@@ -845,7 +850,7 @@
                             This means:
                             <ul class="custom-list ps-4 mt-2">
                                 <li>New assets automatically inherit your standards</li>
-                                <li>Glob‑based filters allow precise targeting</li>
+                                <li>Glob-based filters allow precise targeting</li>
                                 <li>No more manual importer tweaking</li>
                             </ul>
                         </li>
@@ -855,7 +860,7 @@
                             Author presets that enforce:
                             <ul class="custom-list ps-4 mt-2">
                                 <li>Max texture size (1K → 8K)</li>
-                                <li>Mip‑map rules</li>
+                                <li>Mip-map rules</li>
                                 <li>Read/Write toggles</li>
                                 <li>TextureImporterType (Default, Normal Map, Sprite, etc.)</li>
                             </ul>
@@ -863,12 +868,12 @@
                         </li>
 
                         <li class="mb-2">
-                            <strong>Two‑Mode Cyber UI:</strong>
-                            A neon‑styled UI Toolkit interface with:
+                            <strong>Two-Mode Cyber UI:</strong>
+                            A neon-styled UI Toolkit interface with:
                             <ul class="custom-list ps-4 mt-2">
-                                <li><b>Extraction Mode</b> — rip presets from existing components</li>
-                                <li><b>Authoring Mode</b> — generate presets from scratch</li>
-                                <li>Tab‑based navigation</li>
+                                <li><b>Extraction Mode</b> - rip presets from existing components</li>
+                                <li><b>Authoring Mode</b> - generate presets from scratch</li>
+                                <li>Tab-based navigation</li>
                                 <li>Fully responsive layout</li>
                             </ul>
                         </li>
@@ -876,12 +881,12 @@
                         <li class="mb-2">
                             <strong>Preset Manager Integration:</strong>
                             Automatically inserts your presets at the top of Unity’s default preset stack,
-                            ensuring they override Unity’s built‑in importer behavior without manual intervention.
+                            ensuring they override Unity’s built-in importer behavior without manual intervention.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Enterprise‑Scale Consistency:</strong>
-                            Ideal for teams, multi‑avatar creators, and large world projects where:
+                            <strong>Enterprise-Scale Consistency:</strong>
+                            Ideal for teams, multi-avatar creators, and large world projects where:
                             <ul class="custom-list ps-4 mt-2">
                                 <li>Texture import rules must be identical</li>
                                 <li>AudioSource defaults must match</li>
@@ -907,13 +912,13 @@
                 </div>
 
                 <div class="tool-content">
-                    <h3 class="text-glow-cyan">Vixen World Engine: Omni‑Matrix Diagnostic Spider</h3>
+                    <h3 class="text-glow-cyan">Vixen World Engine: Omni-Matrix Diagnostic Spider</h3>
 
                     <p class="mb-3">
-                        A hyper‑adaptive, reflection‑driven auditing organism engineered to dissect VRChat worlds at the
-                        architectural level. The Spider crawls through Udon assemblies, Unity internals, and third‑party
+                        A hyper-adaptive, reflection-driven auditing organism engineered to dissect VRChat worlds at the
+                        architectural level. The Spider crawls through Udon assemblies, Unity internals, and third-party
                         ecosystems to expose VRAM bombs, network starvation loops, shader corruption vectors, and
-                        compute‑heavy topology traps before they detonate in a live instance.
+                        compute-heavy topology traps before they detonate in a live instance.
                     </p>
 
                     <!-- FLEXBOX MATRIX GRID -->
@@ -923,12 +928,12 @@
                         <div class="matrix-column">
                             <h4 class="text-glow-pink caption1 mb-2">ECOSYSTEM & TOPOLOGY</h4>
                             <ul class="custom-list ps-4 caption2">
-                                <li class="mb-2"><strong>ProTV Pipeline Guard:</strong> Deep‑scans ProTV instances for HDR VRAM bloat, baked GSV conflicts, RTGI mobile sinks, aggressive playlist search loops, and emissive GI blowouts. Automatically patches unsafe fields via reflection‑based fix payloads.</li>
-                                <li class="mb-2"><strong>IwaSync3 Stability Matrix:</strong> Flags 1080p+ video blowouts, unbounded playlist growth, non‑spatialized global audio, aggressive sync frequencies, emissive screen overdrive, and GC‑heavy event invokers that destabilize frame pacing.</li>
-                                <li class="mb-2"><strong>Mesh & Geometry Auditor:</strong> Hunts for 66k+ vertex meshes, missing LOD chains, non‑convex MeshCollider drag, realtime reflection probes, and physics sinks that create unpredictable CPU spikes.</li>
-                                <li class="mb-2"><strong>TXL Logic Scraper:</strong> Detects starvation‑level polling (<code>0.01f</code> intervals), collapsed translation tables, forced collider checks, orphaned Udon behaviours, and cryptographic sinks from DigestValidator.</li>
-                                <li class="mb-2"><strong>Native Video Throttling:</strong> Automatically clamps AVPro and Unity Video components from <strong>Unlimited (0)</strong> or 4K down to safe 1080p limits, preventing bandwidth nukes and Quest‑side crashes.</li>
-                                <li class="mb-2"><strong>Omni‑Chaos Stress Fabricator:</strong> Generates a full stress‑test environment with VRAM nukes, heavy meshes, reflection probes, network sync storms, and video pipeline overloads to validate world stability under extreme conditions.</li>
+                                <li class="mb-2"><strong>ProTV Pipeline Guard:</strong> Deep-scans ProTV instances for HDR VRAM bloat, baked GSV conflicts, RTGI mobile sinks, aggressive playlist search loops, and emissive GI blowouts. Automatically patches unsafe fields via reflection-based fix payloads.</li>
+                                <li class="mb-2"><strong>IwaSync3 Stability Matrix:</strong> Flags 1080p+ video blowouts, unbounded playlist growth, non-spatialized global audio, aggressive sync frequencies, emissive screen overdrive, and GC-heavy event invokers that destabilize frame pacing.</li>
+                                <li class="mb-2"><strong>Mesh & Geometry Auditor:</strong> Hunts for 66k+ vertex meshes, missing LOD chains, non-convex MeshCollider drag, realtime reflection probes, and physics sinks that create unpredictable CPU spikes.</li>
+                                <li class="mb-2"><strong>TXL Logic Scraper:</strong> Detects starvation-level polling (<code>0.01f</code> intervals), collapsed translation tables, forced collider checks, orphaned Udon behaviours, and cryptographic sinks from DigestValidator.</li>
+                                <li class="mb-2"><strong>Native Video Throttling:</strong> Automatically clamps AVPro and Unity Video components from <strong>Unlimited (0)</strong> or 4K down to safe 1080p limits, preventing bandwidth nukes and Quest-side crashes.</li>
+                                <li class="mb-2"><strong>Omni-Chaos Stress Fabricator:</strong> Generates a full stress-test environment with VRAM nukes, heavy meshes, reflection probes, network sync storms, and video pipeline overloads to validate world stability under extreme conditions.</li>
                             </ul>
                         </div>
 
@@ -936,12 +941,12 @@
                         <div class="matrix-column">
                             <h4 class="text-glow-pink caption1 mb-2">UI, SECURITY & MEMORY</h4>
                             <ul class="custom-list ps-4 caption2">
-                                <li class="mb-2"><strong>Raw UASM Bytecode Scraper:</strong> Pierces <code>UdonSharpEditorCache</code> to analyze raw Udon assembly. Detects lethal <code>PlayerData.Set</code> calls inside <code>Update()</code>, infinite sync loops, and network‑rate‑limit bombs before they reach a build.</li>
-                                <li class="mb-2"><strong>UI & Font Hunter:</strong> Identifies legacy <code>Arial.ttf</code>, mismatched TMP assets, missing shader channels, and world‑space canvases that trigger catastrophic rebuild cascades.</li>
-                                <li class="mb-2"><strong>Shader Integrity Matrix:</strong> Protects core SDK shaders, IwaSync internals, ProTV internals, and VRC Billiards materials from the autonomous shader replacer to preserve logic‑driven material behavior.</li>
-                                <li class="mb-2"><strong>Hardware‑Level VRAM Profiling:</strong> Uses <code>Profiler.GetRuntimeMemorySizeLong()</code> to capture true GPU footprint, exposing procedural 4K RenderTextures, TMP atlases, UI masks, and unmanaged memory hogs that evade standard project scanners.</li>
-                                <li class="mb-2"><strong>Canvas Rebuild Tracker:</strong> Maps layout‑modifying UI elements on root canvases to prevent rebuild storms across playlist UIs, queue systems, and dynamic world‑space interfaces.</li>
-                                <li class="mb-2"><strong>Texture & Audio Forensics:</strong> Scans all textures, UI atlases, meshes, and audio clips to generate a full VRAM breakdown and compute threat‑level score.</li>
+                                <li class="mb-2"><strong>Raw UASM Bytecode Scraper:</strong> Pierces <code>UdonSharpEditorCache</code> to analyze raw Udon assembly. Detects lethal <code>PlayerData.Set</code> calls inside <code>Update()</code>, infinite sync loops, and network-rate-limit bombs before they reach a build.</li>
+                                <li class="mb-2"><strong>UI & Font Hunter:</strong> Identifies legacy <code>Arial.ttf</code>, mismatched TMP assets, missing shader channels, and world-space canvases that trigger catastrophic rebuild cascades.</li>
+                                <li class="mb-2"><strong>Shader Integrity Matrix:</strong> Protects core SDK shaders, IwaSync internals, ProTV internals, and VRC Billiards materials from the autonomous shader replacer to preserve logic-driven material behavior.</li>
+                                <li class="mb-2"><strong>Hardware-Level VRAM Profiling:</strong> Uses <code>Profiler.GetRuntimeMemorySizeLong()</code> to capture true GPU footprint, exposing procedural 4K RenderTextures, TMP atlases, UI masks, and unmanaged memory hogs that evade standard project scanners.</li>
+                                <li class="mb-2"><strong>Canvas Rebuild Tracker:</strong> Maps layout-modifying UI elements on root canvases to prevent rebuild storms across playlist UIs, queue systems, and dynamic world-space interfaces.</li>
+                                <li class="mb-2"><strong>Texture & Audio Forensics:</strong> Scans all textures, UI atlases, meshes, and audio clips to generate a full VRAM breakdown and compute threat-level score.</li>
                                 <li class="mb-2"><strong>Network & Persistence Auditor:</strong> Detects continuous sync storms, hollow player objects, unsafe persistence calls, and Udon behaviours configured for uncontrolled network replication.</li>
                             </ul>
                         </div>
@@ -951,7 +956,7 @@
                     <div class="tool-footer mt-3 pt-2">
                         <p class="caption2 m-0">
                             <strong>Automated Fix Library:</strong>
-                            Includes 1‑click surgical repairs for font migrations, spatialization, resolution throttling,
+                            Includes 1-click surgical repairs for font migrations, spatialization, resolution throttling,
                             shader replacement, GSV conflict resolution, and Udon component cleanup.
                         </p>
                     </div>

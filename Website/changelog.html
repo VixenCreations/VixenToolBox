@@ -7,7 +7,7 @@
     <!-- Primary SEO -->
     <title>Vixens Toolbox | Changelog, Release Notes & Version History</title>
     <meta name="title" content="Vixens Toolbox | Changelog, Release Notes & Version History">
-    <meta name="description" content="Track every update to Vixens Toolbox — full release notes, version history, feature additions, bug fixes, performance improvements, and ecosystem evolution for VRChat creators.">
+    <meta name="description" content="Track every update to Vixens Toolbox - full release notes, version history, feature additions, bug fixes, performance improvements, and ecosystem evolution for VRChat creators.">
     <meta name="keywords" content="Vixens Toolbox changelog, VRChat tools updates, VRChat release notes, Unity editor tools changelog, PhysBones automation updates, VRChat creator tools version history, VPM updates, Vixenlicious, VRChat development log">
     <meta name="author" content="Vixenlicious">
     <meta name="theme-color" content="#ff00aa">
@@ -19,7 +19,7 @@
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/changelog.html">
     <meta property="og:title" content="Vixens Toolbox | Changelog, Release Notes & Version History">
-    <meta property="og:description" content="Explore the full changelog for Vixens Toolbox — version history, feature updates, bug fixes, and ecosystem improvements for VRChat creators.">
+    <meta property="og:description" content="Explore the full changelog for Vixens Toolbox - version history, feature updates, bug fixes, and ecosystem improvements for VRChat creators.">
     <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="og:site_name" content="Vixens Toolbox">
 
@@ -27,7 +27,7 @@
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/changelog.html">
     <meta property="twitter:title" content="Vixens Toolbox | Changelog, Release Notes & Version History">
-    <meta property="twitter:description" content="See every update to Vixens Toolbox — detailed release notes, version history, and development progress.">
+    <meta property="twitter:description" content="See every update to Vixens Toolbox - detailed release notes, version history, and development progress.">
     <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="twitter:site" content="@VixenVRC">
 
@@ -70,6 +70,11 @@
             <fluent-anchor href="index.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2.5L2 8.5H4V16.5H8V11.5H12V16.5H16V8.5H18L10 2.5Z" /></svg>
                 VPM Registry
+            </fluent-anchor>
+
+            <fluent-anchor href="ai-transparency.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                AI Transparency
             </fluent-anchor>
 
             <fluent-anchor href="tools.html" class="nav-item">
@@ -117,6 +122,7 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
+                        <fluent-option value="v2.1.0">v2.1.0</fluent-option>
                         <fluent-option value="v2.0.4">v2.0.4</fluent-option>
                         <fluent-option value="v2.0.3">v2.0.3</fluent-option>
                         <fluent-option value="v2.0.2">v2.0.2</fluent-option>
@@ -144,6 +150,30 @@
             </div>
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
+
+
+                <div class="changelog-entry" data-version="v2.1.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.1.0 - 2026-05-15</h5>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>VectorLabelDrawer System:</strong> Engineered a custom MaterialPropertyDrawer natively hooked into ShaderLab's Vector arrays. This handles packed vector data inside the inspector seamlessly, preventing standard 4-float structural UI clutter while preserving exact field alignments.</li>
+                        <li class="mb-2"><strong>UITK & IMGUI Hybrid Editor:</strong> Deployed a completely overhauled inspector architecture (`VixenWearUITKInspector`). Features a sleek, tab-driven workflow dividing material configuration into Base, Surface & PBR, Polish & Translucency, Integration, and AudioLink.</li>
+                        <li class="mb-2"><strong>AI Transparency & Development Ethics Page:</strong> Published our formal documentation on enterprise-scale AI deployment. This structural breakdown details our 100% hand-reviewed code standards, agentic research integration, and measurable workflow accelerations to ensure transparency across the VixenTools ecosystem.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Massive Shader Property Packing:</strong> Consolidated loose floats and variables into highly optimized `Vector` attributes, such as `_PBRParams` [cite: 2], `_GeoEmisParams` [cite: 3], and `_ClearcoatParams`[cite: 4]. This drastically reduces uniform overhead and streamlines memory bandwidth across the material pipeline.</li>
+                        <li class="mb-2"><strong>Aggressive Baseline Optimization:</strong> Expensive calculations have been zeroed out by default to guarantee maximum out-of-the-box performance. Parallax and Displacement are now disabled at the baseline[cite: 3]. Iridescence and Rim lighting have also been zeroed out[cite: 4].</li>
+                        <li class="mb-2"><strong>AudioLink Modulation Standardization:</strong> All AudioLink reactive modulations (`_ALParamsA`, `_ALParamsB`) are entirely zeroed out by default to prevent unintended emission or vertex manipulation unless explicitly configured by the user[cite: 7].</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Inspector State Loss (Domain Reloads):</strong> Solved an aggressive UX friction point where the material inspector would reset its tab focus during Unity script compilation. The editor now securely caches active tabs and foldout states to `EditorPrefs`, surviving domain reloads without breaking the workflow.</li>
+                    </ul>
+                </div>
 
                 <div class="changelog-entry" data-version="v2.0.4">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.0.4 - 2026-05-15</h5>
@@ -337,7 +367,7 @@
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Serialization Deadlock & CS0246 (Architecture):</strong> Radically decoupled the <code>ShaderDictionaryAsset</code> and its <code>[CustomEditor]</code> class from the primary <code>VixenWorldEngine</code> window space into distinct scripts. This forces Unity's AssetDatabase to index the custom inspector immediately upon compilation, obliterating the deferred-loading bug and resolving the <code>CS0246</code> namespace missing errors.</li>
-                        <li class="mb-2"><strong>Infinite Replacement Loop (Shader Pipeline):</strong> Injected an O(1) circuit breaker into the Geometry & Materials auditor. The heuristic scanner now explicitly recognizes the active <code>_targetReplacementShader</code> as inherently compliant, preventing the engine from falsely flagging—and attempting to recursively convert—materials that have already achieved their optimized target state.</li>
+                        <li class="mb-2"><strong>Infinite Replacement Loop (Shader Pipeline):</strong> Injected an O(1) circuit breaker into the Geometry & Materials auditor. The heuristic scanner now explicitly recognizes the active <code>_targetReplacementShader</code> as inherently compliant, preventing the engine from falsely flagging-and attempting to recursively convert-materials that have already achieved their optimized target state.</li>
                     </ul>
                 </div>
 

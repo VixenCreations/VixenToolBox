@@ -7,7 +7,7 @@
     <!-- Primary SEO -->
     <title>Vixens Toolbox | Documentation, Guides & Technical Reference</title>
     <meta name="title" content="Vixens Toolbox | Documentation, Guides & Technical Reference">
-    <meta name="description" content="Explore the official documentation for Vixens Toolbox — deep‑dive guides, technical references, workflow tutorials, automation breakdowns, and VRChat creator tooling manuals.">
+    <meta name="description" content="Explore the official documentation for Vixens Toolbox - deep‑dive guides, technical references, workflow tutorials, automation breakdowns, and VRChat creator tooling manuals.">
     <meta name="keywords" content="Vixens Toolbox documentation, VRChat tools docs, VRChat shader docs, Unity editor tools documentation, PhysBones automation guide, VRChat creator tutorials, VPM documentation, avatar workflow guides, Vixenlicious docs, VRChat technical reference">
     <meta name="author" content="Vixenlicious">
     <meta name="theme-color" content="#ff00aa">
@@ -19,7 +19,7 @@
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/docs.html">
     <meta property="og:title" content="Vixens Toolbox | Documentation, Guides & Technical Reference">
-    <meta property="og:description" content="Access deep‑dive documentation for Vixens Toolbox — tutorials, workflow guides, automation systems, and VRChat creator tooling reference material.">
+    <meta property="og:description" content="Access deep‑dive documentation for Vixens Toolbox - tutorials, workflow guides, automation systems, and VRChat creator tooling reference material.">
     <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="og:site_name" content="Vixens Toolbox">
 
@@ -27,7 +27,7 @@
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/docs.html">
     <meta property="twitter:title" content="Vixens Toolbox | Documentation, Guides & Technical Reference">
-    <meta property="twitter:description" content="Explore the official Vixens Toolbox documentation — deep‑dive guides, tutorials, and technical references for VRChat creators.">
+    <meta property="twitter:description" content="Explore the official Vixens Toolbox documentation - deep‑dive guides, tutorials, and technical references for VRChat creators.">
     <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="twitter:site" content="@VixenVRC">
 
@@ -63,13 +63,18 @@
     <nav class="sidebar">
         <div class="sidebar-brand">
             <h2 class="text-glow-cyan">VIXENTOOLS</h2>
-            <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">Ecosystem Matrix</div>
+            <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">Ecosystem</div>
         </div>
 
         <div class="nav-links">
             <fluent-anchor href="index.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2.5L2 8.5H4V16.5H8V11.5H12V16.5H16V8.5H18L10 2.5Z" /></svg>
                 VPM Registry
+            </fluent-anchor>
+
+            <fluent-anchor href="ai-transparency.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                AI Transparency
             </fluent-anchor>
 
             <fluent-anchor href="tools.html" class="nav-item">
@@ -170,19 +175,19 @@
                     <div class="badge">VixenAvatarValidator.cs | VixenMeshPatcher.cs</div>
                 </div>
                 <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
-                    A multi-threaded, highly destructive execution matrix designed to violently crush PC avatar polycounts
+                    A multi-threaded, highly destructive execution designed to violently crush PC avatar polycounts
                     and physics limits. It dynamically analyzes your hardware footprint and deploys a custom spatial hashing
                     algorithm to decimate geometry while mathematically protecting high-fidelity facial topology.
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li>
-                        <strong>5D Spatial Hash Welder:</strong> Fuses co-located vertices on excessively heavy meshes
+                        <strong>Vertice Mesh Welder:</strong> Fuses co-located vertices on excessively heavy meshes
                         (&gt;15,000 polygons) by generating a proprietary 5-dimensional coordinate key. By mapping XYZ
                         position natively alongside U and V coordinates, it drastically crushes raw polycounts while
                         mathematically guaranteeing the survival of critical texture seams.
                     </li>
                     <li>
-                        <strong>Dual-Shielding Exclusion Matrix:</strong> Automatically scans submesh material slots for
+                        <strong>Dual-Shielding Exclusion:</strong> Automatically scans submesh material slots for
                         high-detail keywords (e.g., <em>eyes, visor, face</em>) AND actively queries the active Humanoid
                         Armature for <code>HumanBodyBones.Neck</code>. Any vertex influenced by these kinematics is locked
                         entirely out of the decimation grid.
@@ -204,14 +209,14 @@
                 <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
                 <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
                     <li>
-                        <strong>Dynamic PC Target Rank Matrix:</strong> Eradicates static culling limits. Creators
+                        <strong>Dynamic PC Target Rank:</strong> Eradicates static culling limits. Creators
                         explicitly target specific VRChat Performance Ranks (Excellent, Good, Medium, Poor) via a native
                         dropdown. The deep-scanning heuristics instantly recalibrate execution thresholds for Animators,
                         Contacts, and PhysBones based on the selected hardware constraints.
                     </li>
                     <li>
                         <strong>Interactive Physics Executioner:</strong> Replaces invisible auto-cull algorithms with a
-                        surgical UI Toolkit panel. Spawns an interactive matrix mapping every physics component sorted by
+                        surgical UI Toolkit panel. Spawns an interactive mapping every physics component sorted by
                         hierarchy depth. Creators manually select and eradicate expendable leaf-node physics (tail fluff,
                         hair tips) while visually protecting structural roots.
                     </li>
@@ -256,7 +261,7 @@
                     <li>
                         <strong>IgnoreTransform Shield Piercing:</strong>
                         Reads and interprets every <code>ignoreTransforms</code> array inside PhysBone components. If a bone is
-                        explicitly listed, the shield is dropped, allowing the culling matrix to correctly identify and remove
+                        explicitly listed, the shield is dropped, allowing the culling to correctly identify and remove
                         dead leaf‑node bones that would otherwise survive heuristic filtering.
                     </li>
 
@@ -273,7 +278,7 @@
                 <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
                     <li>
                         <strong>Selective Macro Culling:</strong>
-                        After scanning, the interactive topology matrix populates with all detected components. Global
+                        After scanning, the interactive topology populates with all detected components. Global
                         <em>Keep All</em> and <em>Cull All</em> macros allow creators to rapidly triage large arrays, preserving
                         structural bones while discarding expensive fluff such as tail tips and hair strands.
                     </li>
@@ -281,7 +286,7 @@
                     <li>
                         <strong>Post‑Conversion Material Tweaks:</strong>
                         The engine defaults all materials to mobile‑safe shaders such as
-                        <code>VRChat/Mobile/ToonLit</code>. After cloning, minor adjustments restore visual parity—resetting
+                        <code>VRChat/Mobile/ToonLit</code>. After cloning, minor adjustments restore visual parity-resetting
                         emission maps, applying <em>Multiply</em> blending to particle lenses, and enabling <em>Additive</em>
                         rendering on visors to recover transparency.
                     </li>
@@ -316,7 +321,7 @@
 
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li>
-                        <strong>Precision Texture Packing (PBR Matrix):</strong>
+                        <strong>Precision Texture Packing (PBR):</strong>
                         Maximizes VRAM efficiency via a rigorously packed linear map. Channels are strictly allocated:
                         <strong>R</strong> (Metallic), <strong>G</strong> (Ambient Occlusion), <strong>B</strong> (Displacement / Height), and <strong>A</strong> (Smoothness).
                     </li>
@@ -373,7 +378,7 @@
                 </div>
                 <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
                     Designed to eliminate the human error of manually dragging, dropping, and configuring colliders across
-                    avatar iterations. This engine entirely decouples the physics matrix from the mesh hierarchy by
+                    avatar iterations. This engine entirely decouples the physics from the mesh hierarchy by
                     snapshotting your PhysBone architecture into reusable blueprints.
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -432,7 +437,7 @@
                 <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
                     An advanced visual workspace for staging, easing, and sampling complex animation curves, built to bypass
                     Unity's clunky default Animation window completely. The Workbench treats curves, bindings, and material
-                    properties as a programmable matrix instead of a fragile hand-drawn timeline.
+                    properties as a programmable instead of a fragile hand-drawn timeline.
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li>
@@ -513,7 +518,7 @@
                     <div class="badge">VixenBadgeMaker.cs</div>
                 </div>
                 <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
-                    A high-fidelity, CSS-driven procedural generation matrix utilizing a native JSON layout engine
+                    A high-fidelity, CSS-driven procedural generation utilizing a native JSON layout engine
                     (<code>layout.json</code>) to architect multi-channel convention badges dynamically, specifically
                     heavily targeting Furality templates.
                 </p>
@@ -682,7 +687,7 @@
                             </li>
 
                             <li class="mb-2">
-                                <strong>IwaSync3 Matrix:</strong>
+                                <strong>IwaSync3:</strong>
                                 Flags 1080p+ video blowouts, unbounded playlist growth, global non‑spatialized audio,
                                 aggressive sync frequencies, emissive screen overdrive, and GC‑heavy event invokers.
                             </li>

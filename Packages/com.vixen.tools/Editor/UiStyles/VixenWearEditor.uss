@@ -1,0 +1,402 @@
+﻿/* =======================================================
+   VixenWear — Latex Ultra Shader Inspector Skin
+   (Unity‑compatible USS — no CSS variables, no color-mix)
+   ======================================================= */
+
+/* ---------- Colors (manually expanded) ---------- */
+
+.bg-window        { background-color: #0b0b0f; }
+.bg-header        { background-color: #0c0612; }
+.bg-panel         { background-color: #15151b; }
+.bg-panel-alt     { background-color: #1b1b24; }
+.bg-tab-bar       { background-color: #14141b; }
+.bg-tab-active    { background-color: #232331; }
+.bg-tab-inactive  { background-color: #181821; }
+
+.text-main        { color: #e6e6f0; }
+.text-muted       { color: #9a9ab0; }
+.text-soft        { color: #6f6f88; }
+
+.border-soft      { border-color: rgba(255,255,255,0.06); }
+.border-strong    { border-color: rgba(0,229,255,0.55); }
+
+.accent-cyan      { color: #00e5ff; }
+.accent-pink      { color: #ff00aa; }
+
+/* =======================================================
+   Root & Scroll
+   ======================================================= */
+
+#hub-root {
+    background-color: #0b0b0f;
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+#main-scroll {
+    flex-grow: 1;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 12px;
+    padding-bottom: 20px;
+}
+
+.unity-scroll-view__content-viewport,
+.unity-scroll-view__content-container {
+    background-color: transparent;
+}
+
+/* =======================================================
+   Header Banner
+   ======================================================= */
+
+#hub-header {
+    min-height: 70px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    background-color: #0c0612;
+    border-bottom-width: 2px;
+    border-bottom-color: #7a0055; /* static mix of pink+black */
+
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#hub-header-title {
+    font-size: 16px;
+    -unity-font-style: bold;
+    color: #ffffff;
+}
+
+/* =======================================================
+   Tabs
+   ======================================================= */
+
+#tab-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    background-color: #14141b;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(255,255,255,0.06);
+}
+
+.tab-btn {
+    height: 26px;
+    min-width: 120px;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+
+    border-radius: 4px;
+    border-width: 1px;
+    border-color: transparent;
+
+    font-size: 11px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+
+    background-color: #181821;
+    color: #6f6f88;
+}
+
+.tab-btn:hover {
+    background-color: #222233;
+    color: #e6e6f0;
+}
+
+.tab-btn-active {
+    background-color: #232331;
+    color: #00e5ff;
+    border-color: rgba(0,229,255,0.55);
+}
+
+.tab-btn-inactive {
+    background-color: #181821;
+    color: #6f6f88;
+}
+
+/* =======================================================
+   Tab Description
+   ======================================================= */
+
+#desc-container {
+    margin-left: 14px;
+    margin-right: 14px;
+    margin-top: 8px;
+    margin-bottom: 4px;
+
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+
+    background-color: rgba(255,255,255,0.03);
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: rgba(255,255,255,0.06);
+
+    flex-direction: row;
+    align-items: center;
+}
+
+#tab-desc-label {
+    color: #9a9ab0;
+    font-size: 11px;
+    -unity-text-align: middle-left;
+    white-space: normal;
+}
+
+/* =======================================================
+   IMGUI Container Wrapper
+   ======================================================= */
+
+#latex-imgui-root {
+    margin-top: 12px;
+    margin-bottom: 12px;
+
+    padding-left: 14px;
+    padding-right: 14px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+
+    background-color: #15151b;
+    border-radius: 8px;
+    border-width: 1px;
+    border-color: rgba(255,255,255,0.06);
+}
+
+/* =======================================================
+   Field Styling (Unity‑safe)
+   ======================================================= */
+
+.unity-label {
+    color: #e6e6f0;
+    font-size: 11px;
+}
+
+.unity-base-field {
+    color: #e6e6f0;
+    font-size: 11px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+/* Text / numeric fields */
+.unity-text-field,
+.unity-float-field,
+.unity-integer-field,
+.unity-vector2-field,
+.unity-vector3-field,
+.unity-vector4-field {
+    background-color: #1b1b24;
+    border-width: 1px;
+    border-color: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+    min-height: 18px;
+}
+
+.unity-text-field:hover,
+.unity-float-field:hover,
+.unity-integer-field:hover,
+.unity-vector2-field:hover,
+.unity-vector3-field:hover,
+.unity-vector4-field:hover {
+    background-color: #232334;
+    border-color: #00e5ff;
+}
+
+.unity-text-field:focus,
+.unity-float-field:focus,
+.unity-integer-field:focus,
+.unity-vector2-field:focus,
+.unity-vector3-field:focus,
+.unity-vector4-field:focus {
+    background-color: #2b2b3c;
+    border-color: #00e5ff;
+}
+
+/* Object fields */
+.unity-object-field {
+    background-color: #1b1b24;
+    border-width: 1px;
+    border-color: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    min-height: 20px;
+}
+
+.unity-object-field:hover {
+    background-color: #232334;
+    border-color: #00e5ff;
+}
+
+/* Popup / enum fields */
+.unity-base-popup-field__input {
+    background-color: #1b1b24;
+    border-width: 1px;
+    border-radius: 3px;
+    border-color: rgba(255,255,255,0.06);
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+.unity-base-popup-field__input:hover {
+    background-color: #232334;
+    border-color: #00e5ff;
+}
+
+.unity-base-popup-field__text {
+    color: #e6e6f0;
+    -unity-font-style: bold;
+}
+
+.unity-base-popup-field__arrow {
+    -unity-background-image-tint-color: #00e5ff;
+}
+
+/* Toggles */
+.unity-toggle {
+    color: #e6e6f0;
+    font-size: 11px;
+}
+
+.unity-toggle__checkmark {
+    border-width: 1px;
+    border-radius: 2px;
+    border-color: rgba(255,255,255,0.06);
+    background-color: #1b1b24;
+}
+
+.unity-toggle__checkmark:checked {
+    background-color: #00e5ff;
+    border-color: #00e5ff;
+}
+
+/* Sliders */
+.unity-slider {
+    height: 16px;
+}
+
+.unity-slider__tracker {
+    background-color: #26263a;
+    border-radius: 999px;
+}
+
+.unity-slider__dragger {
+    background-color: #00e5ff;
+    border-radius: 999px;
+}
+
+/* Color fields */
+.unity-color-field {
+    border-width: 1px;
+    border-radius: 3px;
+    border-color: rgba(255,255,255,0.06);
+    min-height: 20px;
+}
+
+.unity-color-field:hover {
+    border-color: #ff00aa;
+}
+
+/* Buttons */
+.unity-button {
+    background-color: #222233;
+    border-radius: 4px;
+    border-width: 1px;
+    border-color: rgba(255,255,255,0.06);
+    color: #e6e6f0;
+    font-size: 11px;
+    -unity-font-style: bold;
+}
+
+.unity-button:hover {
+    background-color: #2b2b3c;
+    border-color: #00e5ff;
+}
+
+/* =======================================================
+   Responsive Field Scaling Fix (FORCE OVERRIDE)
+   ======================================================= */
+
+/* Force containers to allow children to shrink and not overflow */
+.unity-base-field, 
+.unity-property-field,
+.unity-base-field__container {
+    flex-direction: row;
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden; 
+}
+
+/* 1. Label vs Input Ratio - Strict boundaries */
+.unity-base-field > .unity-label {
+    min-width: 120px;
+    flex-basis: 120px;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+.unity-base-field__input {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0; /* Critical for shrinking */
+}
+
+/* Ensure numerical inputs don't collapse to 0px */
+.unity-float-field__input, 
+.unity-integer-field__input {
+    min-width: 30px;
+    flex-shrink: 1;
+}
+
+/* 2. The Multi-Field Row Fix (Targeting AudioLink sub-groups) */
+.unity-composite-field__field-group,
+#latex-imgui-root .unity-composite-field__field-group {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+}
+
+.unity-composite-field__field {
+    flex-basis: 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    margin-right: 2px;
+    min-width: 20px;
+}
+
+.unity-composite-field__field-label {
+    min-width: 10px;
+    flex-shrink: 1;
+    font-size: 9px;
+    color: #9a9ab0;
+}
+
+/* 3. IMGUI Content Viewport Fix */
+.unity-imgui-container {
+    flex-grow: 1;
+    width: 100%;
+    min-width: 250px; /* Safeguard against extreme narrow squishing */
+}
+
+#latex-imgui-root {
+    padding: 10px;
+    flex-direction: column;
+}
