@@ -5,6 +5,24 @@
 All notable changes to the VixenToolBox project will be documented in this file.
 
 ***
+## [2.1.0] - 2026-05-15
+
+### Added
+
+* **VectorLabelDrawer System:** Engineered a custom MaterialPropertyDrawer natively hooked into ShaderLab's Vector arrays. This handles packed vector data inside the inspector seamlessly, preventing standard 4-float structural UI clutter while preserving exact field alignments.
+* **UITK & IMGUI Hybrid Editor:** Deployed a completely overhauled inspector architecture (`VixenWearUITKInspector`). Features a sleek, tab-driven workflow dividing material configuration into Base, Surface & PBR, Polish & Translucency, Integration, and AudioLink.
+* **AI Transparency & Development Ethics Documentation:** Published our formal documentation on enterprise-scale AI deployment. This structural breakdown details our 100% hand-reviewed code standards, agentic research integration, and measurable workflow accelerations to ensure transparency across the VixenTools ecosystem.
+
+### Changed
+
+* **Massive Shader Property Packing:** Consolidated loose floats and variables into highly optimized `Vector` attributes (such as `_PBRParams`, `_GeoEmisParams`, and `_ClearcoatParams`). This drastically reduces uniform overhead and streamlines memory bandwidth across the material pipeline.
+* **Aggressive Baseline Optimization:** Expensive calculations have been zeroed out by default to guarantee maximum out-of-the-box performance. Parallax and Displacement are now disabled at the baseline, and Iridescence and Rim lighting have also been zeroed out.
+* **AudioLink Modulation Standardization:** All AudioLink reactive modulations (`_ALParamsA`, `_ALParamsB`) are entirely zeroed out by default to prevent unintended emission or vertex manipulation unless explicitly configured by the user.
+
+### Fixed
+
+* **Inspector State Loss (Domain Reloads):** Solved an aggressive UX friction point where the material inspector would reset its tab focus during Unity script compilation. The editor now securely caches active tabs and foldout states to `EditorPrefs`, surviving domain reloads without breaking the workflow.
+
 ## [2.0.4] - 2026-05-15
 
 ### Added
