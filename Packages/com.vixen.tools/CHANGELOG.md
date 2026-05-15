@@ -5,6 +5,25 @@
 All notable changes to the VixenToolBox project will be documented in this file.
 
 ***
+## [2.0.4] - 2026-05-15
+
+### Added
+
+* **Natural MatCap Reflection Model:** Introduced a physically‑inspired matcap blending system using Fresnel weighting, roughness‑driven clarity falloff, and energy‑normalized contribution curves. Matcaps now behave like a stylized reflection lobe rather than an additive light source, producing smoother, more realistic latex highlights.
+* **MatCap–Reflection Harmony Layer (Patch 4):** Added a new cross‑fade stage that blends matcaps into the clearcoat reflection based on surface smoothness. High‑polish surfaces now transition seamlessly into probe reflections, eliminating the “double highlight” artifact common in older matcap pipelines.
+
+### Changed
+
+* **MatCap Sampling Pipeline:** Moved matcap intensity and lighting mix out of the BRDF and into the surface stage, reducing redundant per‑pixel math and preventing variant duplication. The BRDF now receives a clean, pre‑normalized matcap signal for consistent lighting behavior.
+* **Clearcoat‑Aware MatCap Integration:** Updated the BRDF to evaluate matcaps against the clearcoat normal rather than the base normal, ensuring matcaps follow the same polish layer as reflections and thin‑film interference.
+* **Energy‑Conserving Highlight Behavior:** Replaced the legacy additive matcap term with a physically‑bounded contribution that respects clearcoat Fresnel, occlusion, and energy conservation. This prevents matcaps from overpowering direct light or blowing out bright latex surfaces.
+
+### Fixed
+
+* **Harsh MatCap Brightness Spikes:** Resolved the long‑standing issue where matcaps appeared unnaturally bright at grazing angles or under high‑intensity lighting. The new Fresnel‑weighted model eliminates edge blowout and restores smooth highlight rolloff.
+* **MatCap vs Reflection Fighting:** Fixed the visual conflict where matcaps and reflection probes produced competing highlight shapes. The new cross‑fade system ensures both layers reinforce each other instead of stacking destructively.
+* **Double‑Smoothness Multiplication:** Removed an accidental double‑application of smoothness to matcap intensity, which previously caused inconsistent gloss levels across different materials and lighting conditions.
+
 ## [2.0.3] - 2026-05-14
 
 ### Added

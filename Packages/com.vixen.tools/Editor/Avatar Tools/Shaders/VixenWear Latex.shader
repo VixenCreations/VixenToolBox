@@ -1,4 +1,4 @@
-Shader "VixenWear/Latex Ultra"
+﻿Shader "VixenWear/Latex Ultra"
 {
     Properties
     {
@@ -189,7 +189,37 @@ Shader "VixenWear/Latex Ultra"
             return uv + finalUVOffset;
         }
 
-        half4 BRDF3_Latex_Clearcoat(half3 diffColor, half3 matcap, half3 specColor, half oneMinusReflectivity, SurfaceOutputStandardLatex s, float3 viewDir, UnityLight light, UnityIndirect gi, half3 clearcoatEnv)
+        inline half3 BlendMatcapNatural(
+            half3 matcap,
+            half3 normal,
+            half3 viewDir,
+            half smoothness,
+            half intensity)
+        {
+            // Fresnel for edge emphasis
+            half nv = saturate(dot(normal, viewDir));
+            half fres = pow(1.0 - nv, 5.0);
+
+            // Roughness attenuates matcap clarity
+            half rough = 1.0 - smoothness;
+            half clarity = saturate(1.0 - rough * 1.25);
+
+            // Energy normalization
+            half3 mc = matcap * clarity * (0.25 + fres * 0.75);
+
+            return mc * intensity;
+        }
+
+        half4 BRDF3_Latex_Clearcoat(
+            half3 diffColor,
+            half3 matcap,
+            half3 specColor,
+            half oneMinusReflectivity,
+            SurfaceOutputStandardLatex s,
+            float3 viewDir,
+            UnityLight light,
+            UnityIndirect gi,
+            half3 clearcoatEnv)
         {
             float3 halfDir = Unity_SafeNormalize(float3(light.dir) + viewDir);
 
@@ -209,7 +239,7 @@ Shader "VixenWear/Latex Ultra"
                 shadowTrace = saturate(1.0 - (s.Height - shadowHeight) * _NormalShadowHardness);
             }
             half normalShadowMask = shadowTrace;
-            
+    
             half cc_nl = saturate(dot(s.ClearcoatNormal, light.dir)) * normalShadowMask;
             half cc_nlSmooth = smoothstep(0.0, 0.15, cc_nl);
             float cc_nh = saturate(dot(s.ClearcoatNormal, halfDir));
@@ -221,7 +251,7 @@ Shader "VixenWear/Latex Ultra"
             float a2 = a * a;
             float d = nh * nh * (a2 - 1.f) + 1.00001f;
             float specularTerm = a2 / (max(0.1f, lh * lh) * (s.BaseRoughness + 0.5f) * (d * d) * 4);
-            
+    
             half ccPerceptualRoughness = SmoothnessToPerceptualRoughness(s.ClearcoatSmoothness);
             half ccRoughness = max(PerceptualRoughnessToRoughness(ccPerceptualRoughness), 0.01);
             float cc_a2 = ccRoughness * ccRoughness;
@@ -241,22 +271,36 @@ Shader "VixenWear/Latex Ultra"
             half3 baseEnv = gi.specular; 
             half grazingTerm = saturate(s.Smoothness + (1 - oneMinusReflectivity));
             half surfaceReduction = 1.0 - s.BaseRoughness * s.BaseRoughness * (0.6 - 0.08 * s.BaseRoughness);
-            
+    
             half energyConservation = (1.0 - clearcoatFresnel);
-            
+    
             half3 indirectBaseSpec = surfaceReduction * baseEnv * FresnelLerpFast(specColor, grazingTerm, nv) * specOcc * energyConservation;
             half ccSurfaceReduction = 1.0 - ccRoughness * ccPerceptualRoughness * (0.6 - 0.08 * ccPerceptualRoughness);
             half3 indirectClearcoatSpec = ccSurfaceReduction * clearcoatEnv * clearcoatFresnel * specOcc;
 
+            // Existing matcap lighting mix
             matcap = matcap * lerp(float3(1,1,1), saturate(gi.diffuse + light.color * nlSmooth), _MatCapLighting) * specOcc;
-            
+    
+            // Base BRDF color (without Patch 4’s cross‑fade)
             half3 color =   gi.diffuse * diffColor
                           + diffColor * light.color * nlSmooth * normalShadowMask
                           + specularTerm * specColor * light.color * nlSmooth * energyConservation * normalShadowMask
                           + indirectBaseSpec
-                          + saturate(matcap) * energyConservation
                           + clearcoatTerm * clearcoatFresnel * finalClearcoatColor * light.color * cc_nlSmooth
                           + indirectClearcoatSpec * finalClearcoatColor; 
+
+            // --- Patch 4: reflection–matcap harmony ---
+            half3 reflectionColor = color;
+            half reflectionStrength = saturate(s.Smoothness * 1.2);
+
+            half3 matcapBlend = lerp(
+                BlendMatcapNatural(matcap, s.ClearcoatNormal, viewDir, s.ClearcoatSmoothness, _MatCapIntensity),
+                reflectionColor,
+                reflectionStrength
+            );
+
+            color = lerp(color, matcapBlend, _MatCapLighting);
+            // --- end Patch 4 ---
 
             return half4(color, 1);
         }
@@ -422,7 +466,7 @@ Shader "VixenWear/Latex Ultra"
             half2 capCoord = viewNormal.xy * 0.5 + 0.5;
 
             half3 env0 = tex2D(_MatCap, capCoord).rgb * _MatCapIntensity;
-            o.Matcap = env0 * o.ClearcoatSmoothness * matcapMask;
+            o.Matcap = env0 * matcapMask;
             
             float4 em = tex2D(_EmissionMap, finalUV);
             o.Emission = em.rgb * _EmissionColor.rgb * em.a * (1.0 + (al_treble * _AudioLinkEmissionMod));
