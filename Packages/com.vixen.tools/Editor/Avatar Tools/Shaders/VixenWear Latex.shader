@@ -8,41 +8,47 @@
         _MainTex ("Albedo (RGB) Cutout (A)", 2D) = "white" {}
         _MinBrightness ("Minimum Brightness", Range(0, 1)) = 0.0
 
-        [HideInInspector] [VectorLabel(UV_Rot, SpeedX, SpeedY, MatCap_Rot)]
-        _UVParams ("UV Animation", Vector) = (0, 0, 0, 0)
+        _UV_Rot ("UV Rotation", Float) = 0
+        _SpeedX ("UV Speed X", Float) = 0
+        _SpeedY ("UV Speed Y", Float) = 0
+        _MatCap_Rot ("MatCap Rotation", Float) = 0
 
         [Header(Surface Maps)]
         _MetallicGlossMap ("Packed PBR (R:Met G:AO B:Disp A:Smooth)", 2D) = "white" {}
         [Normal] _BumpMap ("Normal Map", 2D) = "bump" {}
 
-        // Standardized PBR baseline (no blown-out shadows or normals)
-        [HideInInspector] [VectorLabel(AO_Str, Spec_Occ, Shad_Hard, Norm_Str)]
-        _PBRParams ("PBR Adjustments", Vector) = (1.0, 1.0, 1.0, 1.0)
+        _AO_Str ("AO Strength", Range(0,1)) = 1.0
+        _Spec_Occ ("Specular Occlusion", Range(0,1)) = 1.0
+        _Shad_Hard ("Shadow Hardness", Range(0,1)) = 1.0
+        _Norm_Str ("Normal Strength", Range(0,5)) = 1.0
 
-        // Parallax and Displacement zeroed out for performance
-        [HideInInspector] [VectorLabel(Parallax, Disp_Str, Tess_Edge, Emis_Exp)]
-        _GeoEmisParams ("Geometry & Bloom", Vector) = (0.0, 0.0, 10.0, 1.0)
+        _Parallax ("Parallax Depth", Range(0,0.1)) = 0.0
+        _Disp_Str ("Displacement Strength", Range(0,1)) = 0.0
+        _Tess_Edge ("Tessellation Edge Length", Range(1,50)) = 10.0
+        _Emis_Exp ("Emission Exposure", Float) = 1.0
 
         [Header(Clearcoat Polish)]
-        // The core latex look: Max strength, high smoothness, no flattening
-        [HideInInspector] [VectorLabel(Strength, Smoothness, Spec_AA, CC_Flat)]
-        _ClearcoatParams ("Clearcoat Params", Vector) = (1.0, 0.9, 0.0, 0.0)
+        _CC_Strength ("Clearcoat Strength", Range(0,1)) = 1.0
+        _CC_Smoothness ("Clearcoat Smoothness", Range(0,1)) = 0.9
+        _CC_Spec_AA ("Specular Anti-Aliasing", Range(0,1)) = 0.0
+        _CC_Flat ("Clearcoat Flattening", Range(0,1)) = 0.0
 
-        // Iridescence and Rim lighting zeroed out by default
-        [HideInInspector] [VectorLabel(Film_Str, Film_Thick, Rim_Str, Rim_Power)]
-        _FilmRimParams ("Film & Rim Params", Vector) = (0.0, 0.0, 0.0, 4.0)
+        _Film_Str ("Thin Film Strength", Range(0,1)) = 0.0
+        _Film_Thick ("Thin Film Thickness", Float) = 0.0
+        _Rim_Str ("Rim Light Strength", Range(0,5)) = 0.0
+        _Rim_Power ("Rim Light Power", Range(0.1,10)) = 4.0
 
         [Header(Deferred Translucency)]
-        // SSS turned off
-        [HideInInspector] [VectorLabel(SSS_Str, SSS_Dist, SSS_Power, Unused)]
-        _SSSParams ("Subsurface Params", Vector) = (0.0, 0.1, 4.0, 0.0)
+        _SSS_Str ("Subsurface Strength", Range(0,1)) = 0.0
+        _SSS_Dist ("Subsurface Distance", Range(0,1)) = 0.1
+        _SSS_Power ("Subsurface Power", Range(0.1,10)) = 4.0
 
         [Header(Micro Details)]
         [Toggle(_DETAIL_NORMAL)] _UseDetailNormal ("Enable Micro Detail", Float) = 0
         [Normal] _DetailNormalMap ("Micro Detail Map", 2D) = "bump" {}
         
-        [HideInInspector] [VectorLabel(Strength, UV_Tiling, Unused, Unused)]
-        _DetailParams ("Detail Params", Vector) = (0.0, 1.0, 0, 0)
+        _Det_Strength ("Detail Strength", Range(0,2)) = 0.0
+        _Det_UV_Tiling ("Detail UV Tiling", Float) = 1.0
 
         [Header(Lighting Integration)]
         [HDR] _EmissionColor ("Emission Color", Color) = (0,0,0,1)
@@ -51,9 +57,10 @@
         _MatCap ("MatCap Texture", 2D) = "black" {}
         _MatCapMask ("MatCap Mask", 2D) = "white" {}
 
-        // MatCap intensity zeroed, external light integration at 1.0
-        [HideInInspector] [VectorLabel(MatCap_Int, MatCap_Lit, LV_Int, LTCGI_Int)]
-        _IntegrationParams ("Integration Params", Vector) = (0.0, 1.0, 1.0, 1.0)
+        _MatCap_Int ("MatCap Intensity", Range(0,2)) = 0.0
+        _MatCap_Lit ("MatCap Lighting Mix", Range(0,1)) = 1.0
+        _LV_Int ("Light Volumes Intensity", Range(0,1)) = 1.0
+        _LTCGI_Int ("LTCGI Intensity", Range(0,1)) = 1.0
 
         [Toggle(LIGHTVOLUMES_ENABLE)] _UseLightVolumes ("Enable Light Volumes", Float) = 0
         [Toggle(LTCGI_ENABLE)] _UseLTCGI ("Enable LTCGI", Float) = 0
@@ -62,12 +69,15 @@
         [Toggle(AL_ENABLE)] _UseAudioLink ("Enable AudioLink", Float) = 0
         [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _AL_EmissionBand ("Emission Band", Float) = 0
 
-        // Modulations entirely zeroed out
-        [HideInInspector] [VectorLabel(Emis_Mod, Col_Blend, Scanlines, Scan_Speed)]
-        _ALParamsA ("AudioLink Modulation A", Vector) = (0.0, 0.0, 0.0, 0.0)
+        _AL_Emis_Mod ("Emission Modulation", Range(0,1)) = 0.0
+        _AL_Col_Blend ("Color Blend Modulation", Range(0,1)) = 0.0
+        _AL_Scanlines ("Scanline Modulation", Range(0,1)) = 0.0
+        _AL_Scan_Speed ("Scanline Speed", Float) = 0.0
 
-        [HideInInspector] [VectorLabel(Film_Mod, Paralx_Mod, CC_Shatter, Glitch_Mod)]
-        _ALParamsB ("AudioLink Modulation B", Vector) = (0.0, 0.0, 0.0, 0.0)
+        _AL_Film_Mod ("Thin Film Modulation", Range(0,1)) = 0.0
+        _AL_Paralx_Mod ("Parallax Modulation", Range(0,1)) = 0.0
+        _AL_CC_Shatter ("Clearcoat Shatter", Range(0,1)) = 0.0
+        _AL_Glitch_Mod ("Glitch Modulation", Range(0,1)) = 0.0
     }
 
     CustomEditor "VixenWearEditor"
@@ -148,27 +158,27 @@
         half _CutOff;
         half _MinBrightness;
 
-        // Packed Parameters
-        float4 _UVParams; 
-        float4 _PBRParams; 
-        float4 _GeoEmisParams; 
-        float4 _ClearcoatParams; 
-        float4 _FilmRimParams; 
-        float4 _SSSParams; 
-        float4 _DetailParams;
-        float4 _IntegrationParams;
-        float4 _ALParamsA; 
-        float4 _ALParamsB;
+        // Unpacked Parameters
+        float _UV_Rot, _SpeedX, _SpeedY, _MatCap_Rot;
+        float _AO_Str, _Spec_Occ, _Shad_Hard, _Norm_Str;
+        float _Parallax, _Disp_Str, _Tess_Edge, _Emis_Exp;
+        float _CC_Strength, _CC_Smoothness, _CC_Spec_AA, _CC_Flat;
+        float _Film_Str, _Film_Thick, _Rim_Str, _Rim_Power;
+        float _SSS_Str, _SSS_Dist, _SSS_Power;
+        float _Det_Strength, _Det_UV_Tiling;
+        float _MatCap_Int, _MatCap_Lit, _LV_Int, _LTCGI_Int;
+        float _AL_Emis_Mod, _AL_Col_Blend, _AL_Scanlines, _AL_Scan_Speed;
+        float _AL_Film_Mod, _AL_Paralx_Mod, _AL_CC_Shatter, _AL_Glitch_Mod;
         half _AL_EmissionBand;
 
         float4 tessEdge(appdata_full v0, appdata_full v1, appdata_full v2)
         {
-            return UnityEdgeLengthBasedTess(v0.vertex, v1.vertex, v2.vertex, _GeoEmisParams.z);
+            return UnityEdgeLengthBasedTess(v0.vertex, v1.vertex, v2.vertex, _Tess_Edge);
         }
 
         void disp(inout appdata_full v)
         {
-            float d = tex2Dlod(_MetallicGlossMap, float4(v.texcoord.xy,0,0)).b * _GeoEmisParams.y;
+            float d = tex2Dlod(_MetallicGlossMap, float4(v.texcoord.xy,0,0)).b * _Disp_Str;
             v.vertex.xyz += v.normal * d;
             float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
             v.texcoord1.xyz = _WorldSpaceCameraPos.xyz - worldPos;
@@ -215,7 +225,7 @@
 
             float cc_nh = saturate(dot(s.ClearcoatNormal, halfDir));
             half cc_nv = saturate(dot(s.ClearcoatNormal, viewDir));
-            half specOcc = lerp(1.0, s.Occlusion, _PBRParams.y);
+            half specOcc = lerp(1.0, s.Occlusion, _Spec_Occ);
 
             float shadowTrace = 1.0;
             if (nl > 0.0) 
@@ -223,7 +233,7 @@
                 float3 lightDirTangent = mul(s.WorldToTangent, light.dir);
                 float2 lightDirUV = lightDirTangent.xy * s.ParallaxDepth; 
                 float shadowHeight = tex2Dlod(_MetallicGlossMap, float4(s.UV + lightDirUV, 0, 0)).b;
-                shadowTrace = saturate(1.0 - (s.Height - shadowHeight) * _PBRParams.z);
+                shadowTrace = saturate(1.0 - (s.Height - shadowHeight) * _Shad_Hard);
             }
 
             half coatFresnel = 0.04 + 0.96 * pow(1.0 - cc_nv, 5.0);
@@ -252,11 +262,11 @@
             float clearcoatSpecTerm = cc_a2 / (max(0.1f, lh * lh) * (ccRough + 0.5f) * (cc_d * cc_d) * 4);
             half3 ccSpecular = clearcoatSpecTerm * light.color * saturate(dot(s.ClearcoatNormal, light.dir)) * clearcoatMaskedFresnel * finalClearcoatColor * shadowTrace;
 
-            half3 transLightDir = light.dir + s.Normal * _SSSParams.y;
-            half transDot = pow(saturate(dot(viewDir, -transLightDir)), _SSSParams.z) * _SSSParams.x;
+            half3 transLightDir = light.dir + s.Normal * _SSS_Dist;
+            half transDot = pow(saturate(dot(viewDir, -transLightDir)), _SSS_Power) * _SSS_Str;
             half3 sssGlow = transDot * light.color * s.Thickness * s.NeonColor;
 
-            half rim = pow(1.0 - cc_nv, _FilmRimParams.w) * _FilmRimParams.z * s.NeonColor * (gi.diffuse + 0.1);
+            half rim = pow(1.0 - cc_nv, _Rim_Power) * _Rim_Str * s.NeonColor * (gi.diffuse + 0.1);
 
             half3 finalColor = gi.diffuse * diffColor * energyConservation * s.Occlusion
                              + baseSpecular 
@@ -266,7 +276,7 @@
                              + rim + sssGlow;
 
             half3 matcapEval = matcap * saturate(gi.diffuse + light.color * smoothstep(0.0, 0.15, saturate(dot(s.ClearcoatNormal, light.dir)))) * specOcc;
-            finalColor = lerp(finalColor, finalColor + matcapEval, _IntegrationParams.y);
+            finalColor = lerp(finalColor, finalColor + matcapEval, _MatCap_Lit);
 
             return half4(max(finalColor, diffColor * _MinBrightness), 1);
         }
@@ -279,7 +289,7 @@
                 {
                     float3 lv_L0 = 0, lv_L1r = 0, lv_L1g = 0, lv_L1b = 0;
                     LightVolumeSH(data.worldPos, lv_L0, lv_L1r, lv_L1g, lv_L1b);
-                    gi.indirect.diffuse = lerp(gi.indirect.diffuse, LightVolumeEvaluate(s.Normal, lv_L0, lv_L1r, lv_L1g, lv_L1b), _IntegrationParams.z);
+                    gi.indirect.diffuse = lerp(gi.indirect.diffuse, LightVolumeEvaluate(s.Normal, lv_L0, lv_L1r, lv_L1g, lv_L1b), _LV_Int);
                 }
             #endif
             Unity_GlossyEnvironmentData g = UnityGlossyEnvironmentSetup(s.Smoothness, data.worldViewDir, s.Normal, lerp(unity_ColorSpaceDielectricSpec.rgb, s.Albedo, s.Metallic));
@@ -305,7 +315,7 @@
             #if defined(LTCGI_ENABLE)
                 float3 ltc_d = 0, ltc_s = 0;
                 LTCGI_Contribution(s.WorldPos, s.LTCGINormal, viewDir, max(1.0 - s.ClearcoatSmoothness, 0.02), float2(0,0), ltc_d, ltc_s);
-                c.rgb += (ltc_s * s.ClearcoatStrength + ltc_d * s.Albedo) * _IntegrationParams.w * s.Occlusion;
+                c.rgb += (ltc_s * s.ClearcoatStrength + ltc_d * s.Albedo) * _LTCGI_Int * s.Occlusion;
             #endif
 
             c.a = outputAlpha;
@@ -337,17 +347,17 @@
             #endif
 
             float2 baseUV = IN.uv_MainTex;
-            baseUV += _UVParams.yz * _Time.y;
+            baseUV += float2(_SpeedX, _SpeedY) * _Time.y;
             
-            float uvRad = _UVParams.x * (UNITY_PI / 180.0);
+            float uvRad = _UV_Rot * (UNITY_PI / 180.0);
             float uvS = sin(uvRad);
             float uvC = cos(uvRad);
             baseUV = mul(baseUV - 0.5, float2x2(uvC, -uvS, uvS, uvC)) + 0.5;
 
             float2 glitch = 0;
-            if (al_treble > 0.5) glitch.x = step(0.9, frac(sin(dot(baseUV.y + al_chrono, 12.9898)) * 43758.5453)) * al_treble * _ALParamsB.w;
+            if (al_treble > 0.5) glitch.x = step(0.9, frac(sin(dot(baseUV.y + al_chrono, 12.9898)) * 43758.5453)) * al_treble * _AL_Glitch_Mod;
             
-            float currentP = _GeoEmisParams.x + (al_bass * _ALParamsB.y);
+            float currentP = _Parallax + (al_bass * _AL_Paralx_Mod);
             float2 finalUV = ParallaxRaymarching(baseUV + glitch, normalize(IN.viewDir), currentP);
             
             o.UV = finalUV; 
@@ -359,45 +369,45 @@
 
             float4 pbr = tex2D(_MetallicGlossMap, finalUV);
             o.Metallic = pbr.r; 
-            o.Occlusion = lerp(1.0, pbr.g, _PBRParams.x);
+            o.Occlusion = lerp(1.0, pbr.g, _AO_Str);
             o.Height = pbr.b; 
             o.Smoothness = pbr.a; 
             o.Thickness = saturate(1.0 - pbr.b);
             
-            o.ClearcoatStrength = _ClearcoatParams.x;
-            o.ClearcoatSmoothness = saturate(_ClearcoatParams.y - (al_highmid * _ALParamsB.z));
-            o.ThinFilmThickness = _FilmRimParams.y + (al_bass * _ALParamsB.x);
-            o.ThinFilmStrength = _FilmRimParams.x;
+            o.ClearcoatStrength = _CC_Strength;
+            o.ClearcoatSmoothness = saturate(_CC_Smoothness - (al_highmid * _AL_CC_Shatter));
+            o.ThinFilmThickness = _Film_Thick + (al_bass * _AL_Film_Mod);
+            o.ThinFilmStrength = _Film_Str;
 
             float facing = IN.facing > 0.5 ? 1.0 : -1.0;
-            float3 nMain = UnpackScaleNormal(tex2D(_BumpMap, finalUV), _PBRParams.w);
+            float3 nMain = UnpackScaleNormal(tex2D(_BumpMap, finalUV), _Norm_Str);
             #if defined(_DETAIL_NORMAL)
-                float3 nDet = UnpackScaleNormal(tex2D(_DetailNormalMap, finalUV * _DetailParams.y), _DetailParams.x);
+                float3 nDet = UnpackScaleNormal(tex2D(_DetailNormalMap, finalUV * _Det_UV_Tiling), _Det_Strength);
                 nMain = normalize(float3(nMain.xy + nDet.xy, nMain.z * nDet.z));
             #endif
             nMain.z *= facing;
             o.Normal = nMain;
             
             float3 v_ddx = ddx(o.Normal); float3 v_ddy = ddy(o.Normal);
-            float var = _ClearcoatParams.z * (dot(v_ddx, v_ddx) + dot(v_ddy, v_ddy));
+            float var = _CC_Spec_AA * (dot(v_ddx, v_ddx) + dot(v_ddy, v_ddy));
             o.BaseRoughness = PerceptualRoughnessToRoughness(SmoothnessToPerceptualRoughness(o.Smoothness));
             o.BaseRoughness = lerp(o.BaseRoughness, 1.0, saturate(var * 10.0));
 
-            o.ClearcoatNormal = WorldNormalVector(IN, normalize(float3(o.Normal.xy * _ClearcoatParams.w, o.Normal.z)));
+            o.ClearcoatNormal = WorldNormalVector(IN, normalize(float3(o.Normal.xy * _CC_Flat, o.Normal.z)));
             o.LTCGINormal = o.ClearcoatNormal;
 
             float3 viewNormal = mul((float3x3)UNITY_MATRIX_V, o.ClearcoatNormal);
-            float mcRad = _UVParams.w * (UNITY_PI / 180.0);
+            float mcRad = _MatCap_Rot * (UNITY_PI / 180.0);
             float mcS = sin(mcRad);
             float mcC = cos(mcRad);
             viewNormal.xy = mul(viewNormal.xy, float2x2(mcC, -mcS, mcS, mcC));
             
-            o.Matcap = tex2D(_MatCap, viewNormal.xy * 0.5 + 0.5).rgb * _IntegrationParams.x * tex2D(_MatCapMask, finalUV).r;
+            o.Matcap = tex2D(_MatCap, viewNormal.xy * 0.5 + 0.5).rgb * _MatCap_Int * tex2D(_MatCapMask, finalUV).r;
             
             float4 em = tex2D(_EmissionMap, finalUV);
-            o.NeonColor = lerp(_EmissionColor.rgb, al_color.rgb, _ALParamsA.y);
-            float scan = smoothstep(0.4, 0.6, sin(finalUV.y * _ALParamsA.z - al_chrono * _ALParamsA.w) * 0.5 + 0.5);
-            o.Emission = em.rgb * o.NeonColor * em.a * (1.0 + al_amp * _ALParamsA.x) * (_ALParamsA.z > 0.1 ? scan : 1.0) * _GeoEmisParams.w;
+            o.NeonColor = lerp(_EmissionColor.rgb, al_color.rgb, _AL_Col_Blend);
+            float scan = smoothstep(0.4, 0.6, sin(finalUV.y * _AL_Scanlines - al_chrono * _AL_Scan_Speed) * 0.5 + 0.5);
+            o.Emission = em.rgb * o.NeonColor * em.a * (1.0 + al_amp * _AL_Emis_Mod) * (_AL_Scanlines > 0.1 ? scan : 1.0) * _Emis_Exp;
         }
         ENDCG
     }
