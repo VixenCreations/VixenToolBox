@@ -5,6 +5,27 @@
 All notable changes to the VixenToolBox project will be documented in this file.
 
 ***
+## [2.1.5] - 2026-05-16
+
+### Added
+
+* **Dual-Pass Geometry Shatter Engine:** Implemented a raw Shader Model 5.0 Geometry Shader (`#pragma geometry`) pass. Bypassing standard Surface Shader limitations, this intercepts clipped polygons, calculates their true centers using `SV_PrimitiveID`, un-welds the topology, and physically blasts literal mesh polygons into 3D space to the beat of AudioLink.
+* **God Tier Cybernetics HUD:** Engineered a realtime diagnostic UI system utilizing a B&W window mask. Renders active AudioLink VU meters, 64-pixel spectrum arrays, oscilloscopes, and VRSL DMX grids directly onto the material with independent UV transform and scaling controls.
+* **Granular Clipboard Architecture:** Upgraded the native IMGUI inspector with a highly advanced right-click Context Menu system. Features cross-material Copy/Paste mechanics with distinct execution paths for "Values Only" (preserving local maps) or "With Textures" across all defined UI tabs.
+* **VRSL Stage Hijack Protocol:** Integrated a direct DMX world-buffer intercept. The material now natively mimics a 13-Channel Moving Head fixture, seamlessly overriding local emission with stage RGB/Strobe data and physically geo-warping the mesh using live DMX Pan and Tilt arrays.
+* **Kinetic UV Engine:** Deployed hardware-level UV manipulations including Vortex Twists, Bass Pumping, and spatial-hashed UV Fracture Shards, all mathematically tied to specific AudioLink FFT bands.
+
+### Changed
+
+* **Documentation Overhaul:** Stripped out ambiguous or overly stylistic terminology to ensure clear, universally understood technical instructions for the VixenWear deployment guide.
+* **Inspector & ShaderLab Synchronization:** Purged all redundant `[Header]` attributes from the raw `.shader` properties block, completely eliminating the "double-labeling" UI conflict between Unity's native layout passes and the custom C# Editor script.
+
+### Fixed
+
+* **Vertex "Move Tool" Sliding Bug:** Corrected a critical math flaw in the kinetic vertex engine where global linear translation caused the entire avatar mesh to slide across the screen. The pump matrix now correctly displaces strictly along `v.normal` for true volumetric inflation.
+* **SM5 Compiler & Keyword Conflicts:** Resolved severe d3d11 compile errors in the Domain/Vertex stages by ripping out legacy `tex2Dlod` macros in favor of native `AudioLinkData` fetches. Additionally, renamed variables in the geometry pipeline to prevent syntax tree failures caused by reserved HLSL keywords (`centroid`).
+* **Missing Variable Initialization:** Registered the `_Cyber_AutoCorr_Str` and `_UseCyber` floats into the shader's internal memory allocation, fixing a variable pass failure that previously crashed the HUD Transform Engine.
+
 ## [2.1.0] - 2026-05-15
 
 ### Added
