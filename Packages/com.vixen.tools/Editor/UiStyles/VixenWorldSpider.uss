@@ -40,9 +40,7 @@
     padding: 10px;
 }
 
-/* ---------------------------------------------------- */
-/* CATEGORY FOLDOUTS & MATRIX TOPOLOGY                  */
-/* ---------------------------------------------------- */
+/* CATEGORY FOLDOUTS & MATRIX TOPOLOGY */
 
 .matrix-foldout {
     margin-bottom: 12px;
@@ -97,9 +95,7 @@
     letter-spacing: 0.5px;
 }
 
-/* ---------------------------------------------------- */
-/* SPIDER RESULT ROWS                                   */
-/* ---------------------------------------------------- */
+/* SPIDER RESULT ROWS */
 
 .spider-row {
     flex-direction: row;
@@ -128,9 +124,7 @@
     white-space: normal;
 }
 
-/* ---------------------------------------------------- */
-/* ACTION CONTROLS & OMNI-HEURISTICS DASHBOARD          */
-/* ---------------------------------------------------- */
+/* ACTION CONTROLS & OMNI-HEURISTICS DASHBOARD */
 
 .spider-action-btn {
     height: 35px;
@@ -182,9 +176,7 @@
     padding-bottom: 4px;
 }
 
-/* ---------------------------------------------------- */
-/* FORM INPUTS & ARCHITECTURAL ELEMENTS                 */
-/* ---------------------------------------------------- */
+/* FORM INPUTS & ARCHITECTURAL ELEMENTS */
 
 .control-label {
     font-size: 12px;
@@ -258,9 +250,7 @@ Button.vixen-dropdown:hover {
     background-color: rgba(0, 229, 255, 0.1);
 }
 
-/* ---------------------------------------------------- */
-/* ROW CHECKBOXES                                       */
-/* ---------------------------------------------------- */
+/* ROW CHECKBOXES */
 
 .vixen-toggle {
     margin-right: 8px;

@@ -271,6 +271,26 @@
                         blend‑trees, and state behaviors. All discovered references are remapped to newly generated Android‑safe
                         material variants, preventing pink‑shader failures at runtime.
                     </li>
+
+                    <li>
+                        <strong>Face Tracking &amp; VRCFT Hunter-Killer:</strong>
+                        Three-vector detection sweep catches PC-VR face tracking before it reaches the Android build
+                        pipeline: (1) prefab path match against <code>adjerry91.vrcft.templates</code>, (2) hierarchy
+                        name match against <code>VRCFury - Face Tracking</code> and <code>VF_UE_VRCFT</code> branches,
+                        and (3) namespace/type match against <code>VRCFT</code>, <code>FaceTracking</code>, and
+                        <code>adjerry91</code> components. Hits are routed into a locked auto-cull list with neon-red,
+                        non-overrideable toggles so they're visible for forensic review but cannot be accidentally
+                        retained.
+                    </li>
+
+                    <li>
+                        <strong>Mobile Shader Targeting:</strong>
+                        After material cloning, all materials are auto-converted to a selected Quest shader -
+                        <code>VRChat/Mobile/Toon Standard</code>, <code>VRChat/Mobile/Toon Lit</code>,
+                        <code>VRChat/Mobile/Standard Lite</code>, <code>VRChat/Mobile/MatCap Lit</code>, or Unity's
+                        Mobile Standard - with minor adjustments to restore visual parity (resetting emission maps,
+                        applying <em>Multiply</em> blending to particle lenses, enabling <em>Additive</em> on visors).
+                    </li>
                 </ul>
 
                 <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
@@ -310,82 +330,312 @@
             <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">VixenWear Latex Ultra Shader</h2>
-                    <div class="badge">VixenWear Latex.shader</div>
+                    <div class="badge">VixenWear Latex.shader | VixenWearEditor.cs | v2.3.0</div>
                 </div>
 
                 <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
                     A high-fidelity, dual-lobe PBR surface shader engineered for complex synthetic materials.
-                    It bypasses standard Unity lighting models to provide true tangent-space micro-shadowing,
-                    hardware tessellation, dynamic thin-film interference, and fully integrated SM5 hardware processing for flawless high-gloss black materials and deep atmospheric reflections.
+                    Version 2.3.0 tears out the legacy <code>BRDF3</code> lighting model and ships a full
+                    industry-standard GGX stack: <code>D_GGX</code> (Trowbridge-Reitz), <code>V_SmithJointGGX</code>,
+                    <code>F_Schlick</code>, <code>Burley_Diffuse</code>, and a Karis split-sum
+                    (<code>EnvBRDFApprox_AB</code>) for indirect specular. Optional Filament/Frostbite multi-scatter
+                    energy compensation preserves bright metal highlights at high roughness, while anisotropy,
+                    thin-part transmission, tinted clearcoat, and a deep Light Volumes integration round out the
+                    new physical model.
                 </p>
 
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">Physical Lighting Model</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li>
-                        <strong>Precision Texture Packing (PBR):</strong>
-                        Maximizes VRAM efficiency via a rigorously packed linear map. Channels are strictly allocated:
-                        <strong>R</strong> (Metallic), <strong>G</strong> (Ambient Occlusion), <strong>B</strong> (Displacement / Height), and <strong>A</strong> (Smoothness).
+                        <strong>GGX BRDF Stack:</strong>
+                        Direct and indirect specular run through <code>D_GGX</code>, <code>V_SmithJointGGX</code>,
+                        and <code>F_Schlick</code>; direct diffuse uses <code>Burley_Diffuse</code> for proper
+                        retroreflection at grazing angles. Environment specular uses Karis' split-sum
+                        (<code>EnvBRDFApprox_AB</code>) so no per-mip BRDF integral is required. Optional
+                        <em>Multi-Scatter Energy Compensation</em> (Filament/Frostbite) adds back the energy lost
+                        to multi-scatter at high roughness.
                     </li>
+                    <li>
+                        <strong>Anisotropic Specular Engine:</strong>
+                        <code>_Aniso</code> (-1 to 1) and <code>_AnisoRot</code> (0-360&deg;) drive
+                        <code>D_GGX_Aniso</code> + <code>V_SmithJointGGX_Aniso</code> when
+                        <code>|aniso| &gt; 0.005</code>. The world tangent rotates around <em>N</em> before splitting
+                        alpha into <code>ax</code>/<code>ay</code>, producing real latex-stretch highlights aligned to
+                        the visible pull instead of the UV unwrap.
+                    </li>
+                    <li>
+                        <strong>Thin-Part Transmission:</strong>
+                        <code>_Trans_Str</code>, <code>_Trans_Dist</code>, and <code>_Trans_Power</code> drive a
+                        Burley/Filament back-light term with Beer-Lambert absorption
+                        (<code>exp(-(1-diffColor)/_Trans_Dist)</code>). Gives ears, fingers, and latex membranes
+                        physically correct light bleed without polluting the SSS lobe, modulated by the live bio
+                        pulse and obeying clearcoat energy conservation.
+                    </li>
+                    <li>
+                        <strong>Tinted Dielectric Clearcoat:</strong>
+                        <code>_CC_Tint</code> and <code>_CC_F0</code> let the coat reflect with a colored cast and
+                        custom Fresnel base reflectance. White tint at <code>F0 = 0.04</code> reproduces the standard
+                        dielectric exactly; coloured tints attenuate the under-layer per-channel for
+                        oil-on-water/iridescent acrylic looks.
+                    </li>
+                    <li>
+                        <strong>Geometric Specular Anti-Aliasing:</strong>
+                        Toksvig-style filter (<code>GeometricSpecAA</code>) roughens both base and clearcoat normals
+                        from screen-space normal derivative variance. Eliminates the spec aliasing/sparkle that
+                        hammered high-gloss surfaces at mid-distance silhouettes.
+                    </li>
+                    <li>
+                        <strong>VRChat Mirror Camera Fix:</strong>
+                        <code>vw_CameraPos()</code> and <code>vw_WorldViewDir()</code> read the actual rendering
+                        camera from <code>UNITY_MATRIX_I_V._m03_m13_m23</code> (per-eye correct under single-pass
+                        instanced) instead of <code>_WorldSpaceCameraPos</code> (which stays glued to the player's
+                        head in mirrors). Routed through surface viewDir, GI viewDir, parallax raymarch, and
+                        clearcoat reflection so specular and parallax math is finally correct in mirrors.
+                    </li>
+                </ul>
 
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">Texture Packing & Compatibility</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li>
+                        <strong>Native Packed PBR Map:</strong>
+                        A single RGBA texture keeps VRAM efficient. Default packing is
+                        <strong>R</strong> Metallic, <strong>G</strong> Ambient Occlusion,
+                        <strong>B</strong> Displacement / Height, <strong>A</strong> Smoothness.
+                    </li>
+                    <li>
+                        <strong>Poiyomi / Substance / Marmoset Compatibility Layer:</strong>
+                        The SURFACE tab exposes <code>_PBR_Met_Ch</code>, <code>_PBR_Smooth_Ch</code>,
+                        <code>_PBR_AO_Ch</code>, and <code>_PBR_Height_Ch</code> selectors plus
+                        <code>_PBR_Met_Inv</code> and <code>_PBR_Smooth_Inv</code> (Channel Stores Roughness). The
+                        <code>ChannelPick</code> helper wires the choice through every consumer - parallax raymarch,
+                        BRDF shadow trace, surface stage, and vertex displacement - so drop-in Poiyomi packings
+                        work without re-authoring.
+                    </li>
+                    <li>
+                        <strong>Standard-Style Render Mode Selector:</strong>
+                        <code>_Mode</code> (Opaque/Cutout/Fade/Transparent) drives blend state, ZWrite, render queue,
+                        RenderType/VRCFallback tags, and alpha keywords via <code>SetupMaterialWithBlendMode</code>.
+                        <em>Fade</em> uses straight alpha; <em>Transparent</em> uses premultiplied alpha so specular
+                        survives at low opacity (the correct mode for glass and wet-look latex). Cutout retains the
+                        historical <code>clip(c.a - _CutOff)</code> behavior.
+                    </li>
+                </ul>
+
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">Region Masks, Emission & MatCaps</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li>
+                        <strong>Multi-Region Color Mask (Poiyomi-Style):</strong>
+                        <code>_UseRegionMask</code> + <code>_RegionMask</code> with independent R/G/B zone tints
+                        (<code>_Region_R/G/B_Tint</code>) and per-zone emission boosts
+                        (<code>_Region_R/G/B_Emis</code>). Channels stack independently, letting authors paint
+                        hard-edged feature zones (panels, claws, decals) without a second material.
+                    </li>
+                    <li>
+                        <strong>Secondary Emission Layer:</strong>
+                        <code>_UseEmission2</code> with its own <code>_EmissionMap2</code>,
+                        <code>_EmissionColor2</code>, mask channel picker (<code>_Emis2_MaskCh</code>), and
+                        dedicated AudioLink band reactor (<code>_AL_Band_Emis2</code>,
+                        <code>_AL_Emis2_Mod</code>). Route bass to one circuitry layer and treble to another
+                        without animator wiring.
+                    </li>
+                    <li>
+                        <strong>Multi-Layer MatCap Engine:</strong>
+                        Full second matcap (<code>_UseMatCap2</code>, <code>_MatCap2</code>,
+                        <code>_MatCap2_Mask</code>, <code>_MatCap2_MaskCh</code>, <code>_MatCap2_Tint</code>,
+                        <code>_MatCap2_Int</code>, <code>_MatCap2_Rot</code>) with three blend modes
+                        (<code>Add</code>, <code>Replace</code>, <code>Multiply</code>). Layer 1 also gains mask
+                        channel selection and per-layer tint, so a single RGB region mask can drive different
+                        matcaps in different zones.
+                    </li>
+                    <li>
+                        <strong>View-Space MatCap Math:</strong>
+                        Switched to view-space normal via <code>mul((float3x3)UNITY_MATRIX_V, nWorld)</code> -
+                        mirror-correct and never collapses to a stuck reflection point on flat geometry (the old
+                        tangent-space path collapsed to <code>(0,0,1)</code> on flat polys).
+                    </li>
+                </ul>
+
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">Parallax, Tessellation & World Integration</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
                     <li>
                         <strong>Parallax & Micro-Shadowing:</strong>
-                        Utilizes a 50-step High-Fidelity Gradient Raymarcher mapped to the height channel. It calculates
-                        physical light intersection to create true tangent-space shadows inside recessed geometry seams, backed by DX11 Hardware Tessellation.
+                        50-step adaptive Gradient Raymarcher mapped to the selected height channel. Calculates
+                        physical light intersection inside recessed seams for true tangent-space shadows, backed by
+                        DX11 hardware tessellation up to 50x driven by <em>Tessellation Edge Length</em> and
+                        <em>Displacement Strength</em>.
                     </li>
-
                     <li>
-                        <strong>Clearcoat & Thin-Film Interference:</strong>
-                        Calculates a secondary Clearcoat layer above the base fabric roughness. Features dynamic refractive iridescence
-                        (calculated in nanometers) and Specular AA Variance to suppress aliasing on high-gloss meshes during camera movement.
+                        <strong>Light Volumes Deep Integration:</strong>
+                        Replaced the single intensity slider with a full LV stack:
+                        <code>_LV_Spec_Mix</code>, <code>_LV_Spec_Dominant</code> (dominant-light vs full L1
+                        specular), <code>_LV_CC_Spec_Mix</code> for clearcoat-specific specular,
+                        <code>_LV_Bias</code> for normal-bias offset (fixes light bleed at sharp edges),
+                        <code>_LV_PosOffset</code> for manual world-space offset on thin/sleeve geometry,
+                        <code>_LV_AdditiveOnly</code> to preserve Unity's probe baseline, and
+                        <code>_LV_ProbeDering</code> - an opt-in Bakery L1 deringed-probe fallback for non-LV worlds.
+                        Output is clamped to <code>max(..., 0)</code> to suppress negative SH reconstruction
+                        artifacts that historically blacked out avatars on probes-only worlds.
                     </li>
-
                     <li>
-                        <strong>Ecosystem Integrations:</strong>
-                        Natively wired for AudioLink FFT (Bass-driven iridescence pulse, Treble-driven emission),
-                        LTCGI (realtime polygonal area lighting), and VRC Light Volumes. Features a <strong>VRSL Stage Hijack Protocol</strong> that intercepts world-space DMX buffers to mimic a 13-Channel Moving Head Fixture, seamlessly overriding local emission with stage RGB/Strobe data and physically geo-warping the mesh using live DMX Pan and Tilt arrays.
+                        <strong>LTCGI Surgical Mix Controls:</strong>
+                        Split into <code>_LTCGI_Diff_Mix</code> and <code>_LTCGI_Spec_Mix</code> alongside the master
+                        <code>_LTCGI_Int</code>, letting creators dial area-light diffuse and specular contributions
+                        separately without disabling LTCGI on the whole material.
                     </li>
-
                     <li>
-                        <strong>God Tier Cybernetics (HUD Overlays):</strong>
-                        A built-in diagnostic and cybernetic UI system mapped via a black-and-white window mask. Renders active AudioLink VU meters, 64-pixel spectrum arrays, oscilloscopes, and DMX grids directly onto the material with independent UV transform and scaling controls. Includes an AutoCorrelator Mask Warp to physically distort the HUD window's UVs based on audio pitch.
+                        <strong>VRSL Stage Hijack Protocol:</strong>
+                        Intercepts world-space DMX buffers to mimic a 13-Channel Moving Head Fixture - overrides
+                        emission with stage RGB/Strobe data and physically geo-warps the tessellated mesh via DMX
+                        Pan/Tilt. New <code>_VRSL_Color_Hijack</code> (independent from <code>_VRSL_Intensity</code>)
+                        lerps the AudioLink color toward live DMX RGB (sector channels +3/+4/+5) so the stage can
+                        wash the palette without disabling FFT-driven color movement.
                     </li>
+                </ul>
 
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">AudioLink, HUD & Kinetics</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li>
+                        <strong>AudioLink Runtime-Gated (No <code>AL_ENABLE</code> Variant):</strong>
+                        AudioLink.cginc is now always compiled and gated at runtime via <code>_UseAudioLink</code>.
+                        VRCFury material-toggle animations can flip AudioLink on and off without a build-time
+                        variant explosion - VRC materials can flip floats freely but can't change keywords at
+                        runtime.
+                    </li>
+                    <li>
+                        <strong>Chronotensity, DFT & ColorChord Strip:</strong>
+                        <code>_AL_Chrono_Idx</code> (0-7) picks which chronotensity row to read; <code>_UseChronoFX</code>
+                        makes the entire chrono read opt-in (avoiding 4 extra texture samples per pixel for amplitude-only
+                        setups). <code>_AL_DFT_Note</code> (0-11) drives <code>AudioLinkGetAmplitudesAtNote</code> so the
+                        emission layer can lock to a specific musical note across all octaves. <code>ColorChord Strip</code>
+                        adds a <code>_AL_Strip_Pos</code> selector along the full 128-pixel <code>ALPASS_CCSTRIP</code>.
+                    </li>
+                    <li>
+                        <strong>God Tier Cybernetics HUD:</strong>
+                        Black-and-white masked UI overlays for VU meters, oscilloscope waveform, DMX grid readouts,
+                        plus a new <code>_Cyber_CC_Density</code> (4-64 bars) true bar-chart spectrum and an
+                        <code>_UseCyberAuto</code> autocorrelator ring with animated angular spokes
+                        (<code>sin(angle * 12.0 + animTime)</code>) and gaussian falloff envelope.
+                    </li>
+                    <li>
+                        <strong>HUD Hover-Off-Body Engine:</strong>
+                        <code>_Cyber_Hover</code> (parallax-out height) and <code>_Cyber_Hover_Bob</code> (subtle
+                        vertical drift) shift the HUD UV along the tangent-space view direction so the panel reads
+                        as a holographic plane floating above the avatar surface.
+                    </li>
+                    <li>
+                        <strong>Kinetic Vertex Engine (Rewritten):</strong>
+                        The dual-pass SM5 geometry shader was removed in 2.3.0 - it desynced under hardware
+                        tessellation. The replacement runs entirely inside the <code>disp()</code> vertex stage and
+                        the surface fragment. Vertices snap to a 3D grid (<code>floor(vertex.xyz * 25.0)</code>),
+                        each cell is hashed for a deterministic per-shard random axis, then Rodrigues-rotated, scaled,
+                        and offset along a pivot. The fragment performs a per-pixel
+                        <code>clip(fractureNoise - fractureCut)</code> with a tiny parallax pop on shard edges, so
+                        the visible mesh punches holes in sync with the vertex scatter and survives tessellation
+                        cleanly. Plus a new <code>_Vtx_AutoCorr_Str</code> reads
+                        <code>AudioLinkGetSphericalMappedAutoCorrelatorValue</code> per-vertex for a smooth
+                        volumetric ripple. All gated by <code>_UseVtxKinetic</code> and strictly band-amplitude
+                        driven so silent worlds never shatter the avatar.
+                    </li>
                     <li>
                         <strong>Kinetic UV Engine (Surface Maps):</strong>
-                        Transforms the mathematical surface of the material without altering the mesh. Features Vortex Twists, UV Bass Pumping, and spatial-hashed UV Fracture Shards, all mathematically tied to specific AudioLink FFT bands.
+                        Vortex Twists, UV Bass Pumping, and spatial-hashed UV Fracture Shards - all mathematically
+                        tied to specific AudioLink FFT bands. Chronotensity breath modulates the vortex envelope
+                        when <code>_UseChronoFX</code> is on.
                     </li>
+                </ul>
 
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">Build & Editor Pipeline</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
                     <li>
-                        <strong>Kinetic Vertex Engine (Dual-Pass Geometry Shatter):</strong>
-                        Utilizes a raw Shader Model 5.0 Geometry pipeline to mathematically destroy the mesh topology in real-time. Includes Normal Inflate Distance to physically inflate the avatar to the bass, and a Geometry Shard Scatter that intercepts clipped polygons, un-welds the topology, and physically blasts literal polygons outward into 3D space. Fractured geometry sheds its physical PBR properties and converts to raw kinetic energy (Unlit Emissive) during flight.
+                        <strong>Build-Time Variant Stripper:</strong>
+                        <code>VixenWearVariantStripper</code> (<code>IPreprocessShaders</code>) hammers shader
+                        variants in three layers at build time: (1) managed feature keywords still enabled on any
+                        live material, (2) Deferred/Meta/MotionVectors passes dropped entirely (avatar clothing
+                        never uses them), and (3) dead built-in keywords leaking past the surface pragma
+                        (<code>LIGHTMAP_ON</code>, <code>DIRLIGHTMAP_COMBINED</code>,
+                        <code>DYNAMICLIGHTMAP_ON</code>, <code>LIGHTMAP_SHADOW_MIXING</code>,
+                        <code>SHADOWS_SHADOWMASK</code>, <code>LIGHTPROBE_SH</code>,
+                        <code>LOD_FADE_CROSSFADE</code>). <code>VixenWearVariantStripReporter</code> logs
+                        <code>kept/stripped/total</code> after every build.
                     </li>
-
                     <li>
-                        <strong>Global Material Modulations:</strong>
-                        Secondary atmospheric effects driven by AudioLink FFT arrays. Includes scrolling Audio Scanlines, Parallax Thumping, Clearcoat Shattering on high frequencies, Thin Film Expansion to dynamically shift refractive colors, and Digital Tears to simulate codec failure.
+                        <strong>Build & Play-Mode Keyword Sync:</strong>
+                        <code>VixenWearBuildPreprocessor</code> (<code>IPreprocessBuildWithReport</code>) auto-runs
+                        <code>CleanAllMaterials</code> on every build, and <code>VixenWearPlayModeSync</code>
+                        (<code>InitializeOnLoad</code>) syncs every VixenWear material's keywords on
+                        <code>ExitingEditMode</code> so stale toggles never no-op on the first play frame.
+                    </li>
+                    <li>
+                        <strong><code>Edit Materials From Selection</code> Menu (<code>Ctrl+Shift+M</code>):</strong>
+                        Promotes Hierarchy GameObject selection to the underlying VixenWear <code>.mat</code> assets
+                        by walking <code>GetComponentsInChildren&lt;Renderer&gt;(includeInactive: true)</code>,
+                        deduplicating via <code>HashSet&lt;Material&gt;</code>, and swapping
+                        <code>Selection.objects</code>. Picks up wardrobe layers that are toggled off - critical for
+                        VRC clothing where the inspector otherwise collapses to <code>-</code> across renderers.
+                    </li>
+                    <li>
+                        <strong>VectorLabelDrawer Multi-Edit Fix:</strong>
+                        The drawer now writes individual X/Y/Z/W components per selected material via
+                        <code>m.SetVector(name, cur)</code> where <code>cur[i] = newVal</code>. Previously
+                        <code>prop.vectorValue = v</code> broadcast the first material's entire vector to every
+                        selected material on every edit, silently overwriting independent settings. Each slot
+                        independently shows Unity's mixed-value <code>-</code> indicator, and labels adaptively shrink
+                        from font size 11 down to 8 before falling back to short forms or ellipsis truncation.
+                    </li>
+                    <li>
+                        <strong>Per-Tab Reset to Shader Defaults:</strong>
+                        Right-click any inspector tab (<code>BASE</code>, <code>SURFACE</code>, <code>POLISH</code>,
+                        <code>INTEGRATION</code>, <code>AUDIOLINK</code>, <code>STAGE</code>) for <em>Copy</em>,
+                        <em>Paste (Values Only)</em>, <em>Paste (With Textures)</em>, and <em>Reset to Defaults</em>.
+                        Reset spawns a hidden defaults material from the same shader and writes its values back
+                        through <code>MaterialProperty</code>; the BASE tab re-runs
+                        <code>SetupMaterialWithBlendMode</code> after the reset so <code>_Mode</code> takes visual
+                        effect immediately.
                     </li>
                 </ul>
 
                 <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: Export & Import Workflow</h3>
-
                 <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
                     <li>
-                        <strong>Custom Substance Template:</strong>
-                        Standard HDRP/URP maps are incompatible. You must generate a custom <code>R+G+B+A</code> output template, explicitly mapping <em>Glossiness</em> (not Roughness) to the Alpha channel.
+                        <strong>Native Pack via Substance Painter:</strong>
+                        Create a custom <code>R+G+B+A</code> output template (<em>VixenWear PBR</em>) and drag
+                        <em>Metallic</em> -&gt; R, <em>Ambient Occlusion</em> -&gt; G, <em>Height</em> -&gt; B, and
+                        <strong>Glossiness</strong> (from Converted Maps, not Roughness) -&gt; A. If you'd rather
+                        export <em>Roughness</em>, drop it into A and flip the inspector's
+                        <em>Channel Stores Roughness (Invert)</em> toggle on import.
                     </li>
-
+                    <li>
+                        <strong>Poiyomi / Substance / Marmoset Drop-In:</strong>
+                        For existing third-party packings, skip the re-export entirely. In the SURFACE tab, set
+                        <em>Metallic Channel</em>, <em>Smoothness Channel</em>, <em>AO Channel</em>, and
+                        <em>Height Channel</em> to match the source packing and flip
+                        <em>Invert Metallic</em> / <em>Channel Stores Roughness</em> as needed.
+                    </li>
                     <li>
                         <strong>Alpha-Safe Export Formats:</strong>
-                        Exports must use formats supporting uncompressed Alpha channels (PNG, TGA, or TIFF). JPEGs will permanently destroy the smoothness data. 16-bit depth is highly recommended to prevent stepping in the displacement map.
+                        Use PNG, TGA, or TIFF. JPEGs destroy the alpha (smoothness) data. Export the displacement
+                        map as 16-bit to prevent stepping under hardware tessellation.
                     </li>
-
                     <li>
                         <strong>Linear Data Enforcement (Unity Import):</strong>
-                        Because the packed map contains purely mathematical data, Unity's default gamma correction will warp the displacement and metalness calculations. You <strong>must</strong> uncheck <code>sRGB (Color Texture)</code> in the Unity Inspector.
+                        The packed map is mathematical data, not color. <strong>Uncheck</strong>
+                        <code>sRGB (Color Texture)</code> on the texture importer or Unity's gamma correction will
+                        warp the displacement and metalness reads.
                     </li>
-
                     <li>
                         <strong>Micro-Detail Layering:</strong>
-                        Use the normal map for physical macro-texturing (leather grain, latex pores) and leverage the <em>Clearcoat Normal Flattening</em> parameter to keep the liquid-like specular finish completely smooth over the rough fabric underneath.
+                        Use the normal map for physical macro-texturing (leather grain, latex pores) and the
+                        <em>Clearcoat Flattening</em> parameter to keep the liquid-like specular finish smooth over
+                        the rough fabric underneath. A secondary <em>Detail Normal</em> with independent
+                        <em>Detail UV Tiling</em> handles micro-pores or hex-grid patterns.
+                    </li>
+                    <li>
+                        <strong>Project-Wide Maintenance Menus:</strong>
+                        <code>VixenTools &gt; VixenWear &gt; Disable Media-State Gate On All Materials</code>
+                        clears <code>_UseMediaState</code> across the project - critical when upgrading from 2.1.x
+                        where it defaulted to ON and silently muted AudioLink for users without a VRC video player
+                        in scene. <code>Clean Latex Material Keywords</code> manually re-runs the build-time
+                        keyword sync after bulk animation-clip or VRCFury edits.
                     </li>
                 </ul>
             </div>
@@ -682,7 +932,7 @@
             <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">Vixen World Engine</h2>
-                    <div class="badge">VixenWorldSpider.cs • UdonSharpEditorCache.cs • VixenEngineStressTest.cs</div>
+                    <div class="badge">VixenWorldSpider.cs • VixenHeuristicsDashboard.cs • VixenEngineStressTest.cs • ShaderDictionaryAsset.cs</div>
                 </div>
 
                 <p class="mb-4" style="line-height: 1.6; color: #e0d5eb;">
@@ -737,6 +987,20 @@
                                 preventing SDK validation failures and broken world boot sequences.
                             </li>
 
+                            <li class="mb-2">
+                                <strong>VizVid (VVMW) Pipeline Audit:</strong>
+                                Identifies cross-platform AVPro fallback failures, missing RateLimitResolver
+                                instances, decoupled UI/Frontend handlers, and spatialized audio bleed across
+                                multi-screen setups.
+                            </li>
+
+                            <li class="mb-2">
+                                <strong>Rinvo Search Ecosystem:</strong>
+                                Re-aligns mismatched VideoPlayer UI target enums, enforces proxy addition rules,
+                                and clamps API pool sizes to prevent Udon network rate-limit nukes from the
+                                YouTube search backend.
+                            </li>
+
                         </ul>
                     </div>
 
@@ -780,6 +1044,34 @@
                                 <strong>Video Pipeline Throttling:</strong>
                                 Monitors video players, sync frequencies, and networked playback logic to prevent
                                 runaway bandwidth usage and frame pacing collapse in high-traffic instances.
+                            </li>
+
+                            <li class="mb-2">
+                                <strong>LTCGI / Light Volumes / AudioLink Audits:</strong>
+                                Resolves <code>BakeInProgress</code> NRE deadlocks, detects fragmented LTCGI memory
+                                arrays (ghost screens), and auto-links missing video output textures. Flags
+                                multiple AudioLink core collisions, Quest GPU readback stalls, unlinked reactive
+                                objects, and unsafe TVGI strobe/flicker thresholds on Light Volume rigs.
+                            </li>
+
+                            <li class="mb-2">
+                                <strong>World Profiler Dashboard (<code>VixenHeuristicsDashboard.cs</code>):</strong>
+                                Standalone heuristics window that aggregates texture, mesh, audio, UI, lightmap,
+                                LTCGI, AudioLink, video, physics, and Udon footprints in O(1) via the
+                                <code>_sceneObjectCache</code> + <code>_textureRecoveryCache</code>. Computes a
+                                threat score that heavily penalizes realtime shadow casters (80x weight) and
+                                surfaces an at-a-glance <code>OPTIMAL / MODERATE / SEVERE</code> verdict.
+                            </li>
+
+                            <li class="mb-2">
+                                <strong>Shader Dictionary Auto-Population:</strong>
+                                <code>ShaderDictionaryAsset</code> + its custom editor expose three buttons -
+                                <em>Populate Targets</em>, <em>Populate Whitelist</em>, and
+                                <em>Factory Reset (Nuke &amp; Rebuild)</em>. Dictionaries auto-generate inside
+                                <code>Assets/VixenTools/Asset Database/World Engine/</code> (not inside
+                                <code>Packages/</code>) so custom entries survive VPM upgrades. The
+                                <em>Soft Nuke</em> path bypasses <code>AssetDatabase.DeleteAsset</code> to avoid
+                                GUI null-reference collapses during a rebuild.
                             </li>
 
                         </ul>

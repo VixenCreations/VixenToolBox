@@ -1,4 +1,4 @@
-/* Vixen Badge Maker USS — Native UI Toolkit Integration */
+/* Vixen Badge Maker USS ï¿½ Native UI Toolkit Integration */
 
 :root {
     --bg-dark: #141414;
@@ -11,9 +11,7 @@
     --text-muted: #aaaaaa;
 }
 
-/* =======================================================
-   Base Unity Overrides (Native Style Hijacking)
-   ======================================================= */
+/* Base Unity Overrides (Native Style Hijacking) */
 .unity-base-field,
 .unity-object-field,
 .unity-button,
@@ -76,9 +74,7 @@
     flex-grow: 1;
 }
 
-/* =======================================================
-   Header Banner
-   ======================================================= */
+/* Header Banner */
 #tool-header {
     height: 60px;
     background-color: #0c0612;
@@ -88,9 +84,7 @@
     align-items: center;
 }
 
-/* =======================================================
-   Tabs Navigation
-   ======================================================= */
+/* Tabs Navigation */
 #tab-toolbar {
     flex-direction: row;
     padding: 10px;
@@ -128,9 +122,7 @@
     color: #bbbbbb;
 }
 
-/* =======================================================
-   Scroll Area & Panels
-   ======================================================= */
+/* Scroll Area & Panels */
 #main-scroll {
     flex-grow: 1;
     padding: 10px;
@@ -157,9 +149,7 @@
     margin-bottom: 15px;
 }
 
-/* =======================================================
-   Help Boxes & Info
-   ======================================================= */
+/* Help Boxes & Info */
 .help-box-styled {
     background-color: rgba(0, 0, 0, 0.3);
     border-color: rgba(255, 255, 255, 0.1);
@@ -179,17 +169,13 @@
     white-space: normal; /* Safely wraps long text */
 }
 
-/* =======================================================
-   Foldout Fix
-   ======================================================= */
+/* Foldout Fix */
 .bold-foldout > .unity-foldout__toggle > .unity-toggle__text {
     -unity-font-style: bold;
     font-size: 14px;
 }
 
-/* =======================================================
-   Execution Buttons
-   ======================================================= */
+/* Execution Buttons */
 .cyber-action-btn {
     font-size: 18px;
     -unity-font-style: bold;
@@ -214,9 +200,7 @@
 }
 .pink-btn:hover { background-color: #6e1346; }
 
-/* =======================================================
-   UV Mapper Coordinate Boxes
-   ======================================================= */
+/* UV Mapper Coordinate Boxes */
 .coord-box {
     background-color: rgba(0, 0, 0, 0.4);
     border-width: 1px;

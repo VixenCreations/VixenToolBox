@@ -18,6 +18,25 @@
     box-sizing: border-box;
 }
 
+/* FOUC guard: keep undefined custom elements invisible so the page does not flash unstyled <fluent-*> markup before the web-components module hydrates. */
+:not(:defined) {
+    visibility: hidden;
+}
+
+/* Hold the body invisible until app.js flips .app-ready. The html background stays painted so the user sees the dark-void instead of a white blank. app.js has a hard 2s safety fallback in case the module never loads. */
+html {
+    background-color: var(--dark-void);
+}
+
+body {
+    opacity: 0;
+    transition: opacity 0.18s ease-out;
+}
+
+body.app-ready {
+    opacity: 1;
+}
+
 /* Custom Webkit Scrollbars */
 ::-webkit-scrollbar {
     width: 8px;
@@ -588,9 +607,7 @@ fluent-tooltip {
     }
 
 
-/* ==========================================================================
-   SUPPORT PAGE GRID & CARDS
-   ========================================================================== */
+/* SUPPORT PAGE GRID & CARDS */
 .support-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -661,9 +678,7 @@ fluent-tooltip {
     box-shadow: inset 20px 0 30px -20px rgba(255, 0, 170, 0.2);
 }
 
-/* ==========================================================================
-   COMPETITIVE CARD SYSTEM
-   ========================================================================== */
+/* COMPETITIVE CARD SYSTEM */
 .competitive-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -784,9 +799,7 @@ fluent-tooltip {
     margin: 0;
 }
 
-/* ==========================================================================
-   TOOL SHOWCASE CARDS (Suite Architecture)
-   ========================================================================== */
+/* TOOL SHOWCASE CARDS (Suite Architecture) */
 .tools-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
@@ -886,9 +899,7 @@ fluent-tooltip {
     margin-bottom: 10px;
 }
 
-/* ==========================================================================
-   LIGHTBOX PREVIEW SYSTEM
-   ========================================================================== */
+/* LIGHTBOX PREVIEW SYSTEM */
 
 /* Add pointer cursor to signify images are clickable */
 .preview-trigger {
@@ -967,9 +978,7 @@ fluent-tooltip {
         transform: scale(1.1);
     }
 
-/* ==========================================================================
-   CHANGELOG PAGINATION & DROPDOWN OVERRIDES
-   ========================================================================== */
+/* CHANGELOG PAGINATION & DROPDOWN OVERRIDES */
 
 /* Fade-in Animation for smooth page turns */
 .changelog-fade {
@@ -1018,9 +1027,7 @@ fluent-option {
         color: #fff !important;
     }
 
-/* ==========================================================================
-   JUMP TO TOP BUTTON
-   ========================================================================== */
+/* JUMP TO TOP BUTTON */
 .jump-to-top {
     position: fixed;
     bottom: 40px;
@@ -1056,9 +1063,7 @@ fluent-option {
         transform: translateY(-5px);
     }
 
-/* ==========================================================================
-   RESPONSIVE VIDEO EMBED
-   ========================================================================== */
+/* RESPONSIVE VIDEO EMBED */
 .video-container {
     position: relative;
     padding-bottom: 56.25%; /* mathematically enforces a 16:9 aspect ratio */
@@ -1078,9 +1083,7 @@ fluent-option {
         height: 100%;
     }
 
-/* ==========================================================
-   TOOL MATRIX FLEXBOX FIX
-   ========================================================== */
+/* TOOL MATRIX FLEXBOX FIX */
 .matrix-grid {
     display: flex;
     flex-wrap: wrap;

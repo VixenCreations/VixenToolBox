@@ -1,4 +1,4 @@
-/* Vixen Quest Conversion Engine USS — Native UI Toolkit Integration */
+/* Vixen Quest Conversion Engine USS ï¿½ Native UI Toolkit Integration */
 
 :root {
     --bg-dark: #141414;
@@ -12,9 +12,7 @@
     --text-muted: #aaaaaa;
 }
 
-/* =======================================================
-   Base Unity Overrides (Native Style Hijacking)
-   ======================================================= */
+/* Base Unity Overrides (Native Style Hijacking) */
 .unity-base-field,
 .unity-object-field,
 .unity-button,
@@ -77,9 +75,7 @@
     flex-grow: 1;
 }
 
-/* =======================================================
-   Header Banner
-   ======================================================= */
+/* Header Banner */
 #tool-header {
     height: 60px;
     background-color: #0c0612;
@@ -89,9 +85,7 @@
     align-items: center;
 }
 
-/* =======================================================
-   Scroll Area & Panels
-   ======================================================= */
+/* Scroll Area & Panels */
 #main-scroll {
     flex-grow: 1;
     padding: 10px;
@@ -118,9 +112,7 @@
     margin-bottom: 15px;
 }
 
-/* =======================================================
-   Help Boxes, Results, & Info
-   ======================================================= */
+/* Help Boxes, Results, & Info */
 .info-box-styled {
     background-color: rgba(255, 255, 255, 0.05);
     border-left-width: 4px;
@@ -141,9 +133,7 @@
     margin-bottom: 15px;
 }
 
-/* =======================================================
-   Interactive Topology Matrix (Phase 1.5)
-   ======================================================= */
+/* Interactive Topology Matrix (Phase 1.5) */
 .bold-foldout {
     margin-bottom: 15px; /* Spacing between the matrix categories */
 }
@@ -203,9 +193,7 @@
     border-color: var(--color-cyan);
 }
 
-/* =======================================================
-   Execution Buttons
-   ======================================================= */
+/* Execution Buttons */
 .cyber-action-btn {
     font-size: 16px;
     -unity-font-style: bold;
@@ -237,9 +225,7 @@
     border-width: 1px;
 }
 
-/* =======================================================
-   Texture Matrix Controls
-   ======================================================= */
+/* Texture Matrix Controls */
 .bold-foldout > .unity-button {
     font-size: 11px;
     height: 22px;

@@ -196,53 +196,31 @@ namespace VixenTools.Editor
                 });
             }
 
-            // Task: Tight-Fit Mesh Bounds
+            // Task: Universal Avatar-Scale Bounds
             report.OptimizationSuite.Add(new OptimizationTask
             {
                 ID = "OPTIMIZE_BOUNDS",
-                Label = $"Static Override Tight Mesh Bounds",
-                Description = "Vixen Core Heuristic: Calculates precise 8-corner World-to-Root spatial bounding boxes.",
+                Label = $"<color=#00e5ff>Enforce Universal Avatar Bounds</color>",
+                Description = "Vixen Core Fix: Replaces tight-fit culling with a massive 2.5m³ bounding volume. Prevents clothing and accessories from vanishing at extreme camera angles.",
                 Execute = () => {
                     int meshesProcessed = 0;
+                    
+                    // A universally safe 2.5m x 2.5m x 2.5m bounding box. 
+                    // When applied relative to a root bone like the Hips, this easily covers the entire human wingspan and height.
+                    Bounds universalBounds = new Bounds(Vector3.zero, new Vector3(2.5f, 2.5f, 2.5f));
+
                     foreach (var smr in skinnedRenderers)
                     {
-                        if (smr.sharedMesh == null) continue;
-                        Undo.RecordObject(smr, "Optimize Bounds");
-                        smr.updateWhenOffscreen = false;
-
-                        Bounds meshBounds = smr.sharedMesh.bounds;
-                        Bounds tightBounds;
-
-                        if (smr.rootBone != null && smr.rootBone != smr.transform)
-                        {
-                            Vector3 rootCenter = smr.rootBone.InverseTransformPoint(smr.transform.TransformPoint(meshBounds.center));
-                            tightBounds = new Bounds(rootCenter, Vector3.zero);
-                            
-                            Vector3 e = meshBounds.extents;
-                            Vector3[] corners = new Vector3[] {
-                                new Vector3(e.x, e.y, e.z), new Vector3(e.x, e.y, -e.z),
-                                new Vector3(e.x, -e.y, e.z), new Vector3(e.x, -e.y, -e.z),
-                                new Vector3(-e.x, e.y, e.z), new Vector3(-e.x, e.y, -e.z),
-                                new Vector3(-e.x, -e.y, e.z), new Vector3(-e.x, -e.y, -e.z)
-                            };
-
-                            foreach (var corner in corners)
-                            {
-                                Vector3 worldPt = smr.transform.TransformPoint(meshBounds.center + corner);
-                                Vector3 localPt = smr.rootBone.InverseTransformPoint(worldPt);
-                                tightBounds.Encapsulate(localPt);
-                            }
-                        }
-                        else
-                        {
-                            tightBounds = meshBounds;
-                        }
-
-                        tightBounds.Expand(tightBounds.extents.magnitude * 0.15f);
-                        smr.localBounds = tightBounds;
+                        Undo.RecordObject(smr, "Standardize Bounds");
+                        
+                        // We strictly keep this false. Relying on updateWhenOffscreen = true is a massive 
+                        // performance killer in VRChat. The large bounds handle the visibility instead.
+                        smr.updateWhenOffscreen = false; 
+                        
+                        smr.localBounds = universalBounds;
                         meshesProcessed++;
                     }
-                    Debug.Log($"[VixenTools] Matrix Bounds Optimized across {meshesProcessed} renderers.");
+                    Debug.Log($"[VixenTools] Geometry Culling Matrix updated: Universal Bounds applied to {meshesProcessed} renderers.");
                 }
             });
 
@@ -667,6 +645,57 @@ namespace VixenTools.Editor
         }
         
         private void OnEnable() => _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
+
+        // ====================================================================
+        // REACTIVE UI (DEBOUNCED)
+        // ====================================================================
+        
+        private double _nextScanTime = 0;
+        private bool _scanQueued = false;
+
+        // Taps into the Editor's frame update loop
+        private void Update()
+        {
+            if (_scanQueued && EditorApplication.timeSinceStartup > _nextScanTime)
+            {
+                _scanQueued = false;
+                if (_targetField != null && _targetField.value != null)
+                {
+                    ExecuteDeepScan();
+                }
+            }
+        }
+
+        // Queues a scan with a 500ms delay to prevent Editor lockup during rapid changes
+        private void QueueDeepScan()
+        {
+            // Only queue if we already have an active session
+            if (_lastReport != null && _targetField != null && _targetField.value != null)
+            {
+                _scanQueued = true;
+                _nextScanTime = EditorApplication.timeSinceStartup + 0.5;
+            }
+        }
+
+        // Triggered when anything in the scene hierarchy is added, deleted, or reparented
+        private void OnHierarchyChange() => QueueDeepScan();
+
+        // Triggered when assets are modified (e.g., textures reimported, materials changed)
+        private void OnProjectChange() => QueueDeepScan();
+
+        // Optional Quality-of-Life: Auto-target if you click a new avatar root in the hierarchy
+        private void OnSelectionChange()
+        {
+            var selected = Selection.activeGameObject;
+            if (selected != null && selected.GetComponent<VRCAvatarDescriptor>() != null)
+            {
+                if (_targetField.value != selected)
+                {
+                    _targetField.value = selected;
+                    ExecuteDeepScan();
+                }
+            }
+        }
 
         private void CreateGUI()
         {

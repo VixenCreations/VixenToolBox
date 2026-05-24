@@ -13,9 +13,7 @@
     --text-muted: #aaaaaa;
 }
 
-/* =======================================================
-   Base Unity Overrides
-   ======================================================= */
+/* Base Unity Overrides */
 .unity-base-field,
 .unity-object-field,
 .unity-button,
@@ -79,9 +77,7 @@
     -unity-background-image-tint-color: var(--color-cyan);
 }
 
-/* =======================================================
-   Slider (Legal Hover Glow Simulation)
-   ======================================================= */
+/* Slider (Legal Hover Glow Simulation) */
 
 .unity-slider-int .unity-base-slider__tracker {
     background-color: #2f2f2f;
@@ -108,9 +104,7 @@
     border-width: 2px;
 }
 
-/* =======================================================
-   Custom Toggle Checkboxes
-   ======================================================= */
+/* Custom Toggle Checkboxes */
 .unity-toggle__checkmark {
     background-color: var(--bg-dark);
     border-color: #2f2f2f;
@@ -129,9 +123,7 @@
     border-color: rgba(0, 229, 255, 0.5);
 }
 
-/* =======================================================
-   Tool Root & Header
-   ======================================================= */
+/* Tool Root & Header */
 #hub-root {
     background-color: var(--bg-dark);
     flex-grow: 1;
@@ -148,9 +140,7 @@
     -unity-font-style: bold;
 }
 
-/* =======================================================
-   Panels & Structural
-   ======================================================= */
+/* Panels & Structural */
 .cyber-panel {
     background-color: rgba(200, 200, 200, 0.05);
     border-color: rgba(255, 255, 255, 0.1);
@@ -167,9 +157,7 @@
     color: var(--text-main);
 }
 
-/* =======================================================
-   Action Buttons
-   ======================================================= */
+/* Action Buttons */
 .cyber-action-btn {
     font-size: 16px;
     -unity-font-style: bold;
@@ -218,9 +206,7 @@
     text-shadow: 0px 0px 8px rgba(255, 0, 51, 0.8);
 }
 
-/* =======================================================
-   Data Tags
-   ======================================================= */
+/* Data Tags */
 .data-tag-btn {
     background-color: #1e1e1e;
     border-width: 1px;
@@ -274,9 +260,7 @@
     color: #ffffff;
 }
 
-/* =======================================================
-   Validation Results Matrix
-   ======================================================= */
+/* Validation Results Matrix */
 .md-h1 {
     font-size: 18px;
     -unity-font-style: bold;
@@ -332,9 +316,7 @@
     margin-top: 1px;
 }
 
-/* =======================================================
-   Optimization Task Matrix
-   ======================================================= */
+/* Optimization Task Matrix */
 .opt-task-row {
     flex-direction: row;
     align-items: flex-start;

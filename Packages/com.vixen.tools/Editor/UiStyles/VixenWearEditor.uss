@@ -1,7 +1,4 @@
-﻿/* =======================================================
-   VixenWear — Latex Ultra Shader Inspector Skin
-   (Unity‑compatible USS — no CSS variables, no color-mix)
-   ======================================================= */
+﻿/* VixenWear — Latex Ultra Shader Inspector Skin (Unity‑compatible USS — no CSS variables, no color-mix) */
 
 /* ---------- Colors (manually expanded) ---------- */
 
@@ -23,9 +20,7 @@
 .accent-cyan      { color: #00e5ff; }
 .accent-pink      { color: #ff00aa; }
 
-/* =======================================================
-   Root & Scroll
-   ======================================================= */
+/* Root & Scroll */
 
 #hub-root {
     background-color: #0b0b0f;
@@ -46,9 +41,7 @@
     background-color: transparent;
 }
 
-/* =======================================================
-   Header Banner
-   ======================================================= */
+/* Header Banner */
 
 #hub-header {
     min-height: 70px;
@@ -72,9 +65,7 @@
     color: #ffffff;
 }
 
-/* =======================================================
-   Tabs
-   ======================================================= */
+/* Tabs */
 
 #tab-container {
     flex-direction: row;
@@ -128,9 +119,7 @@
     color: #6f6f88;
 }
 
-/* =======================================================
-   Tab Description
-   ======================================================= */
+/* Tab Description */
 
 #desc-container {
     margin-left: 14px;
@@ -159,9 +148,7 @@
     white-space: normal;
 }
 
-/* =======================================================
-   IMGUI Container Wrapper
-   ======================================================= */
+/* IMGUI Container Wrapper */
 
 #latex-imgui-root {
     margin-top: 12px;
@@ -178,9 +165,7 @@
     border-color: rgba(255,255,255,0.06);
 }
 
-/* =======================================================
-   Field Styling (Unity‑safe)
-   ======================================================= */
+/* Field Styling (Unity‑safe) */
 
 .unity-label {
     color: #e6e6f0;
@@ -329,9 +314,7 @@
     border-color: #00e5ff;
 }
 
-/* =======================================================
-   Responsive Field Scaling Fix (FORCE OVERRIDE)
-   ======================================================= */
+/* Responsive Field Scaling Fix (FORCE OVERRIDE) */
 
 /* Force containers to allow children to shrink and not overflow */
 .unity-base-field, 

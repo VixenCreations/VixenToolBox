@@ -1,8 +1,6 @@
-/* Animation Workbench USS — Unity 2022.3 Compatible */
+/* Animation Workbench USS ï¿½ Unity 2022.3 Compatible */
 
-/* ============================
-   Global Theme Tokens
-   ============================ */
+/* Global Theme Tokens */
 :root {
     --bg-dark: #1a1a1a;
     --bg-darker: #141414;
@@ -31,9 +29,7 @@
     --radius: 4px;
 }
 
-/* ============================
-   Base UI Overrides
-   ============================ */
+/* Base UI Overrides */
 .unity-base-field,
 .unity-object-field,
 .unity-button,
@@ -59,9 +55,7 @@
     border-radius: var(--radius);
 }
 
-/* ============================
-   Root Container
-   ============================ */
+/* Root Container */
 #workbench-root {
     flex-direction: column;
     min-width: 450px; /* FIX: Lowered significantly so it can shrink */
@@ -69,9 +63,7 @@
     background-color: var(--bg-dark);
 }
 
-/* ============================
-   VixenTools Cyber Panels
-   ============================ */
+/* VixenTools Cyber Panels */
 .cyber-panel {
     background-color: rgba(200, 200, 200, 0.05);
     border-color: rgba(255, 255, 255, 0.1);
@@ -102,9 +94,7 @@
 }
 .pink-btn:hover { background-color: #e65c9c; }
 
-/* ============================
-   Top Toolbar
-   ============================ */
+/* Top Toolbar */
 #top-toolbar {
     min-height: 38px; /* FIX: Allows toolbar to grow if items wrap */
     background-color: var(--bg-toolbar);
@@ -122,17 +112,13 @@
     margin-right: 6px;
 }
 
-/* ============================
-   Main Scroll
-   ============================ */
+/* Main Scroll */
 #main-scroll {
     flex-grow: 1;
     padding: 6px;
 }
 
-/* ============================
-   Bindings Panel
-   ============================ */
+/* Bindings Panel */
 .binding-row {
     flex-direction: row;
     align-items: center;
@@ -146,9 +132,7 @@
     background-color: rgba(255,255,255,0.05);
 }
 
-/* ============================
-   ScrollViews
-   ============================ */
+/* ScrollViews */
 .scroll-section {
     flex-grow: 1;
     overflow: scroll;
@@ -162,9 +146,7 @@ unity-scroll-view .unity-base-slider__thumb {
     border-radius: 4px;
 }
 
-/* ============================
-   Graph Container
-   ============================ */
+/* Graph Container */
 #curve-graph-container {
     flex-grow: 1;
     min-height: 250px;
@@ -214,9 +196,7 @@ unity-scroll-view .unity-base-slider__thumb {
     margin-top: 4px;
 }
 
-/* ============================
-   Buttons
-   ============================ */
+/* Buttons */
 .unity-button {
     height: 24px;
     min-width: 72px;
@@ -236,17 +216,13 @@ unity-scroll-view .unity-base-slider__thumb {
     background-color: var(--btn-bg-active);
 }
 
-/* ============================
-   Helpers
-   ============================ */
+/* Helpers */
 .label-muted {
     color: var(--text-muted);
     font-size: 11px;
 }
 
-/* ========================================================================== */
-/* POPUP WINDOW STYLING (MaterialPropertySearchPopup)                         */
-/* ========================================================================== */
+/* POPUP WINDOW STYLING (MaterialPropertySearchPopup) */
 
 /* Root */
 .popup-root {
@@ -277,9 +253,7 @@ unity-scroll-view .unity-base-slider__thumb {
     min-width: 70px;
 }
 
-/* ------------------------------
-   FOLDOUT FIX (critical)
-   ------------------------------ */
+/* FOLDOUT FIX (critical) */
 foldout {
     background-color: transparent;
     padding-left: 0;
@@ -321,9 +295,7 @@ foldout > .unity-foldout__content {
     -unity-font-style: bold;
 }
 
-/* ================================================
-   Easing Dropdown (Custom ComboBox)
-   ================================================ */
+/* Easing Dropdown (Custom ComboBox) */
 
 .easing-dropdown {
     background-color: var(--bg-panel);

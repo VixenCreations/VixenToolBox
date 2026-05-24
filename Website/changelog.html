@@ -122,6 +122,7 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
+                        <fluent-option value="v2.3.0">v2.3.0</fluent-option>
                         <fluent-option value="v2.1.5">v2.1.5</fluent-option>
                         <fluent-option value="v2.1.0">v2.1.0</fluent-option>
                         <fluent-option value="v2.0.4">v2.0.4</fluent-option>
@@ -152,7 +153,86 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
-                <div class="changelog-entry" data-version="v2.1.5">
+                <div class="changelog-entry" data-version="v2.3.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.3.0 - 2026-05-23</h5>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>GGX BRDF Rewrite (VixenWear Latex Ultra):</strong> Tore out the legacy BRDF3 lobe and replaced it with an industry-standard GGX pipeline: `D_GGX` (Trowbridge-Reitz), `V_SmithJointGGX`, `F_Schlick`, `Burley_Diffuse`, and a Karis split-sum (`EnvBRDFApprox_AB`) for indirect specular. Optional Filament/Frostbite multi-scatter energy compensation (`EnergyCompensation`) preserves bright metal highlights at high roughness without breaking energy conservation.</li>
+                        <li class="mb-2"><strong>Anisotropic Specular Engine:</strong> Added `_Aniso` and `_AnisoRot` for stretched highlights along a per-material tangent. Uses Burley's anisotropic alpha split with full `D_GGX_Aniso` + `V_SmithJointGGX_Aniso` evaluation; rotates the world tangent around N at the requested degree before splitting alpha into `ax`/`ay`, producing true latex-stretch highlights instead of a fake brushed-metal hack.</li>
+                        <li class="mb-2"><strong>Thin-Part Transmission:</strong> New `_Trans_Str`, `_Trans_Dist`, and `_Trans_Power` drive a Burley/Filament back-light term with Beer-Lambert absorption (`exp(-(1-diffColor)/_Trans_Dist)`), giving ears, fingers, and latex membranes physically correct light bleed without polluting the SSS lobe.</li>
+                        <li class="mb-2"><strong>Tinted Dielectric Clearcoat:</strong> Added `_CC_Tint` and `_CC_F0` so the clearcoat reflects with a colored cast and a custom Fresnel base reflectance. White tint at `F0=0.04` reproduces the standard dielectric exactly; coloured tints give the under-layer a complementary cast via per-channel `baseEnergy` attenuation.</li>
+                        <li class="mb-2"><strong>Geometric Specular Anti-Aliasing:</strong> Added `GeometricSpecAA` - a Toksvig-style filter that roughens both base and clearcoat normals based on screen-space normal derivative variance. Eliminates the spec aliasing/sparkle that hammered high-gloss surfaces at mid-distance.</li>
+                        <li class="mb-2"><strong>Poiyomi-Pack PBR Compatibility Layer:</strong> Added `_PBR_Met_Ch`, `_PBR_Smooth_Ch`, `_PBR_AO_Ch`, `_PBR_Height_Ch` channel selectors plus `_PBR_Met_Inv` and `_PBR_Smooth_Inv` (Channel Stores Roughness). Drops Poiyomi/Substance/Marmoset-packed masks straight in without re-authoring; the `ChannelPick` helper is wired through every consumer (parallax raymarch, BRDF shadow trace, surface metallic/smoothness, AO, height) so the channel choice is honored everywhere.</li>
+                        <li class="mb-2"><strong>Multi-Region Color Mask (Poiyomi-Style):</strong> New `_UseRegionMask` + `_RegionMask` with independent R/G/B zone tints (`_Region_R/G/B_Tint`) and per-zone emission boosts (`_Region_R/G/B_Emis`). Channels stack independently, letting authors paint hard-edged feature zones (panels, claws, decals) without a second material.</li>
+                        <li class="mb-2"><strong>Secondary Emission Layer:</strong> New `_UseEmission2` with its own `_EmissionMap2`, `_EmissionColor2`, mask channel picker (`_Emis2_MaskCh`), and dedicated AudioLink band reactor (`_AL_Band_Emis2`, `_AL_Emis2_Mod`). Authors can route bass to one circuitry layer and treble to another without juggling animator parameters.</li>
+                        <li class="mb-2"><strong>Multi-Layer MatCap Engine:</strong> Added a full second matcap layer (`_UseMatCap2`, `_MatCap2`, `_MatCap2_Mask`, `_MatCap2_MaskCh`, `_MatCap2_Tint`, `_MatCap2_Int`, `_MatCap2_Rot`) with three blend modes (`Add`, `Replace`, `Multiply`). Layer 1 also gains mask channel selection (`_MatCap_MaskCh`) and per-layer tint so a single RGB region mask can drive different matcaps in different zones.</li>
+                        <li class="mb-2"><strong>VRChat Mirror Camera Rendering Fix:</strong> Added `vw_CameraPos()` and `vw_WorldViewDir()` helpers that read the actual rendering camera from `UNITY_MATRIX_I_V._m03_m13_m23` (per-eye correct under single-pass instanced) instead of `_WorldSpaceCameraPos` (which stays glued to the player's head in mirrors). Routed through surface viewDir, GI viewDir, parallax raymarch, and clearcoat reflection so specular/parallax/cubemap math is finally correct in mirrors.</li>
+                        <li class="mb-2"><strong>Light Volumes Deep Integration:</strong> Replaced the single intensity slider with a full LV stack: `_LV_Spec_Mix`, `_LV_Spec_Dominant` (dominant-light vs full L1 specular), `_LV_CC_Spec_Mix` for clearcoat-specific specular, `_LV_Bias` for normal-bias offset (fixes light bleed at sharp edges), `_LV_PosOffset` for manual world-space offset on thin/sleeve geometry, `_LV_AdditiveOnly` for additive-only mode that preserves Unity's probe baseline, and `_LV_ProbeDering` - an opt-in Bakery L1 deringed-probe fallback for non-LV worlds.</li>
+                        <li class="mb-2"><strong>LTCGI Surgical Mix Controls:</strong> Split LTCGI into independent `_LTCGI_Diff_Mix` and `_LTCGI_Spec_Mix` (alongside the master `_LTCGI_Int`), letting creators dial area-light diffuse and specular contributions separately without disabling LTCGI on the whole material.</li>
+                        <li class="mb-2"><strong>VRSL Color Hijack:</strong> Added `_VRSL_Color_Hijack` (independent from `_VRSL_Intensity`) that lerps the AudioLink color toward live DMX RGB (sector channels +3/+4/+5). Lets stage colour washes override neon emission palettes without disabling AL color reactivity entirely.</li>
+                        <li class="mb-2"><strong>Chronotensity Index Selector:</strong> New `_AL_Chrono_Idx` (0-7) lets authors pick which chronotensity row they're tapping, and `_UseChronoFX` makes the entire chrono read opt-in - avoiding 4 extra texture samples per pixel for amplitude-only setups. All chrono-driven effects (vortex breath, fracture re-roll, glitch re-seed, scanline reaction, flicker time) now gate behind this toggle.</li>
+                        <li class="mb-2"><strong>DFT Note Emission Reactor:</strong> Added `_AL_DFT_Note` (0-11) and `_AL_DFT_Mod` driving `AudioLinkGetAmplitudesAtNote` - the emission layer can now pull on a specific musical note across all octaves (e.g., always glow on a C# or pull a snare hit cleanly out of the mix) instead of using band averages.</li>
+                        <li class="mb-2"><strong>ColorChord Strip Position:</strong> New `ColorChord Strip` source for `_AL_ColorMode` lets the artist pick any position along the 128-pixel `ALPASS_CCSTRIP` via `_AL_Strip_Pos`, exposing the full continuous ColorChord gradient.</li>
+                        <li class="mb-2"><strong>Audio Color Blend (Rainbow):</strong> `_AL_Col_Blend` now drives a `HUEtoRGB` rainbow cycle over `_Time.y + bio + worldPos.y` before VRSL hijack, giving a worldspace-anchored chromatic shift that reacts to the live bio pulse.</li>
+                        <li class="mb-2"><strong>Spherical Autocorrelator Vertex Engine:</strong> New `_Vtx_AutoCorr_Str` reads `AudioLinkGetSphericalMappedAutoCorrelatorValue(normalize(v.vertex.xyz))` per-vertex - drives a smooth volumetric ripple that doesn't require a band selection because every vertex samples its own object-space direction.</li>
+                        <li class="mb-2"><strong>Spectrum Bar Density Control:</strong> Added `_Cyber_CC_Density` (4-64 bars) - the HUD spectrum is now a true bar chart with adjustable resolution and proper inter-bar gaps, not a continuous strip.</li>
+                        <li class="mb-2"><strong>Autocorrelator HUD Ring:</strong> New `_UseCyberAuto` with full `Transform` placement and `_Cyber_AutoCorr_Str` intensity. Renders a radial ring driven by `ALPASS_AUTOCORRELATOR` with animated angular spokes (`sin(angle * 12.0 + animTime)`) and a gaussian falloff envelope for the readout band.</li>
+                        <li class="mb-2"><strong>HUD Hover-Off-Body Engine:</strong> Added `_Cyber_Hover` (parallax-out height) and `_Cyber_Hover_Bob` (subtle vertical drift). The HUD UV is shifted along the tangent-space view direction so the panel reads as a holographic plane floating <em>above</em> the avatar surface, with a subtle sine-driven bob for "alive" feel.</li>
+                        <li class="mb-2"><strong>Standard-Style Render Mode Selector:</strong> New `_Mode` property (Opaque/Cutout/Fade/Transparent) drives blend state, ZWrite, render queue, RenderType tag, VRCFallback tag, and alpha keywords via `SetupMaterialWithBlendMode`. `Fade` uses straight alpha; `Transparent` uses premultiplied alpha so specular survives at low opacity (glass/latex). Cutout retains the historical `clip(c.a - _CutOff)` behavior.</li>
+                        <li class="mb-2"><strong>Build-Time Variant Stripper (`VixenWearVariantStripper`):</strong> New `IPreprocessShaders` that hammers shader variants in three layers: (1) managed feature keywords still enabled on any live material, (2) Deferred/Meta/MotionVectors passes entirely dropped (avatar clothing never uses them), and (3) dead built-in keywords leaking past the surface pragma (`LIGHTMAP_ON`, `DIRLIGHTMAP_COMBINED`, `DYNAMICLIGHTMAP_ON`, `LIGHTMAP_SHADOW_MIXING`, `SHADOWS_SHADOWMASK`, `LIGHTPROBE_SH`, `LOD_FADE_CROSSFADE`). Accompanied by `VixenWearVariantStripReporter` that logs `kept/stripped/total` post-build.</li>
+                        <li class="mb-2"><strong>Build &amp; Play-Mode Keyword Sync:</strong> `VixenWearBuildPreprocessor` (`IPreprocessBuildWithReport`) auto-runs `CleanAllMaterials` on every build, and `VixenWearPlayModeSync` (`InitializeOnLoad`) syncs every VixenWear material's keywords on `ExitingEditMode` so stale toggles never no-op on the first play frame.</li>
+                        <li class="mb-2"><strong>`Edit Materials From Selection` Menu (`Ctrl+Shift+M`):</strong> Promotes Hierarchy GameObject selection to the underlying VixenWear `.mat` assets by walking `GetComponentsInChildren&lt;Renderer&gt;(includeInactive: true)`, deduplicating via `HashSet&lt;Material&gt;`, and swapping `Selection.objects`. Picks up wardrobe layers that are toggled off - critical for VRC clothing where the inspector otherwise collapses to `-` across renderers.</li>
+                        <li class="mb-2"><strong>`Disable Media-State Gate On All Materials` Menu:</strong> Project-wide bulk fix that clears `_UseMediaState` on every VixenWear material at once, restoring AudioLink reactivity for worlds without a `_MediaPlaying` driver.</li>
+                        <li class="mb-2"><strong>`Clean Latex Material Keywords` Menu:</strong> Manual trigger for the build-time keyword sync - rebuilds every VixenWear material's keyword state from current property values, useful after bulk-editing via animation clips or VRCFury.</li>
+                        <li class="mb-2"><strong>Per-Tab Reset to Shader Defaults:</strong> Right-click any inspector tab and pick "Reset {TAB} to Defaults" - spawns a hidden defaults material from the same shader and writes its values back through `MaterialProperty`. Honors `_Mode` by re-running `SetupMaterialWithBlendMode` after the reset on the BASE tab.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>AudioLink Now Always-Compiled (No `AL_ENABLE` Variant):</strong> Ripped out the `AL_ENABLE` shader feature keyword entirely. AudioLink.cginc is now always included and gated at runtime via `_UseAudioLink`, so VRCFury material-toggle animations can flip AudioLink on/off without a build-time variant explosion (VRC materials can't change keywords at runtime). The stripper actively `DisableKeyword("AL_ENABLE")` on every material to clear stale state.</li>
+                        <li class="mb-2"><strong>Dead `CYBER_ENABLE` Keyword Purged:</strong> Removed `CYBER_ENABLE` from the pragma list and force-disabled on every material - the shader never `#if`-gated on it so it was generating a useless 2x variant set.</li>
+                        <li class="mb-2"><strong>`VectorLabelDrawer` Per-Component Multi-Edit Fix:</strong> The drawer now writes individual `X`/`Y`/`Z`/`W` components per selected material via `m.SetVector(name, cur)` where `cur[i] = newVal`. Previously `prop.vectorValue = v` broadcast the first material's <em>entire</em> vector to every selected material on every edit - silently overwriting independent settings whenever a single component changed.</li>
+                        <li class="mb-2"><strong>`VectorLabelDrawer` Per-Component Mixed-Value Display:</strong> Each X/Y/Z/W slot independently shows Unity's `-` mixed-value indicator instead of the all-or-nothing `prop.hasMixedValue` behavior. Matches the native `Vector4Field` workflow users expect.</li>
+                        <li class="mb-2"><strong>`VectorLabelDrawer` Adaptive Label Sizing:</strong> Labels now shrink from font size 11 down to 8 to fit the available slot, fall back to short forms (`X Offset` -&gt; `X`, `Scale` -&gt; `Scl`, `Rotation` -&gt; `Rot`), and ellipsis-truncate as a last resort. Full label is preserved in the tooltip.</li>
+                        <li class="mb-2"><strong>`VixenALBandDrawer` Change-Gated Writes:</strong> Wrapped the `IntPopup` write in `EditorGUI.BeginChangeCheck` so it no longer unconditionally overwrites every selected material's value on every repaint. `EditorGUI.showMixedValue = p.hasMixedValue` shows the proper `-` indicator for multi-edit.</li>
+                        <li class="mb-2"><strong>`UseMediaState` Default Flipped to OFF:</strong> New materials now default to AudioLink running regardless of media player state. The opt-in gate is still available for worlds that genuinely want video-driven activation, but the previous opt-out default was silently killing AudioLink for users without a VRC video player in scene.</li>
+                        <li class="mb-2"><strong>Inspector Tab Reorganization:</strong> `BASE` gains `_Mode`; `SURFACE` gains all `_PBR_*_Ch` selectors; `POLISH` gains `_CC_Tint`, `_CC_F0`, anisotropy, transmission, and `_UseMultiScatter`; `INTEGRATION` absorbs MatCap (with channel/tint), gains layer 2, all region mask + secondary emission props, and the deep Light Volumes + LTCGI stacks; `AUDIOLINK` gains chronotensity, DFT, autocorrelator HUD, hover, strip-position, spectrum density, and vertex autocorrelator; `STAGE` gains `_VRSL_Color_Hijack`.</li>
+                        <li class="mb-2"><strong>Surface Pragma Hardened:</strong> Added `keepalpha exclude_path:deferred exclude_path:prepass nolightmap nodynlightmap nodirlightmap noshadowmask nometa nolppv` plus a defensive `#pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK`. Massive baseline variant reduction even before the build-time stripper runs.</li>
+                        <li class="mb-2"><strong>Vertex Fracture Engine Rewritten:</strong> Replaced the old per-primitive geometry-shader scatter with a `disp()`-stage shatter that snaps verts to a 3D grid (`floor(vertex.xyz * 25.0)`), hashes each cell for a per-shard random axis (Rodrigues rotation), pivot offset along the normal, scatter direction, and subtle scale - all gated by `_UseVtxKinetic` and strictly driven by AudioLink band amplitude so silent worlds never shatter the avatar.</li>
+                        <li class="mb-2"><strong>Per-Pixel Fracture Clip in Surface Stage:</strong> The fragment now `clip(fractureNoise - fractureCut)` against a per-pixel hash, with `fracturePop` driving a tiny parallax offset on shard edges - reads as physical shard separation and survives tessellation cleanly.</li>
+                        <li class="mb-2"><strong>`PerformPaste` Honors `_Mode`:</strong> Pasting BASE tab settings now re-runs `SetupMaterialWithBlendMode` on the destination materials so the blend state actually matches the pasted `_Mode` instead of inheriting the previous mode's leftover state.</li>
+                        <li class="mb-2"><strong>Codebase-Wide Multi-Line Comment Purge:</strong> Stripped `/* */` block-comment syntax across the C# editor scripts (`VixenHub`, `VixenWorldSpider`, `VixenEngineStressTest`), every UI Toolkit stylesheet under `Editor/UiStyles/`, the `AnimationWorkbench` resource styles, and the public-site CSS. C# blocks rewritten as `//` line comments; USS/CSS section banners flattened to single-line `/* ... */` (USS has no `//` syntax). Resolves editor-side lag on larger stylesheet files in VS Code / Rider - cosmetic only, zero runtime impact. Third-party vendored shader libraries (LTCGI, AudioLink, LightVolumes) intentionally skipped to preserve upstream sync.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Mirror Camera Specular/Parallax Math:</strong> Resolved a long-standing issue where view-dependent math (specular highlights, parallax raymarching, clearcoat cubemap reflection) rendered wrong in VRChat mirrors. Unity's surface-shader plumbing computed viewDir from `_WorldSpaceCameraPos` (the player's head, not the mirror camera) - now reprojected through `vw_WorldViewDir()` from the actual rendering camera matrix.</li>
+                        <li class="mb-2"><strong>Light Volumes Black-Out on Default Worlds:</strong> Probe SH (especially Bakery's dering path) can produce negative diffuse values when L1 magnitude exceeds L0, causing the avatar to render pitch-black on probes-only worlds. Now clamps `LightVolumeEvaluate` output to `max(..., 0)` to suppress the negative reconstruction artifact.</li>
+                        <li class="mb-2"><strong>Light Volumes Edge Bleed:</strong> Sharp geometry edges sampled the volume at the wrong location, causing light bleed into shadowed cavities. Added `_LV_Bias` normal-bias offset (matches the official LV PBR reference shader) plus manual `_LV_PosOffset` for thin sleeve/membrane geometry.</li>
+                        <li class="mb-2"><strong>Multi-Edit Vector Property Corruption:</strong> The `VectorLabelDrawer` was silently broadcasting the <em>first</em> selected material's entire vector to every other selected material on every component edit. Per-component, per-material writes via `Undo.RecordObjects` + `m.SetVector` preserve each target's independent state.</li>
+                        <li class="mb-2"><strong>Multi-Edit Enum Property Spam:</strong> `VixenALBandDrawer` unconditionally overwrote `p.floatValue` on every OnGUI tick, silently resetting other selected materials' band selections back to the first material's value. Now change-gated.</li>
+                        <li class="mb-2"><strong>Geometry Shader Pass Instability Under Tessellation:</strong> The dual-pass SM5 `GEOMETRY_FRACTURE` Pass 2 from 2.1.5 collapsed under hardware tessellation - the `primID` hashing desynced from the tessellated triangle indices, producing flickering and orphaned shards. Replaced entirely with the per-pixel surface-shader noise clip (which also tessellates correctly).</li>
+                        <li class="mb-2"><strong>Static-Slider Fracture in Silent Worlds:</strong> Fracture/pump/autocorrelator vertex effects could fire from manual slider values even when AudioLink wasn't running, shattering avatars in silent worlds. All vertex AL effects are now strictly band-amplitude-driven with `_UseAudioLink &gt; 0.5 &amp;&amp; _UseVtxKinetic &gt; 0.5` as the master gate.</li>
+                        <li class="mb-2"><strong>Stale Keyword Build Variant Bloat:</strong> Materials retained `AL_ENABLE`, `CYBER_ENABLE`, and obsolete alpha keywords from prior shader versions, forcing the build system to compile thousands of dead variants. Build preprocessor now scrubs every VixenWear material's keyword set against the current pragma list before compilation; post-build report logs the strip count.</li>
+                        <li class="mb-2"><strong>Stale `_UseMediaState` Gates Blocking AudioLink:</strong> Materials authored under 2.1.5 had `_UseMediaState` ON by default and silently muted AudioLink in worlds without a VRC video player. New default is OFF; `Disable Media-State Gate On All Materials` provides a project-wide bulk fix for upgraded materials.</li>
+                        <li class="mb-2"><strong>MatCap UV Collapse on Flat Geometry:</strong> Previous tangent-space matcap math collapsed to `(0,0,1)` on flat polygons, producing a stuck reflection point. Switched to view-space normal via `mul((float3x3)UNITY_MATRIX_V, nWorld)` which is mirror-correct and never collapses.</li>
+                        <li class="mb-2"><strong>Tab Inspector State Loss on Reset:</strong> `PerformReset` on the BASE tab now re-runs `SetupMaterialWithBlendMode` after writing defaults, so the reset value of `_Mode` actually takes visual effect instead of lagging behind the property.</li>
+                        <li class="mb-2"><strong>Clipboard Texture Offsets/Scales Lost on Paste:</strong> `PerformPaste` now writes `SetTextureOffset` and `SetTextureScale` per-target inside the paste loop instead of relying on `prop.textureValue` to round-trip the tiling state.</li>
+                        <li class="mb-2"><strong>Destructive Topology Engine Crash on Dirty Rigs:</strong> `VixenMeshPatcher.CollapseBonesToParent` threw an `ArgumentNullException` when mapping `SkinnedMeshRenderer.bones` into a dictionary if the array contained `null` slots (common from dirty FBX vertex groups or upstream hierarchy flatteners). Dictionary insertions and hierarchy lookups are now strictly null-gated to prevent serialization halts.</li>
+                        <li class="mb-2"><strong>Aggressive Frustum Culling on Modular Clothing:</strong> The `OPTIMIZE_BOUNDS` heuristic previously calculated tight-fit spatial bounds per-mesh, causing modular clothing to vanish instantly when the tight bounds rotated slightly off-camera. Replaced with a <strong>Universal Avatar-Scale Bounds</strong> matrix (a universally safe 2.5m³ volume anchored to the root bone) to completely neutralize clipping while safely enforcing `updateWhenOffscreen = false` for VRAM optimization.</li>
+                        <li class="mb-2"><strong>Validator UI Desync &amp; Stale Data:</strong> The Validator window previously went stale if hierarchy or component edits occurred outside the tool. Integrated a debounced event trigger hooking into Unity's `OnHierarchyChange`, `OnProjectChange`, and `OnSelectionChange` to silently queue a deep scan and refresh the UI after a 500ms delay, preventing Editor lockups during rapid manual edits.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Removed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>`Pass 2 GEOMETRY_FRACTURE` (SM5 Geometry Shader):</strong> Removed entirely. Hardware tessellation desyncs were unfixable without sacrificing tessellation, and the per-pixel clip+parallax pop in Pass 1 produces an equivalent (and more stable) visual.</li>
+                        <li class="mb-2"><strong>`AL_ENABLE` Shader Feature:</strong> Now runtime-gated. AudioLink.cginc is always included; `_UseAudioLink` flips it without a keyword variant.</li>
+                        <li class="mb-2"><strong>`CYBER_ENABLE` Shader Feature:</strong> Dead keyword that the shader never `#if`-gated against. Force-disabled on every material via the keyword stripper.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="v2.1.5" hidden>
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.1.5 - 2026-05-16</h5>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -178,7 +258,7 @@
                     </ul>
                 </div>
 
-                <div class="changelog-entry" data-version="v2.1.0">
+                <div class="changelog-entry" data-version="v2.1.0" hidden>
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.1.0 - 2026-05-15</h5>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -201,7 +281,7 @@
                     </ul>
                 </div>
 
-                <div class="changelog-entry" data-version="v2.0.4">
+                <div class="changelog-entry" data-version="v2.0.4" hidden>
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.0.4 - 2026-05-15</h5>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -225,7 +305,7 @@
                     </ul>
                 </div>
 
-                <div class="changelog-entry" data-version="v2.0.3">
+                <div class="changelog-entry" data-version="v2.0.3" hidden>
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.0.3 - 2026-05-14</h5>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -250,7 +330,7 @@
                     </ul>
                 </div>
 
-                <div class="changelog-entry" data-version="v2.0.2">
+                <div class="changelog-entry" data-version="v2.0.2" hidden>
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.0.2 - 2026-05-13</h5>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
@@ -259,7 +339,7 @@
                     </ul>
                 </div>
 
-                <div class="changelog-entry" data-version="v2.0.1">
+                <div class="changelog-entry" data-version="v2.0.1" hidden>
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.0.1 - 2026-05-12</h5>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -285,7 +365,7 @@
                     </ul>
                 </div>
 
-                <div class="changelog-entry" data-version="v2.0.0">
+                <div class="changelog-entry" data-version="v2.0.0" hidden>
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.0.0 - 2026-05-12</h5>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -376,7 +456,7 @@
                     </ul>
                 </div>
 
-                <div class="changelog-entry" data-version="v1.6.1">
+                <div class="changelog-entry" data-version="v1.6.1" hidden>
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v1.6.1 - 2026-05-05</h5>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -397,7 +477,7 @@
                     </ul>
                 </div>
 
-                <div class="changelog-entry" data-version="v1.6.0">
+                <div class="changelog-entry" data-version="v1.6.0" hidden>
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v1.6.0 - 2026-05-04</h5>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -455,7 +535,7 @@
                     </ul>
                 </div>
 
-                <div class="changelog-entry" data-version="v1.5.1">
+                <div class="changelog-entry" data-version="v1.5.1" hidden>
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v1.5.1 - 2026-05-01</h5>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -478,7 +558,7 @@
                     </ul>
                 </div>
 
-                <div class="changelog-entry" data-version="v1.5.0">
+                <div class="changelog-entry" data-version="v1.5.0" hidden>
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v1.5.0 - 2026-04-30</h5>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -516,7 +596,7 @@
                     </ul>
                 </div>
 
-                <div class="changelog-entry" data-version="v1.4.5">
+                <div class="changelog-entry" data-version="v1.4.5" hidden>
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v1.4.5 - 2026-04-28</h5>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -540,7 +620,7 @@
                     </ul>
                 </div>
 
-                <div class="changelog-entry" data-version="v1.4.4">
+                <div class="changelog-entry" data-version="v1.4.4" hidden>
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v1.4.4 - 2026-04-27</h5>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>

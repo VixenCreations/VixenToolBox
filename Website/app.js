@@ -1,4 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- FOUC Guard: reveal the page once Fluent UI is hydrated ---
+    // styles.css cloaks <body> until .app-ready is added. We wait for the
+    // critical fluent custom elements to register, then flip the class.
+    // A 2s safety timer guarantees the page never stays hidden if the
+    // unpkg module fails (offline, CDN down, etc).
+    let revealed = false;
+    const revealPage = () => {
+        if (revealed) return;
+        revealed = true;
+        document.body.classList.add('app-ready');
+    };
+    const fluentTags = ['fluent-anchor', 'fluent-button', 'fluent-select', 'fluent-option'];
+    Promise.all(fluentTags.map(tag => customElements.whenDefined(tag)))
+        .then(revealPage)
+        .catch(revealPage);
+    setTimeout(revealPage, 2000);
+
     // --- Utility: Copy to Clipboard ---
     const handleCopyToClipboard = async (textToCopy, buttonElement) => {
         if (!textToCopy) return;
@@ -155,9 +172,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const lightboxClose = document.getElementById('lightboxClose');
 
     if (lightbox && lightboxImg && lightboxClose) {
+        // Pending src-clear timer. Tracked so a rapid reopen can cancel it
+        // before it nukes the freshly-set image src.
+        let lightboxClearTimer = null;
+
         // Open Lightbox when an image with .preview-trigger is clicked
         document.querySelectorAll('.preview-trigger').forEach(img => {
             img.addEventListener('click', (e) => {
+                if (lightboxClearTimer) {
+                    clearTimeout(lightboxClearTimer);
+                    lightboxClearTimer = null;
+                }
                 lightboxImg.src = e.target.src;
                 lightbox.classList.add('active');
             });
@@ -167,8 +192,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const closeLightbox = () => {
             lightbox.classList.remove('active');
             // Clear the src after the CSS fade transition completes (300ms)
-            setTimeout(() => {
+            if (lightboxClearTimer) clearTimeout(lightboxClearTimer);
+            lightboxClearTimer = setTimeout(() => {
                 lightboxImg.src = '';
+                lightboxClearTimer = null;
             }, 300);
         };
 

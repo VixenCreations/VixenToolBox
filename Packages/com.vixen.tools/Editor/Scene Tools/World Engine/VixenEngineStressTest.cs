@@ -955,7 +955,7 @@ namespace VixenTools.Editor.QA
                     field.SetValue(target, converted);
                     return;
                 }
-                catch { /* incompatible - fall through */ }
+                catch { } // incompatible - fall through
             }
             catch (Exception ex)
             {

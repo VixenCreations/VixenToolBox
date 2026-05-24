@@ -801,7 +801,7 @@ namespace VixenTools.Editor
                         _getUdonTypeMethod = utilityType?.GetMethod("GetUdonSharpBehaviourType", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
                     }
                 }
-                catch (Exception) { /* Fail silently */ }
+                catch (Exception) { } // Fail silently
                 finally
                 {
                     _udonReflectionInitialized = true;
@@ -818,7 +818,7 @@ namespace VixenTools.Editor
                     Type backingType = _getUdonTypeMethod.Invoke(null, new object[] { udon }) as Type;
                     if (backingType != null) resolvedName = backingType.FullName;
                 }
-                catch (Exception) { /* Let the fallback take over if invocation fails */ }
+                catch (Exception) { } // Let the fallback take over if invocation fails
             }
 
             // 4. Heuristic Fallback to the physical program asset name

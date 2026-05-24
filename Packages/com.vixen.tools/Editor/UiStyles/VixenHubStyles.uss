@@ -1,4 +1,4 @@
-/* Vixen Hub USS — Native UI Toolkit Integration */
+/* Vixen Hub USS ï¿½ Native UI Toolkit Integration */
 
 :root {
     --bg-dark: #141414;
@@ -13,9 +13,7 @@
     --text-muted: #aaaaaa;
 }
 
-/* =======================================================
-   Base Unity Overrides (Hijacking Default Grey Styles)
-   ======================================================= */
+/* Base Unity Overrides (Hijacking Default Grey Styles) */
 .unity-base-field,
 .unity-button,
 .unity-label,
@@ -51,9 +49,7 @@
     flex-grow: 1;
 }
 
-/* =======================================================
-   Header Banner
-   ======================================================= */
+/* Header Banner */
 #hub-header {
     min-height: 120px;
     border-bottom-width: 2px;
@@ -75,9 +71,7 @@
     -unity-font-style: bold;
 }
 
-/* =======================================================
-   Tabs Navigation
-   ======================================================= */
+/* Tabs Navigation */
 #tab-container {
     flex-direction: row;
     flex-wrap: wrap;
@@ -116,9 +110,7 @@
     color: #bbbbbb;
 }
 
-/* =======================================================
-   Tab Description
-   ======================================================= */
+/* Tab Description */
 #desc-container {
     padding: 10px;
     margin-left: 15px;
@@ -139,9 +131,7 @@
     flex-shrink: 1;
 }
 
-/* =======================================================
-   Content Area & Markdown Engine
-   ======================================================= */
+/* Content Area & Markdown Engine */
 #main-scroll {
     flex-grow: 1;
     padding: 15px 20px 30px 20px;
@@ -207,9 +197,7 @@
     margin-bottom: 8px;
 }
 
-/* =======================================================
-   Interactive Link Cards (Donation / Social / Support)
-   ======================================================= */
+/* Interactive Link Cards (Donation / Social / Support) */
 .link-grid {
     flex-direction: row;
     flex-wrap: wrap; 

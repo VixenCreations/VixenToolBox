@@ -50,7 +50,7 @@ namespace VixenTools.Editor
                     }
                 }
             }
-            catch { /* Fail silently to prevent disrupting editor loads if package is migrating */ }
+            catch { } // Fail silently to prevent disrupting editor loads if package is migrating
         }
 
         private static void OnSceneGUI(SceneView sceneView)

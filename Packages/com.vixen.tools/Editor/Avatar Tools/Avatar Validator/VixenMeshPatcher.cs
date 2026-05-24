@@ -594,7 +594,14 @@ namespace VixenTools.Editor
                 BoneWeight[] weights = mesh.boneWeights;
                 
                 Dictionary<Transform, int> boneIndexMap = new Dictionary<Transform, int>();
-                for (int i = 0; i < currentBones.Length; i++) boneIndexMap[currentBones[i]] = i;
+                for (int i = 0; i < currentBones.Length; i++)
+                {
+                    // [Vixen Core Fix] Guard against null joints in dirty SMR bone arrays.
+                    if (currentBones[i] != null)
+                    {
+                        boneIndexMap[currentBones[i]] = i;
+                    }
+                }
 
                 for (int i = 0; i < weights.Length; i++)
                 {
@@ -617,7 +624,9 @@ namespace VixenTools.Editor
             if (weight > 0 && targetIndex >= 0 && targetIndex < allBones.Length)
             {
                 Transform currentBone = allBones[targetIndex];
-                if (cullList.Contains(currentBone) && currentBone.parent != null)
+                
+                // [Vixen Core Fix] Ensure currentBone is not null before checking hierarchy to prevent NREs
+                if (currentBone != null && cullList.Contains(currentBone) && currentBone.parent != null)
                 {
                     if (indexMap.TryGetValue(currentBone.parent, out int parentIndex))
                     {

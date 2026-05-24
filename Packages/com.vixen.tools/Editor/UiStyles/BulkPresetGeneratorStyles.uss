@@ -1,4 +1,4 @@
-/* Vixen Bulk Preset Generator USS — Native UI Toolkit Integration */
+/* Vixen Bulk Preset Generator USS ï¿½ Native UI Toolkit Integration */
 
 :root {
     --bg-dark: #141414;
@@ -11,9 +11,7 @@
     --text-muted: #aaaaaa;
 }
 
-/* =======================================================
-   Base Unity Overrides (Native Style Hijacking)
-   ======================================================= */
+/* Base Unity Overrides (Native Style Hijacking) */
 .unity-base-field,
 .unity-object-field,
 .unity-button,
@@ -76,9 +74,7 @@
     flex-grow: 1;
 }
 
-/* =======================================================
-   Header Banner
-   ======================================================= */
+/* Header Banner */
 #tool-header {
     height: 60px;
     background-color: #0c0612;
@@ -88,9 +84,7 @@
     align-items: center;
 }
 
-/* =======================================================
-   Tabs Navigation
-   ======================================================= */
+/* Tabs Navigation */
 #tab-toolbar {
     flex-direction: row;
     padding: 10px;
@@ -127,9 +121,7 @@
     color: #bbbbbb;
 }
 
-/* =======================================================
-   Scroll Area & Panels
-   ======================================================= */
+/* Scroll Area & Panels */
 #main-scroll {
     flex-grow: 1;
     padding: 10px;
@@ -156,9 +148,7 @@
     margin-bottom: 15px;
 }
 
-/* =======================================================
-   Help Boxes & Info
-   ======================================================= */
+/* Help Boxes & Info */
 .info-box-styled {
     background-color: rgba(255, 255, 255, 0.05);
     border-left-width: 4px;
@@ -170,9 +160,7 @@
     white-space: normal;
 }
 
-/* =======================================================
-   Execution Buttons
-   ======================================================= */
+/* Execution Buttons */
 .cyber-action-btn {
     font-size: 16px;
     -unity-font-style: bold;
