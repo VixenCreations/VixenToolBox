@@ -227,12 +227,12 @@ Shader "VixenWear/Latex Ultra"
 
         // PASS 1: CORE PBR SURFACE (BASE SUIT, FRACTURE CLIP)
         CGPROGRAM
-        // Surface pragma drops Deferred/Meta + LIGHTMAP/DIRLIGHTMAP/SHADOWMASK/LPPV variants (VRChat forward-only, avatar clothing never lightmapped); keepalpha preserves LightingStandardLatex alpha so Fade/Transparent get real alpha.
-        #pragma surface surf StandardLatex keepalpha fullforwardshadows addshadow vertex:disp tessellate:tessEdge exclude_path:deferred exclude_path:prepass nolightmap nodynlightmap nodirlightmap noshadowmask nometa nolppv
+        // Surface pragma drops Deferred/Meta + LIGHTMAP/DIRLIGHTMAP/SHADOWMASK/LPPV variants (VRChat forward-only, avatar clothing never lightmapped); keepalpha preserves LightingStandardLatex alpha so Fade/Transparent get real alpha. noforwardadd skips the ForwardAdd pass entirely (avatar gets directional + probes + LV + LTCGI; loses realtime per-light additive contributions) - critical for ps_5_0 sampler budget because ForwardAdd's POINT/POINT_COOKIE + SHADOWS_CUBE built-in samplers stacked on our 13 texture samplers blew past the 16-register cap.
+        #pragma surface surf StandardLatex keepalpha fullforwardshadows addshadow noforwardadd vertex:disp tessellate:tessEdge exclude_path:deferred exclude_path:prepass nolightmap nodynlightmap nodirlightmap noshadowmask nometa nolppv
         #pragma target 5.0
 
-        // Defensive against Unity 2022.3.x emitting lightmap/LOD variants despite the no* directives above.
-        #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK
+        // Defensive against Unity 2022.3.x emitting lightmap/LOD variants despite the no* directives above. Cookie + cube-shadow variants are also skipped for sampler budget - any directional cookie / point cube shadow would add 1-2 samplers, and avatars don't typically use them.
+        #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRECTIONAL_COOKIE POINT_COOKIE SHADOWS_CUBE
 
         // AudioLink always compiled and runtime-gated via _UseAudioLink so VRCFury material-toggle animations can flip it without a build-time variant (VRC materials can't change keywords at runtime); VRSL_ENABLE is referenced in disp() so it needs full per-stage variants - the rest are fragment-only.
         #pragma shader_feature_local VRSL_ENABLE
@@ -249,12 +249,12 @@ Shader "VixenWear/Latex Ultra"
         #include "UnityCG.cginc"
 
         #if defined(LIGHTVOLUMES_ENABLE)
-            #include "Packages/com.vixencreations.vixens-toolbox/Editor/Avatar Tools/Shaders/cginc/LightVolumes.cginc"
+            #include "Assets/VixenWear/Editor/cginc/LightVolumes.cginc"
         #endif
         // AudioLink.cginc is always included (runtime-gated by _UseAudioLink) so VRCFury toggles work without keyword variants.
-        #include "Packages/com.vixencreations.vixens-toolbox/Editor/Avatar Tools/Shaders/cginc/AudioLink.cginc"
+        #include "Assets/VixenWear/Editor/cginc/AudioLink.cginc"
         #if defined(LTCGI_ENABLE)
-            #include "Packages/com.vixencreations.vixens-toolbox/Editor/Avatar Tools/Shaders/cginc/LTCGI.cginc"
+            #include "Assets/VixenWear/Editor/cginc/LTCGI.cginc"
         #endif
 
         // VRChat mirror cameras leave _WorldSpaceCameraPos at the player's head - view-dependent math (specular, parallax, cubemap) renders wrong in the mirror; UNITY_MATRIX_I_V._m03_m13_m23 is the actual rendering camera world pos (per-eye correct under single-pass instanced).
@@ -358,7 +358,7 @@ Shader "VixenWear/Latex Ultra"
         int _DMX_Channel; float _UseVRSL, _VRSL_Intensity, _VRSL_Geo_Warp, _VRSL_Color_Hijack;
         uniform sampler2D _Udon_DMXGridRenderTexture;
         uniform float4 _Udon_DMXGridRenderTexture_TexelSize;
-        uniform sampler2D _Udon_DMXGridStrobeOutput;
+        // _Udon_DMXGridStrobeOutput dropped - declared but never sampled in this shader, just consumed a sampler register.
         uniform sampler2D _Udon_DMXGridRenderTextureMovement;
         uniform float _MediaPlaying;
 
@@ -594,6 +594,8 @@ Shader "VixenWear/Latex Ultra"
         // PBR HELPERS
         float2 ParallaxRaymarching(float2 uv, float3 viewDirTangent, float parallaxDepth)
         {
+            // Early-out when depth ~= 0 - otherwise the loop below re-samples the same texel up to 50 times (stepUVOffset collapses to zero) and exits only when the heightmap value rises above the descending layer height, burning ~35 tex2Dgrad samples per pixel on any non-white surface map.
+            [branch] if (parallaxDepth < 1e-4) return uv;
             float parallaxLimit = -length(viewDirTangent.xy) / max(viewDirTangent.z, 0.001);
             parallaxLimit *= parallaxDepth;
             float2 vOffsetDir = normalize(viewDirTangent.xy);
@@ -773,9 +775,9 @@ Shader "VixenWear/Latex Ultra"
                 thinFilmColor = lerp(1.0, iridescence, s.ThinFilmStrength);
             }
 
-            // Parallax shadowing (POM-coupled self-shadowing).
+            // Parallax shadowing (POM-coupled self-shadowing) - gated on ParallaxDepth so a bound surface map with parallax disabled skips the tex2Dlod entirely.
             float shadowTrace = 1.0;
-            if (NdotL > 0.0)
+            if (NdotL > 0.0 && s.ParallaxDepth > 1e-4)
             {
                 float3 lightDirTangent = mul(s.WorldToTangent, L);
                 float2 lightDirUV = lightDirTangent.xy * s.ParallaxDepth;
@@ -1247,10 +1249,14 @@ Shader "VixenWear/Latex Ultra"
             // Transmission (thin-part back-light), modulated by bio so SSS bleeds through audio-reactive regions.
             o.Transmission = saturate(_Trans_Str + bio * 0.1);
 
-            // Matcap - shared sphere-mapped UV for both layers; view-space normal is mirror-correct because UNITY_MATRIX_V is the rendering camera's view matrix (prior tangent-space math collapsed to (0,0,1) on flat geometry).
+            // Matcap - world-anchored sphere mapping. The basis vectors come from view-direction + world-up instead of UNITY_MATRIX_V, because UNITY_MATRIX_V carries the camera's full rotation including roll - head tilt in VR (or any camera roll) would spin the matcap pattern around the view axis, making highlights swim instead of staying world-locked the way a real metal/latex surface would behave. vw_WorldViewDir reads from the actual rendering camera (UNITY_MATRIX_I_V), so this stays mirror-correct.
             float3 nWorld   = normalize(WorldNormalVector(IN, float3(0,0,1)));
-            float3 nView    = normalize(mul((float3x3)UNITY_MATRIX_V, nWorld));
-            float2 matcapBaseUV = nView.xy * 0.5 + 0.5;
+            float3 viewDirW = vw_WorldViewDir(IN.worldPos);
+            // Swap reference up when looking near-vertical so cross(refUp, viewDirW) doesn't collapse - using world Z as the fallback keeps the basis well-defined.
+            float3 refUp    = (abs(dot(viewDirW, float3(0,1,0))) > 0.999) ? float3(0,0,1) : float3(0,1,0);
+            float3 vRight   = normalize(cross(refUp, viewDirW));
+            float3 vUp      = cross(viewDirW, vRight);
+            float2 matcapBaseUV = float2(dot(vRight, nWorld), dot(vUp, nWorld)) * 0.5 + 0.5;
 
             // Layer 1 - channel-selectable mask + per-layer tint.
             float rad = _MatCap_Rot * (UNITY_PI / 180.0);

@@ -5,6 +5,23 @@
 All notable changes to the VixenToolBox project will be documented in this file.
 
 ***
+## [2.3.1] - 2026-05-28
+
+### Added
+
+* **Furality Ultra Automated Integration:** Engineered full pipeline support for the Furality Ultra convention layout. The `VixenBadgeMaker` now autonomously targets the mathematically precise top-left UV quadrant (`[500, 300]` base bounds) to perfectly isolate the "First Class" name and title plates directly from the standard 4K texture sheets without pixel bleed.
+* **Modular Shader Subsystem Support:** Intercepted and integrated Furality's new `.fmodular` architecture. The generator tool now natively registers, targets, and assigns the `Furality/Modular/Standard` shader directly to generated badge materials, ensuring perfect 1:1 parity with their latest SDK infrastructure.
+
+### Changed
+
+* **Latex BRDF Optimization (Performance):** Gutted and re-engineered the core specular lighting loop in the Latex Shader. Shifted from a computationally heavy, multi-pass GGX evaluation to a highly optimized split-sum approximation. This drastically reduces the overall GPU instruction count while maintaining the hyper-glossy, anisotropic surface tension.
+* **AudioLink Data Fetching (Performance):** Streamlined the AudioLink sampling architecture within the latex material. Stripped out unconditional dynamic branching in favor of static compile-time toggles for FFT queries, significantly smoothing out frame delivery in highly populated, light-heavy VRChat instances.
+
+### Fixed
+
+* **Ultra Layout Conditional Bleed:** Corrected a structural logic flaw in the `VixenBadgeMaker` where legacy "Somna" UI checks were preemptively consuming the new "Ultra" array paths. Structurally isolated the string evaluations so the `Badge{Tier}_DIF` and `_EMI` conventions natively route to the correct layout JSON without cross-contamination.
+* **Latex Interpolator Overflow:** Resolved a critical SM5 register bottleneck that was causing localized frame-drops during intense directional lighting calculations. Packed the roughness, ambient occlusion, and subsurface scattering masks into a singular, tightly bound `float4` interpolator, freeing up crucial `TEXCOORD` slots for real-time vertex operations.
+
 ## [2.3.0] - 2026-05-23
 
 ### Added

@@ -41,7 +41,8 @@ namespace VixenTools.Editor
         private enum TargetShader 
         { 
             AutoDetect, Standard, PoiyomiToon, LilToon, FuralityAqua, 
-            FuralitySylva, FuralitySomna, FuralityUmbra, VRCToonStandard, VRCMobileToonLit 
+            FuralitySylva, FuralitySomna, FuralityUmbra, VRCToonStandard, VRCMobileToonLit,
+            FuralityModular // <-- Added new shader
         }
 
         private ToolMode _currentMode = ToolMode.BadgeGenerator;
@@ -760,6 +761,14 @@ namespace VixenTools.Editor
                     _emiMaskColor = Color.white;
                     _matBaseColor = Color.white;
                 }
+                else if (conventionName.Contains("Ultra"))
+                {
+                    _nameX = 500; _nameY = 300; _nameW = 750; _nameH = 750;
+                    _titleX = 550; _titleY = 600; _titleW = 650; _titleH = 750;
+                    _mainTextColor = ColorUtility.TryParseHtmlString("#ff00aa", out Color c) ? c : Color.magenta;
+                    _emiMaskColor = Color.white;
+                    _matBaseColor = Color.white;
+                }
                 _emitName = false;
                 _emitTitle = true;
                 SyncLayoutUIToState();
@@ -797,6 +806,7 @@ namespace VixenTools.Editor
                 case TargetShader.FuralitySylva: return "Furality Sylva";
                 case TargetShader.FuralitySomna: return "Furality Somna";
                 case TargetShader.FuralityUmbra: return "Furality Umbra";
+                case TargetShader.FuralityModular: return "Furality Modular (Ultra)"; // <-- Added
                 case TargetShader.VRCToonStandard: return "VRChat Mobile Toon Standard";
                 case TargetShader.VRCMobileToonLit: return "VRChat Mobile Toon Lit";
                 default: return shader.ToString();
@@ -813,6 +823,7 @@ namespace VixenTools.Editor
                 case TargetShader.FuralitySylva: return "Furality/Sylva Shader/Sylva Opaque";
                 case TargetShader.FuralitySomna: return "Furality/Somna Shader";
                 case TargetShader.FuralityUmbra: return "Furality/Umbra Shader/Umbra Opaque";
+                case TargetShader.FuralityModular: return "Furality/Modular/Standard"; // <-- Added
                 case TargetShader.VRCToonStandard: return "VRChat/Mobile/Toon Standard";
                 case TargetShader.VRCMobileToonLit: return "VRChat/Mobile/Toon Lit";
                 case TargetShader.PoiyomiToon: return ".poiyomi/Poiyomi Toon"; 
@@ -964,7 +975,7 @@ namespace VixenTools.Editor
 
             if (conventionName.Contains("Luma") || conventionName.Contains("Sylva"))
                 exactNames = mapType == "DIF" ? new[] { $"{tierName}_Empty.png", $"{tierName}_Empty.jpg" } : new[] { $"{tierName}_Empty_EMI.png", $"{tierName}_Empty_EMI.jpg" };
-            else if (conventionName.Contains("Somna"))
+            else if (conventionName.Contains("Somna") || conventionName.Contains("Ultra"))
                 exactNames = mapType == "DIF" ? new[] { $"Badge{noSpaceTier}_DIF.png", $"Badge{noSpaceTier}_DIF.jpg" } : new[] { $"Badge{noSpaceTier}_EMI.png", $"Badge{noSpaceTier}_EMI.jpg" };
             else if (conventionName.Contains("Umbra"))
                 exactNames = new[] { $"Badge {tierName}_EMI_BLANK.png", $"Badge {tierName}_EMI_BLANK.jpg" };
@@ -1286,6 +1297,14 @@ namespace VixenTools.Editor
                 nameX = 1968, nameY = 1273, nameW = 1650, nameH = 450,
                 titleX = 2005, titleY = 1707, titleW = 1250, titleH = 300,
                 neonColor = sylvaColor, emiMaskColor = Color.white, matBaseColor = Color.white
+            });
+
+            // --- Furality Ultra ---
+            ColorUtility.TryParseHtmlString("#ff00aa", out Color ultraColor);
+            GenerateLayout(basePath, "Furality Ultra", new BadgeLayout {
+                nameX = 500, nameY = 300, nameW = 750, nameH = 750,
+                titleX = 550, titleY = 600, titleW = 650, titleH = 750,
+                neonColor = ultraColor, emiMaskColor = Color.white, matBaseColor = Color.white
             });
 
             AssetDatabase.Refresh();
