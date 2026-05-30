@@ -260,7 +260,7 @@
     color: #ffffff;
 }
 
-/* Validation Results Matrix */
+/* Validation Results System */
 .md-h1 {
     font-size: 18px;
     -unity-font-style: bold;
@@ -316,7 +316,7 @@
     margin-top: 1px;
 }
 
-/* Optimization Task Matrix */
+/* Optimization Task System */
 .opt-task-row {
     flex-direction: row;
     align-items: flex-start;

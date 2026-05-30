@@ -40,13 +40,13 @@
     padding: 10px;
 }
 
-/* CATEGORY FOLDOUTS & MATRIX TOPOLOGY */
+/* CATEGORY FOLDOUTS & SYSTEM TOPOLOGY */
 
-.matrix-foldout {
+.system-foldout {
     margin-bottom: 12px;
 }
 
-.matrix-foldout > .unity-foldout__toggle > .unity-toggle__text {
+.system-foldout > .unity-foldout__toggle > .unity-toggle__text {
     -unity-font-style: bold;
     font-size: 14px;
     color: var(--vixen-cyan);
@@ -54,7 +54,7 @@
 }
 
 /* Tint the foldout arrow to match the neon cyan text */
-.matrix-foldout > .unity-foldout__toggle > .unity-toggle__input > .unity-toggle__checkmark {
+.system-foldout > .unity-foldout__toggle > .unity-toggle__input > .unity-toggle__checkmark {
     -unity-background-image-tint-color: var(--vixen-cyan);
 }
 

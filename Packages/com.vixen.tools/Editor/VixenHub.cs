@@ -123,7 +123,7 @@ namespace VixenTools.Editor
             badge.RegisterCallback<PointerLeaveEvent>(e => badge.style.backgroundColor = new Color(0.05f, 0.05f, 0.08f, 0.95f));
 
             // --- TYPOGRAPHY ---
-            var label = new Label(">> <color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> UPDATE") { enableRichText = true };
+            var label = new Label(">> <color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> UPDATE") { enableRichText = true };
             label.style.fontSize = 14;
             
             Font cyberFont = AssetDatabase.LoadAssetAtPath<Font>("Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf");
@@ -175,14 +175,14 @@ namespace VixenTools.Editor
         [MenuItem("VixenTools/Hub Dashboard")]
         public static void ShowWindow()
         {
-            var window = GetWindow<VixenHub>("Vixen Hub");
+            var window = GetWindow<VixenHub>("VixForge Hub");
             window.minSize = new Vector2(450, 600);
             window.Show();
         }
 
         public static void ShowChangelogWindow()
         {
-            var window = GetWindow<VixenHub>("Vixen Hub");
+            var window = GetWindow<VixenHub>("VixForge Hub");
             window.minSize = new Vector2(450, 600);
             window.Show();
             
@@ -259,7 +259,7 @@ namespace VixenTools.Editor
             textContainer.AddToClassList("hub-header-text-container");
             textContainer.style.height = 120;
 
-            var titleLabel = new Label("<color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> HUB") { enableRichText = true };
+            var titleLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> HUB") { enableRichText = true };
             titleLabel.AddToClassList("hub-header-title");
             if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             
@@ -352,12 +352,12 @@ namespace VixenTools.Editor
                     break;
                 case TabMode.CoreModules:
                     _btnCoreModules.RemoveFromClassList("tab-btn-inactive"); _btnCoreModules.AddToClassList("tab-btn-active");
-                    _tabDescription.text = "Direct access to the flagship utilities that power the VixenTools ecosystem.";
+                    _tabDescription.text = "Direct access to the flagship utilities that power the VixForge ecosystem.";
                     RenderCoreModules();
                     break;
                 case TabMode.SupportedModules:
                     _btnSupportedModules.RemoveFromClassList("tab-btn-inactive"); _btnSupportedModules.AddToClassList("tab-btn-active");
-                    _tabDescription.text = "Explore third-party integrations and assets natively supported and audited by the VixenTools ecosystem.";
+                    _tabDescription.text = "Explore third-party integrations and assets natively supported and audited by the VixForge ecosystem.";
                     RenderSupportedModules();
                     break;
                 case TabMode.ShaderDocs:
@@ -481,9 +481,10 @@ namespace VixenTools.Editor
 #if !UDON
             var avatarList = new List<(System.Action action, string title, string desc)>
             {
-                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Badge Studio"), "Vixen Badge Studio", "High-fidelity procedural generation engine for VRChat convention badges."),
+                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Badge Studio"), "Badge Studio", "High-fidelity procedural generation engine for VRChat convention badges."),
                 (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Quest Conversion Engine"), "Quest Conversion Engine", "Non-destructive, high-fidelity pipeline mapping 100% of Android performance limits."),
                 (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/PhysBone Topology Mapper"), "PhysBone Topology Mapper", "Automates PhysBone extraction and injection bypassing native prefab constraints."),
+                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Accessory Engine"), "Accessory Mounting Engine", "Generates sterile armature clones and surgically mounts accessories via destructive auto-rigging or kinematic parent constraints."),
                 (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Optimization Suite"), "Optimization Suite", "Advanced dual-pipeline validation and automated optimization engine with ImageMagick VRAM resolution.")
             };
 
@@ -530,7 +531,7 @@ namespace VixenTools.Editor
                     SwitchMode(TabMode.CoreModules);
                 },
                 "<color=#00e5ff>Vixen World Engine</color>",
-                "Omni-Matrix diagnostic spider. Full ecosystem audits for ProTV, TXL, IwaSync3, video pipelines, Udon persistence, and shader replacement matrices.")
+                "Omni-System diagnostic spider. Full ecosystem audits for ProTV, TXL, IwaSync3, video pipelines, Udon persistence, and shader replacement systems.")
             };
 
             RenderActionGrid("WORLD PIPELINE TOOLS", "#ff00aa", worldList);
@@ -540,7 +541,7 @@ namespace VixenTools.Editor
         private void RenderSupportedModules()
         {
             string markdown = @"
-The **VixenTools Architecture** is engineered to interoperate flawlessly with industry-standard third-party modules. The World Engine and Avatar Validators actively audit, scan, and protect these ecosystems natively.
+The **VixForge Architecture** is engineered to interoperate flawlessly with industry-standard third-party modules. The World Engine and Avatar Validators actively audit, scan, and protect these ecosystems natively.
 ";
             ParseMarkdownAndInject(markdown, _contentContainer);
 

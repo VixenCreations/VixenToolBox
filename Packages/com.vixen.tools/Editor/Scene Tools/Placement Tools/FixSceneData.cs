@@ -7,7 +7,7 @@ using UnityEditor.SceneManagement;
 namespace VixenTools.Editor
 {
     /// <summary>
-    /// VixenTools Utility: Forces serialization of lighting data to resolve 
+    /// VixForge Utility: Forces serialization of lighting data to resolve
     /// missing or unlinked lightmap references in the active scene.
     /// </summary>
     public class FixSceneData
@@ -20,7 +20,7 @@ namespace VixenTools.Editor
 
             if (string.IsNullOrEmpty(currentScene.path))
             {
-                Debug.LogError("[VixenTools] Scene must be saved to a file before fixing lighting data.");
+                Debug.LogError("[VixForge] Scene must be saved to a file before fixing lighting data.");
                 return;
             }
 
@@ -29,7 +29,7 @@ namespace VixenTools.Editor
 
             if (lightingData == null)
             {
-                Debug.LogWarning($"[VixenTools] No Lighting Data Asset found for {currentScene.name}. You may need to Generate Lighting once first.");
+                Debug.LogWarning($"[VixForge] No Lighting Data Asset found for {currentScene.name}. You may need to Generate Lighting once first.");
                 return;
             }
 
@@ -45,11 +45,11 @@ namespace VixenTools.Editor
 
             if (saveSuccess)
             {
-                Debug.Log($"[VixenTools] Successfully re-assigned and serialized lighting data for: {currentScene.name}");
+                Debug.Log($"[VixForge] Successfully re-assigned and serialized lighting data for: {currentScene.name}");
             }
             else
             {
-                Debug.LogError("[VixenTools] Failed to save the scene during the fix process.");
+                Debug.LogError("[VixForge] Failed to save the scene during the fix process.");
             }
         }
     }

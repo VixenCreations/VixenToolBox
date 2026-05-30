@@ -5,46 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Primary SEO -->
-    <title>Vixens Toolbox | Documentation, Guides & Technical Reference</title>
-    <meta name="title" content="Vixens Toolbox | Documentation, Guides & Technical Reference">
-    <meta name="description" content="Explore the official documentation for Vixens Toolbox - deep‑dive guides, technical references, workflow tutorials, automation breakdowns, and VRChat creator tooling manuals.">
-    <meta name="keywords" content="Vixens Toolbox documentation, VRChat tools docs, VRChat shader docs, Unity editor tools documentation, PhysBones automation guide, VRChat creator tutorials, VPM documentation, avatar workflow guides, Vixenlicious docs, VRChat technical reference">
-    <meta name="author" content="Vixenlicious">
+    <title>Vixforge Toolkit | Documentation, Guides & Technical Reference</title>
+    <meta name="title" content="Vixforge Toolkit | Documentation, Guides & Technical Reference">
+    <meta name="description" content="Explore the official documentation for the Vixforge Toolkit - deep-dive guides, technical references, workflow tutorials, UdonSharp/C# breakdowns, automation systems, and VRChat creator tooling manuals.">
+    <meta name="keywords" content="Vixforge Toolkit documentation, Vixforge Interactive, VRChat tools docs, VRChat shader docs, Unity 2022.3 editor tools documentation, PhysBones automation guide, UdonSharp guide, VRChat creator tutorials, VPM documentation, avatar workflow guides, Trae, VRChat technical reference">
+    <meta name="author" content="Trae | Vixforge Interactive">
     <meta name="theme-color" content="#ff00aa">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://vixencreations.github.io/VixenToolBox/docs.html">
+    <link rel="canonical" href="https://vixforge-interactive.github.io/Toolkit/docs.html">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
-    <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/docs.html">
-    <meta property="og:title" content="Vixens Toolbox | Documentation, Guides & Technical Reference">
-    <meta property="og:description" content="Access deep‑dive documentation for Vixens Toolbox - tutorials, workflow guides, automation systems, and VRChat creator tooling reference material.">
-    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
-    <meta property="og:site_name" content="Vixens Toolbox">
+    <meta property="og:url" content="https://vixforge-interactive.github.io/Toolkit/docs.html">
+    <meta property="og:title" content="Vixforge Toolkit | Documentation, Guides & Technical Reference">
+    <meta property="og:description" content="Access deep-dive documentation for the Vixforge Toolkit - tutorials, workflow guides, automation systems, and VRChat creator tooling reference material.">
+    <meta property="og:image" content="https://vixforge-interactive.github.io/Toolkit/banner.png">
+    <meta property="og:site_name" content="Vixforge Interactive">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/docs.html">
-    <meta property="twitter:title" content="Vixens Toolbox | Documentation, Guides & Technical Reference">
-    <meta property="twitter:description" content="Explore the official Vixens Toolbox documentation - deep‑dive guides, tutorials, and technical references for VRChat creators.">
-    <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
-    <meta property="twitter:site" content="@VixenVRC">
+    <meta property="twitter:url" content="https://vixforge-interactive.github.io/Toolkit/docs.html">
+    <meta property="twitter:title" content="Vixforge Toolkit | Documentation, Guides & Technical Reference">
+    <meta property="twitter:description" content="Explore the official Vixforge Toolkit documentation - deep-dive guides, tutorials, and technical references for VRChat creators.">
+    <meta property="twitter:image" content="https://vixforge-interactive.github.io/Toolkit/banner.png">
+    <meta property="twitter:site" content="@Vixforge">
 
     <!-- Structured Data for Google Rich Results -->
     <script type="application/ld+json">
         {
           "@context": "https://schema.org",
           "@type": "TechArticle",
-          "headline": "Vixens Toolbox Documentation & Technical Reference",
-          "description": "Deep‑dive documentation for Vixens Toolbox, including tutorials, workflow guides, automation breakdowns, and VRChat creator tooling reference material.",
+          "headline": "Vixforge Toolkit Documentation & Technical Reference",
+          "description": "Deep-dive documentation for the Vixforge Toolkit, including tutorials, workflow guides, automation breakdowns, UdonSharp/C# references, and VRChat creator tooling reference material.",
           "author": {
-            "@type": "Person",
-            "name": "Vixenlicious"
+            "@type": "Organization",
+            "name": "Vixforge Interactive"
           },
-          "url": "https://vixencreations.github.io/VixenToolBox/docs.html",
-          "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
-          "keywords": "Vixens Toolbox documentation, VRChat tools docs, Unity editor tools documentation, PhysBones automation guide, VRChat creator tutorials"
+          "publisher": {
+            "@type": "Organization",
+            "name": "Vixforge Interactive"
+          },
+          "url": "https://vixforge-interactive.github.io/Toolkit/docs.html",
+          "image": "https://vixforge-interactive.github.io/Toolkit/banner.png",
+          "keywords": "Vixforge Toolkit documentation, VRChat tools docs, Unity 2022.3 editor tools documentation, PhysBones automation guide, UdonSharp guide, VRChat creator tutorials"
         }
     </script>
 
@@ -63,7 +67,7 @@
     <nav class="sidebar">
         <div class="sidebar-brand">
             <h2 class="text-glow-cyan">VIXENTOOLS</h2>
-            <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">Ecosystem</div>
+            <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">by Vixforge Interactive</div>
         </div>
 
         <div class="nav-links">
@@ -689,6 +693,102 @@
                 </ul>
             </div>
 
+            <!-- ACCESSORY MOUNTING ENGINE -->
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Accessory Mounting Engine</h2>
+                    <div class="badge">AccessoryArmatureCloner.cs</div>
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    Clones sterile armatures from a source rig and surgically mounts accessories onto the resulting
+                    hierarchy. Built to eliminate the manual labor of rigging convention props, conditional outfit
+                    pieces, and rigid attachments by collapsing a multi-step destructive workflow into a single
+                    deterministic pipeline pass.
+                </p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li>
+                        <strong>Dual Pipeline Modes:</strong> <code>FullGeneration</code> clones a fresh sterile armature
+                        out of the source hierarchy using a recursive <code>CloneHierarchy</code> pass that preserves
+                        local TRS at every node. <code>AppendToExisting</code> skips cloning entirely and uses
+                        <code>AnimationUtility.CalculateTransformPath</code> to resolve relative bone paths against an
+                        existing sterile rig, letting creators seamlessly append new accessories to a previously
+                        generated target without rebuilding the armature.
+                    </li>
+                    <li>
+                        <strong>Destructive Auto-Rig Strategy:</strong> For soft/deforming meshes, every child
+                        <code>SkinnedMeshRenderer</code> and <code>MeshFilter</code> in the accessory hierarchy gets
+                        gathered, deduplicated, and baked individually. Each mesh receives a per-child
+                        <code>Matrix4x4 localToBoneOffset = sterileBone.worldToLocalMatrix * target.localToWorldMatrix</code>
+                        transform that's applied to vertices, normals, and tangents. Blend shapes are fully preserved
+                        every frame's deltaV/N/T arrays are transformed through the same offset and rebuilt onto the
+                        baked mesh.
+                    </li>
+                    <li>
+                        <strong>Kinematic Constraint Strategy:</strong> For rigid prefabs, particles, and audio sources,
+                        skips the bake entirely and applies a <code>ParentConstraint</code> with surgically calculated
+                        position/rotation offsets (<code>sterileBone.InverseTransformPoint(...)</code> and
+                        <code>Quaternion.Inverse(sterileBone.rotation) * accessoryRoot.rotation</code>), then locks the
+                        constraint to preserve the exact visual placement at mount time.
+                    </li>
+                    <li>
+                        <strong>PhysBone-Safe Root Lock:</strong> The auto-rig path deliberately does <em>not</em> zero
+                        the accessory root's transform after baking. Instead, it parents the root under the target rig
+                        and applies the same locked <code>ParentConstraint</code> as the kinematic strategy, preserving
+                        any PhysBone hierarchies that depend on a non-zeroed root for inertia and anchor calculations.
+                    </li>
+                    <li>
+                        <strong>Single-Bone Rigid Bind:</strong> Baked meshes are bound to a single bone
+                        (<code>boneIndex0 = 0, weight0 = 1f</code>) with <code>bindposes</code> set to
+                        <code>Matrix4x4.identity</code>. The resulting <code>SkinnedMeshRenderer</code> swap is
+                        in-place: existing <code>MeshFilter</code> and <code>MeshRenderer</code> components are
+                        undo-destroyed and replaced with a fresh SMR carrying the original materials.
+                    </li>
+                    <li>
+                        <strong>Culling-Resistant Bounds:</strong> Baked meshes ship with
+                        <code>SkinnedMeshRenderer.localBounds</code> forced to a 2.5m cube around origin, preventing
+                        Unity from aggressively frustum-culling accessories whose vertex data has been transformed into
+                        bone space.
+                    </li>
+                    <li>
+                        <strong>Step-Through Asset Persistence:</strong> Baked meshes serialize to
+                        <code>Assets/VixenTools/Meshes/BakedAccessories/</code> with GUID-suffixed names to prevent
+                        collision across runs. The folder bootstrap uses a step-through
+                        <code>IsValidFolder &rarr; CreateFolder</code> chain so the path resolves cleanly on fresh
+                        installs where neither <code>Assets/VixenTools</code> nor its children exist yet.
+                    </li>
+                    <li>
+                        <strong>Full Undo Integration:</strong> Every bone clone, component swap, constraint binding,
+                        parent re-route, and mesh swap is wrapped in <code>Undo.*</code> calls and collapsed into a
+                        single undo group, so a single <code>Ctrl+Z</code> rewinds the entire pipeline execution.
+                    </li>
+                </ul>
+
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
+                <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
+                    <li>
+                        <strong>First-Pass Mount:</strong> The creator drops their source avatar's armature root into
+                        <em>Source Armature</em>, drops the destination GameObject into <em>Target Accessory Root</em>,
+                        and adds each accessory prefab with its desired target bone in the <em>Accessory Mappings</em>
+                        list. <code>FullGeneration</code> + <code>DestructiveAutoRig</code> then clones a sterile rig,
+                        bakes the accessories, and parents the result under the target  all in a single click.
+                    </li>
+                    <li>
+                        <strong>Appending Without Re-Cloning:</strong> When new accessories ship later (a convention
+                        badge, a seasonal prop), switching to <code>AppendToExisting</code> reuses the already-generated
+                        sterile armature inside the target. The mapper resolves bone identities by relative path, so
+                        mappings made against the original source rig still resolve cleanly without touching the
+                        already-mounted accessories.
+                    </li>
+                    <li>
+                        <strong>Mixing Strategies Per-Mount:</strong> Because the strategy is selected at execute time
+                        and the constraint logic is shared between both paths, a creator can run the engine multiple
+                        times against the same target  <code>DestructiveAutoRig</code> for a deforming cloth piece,
+                        <code>KinematicConstraint</code> for a rigid badge  and the resulting target carries a
+                        consistent mix of baked SMRs and constrained rigid roots.
+                    </li>
+                </ul>
+            </div>
+
             <!-- ANIMATION WORKBENCH PRO -->
             <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
@@ -850,7 +950,7 @@
                         <h4 class="text-glow-pink caption1 mb-3">SPATIAL TOPOLOGY TOOLS</h4>
                         <ul class="custom-list m-0 ps-4 mb-4">
                             <li class="mb-3">
-                                <strong>Live Surface Snapping (Dual-Matrix Gravity):</strong> Utilizes low-overhead
+                                <strong>Live Surface Snapping (Dual-System Gravity):</strong> Utilizes low-overhead
                                 <code>Transform.hasChanged</code> tracking to simulate autonomous gravity for objects moved
                                 via the transform gizmo. It calculates bounding-box nadirs on the fly to drop assets
                                 perfectly flush with underlying geometry the moment the mouse is released.

@@ -15,8 +15,8 @@ using ImageMagick;
 namespace VixenTools.Editor
 {
     /// <summary>
-    /// VixenTools Core: Advanced dual-pipeline validation and automated optimization engine.
-    /// Incorporates proprietary VixenTools Topology Erasure and tight-fit bounding constraints.
+    /// VixForge Core: Advanced dual-pipeline validation and automated optimization engine.
+    /// Incorporates proprietary VixForge Topology Erasure and tight-fit bounding constraints.
     /// </summary>
     public static class AvatarSDKValidator
     {
@@ -112,7 +112,7 @@ namespace VixenTools.Editor
                 report.IsQuestUploadReady = false;
             }
 
-            // --- 2. DESTRUCTIVE TOPOLOGY ERASURE MATRIX ---
+            // --- 2. DESTRUCTIVE TOPOLOGY ERASURE SYSTEM ---
             var allTransforms = avatarRoot.GetComponentsInChildren<Transform>(true);
             var renderers = avatarRoot.GetComponentsInChildren<Renderer>(true);
             var skinnedRenderers = avatarRoot.GetComponentsInChildren<SkinnedMeshRenderer>(true);
@@ -169,7 +169,7 @@ namespace VixenTools.Editor
                     Execute = () => {
                         int culled = 0;
                         foreach (var t in orphanedTransforms) { if (t != null) { Undo.DestroyObjectImmediate(t.gameObject); culled++; } }
-                        Debug.Log($"[VixenTools] Topology Flattened: {culled} orphans purged.");
+                        Debug.Log($"[VixForge] Topology Flattened: {culled} orphans purged.");
                     }
                 });
             }
@@ -191,7 +191,7 @@ namespace VixenTools.Editor
                     Execute = () => {
                         int culled = 0;
                         foreach (var b in disabledComponents) { if (b != null) { Undo.DestroyObjectImmediate(b); culled++; } }
-                        Debug.Log($"[VixenTools] Matrix Cleaned: {culled} dead components stripped.");
+                        Debug.Log($"[VixForge] System Cleaned: {culled} dead components stripped.");
                     }
                 });
             }
@@ -220,7 +220,7 @@ namespace VixenTools.Editor
                         smr.localBounds = universalBounds;
                         meshesProcessed++;
                     }
-                    Debug.Log($"[VixenTools] Geometry Culling Matrix updated: Universal Bounds applied to {meshesProcessed} renderers.");
+                    Debug.Log($"[VixForge] Geometry Culling System updated: Universal Bounds applied to {meshesProcessed} renderers.");
                 }
             });
 
@@ -282,7 +282,7 @@ namespace VixenTools.Editor
                                 if (mat != null && shieldKeywords.Any(k => mat.name.ToLower().Contains(k))) protectedSlots.Add(m);
                             }
 
-                            // 2. Build 4D-Chess Kinematic Protection Matrix
+                            // 2. Build 4D-Chess Kinematic Protection System
                             HashSet<int> protectedBoneIndices = new HashSet<int>();
                             if (animator != null && animator.isHuman)
                             {
@@ -309,12 +309,12 @@ namespace VixenTools.Editor
                             
                             newTotal += smr.sharedMesh.vertexCount;
                         }
-                        Debug.Log($"[VixenTools] Topology Welded: Erased {originalTotal - newTotal} vertices. Kinematic shielding active.");
+                        Debug.Log($"[VixForge] Topology Welded: Erased {originalTotal - newTotal} vertices. Kinematic shielding active.");
                     }
                 });
             }
 
-            // --- 3. VRAM HEURISTICS & DEEP MATERIAL MATRIX SCAN ---
+            // --- 3. VRAM HEURISTICS & DEEP MATERIAL SYSTEM SCAN ---
             HashSet<Material> allMaterials = new HashSet<Material>();
 
             foreach (var r in renderers)
@@ -363,7 +363,7 @@ namespace VixenTools.Editor
                 });
             }
 
-            // --- NEW: VIXEN CORE HEURISTICS (TEXTURE OPTIMIZATION & DATA INTEGRITY) ---
+            // --- NEW: VIXFORGE CORE HEURISTICS (TEXTURE OPTIMIZATION & DATA INTEGRITY) ---
 
             // 1. Mipmap Streaming Validation
             foreach (var tex in report.UniqueTextures)
@@ -427,7 +427,7 @@ namespace VixenTools.Editor
                 }
             }
 
-            // --- 4. PC PIPELINE MATRIX (RAW DATA & WARNINGS) ---
+            // --- 4. PC PIPELINE SYSTEM (RAW DATA & WARNINGS) ---
             var illegalPC = AvatarValidation.FindIllegalComponents(avatarRoot).ToList();
             foreach (var comp in illegalPC)
             {
@@ -532,7 +532,7 @@ namespace VixenTools.Editor
             if (report.PBComponents > maxPb) report.PCPerformanceWarnings.Add(new Anomaly { Description = $"<b>Exceeds Target:</b> PhysBones ({report.PBComponents} / {maxPb})", ContextObject = avatarRoot });
             if (report.Contacts > maxContacts) report.PCPerformanceWarnings.Add(new Anomaly { Description = $"<b>Exceeds Target:</b> Contacts ({report.Contacts} / {maxContacts})", ContextObject = avatarRoot });
 
-            // --- 5. QUEST PIPELINE MATRIX ---
+            // --- 5. QUEST PIPELINE SYSTEM ---
             var mobileShaderWhitelist = new HashSet<string>(VRC.SDKBase.Validation.AvatarValidation.ShaderWhiteList);
             foreach (var r in renderers)
             {
@@ -616,10 +616,10 @@ namespace VixenTools.Editor
                         }
                     }
                 }
-                catch (System.Exception e) { Debug.LogWarning($"[VixenTools] Magick failed for {tex.name}: {e.Message}"); }
+                catch (System.Exception e) { Debug.LogWarning($"[VixForge] Magick failed for {tex.name}: {e.Message}"); }
             }
             AssetDatabase.Refresh();
-            Debug.Log($"[VixenTools] Optimization Matrix: {count} textures compressed.");
+            Debug.Log($"[VixForge] Optimization Engine: {count} textures compressed.");
         }
     }
 
@@ -723,7 +723,7 @@ namespace VixenTools.Editor
             _rankEnum.RegisterValueChangedCallback(e => _targetRank = (AvatarSDKValidator.PCPerformanceRank)e.newValue);
             configPanel.Add(_rankEnum);
 
-            var scanBtn = new Button(ExecuteDeepScan) { text = "EXECUTE DEEP MATRIX SCAN" };
+            var scanBtn = new Button(ExecuteDeepScan) { text = "EXECUTE DEEP SYSTEM SCAN" };
             scanBtn.AddToClassList("cyber-action-btn");
             scanBtn.AddToClassList("cyan-btn");
             configPanel.Add(scanBtn);
@@ -788,10 +788,10 @@ namespace VixenTools.Editor
             statsPanel.Add(statsLabel);
             _resultsContainer.Add(statsPanel);
 
-            // --- 3. INTERACTIVE PHYSICS MATRIX ---
+            // --- 3. INTERACTIVE PHYSICS SYSTEM ---
             if (_lastReport.PhysicsNodes.Count > 0)
             {
-                var physPanel = CreateCyberPanel("Interactive Physics Matrix", "#ffaa00");
+                var physPanel = CreateCyberPanel("Interactive Physics System", "#ffaa00");
                 
                 var info = new Label("Select specific physics components to violently purge from the hierarchy to meet Target Rank constraints. Sorted by depth (Leaf nodes first).");
                 info.AddToClassList("md-p");
@@ -858,7 +858,7 @@ namespace VixenTools.Editor
                             culled++;
                         }
                     }
-                    Debug.Log($"[VixenTools] Matrix Culler: Eradicated {culled} physics nodes.");
+                    Debug.Log($"[VixForge] System Culler: Eradicated {culled} physics nodes.");
                     ExecuteDeepScan();
                 }) { text = "EXECUTE PHYSICS ERADICATION" };
                 executePhysBtn.AddToClassList("cyber-action-btn");
@@ -868,7 +868,7 @@ namespace VixenTools.Editor
                 _resultsContainer.Add(physPanel);
             }
 
-            // --- 4. OPTIMIZATION SELECTION MATRIX ---
+            // --- 4. OPTIMIZATION SELECTION SYSTEM ---
             if (_lastReport.OptimizationSuite.Count > 0)
             {
                 var suitePanel = CreateCyberPanel("Destructive Topology Engine", "#ff00aa");

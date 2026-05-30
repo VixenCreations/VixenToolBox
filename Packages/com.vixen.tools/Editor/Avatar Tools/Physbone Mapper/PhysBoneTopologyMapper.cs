@@ -14,7 +14,7 @@ using VRC.SDK3.Dynamics.PhysBone.Components;
 namespace VixenTools.Editor
 {
     /// <summary>
-    /// VixenTools Editor: Extracts and Injects complete PhysBone architectures across avatars.
+    /// VixForge Editor: Extracts and Injects complete PhysBone architectures across avatars.
     /// Safely degrades in non-VRChat Unity environments.
     /// </summary>
     public class PhysBoneTopologyMapper : EditorWindow
@@ -53,11 +53,11 @@ namespace VixenTools.Editor
             // Load USS
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath);
             if (styleSheet != null) root.styleSheets.Add(styleSheet);
-            else Debug.LogWarning($"[VixenTools] Could not load Stylesheet at {UssPath}");
+            else Debug.LogWarning($"[VixForge] Could not load Stylesheet at {UssPath}");
 
             // --- HEADER ---
             var headerRect = new VisualElement { name = "tool-header" };
-            var titleLabel = new Label("<color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> TOPOLOGY MAPPER") { enableRichText = true };
+            var titleLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> TOPOLOGY MAPPER") { enableRichText = true };
             if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             headerRect.Add(titleLabel);
             root.Add(headerRect);
@@ -105,7 +105,7 @@ namespace VixenTools.Editor
         {
             var panel = CreateCyberPanel("Phase 2: Architecture Injection", "#ff00aa");
 
-            var infoLabel = new Label("Select a blank avatar and a Blueprint. This will reconstruct your master physics matrix.");
+            var infoLabel = new Label("Select a blank avatar and a Blueprint. This will reconstruct your master physics system.");
             infoLabel.AddToClassList("info-box-styled");
             panel.Add(infoLabel);
 
@@ -129,7 +129,7 @@ namespace VixenTools.Editor
         {
             if (_sourceAvatar == null)
             {
-                Debug.LogError("[VixenTools] Source Avatar missing.");
+                Debug.LogError("[VixForge] Source Avatar missing.");
                 return;
             }
 
@@ -167,14 +167,14 @@ namespace VixenTools.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            Debug.Log($"[VixenTools] Extraction Complete! Mapped {count} PhysBones to {blueprintPath}.");
+            Debug.Log($"[VixForge] Extraction Complete! Mapped {count} PhysBones to {blueprintPath}.");
         }
 
         private void InjectTopology()
         {
             if (_targetAvatar == null || _loadedBlueprint == null)
             {
-                Debug.LogError("[VixenTools] Target Avatar or Blueprint missing.");
+                Debug.LogError("[VixForge] Target Avatar or Blueprint missing.");
                 return;
             }
 
@@ -201,13 +201,13 @@ namespace VixenTools.Editor
                 }
                 else
                 {
-                    Debug.LogWarning($"[VixenTools] Bone not found on target: {node.bonePath}. Skipping.");
+                    Debug.LogWarning($"[VixForge] Bone not found on target: {node.bonePath}. Skipping.");
                     failCount++;
                 }
             }
 
             EditorUtility.SetDirty(_targetAvatar);
-            Debug.Log($"[VixenTools] Injection Complete! Applied {successCount} presets. Failed/Skipped: {failCount}.");
+            Debug.Log($"[VixForge] Injection Complete! Applied {successCount} presets. Failed/Skipped: {failCount}.");
         }
 #else
         private void BuildMissingSdkUI(VisualElement container)

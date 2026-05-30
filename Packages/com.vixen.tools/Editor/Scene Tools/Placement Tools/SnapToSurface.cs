@@ -6,8 +6,8 @@ using System.Collections.Generic;
 namespace VixenTools.Editor
 {
     /// <summary>
-    /// VixenTools Utility: Enterprise-grade surface snapping, locked to the VRChat Worlds SDK.
-    /// Features Dual-Matrix Gravity Detection and the new 'Precision Click-to-Place' Camera Raycaster 
+    /// VixForge Utility: Enterprise-grade surface snapping, locked to the VRChat Worlds SDK.
+    /// Features Dual-System Gravity Detection and the new 'Precision Click-to-Place' Camera Raycaster
     /// for flawless architectural decorating and shelf placement.
     /// </summary>
     [InitializeOnLoad]

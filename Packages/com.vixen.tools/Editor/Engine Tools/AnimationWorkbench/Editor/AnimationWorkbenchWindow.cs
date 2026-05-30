@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 namespace Vixenlicious.AnimationWorkbench
 {
     /// <summary>
-    /// VixenTools Editor: Advanced Animation Curve editor with programmatic 
+    /// VixForge Editor: Advanced Animation Curve editor with programmatic
     /// easing generation, property discovery, and bulk management.
     /// </summary>
     public class AnimationWorkbenchWindow : EditorWindow
@@ -101,7 +101,7 @@ namespace Vixenlicious.AnimationWorkbench
             else
             {
                 Debug.LogWarning(
-                    "[VixenTools] Stylesheet not found. Expected at: " +
+                    "[VixForge] Stylesheet not found. Expected at: " +
                     "Packages/com.vixencreations.vixens-toolbox/Editor/Avatar Tools/AnimationWorkbench/Editor/Resources/AnimationWorkbenchStyles.uss");
             }
         }
@@ -121,7 +121,7 @@ namespace Vixenlicious.AnimationWorkbench
             headerRect.style.borderBottomWidth = 2;
             headerRect.style.borderBottomColor = new Color(1f, 0f, 0.66f, 0.8f); 
 
-            var headerLabel = new Label("<color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> ANIMATION WORKBENCH");
+            var headerLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> ANIMATION WORKBENCH");
             headerLabel.enableRichText = true;
             headerLabel.style.fontSize = 24;
             if (_cyberFont != null)
@@ -288,16 +288,16 @@ namespace Vixenlicious.AnimationWorkbench
             bindingBox.style.flexGrow = 2;   // FIX: Give this panel 2x priority when stretching horizontally
             bindingBox.style.flexDirection = FlexDirection.Column;
 
-            var bindingsHeader = new Label("Bindings Matrix") { style = { unityFontStyleAndWeight = FontStyle.Bold, fontSize = 14 } };
+            var bindingsHeader = new Label("Bindings System") { style = { unityFontStyleAndWeight = FontStyle.Bold, fontSize = 14 } };
             bindingsHeader.enableRichText = true;
-            bindingsHeader.text = "<color=#ff00aa>Bindings Matrix</color>";
+            bindingsHeader.text = "<color=#ff00aa>Bindings System</color>";
             bindingBox.Add(bindingsHeader);
 
             var bindingToolbar = new VisualElement();
             bindingToolbar.style.flexDirection = FlexDirection.Row;
             bindingToolbar.style.marginTop = 10;
 
-            refreshBindingsBtn = new Button(RefreshBindings) { text = "Refresh Matrix" };
+            refreshBindingsBtn = new Button(RefreshBindings) { text = "Refresh System" };
             bindingToolbar.Add(refreshBindingsBtn);
 
             var selectAllBtn = new Button(() =>
@@ -341,7 +341,7 @@ namespace Vixenlicious.AnimationWorkbench
             {
                 if (materialEntries.Count == 0)
                 {
-                    statusLabel.text = "[VixenTools] No material float properties found.";
+                    statusLabel.text = "[VixForge] No material float properties found.";
                     return;
                 }
 
@@ -399,7 +399,7 @@ namespace Vixenlicious.AnimationWorkbench
             controlRow.Add(bindingBox);
 
             // ---------------------------
-            // ACTION PANEL (VixenTools Styled)
+            // ACTION PANEL (VixForge Styled)
             // ---------------------------
             var actionBox = new VisualElement();
             actionBox.AddToClassList("cyber-panel");
@@ -424,7 +424,7 @@ namespace Vixenlicious.AnimationWorkbench
             {
                 if (currentClip == null || previewTarget == null)
                 {
-                    statusLabel.text = "[VixenTools] Cannot preview: missing clip or preview target.";
+                    statusLabel.text = "[VixForge] Cannot preview: missing clip or preview target.";
                     return;
                 }
 
@@ -432,14 +432,14 @@ namespace Vixenlicious.AnimationWorkbench
                     AnimationUtility.SetEditorCurve(currentClip, kv.Key, kv.Value);
 
                 previewEngine?.StartPreview(currentClip, startTime);
-                statusLabel.text = $"[VixenTools] Preview running.";
+                statusLabel.text = $"[VixForge] Preview running.";
             })
             { text = "Start Preview" };
 
             var stopPreviewBtn = new Button(() =>
             {
                 previewEngine?.StopPreview();
-                statusLabel.text = "[VixenTools] Preview halted.";
+                statusLabel.text = "[VixForge] Preview halted.";
             })
             { text = "Stop Preview" };
 
@@ -513,7 +513,7 @@ namespace Vixenlicious.AnimationWorkbench
             bottomRow.style.paddingRight = 6;
             bottomRow.style.backgroundColor = new Color(0.08f, 0.08f, 0.10f);
 
-            statusLabel = new Label("[VixenTools] Systems Online.");
+            statusLabel = new Label("[VixForge] Systems Online.");
             statusLabel.style.color = new Color(0.5f, 0.5f, 0.5f);
             bottomRow.Add(statusLabel);
 
@@ -540,7 +540,7 @@ namespace Vixenlicious.AnimationWorkbench
             timelineRibbon.SetClip(currentClip);
             RefreshBindings();
 
-            statusLabel.text = $"[VixenTools] Authored new clip: {path}";
+            statusLabel.text = $"[VixForge] Authored new clip: {path}";
         }
 
         private void DeleteSelectedBindings()
@@ -550,7 +550,7 @@ namespace Vixenlicious.AnimationWorkbench
             var toRemove = bindingProfiles.Where(p => p.selected).Select(p => p.binding).ToList();
             if (toRemove.Count == 0)
             {
-                statusLabel.text = "[VixenTools] Warning: No bindings selected for deletion.";
+                statusLabel.text = "[VixForge] Warning: No bindings selected for deletion.";
                 return;
             }
 
@@ -564,7 +564,7 @@ namespace Vixenlicious.AnimationWorkbench
             EditorUtility.SetDirty(currentClip);
             AssetDatabase.SaveAssets();
 
-            statusLabel.text = $"[VixenTools] Successfully purged {toRemove.Count} bindings from clip matrix.";
+            statusLabel.text = $"[VixForge] Successfully purged {toRemove.Count} bindings from clip system.";
             RefreshBindings();
         }
 
@@ -669,7 +669,7 @@ namespace Vixenlicious.AnimationWorkbench
         {
             if (currentClip == null)
             {
-                statusLabel.text = "[VixenTools] Cannot append binding: clip asset missing.";
+                statusLabel.text = "[VixForge] Cannot append binding: clip asset missing.";
                 return;
             }
 
@@ -685,7 +685,7 @@ namespace Vixenlicious.AnimationWorkbench
 
             if (AnimationUtility.GetEditorCurve(currentClip, binding) != null)
             {
-                statusLabel.text = "[VixenTools] Binding logic halted: Track already exists on clip.";
+                statusLabel.text = "[VixForge] Binding logic halted: Track already exists on clip.";
                 return;
             }
 
@@ -697,7 +697,7 @@ namespace Vixenlicious.AnimationWorkbench
             AssetDatabase.SaveAssets();
 
             RefreshBindings();
-            statusLabel.text = $"[VixenTools] Injected target path: {binding.path} → {binding.propertyName}";
+            statusLabel.text = $"[VixForge] Injected target path: {binding.path} → {binding.propertyName}";
         }
 
         private AnimationCurve CreateDefaultTwoKeyCurve(EditorCurveBinding binding)
@@ -747,7 +747,7 @@ namespace Vixenlicious.AnimationWorkbench
 
             if (currentClip == null)
             {
-                statusLabel.text = "[VixenTools] Standby. No clip assigned.";
+                statusLabel.text = "[VixForge] Standby. No clip assigned.";
                 bindingsListContainer.Clear();
                 graphView.SetCurveSet(new Dictionary<EditorCurveBinding, AnimationCurve>());
                 timelineRibbon.SetClip(null);
@@ -784,7 +784,7 @@ namespace Vixenlicious.AnimationWorkbench
 
             RebuildBindingsUI();
             timelineRibbon.SetClip(currentClip);
-            statusLabel.text = $"[VixenTools] Indexed {bindingProfiles.Count} binding nodes.";
+            statusLabel.text = $"[VixForge] Indexed {bindingProfiles.Count} binding nodes.";
 
             graphView.SetCurveSet(stagedCurves);
 
@@ -842,7 +842,7 @@ namespace Vixenlicious.AnimationWorkbench
                     {
                         overrideStartValue = c.Evaluate(startTime);
                         overrideEndValue = c.Evaluate(endTime);
-                        statusLabel.text = $"[VixenTools] Vector Sampled: {p.binding.propertyName} start={overrideStartValue:0.000} end={overrideEndValue:0.000}";
+                        statusLabel.text = $"[VixForge] Vector Sampled: {p.binding.propertyName} start={overrideStartValue:0.000} end={overrideEndValue:0.000}";
                     }
                 })
                 { text = "Sample" };
@@ -861,7 +861,7 @@ namespace Vixenlicious.AnimationWorkbench
         {
             if (curves == null) return;
             foreach (var kv in curves) stagedCurves[kv.Key] = kv.Value;
-            statusLabel.text = "[VixenTools] Staged matrix updated via graph node edit.";
+            statusLabel.text = "[VixForge] Staged system updated via graph node edit.";
         }
 
         private AnimationCurve EnsureCurveExistsForBinding(AnimationClip clip, EditorCurveBinding binding)
@@ -903,7 +903,7 @@ namespace Vixenlicious.AnimationWorkbench
             }
 
             graphView.SetCurveSet(stagedCurves);
-            statusLabel.text = "[VixenTools] Mathematical easing applied to staged curves.";
+            statusLabel.text = "[VixForge] Mathematical easing applied to staged curves.";
             timelineRibbon.SetRange(sTime, eTime);
             graphView.SetRange(sTime, eTime);
             graphView.SetZoomFactor(zoomPercent / 100f);
@@ -921,7 +921,7 @@ namespace Vixenlicious.AnimationWorkbench
             EditorUtility.SetDirty(currentClip);
             AssetDatabase.SaveAssets();
 
-            statusLabel.text = $"[VixenTools] Push successful. Applied {stagedCurves.Count} curve datasets to active clip.";
+            statusLabel.text = $"[VixForge] Push successful. Applied {stagedCurves.Count} curve datasets to active clip.";
 
             foreach (var p in bindingProfiles)
                 p.currentCurve = AnimationUtility.GetEditorCurve(currentClip, p.binding);
@@ -943,7 +943,7 @@ namespace Vixenlicious.AnimationWorkbench
 
             graphView.SetCurveSet(stagedCurves);
             AssetDatabase.SaveAssets();
-            statusLabel.text = "[VixenTools] Changes reverted. Restored original timeline states.";
+            statusLabel.text = "[VixForge] Changes reverted. Restored original timeline states.";
             TryAutoFitGraph();
         }
 
@@ -958,7 +958,7 @@ namespace Vixenlicious.AnimationWorkbench
 
             EditorUtility.SetDirty(currentClip);
             AssetDatabase.SaveAssets();
-            statusLabel.text = "[VixenTools] Core data saved successfully.";
+            statusLabel.text = "[VixForge] Core data saved successfully.";
         }
 
         [ContextMenu("Generate Staged")]

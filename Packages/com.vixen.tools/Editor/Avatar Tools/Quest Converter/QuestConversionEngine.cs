@@ -19,7 +19,7 @@ using VRC.SDK3.Avatars.Components;
 namespace VixenTools.Editor
 {
     /// <summary>
-    /// VixenTools Core: Non-destructive Quest material and hierarchy conversion engine.
+    /// VixForge Core: Non-destructive Quest material and hierarchy conversion engine.
     /// Maps 100% of VRChat Mobile Performance Limits natively.
     /// </summary>
     public class QuestConversionEngine : EditorWindow
@@ -30,7 +30,7 @@ namespace VixenTools.Editor
         private Font _cyberFont;
         private GameObject _sourceAvatar;
         
-        // --- Deep Matrix Scan Data ---
+        // --- Deep System Scan Data ---
         private int _totalTriangles = 0;
         private int _skinnedMeshCount = 0;
         private int _basicMeshCount = 0;
@@ -54,7 +54,7 @@ namespace VixenTools.Editor
         private HashSet<Material> _scannedMaterials = new HashSet<Material>(); // Deep Mat Cache
         private string _activeTexturesDir;
 
-        // --- Interactive Topology Matrix State ---
+        // --- Interactive Topology System State ---
         private class TopologyNode
         {
             public Component component;
@@ -64,7 +64,7 @@ namespace VixenTools.Editor
             public bool isLocked;
         }
 
-        // --- Interactive Texture Processing Matrix State ---
+        // --- Interactive Texture Processing System State ---
         private class TextureNode
         {
             public Texture texture;
@@ -115,7 +115,7 @@ namespace VixenTools.Editor
             if (styleSheet != null) root.styleSheets.Add(styleSheet);
 
             var headerRect = new VisualElement { name = "tool-header" };
-            var titleLabel = new Label("<color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> QUEST ENGINE") { enableRichText = true };
+            var titleLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> QUEST ENGINE") { enableRichText = true };
             if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             headerRect.Add(titleLabel);
             root.Add(headerRect);
@@ -133,7 +133,7 @@ namespace VixenTools.Editor
 
         private void BuildPhase1UI(VisualElement container)
         {
-            var panel = CreateCyberPanel("Phase 1: Deep Matrix Scanning", "#00e5ff");
+            var panel = CreateCyberPanel("Phase 1: Deep System Scanning", "#00e5ff");
 
             var infoLabel = new Label("Select the root of your PC Avatar. The engine maps 100% of VRChat Mobile Performance caps and non-destructively isolates a Quest clone.");
             infoLabel.AddToClassList("info-box-styled");
@@ -168,7 +168,7 @@ namespace VixenTools.Editor
             });
             panel.Add(rankEnum);
 
-            var scanBtn = new Button(AnalyzeHierarchy) { text = "Scan Matrix Architecture" };
+            var scanBtn = new Button(AnalyzeHierarchy) { text = "Scan System Architecture" };
             scanBtn.AddToClassList("cyber-action-btn");
             scanBtn.AddToClassList("cyan-btn");
             panel.Add(scanBtn);
@@ -232,28 +232,28 @@ namespace VixenTools.Editor
 
         private void BuildTopologyUI(VisualElement container)
         {
-            var panel = CreateCyberPanel("Phase 1.5: Interactive Topology Matrix", "#00e5ff");
+            var panel = CreateCyberPanel("Phase 1.5: Interactive Topology System", "#00e5ff");
 
             var infoLabel = new Label("VRChat limits are mathematically applied based on Target Rank. You may override kept nodes. ImageMagick conversions can be individually disabled to save time.");
             infoLabel.AddToClassList("info-box-styled");
             panel.Add(infoLabel);
 
-            BuildTextureSection(panel, "Matrix: Texture Map Selection", true, out _textureScroll, out _textureLabel);
+            BuildTextureSection(panel, "System: Texture Map Selection", true, out _textureScroll, out _textureLabel);
 
-            BuildTopologySection(panel, "Matrix: Animators", false, out _animatorScroll, out _animatorLabel);
+            BuildTopologySection(panel, "System: Animators", false, out _animatorScroll, out _animatorLabel);
 
 #if VRC_SDK_VRCSDK3
-            BuildTopologySection(panel, "Matrix: PhysBones", false, out _pbScroll, out _pbLabel);
-            BuildTopologySection(panel, "Matrix: Colliders", false, out _colScroll, out _colLabel);
-            BuildTopologySection(panel, "Matrix: Contacts", false, out _contactScroll, out _contactLabel);
-            BuildTopologySection(panel, "Matrix: Constraints", false, out _constraintScroll, out _constraintLabel);
-            BuildTopologySection(panel, "Matrix: Raycasts", false, out _raycastScroll, out _raycastLabel);
+            BuildTopologySection(panel, "System: PhysBones", false, out _pbScroll, out _pbLabel);
+            BuildTopologySection(panel, "System: Colliders", false, out _colScroll, out _colLabel);
+            BuildTopologySection(panel, "System: Contacts", false, out _contactScroll, out _contactLabel);
+            BuildTopologySection(panel, "System: Constraints", false, out _constraintScroll, out _constraintLabel);
+            BuildTopologySection(panel, "System: Raycasts", false, out _raycastScroll, out _raycastLabel);
 #endif
-            BuildTopologySection(panel, "Matrix: Particle Systems", false, out _particleScroll, out _particleLabel);
-            BuildTopologySection(panel, "Matrix: Trail Renderers", false, out _trailScroll, out _trailLabel);
-            BuildTopologySection(panel, "Matrix: Line Renderers", false, out _lineScroll, out _lineLabel);
-            BuildTopologySection(panel, "Matrix: Face Tracking & VRCFT (Auto-Culled)", false, out _ftScroll, out _ftLabel);
-            BuildTopologySection(panel, "Matrix: Physics Joints (Auto-Culled)", false, out _jointScroll, out _jointLabel); 
+            BuildTopologySection(panel, "System: Particle Systems", false, out _particleScroll, out _particleLabel);
+            BuildTopologySection(panel, "System: Trail Renderers", false, out _trailScroll, out _trailLabel);
+            BuildTopologySection(panel, "System: Line Renderers", false, out _lineScroll, out _lineLabel);
+            BuildTopologySection(panel, "System: Face Tracking & VRCFT (Auto-Culled)", false, out _ftScroll, out _ftLabel);
+            BuildTopologySection(panel, "System: Physics Joints (Auto-Culled)", false, out _jointScroll, out _jointLabel); 
             BuildTopologySection(panel, "Incompatible Mobile Components (Auto-Culled)", false, out _incompatibleScroll, out _incompatibleLabel);
 
             container.Add(panel);
@@ -590,7 +590,7 @@ namespace VixenTools.Editor
                     }
                 }
 
-                // If flagged, add to the structural purge matrix
+                // If flagged, add to the structural purge system
                 if (isFaceTracking)
                 {
                     _scannedFaceTracking.Add(new TopologyNode {
@@ -644,7 +644,7 @@ namespace VixenTools.Editor
 
             _hasScanned = true;
             BuildDynamicResultsUI();
-            Debug.Log($"[VixenTools] Deep Matrix Scan Complete. {_scannedMaterials.Count} unique materials extracted including hidden nodes.");
+            Debug.Log($"[VixForge] Deep System Scan Complete. {_scannedMaterials.Count} unique materials extracted including hidden nodes.");
         }
 
         private TopologyNode CreateNode(Component comp, bool lockedPurge)
@@ -728,7 +728,7 @@ namespace VixenTools.Editor
 
             try
             {
-                EditorUtility.DisplayProgressBar("VixenTools Quest Engine", "Initializing Directory Structures...", 0.1f);
+                EditorUtility.DisplayProgressBar("VixForge Quest Engine", "Initializing Directory Structures...", 0.1f);
 
                 string avatarName = _sourceAvatar.name;
                 string questName = $"Quest_{avatarName}";
@@ -745,7 +745,7 @@ namespace VixenTools.Editor
 
                 _textureCache.Clear();
 
-                EditorUtility.DisplayProgressBar("VixenTools Quest Engine", "Generating Prefab Sandbox...", 0.2f);
+                EditorUtility.DisplayProgressBar("VixForge Quest Engine", "Generating Prefab Sandbox...", 0.2f);
                 string prefabPath = AssetDatabase.GenerateUniqueAssetPath($"{avatarDir}/{avatarName}_Base.prefab");
                 GameObject tempPrefab = PrefabUtility.SaveAsPrefabAsset(_sourceAvatar, prefabPath);
 
@@ -758,7 +758,7 @@ namespace VixenTools.Editor
                 questClone.transform.rotation = _sourceAvatar.transform.rotation;
                 questClone.transform.parent = _sourceAvatar.transform.parent;
 
-                EditorUtility.DisplayProgressBar("VixenTools Quest Engine", "Cloning and Converting ALL Matrix Materials...", 0.4f);
+                EditorUtility.DisplayProgressBar("VixForge Quest Engine", "Cloning and Converting ALL System Materials...", 0.4f);
                 Dictionary<Material, Material> materialCache = new Dictionary<Material, Material>();
                 Shader targetShader = GetShaderForEnum(_selectedTargetShader);
 
@@ -767,7 +767,7 @@ namespace VixenTools.Editor
                 {
                     if (originalMat == null) continue;
                     
-                    EditorUtility.DisplayProgressBar("VixenTools Quest Engine", $"Processing Material Cache ({matIndex}/{_scannedMaterials.Count})...", 0.4f + (0.2f * ((float)matIndex / _scannedMaterials.Count)));
+                    EditorUtility.DisplayProgressBar("VixForge Quest Engine", $"Processing Material Cache ({matIndex}/{_scannedMaterials.Count})...", 0.4f + (0.2f * ((float)matIndex / _scannedMaterials.Count)));
 
                     Material questMat = new Material(targetShader);
                     questMat.name = $"{originalMat.name}_Quest";
@@ -781,7 +781,7 @@ namespace VixenTools.Editor
                     matIndex++;
                 }
 
-                EditorUtility.DisplayProgressBar("VixenTools Quest Engine", "Deep Re-Mapping Component References...", 0.65f);
+                EditorUtility.DisplayProgressBar("VixForge Quest Engine", "Deep Re-Mapping Component References...", 0.65f);
                 
                 // 1. Swap Standard Renderers
                 Renderer[] cloneRenderers = questClone.GetComponentsInChildren<Renderer>(true);
@@ -829,7 +829,7 @@ namespace VixenTools.Editor
                     }
                 }
 
-                EditorUtility.DisplayProgressBar("VixenTools Quest Engine", "Applying Matrix Topology Overrides...", 0.8f);
+                EditorUtility.DisplayProgressBar("VixForge Quest Engine", "Applying System Topology Overrides...", 0.8f);
                 
                 ProcessDestruction(_scannedAnimators, questClone);
 #if VRC_SDK_VRCSDK3
@@ -854,7 +854,7 @@ namespace VixenTools.Editor
                 PrefabUtility.UnpackPrefabInstance(questClone, PrefabUnpackMode.OutermostRoot, InteractionMode.AutomatedAction);
                 Selection.activeGameObject = questClone;
                 
-                Debug.Log($"[VixenTools] Quest Conversion Complete! {materialCache.Count} total materials and {_textureCache.Count} high-fidelity textures processed.");
+                Debug.Log($"[VixForge] Quest Conversion Complete! {materialCache.Count} total materials and {_textureCache.Count} high-fidelity textures processed.");
             }
             finally
             {
@@ -983,7 +983,7 @@ namespace VixenTools.Editor
             // Absolute sanity check: Ensure the file actually exists on disk before we feed it to ImageMagick
             if (!File.Exists(sourcePath))
             {
-                Debug.LogWarning($"[VixenTools] Bypassing virtual or missing texture: {sourceTex.name} at path {sourcePath}.");
+                Debug.LogWarning($"[VixForge] Bypassing virtual or missing texture: {sourceTex.name} at path {sourcePath}.");
                 return sourceTex;
             }
 
@@ -1016,7 +1016,7 @@ namespace VixenTools.Editor
             }
             catch (Exception ex)
             {
-                Debug.LogWarning($"[VixenTools] ImageMagick processing failed for {texName}, falling back to Unity Copy. Error: {ex.Message}");
+                Debug.LogWarning($"[VixForge] ImageMagick processing failed for {texName}, falling back to Unity Copy. Error: {ex.Message}");
                 
                 // Hardened fallback: Prevent the Unity GUI popup crash if the file is locked or phantom
                 if (File.Exists(sourcePath))
@@ -1025,7 +1025,7 @@ namespace VixenTools.Editor
                 }
                 else
                 {
-                    Debug.LogError($"[VixenTools] Fallback copy failed. Source path does not exist on disk: {sourcePath}. Passing original reference.");
+                    Debug.LogError($"[VixForge] Fallback copy failed. Source path does not exist on disk: {sourcePath}. Passing original reference.");
                     return sourceTex;
                 }
             }

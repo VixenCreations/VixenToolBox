@@ -249,12 +249,12 @@ Shader "VixenWear/Latex Ultra"
         #include "UnityCG.cginc"
 
         #if defined(LIGHTVOLUMES_ENABLE)
-            #include "Assets/VixenWear/Editor/cginc/LightVolumes.cginc"
+            #include "Packages/com.vixencreations.vixens-toolbox/Editor/Avatar Tools/Shaders/cginc/LightVolumes.cginc"
         #endif
         // AudioLink.cginc is always included (runtime-gated by _UseAudioLink) so VRCFury toggles work without keyword variants.
-        #include "Assets/VixenWear/Editor/cginc/AudioLink.cginc"
+        #include "Packages/com.vixencreations.vixens-toolbox/Editor/Avatar Tools/Shaders/cginc/AudioLink.cginc"
         #if defined(LTCGI_ENABLE)
-            #include "Assets/VixenWear/Editor/cginc/LTCGI.cginc"
+            #include "Packages/com.vixencreations.vixens-toolbox/Editor/Avatar Tools/Shaders/cginc/LTCGI.cginc"
         #endif
 
         // VRChat mirror cameras leave _WorldSpaceCameraPos at the player's head - view-dependent math (specular, parallax, cubemap) renders wrong in the mirror; UNITY_MATRIX_I_V._m03_m13_m23 is the actual rendering camera world pos (per-eye correct under single-pass instanced).

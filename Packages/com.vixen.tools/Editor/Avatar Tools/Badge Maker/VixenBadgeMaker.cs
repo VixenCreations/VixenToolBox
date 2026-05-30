@@ -175,7 +175,7 @@ namespace VixenTools.Editor
             if (styleSheet != null) root.styleSheets.Add(styleSheet);
 
             var headerRect = new VisualElement { name = "tool-header" };
-            var titleLabel = new Label("<color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> BADGE STUDIO") { enableRichText = true };
+            var titleLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> BADGE STUDIO") { enableRichText = true };
             if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             headerRect.Add(titleLabel);
             root.Add(headerRect);
@@ -703,7 +703,7 @@ namespace VixenTools.Editor
                         _emitTitle = layout.emitTitle;
                     }
                 }
-                catch { Debug.LogWarning("[VixenTools] Failed to parse layout.json."); }
+                catch { Debug.LogWarning("[VixForge] Failed to parse layout.json."); }
             }
             SyncLayoutUIToState();
         }
@@ -723,7 +723,7 @@ namespace VixenTools.Editor
             string jsonPath = Path.Combine(folderPath, "layout.json");
             File.WriteAllText(jsonPath, JsonUtility.ToJson(layout, true));
             AssetDatabase.Refresh();
-            Debug.Log($"[VixenTools] Persisted layout to {jsonPath}");
+            Debug.Log($"[VixForge] Persisted layout to {jsonPath}");
         }
 
         private void AutoAssignLayoutBounds(string conventionName)
@@ -923,14 +923,27 @@ namespace VixenTools.Editor
 
             if (_applyToMaterial) ApplyToMaterial(conventionName, tierName, difOut, emiOut);
 
-            Debug.Log($"[VixenTools] Successfully compiled badge to {outDir}");
+            Debug.Log($"[VixForge] Successfully compiled badge to {outDir}");
         }
 
         private MagickImage GenerateTextPlate(string fontPath, string text, int w, int h, MagickColor color, float rotation)
         {
             if (string.IsNullOrEmpty(text)) text = " ";
             var settings = new MagickReadSettings { BackgroundColor = MagickColors.Transparent, FillColor = color, Font = "@" + fontPath, Width = (uint)w, Height = (uint)h };
-            var image = new MagickImage($"label:{text}", settings);
+
+            // @filename indirection avoids the label: parser choking on ' " ` @ : in user text.
+            string tempFile = Path.Combine(Path.GetTempPath(), $"vixen_label_{Guid.NewGuid():N}.txt").Replace("\\", "/");
+            MagickImage image;
+            try
+            {
+                File.WriteAllText(tempFile, text, new System.Text.UTF8Encoding(false));
+                image = new MagickImage($"label:@{tempFile}", settings);
+            }
+            finally
+            {
+                try { if (File.Exists(tempFile)) File.Delete(tempFile); } catch { }
+            }
+
             image.Trim();
             if (rotation != 0f) { image.BackgroundColor = MagickColors.Transparent; image.Rotate(rotation); }
             return image;
@@ -938,7 +951,7 @@ namespace VixenTools.Editor
 
         private void CompositeTexture(string baseTexPath, MagickImage namePlate, MagickImage titlePlate, string outPath, bool applyGrayscale, bool isEmission)
         {
-            if (string.IsNullOrEmpty(baseTexPath) || !File.Exists(baseTexPath)) { Debug.LogWarning($"[VixenTools] Missing base texture at: {baseTexPath}"); return; }
+            if (string.IsNullOrEmpty(baseTexPath) || !File.Exists(baseTexPath)) { Debug.LogWarning($"[VixForge] Missing base texture at: {baseTexPath}"); return; }
             
             using MagickImage img = new MagickImage(baseTexPath);
             img.HasAlpha = true; // Force alpha channel support for the incoming plate blending
@@ -1047,7 +1060,7 @@ namespace VixenTools.Editor
         {
             string safeName = Regex.Replace(_newTemplateName, @"[<>:""/\\|?* ]", "_");
             string templateDir = Path.Combine(VixenRootPath, safeName);
-            if (Directory.Exists(templateDir)) { Debug.LogError($"[VixenTools] Template {safeName} already exists!"); return; }
+            if (Directory.Exists(templateDir)) { Debug.LogError($"[VixForge] Template {safeName} already exists!"); return; }
 
             Directory.CreateDirectory(templateDir);
             string texDir = Path.Combine(templateDir, "Textures"); Directory.CreateDirectory(texDir);
@@ -1308,7 +1321,7 @@ namespace VixenTools.Editor
             });
 
             AssetDatabase.Refresh();
-            Debug.Log("[VixenTools] Successfully generated all Furality layout.json templates!");
+            Debug.Log("[VixForge] Successfully generated all Furality layout.json templates!");
         }
 
         private void GenerateLayout(string basePath, string conventionName, BadgeLayout layout)

@@ -2,7 +2,7 @@
 
 The **Vixen Compute Score** is a proprietary, weighted heuristic model designed for the VRChat ecosystem. It evaluates the raw structural complexity of a scene rather than relying on Unity's frame-timing (ms) metrics. 
 
-Because frame times fluctuate drastically based on the end user's CPU/GPU, hardware-based profiling is notoriously unreliable for generalized world optimization. By analyzing the matrix of active components, draw calls, and mathematical operations, the Vixen World Engine provides a deterministic, hardware-agnostic threat level for your world.
+Because frame times fluctuate drastically based on the end user's CPU/GPU, hardware-based profiling is notoriously unreliable for generalized world optimization. By analyzing the system of active components, draw calls, and mathematical operations, the VixForge World Engine provides a deterministic, hardware-agnostic threat level for your world.
 
 ***
 ## THE GHOST COMPONENT FILTER
@@ -30,7 +30,7 @@ VRC Light Volumes provide excellent baked lighting, but processing the spherical
 Every active rigidbody must be evaluated by the PhysX engine per fixed update step. Note: Rigidbodies are always calculated if their parent GameObject is active, as they do not have a separate `.enabled` toggle.
 
 **POINT LIGHT VOLUMES (`x 4.00`)**
-Dynamic variations of light volumes require constant recalculation of the volume matrix against moving objects.
+Dynamic variations of light volumes require constant recalculation of the volume system against moving objects.
 
 **REFLECTION PROBES (`x 10.00`)**
 A Realtime Reflection Probe is essentially a 6-sided camera. It forces the Unity rendering pipeline to draw the surrounding geometry 6 additional times to map the cubemap faces.

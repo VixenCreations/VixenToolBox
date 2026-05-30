@@ -11,7 +11,7 @@ using System.Linq;
 namespace VixenTools.Editor
 {
     /// <summary>
-    /// VixenTools Core: A unified pipeline tool that handles both bulk extraction of presets 
+    /// VixForge Core: A unified pipeline tool that handles both bulk extraction of presets
     /// from existing assets, and the programmatic authoring of standardized Importer presets 
     /// from scratch using a Phantom Asset architecture.
     /// </summary>
@@ -74,11 +74,11 @@ namespace VixenTools.Editor
             // Load USS
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath);
             if (styleSheet != null) root.styleSheets.Add(styleSheet);
-            else Debug.LogWarning($"[VixenTools] Could not load Stylesheet at {UssPath}");
+            else Debug.LogWarning($"[VixForge] Could not load Stylesheet at {UssPath}");
 
             // --- HEADER ---
             var headerRect = new VisualElement { name = "tool-header" };
-            var titleLabel = new Label("<color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> PRESET MANAGER") { enableRichText = true };
+            var titleLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> PRESET MANAGER") { enableRichText = true };
             if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             headerRect.Add(titleLabel);
             root.Add(headerRect);
@@ -256,7 +256,7 @@ namespace VixenTools.Editor
             GameObject[] selectedObjects = Selection.gameObjects;
             if (selectedObjects.Length == 0)
             {
-                Debug.LogWarning("[VixenTools] No objects selected for extraction.");
+                Debug.LogWarning("[VixForge] No objects selected for extraction.");
                 return;
             }
 
@@ -287,7 +287,7 @@ namespace VixenTools.Editor
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log($"[VixenTools] Extracted {count} presets to {_outputDirectory}.");
+            Debug.Log($"[VixForge] Extracted {count} presets to {_outputDirectory}.");
         }
 
         private void ExecuteTextureAuthoring()
@@ -319,7 +319,7 @@ namespace VixenTools.Editor
                     InjectIntoPresetManager(newPreset, _authoringFilter);
                 }
 
-                Debug.Log($"[VixenTools] Authored Master Texture Preset: {presetPath}");
+                Debug.Log($"[VixForge] Authored Master Texture Preset: {presetPath}");
             }
 
             // 4. Clean up the Phantom Asset

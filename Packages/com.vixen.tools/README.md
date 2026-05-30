@@ -1,15 +1,15 @@
-# VixenTools
+# VixForge
 
-I built VixenTools because the VRChat pipeline is full of repetitive, mind-numbing bottlenecks.
+I built VixForge because the VRChat pipeline is full of repetitive, mind-numbing bottlenecks.
 
-This is a comprehensive suite of custom Unity Editor utilities and automation scripts focused specifically on **High-Fidelity Avatar Pipeline & Topology Architecture**. Engineered entirely on Unity’s modern UI Toolkit, the goal is simple: eliminate human error, enforce strict project consistency, and push the Unity engine to its absolute limits. Whether you’re violently crushing a PC avatar’s polycount or auditing a complex world for Udon network starvations, this toolset is designed to save you hundreds of hours of grinding so you can actually focus on creating.
+This is a comprehensive suite of custom Unity Editor utilities and automation scripts focused specifically on **High-Fidelity Avatar Pipeline & Topology Architecture**. Engineered entirely on Unityï¿½s modern UI Toolkit, the goal is simple: eliminate human error, enforce strict project consistency, and push the Unity engine to its absolute limits. Whether youï¿½re violently crushing a PC avatarï¿½s polycount or auditing a complex world for Udon network starvations, this toolset is designed to save you hundreds of hours of grinding so you can actually focus on creating.
 
 ### 1. Architectural Distribution & Infrastructure
 
 * **VPM-Native Architecture:** Distributed via a custom VRChat Creator Companion (VCC) repository so your packages stay updated inside your existing workflow.
 * **Context-Aware Dual-SDK Ecosystem:** The core architecture natively bridges both the VRChat Avatar SDK (`VRC_SDK_VRCSDK3`) and the VRChat World SDK (`UDON`). The central Hub reads active compiler directives and hot-swaps the UI system to match your current development environment.
-* **Reactive Scene State Routing (Hub):** Bypasses manual UI refreshes. The Hub’s `RenderActionGrid` uses synchronous layout flushing and rich-text injection to read `EditorPrefs` and instantly update button labels and badge states (e.g. `<color=#00e5ff>[ ACTIVE ]</color>`) as you toggle tools.
-* **Autonomous Scene View HUD Notifier:** No more modal popups. A native UI Toolkit badge is injected directly into `SceneView.rootVisualElement` whenever a new VixenTools version is detected, routing you straight into the Hub’s changelog view.
+* **Reactive Scene State Routing (Hub):** Bypasses manual UI refreshes. The Hubï¿½s `RenderActionGrid` uses synchronous layout flushing and rich-text injection to read `EditorPrefs` and instantly update button labels and badge states (e.g. `<color=#00e5ff>[ ACTIVE ]</color>`) as you toggle tools.
+* **Autonomous Scene View HUD Notifier:** No more modal popups. A native UI Toolkit badge is injected directly into `SceneView.rootVisualElement` whenever a new VixForge version is detected, routing you straight into the Hubï¿½s changelog view.
 * **Modern UI Toolkit Core:** All major tools (Hub, World Engine, Quest Conversion Engine, etc.) are built on UI Toolkit with custom USS themes, cyberpunk typography, and responsive layouts tuned for 2022+ editor workflows.
 
 ### 2. The World Engine
@@ -24,8 +24,8 @@ A lethal, Enterprise-level heuristic auditing system designed to hunt down 25+ s
 * **LTCGI:** Resolves `BakeInProgress` NRE deadlocks, detects fragmented memory arrays (ghost screens), and auto-links missing video output textures.
 * **AudioLink & Light Volumes:** Flags multiple core collisions, Quest GPU readback stalls, unlinked reactive objects, and unsafe TVGI strobe/flicker thresholds.
 * **Rinvo:** Re-aligns mismatched VideoPlayer UI target enums, enforces proxy addition rules, and clamps API pool sizes to prevent Udon network rate limits.
-* **Raw UASM Code Validation:** Bypasses standard component checks by intercepting the `UdonSharpEditorCache`. Parses raw Udon Assembly (UASM) to detect `PlayerData.Set` calls trapped inside `Update()` loops—catching network rate-limit nukes before they silently corrupt or throttle cloud data.
-* **Native Video Pipeline Catchers:** Dedicated heuristics for `VRCAVProVideoPlayer` and `VRCUnityVideoPlayer` that detect and offer auto-fixes for “Unlimited (0)” resolution bandwidth nukes and low-latency configurations that destabilize mobile instances.
+* **Raw UASM Code Validation:** Bypasses standard component checks by intercepting the `UdonSharpEditorCache`. Parses raw Udon Assembly (UASM) to detect `PlayerData.Set` calls trapped inside `Update()` loopsï¿½catching network rate-limit nukes before they silently corrupt or throttle cloud data.
+* **Native Video Pipeline Catchers:** Dedicated heuristics for `VRCAVProVideoPlayer` and `VRCUnityVideoPlayer` that detect and offer auto-fixes for ï¿½Unlimited (0)ï¿½ resolution bandwidth nukes and low-latency configurations that destabilize mobile instances.
 * **World Profiler Dashboard:** Aggregates texture, mesh, audio, and UI memory via `Profiler.GetRuntimeMemorySizeLong()` and computes a threat score that heavily penalizes realtime shadow casters, physics, and dense Light Volume setups, surfacing an at-a-glance `OPTIMAL / MODERATE / SEVERE` compute threat level.
 
 ### 3. Avatar Optimization & Vertice Mesh Welder
@@ -34,15 +34,15 @@ A multi-threaded execution system designed to violently crush PC avatar polycoun
 
 * **Vertice Mesh Welder:** Annihilates heavy meshes using a proprietary 5D coordinate key (XYZ position plus UV coordinates). Vertices sharing atomic space but divergent UVs are never fused, preventing seam tearing and texture warping.
 * **Dual-Shielding Exclusion system:** Scans submesh material slots for high-detail keywords (eyes, visor, face) and queries the Humanoid armature for head/neck bone weights to lock delicate facial topology out of the decimation grid.
-* **Deep Material Inspector Spider:** Pierces through obfuscated components—including Animator controllers and **VRCFury** toggles—to hunt down hidden materials and textures, ensuring the downsampling pipeline captures 100% of the avatar’s VRAM footprint.
+* **Deep Material Inspector Spider:** Pierces through obfuscated componentsï¿½including Animator controllers and **VRCFury** togglesï¿½to hunt down hidden materials and textures, ensuring the downsampling pipeline captures 100% of the avatarï¿½s VRAM footprint.
 * **Hardware-Level VRAM Profiling:** Captures the base texture class directly from GPU registers via `Profiler.GetRuntimeMemorySizeLong()`, unmasking procedural, unmanaged, and 64MB 4K `RenderTexture` assets that hide from standard project scanners.
 
 ### 4. The Quest Conversion Engine
 
 A fully non-destructive pipeline for converting PC avatars to Android. It generates an isolated prefab sandbox so your base PC avatar is never irreversibly altered.
 
-* **Biometric system Purge (“Hunter-Killer”):** Eradicates compilation blockages by aggressively stripping out PC-VR face tracking parameters. Specifically targets `adjerry91` templates and internal VRCFury branches like `VF_UE_VRCFT` and `VRCFury - Face Tracking Prefabs`, locking them out of the Android build pipeline.
-* **High-Fidelity Linear Downsampling:** Intercepts Unity’s importer to route textures through a Magick.NET Lanczos pipeline in linear color space, followed by an `UnsharpMask` pass to recover micro-contrast (fur, fabric) before ASTC compression.
+* **Biometric system Purge (ï¿½Hunter-Killerï¿½):** Eradicates compilation blockages by aggressively stripping out PC-VR face tracking parameters. Specifically targets `adjerry91` templates and internal VRCFury branches like `VF_UE_VRCFT` and `VRCFury - Face Tracking Prefabs`, locking them out of the Android build pipeline.
+* **High-Fidelity Linear Downsampling:** Intercepts Unityï¿½s importer to route textures through a Magick.NET Lanczos pipeline in linear color space, followed by an `UnsharpMask` pass to recover micro-contrast (fur, fabric) before ASTC compression.
 * **ASTC Pipeline Sync:** Fixes sRGB/Linear mismatches by forcing correct format serialization before applying `ASTC_6x6` crunching, preventing corrupted normal maps and inverted color outputs.
 * **Interactive Topology system:** Presents PhysBones, colliders, contacts, constraints, raycasts, particles, trails, lines, joints, and incompatible components in a UI Toolkit system. VRChat mobile limits are applied per target rank, with auto-culled categories (e.g. face tracking, joints) locked for safety but still visible for forensic review.
 * **Texture Processing system:** Lists all detected textures with resolution metadata and per-texture toggles, allowing you to selectively opt out of Magick.NET processing for assets you want to preserve at full fidelity.
@@ -51,19 +51,19 @@ A fully non-destructive pipeline for converting PC avatars to Android. It genera
 
 Tools that weaponize the Scene View itself as a precision editing surface and stress lab.
 
-* **Precision Click-to-Place Raycaster:** A “sniper-rifle” camera raycaster that lets you visually paint or teleport objects onto complex polygons. Guided by a cyan/magenta UV projection disc, it uses a custom bitwise layer mask to ignore VRChat utility layers (Ignore Raycast, Water, UI, Player, PlayerLocal, UiMenu, Pickup) and snap exclusively to physical geometry.
-* **Live Surface Snapping:** Uses low-overhead `Transform.hasChanged` tracking to continuously drop selected objects flush to the floor by their geometric “feet.” Includes “Surgical Shielding” that temporarily disables child colliders to prevent self-occlusion during raycasts, then restores them cleanly afterward.
+* **Precision Click-to-Place Raycaster:** A ï¿½sniper-rifleï¿½ camera raycaster that lets you visually paint or teleport objects onto complex polygons. Guided by a cyan/magenta UV projection disc, it uses a custom bitwise layer mask to ignore VRChat utility layers (Ignore Raycast, Water, UI, Player, PlayerLocal, UiMenu, Pickup) and snap exclusively to physical geometry.
+* **Live Surface Snapping:** Uses low-overhead `Transform.hasChanged` tracking to continuously drop selected objects flush to the floor by their geometric ï¿½feet.ï¿½ Includes ï¿½Surgical Shieldingï¿½ that temporarily disables child colliders to prevent self-occlusion during raycasts, then restores them cleanly afterward.
 * **Disjointed Pivot Alignment:** Re-engineered `CalculateFeetOffset` logic iterates through all child colliders and renderers to compute true lowest bounds, ensuring complex prefabs with offset pivots land perfectly on surfaces instead of floating or clipping.
-* **Autonomous Omni-Chaos Generator (QA):** An environment constructor that quarantines execution into a dedicated `Stress Test.unity` scene. It builds a minimal VRChat world (lighting, floor, `VRCSceneDescriptor`, spawn) and spawns heavily engineered “Nightmare Pods” to simulate catastrophic performance issues across physics, UI voids, VRAM nukes, network persistence sinks, and third-party ecosystems (ProTV, TXL, IwaSync3, VizVid, LTCGI, Rinvo)—letting you validate heuristic catch-rates in a controlled sandbox.
+* **Autonomous Omni-Chaos Generator (QA):** An environment constructor that quarantines execution into a dedicated `Stress Test.unity` scene. It builds a minimal VRChat world (lighting, floor, `VRCSceneDescriptor`, spawn) and spawns heavily engineered ï¿½Nightmare Podsï¿½ to simulate catastrophic performance issues across physics, UI voids, VRAM nukes, network persistence sinks, and third-party ecosystems (ProTV, TXL, IwaSync3, VizVid, LTCGI, Rinvo)ï¿½letting you validate heuristic catch-rates in a controlled sandbox.
 
-### 6. Vixen Hub & In-Engine Documentation
+### 6. VixForge Hub & In-Engine Documentation
 
 The central command console and documentation layer for the entire architecture.
 
-* **Vixen Hub Dashboard:** A UI Toolkit-powered control center with tabs for Ecosystem Architecture, Core Modules, Network Routing, Support, and Release Changelogs. All major tools are launched from here with consistent styling and layout.
-* **Dynamic Changelog Viewer:** Parses `CHANGELOG.md` into version-indexed entries with a dropdown selector. The Hub’s update badge routes directly into this tab so you can see exactly what changed in each release.
-* **Core Modules Grid:** Curated launchers for flagship tools like Quest Conversion Engine, Badge Studio, Animation Workbench Pro, PhysBone Topology Mapper, Pipeline Preset Manager, and World Pipeline tools (Live Surface Snapping, Precision Click-to-Place, Vixen World Engine), with live state indicators for scene utilities.
-* **AI Transparency & Development Ethics:** Fully integrated documentation detailing our enterprise-scale AI deployment. This structural breakdown provides raw data on our 100% hand-reviewed code standards, agentic research integration, and workflow accelerations, guaranteeing total transparency across the VixenTools ecosystem.
+* **VixForge Hub Dashboard:** A UI Toolkit-powered control center with tabs for Ecosystem Architecture, Core Modules, Network Routing, Support, and Release Changelogs. All major tools are launched from here with consistent styling and layout.
+* **Dynamic Changelog Viewer:** Parses `CHANGELOG.md` into version-indexed entries with a dropdown selector. The Hubï¿½s update badge routes directly into this tab so you can see exactly what changed in each release.
+* **Core Modules Grid:** Curated launchers for flagship tools like Quest Conversion Engine, Badge Studio, Animation Workbench Pro, PhysBone Topology Mapper, Pipeline Preset Manager, and World Pipeline tools (Live Surface Snapping, Precision Click-to-Place, VixForge World Engine), with live state indicators for scene utilities.
+* **AI Transparency & Development Ethics:** Fully integrated documentation detailing our enterprise-scale AI deployment. This structural breakdown provides raw data on our 100% hand-reviewed code standards, agentic research integration, and workflow accelerations, guaranteeing total transparency across the VixForge ecosystem.
 * **Network & Routing:** Centralized, distraction-free routing restricted strictly to our active channels: **GitHub** (for source repositories, issue tracking, and version history) and **YouTube** (for technical breakdowns and pipeline tutorials). Dead domains and inactive social channels have been structurally purged from the ecosystem.
 * **In-Engine Documentation:** Bypassing external websites entirely, the Hub features a dynamic Markdown-to-UIElements parser. Deep-dive architecture guides (like the Heuristics Engine and Shader Setup) are rendered directly inside the Unity Editor, keeping your workflow unbroken.
 

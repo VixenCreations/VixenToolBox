@@ -133,15 +133,15 @@
     margin-bottom: 15px;
 }
 
-/* Interactive Topology Matrix (Phase 1.5) */
+/* Interactive Topology System (Phase 1.5) */
 .bold-foldout {
-    margin-bottom: 15px; /* Spacing between the matrix categories */
+    margin-bottom: 15px; /* Spacing between the system categories */
 }
 
 .bold-foldout > .unity-foldout__toggle > .unity-toggle__text {
     -unity-font-style: bold;
     font-size: 14px;
-    color: var(--color-cyan); /* High-contrast header for each matrix */
+    color: var(--color-cyan); /* High-contrast header for each system */
 }
 
 .topology-scroll-view {
@@ -225,7 +225,7 @@
     border-width: 1px;
 }
 
-/* Texture Matrix Controls */
+/* Texture System Controls */
 .bold-foldout > .unity-button {
     font-size: 11px;
     height: 22px;

@@ -8,7 +8,7 @@ using System;
 namespace VixenTools.Editor
 {
     /// <summary>
-    /// VixenTools Core: Advanced Mesh Topology Engine.
+    /// VixForge Core: Advanced Mesh Topology Engine.
     /// Clones FBX mesh data into memory, applies vertex/bone transformations, 
     /// and serializes the optimized mesh to disk for SDK compilation.
     /// </summary>
@@ -27,7 +27,7 @@ namespace VixenTools.Editor
             Mesh clonedMesh = UnityEngine.Object.Instantiate(smr.sharedMesh);
             clonedMesh.name = $"{smr.sharedMesh.name}_VixenPatched_{patchLabel}";
 
-            // 2. Execute Custom Topology Matrix (Vertices, UVs, Bones)
+            // 2. Execute Custom Topology System (Vertices, UVs, Bones)
             patchingLogic?.Invoke(clonedMesh, smr);
 
             // 3. Recalculate structural integrity
@@ -54,7 +54,7 @@ namespace VixenTools.Editor
             Undo.RecordObject(smr, "Apply Patched Mesh");
             smr.sharedMesh = clonedMesh;
 
-            Debug.Log($"[VixenTools] Topology Patched: {clonedMesh.name} serialized to {assetPath}");
+            Debug.Log($"[VixForge] Topology Patched: {clonedMesh.name} serialized to {assetPath}");
         }
 
         // ====================================================================
@@ -63,7 +63,7 @@ namespace VixenTools.Editor
 
         /// <summary>
         /// Precision Microwelder: Seals sub-millimeter splits while strictly preserving UV texture seams.
-        /// Utilizes a 5D Hash Matrix (X, Y, Z, U, V) to ensure rendering integrity is never compromised.
+        /// Utilizes a 5D Hash System (X, Y, Z, U, V) to ensure rendering integrity is never compromised.
         /// </summary>
         public static void WeldVertices(
             SkinnedMeshRenderer smr, 
@@ -115,7 +115,7 @@ namespace VixenTools.Editor
                     extractedBlendShapes.Add(new BlendShapeExtract { Name = shapeName, Frames = frames });
                 }
 
-                // 3. THE 5D PRECISION HASH MATRIX (Zero-GC, UV-Safe)
+                // 3. THE 5D PRECISION HASH SYSTEM (Zero-GC, UV-Safe)
                 List<Vector3> newVerts = new List<Vector3>();
                 List<Vector3> newNormals = new List<Vector3>();
                 List<Vector2> newUvs = new List<Vector2>();
@@ -227,7 +227,7 @@ namespace VixenTools.Editor
 
                 mesh.RecalculateNormals(); 
 
-                // 6. BLENDSHAPE RE-MAPPING MATRIX
+                // 6. BLENDSHAPE RE-MAPPING SYSTEM
                 foreach (var shape in extractedBlendShapes)
                 {
                     foreach (var frame in shape.Frames)
@@ -319,7 +319,7 @@ namespace VixenTools.Editor
                 }
                 mesh.ClearBlendShapes(); 
 
-                // 4. THE IN-MEMORY ITERATION MATRIX (UV-Locked 5D Hash)
+                // 4. THE IN-MEMORY ITERATION SYSTEM (UV-Locked 5D Hash)
                 int currentTriCount = mesh.triangles.Length / 3;
                 float currentThreshold = startThreshold;
                 int pass = 1;
@@ -342,7 +342,7 @@ namespace VixenTools.Editor
                     
                     int[] passMap = new int[currentVerts.Length];
                     
-                    // STRICT UV LOCK: Re-introduced U and V to the matrix. Textures physically cannot tear.
+                    // STRICT UV LOCK: Re-introduced U and V to the system. Textures physically cannot tear.
                     var spatialHash = new Dictionary<(long, long, long, long, long), int>();
                     
                     float multiplier = 1f / Mathf.Max(currentThreshold, 0.00001f);
@@ -481,12 +481,12 @@ namespace VixenTools.Editor
                     }
                 }
                 
-                Debug.Log($"[VixenTools] Precision Microweld Halted. Passes: {pass}. Final Tris: {currentTriCount}");
+                Debug.Log($"[VixForge] Precision Microweld Halted. Passes: {pass}. Final Tris: {currentTriCount}");
             });
         }
 
         // ====================================================================
-        // KINEMATIC ISOLATION & PROTECTION MATRIX
+        // KINEMATIC ISOLATION & PROTECTION SYSTEM
         // ====================================================================
 
         /// <summary>
@@ -500,7 +500,7 @@ namespace VixenTools.Editor
             
             if (animator == null || !animator.isHuman || smr == null) 
             {
-                Debug.LogWarning("[VixenTools] Warning: Missing Animator, Non-Humanoid Rig, or missing SMR. Returning empty protection matrix.");
+                Debug.LogWarning("[VixForge] Warning: Missing Animator, Non-Humanoid Rig, or missing SMR. Returning empty protection system.");
                 return protectedIndices;
             }
 
@@ -517,7 +517,7 @@ namespace VixenTools.Editor
                 }
                 else
                 {
-                    Debug.LogWarning($"[VixenTools] HumanBodyBone {humanBone} not mapped in Animator.");
+                    Debug.LogWarning($"[VixForge] HumanBodyBone {humanBone} not mapped in Animator.");
                 }
             }
 
@@ -531,7 +531,7 @@ namespace VixenTools.Editor
                 }
             }
 
-            Debug.Log($"[VixenTools] Kinematic Protection Matrix generated: {protectedIndices.Count} structural bones locked.");
+            Debug.Log($"[VixForge] Kinematic Protection System generated: {protectedIndices.Count} structural bones locked.");
             return protectedIndices;
         }
 

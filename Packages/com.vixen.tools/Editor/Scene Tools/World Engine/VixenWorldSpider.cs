@@ -27,7 +27,7 @@ namespace VixenTools.Editor
         private const string WhitelistDictPath = "Assets/VixenTools/Asset Database/World Engine/VixenShaderWhitelist.asset";
 
         private ScrollView _mainScroll;
-        private VisualElement _matrixContainer;
+        private VisualElement _systemContainer;
         private Font _cyberFont;
 
         private int _targetTextureResolution = 2048;
@@ -64,7 +64,7 @@ namespace VixenTools.Editor
         private List<EngineDiagnostic> _diagnosticsDb = new List<EngineDiagnostic>();
 
         [MenuItem("VixenTools/Scene/Vixen World Engine")]
-        public static void ShowWindow() => GetWindow<VixenWorldEngine>("Vixen World Engine");
+        public static void ShowWindow() => GetWindow<VixenWorldEngine>("VixForge World Engine");
 
         private void OnEnable()
         {
@@ -95,7 +95,7 @@ namespace VixenTools.Editor
             var title = new Label();
             title.AddToClassList("panel-header");
             title.style.color = ColorUtility.TryParseHtmlString("#ffffff", out Color w) ? w : Color.white;
-            title.text = "<color=#00e5ff>VIXEN</color><color=#ff00aa>TOOLS</color> WORLD ENGINE";
+            title.text = "<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> WORLD ENGINE";
             title.enableRichText = true;
             if (_cyberFont != null) title.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             header.Add(title);
@@ -233,7 +233,7 @@ namespace VixenTools.Editor
 
             // Action Buttons
             var btnRow = new VisualElement { style = { flexDirection = FlexDirection.Row } };
-            var scanBtn = new Button(InitiateFullMatrixScan) { text = "SCAN SCENE" };
+            var scanBtn = new Button(InitiateFullSystemScan) { text = "SCAN SCENE" };
             scanBtn.AddToClassList("spider-action-btn");
             scanBtn.AddToClassList("btn-cyan");
 
@@ -246,8 +246,8 @@ namespace VixenTools.Editor
             controlPanel.Add(btnRow);
             _mainScroll.Add(controlPanel);
 
-            _matrixContainer = new VisualElement();
-            _mainScroll.Add(_matrixContainer);
+            _systemContainer = new VisualElement();
+            _mainScroll.Add(_systemContainer);
         }
 
         private void EnsureDictionariesExist(bool forceRebuild = false)
@@ -568,8 +568,8 @@ namespace VixenTools.Editor
                 _isProcessingQueue = false;
                 EditorUtility.ClearProgressBar();
                 
-                // Re-render the UI matrix to clear the ghosts
-                InitiateFullMatrixScan(); 
+                // Re-render the UI system to clear the ghosts
+                InitiateFullSystemScan(); 
                 Debug.Log("[Vixen System] Background Asset Queue Completed. Lookup Checksum Saved.");
             }
             else
@@ -578,7 +578,7 @@ namespace VixenTools.Editor
             }
         }
 
-        private void InitiateFullMatrixScan()
+        private void InitiateFullSystemScan()
         {
             // === INTERNAL ENGINE CALLS ===
             LoadLookupCache(); // <-- Added 05/10/26
@@ -613,15 +613,15 @@ namespace VixenTools.Editor
             AuditAudioLinkEcosystem(); // <-- Added 05/07/26
             AuditLTCGIPipeline(); // <-- Added 05/09/26
 
-            RenderDiagnosticMatrix();
+            RenderDiagnosticSystem();
 
             // POP OUT THE NEW HEURISTICS WINDOW
             VixenHeuristicsDashboard.Open(_detectedTextures, _detectedMeshes, _detectedAudio, _detectedUITextures);
         }
 
-        private void RenderDiagnosticMatrix()
+        private void RenderDiagnosticSystem()
         {
-            _matrixContainer.Clear();
+            _systemContainer.Clear();
             var categories = _diagnosticsDb.Select(d => d.Category).Distinct().OrderBy(c => c).ToList();
 
             foreach (var category in categories)
@@ -630,7 +630,7 @@ namespace VixenTools.Editor
                 bool isExpanded = _expandedCategories.Contains(category);
                 
                 var foldout = new Foldout { text = category, value = isExpanded };
-                foldout.AddToClassList("matrix-foldout");
+                foldout.AddToClassList("system-foldout");
                 
                 var contentContainer = new VisualElement();
                 contentContainer.AddToClassList("topology-container");
@@ -662,7 +662,7 @@ namespace VixenTools.Editor
                     }
                 });
 
-                _matrixContainer.Add(foldout);
+                _systemContainer.Add(foldout);
             }
         }
 
@@ -1549,7 +1549,7 @@ namespace VixenTools.Editor
                         // 1.777777f is ProTV's exact internal default for 16:9
                         if (tvAspect <= 0f || Math.Abs(tvAspect - 1.777777f) > 0.05f && Math.Abs(tvAspect - 1.333333f) > 0.05f && Math.Abs(tvAspect - 2.333333f) > 0.05f)
                         {
-                            LogDiagnostic("PROTV CONFIG: INVALID ASPECT", "Non-Standard Aspect Ratio", $"'{component.gameObject.name}' has its default aspect ratio set to {tvAspect:F3}. This breaks shader matrix bounds and UV calculations. Click Fix to force standard 16:9.", "#ff00aa", component, () => {
+                            LogDiagnostic("PROTV CONFIG: INVALID ASPECT", "Non-Standard Aspect Ratio", $"'{component.gameObject.name}' has its default aspect ratio set to {tvAspect:F3}. This breaks shader system bounds and UV calculations. Click Fix to force standard 16:9.", "#ff00aa", component, () => {
                                 tvSO.Update();
                                 aspectProp.floatValue = 1.777777f;
                                 tvSO.ApplyModifiedProperties();
@@ -2208,7 +2208,7 @@ namespace VixenTools.Editor
                     if (globalSettings.Length > 1)
                     {
                         LogDiagnostic("VIZVID ECOSYSTEM", "Singleton Violation: Global Settings", 
-                            $"Matrix detected {globalSettings.Length} GlobalSettings instances. VVMW architecture strictly dictates a single global settings module. Multiple instances will trigger race conditions and initialization failures.", 
+                            $"System detected {globalSettings.Length} GlobalSettings instances. VVMW architecture strictly dictates a single global settings module. Multiple instances will trigger race conditions and initialization failures.", 
                             "#ff00aa", (Component)globalSettings[1]);
                     }
                 }
@@ -3735,7 +3735,7 @@ namespace VixenTools.Editor
                 catch (Exception)
                 {
                     // Explicitly swallow internal TMP crashes on ghost objects
-                    // to prevent the matrix scan from halting.
+                    // to prevent the system scan from halting.
                 }
             }
 
@@ -4521,7 +4521,7 @@ namespace VixenTools.Editor
                 if (_workQueue.Count > 0)
                 {
                     // Offload to the background thread to prevent Editor freezing.
-                    // ProcessQueueTick() will handle the Refresh(), SaveLookupCache(), and InitiateFullMatrixScan() when finished.
+                    // ProcessQueueTick() will handle the Refresh(), SaveLookupCache(), and InitiateFullSystemScan() when finished.
                     StartProcessingQueue();
                 }
                 else
@@ -4532,9 +4532,9 @@ namespace VixenTools.Editor
                     // Force a save to the JSON database just in case any instant-fixes modified the cache
                     SaveLookupCache();
                     
-                    InitiateFullMatrixScan();
+                    InitiateFullSystemScan();
                     
-                    EditorUtility.DisplayDialog("VIXEN SYSTEM", "Targeted purges complete. Matrix updated.", "ACKNOWLEDGE");
+                    EditorUtility.DisplayDialog("VIXEN SYSTEM", "Targeted purges complete. System updated.", "ACKNOWLEDGE");
                 }
             }
         }
