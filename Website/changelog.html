@@ -8,27 +8,27 @@
     <title>Vixforge Toolkit | Changelog, Release Notes & Version History</title>
     <meta name="title" content="Vixforge Toolkit | Changelog, Release Notes & Version History">
     <meta name="description" content="Track every update to the Vixforge Toolkit - full release notes, version history, feature additions, bug fixes, performance improvements, and ecosystem evolution for VRChat creators.">
-    <meta name="keywords" content="Vixforge Toolkit changelog, Vixforge Interactive, VRChat tools updates, VRChat release notes, Unity 2022.3 editor tools changelog, PhysBones automation updates, VRChat creator tools version history, VPM updates, Trae, VRChat development log">
-    <meta name="author" content="Trae | Vixforge Interactive">
+    <meta name="keywords" content="Vixforge Toolkit changelog, Vixforge Interactive, VRChat tools updates, VRChat release notes, Unity 2022.3 editor tools changelog, PhysBones automation updates, VRChat creator tools version history, VPM updates, Vixenlicous, VRChat development log">
+    <meta name="author" content="Vixenlicous | Vixforge Interactive">
     <meta name="theme-color" content="#ff00aa">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://vixforge-interactive.github.io/Toolkit/changelog.html">
+    <link rel="canonical" href="https://vixencreations.github.io/VixenToolBox/changelog.html">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
-    <meta property="og:url" content="https://vixforge-interactive.github.io/Toolkit/changelog.html">
+    <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/changelog.html">
     <meta property="og:title" content="Vixforge Toolkit | Changelog, Release Notes & Version History">
     <meta property="og:description" content="Explore the full changelog for the Vixforge Toolkit - version history, feature updates, bug fixes, and ecosystem improvements for VRChat creators.">
-    <meta property="og:image" content="https://vixforge-interactive.github.io/Toolkit/banner.png">
+    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="og:site_name" content="Vixforge Interactive">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://vixforge-interactive.github.io/Toolkit/changelog.html">
+    <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/changelog.html">
     <meta property="twitter:title" content="Vixforge Toolkit | Changelog, Release Notes & Version History">
     <meta property="twitter:description" content="See every update to the Vixforge Toolkit - detailed release notes, version history, and development progress.">
-    <meta property="twitter:image" content="https://vixforge-interactive.github.io/Toolkit/banner.png">
+    <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="twitter:site" content="@Vixforge">
 
     <!-- Structured Data for Google Rich Results -->
@@ -46,8 +46,8 @@
             "@type": "Organization",
             "name": "Vixforge Interactive"
           },
-          "url": "https://vixforge-interactive.github.io/Toolkit/changelog.html",
-          "image": "https://vixforge-interactive.github.io/Toolkit/banner.png",
+          "url": "https://vixencreations.github.io/VixenToolBox/changelog.html",
+          "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
           "keywords": "Vixforge Toolkit changelog, VRChat tools updates, Unity 2022.3 editor tools release notes, PhysBones automation updates, VRChat creator tools version history"
         }
     </script>
@@ -173,7 +173,7 @@
                     <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
                         <li class="mb-2"><strong>"Forged in Digital Fire" Visual Redesign:</strong> Comprehensive industrial-aesthetic overhaul of `styles.css`. Palette: `--dark-void` deepened from `#06020a` to `#04060a`, `--glass-bg` darkened to a near-opaque `rgba(10, 14, 20, 0.85)` and `--glass-border` flipped from pink to a 25%-alpha cyan, neutral text recolored to `#d1d5db`, `--neon-pink-glow` and `--neon-cyan-glow` opacity dialed back from `0.6` to `0.4`, and `--base-layer-luminance` lowered from `0.15` to `0.12`. Panel corners sharpened (16px &rarr; 8px &rarr; 4px in places); webkit scrollbars halved to 6px with rectangular thumbs and a 1px tracked border for a machined-edge feel; sidebar nav padding tightened from `1.25rem` to `1rem` with a 90deg-cyan-gradient active state replacing the solid fill. Section dividers, button hover lifts, and the support/comp/tool card families all rebuilt around the new colder, low-saturation industrial palette.</li>
                         <li class="mb-2"><strong>Background Art Z-Stack Fix:</strong> Corrected a layered painting bug where `.background-art` (the blurred hero JPEG) was rendering correctly into the DOM but never reached the screen - `body`'s opaque `background-color: var(--dark-void)` was sitting on top of the `position: fixed; z-index: -1` element. Body fill flipped to `transparent`; `&lt;html&gt;` still paints `--dark-void` as the FOUC fallback while the cloak/reveal layer holds the page invisible until `app.js` flips `.app-ready`. Blur tightened from `blur(8px) brightness(0.4)` to `blur(12px) brightness(0.25)` to match the deeper void palette.</li>
-                        <li class="mb-2"><strong>Cross-Page SEO Refresh (9 Pages):</strong> Rewrote every public page's full SEO block - `title`, `meta description`, `meta keywords`, `meta author`, canonical URL, full Open Graph block, full Twitter card block, and JSON-LD structured-data payload. Canonical pattern moved to `https://vixforge-interactive.github.io/Toolkit/{page}.html`; `og:site_name` now reads `Vixforge Interactive` site-wide; `twitter:site` swapped from `@VixenVRC` to `@Vixforge`; `meta author` flipped from `Vixenlicious` to `Trae | Vixforge Interactive`. Page-specific copy refreshed to reference Unity 2022.3, UdonSharp, and the Vixforge Toolkit product line where appropriate.</li>
+                        <li class="mb-2"><strong>Cross-Page SEO Refresh (9 Pages):</strong> Rewrote every public page's full SEO block - `title`, `meta description`, `meta keywords`, `meta author`, canonical URL, full Open Graph block, full Twitter card block, and JSON-LD structured-data payload. Canonical pattern moved to `https://vixencreations.github.io/VixenToolBox/{page}.html`; `og:site_name` now reads `Vixforge Interactive` site-wide; `twitter:site` swapped from `@VixenVRC` to `@Vixforge`; `meta author` flipped from `Vixenlicious` to `Vixenlicous | Vixforge Interactive`. Page-specific copy refreshed to reference Unity 2022.3, UdonSharp, and the Vixforge Toolkit product line where appropriate.</li>
                         <li class="mb-2"><strong>Typography &amp; Density Tightening:</strong> Sidebar nav font weight reduced from 600 to 500 (600 reserved for the active state), `h1` letter-spacing cut from 2px to 1px and font-size from 2.5rem to 2.2rem, panel padding and border-radii tuned for a denser, software-tool body. `caption1` foreground recolored from lavender (`#bfa8d2`) to cool grey (`#9ca3af`) to match the new metal palette; `.id-badge` and `.badge` rebuilt as `monospace` chips with 4px corners.</li>
                     </ul>
 

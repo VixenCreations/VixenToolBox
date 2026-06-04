@@ -1,4 +1,5 @@
-Shader "VixenWear/Latex Ultra"
+// SPS-compatible variant of "VixenWear/Latex Ultra". Tessellation is removed because VRCFury's SPS patcher rewrites the surface pragma's vertex function to use SpsInputs but leaves tessellate: untouched, causing a "wrong parameter type" compile error. Keep in sync with "VixenWear Latex.shader" for any non-tess changes.
+Shader "VixenWear/Latex Ultra SPS"
 {
     Properties
     {
@@ -36,7 +37,6 @@ Shader "VixenWear/Latex Ultra"
 
         _Parallax ("Parallax Depth", Range(0,0.1)) = 0.0
         _Disp_Str ("Displacement Strength", Range(0,1)) = 0.0
-        _Tess_Edge ("Tessellation Edge Length", Range(1,50)) = 10.0
         _Emis_Exp ("Emission Exposure", Float) = 1.0
 
         _CC_Strength ("Clearcoat Strength", Range(0,1)) = 1.0
@@ -350,7 +350,8 @@ Shader "VixenWear/Latex Ultra"
         // PASS 1: CORE PBR SURFACE (BASE SUIT, FRACTURE CLIP)
         CGPROGRAM
         // Surface pragma drops Deferred/Meta + LIGHTMAP/DIRLIGHTMAP/SHADOWMASK/LPPV variants (VRChat forward-only, avatar clothing never lightmapped); keepalpha preserves LightingStandardLatex alpha so Fade/Transparent get real alpha. noforwardadd skips the ForwardAdd pass entirely (avatar gets directional + probes + LV + LTCGI; loses realtime per-light additive contributions) - critical for ps_5_0 sampler budget because ForwardAdd's POINT/POINT_COOKIE + SHADOWS_CUBE built-in samplers stacked on our 13 texture samplers blew past the 16-register cap.
-        #pragma surface surf StandardLatex keepalpha fullforwardshadows addshadow noforwardadd vertex:disp tessellate:tessEdge exclude_path:deferred exclude_path:prepass nolightmap nodynlightmap nodirlightmap noshadowmask nometa nolppv
+        // Tessellation removed for SPS compatibility - VRCFury's SPS patcher rewrites vertex:disp but cannot rewrite tessellate:tessEdge, causing a struct type mismatch. Displacement still happens at vertex resolution via disp() and per-pixel via parallax raymarching.
+        #pragma surface surf StandardLatex keepalpha fullforwardshadows addshadow noforwardadd vertex:disp exclude_path:deferred exclude_path:prepass nolightmap nodynlightmap nodirlightmap noshadowmask nometa nolppv
         #pragma target 5.0
 
         // Defensive against Unity 2022.3.x emitting lightmap/LOD variants despite the no* directives above. Cookie + cube-shadow variants are also skipped for sampler budget - any directional cookie / point cube shadow would add 1-2 samplers, and avatars don't typically use them.
@@ -369,7 +370,6 @@ Shader "VixenWear/Latex Ultra"
         #pragma shader_feature_local _ALPHAPREMULTIPLY_ON
 
         #include "UnityPBSLighting.cginc"
-        #include "Tessellation.cginc"
         #include "UnityCG.cginc"
 
         #if defined(LIGHTVOLUMES_ENABLE)
@@ -438,7 +438,7 @@ Shader "VixenWear/Latex Ultra"
         half _CutOff, _MinBrightness;
         float _UV_Rot, _SpeedX, _SpeedY, _MatCap_Rot;
         float _AO_Str, _Spec_Occ, _Shad_Hard, _Norm_Str;
-        float _Parallax, _Disp_Str, _Tess_Edge, _Emis_Exp;
+        float _Parallax, _Disp_Str, _Emis_Exp;
         // Poiyomi compat: PBR mask channel selectors + invert toggles.
         float _PBR_Met_Ch, _PBR_Met_Inv, _PBR_Smooth_Ch, _PBR_Smooth_Inv, _PBR_AO_Ch, _PBR_Height_Ch;
         // Poiyomi compat: secondary emission layer + multi-region color mask.
@@ -552,10 +552,7 @@ Shader "VixenWear/Latex Ultra"
             return saturate(float3(r, g, b));
         }
 
-        float4 tessEdge(appdata_full v0, appdata_full v1, appdata_full v2)
-        {
-            return UnityEdgeLengthBasedTess(v0.vertex, v1.vertex, v2.vertex, _Tess_Edge);
-        }
+        // tessEdge() removed for SPS compatibility - see pragma comment above.
 
         // Poiyomi-style packed PBR channel picker. Channel index: 0=R, 1=G, 2=B, 3=A.
         inline float ChannelPick(fixed4 packed, float ch)

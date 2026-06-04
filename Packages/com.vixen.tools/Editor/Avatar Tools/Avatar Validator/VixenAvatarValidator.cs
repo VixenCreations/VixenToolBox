@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
+using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using VRC.SDK3.Avatars.Components;
@@ -11,6 +12,9 @@ using VRC.Dynamics;
 using VRC.SDK3.Dynamics.Contact.Components;
 using UnityEngine.Profiling;
 using ImageMagick;
+using VRC.SDK3.Avatars;
+using VRC.SDKBase.Validation.Performance;
+using VRC.SDKBase.Validation.Performance.Stats;
 
 namespace VixenTools.Editor
 {
@@ -21,6 +25,7 @@ namespace VixenTools.Editor
     public static class AvatarSDKValidator
     {
         public enum PCPerformanceRank { Excellent, Good, Medium, Poor }
+        public enum ResizeMode { Downscale, Upscale }
 
         public class Anomaly
         {
@@ -72,9 +77,14 @@ namespace VixenTools.Editor
             public List<Anomaly> QuestErrors = new List<Anomaly>();
             public List<Anomaly> Warnings = new List<Anomaly>();
             public List<OptimizationTask> OptimizationSuite = new List<OptimizationTask>();
+
+            // Authoritative results from VRChat's own performance calculator (additive to the
+            // hand-rolled hardware-cap panel). Null rating = SDK calc was unavailable.
+            public string OfficialOverallRating = null;
+            public List<Anomaly> OfficialPerfWarnings = new List<Anomaly>();
         }
 
-        public static ValidationReport RunFullSweep(GameObject avatarRoot, int targetTexSize = 1024, PCPerformanceRank targetRank = PCPerformanceRank.Poor)
+        public static ValidationReport RunFullSweep(GameObject avatarRoot, int targetTexSize = 1024, PCPerformanceRank targetRank = PCPerformanceRank.Poor, ResizeMode resizeMode = ResizeMode.Downscale)
         {
             var report = new ValidationReport();
             if (avatarRoot == null) return report;
@@ -196,31 +206,84 @@ namespace VixenTools.Editor
                 });
             }
 
-            // Task: Universal Avatar-Scale Bounds
+            // Task: Per-Mesh Auto-Fit Bounds (PhysBone aware)
             report.OptimizationSuite.Add(new OptimizationTask
             {
                 ID = "OPTIMIZE_BOUNDS",
-                Label = $"<color=#00e5ff>Enforce Universal Avatar Bounds</color>",
-                Description = "Vixen Core Fix: Replaces tight-fit culling with a massive 2.5m³ bounding volume. Prevents clothing and accessories from vanishing at extreme camera angles.",
+                Label = $"<color=#00e5ff>Auto-Fit Per-Mesh Avatar Bounds</color>",
+                Description = "Vixen Core Fix: Sizes each renderer's culling bounds from its bind pose, transformed into root-bone local space (per Unity SMR docs). Static meshes get a 50% safety margin; meshes driven by VRCPhysBones get 200% to cover runtime swing. Floor at 0.3m guards against degenerate bounds on stub meshes.",
                 Execute = () => {
                     int meshesProcessed = 0;
-                    
-                    // A universally safe 2.5m x 2.5m x 2.5m bounding box. 
-                    // When applied relative to a root bone like the Hips, this easily covers the entire human wingspan and height.
-                    Bounds universalBounds = new Bounds(Vector3.zero, new Vector3(2.5f, 2.5f, 2.5f));
+
+                    // 1.5x = +25% per side: covers normal animation drift on static meshes.
+                    // 3.0x = +100% per side: covers PhysBone swing on hair/tail/cape/breast bones,
+                    //   which Unity's import-time bounds CANNOT account for (PhysBones move bones
+                    //   at runtime; the SMR docs explicitly list this as a case where the imported
+                    //   bounds may be exceeded).
+                    // minBoundsSize floors near-zero bounds on degenerate meshes so they don't
+                    //   instantly cull.
+                    const float staticMargin = 1.5f;
+                    const float physBoneMargin = 3.0f;
+                    const float minBoundsSize = 0.3f;
+
+                    // Walk every PhysBone's root subtree once and record affected bones.
+                    // Any SMR whose bone list touches this set gets the larger margin.
+                    var physBoneAffected = new HashSet<Transform>();
+                    foreach (var pb in avatarRoot.GetComponentsInChildren<VRCPhysBoneBase>(true))
+                    {
+                        Transform pbRoot = pb.GetRootTransform();
+                        if (pbRoot == null) continue;
+                        foreach (var t in pbRoot.GetComponentsInChildren<Transform>(true))
+                            physBoneAffected.Add(t);
+                    }
 
                     foreach (var smr in skinnedRenderers)
                     {
-                        Undo.RecordObject(smr, "Standardize Bounds");
-                        
-                        // We strictly keep this false. Relying on updateWhenOffscreen = true is a massive 
-                        // performance killer in VRChat. The large bounds handle the visibility instead.
-                        smr.updateWhenOffscreen = false; 
-                        
-                        smr.localBounds = universalBounds;
+                        if (smr == null) continue;
+
+                        Undo.RecordObject(smr, "Auto-Fit Bounds");
+
+                        // We strictly keep this false. updateWhenOffscreen=true recalculates bounds
+                        // every frame which Unity's docs admit is fine but a perf killer in VRChat.
+                        smr.updateWhenOffscreen = false;
+
+                        // Pick margin per-mesh based on whether this SMR is skinned to any PhysBone subtree.
+                        bool hasPhysBone = false;
+                        if (smr.bones != null)
+                        {
+                            foreach (var b in smr.bones)
+                            {
+                                if (b != null && physBoneAffected.Contains(b)) { hasPhysBone = true; break; }
+                            }
+                        }
+                        float margin = hasPhysBone ? physBoneMargin : staticMargin;
+
+                        Bounds fitted;
+                        if (smr.sharedMesh != null)
+                        {
+                            // sharedMesh.bounds is the bind-pose AABB in MESH local space (the SMR's
+                            // transform space). smr.localBounds is in ROOT BONE local space — Unity
+                            // docs: "the bounds move along with [the root bone] transform". So we
+                            // convert by transforming the 8 corners through both spaces.
+                            Bounds bind = smr.sharedMesh.bounds;
+                            Transform rootBone = smr.rootBone != null ? smr.rootBone : smr.transform;
+                            Bounds rootSpace = TransformBoundsToSpace(bind, smr.transform, rootBone);
+
+                            Vector3 size = rootSpace.size * margin;
+                            size.x = Mathf.Max(size.x, minBoundsSize);
+                            size.y = Mathf.Max(size.y, minBoundsSize);
+                            size.z = Mathf.Max(size.z, minBoundsSize);
+                            fitted = new Bounds(rootSpace.center, size);
+                        }
+                        else
+                        {
+                            fitted = new Bounds(Vector3.zero, Vector3.one * minBoundsSize);
+                        }
+
+                        smr.localBounds = fitted;
                         meshesProcessed++;
                     }
-                    Debug.Log($"[VixForge] Geometry Culling System updated: Universal Bounds applied to {meshesProcessed} renderers.");
+                    Debug.Log($"[VixForge] Geometry Culling System updated: Per-mesh bounds fitted on {meshesProcessed} renderers (PhysBone-aware margins).");
                 }
             });
 
@@ -257,7 +320,7 @@ namespace VixenTools.Editor
             }
 
             // Task: Destructive Vertex Welding
-            List<SkinnedMeshRenderer> heavyMeshes = skinnedRenderers.Where(s => s.sharedMesh != null && (s.sharedMesh.triangles.Length / 3) > 15000).ToList();
+            List<SkinnedMeshRenderer> heavyMeshes = skinnedRenderers.Where(s => s.sharedMesh != null && CountTriangles(s.sharedMesh) > 15000).ToList();
             if (heavyMeshes.Count > 0)
             {
                 report.OptimizationSuite.Add(new OptimizationTask
@@ -352,14 +415,32 @@ namespace VixenTools.Editor
             }
             report.TotalVRAM_MB = totalBytes / (1024f * 1024f);
 
-            if (report.TotalVRAM_MB > 40f)
+            // Official VRChat performance pass: authoritative ratings + the ~19 categories the
+            // hand-rolled hardware-cap panel doesn't measure. Additive and fully guarded.
+            RunOfficialPerformanceScan(avatarRoot, report);
+
+            // Count only textures we will actually touch: skips RenderTextures, out-of-project
+            // assets, and protected shader/data textures (Poiyomi internals, .exr LUTs, etc.).
+            int processableTextures = 0;
+            foreach (var t in report.UniqueTextures)
+                if (IsProcessableTexture(t, out _)) processableTextures++;
+
+            // Gating: both modes require at least one processable texture. Downscale additionally
+            // requires the VRAM threshold (it's a perf fix); Upscale fires on intent alone.
+            bool showResizeTask = processableTextures > 0 &&
+                (resizeMode == ResizeMode.Upscale || report.TotalVRAM_MB > 40f);
+
+            if (showResizeTask)
             {
+                bool isUp = resizeMode == ResizeMode.Upscale;
                 report.OptimizationSuite.Add(new OptimizationTask
                 {
-                    ID = "VRAM_REDUCE",
-                    Label = $"Downscale {report.UniqueTextures.Count} Textures to {targetTexSize}px",
-                    Description = "Uses ImageMagick for destructive zero-cloud VRAM control. Hits all textures, including VRCFury variants.",
-                    Execute = () => ProcessTexturesWithMagick(report.UniqueTextures, targetTexSize)
+                    ID = isUp ? "VRAM_UPSCALE" : "VRAM_REDUCE",
+                    Label = $"{(isUp ? "Upscale" : "Downscale")} {processableTextures} Textures to {targetTexSize}px",
+                    Description = isUp
+                        ? "Uses ImageMagick with Mitchell filter + adaptive sharpening to upscale undersized textures. Skips textures already at or above target."
+                        : "Uses ImageMagick for destructive zero-cloud VRAM control. Hits all textures, including VRCFury variants.",
+                    Execute = () => ProcessTexturesWithMagick(report.UniqueTextures, targetTexSize, resizeMode)
                 });
             }
 
@@ -442,14 +523,14 @@ namespace VixenTools.Editor
 
             foreach (var smr in skinnedRenderers) 
             { 
-                if (smr.sharedMesh != null) report.PolyCount += smr.sharedMesh.triangles.Length / 3; 
+                if (smr.sharedMesh != null) report.PolyCount += CountTriangles(smr.sharedMesh);
                 report.MaterialSlotCount += smr.sharedMaterials.Length; 
             }
             
             foreach (var mr in avatarRoot.GetComponentsInChildren<MeshRenderer>(true))
             {
                 var filter = mr.GetComponent<MeshFilter>();
-                if (filter != null && filter.sharedMesh != null) report.PolyCount += filter.sharedMesh.triangles.Length / 3;
+                if (filter != null && filter.sharedMesh != null) report.PolyCount += CountTriangles(filter.sharedMesh);
                 report.MaterialSlotCount += mr.sharedMaterials.Length;
             }
 
@@ -594,32 +675,167 @@ namespace VixenTools.Editor
             return false;
         }
 
-        private static void ProcessTexturesWithMagick(HashSet<Texture> textures, int targetSize)
+        // Re-expresses an axis-aligned bounds (originally in `sourceSpace` local coords) as an
+        // axis-aligned bounds in `targetSpace` local coords. Walks all 8 corners through both
+        // transforms; the result encompasses the rotated source AABB. Identity when spaces match.
+        private static Bounds TransformBoundsToSpace(Bounds source, Transform sourceSpace, Transform targetSpace)
         {
-            int count = 0;
-            foreach (var tex in textures)
-            {
-                // THE FIX: Prevent ImageMagick from trying to decode active RenderTextures
-                if (tex is RenderTexture) continue;
+            if (sourceSpace == targetSpace || targetSpace == null) return source;
 
-                string path = AssetDatabase.GetAssetPath(tex);
-                if (string.IsNullOrEmpty(path) || !path.StartsWith("Assets/")) continue;
-                try
+            Vector3 c = source.center;
+            Vector3 ext = source.extents;
+            Vector3 min = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+            Vector3 max = new Vector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
+
+            for (int i = 0; i < 8; i++)
+            {
+                Vector3 corner = c + new Vector3(
+                    (i & 1) == 0 ? -ext.x : ext.x,
+                    (i & 2) == 0 ? -ext.y : ext.y,
+                    (i & 4) == 0 ? -ext.z : ext.z);
+                Vector3 world = sourceSpace.TransformPoint(corner);
+                Vector3 target = targetSpace.InverseTransformPoint(world);
+                min = Vector3.Min(min, target);
+                max = Vector3.Max(max, target);
+            }
+
+            return new Bounds((min + max) * 0.5f, max - min);
+        }
+
+        // Non-allocating triangle count. Mesh.triangles allocates a full int[] copy on every
+        // access; GetIndexCount returns each submesh's index count with zero allocation.
+        private static int CountTriangles(Mesh mesh)
+        {
+            if (mesh == null) return 0;
+            uint indices = 0;
+            for (int s = 0; s < mesh.subMeshCount; s++)
+                indices += mesh.GetIndexCount(s);
+            return (int)(indices / 3);
+        }
+
+        // Runs VRChat's own performance calculator so our rating matches the upload screen
+        // exactly, and surfaces categories (particles, lights, cloth, audio, constraints,
+        // contacts, PhysBone collision checks, etc.) the hardware-cap panel doesn't measure.
+        private static void RunOfficialPerformanceScan(GameObject avatarRoot, ValidationReport report)
+        {
+            if (avatarRoot == null) return;
+            try
+            {
+                bool isMobile = EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android;
+                var perfStats = new AvatarPerformanceStats(isMobile);
+                AvatarPerformance.CalculatePerformanceStats(avatarRoot.name, avatarRoot, perfStats, isMobile);
+
+                var overall = perfStats.GetPerformanceRatingForCategory(AvatarPerformanceCategory.Overall);
+                report.OfficialOverallRating = AvatarPerformanceStats.GetPerformanceRatingDisplayName(overall);
+
+                foreach (AvatarPerformanceCategory category in System.Enum.GetValues(typeof(AvatarPerformanceCategory)))
                 {
-                    using (MagickImage img = new MagickImage(path))
+                    if (category == AvatarPerformanceCategory.Overall ||
+                        category == AvatarPerformanceCategory.AvatarPerformanceCategoryCount)
+                        continue;
+
+                    SDKPerformanceDisplay.GetSDKPerformanceInfoText(
+                        perfStats, category, out string statText, out string errorText,
+                        out PerformanceInfoDisplayLevel level);
+
+                    // Anything above "Info" is a real concern worth surfacing to the user.
+                    if (level != PerformanceInfoDisplayLevel.None && level != PerformanceInfoDisplayLevel.Info)
                     {
-                        if (img.Width > targetSize || img.Height > targetSize)
-                        {
-                            img.Resize(new MagickGeometry((uint)targetSize, (uint)targetSize));
-                            img.Write(path);
-                            count++;
-                        }
+                        string msg = string.IsNullOrEmpty(errorText) ? statText : $"{statText} — {errorText}";
+                        if (!string.IsNullOrEmpty(msg))
+                            report.OfficialPerfWarnings.Add(new Anomaly { Description = msg, ContextObject = avatarRoot });
                     }
                 }
-                catch (System.Exception e) { Debug.LogWarning($"[VixForge] Magick failed for {tex.name}: {e.Message}"); }
             }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"[VixForge] Official VRChat performance scan unavailable: {e.Message}");
+            }
+        }
+
+        // Single policy gate for which textures the resize/optimize pass may touch.
+        // Excludes RenderTextures, assets outside the project's Assets folder, and anything
+        // VixenMagickKit flags as protected (shader-internal textures, .exr/.hdr data, etc.).
+        private static bool IsProcessableTexture(Texture tex, out string assetPath)
+        {
+            assetPath = null;
+            if (tex == null || tex is RenderTexture) return false;
+            assetPath = AssetDatabase.GetAssetPath(tex);
+            if (string.IsNullOrEmpty(assetPath) || !assetPath.StartsWith("Assets/")) return false;
+            if (VixenMagickKit.IsProtectedAsset(assetPath)) return false;
+            return true;
+        }
+
+        private static void ProcessTexturesWithMagick(HashSet<Texture> textures, int targetSize, ResizeMode mode)
+        {
+            int count = 0;
+            int processed = 0;
+            int total = textures.Count;
+            string activeVerb = mode == ResizeMode.Downscale ? "Downscaling" : "Upscaling";
+            bool canceled = false;
+
+            try
+            {
+                foreach (var tex in textures)
+                {
+                    processed++;
+                    // Skip RenderTextures, out-of-project assets, and protected shader/data
+                    // textures (Poiyomi internals, .exr LUTs, etc.) in one policy check.
+                    if (!IsProcessableTexture(tex, out string path)) continue;
+
+                    // Cancelable progress bar — essential because Magick.NET resize + sharpen + lossless
+                    // re-encode can run for minutes on big upscale targets, during which Unity is
+                    // otherwise frozen with no feedback.
+                    if (EditorUtility.DisplayCancelableProgressBar(
+                            $"VixForge: {activeVerb} Textures",
+                            $"({processed}/{total}) {System.IO.Path.GetFileName(path)}",
+                            (float)processed / Mathf.Max(1, total)))
+                    {
+                        canceled = true;
+                        Debug.LogWarning($"[VixForge] {activeVerb} canceled at {processed}/{total}.");
+                        break;
+                    }
+
+                    try
+                    {
+                        using (MagickImage img = new MagickImage(File.ReadAllBytes(path)))
+                        {
+                            // Downscale: any dim over target → shrink. Upscale: both dims under target → grow.
+                            bool needsWork = mode == ResizeMode.Downscale
+                                ? (img.Width > targetSize || img.Height > targetSize)
+                                : (img.Width < targetSize && img.Height < targetSize);
+
+                            if (needsWork)
+                            {
+                                // Lanczos preserves detail best on downscale. Mitchell avoids ringing on upscale.
+                                img.FilterType = mode == ResizeMode.Downscale ? FilterType.Lanczos : FilterType.Mitchell;
+                                img.Resize(new MagickGeometry((uint)targetSize, (uint)targetSize));
+                                if (mode == ResizeMode.Upscale)
+                                {
+                                    // Mild sharpening to recover crispness that Mitchell smooths out.
+                                    img.AdaptiveSharpen(0, 0.6);
+                                }
+                                img.Strip();
+                                img.Write(path);
+                                count++;
+                            }
+                        }
+                        // TryLosslessOptimize internally drops to single-pass mode for files >10MB
+                        // so this is safe to call regardless of target size.
+                        VixenMagickKit.TryLosslessOptimize(path);
+                    }
+                    catch (System.Exception e) { Debug.LogWarning($"[VixForge] Magick failed for {tex.name}: {e.Message}"); }
+                }
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
+            }
+
             AssetDatabase.Refresh();
-            Debug.Log($"[VixForge] Optimization Engine: {count} textures compressed.");
+            string verb = mode == ResizeMode.Downscale ? "compressed" : "upscaled";
+            string tail = canceled ? " (canceled)" : "";
+            Debug.Log($"[VixForge] Optimization Engine: {count} textures {verb}{tail}.");
         }
     }
 
@@ -631,9 +847,13 @@ namespace VixenTools.Editor
         private Font _cyberFont;
         private VisualElement _resultsContainer;
         private ObjectField _targetField;
-        private SliderInt _resSlider;
-        private EnumField _rankEnum; 
+        private PopupField<int> _sizePopup;
+        // Same preset ladder Unity uses for the TextureImporter Max Size dropdown.
+        private static readonly List<int> SizePresets = new List<int> { 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384 };
+        private EnumField _rankEnum;
         private AvatarSDKValidator.PCPerformanceRank _targetRank = AvatarSDKValidator.PCPerformanceRank.Poor;
+        private EnumField _modeEnum;
+        private AvatarSDKValidator.ResizeMode _resizeMode = AvatarSDKValidator.ResizeMode.Downscale;
         private AvatarSDKValidator.ValidationReport _lastReport;
 
         [MenuItem("VixenTools/Avatars/Optimization Suite", priority = 40)]
@@ -716,8 +936,12 @@ namespace VixenTools.Editor
             _targetField = new ObjectField("Avatar Root") { objectType = typeof(GameObject), allowSceneObjects = true };
             configPanel.Add(_targetField);
             
-            _resSlider = new SliderInt("Optimization Target (px)", 256, 4096) { value = 1024, showInputField = true };
-            configPanel.Add(_resSlider);
+            _sizePopup = new PopupField<int>("Optimization Target (px)", SizePresets, 1024);
+            configPanel.Add(_sizePopup);
+
+            _modeEnum = new EnumField("Resize Mode", _resizeMode);
+            _modeEnum.RegisterValueChangedCallback(e => _resizeMode = (AvatarSDKValidator.ResizeMode)e.newValue);
+            configPanel.Add(_modeEnum);
 
             _rankEnum = new EnumField("Target PC Performance Rank", _targetRank);
             _rankEnum.RegisterValueChangedCallback(e => _targetRank = (AvatarSDKValidator.PCPerformanceRank)e.newValue);
@@ -739,7 +963,7 @@ namespace VixenTools.Editor
             _resultsContainer.Clear();
             var target = _targetField.value as GameObject;
             
-            _lastReport = AvatarSDKValidator.RunFullSweep(target, _resSlider.value, _targetRank);
+            _lastReport = AvatarSDKValidator.RunFullSweep(target, _sizePopup.value, _targetRank, _resizeMode);
 
             // --- 1. HIERARCHY TOPOLOGY ---
             var archPanel = CreateCyberPanel("Hierarchy Topology", "#00e5ff");
@@ -752,6 +976,23 @@ namespace VixenTools.Editor
                 archPanel.Add(CreateRow($"<b>Hardware VRAM Footprint:</b> {_lastReport.TotalVRAM_MB:F2} MB ({_lastReport.UniqueTextures.Count} Textures)", null, vramHex));
             }
             _resultsContainer.Add(archPanel);
+
+            // --- 1.5. OFFICIAL VRCHAT PERFORMANCE (authoritative SDK calculator) ---
+            if (_lastReport.OfficialOverallRating != null)
+            {
+                var perfPanel = CreateCyberPanel("VRChat Official Performance", "#00ff66");
+                perfPanel.Add(CreateRow($"<b>Overall Rating:</b> {_lastReport.OfficialOverallRating}", null, "#00ff66"));
+                if (_lastReport.OfficialPerfWarnings.Count == 0)
+                {
+                    perfPanel.Add(CreateRow("No category warnings from the VRChat SDK.", null, "#00e5ff"));
+                }
+                else
+                {
+                    foreach (var w in _lastReport.OfficialPerfWarnings)
+                        perfPanel.Add(CreateRow(w.Description, w.ContextObject, "#ffaa00"));
+                }
+                _resultsContainer.Add(perfPanel);
+            }
 
             // --- 2. HARDWARE CAP ANALYSIS (Persistent Stats Panel) ---
             int maxPb = 32; int maxContacts = 32; int maxAnimators = 2;

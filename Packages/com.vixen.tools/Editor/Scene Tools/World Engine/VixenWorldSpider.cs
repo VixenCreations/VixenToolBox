@@ -4195,9 +4195,11 @@ namespace VixenTools.Editor
 
         private bool ResizeTextureWithMagick(string fullPath, string assetPath, int maxWidth, int maxHeight)
         {
+            // Never resize shader-internal or HDR data textures (Poiyomi internals, .exr, etc.).
+            if (VixenMagickKit.IsProtectedAsset(assetPath)) return false;
             try
             {
-                using (var img = new MagickImage(fullPath))
+                using (var img = new MagickImage(File.ReadAllBytes(fullPath)))
                 {
                     img.FilterType = FilterType.Lanczos;
                     img.Resize(new MagickGeometry((uint)maxWidth, (uint)maxHeight)
@@ -4209,6 +4211,7 @@ namespace VixenTools.Editor
                     img.Strip();
                     img.Write(fullPath);
                 }
+                VixenMagickKit.TryLosslessOptimize(fullPath);
 
                 AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
                 return true;
@@ -4222,9 +4225,11 @@ namespace VixenTools.Editor
 
         private bool OptimizeTextureWithMagick(string fullPath, string assetPath)
         {
+            // Never re-encode shader-internal or HDR data textures (Poiyomi internals, .exr, etc.).
+            if (VixenMagickKit.IsProtectedAsset(assetPath)) return false;
             try
             {
-                using (var img = new MagickImage(fullPath))
+                using (var img = new MagickImage(File.ReadAllBytes(fullPath)))
                 {
                     img.Strip();
 
@@ -4233,6 +4238,7 @@ namespace VixenTools.Editor
 
                     img.Write(fullPath);
                 }
+                VixenMagickKit.TryLosslessOptimize(fullPath);
 
                 AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
                 return true;

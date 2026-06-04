@@ -953,7 +953,7 @@ namespace VixenTools.Editor
         {
             if (string.IsNullOrEmpty(baseTexPath) || !File.Exists(baseTexPath)) { Debug.LogWarning($"[VixForge] Missing base texture at: {baseTexPath}"); return; }
             
-            using MagickImage img = new MagickImage(baseTexPath);
+            using MagickImage img = new MagickImage(File.ReadAllBytes(baseTexPath));
             img.HasAlpha = true; // Force alpha channel support for the incoming plate blending
             
             if (applyGrayscale) img.Grayscale(); 
@@ -968,13 +968,14 @@ namespace VixenTools.Editor
                 // If Magick saves a cleared background as Transparent White (255,255,255,0), the whole badge blows out.
                 using MagickImage blackBg = new MagickImage(MagickColors.Black, img.Width, img.Height);
                 blackBg.Composite(img, CompositeOperator.Over);
-                blackBg.HasAlpha = false; 
+                blackBg.HasAlpha = false;
                 blackBg.Write(outPath);
             }
             else
             {
                 img.Write(outPath);
             }
+            VixenMagickKit.TryLosslessOptimize(outPath);
         }
 
         private string ResolveFuralityTexture(string folder, string conventionName, string tierName, string mapType)
@@ -1078,10 +1079,12 @@ namespace VixenTools.Editor
             }
             else
             {
-                if (_sourceDiffuse != null) { using (MagickImage dif = new MagickImage(AssetDatabase.GetAssetPath(_sourceDiffuse))) { _templateResolution = (int)dif.Width; dif.Write(difPath); } } 
-                if (_sourceEmission != null) { using (MagickImage emi = new MagickImage(AssetDatabase.GetAssetPath(_sourceEmission))) emi.Write(emiPath); }
+                if (_sourceDiffuse != null) { using (MagickImage dif = new MagickImage(File.ReadAllBytes(AssetDatabase.GetAssetPath(_sourceDiffuse)))) { _templateResolution = (int)dif.Width; dif.Write(difPath); } }
+                if (_sourceEmission != null) { using (MagickImage emi = new MagickImage(File.ReadAllBytes(AssetDatabase.GetAssetPath(_sourceEmission)))) emi.Write(emiPath); }
                 else { using (MagickImage emi = new MagickImage(MagickColors.Black, (uint)_templateResolution, (uint)_templateResolution)) emi.Write(emiPath); }
             }
+            VixenMagickKit.TryLosslessOptimize(difPath);
+            VixenMagickKit.TryLosslessOptimize(emiPath);
 
             SaveLayoutConfig(templateDir);
             AssetDatabase.Refresh();

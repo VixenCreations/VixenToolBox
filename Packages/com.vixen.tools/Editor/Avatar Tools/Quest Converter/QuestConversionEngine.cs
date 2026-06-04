@@ -980,6 +980,14 @@ namespace VixenTools.Editor
                 return sourceTex;
             }
 
+            // Never rewrite shader-internal or HDR data textures (Poiyomi fallback LUTs, .exr
+            // reflection probes, etc.). Resizing them corrupts the source shader and triggers a
+            // Unity reimport storm. Pass the original reference through untouched.
+            if (VixenMagickKit.IsProtectedAsset(sourcePath))
+            {
+                return sourceTex;
+            }
+
             // Absolute sanity check: Ensure the file actually exists on disk before we feed it to ImageMagick
             if (!File.Exists(sourcePath))
             {
@@ -996,7 +1004,7 @@ namespace VixenTools.Editor
 
             try
             {
-                using (MagickImage img = new MagickImage(sourcePath))
+                using (MagickImage img = new MagickImage(File.ReadAllBytes(sourcePath)))
                 {
                     if (img.Width > targetSize || img.Height > targetSize)
                     {
@@ -1008,11 +1016,15 @@ namespace VixenTools.Editor
                         img.Resize(size);
                         if (!isNormalMap && !isLinear) img.ColorSpace = ImageMagick.ColorSpace.sRGB; 
                         
-                        img.UnsharpMask(0.0, 0.5, 1.0, 0.05);
+                        // AdaptiveSharpen targets edges and ignores flat areas, so it sharpens detail
+                        // without amplifying noise in skin/hair/background. Visibly crisper than the
+                        // previous mild UnsharpMask after a Lanczos downscale.
+                        img.AdaptiveSharpen(0, 1.0);
                     }
                     img.Quality = 100;
                     img.Write(newPath);
                 }
+                VixenMagickKit.TryLosslessOptimize(newPath);
             }
             catch (Exception ex)
             {

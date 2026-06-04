@@ -263,26 +263,40 @@ namespace VixenTools.Editor
             EnsureDirectoryExists(_outputDirectory);
             int count = 0;
 
-            foreach (var obj in selectedObjects)
+            // Batch every CreateAsset into a single import pass. Safe here because nothing in the
+            // loop reads a created asset back from disk — the in-memory Preset objects are used
+            // directly — so deferring the import does not break anything. CreateAsset still
+            // registers each path synchronously, so GenerateUniqueAssetPath stays collision-free.
+            // try/finally guarantees StopAssetEditing runs even if a CreateAsset throws, so the
+            // editor can never be left in a locked asset-editing state.
+            AssetDatabase.StartAssetEditing();
+            try
             {
-                Component[] components = _includeChildren ? obj.GetComponentsInChildren<Component>(true) : obj.GetComponents<Component>();
-                
-                foreach (var comp in components)
+                foreach (var obj in selectedObjects)
                 {
-                    if (comp == null || (_ignoreTransforms && comp is Transform)) continue;
-                    
-                    Preset preset = new Preset(comp);
-                    string typeName = comp.GetType().Name;
-                    string path = AssetDatabase.GenerateUniqueAssetPath($"{_outputDirectory}/{obj.name}_{typeName}.preset");
-                    
-                    AssetDatabase.CreateAsset(preset, path);
-                    count++;
+                    Component[] components = _includeChildren ? obj.GetComponentsInChildren<Component>(true) : obj.GetComponents<Component>();
 
-                    if (_registerExtractionToManager)
+                    foreach (var comp in components)
                     {
-                        InjectIntoPresetManager(preset, _extractionFilter);
+                        if (comp == null || (_ignoreTransforms && comp is Transform)) continue;
+
+                        Preset preset = new Preset(comp);
+                        string typeName = comp.GetType().Name;
+                        string path = AssetDatabase.GenerateUniqueAssetPath($"{_outputDirectory}/{obj.name}_{typeName}.preset");
+
+                        AssetDatabase.CreateAsset(preset, path);
+                        count++;
+
+                        if (_registerExtractionToManager)
+                        {
+                            InjectIntoPresetManager(preset, _extractionFilter);
+                        }
                     }
                 }
+            }
+            finally
+            {
+                AssetDatabase.StopAssetEditing();
             }
 
             AssetDatabase.SaveAssets();

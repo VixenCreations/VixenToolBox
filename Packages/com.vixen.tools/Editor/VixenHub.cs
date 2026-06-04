@@ -6,6 +6,7 @@ using UnityEditor.UIElements;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using ImageMagick;
 
 namespace VixenTools.Editor
 {
@@ -132,6 +133,123 @@ namespace VixenTools.Editor
             badge.Add(label);
 
             return badge;
+        }
+    }
+
+    // Process-wide Magick.NET tuning + shared lossless re-encode helper.
+    // Used by every VixForge tool that emits images so Unity restarts are not required
+    // to release file handles and so all PNG/JPEG/GIF/ICO outputs get the best compression
+    // Magick.NET can produce.
+    [InitializeOnLoad]
+    public static class VixenMagickKit
+    {
+        static VixenMagickKit()
+        {
+            // OpenMP defaults to 1 thread on some Windows configurations; force all cores.
+            // Resource limits are process-wide globals so re-running on each domain reload
+            // is safe and idempotent.
+            try
+            {
+                ResourceLimits.Thread = (ulong)System.Math.Max(1, System.Environment.ProcessorCount);
+            }
+            catch { }
+        }
+
+        // Asset-path fragments that mark shader / tool package internals. Textures inside these
+        // are hardcoded by the shader (fallback LUTs, matcaps, ramps, noise, reflection probes);
+        // resizing or re-encoding them corrupts the shader and triggers a Unity reimport storm.
+        // Matched case-insensitively as substrings of the forward-slash-normalized path.
+        // Extend this list as new shader packages are encountered.
+        private static readonly string[] ProtectedPathFragments =
+        {
+            "/_PoiyomiShaders/",
+            "/_PoiyomiToonShaders/",
+            "/Poiyomi/",
+            "/lilToon/",
+            "/Sunao Shader/",
+            "/Editor Default Resources/",
+        };
+
+        // Texture file formats that hold data, not visual content: HDR maps, color-grading LUTs,
+        // reflection probes, lightmaps. They must never be resampled or re-encoded — doing so
+        // destroys the data the shader reads. This alone catches the common ".exr fallback" case.
+        private static readonly string[] ProtectedExtensions =
+        {
+            ".exr", ".hdr", ".cubemap", ".rendertexture",
+        };
+
+        // Central policy: returns true when the asset at this path must not be touched by any
+        // image pass (resize, sharpen, lossless re-encode). Accepts both project-relative asset
+        // paths ("Assets/...") and absolute filesystem paths. A null/empty path is treated as
+        // protected (can't verify it, so don't touch it).
+        public static bool IsProtectedAsset(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return true;
+
+            string normalized = path.Replace('\\', '/');
+
+            foreach (var ext in ProtectedExtensions)
+                if (normalized.EndsWith(ext, System.StringComparison.OrdinalIgnoreCase))
+                    return true;
+
+            foreach (var fragment in ProtectedPathFragments)
+                if (normalized.IndexOf(fragment, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                    return true;
+
+            return false;
+        }
+
+        // Lossless re-encode that never holds the source file open.
+        // - Reads bytes via managed I/O (so the OS handle is released before Magick sees it).
+        // - Runs ImageOptimizer with OptimalCompression which tries multiple filter/strategy
+        //   combos and keeps the smallest output.
+        // - Only overwrites when the result is genuinely smaller.
+        // - Silently skips unsupported formats (TGA, DDS, EXR, etc.) so callers can fire it
+        //   blindly after any Write().
+        // Above this file size, OptimalCompression's 4x re-encode pass is disproportionately
+        // expensive (it tries qualities 91/94/95/97 sequentially). On a 30 MB PNG that's
+        // ~2 minutes per file, which is exactly what locked up the editor on the upscale path.
+        // Below the threshold we still do the full 4-pass search.
+        private const long OptimalCompressionMaxBytes = 10L * 1024 * 1024;
+
+        public static bool TryLosslessOptimize(string path)
+        {
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return false;
+            // Backstop: never re-encode protected shader/data assets even if a caller asks.
+            if (IsProtectedAsset(path)) return false;
+            try
+            {
+                long fileBytes = new FileInfo(path).Length;
+                // PngHelper.GetQualityList: returns 4 qualities when OptimalCompression=true,
+                // returns 1 quality when false. For big files we use the single-pass mode.
+                bool useOptimal = fileBytes <= OptimalCompressionMaxBytes;
+
+                byte[] original = File.ReadAllBytes(path);
+                using var ms = new MemoryStream(original.Length);
+                ms.Write(original, 0, original.Length);
+                ms.Position = 0;
+
+                var optimizer = new ImageOptimizer
+                {
+                    OptimalCompression = useOptimal,
+                    IgnoreUnsupportedFormats = true
+                };
+
+                if (optimizer.LosslessCompress(ms))
+                {
+                    byte[] optimized = ms.ToArray();
+                    if (optimized.Length > 0 && optimized.Length < original.Length)
+                    {
+                        File.WriteAllBytes(path, optimized);
+                        return true;
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"[VixForge] LosslessCompress skipped for '{path}': {ex.Message}");
+            }
+            return false;
         }
     }
 

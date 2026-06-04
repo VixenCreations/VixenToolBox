@@ -334,7 +334,17 @@ public class VixenWearEditor : ShaderGUI
             "_Trans_Str",
             "_Trans_Dist",
             "_Trans_Power",
-            "_UseMultiScatter"
+            "_UseMultiScatter",
+            "_UseOutline",
+            "_OutlineColor",
+            "_OutlineEmis",
+            "_OutlineWidth",
+            "_MaxOutlineWidth",
+            "_OutlineViewFudge",
+            "_OutlineMask",
+            "_OutlineMaskCh",
+            "_AL_Band_Outline",
+            "_AL_Outline_Mod"
         },
         // INTEGRATION
         new[]
@@ -681,6 +691,9 @@ public class VixenWearEditor : ShaderGUI
         // Force-disable CYBER_ENABLE - shader never #if-gates on it, so the 2x variant set is dead.
         mat.DisableKeyword("CYBER_ENABLE");
 
+        // Clear EmissiveIsBlack so Unity's build pipeline doesn't strip _EmissionColor/_EmissionMap/_EmissionColor2 from materials whose flag was never updated (default on freshly cloned mats, e.g. VRCFury swap targets).
+        mat.globalIlluminationFlags &= ~MaterialGlobalIlluminationFlags.EmissiveIsBlack;
+
         // Alpha workflow keywords mirror _Mode - done here (not just in SetupMaterialWithBlendMode) so upgraded materials pick up the right keyword on the next build/play-mode transition without an inspector visit.
         if (mat.HasProperty("_Mode"))
         {
@@ -751,6 +764,9 @@ public class VixenWearEditor : ShaderGUI
         base.AssignNewShaderToMaterial(material, oldShader, newShader);
         if (material != null && material.HasProperty("_Mode"))
             SetupMaterialWithBlendMode(material, (int)material.GetFloat("_Mode"));
+        // Clear EmissiveIsBlack on first shader assignment so Unity's build pipeline can't strip emission properties from this material later.
+        if (material != null)
+            material.globalIlluminationFlags &= ~MaterialGlobalIlluminationFlags.EmissiveIsBlack;
     }
 
     private void UpdateKeywords(Material mat) => SyncKeywords(mat);
@@ -1006,6 +1022,28 @@ public class VixenWearEditor : ShaderGUI
 
             EditorGUILayout.LabelField("Energy Conservation", EditorStyles.boldLabel);
             DrawProp(ed, FindProperty("_UseMultiScatter", p, false), "Multi-Scatter Compensation");
+            GUILayout.Space(10);
+
+            EditorGUILayout.LabelField("Outline (Backface Extrusion)", EditorStyles.boldLabel);
+            var _UseOL = FindProperty("_UseOutline", p, false);
+            DrawProp(ed, _UseOL, "Enable Outline");
+            if (_UseOL != null && _UseOL.floatValue > 0.5f)
+            {
+                EditorGUI.indentLevel++;
+                DrawProp(ed, FindProperty("_OutlineColor", p, false), "Outline Color");
+                DrawProp(ed, FindProperty("_OutlineEmis", p, false), "Outline Emission (HDR)");
+                DrawProp(ed, FindProperty("_OutlineWidth", p, false), "Outline Width");
+                DrawProp(ed, FindProperty("_MaxOutlineWidth", p, false), "Max Width (Distance Clamp)");
+                DrawProp(ed, FindProperty("_OutlineViewFudge", p, false), "View Fudge");
+                DrawProp(ed, FindProperty("_OutlineMask", p, false), "Outline Mask");
+                DrawProp(ed, FindProperty("_OutlineMaskCh", p, false), "Outline Mask Channel");
+                EditorGUILayout.HelpBox("Outline renders as a Cull Front backface extrusion along the world normal. Width auto-scales with eye depth so the outline stays a constant visual thickness; Max Width clamps the extrusion at distance. Set Mask Channel to None for a uniform outline; pick R/G/B/A for a textured mask.", MessageType.None);
+                GUILayout.Space(4);
+                EditorGUILayout.LabelField("Outline AudioLink", EditorStyles.miniBoldLabel);
+                DrawProp(ed, FindProperty("_AL_Band_Outline", p, false), "Outline AL Band");
+                DrawProp(ed, FindProperty("_AL_Outline_Mod", p, false), "Outline AL Emission Boost");
+                EditorGUI.indentLevel--;
+            }
         }
         // INTEGRATION
         else if (ActiveTab == 3)
@@ -1335,6 +1373,13 @@ public class VixenWearEditor : ShaderGUI
 public class VixenWearBuildPreprocessor : IPreprocessBuildWithReport
 {
     public const string SHADER_NAME = "VixenWear/Latex Ultra";
+    public const string SHADER_NAME_SPS = "VixenWear/Latex Ultra SPS";
+
+    // Both variants share the same property layout and editor; the SPS variant drops tessellation so VRCFury's SPS patcher can wrap the vertex function without hitting a struct type mismatch in tessEdge.
+    public static bool IsVixenWearShader(Shader s)
+    {
+        return s != null && (s.name == SHADER_NAME || s.name == SHADER_NAME_SPS);
+    }
 
     public int callbackOrder => 0;
 
@@ -1380,7 +1425,7 @@ public class VixenWearBuildPreprocessor : IPreprocessBuildWithReport
                 foreach (Material mat in r.sharedMaterials)
                 {
                     if (mat == null || mat.shader == null) continue;
-                    if (mat.shader.name != SHADER_NAME) { skippedNonVixen++; continue; }
+                    if (!IsVixenWearShader(mat.shader)) { skippedNonVixen++; continue; }
                     if (seen.Add(mat)) mats.Add(mat);
                 }
             }
@@ -1391,7 +1436,7 @@ public class VixenWearBuildPreprocessor : IPreprocessBuildWithReport
             EditorUtility.DisplayDialog(
                 "Edit VixenWear Materials",
                 $"Scanned {rendererCount} renderer(s) under {selectedGOs.Length} GameObject(s) and found no VixenWear materials.\n\n" +
-                (skippedNonVixen > 0 ? $"({skippedNonVixen} non-VixenWear material slot(s) skipped.)" : "Make sure the renderers reference materials using the VixenWear/Latex Ultra shader."),
+                (skippedNonVixen > 0 ? $"({skippedNonVixen} non-VixenWear material slot(s) skipped.)" : "Make sure the renderers reference materials using the VixenWear/Latex Ultra or VixenWear/Latex Ultra SPS shader."),
                 "OK");
             return;
         }
@@ -1417,7 +1462,7 @@ public class VixenWearBuildPreprocessor : IPreprocessBuildWithReport
             string path = AssetDatabase.GUIDToAssetPath(guid);
             Material mat = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (mat == null || mat.shader == null) continue;
-            if (mat.shader.name != SHADER_NAME) continue;
+            if (!IsVixenWearShader(mat.shader)) continue;
             if (!mat.HasProperty("_UseMediaState")) continue;
             if (mat.GetFloat("_UseMediaState") <= 0.5f) continue;
 
@@ -1439,15 +1484,18 @@ public class VixenWearBuildPreprocessor : IPreprocessBuildWithReport
             string path = AssetDatabase.GUIDToAssetPath(guid);
             Material mat = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (mat == null || mat.shader == null) continue;
-            if (mat.shader.name != SHADER_NAME) continue;
+            if (!IsVixenWearShader(mat.shader)) continue;
 
             scanned++;
 
             string[] before = (string[])mat.shaderKeywords.Clone();
+            MaterialGlobalIlluminationFlags giBefore = mat.globalIlluminationFlags;
             VixenWearEditor.SyncKeywords(mat);
             string[] after = mat.shaderKeywords;
+            MaterialGlobalIlluminationFlags giAfter = mat.globalIlluminationFlags;
 
-            if (!KeywordsEqual(before, after))
+            // Persist either change - GI flag drift alone (the EmissiveIsBlack clear) still needs to hit disk so Unity's build pipeline doesn't strip _EmissionColor from VRCFury swap-target materials whose keywords were already in sync.
+            if (!KeywordsEqual(before, after) || giBefore != giAfter)
             {
                 if (saveToDisk)
                 {
@@ -1525,7 +1573,7 @@ public class VixenWearVariantStripper : IPreprocessShaders
 
     public void OnProcessShader(Shader shader, ShaderSnippetData snippet, IList<ShaderCompilerData> data)
     {
-        if (shader == null || shader.name != VixenWearBuildPreprocessor.SHADER_NAME) return;
+        if (!VixenWearBuildPreprocessor.IsVixenWearShader(shader)) return;
 
         if (_liveKeywords == null) _liveKeywords = CollectLiveKeywords();
 
@@ -1586,7 +1634,7 @@ public class VixenWearVariantStripper : IPreprocessShaders
             string path = AssetDatabase.GUIDToAssetPath(guid);
             Material mat = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (mat == null || mat.shader == null) continue;
-            if (mat.shader.name != VixenWearBuildPreprocessor.SHADER_NAME) continue;
+            if (!VixenWearBuildPreprocessor.IsVixenWearShader(mat.shader)) continue;
             foreach (string kw in mat.shaderKeywords) live.Add(kw);
         }
         return live;
