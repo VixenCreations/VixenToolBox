@@ -551,9 +551,12 @@
 
                     <p class="mb-3">
                         A high-fidelity, dual-lobe PBR surface shader engineered for synthetic materials.
-                        Version 2.3.0 ships a full industry-standard GGX BRDF stack with anisotropy,
-                        thin-part transmission, tinted clearcoat, mirror-correct view math, and the deepest
-                        Light Volumes + LTCGI integration of any creator-facing shader on the platform.
+                        It ships a full industry-standard GGX BRDF stack with anisotropy, thin-part transmission,
+                        tinted clearcoat, mirror-correct view math, and the deepest Light Volumes + LTCGI
+                        integration of any creator-facing shader on the platform - now in two variants (base plus a
+                        tessellation-free <code>Latex Ultra SPS</code> clone for VRCFury SPS patching) with a full
+                        liquid surface system: a master Polish gate, Poiyomi/Mochie reflection &amp; specular masks,
+                        wet/run-off with geometry water droplets, and gravity-aligned melting goo.
                     </p>
 
                     <ul class="custom-list m-0 ps-4">
@@ -592,6 +595,17 @@
                             single-pass instanced) instead of <code>_WorldSpaceCameraPos</code>. Routed through
                             viewDir, GI viewDir, parallax raymarch, and clearcoat reflection so specular and
                             parallax math is finally correct in VRChat mirrors.
+                        </li>
+
+                        <li class="mb-2">
+                            <strong>Liquid Surface System (Polish, Wet &amp; Goo):</strong>
+                            A master <code>_UsePolish</code> gate collapses the whole clearcoat/SSS/transmission
+                            stack to a flat base on demand. A wet/run-off layer soaks the latex with a near-mirror
+                            film, dielectric sheen, and animated rivulets, while a PC-only geometry stage emits real
+                            water droplets that swell, pinch off, and fall away with sway, body-slide, and
+                            floor-splat physics. Gravity-aligned melting goo sags the mesh in the displacement stage
+                            with floor-pooling and per-strand sway. Poiyomi/Mochie reflection &amp; specular masks
+                            drop in packed maps via a one-click setup button.
                         </li>
 
                         <li class="mb-2">
@@ -641,22 +655,25 @@
                         </li>
 
                         <li class="mb-2">
-                            <strong>Kinetic Engine (Vertex + UV):</strong>
-                            <code>disp()</code>-stage shatter snaps verts to a 3D grid and Rodrigues-rotates
-                            each shard around a deterministic per-cell random axis, with a per-pixel
-                            <code>clip()</code> in the surface stage punching holes in sync. A spherical
-                            autocorrelator vertex ripple drives volumetric breathing per-vertex with no band
-                            selection. Surface-side Vortex Twists, UV Bass Pumping, and spatial-hashed UV
-                            Fracture Shards are all band-amplitude gated, so silent worlds never shatter the
-                            avatar.
+                            <strong>Kinetic Engine + Flying Shards (PC):</strong>
+                            A per-pixel <code>clip()</code> in the surface stage punches holes in sync with the
+                            vertex pump, and a spherical autocorrelator vertex ripple drives volumetric breathing
+                            with no band selection. On PC the fracture becomes a full flying-shard system driven by
+                            geometry passes - a manual hold/animate dissolve opens the body up, with hover, tumble,
+                            spiral, lift, float, and trail controls plus shard hue-shift and AudioLink ColorChord
+                            blending (the SPS variant dissolves via the clip only). Surface-side Vortex Twists, UV
+                            Bass Pumping, and spatial-hashed UV Fracture Shards stay band-amplitude gated so silent
+                            worlds never shatter the avatar.
                         </li>
 
                         <li class="mb-2">
                             <strong>God Tier Cybernetics HUD:</strong>
                             VU meters, oscilloscope waveform, DMX grid readouts, a configurable
-                            (<code>_Cyber_CC_Density</code> 4-64 bars) true bar-chart spectrum, and a new
-                            autocorrelator ring with animated angular spokes. The HUD now floats off the body
-                            via tangent-space view-direction parallax + a subtle sine-driven bob.
+                            (<code>_Cyber_CC_Density</code> 4-64 bars) true bar-chart spectrum, and an
+                            autocorrelator ring with animated angular spokes and four per-band effects (Shimmer,
+                            Pop, Sizzle, Electrify). A <code>_Cyber_VU_Style</code> Console mode renders a full
+                            self-playing AudioLink control panel, and each widget reacts to its own band. The HUD
+                            floats off the body via tangent-space view-direction parallax + a subtle sine-driven bob.
                         </li>
 
                         <li class="mb-2">

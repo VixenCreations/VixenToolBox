@@ -18,7 +18,7 @@
 
 /// Double-sample screen texture for diffuse lighting to smooth resulting lighting
 /// a bit more with global screen color data. Slight performance cost.
-//#define LTCGI_BLENDED_DIFFUSE_SAMPLING
+#define LTCGI_BLENDED_DIFFUSE_SAMPLING
 
 /// Disable extra specular detail LUT, saves a sampler.
 //#define LTCGI_DISABLE_LUT2
@@ -63,7 +63,7 @@ const float LUT_BIAS = 0.5/LUT_SIZE;
 #ifdef LTCGI_AUDIOLINK
 #ifndef AUDIOLINK_WIDTH
 #ifndef AUDIOLINK_CGINC_INCLUDED
-#include "Packages/at.pimaker.ltcgi/Shaders/LTCGI_AudioLinkNoOp.cginc"
+#include "Packages/com.vixencreations.vixens-toolbox/Editor/Avatar Tools/Shaders/cginc/LTCGI_AudioLinkNoOp.cginc"
 #define AUDIOLINK_CGINC_INCLUDED
 #endif
 #endif
@@ -79,7 +79,7 @@ const float LUT_BIAS = 0.5/LUT_SIZE;
 //#define LTCGI_CYLINDER
 
 // Activate avatar mode, which overrides certain configs from above.
-//#define LTCGI_AVATAR_MODE
+#define LTCGI_AVATAR_MODE
 
 // Slightly simplified and thus faster sampling for reflections at the cost of quality.
 //#define LTCGI_FAST_SAMPLING

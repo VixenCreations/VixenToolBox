@@ -300,6 +300,13 @@ public class VixenWearEditor : ShaderGUI
             "_PBR_Smooth_Inv",
             "_PBR_AO_Ch",
             "_PBR_Height_Ch",
+            "_UsePackedMasks",
+            "_ReflMask_Ch",
+            "_ReflMask_Inv",
+            "_ReflMask_Str",
+            "_SpecMask_Ch",
+            "_SpecMask_Inv",
+            "_SpecMask_Str",
             "_BumpMap",
             "_AO_Str",
             "_Spec_Occ",
@@ -335,6 +342,46 @@ public class VixenWearEditor : ShaderGUI
             "_Trans_Dist",
             "_Trans_Power",
             "_UseMultiScatter",
+            "_UsePolish",
+            "_PolishMask",
+            "_PolishMaskCh",
+            "_UseDrip",
+            "_DripMask",
+            "_DripMaskCh",
+            "_Drip_Density",
+            "_Drip_Width",
+            "_Drip_Coverage",
+            "_Drip_Speed",
+            "_Drip_Strength",
+            "_Drip_Normal",
+            "_Drip3D_Strength",
+            "_Drip3D_Scale",
+            "_Drip3D_Sheen",
+            "_Drip3D_Fall",
+            "_Drip_Sway",
+            "_Drip_BodyFollow",
+            "_Drip_FloorCollide",
+            "_Wet_Amount",
+            "_Wet_Darken",
+            "_Wet_Smoothness",
+            "_Wet_Sheen",
+            "_Wet_Flatten",
+            "_UseGoo",
+            "_GooMask",
+            "_GooMaskCh",
+            "_Goo_Strength",
+            "_Goo_Noise",
+            "_Goo_Speed",
+            "_Goo_Droop",
+            "_Goo_Reach",
+            "_Goo_Variation",
+            "_Goo_ToGround",
+            "_Goo_GroundY",
+            "_Goo_Sway",
+            "_Goo_SwaySpeed",
+            "_Goo_BodyFollow",
+            "_Goo_FloorCollide",
+            "_Goo_Pool",
             "_UseOutline",
             "_OutlineColor",
             "_OutlineEmis",
@@ -409,7 +456,7 @@ public class VixenWearEditor : ShaderGUI
             "_Cyber_Hover",
             "_Cyber_Hover_Bob",
             "_UseCyberVU",
-            "_Cyber_VU_Band",
+            "_Cyber_VU_Style",
             "_Cyber_VU_Str",
             "_Cyber_VU_Transform",
             "_UseCyberCC",
@@ -418,20 +465,42 @@ public class VixenWearEditor : ShaderGUI
             "_Cyber_CC_Density",
             "_Cyber_CC_Transform",
             "_UseCyberWave",
+            "_Cyber_Wave_Band",
             "_Cyber_Wave_Str",
             "_Cyber_Wave_Transform",
             "_UseCyberDMX",
+            "_Cyber_DMX_Band",
             "_Cyber_DMX_Str",
             "_Cyber_DMX_Transform",
             "_UseCyberAuto",
+            "_Cyber_Auto_Band",
             "_Cyber_AutoCorr_Str",
             "_Cyber_Auto_Transform",
+            "_Cyber_Auto_Shimmer",
+            "_Cyber_Auto_Shimmer_Band",
+            "_Cyber_Auto_Pop",
+            "_Cyber_Auto_Pop_Band",
+            "_Cyber_Auto_Sizzle",
+            "_Cyber_Auto_Sizzle_Band",
+            "_Cyber_Auto_Electrify",
+            "_Cyber_Auto_Electrify_Band",
 
             "_UseVtxKinetic",
             "_Vtx_Pump_Band",
             "_Vtx_Pump_Str",
             "_Vtx_Fracture_Band",
             "_Vtx_Fracture_Str",
+            "_Vtx_Fracture_Amount",
+            "_Vtx_Fracture_Dist",
+            "_Vtx_Fracture_Spin",
+            "_Vtx_Fracture_Spiral",
+            "_Vtx_Fracture_Lift",
+            "_Vtx_Fracture_Float",
+            "_Vtx_Fracture_Trail",
+            "_Shard_ColorMod",
+            "_Shard_ColorMod_Speed",
+            "_UseShardCC",
+            "_Shard_CC_Str",
             "_Vtx_AutoCorr_Str",
 
             "_UseALVortex",
@@ -530,6 +599,13 @@ public class VixenWearEditor : ShaderGUI
             ed.PropertiesChanged();
             UpdateKeywordsForTargets(ed.targets);
         }
+    }
+
+    // Sets a float/range/enum property on all targets if it exists (used by one-click setup helpers). Null-safe so it no-ops on shader variants missing the property.
+    private void SetF(MaterialProperty[] p, string name, float value)
+    {
+        MaterialProperty prop = FindProperty(name, p, false);
+        if (prop != null) prop.floatValue = value;
     }
 
     private void PerformPaste(MaterialEditor ed, MaterialProperty[] p, int tabIndex, bool includeTextures)
@@ -953,7 +1029,7 @@ public class VixenWearEditor : ShaderGUI
         else if (ActiveTab == 1)
         {
             DrawProp(ed, FindProperty("_MetallicGlossMap", p, false), "Packed PBR Map");
-            EditorGUILayout.HelpBox("Poiyomi/Substance/Marmoset compatibility - pick which channel of the packed map drives each PBR property. Defaults are VixenWear native (R:Met G:AO B:Disp A:Smooth).", MessageType.None);
+            EditorGUILayout.HelpBox("Poiyomi/Substance/Marmoset compatibility - pick which channel of the packed map drives each PBR property. Defaults are VixenWear native (R:Met G:AO B:Disp A:Smooth). For a Poiyomi/Mochie 'Metallic Maps' texture (R:Met G:Smooth B:Reflection A:Specular), use the one-click setup button below.", MessageType.None);
             EditorGUI.indentLevel++;
             DrawProp(ed, FindProperty("_PBR_Met_Ch", p, false), "Metallic Channel");
             DrawProp(ed, FindProperty("_PBR_Met_Inv", p, false), "Invert Metallic");
@@ -962,6 +1038,38 @@ public class VixenWearEditor : ShaderGUI
             DrawProp(ed, FindProperty("_PBR_AO_Ch", p, false), "AO Channel");
             DrawProp(ed, FindProperty("_PBR_Height_Ch", p, false), "Height Channel");
             EditorGUI.indentLevel--;
+            GUILayout.Space(6);
+
+            // Poiyomi/Mochie reflection + specular masks, sampled from the packed PBR map above.
+            var _UsePM = FindProperty("_UsePackedMasks", p, false);
+            DrawProp(ed, _UsePM, "Reflection / Specular Masks");
+            if (_UsePM != null && _UsePM.floatValue > 0.5f)
+            {
+                EditorGUI.indentLevel++;
+                DrawProp(ed, FindProperty("_ReflMask_Ch", p, false), "Reflection Mask Channel");
+                DrawProp(ed, FindProperty("_ReflMask_Inv", p, false), "Invert Reflection Mask");
+                DrawProp(ed, FindProperty("_ReflMask_Str", p, false), "Reflection Mask Strength");
+                DrawProp(ed, FindProperty("_SpecMask_Ch", p, false), "Specular Mask Channel");
+                DrawProp(ed, FindProperty("_SpecMask_Inv", p, false), "Invert Specular Mask");
+                DrawProp(ed, FindProperty("_SpecMask_Str", p, false), "Specular Mask Strength");
+                EditorGUILayout.HelpBox("Reflection Mask dims environment / reflection-probe specular (including clearcoat env, Light Volume, and LTCGI reflections). Specular Mask dims direct light highlights. Channel defaults match Mochie packing (B = reflection, A = specular). Matcaps keep their own masks and are not affected.", MessageType.None);
+                EditorGUI.indentLevel--;
+            }
+            GUILayout.Space(6);
+
+            if (GUILayout.Button("Set Up for Poiyomi / Mochie Metallic Map"))
+            {
+                Undo.RecordObjects(ed.targets, "Mochie Metallic Map Setup");
+                SetF(p, "_PBR_Met_Ch", 0f); SetF(p, "_PBR_Met_Inv", 0f);
+                SetF(p, "_PBR_Smooth_Ch", 1f); SetF(p, "_PBR_Smooth_Inv", 0f);
+                SetF(p, "_PBR_AO_Ch", 4f);
+                SetF(p, "_UsePackedMasks", 1f);
+                SetF(p, "_ReflMask_Ch", 2f); SetF(p, "_ReflMask_Inv", 0f); SetF(p, "_ReflMask_Str", 1f);
+                SetF(p, "_SpecMask_Ch", 3f); SetF(p, "_SpecMask_Inv", 0f); SetF(p, "_SpecMask_Str", 1f);
+                ed.PropertiesChanged();
+                UpdateKeywordsForTargets(ed.targets);
+            }
+            EditorGUILayout.HelpBox("One-click translation: maps a Mochie/Poiyomi 'Metallic Maps' texture (R:Metallic G:Smoothness B:Reflection Mask A:Specular Mask) onto our packed PBR - sets the channels, disables AO (None), and enables the masks. Drop the Mochie map into Packed PBR Map above first.", MessageType.None);
             GUILayout.Space(6);
 
             DrawProp(ed, FindProperty("_BumpMap", p, false), "Normal Map");
@@ -990,38 +1098,128 @@ public class VixenWearEditor : ShaderGUI
         // POLISH
         else if (ActiveTab == 2)
         {
-            DrawProp(ed, FindProperty("_CC_Strength", p, false), "Clearcoat Strength");
-            DrawProp(ed, FindProperty("_CC_Smoothness", p, false), "Clearcoat Smoothness");
-            DrawProp(ed, FindProperty("_CC_Spec_AA", p, false), "Specular Anti-Aliasing");
-            DrawProp(ed, FindProperty("_CC_Flat", p, false), "Clearcoat Flattening");
-            DrawProp(ed, FindProperty("_CC_Tint", p, false), "Clearcoat Tint");
-            DrawProp(ed, FindProperty("_CC_F0", p, false), "Clearcoat F0 (0.04 = dielectric)");
+            var _UsePol = FindProperty("_UsePolish", p, false);
+            DrawProp(ed, _UsePol, "Enable Polish Layer");
+            EditorGUILayout.HelpBox("Master gate for the polish lighting layer (clearcoat, thin film, SSS, transmission, anisotropy, rim, multi-scatter). Off collapses the material to a flat GGX base. Drip, Goo, and Outline below have their own toggles.", MessageType.None);
+            if (_UsePol != null && _UsePol.floatValue > 0.5f)
+            {
+                EditorGUI.indentLevel++;
+                DrawProp(ed, FindProperty("_PolishMask", p, false), "Polish Mask (B&W)");
+                DrawProp(ed, FindProperty("_PolishMaskCh", p, false), "Polish Mask Channel");
+                GUILayout.Space(8);
+
+                DrawProp(ed, FindProperty("_CC_Strength", p, false), "Clearcoat Strength");
+                DrawProp(ed, FindProperty("_CC_Smoothness", p, false), "Clearcoat Smoothness");
+                DrawProp(ed, FindProperty("_CC_Spec_AA", p, false), "Specular Anti-Aliasing");
+                DrawProp(ed, FindProperty("_CC_Flat", p, false), "Clearcoat Flattening");
+                DrawProp(ed, FindProperty("_CC_Tint", p, false), "Clearcoat Tint");
+                DrawProp(ed, FindProperty("_CC_F0", p, false), "Clearcoat F0 (0.04 = dielectric)");
+                GUILayout.Space(10);
+
+                DrawProp(ed, FindProperty("_Film_Str", p, false), "Thin Film Iridescence");
+                DrawProp(ed, FindProperty("_Film_Thick", p, false), "Film Thickness (100-2000nm)");
+                DrawProp(ed, FindProperty("_Rim_Str", p, false), "Rim Light Strength");
+                DrawProp(ed, FindProperty("_Rim_Power", p, false), "Rim Light Power");
+                GUILayout.Space(10);
+
+                DrawProp(ed, FindProperty("_SSS_Str", p, false), "Volumetric SSS Strength");
+                DrawProp(ed, FindProperty("_SSS_Dist", p, false), "Terminator Bleed (Wrap)");
+                DrawProp(ed, FindProperty("_SSS_Power", p, false), "Backscatter Focus");
+                GUILayout.Space(10);
+
+                EditorGUILayout.LabelField("Anisotropic Specular (Latex Stretch)", EditorStyles.boldLabel);
+                DrawProp(ed, FindProperty("_Aniso", p, false), "Anisotropy (-1 = vertical, +1 = horizontal)");
+                DrawProp(ed, FindProperty("_AnisoRot", p, false), "Anisotropy Rotation (deg)");
+                GUILayout.Space(10);
+
+                EditorGUILayout.LabelField("Transmission (Thin-Part Back-Light)", EditorStyles.boldLabel);
+                DrawProp(ed, FindProperty("_Trans_Str", p, false), "Transmission Strength");
+                DrawProp(ed, FindProperty("_Trans_Dist", p, false), "Absorption Distance");
+                DrawProp(ed, FindProperty("_Trans_Power", p, false), "Back-Light Falloff");
+                GUILayout.Space(10);
+
+                EditorGUILayout.LabelField("Energy Conservation", EditorStyles.boldLabel);
+                DrawProp(ed, FindProperty("_UseMultiScatter", p, false), "Multi-Scatter Compensation");
+                EditorGUI.indentLevel--;
+            }
             GUILayout.Space(10);
 
-            DrawProp(ed, FindProperty("_Film_Str", p, false), "Thin Film Iridescence");
-            DrawProp(ed, FindProperty("_Film_Thick", p, false), "Film Thickness (100–2000nm)");
-            DrawProp(ed, FindProperty("_Rim_Str", p, false), "Rim Light Strength");
-            DrawProp(ed, FindProperty("_Rim_Power", p, false), "Rim Light Power");
+            // Wet - full soaked look plus run-off rivulets.
+            EditorGUILayout.LabelField("Wet & Run-Off", EditorStyles.boldLabel);
+            var _UseDr = FindProperty("_UseDrip", p, false);
+            DrawProp(ed, _UseDr, "Enable Wet");
+            if (_UseDr != null && _UseDr.floatValue > 0.5f)
+            {
+                EditorGUI.indentLevel++;
+                DrawProp(ed, FindProperty("_DripMask", p, false), "Wet Mask (B&W)");
+                DrawProp(ed, FindProperty("_DripMaskCh", p, false), "Wet Mask Channel");
+                GUILayout.Space(4);
+                EditorGUILayout.LabelField("Soaked Look (Just Out of the Pool)", EditorStyles.miniBoldLabel);
+                DrawProp(ed, FindProperty("_Wet_Amount", p, false), "Wetness");
+                DrawProp(ed, FindProperty("_Wet_Darken", p, false), "Darkening");
+                DrawProp(ed, FindProperty("_Wet_Smoothness", p, false), "Wet Smoothness");
+                DrawProp(ed, FindProperty("_Wet_Sheen", p, false), "Film Sheen");
+                DrawProp(ed, FindProperty("_Wet_Flatten", p, false), "Normal Flatten");
+                EditorGUILayout.HelpBox("Soaks the masked area like fresh out of the shower: darkens the latex (water absorption), drives reflections to a near-mirror water film, adds a dielectric Fresnel sheen, and flattens micro-detail. Film Sheen rides on the clearcoat, so keep the Polish layer enabled for the strongest wet highlight.", MessageType.None);
+                GUILayout.Space(4);
+                EditorGUILayout.LabelField("Run-Off Rivulets", EditorStyles.miniBoldLabel);
+                DrawProp(ed, FindProperty("_Drip_Density", p, false), "Density (Columns)");
+                DrawProp(ed, FindProperty("_Drip_Width", p, false), "Rivulet Thinness");
+                DrawProp(ed, FindProperty("_Drip_Coverage", p, false), "Coverage");
+                DrawProp(ed, FindProperty("_Drip_Speed", p, false), "Flow Speed");
+                DrawProp(ed, FindProperty("_Drip_Strength", p, false), "Streak Strength");
+                DrawProp(ed, FindProperty("_Drip_Normal", p, false), "Streak Normal Bump");
+                EditorGUILayout.HelpBox("Animated vertical streaks of water running off, layered on top of the soak. Flows along UV vertical. Higher Rivulet Thinness = narrower streaks; set Streak Strength to 0 for a still, evenly-soaked look.", MessageType.None);
+                var _Drip3D = FindProperty("_Drip3D_Strength", p, false);
+                if (_Drip3D != null)
+                {
+                    GUILayout.Space(4);
+                    EditorGUILayout.LabelField("Clear 3D Drips (Geometry, PC only)", EditorStyles.miniBoldLabel);
+                    DrawProp(ed, _Drip3D, "Clear Drip Amount");
+                    DrawProp(ed, FindProperty("_Drip3D_Scale", p, false), "Droplet Size");
+                    DrawProp(ed, FindProperty("_Drip3D_Sheen", p, false), "Glassiness");
+                    DrawProp(ed, FindProperty("_Drip3D_Fall", p, false), "Fall Distance");
+                    EditorGUILayout.HelpBox("Real water droplets emitted by a geometry shader: they swell on downward-facing wet areas, form a neck, pinch off, then fall away as free geometry and dry out (fade). Tinted to the Clearcoat Tint. PC only - it uses a geometry stage, so it is not present on the SPS shader (or Quest). The Wet mask picks where drips form; Coverage and Flow Speed are shared with the rivulets. Droplet Size is roughly millimetres; Fall Distance is how far a drop falls before it fades.", MessageType.None);
+                    GUILayout.Space(2);
+                    EditorGUILayout.LabelField("Physics & Collision", EditorStyles.miniBoldLabel);
+                    DrawProp(ed, FindProperty("_Drip_Sway", p, false), "Sway / Wobble");
+                    DrawProp(ed, FindProperty("_Drip_BodyFollow", p, false), "Surface Slide (Body)");
+                    DrawProp(ed, FindProperty("_Drip_FloorCollide", p, false), "Floor Splat");
+                    EditorGUILayout.HelpBox("Sway adds surface-tension wobble and a breeze to falling drops (grows the further they fall). Surface Slide makes an attached drop run down ALONG the body before it detaches (a faked body collision). Floor Splat pins drops to the shared world floor and spreads them into a fading puddle; the floor height is the Goo \"Ground / Floor Height\" below (shared by both effects). Drops always fall under world gravity, so they already track movement; true inertial trailing would need a PhysBone, not a shader.", MessageType.None);
+                }
+                EditorGUI.indentLevel--;
+            }
             GUILayout.Space(10);
 
-            DrawProp(ed, FindProperty("_SSS_Str", p, false), "Volumetric SSS Strength");
-            DrawProp(ed, FindProperty("_SSS_Dist", p, false), "Terminator Bleed (Wrap)");
-            DrawProp(ed, FindProperty("_SSS_Power", p, false), "Backscatter Focus");
-            GUILayout.Space(10);
-
-            EditorGUILayout.LabelField("Anisotropic Specular (Latex Stretch)", EditorStyles.boldLabel);
-            DrawProp(ed, FindProperty("_Aniso", p, false), "Anisotropy (-1 = vertical, +1 = horizontal)");
-            DrawProp(ed, FindProperty("_AnisoRot", p, false), "Anisotropy Rotation (deg)");
-            GUILayout.Space(10);
-
-            EditorGUILayout.LabelField("Transmission (Thin-Part Back-Light)", EditorStyles.boldLabel);
-            DrawProp(ed, FindProperty("_Trans_Str", p, false), "Transmission Strength");
-            DrawProp(ed, FindProperty("_Trans_Dist", p, false), "Absorption Distance");
-            DrawProp(ed, FindProperty("_Trans_Power", p, false), "Back-Light Falloff");
-            GUILayout.Space(10);
-
-            EditorGUILayout.LabelField("Energy Conservation", EditorStyles.boldLabel);
-            DrawProp(ed, FindProperty("_UseMultiScatter", p, false), "Multi-Scatter Compensation");
+            // Goo - melting/runny vertex sag.
+            EditorGUILayout.LabelField("Goo (Melting Sag)", EditorStyles.boldLabel);
+            var _UseGo = FindProperty("_UseGoo", p, false);
+            DrawProp(ed, _UseGo, "Enable Goo");
+            if (_UseGo != null && _UseGo.floatValue > 0.5f)
+            {
+                EditorGUI.indentLevel++;
+                DrawProp(ed, FindProperty("_GooMask", p, false), "Goo Mask (B&W)");
+                DrawProp(ed, FindProperty("_GooMaskCh", p, false), "Goo Mask Channel");
+                DrawProp(ed, FindProperty("_Goo_Strength", p, false), "Melt Amount");
+                DrawProp(ed, FindProperty("_Goo_Reach", p, false), "Stretch Distance");
+                DrawProp(ed, FindProperty("_Goo_Variation", p, false), "Strand Variation");
+                DrawProp(ed, FindProperty("_Goo_Noise", p, false), "Tendril Scale");
+                DrawProp(ed, FindProperty("_Goo_Speed", p, false), "Flow Speed");
+                DrawProp(ed, FindProperty("_Goo_Droop", p, false), "Underside Bias");
+                GUILayout.Space(2);
+                DrawProp(ed, FindProperty("_Goo_ToGround", p, false), "Melt To Ground");
+                DrawProp(ed, FindProperty("_Goo_GroundY", p, false), "Ground / Floor Height (World Y)");
+                EditorGUILayout.HelpBox("Gravity-aligned vertex melt that mimics runny/melting latex. Runs in the displacement stage and benefits from tessellation on the base shader (more verts = smoother strands). Melt Amount is the master intensity; Stretch Distance dramatically extends how far it sags (world units); Strand Variation adds procedural FBM noise so tendrils range from uniform (0) to wildly uneven (1). Melt To Ground pulls the goo down toward the world ground plane (set Ground / Floor Height to your world floor's Y, usually 0) so strands can reach the floor regardless of avatar height. Note: extreme stretch can be frustum-culled when the body is off-screen unless the mesh bounds (or an Anchor Override) are expanded.", MessageType.None);
+                GUILayout.Space(4);
+                EditorGUILayout.LabelField("Physics & Collision", EditorStyles.miniBoldLabel);
+                DrawProp(ed, FindProperty("_Goo_Sway", p, false), "Sway Amount");
+                DrawProp(ed, FindProperty("_Goo_SwaySpeed", p, false), "Sway Speed");
+                DrawProp(ed, FindProperty("_Goo_BodyFollow", p, false), "Surface Follow (Body Collide)");
+                DrawProp(ed, FindProperty("_Goo_FloorCollide", p, false), "Floor Collision");
+                DrawProp(ed, FindProperty("_Goo_Pool", p, false), "Floor Pooling");
+                EditorGUILayout.HelpBox("Sway gives the tendrils a gentle pendulum swing (Sway Speed sets the rate), staggered per strand so they don't move in lock-step. Surface Follow flows goo ALONG the body instead of sinking straight through it (a faked body collision; 1 = full surface flow). Floor Collision clamps the melt to the Ground / Floor Height above, and Floor Pooling spreads landed strands sideways into a puddle. The goo re-aligns to gravity and the body surface every frame, so it already tracks posing and locomotion; true inertial lag/overshoot and per-bone body collision are not possible in a shader - drive a PhysBone chain over the goo region for that.", MessageType.None);
+                EditorGUI.indentLevel--;
+            }
             GUILayout.Space(10);
 
             EditorGUILayout.LabelField("Outline (Backface Extrusion)", EditorStyles.boldLabel);
@@ -1174,7 +1372,7 @@ public class VixenWearEditor : ShaderGUI
                     DrawProp(ed, _UVU, "Enable VU Meter Segment");
                     if (_UVU != null && _UVU.floatValue > 0.5f)
                     {
-                        DrawProp(ed, FindProperty("_Cyber_VU_Band", p, false), "VU Meter Band");
+                        DrawProp(ed, FindProperty("_Cyber_VU_Style", p, false), "VU Meter Style (Console / Bar)");
                         DrawProp(ed, FindProperty("_Cyber_VU_Str", p, false), "VU Meter Intensity");
                         DrawProp(ed, FindProperty("_Cyber_VU_Transform", p, false), "VU Meter Placement (X,Y,Scl,Rot)");
                     }
@@ -1195,6 +1393,7 @@ public class VixenWearEditor : ShaderGUI
                     DrawProp(ed, _UWave, "Enable Waveform Line");
                     if (_UWave != null && _UWave.floatValue > 0.5f)
                     {
+                        DrawProp(ed, FindProperty("_Cyber_Wave_Band", p, false), "Waveform Band");
                         DrawProp(ed, FindProperty("_Cyber_Wave_Str", p, false), "Waveform Intensity");
                         DrawProp(ed, FindProperty("_Cyber_Wave_Transform", p, false), "Waveform Placement (X,Y,Scl,Rot)");
                     }
@@ -1204,6 +1403,7 @@ public class VixenWearEditor : ShaderGUI
                     DrawProp(ed, _UDMX, "Enable DMX Grid Segment");
                     if (_UDMX != null && _UDMX.floatValue > 0.5f)
                     {
+                        DrawProp(ed, FindProperty("_Cyber_DMX_Band", p, false), "DMX Grid Band");
                         DrawProp(ed, FindProperty("_Cyber_DMX_Str", p, false), "DMX Grid Intensity");
                         DrawProp(ed, FindProperty("_Cyber_DMX_Transform", p, false), "DMX Placement (X,Y,Scl,Rot)");
                     }
@@ -1213,8 +1413,19 @@ public class VixenWearEditor : ShaderGUI
                     DrawProp(ed, _UAuto, "Enable Autocorrelator Ring");
                     if (_UAuto != null && _UAuto.floatValue > 0.5f)
                     {
+                        DrawProp(ed, FindProperty("_Cyber_Auto_Band", p, false), "Autocorrelator Band");
                         DrawProp(ed, FindProperty("_Cyber_AutoCorr_Str", p, false), "Autocorrelator Intensity");
                         DrawProp(ed, FindProperty("_Cyber_Auto_Transform", p, false), "Autocorrelator Placement (X,Y,Scl,Rot)");
+
+                        EditorGUILayout.LabelField("Ring Effects (each toggle + its own reaction band)", EditorStyles.miniBoldLabel);
+                        DrawProp(ed, FindProperty("_Cyber_Auto_Shimmer", p, false), "Shimmer");
+                        DrawProp(ed, FindProperty("_Cyber_Auto_Shimmer_Band", p, false), "Shimmer Band");
+                        DrawProp(ed, FindProperty("_Cyber_Auto_Pop", p, false), "Pop");
+                        DrawProp(ed, FindProperty("_Cyber_Auto_Pop_Band", p, false), "Pop Band");
+                        DrawProp(ed, FindProperty("_Cyber_Auto_Sizzle", p, false), "Sizzle");
+                        DrawProp(ed, FindProperty("_Cyber_Auto_Sizzle_Band", p, false), "Sizzle Band");
+                        DrawProp(ed, FindProperty("_Cyber_Auto_Electrify", p, false), "Electrify");
+                        DrawProp(ed, FindProperty("_Cyber_Auto_Electrify_Band", p, false), "Electrify Band");
                     }
                     EditorGUI.indentLevel--;
                 }
@@ -1230,7 +1441,21 @@ public class VixenWearEditor : ShaderGUI
                     DrawProp(ed, FindProperty("_Vtx_Pump_Str", p, false), "Normal Inflate Distance");
                     GUILayout.Space(4);
                     DrawProp(ed, FindProperty("_Vtx_Fracture_Band", p, false), "Geometry Fracture Band");
-                    DrawProp(ed, FindProperty("_Vtx_Fracture_Str", p, false), "Shard Scatter Distance");
+                    DrawProp(ed, FindProperty("_Vtx_Fracture_Amount", p, false), "Fracture Amount (Hold/Animate)");
+                    DrawProp(ed, FindProperty("_Vtx_Fracture_Dist", p, false), "Shard Hover Distance");
+                    DrawProp(ed, FindProperty("_Vtx_Fracture_Spin", p, false), "Shard Tumble");
+                    DrawProp(ed, FindProperty("_Vtx_Fracture_Str", p, false), "Shard AudioLink Jitter");
+                    DrawProp(ed, FindProperty("_Vtx_Fracture_Spiral", p, false), "Shard Spiral");
+                    DrawProp(ed, FindProperty("_Vtx_Fracture_Lift", p, false), "Shard Lift (Up/Down, Animate)");
+                    DrawProp(ed, FindProperty("_Vtx_Fracture_Float", p, false), "Shard Float Drift");
+                    DrawProp(ed, FindProperty("_Vtx_Fracture_Trail", p, false), "Shard Trail Length");
+                    GUILayout.Space(4);
+                    DrawProp(ed, FindProperty("_Shard_ColorMod", p, false), "Shard Hue Shift");
+                    DrawProp(ed, FindProperty("_Shard_ColorMod_Speed", p, false), "Shard Hue Cycle Speed");
+                    var _UShardCC = FindProperty("_UseShardCC", p, false);
+                    DrawProp(ed, _UShardCC, "Shard AudioLink ColorChord");
+                    if (_UShardCC != null && _UShardCC.floatValue > 0.5f)
+                        DrawProp(ed, FindProperty("_Shard_CC_Str", p, false), "Shard ColorChord Blend");
                     GUILayout.Space(4);
                     DrawProp(ed, FindProperty("_Vtx_AutoCorr_Str", p, false), "Spherical Autocorrelator Ripple");
                     EditorGUI.indentLevel--;

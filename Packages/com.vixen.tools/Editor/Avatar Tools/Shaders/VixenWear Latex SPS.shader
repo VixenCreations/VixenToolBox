@@ -27,8 +27,17 @@ Shader "VixenWear/Latex Ultra SPS"
         [Toggle] _PBR_Met_Inv ("Invert Metallic", Float) = 0
         [Enum(R,0,G,1,B,2,A,3)] _PBR_Smooth_Ch ("Smoothness Channel", Float) = 3
         [Toggle] _PBR_Smooth_Inv ("Channel Stores Roughness (Invert)", Float) = 0
-        [Enum(R,0,G,1,B,2,A,3)] _PBR_AO_Ch ("AO Channel", Float) = 1
+        [Enum(R,0,G,1,B,2,A,3,None,4)] _PBR_AO_Ch ("AO Channel", Float) = 1
         [Enum(R,0,G,1,B,2,A,3)] _PBR_Height_Ch ("Height Channel", Float) = 2
+
+        // Poiyomi/Mochie packed-map masks - reflection mask dims environment/probe reflections, specular mask dims direct highlights. Channel defaults (B/A) match Mochie "Metallic Maps" packing (R:Met G:Smooth B:ReflMask A:SpecMask). Default off so existing materials are unchanged.
+        [Toggle] _UsePackedMasks ("Enable Reflection / Specular Masks", Float) = 0
+        [Enum(R,0,G,1,B,2,A,3)] _ReflMask_Ch ("Reflection Mask Channel", Float) = 2
+        [Toggle] _ReflMask_Inv ("Invert Reflection Mask", Float) = 0
+        _ReflMask_Str ("Reflection Mask Strength", Range(0,1)) = 1
+        [Enum(R,0,G,1,B,2,A,3)] _SpecMask_Ch ("Specular Mask Channel", Float) = 3
+        [Toggle] _SpecMask_Inv ("Invert Specular Mask", Float) = 0
+        _SpecMask_Str ("Specular Mask Strength", Range(0,1)) = 1
 
         _AO_Str ("AO Strength", Range(0,1)) = 1.0
         _Spec_Occ ("Specular Occlusion", Range(0,1)) = 1.0
@@ -63,6 +72,49 @@ Shader "VixenWear/Latex Ultra SPS"
         _Trans_Power ("Transmission Falloff", Range(0.1,10)) = 2.0
 
         [Toggle] _UseMultiScatter ("Multi-Scatter Energy Compensation", Float) = 1
+
+        // Polish layer master gate + B&W mask - scales the entire polish lighting layer (clearcoat, thin film, SSS, transmission, anisotropy, rim, multi-scatter) per-pixel. Toggle on + white mask preserves the historical look; runtime-gated (no keyword) so VRCFury can animate it.
+        [Toggle] _UsePolish ("Enable Polish Layer", Float) = 1
+        [NoScaleOffset] _PolishMask ("Polish Mask (B&W)", 2D) = "white" {}
+        [Enum(R,0,G,1,B,2,A,3)] _PolishMaskCh ("Polish Mask Channel", Float) = 0
+
+        // Drip - procedural vertical rivulets that mimic water running off the latex (per-pixel wet streaks). Own toggle so off = no cost.
+        [Toggle] _UseDrip ("Enable Drip (Water Run-Off)", Float) = 0
+        [NoScaleOffset] _DripMask ("Drip Mask (B&W)", 2D) = "white" {}
+        [Enum(R,0,G,1,B,2,A,3)] _DripMaskCh ("Drip Mask Channel", Float) = 0
+        _Drip_Density ("Drip Density (Columns)", Range(2, 200)) = 40
+        _Drip_Width ("Rivulet Thinness", Range(1, 300)) = 90
+        _Drip_Coverage ("Drip Coverage", Range(0, 1)) = 0.4
+        _Drip_Speed ("Drip Flow Speed", Range(0, 2)) = 0.25
+        _Drip_Strength ("Drip Run-Off Streak Strength", Range(0, 1)) = 0.7
+        _Drip_Normal ("Drip Normal Bump", Range(0, 1)) = 0.5
+
+        // Wet soak - global "just out of the shower/pool" wetness layered under the run-off rivulets above.
+        _Wet_Amount ("Wetness (Soaked)", Range(0, 1)) = 0.7
+        _Wet_Darken ("Wet Darkening", Range(0, 1)) = 0.6
+        _Wet_Smoothness ("Wet Smoothness", Range(0, 1)) = 0.95
+        _Wet_Sheen ("Wet Film Sheen", Range(0, 1)) = 0.5
+        _Wet_Flatten ("Wet Normal Flatten", Range(0, 1)) = 0.5
+
+        // Goo - gravity-aligned vertex sag that mimics melting/runny latex or wax. Runs in disp(); own toggle.
+        [Toggle] _UseGoo ("Enable Goo (Melting Sag)", Float) = 0
+        [NoScaleOffset] _GooMask ("Goo Mask (B&W)", 2D) = "white" {}
+        [Enum(R,0,G,1,B,2,A,3)] _GooMaskCh ("Goo Mask Channel", Float) = 0
+        _Goo_Strength ("Goo Sag Distance", Range(0, 1)) = 0.0
+        _Goo_Noise ("Goo Tendril Scale", Range(0.1, 20)) = 6.0
+        _Goo_Speed ("Goo Flow Speed", Range(0, 2)) = 0.3
+        _Goo_Droop ("Goo Underside Bias", Range(0, 1)) = 0.6
+        _Goo_Reach ("Goo Stretch Distance", Range(0, 10)) = 0.3
+        _Goo_Variation ("Goo Strand Variation", Range(0, 1)) = 0.7
+        _Goo_ToGround ("Goo Melt To Ground", Range(0, 1)) = 0
+        _Goo_GroundY ("Goo Ground Height (World Y)", Float) = 0
+
+        // Goo physics + collision - ambient pendulum sway, surface-follow body collision, and a floor clamp with pooling. All default off so existing materials are unchanged; _Goo_GroundY is the shared world floor.
+        _Goo_Sway ("Goo Sway Amount", Range(0, 1)) = 0
+        _Goo_SwaySpeed ("Goo Sway Speed", Range(0, 3)) = 1.0
+        _Goo_BodyFollow ("Goo Surface Follow (Body)", Range(0, 1)) = 0
+        [Toggle] _Goo_FloorCollide ("Goo Floor Collision", Float) = 0
+        _Goo_Pool ("Goo Floor Pooling", Range(0, 1)) = 0.3
 
         [Toggle(_DETAIL_NORMAL)] _UseDetailNormal ("Enable Micro Detail", Float) = 0
         [NoScaleOffset][Normal] _DetailNormalMap ("Micro Detail Map", 2D) = "bump" {}
@@ -136,12 +188,11 @@ Shader "VixenWear/Latex Ultra SPS"
         [Toggle] _UseChronoFX ("Enable Chronotensity FX", Float) = 0
 
         [Toggle] _UseCyber ("Enable Cybernetic Overlays", Float) = 0
-        [NoScaleOffset] _CyberMask ("Cyber Mask (B&W Window)", 2D) = "white" {}
+        [NoScaleOffset] _CyberMask ("Cyber Mask (B&W Window)", 2D) = "black" {}
         _Cyber_Hover ("HUD Hover Height (Float Off Body)", Range(0, 0.15)) = 0.03
         _Cyber_Hover_Bob ("HUD Hover Bob (Subtle Drift)", Range(0, 1)) = 0.25
 
         [Toggle] _UseCyberVU ("Enable VU Meter", Float) = 0
-        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Cyber_VU_Band ("VU Band", Float) = 0
         _Cyber_VU_Str ("VU Meter Intensity", Range(0,5)) = 1.0
         [VectorLabel(X Offset, Y Offset, Scale, Rotation)] _Cyber_VU_Transform ("VU Transform", Vector) = (0,0,1,0)
 
@@ -152,16 +203,28 @@ Shader "VixenWear/Latex Ultra SPS"
         [VectorLabel(X Offset, Y Offset, Scale, Rotation)] _Cyber_CC_Transform ("Spectrum Transform", Vector) = (0,0,1,0)
 
         [Toggle] _UseCyberWave ("Enable Waveform", Float) = 0
+        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Cyber_Wave_Band ("Waveform Band", Float) = 0
         _Cyber_Wave_Str ("Waveform Intensity", Range(0,5)) = 1.0
         [VectorLabel(X Offset, Y Offset, Scale, Rotation)] _Cyber_Wave_Transform ("Waveform Transform", Vector) = (0,0,1,0)
 
         [Toggle] _UseCyberDMX ("Enable DMX Grid Readout", Float) = 0
+        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Cyber_DMX_Band ("DMX Grid Band", Float) = 0
         _Cyber_DMX_Str ("DMX Grid Intensity", Range(0,5)) = 1.0
         [VectorLabel(X Offset, Y Offset, Scale, Rotation)] _Cyber_DMX_Transform ("DMX Grid Transform", Vector) = (0,0,1,0)
 
         [Toggle] _UseCyberAuto ("Enable Autocorrelator Ring", Float) = 0
+        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Cyber_Auto_Band ("Autocorrelator Band", Float) = 0
         _Cyber_AutoCorr_Str ("Autocorrelator Intensity", Range(0,5)) = 1.0
         [VectorLabel(X Offset, Y Offset, Scale, Rotation)] _Cyber_Auto_Transform ("Autocorrelator Transform", Vector) = (0,0,1,0)
+        // Per-effect reactors for the Autocorrelator HUD ring (the geometry HUD pass ships on the non-SPS shader; these keep the inspector and material copy/paste parallel between variants).
+        [Toggle] _Cyber_Auto_Shimmer ("AC Shimmer Effect", Float) = 1
+        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Cyber_Auto_Shimmer_Band ("AC Shimmer Band", Float) = 3
+        [Toggle] _Cyber_Auto_Pop ("AC Pop Effect", Float) = 1
+        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Cyber_Auto_Pop_Band ("AC Pop Band", Float) = 0
+        [Toggle] _Cyber_Auto_Sizzle ("AC Sizzle Effect", Float) = 1
+        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Cyber_Auto_Sizzle_Band ("AC Sizzle Band", Float) = 2
+        [Toggle] _Cyber_Auto_Electrify ("AC Electrify Effect", Float) = 1
+        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Cyber_Auto_Electrify_Band ("AC Electrify Band", Float) = 1
 
         [Toggle] _UseVtxKinetic ("Enable Vertex Displacement", Float) = 0
         [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Vtx_Pump_Band ("Vertex Pump Band", Float) = 0
@@ -169,6 +232,9 @@ Shader "VixenWear/Latex Ultra SPS"
 
         [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Vtx_Fracture_Band ("Vertex Fracture Band", Float) = 3
         _Vtx_Fracture_Str ("Vertex Fracture Scatter", Range(0, 5)) = 0.0
+        _Vtx_Fracture_Amount ("Vertex Fracture Amount (Hold/Animate)", Range(0,1)) = 0.0
+        _Vtx_Fracture_Dist ("Vertex Fracture Hover Distance", Range(0,2)) = 0.35
+        _Vtx_Fracture_Spin ("Vertex Fracture Tumble", Range(0,1)) = 0.6
 
         _Vtx_AutoCorr_Str ("Vertex Autocorrelator Ripple", Range(0,5)) = 0.0
 
@@ -419,6 +485,9 @@ Shader "VixenWear/Latex Ultra SPS"
             half  Anisotropy;
             half  AnisoRotation;
             half  Transmission;
+            half  PolishMask;
+            half  ReflectionMask;
+            half  SpecularMask;
         };
 
         struct Input
@@ -431,7 +500,12 @@ Shader "VixenWear/Latex Ultra SPS"
             INTERNAL_DATA
         };
 
-        sampler2D _MainTex, _MetallicGlossMap, _BumpMap, _DetailNormalMap, _EmissionMap, _EmissionMap2, _RegionMask, _MatCap, _MatCapMask, _MatCap2, _MatCap2_Mask, _CyberMask;
+        // _MainTex uses an explicit texture + sampler so the fragment-stage B&W masks (_PolishMask, _DripMask, _CyberMask) can borrow its sampler instead of each consuming one of the 16 ps_5_0 sampler registers. A borrowed sampler only resolves in a stage where its donor texture is actually sampled, so _GooMask keeps its own combined sampler: it is read in the vertex/displacement stage (and the auto-generated shadow caster), where _MainTex is not sampled. Net sampler count is unchanged versus before these effects: _CyberMask gives up its register, _GooMask takes one.
+        UNITY_DECLARE_TEX2D(_MainTex);
+        UNITY_DECLARE_TEX2D_NOSAMPLER(_PolishMask);
+        UNITY_DECLARE_TEX2D_NOSAMPLER(_DripMask);
+        UNITY_DECLARE_TEX2D_NOSAMPLER(_CyberMask);
+        sampler2D _MetallicGlossMap, _BumpMap, _DetailNormalMap, _EmissionMap, _EmissionMap2, _RegionMask, _MatCap, _MatCapMask, _MatCap2, _MatCap2_Mask, _GooMask;
         fixed4 _Color, _EmissionColor, _EmissionColor2, _CC_Tint;
         fixed4 _Region_R_Tint, _Region_G_Tint, _Region_B_Tint;
         fixed4 _MatCap_Tint, _MatCap2_Tint;
@@ -441,6 +515,7 @@ Shader "VixenWear/Latex Ultra SPS"
         float _Parallax, _Disp_Str, _Emis_Exp;
         // Poiyomi compat: PBR mask channel selectors + invert toggles.
         float _PBR_Met_Ch, _PBR_Met_Inv, _PBR_Smooth_Ch, _PBR_Smooth_Inv, _PBR_AO_Ch, _PBR_Height_Ch;
+        float _UsePackedMasks, _ReflMask_Ch, _ReflMask_Inv, _ReflMask_Str, _SpecMask_Ch, _SpecMask_Inv, _SpecMask_Str;
         // Poiyomi compat: secondary emission layer + multi-region color mask.
         float _UseEmission2, _Emis2_MaskCh, _AL_Band_Emis2, _AL_Emis2_Mod;
         float _UseRegionMask, _Region_R_Emis, _Region_G_Emis, _Region_B_Emis;
@@ -450,6 +525,12 @@ Shader "VixenWear/Latex Ultra SPS"
         float _Aniso, _AnisoRot;
         float _Trans_Str, _Trans_Dist, _Trans_Power;
         float _UseMultiScatter;
+        // Polish master gate + B&W mask, plus the drip (surface) and goo (vertex) latex effects.
+        float _UsePolish, _PolishMaskCh;
+        float _UseDrip, _DripMaskCh, _Drip_Density, _Drip_Width, _Drip_Coverage, _Drip_Speed, _Drip_Strength, _Drip_Normal;
+        float _Wet_Amount, _Wet_Darken, _Wet_Smoothness, _Wet_Sheen, _Wet_Flatten;
+        float _UseGoo, _GooMaskCh, _Goo_Strength, _Goo_Noise, _Goo_Speed, _Goo_Droop, _Goo_Reach, _Goo_Variation, _Goo_ToGround, _Goo_GroundY;
+        float _Goo_Sway, _Goo_SwaySpeed, _Goo_BodyFollow, _Goo_FloorCollide, _Goo_Pool;
         float _Det_Strength, _Det_UV_Tiling;
         float _MatCap_Int, _MatCap_Lit, _MatCap_MaskCh;
         float _UseMatCap2, _MatCap2_MaskCh, _MatCap2_Int, _MatCap2_Rot, _MatCap2_Blend;
@@ -464,13 +545,14 @@ Shader "VixenWear/Latex Ultra SPS"
 
         float _UseVtxKinetic, _Vtx_Pump_Band, _Vtx_Pump_Str;
         float _Vtx_Fracture_Band, _Vtx_Fracture_Str, _Vtx_AutoCorr_Str;
+        float _Vtx_Fracture_Amount, _Vtx_Fracture_Dist, _Vtx_Fracture_Spin;
 
         float _UseCyber, _Cyber_AutoCorr_Str, _Cyber_Hover, _Cyber_Hover_Bob;
-        float _UseCyberVU, _Cyber_VU_Band, _Cyber_VU_Str; float4 _Cyber_VU_Transform;
+        float _UseCyberVU, _Cyber_VU_Str; float4 _Cyber_VU_Transform;
         float _UseCyberCC, _Cyber_CC_Band, _Cyber_CC_Str, _Cyber_CC_Density; float4 _Cyber_CC_Transform;
-        float _UseCyberWave, _Cyber_Wave_Str; float4 _Cyber_Wave_Transform;
-        float _UseCyberDMX, _Cyber_DMX_Str; float4 _Cyber_DMX_Transform;
-        float _UseCyberAuto; float4 _Cyber_Auto_Transform;
+        float _UseCyberWave, _Cyber_Wave_Band, _Cyber_Wave_Str; float4 _Cyber_Wave_Transform;
+        float _UseCyberDMX, _Cyber_DMX_Band, _Cyber_DMX_Str; float4 _Cyber_DMX_Transform;
+        float _UseCyberAuto, _Cyber_Auto_Band; float4 _Cyber_Auto_Transform;
 
         float _UseAudioLink, _AL_ColorMode, _UseMediaState, _AL_Waveform_Mod, _AL_AutoCorr_Mod;
         float _AL_Strip_Pos, _AL_Chrono_Idx, _UseChronoFX;
@@ -563,6 +645,28 @@ Shader "VixenWear/Latex Ultra SPS"
                  :              packed.a;
         }
 
+        // Hash + smooth 3D value noise (0..1) driving the Goo melt's procedural per-strand variation.
+        float gooHash3(float3 p) { return frac(sin(dot(p, float3(12.9898, 78.233, 37.719))) * 43758.5453); }
+        float gooNoise3(float3 p)
+        {
+            float3 i = floor(p);
+            float3 f = frac(p);
+            f = f * f * (3.0 - 2.0 * f);
+            float n000 = gooHash3(i + float3(0, 0, 0));
+            float n100 = gooHash3(i + float3(1, 0, 0));
+            float n010 = gooHash3(i + float3(0, 1, 0));
+            float n110 = gooHash3(i + float3(1, 1, 0));
+            float n001 = gooHash3(i + float3(0, 0, 1));
+            float n101 = gooHash3(i + float3(1, 0, 1));
+            float n011 = gooHash3(i + float3(0, 1, 1));
+            float n111 = gooHash3(i + float3(1, 1, 1));
+            float nx00 = lerp(n000, n100, f.x);
+            float nx10 = lerp(n010, n110, f.x);
+            float nx01 = lerp(n001, n101, f.x);
+            float nx11 = lerp(n011, n111, f.x);
+            return lerp(lerp(nx00, nx10, f.y), lerp(nx01, nx11, f.y), f.z);
+        }
+
         // Returns true if AudioLink should be considered active for this frame.
         bool AL_Active()
         {
@@ -606,7 +710,7 @@ Shader "VixenWear/Latex Ultra SPS"
                 int colorMode = (int)_AL_ColorMode;
                 // CCCOLORS index 0 is always black, so band → note is offset by +1.
                 if (colorMode == 1)
-                    al_color = AudioLinkData(ALPASS_CCCOLORS + int2(((int)_AL_Band_Emission % 11) + 1, 0));
+                    al_color = AudioLinkData(ALPASS_CCCOLORS + int2((int)((uint)_AL_Band_Emission % 11u) + 1, 0));
                 // Theme 0..3 live at uint2(0..3, 23), not CCCOLORS row+1.
                 else if (colorMode >= 2 && colorMode <= 5)
                     al_color = AudioLinkData(ALPASS_THEME_COLOR0 + int2(colorMode - 2, 0));
@@ -615,7 +719,7 @@ Shader "VixenWear/Latex Ultra SPS"
 
                 float wavePhase = frac(uv.y * 2.0 - _Time.y * 0.2);
                 raw_waveform = AudioLinkData(ALPASS_WAVEFORM + int2((int)(wavePhase * 128.0), 0)).r - 0.5;
-                autoCorr = AudioLinkData(ALPASS_AUTOCORRELATOR + int2((int)(frac(uv.x) * 128.0), 0)).r;
+                autoCorr = AudioLinkData(ALPASS_AUTOCORRELATOR + int2((int)(frac(uv.x) * 128.0), 0)).r * 0.007;
             }
 
             // Respect media state: when enabled, mute effects if media is NOT playing
@@ -672,39 +776,76 @@ Shader "VixenWear/Latex Ultra SPS"
                     v.vertex.xyz += v.normal * (ac - 0.6) * _Vtx_AutoCorr_Str * 0.1;
                 }
 
-                // Vertex fracture: scatter + pivot+rotate. Driven strictly by AL band amplitude - no manual fallback so the avatar isn't shattered in silent worlds.
-                if (_Vtx_Fracture_Str > 0.0001)
+                // Vertex fracture is now driven by _Vtx_Fracture_Amount; the old in-place vertex scatter is removed. SPS has no geometry shard pass, so the suit dissolves via the main-pass clip without flying shards.
+            }
+
+            // GOO - melting/runny latex. Gravity-aligned, masked, and procedurally varied so it forms uneven runny tendrils. Range is dramatically extendable via _Goo_Reach, and it can optionally melt all the way down to the world ground plane (_Goo_ToGround). Runs in disp(); own toggle, independent of the AL kinetic gate.
+            if (_UseGoo > 0.5 && _Goo_Strength > 0.0001)
+            {
+                float gooMask = ChannelPick(tex2Dlod(_GooMask, float4(uv, 0, 0)), _GooMaskCh);
+                if (gooMask > 0.001)
                 {
-                    int fracBand = (int)_Vtx_Fracture_Band;
-                    float fracAmp = (fracBand == 0) ? amps.x : (fracBand == 1) ? amps.y : (fracBand == 2) ? amps.z : amps.w;
-                    fracAmp *= _Vtx_Fracture_Str;
+                    // World position (for melt-to-ground) and world normal (downward-facing surfaces melt more).
+                    float3 gooWorldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+                    float3 worldN = UnityObjectToWorldNormal(v.normal);
+                    float facingDown = saturate(dot(worldN, float3(0, -1, 0)));
+                    float faceWeight = lerp(1.0, facingDown, saturate(_Goo_Droop));
 
-                    if (fracAmp > 0.0001)
+                    // PROCEDURAL GENERATION - coarse per-strand identity (coherent tendrils) plus two octaves of value noise for organic, uneven melting. _Goo_Variation blends from a uniform melt (0) to wildly varying strand lengths (1).
+                    float3 gooNP = v.vertex.xyz * _Goo_Noise;
+                    float gooFbm = gooNoise3(gooNP) * 0.65 + gooNoise3(gooNP * 2.7 + 13.1) * 0.35;
+                    float3 gooCell = floor(v.vertex.xyz * _Goo_Noise * 0.5);
+                    float strandHash = gooHash3(gooCell);
+                    float procReach = saturate(gooFbm * 0.6 + strandHash * 0.6);
+                    float strandReach = lerp(1.0, procReach * 1.6, saturate(_Goo_Variation));
+
+                    // Slow time wobble so the melt stays alive and runny; staggered per strand.
+                    float wobble = 0.75 + 0.25 * sin(_Time.y * _Goo_Speed * 6.2831 + strandHash * 6.2831);
+
+                    // Common melt weight (0..~1.5); some strands reach further than others.
+                    float meltWeight = gooMask * faceWeight * strandReach * wobble * saturate(_Goo_Strength);
+
+                    // DRAMATICALLY EXTENDED RANGE. Distance mode stretches down a large, settable distance (_Goo_Reach world units). Ground mode pulls each vertex down toward the world ground plane (Y = _Goo_GroundY) so strands reach the floor regardless of avatar height. Computed in world space, then converted to object space so non-uniform scale is handled.
+                    float distDown   = _Goo_Reach * meltWeight;
+                    float groundDown = max(gooWorldPos.y - _Goo_GroundY, 0.0) * saturate(meltWeight);
+                    float down = lerp(distDown, groundDown, saturate(_Goo_ToGround));
+
+                    // PHYSICS - lateral pendulum sway, growing with how far the strand has melted so the tip swings most, like a weighted strand. Staggered per strand so tendrils never move in lock-step.
+                    float3 lateral = 0;
+                    float swayPh = _Time.y * _Goo_SwaySpeed * 2.0 + strandHash * 6.2831;
+                    lateral.x = sin(swayPh) * _Goo_Sway;
+                    lateral.z = sin(swayPh * 0.8 + 1.7) * _Goo_Sway;
+                    lateral *= down * 0.4;
+
+                    float3 meltWorld = float3(lateral.x, -down, lateral.z);
+
+                    // BODY COLLISION (best-effort) - project the melt onto the surface tangent plane so goo flows ALONG the body instead of tunnelling straight through it (1 = pure surface flow, 0 = straight gravity).
+                    if (_Goo_BodyFollow > 0.0001)
                     {
-                        // Snap to a 3D grid so same-chunk verts hash identically and move together under tessellation.
-                        float3 cell = floor(v.vertex.xyz * 25.0); // 25.0 controls physical shard size
-                        float hash = frac(sin(dot(cell, float3(12.9898,78.233,37.719))) * 43758.5453);
-
-                        float3 randDir = normalize(float3(frac(hash * 1.0) * 2.0 - 1.0, frac(hash * 1.37) * 2.0 - 1.0, frac(hash * 3.11) * 2.0 - 1.0));
-                        float rotSeed = frac(hash * 7.13);
-
-                        float scatter = fracAmp * 0.06;
-                        float3 pivotOffset = v.normal * (0.02 + fracAmp * 0.02);
-                        float3 pivot = v.vertex.xyz - pivotOffset;
-
-                        // rotation around random axis (Rodrigues)
-                        float angle = rotSeed * fracAmp * 6.2831853;
-                        float s = sin(angle), c = cos(angle);
-                        float3 axis = normalize(randDir + 0.0001);
-                        float3 rel = v.vertex.xyz - pivot;
-                        float3 relRot = rel * c + cross(axis, rel) * s + axis * dot(axis, rel) * (1.0 - c);
-                        v.vertex.xyz = pivot + relRot;
-
-                        // scatter and subtle scale
-                        v.vertex.xyz += randDir * scatter;
-                        float scale = 1.0 + fracAmp * 0.08;
-                        v.vertex.xyz = pivot + (v.vertex.xyz - pivot) * scale;
+                        float3 tangentFlow = meltWorld - worldN * dot(meltWorld, worldN);
+                        float lenM = length(meltWorld);
+                        float tfl = length(tangentFlow);
+                        tangentFlow = (tfl > 1e-5) ? (tangentFlow / tfl * lenM) : meltWorld;
+                        meltWorld = lerp(meltWorld, tangentFlow, saturate(_Goo_BodyFollow));
                     }
+
+                    // FLOOR COLLISION - clamp the melted world position to the floor plane (_Goo_GroundY) and splay sideways into a shallow pool where it lands.
+                    float3 meltedWP = gooWorldPos + meltWorld;
+                    if (_Goo_FloorCollide > 0.5)
+                    {
+                        float below = _Goo_GroundY - meltedWP.y;
+                        if (below > 0.0)
+                        {
+                            meltedWP.y = _Goo_GroundY;
+                            float2 splay = float2(strandHash - 0.5, gooHash3(gooCell + 7.3) - 0.5);
+                            float sl = length(splay);
+                            splay = (sl > 1e-5) ? splay / sl : float2(1, 0);
+                            meltedWP.xz += splay * below * _Goo_Pool;
+                        }
+                    }
+
+                    // Back to object space (handles non-uniform scale).
+                    v.vertex.xyz += mul((float3x3)unity_WorldToObject, meltedWP - gooWorldPos);
                 }
             }
 
@@ -715,34 +856,42 @@ Shader "VixenWear/Latex Ultra SPS"
         // PBR HELPERS
         float2 ParallaxRaymarching(float2 uv, float3 viewDirTangent, float parallaxDepth)
         {
+            // Derivatives are taken up front in uniform control flow so the tex2Dgrad calls inside the dynamic loop stay valid, and the function uses a single return path so FXC can prove every local is initialized (silences the "potentially uninitialized variable" warning in the shadow caster).
+            float2 dx = ddx(uv);
+            float2 dy = ddy(uv);
+            float2 result = uv;
+
             // Early-out when depth ~= 0 - otherwise the loop below re-samples the same texel up to 50 times (stepUVOffset collapses to zero) and exits only when the heightmap value rises above the descending layer height, burning ~35 tex2Dgrad samples per pixel on any non-white surface map.
-            [branch] if (parallaxDepth < 1e-4) return uv;
-            float parallaxLimit = -length(viewDirTangent.xy) / max(viewDirTangent.z, 0.001);
-            parallaxLimit *= parallaxDepth;
-            float2 vOffsetDir = normalize(viewDirTangent.xy);
-            float2 vMaxOffset = vOffsetDir * parallaxLimit;
-            int numSteps = (int)lerp(48.0, 8.0, max(viewDirTangent.z, 0.0));
-            float stepSize = 1.0 / (float)numSteps;
-            float2 dx = ddx(uv); float2 dy = ddy(uv);
-
-            float currentLayerHeight = 1.0; float2 currentUVOffset = 0.0;
-            float2 stepUVOffset = vMaxOffset * stepSize;
-            float currentMapHeight = ChannelPick(tex2Dgrad(_MetallicGlossMap, uv, dx, dy), _PBR_Height_Ch);
-
-            UNITY_LOOP
-            for(int i = 0; i < 50; i++)
+            [branch] if (parallaxDepth >= 1e-4)
             {
-                if (currentMapHeight >= currentLayerHeight) break;
-                currentLayerHeight -= stepSize;
-                currentUVOffset += stepUVOffset;
-                currentMapHeight = ChannelPick(tex2Dgrad(_MetallicGlossMap, uv + currentUVOffset, dx, dy), _PBR_Height_Ch);
-            }
+                float parallaxLimit = -length(viewDirTangent.xy) / max(viewDirTangent.z, 0.001);
+                parallaxLimit *= parallaxDepth;
+                float2 vOffsetDir = normalize(viewDirTangent.xy);
+                float2 vMaxOffset = vOffsetDir * parallaxLimit;
+                int numSteps = (int)lerp(48.0, 8.0, max(viewDirTangent.z, 0.0));
+                float stepSize = 1.0 / (float)numSteps;
 
-            float prevLayerHeight = currentLayerHeight + stepSize;
-            float prevMapHeight = ChannelPick(tex2Dgrad(_MetallicGlossMap, uv + currentUVOffset - stepUVOffset, dx, dy), _PBR_Height_Ch);
-            float weight = (currentLayerHeight - currentMapHeight) /
-                           max((currentLayerHeight - currentMapHeight) + (prevMapHeight - prevLayerHeight), 0.0001);
-            return uv + (currentUVOffset - stepUVOffset * weight);
+                float currentLayerHeight = 1.0;
+                float2 currentUVOffset = 0.0;
+                float2 stepUVOffset = vMaxOffset * stepSize;
+                float currentMapHeight = ChannelPick(tex2Dgrad(_MetallicGlossMap, uv, dx, dy), _PBR_Height_Ch);
+
+                UNITY_LOOP
+                for(int i = 0; i < 50; i++)
+                {
+                    if (currentMapHeight >= currentLayerHeight) break;
+                    currentLayerHeight -= stepSize;
+                    currentUVOffset += stepUVOffset;
+                    currentMapHeight = ChannelPick(tex2Dgrad(_MetallicGlossMap, uv + currentUVOffset, dx, dy), _PBR_Height_Ch);
+                }
+
+                float prevLayerHeight = currentLayerHeight + stepSize;
+                float prevMapHeight = ChannelPick(tex2Dgrad(_MetallicGlossMap, uv + currentUVOffset - stepUVOffset, dx, dy), _PBR_Height_Ch);
+                float weight = (currentLayerHeight - currentMapHeight) /
+                               max((currentLayerHeight - currentMapHeight) + (prevMapHeight - prevLayerHeight), 0.0001);
+                result = uv + (currentUVOffset - stepUVOffset * weight);
+            }
+            return result;
         }
 
         inline half HDRPSpecularOcclusion(half NdotV, half AO, half roughness)
@@ -863,6 +1012,13 @@ Shader "VixenWear/Latex Ultra SPS"
 
             half rawAO = s.Occlusion;
 
+            // Polish layer master gate + per-pixel B&W mask. polish=0 collapses the whole polish layer to a flat GGX base: clearcoat off (so baseEnergy returns to 1), thin film neutral, no transmission, isotropic spec. Clearcoat/film/transmission/aniso scale here; SSS, rim, and multi-scatter pick it up below.
+            half polish = saturate(s.PolishMask);
+            s.ClearcoatStrength *= polish;
+            s.ThinFilmStrength  *= polish;
+            s.Transmission      *= polish;
+            s.Anisotropy        *= polish;
+
             // Geometric specular AA: roughens normals based on screen-space variance.
             half aBase   = GeometricSpecAA(N,  s.BaseRoughness, s.SpecAA);
             half ccRough = max(1.0 - s.ClearcoatSmoothness, 0.0089);
@@ -956,7 +1112,7 @@ Shader "VixenWear/Latex Ultra SPS"
             // SSS - wrap + back-scatter
             float wrap = saturate((NdotL + _SSS_Dist) / max(1e-5, 1.0 + _SSS_Dist));
             float back = pow(saturate(dot(V, -L)), _SSS_Power);
-            float sssTerm = (wrap * 0.6 + back * 0.4) * _SSS_Str;
+            float sssTerm = (wrap * 0.6 + back * 0.4) * _SSS_Str * polish;
             half3 absorption = 1.0 - diffColor;
             half3 sssProfile = exp2(-s.Thickness * absorption * 4.0);
             half3 sssColor = diffColor * light.color * sssTerm * sssProfile * s.Thickness;
@@ -975,7 +1131,7 @@ Shader "VixenWear/Latex Ultra SPS"
 
             // Rim - fake atmospheric edge
             half rimExponent = lerp(30.0, 0.1, saturate(_Rim_Power / 10.0));
-            half rim = pow(saturate(1.0 - NcV), rimExponent) * _Rim_Str *
+            half rim = pow(saturate(1.0 - NcV), rimExponent) * _Rim_Str * polish *
                        saturate(_Rim_Power * 100.0);
             half3 rimColor = rim * diffColor * (gi.diffuse + 0.1);
 
@@ -987,7 +1143,7 @@ Shader "VixenWear/Latex Ultra SPS"
 
             // Multi-scatter compensation (Filament). Skipped when toggle off.
             half3 baseMS = 1.0;
-            if (_UseMultiScatter > 0.5)
+            if (_UseMultiScatter > 0.5 && polish > 0.001)
             {
                 baseMS = EnergyCompensation(specColor, dfg_base);
                 baseSpecular *= baseMS;
@@ -999,18 +1155,22 @@ Shader "VixenWear/Latex Ultra SPS"
             // Indirect clearcoat specular (uses its own roughness-mip env color).
             half3 indirectCCSpec = clearcoatEnv * envBRDF_cc * thinFilmColor * ccSpecOcc;
 
+            // Poiyomi/Mochie packed-map masks - specular mask dims direct light highlights, reflection mask dims environment/probe reflections (incl. clearcoat env, Light Volume, and LTCGI specular). Both are 1.0 (no effect) unless _UsePackedMasks is on.
+            half specMask = s.SpecularMask;
+            half reflMask = s.ReflectionMask;
+
             // Combine
             half3 finalColor =
                 gi.diffuse * diffColor * baseEnergy * rawAO +           // indirect diffuse (Poiyomi-realistic: raw scalar AO, no multi-bounce)
                 baseDiffuse +                                            // direct diffuse (Burley)
                 sssColor +
                 transmission +
-                baseSpecular +
-                ccSpecular +
-                indirectBaseSpec +
-                indirectCCSpec +
-                s.LVSpec * baseEnergy * baseSpecOcc +
-                s.LVCCSpec * s.ClearcoatStrength * thinFilmColor * ccSpecOcc +
+                baseSpecular * specMask +
+                ccSpecular * specMask +
+                indirectBaseSpec * reflMask +
+                indirectCCSpec * reflMask +
+                s.LVSpec * baseEnergy * baseSpecOcc * reflMask +
+                s.LVCCSpec * s.ClearcoatStrength * thinFilmColor * ccSpecOcc * reflMask +
                 rimColor;
 
             // LTCGI (area lights)
@@ -1028,7 +1188,7 @@ Shader "VixenWear/Latex Ultra SPS"
                 half3 ltcgiBaseSpec = base_ltc_s * specColor * baseEnergy * baseSpecOcc * _LTCGI_Spec_Mix * baseMS;
                 half3 ltcgiCCSpec   = cc_ltc_s * ccFresEnv * thinFilmColor * ccSpecOcc * _LTCGI_Spec_Mix;
 
-                finalColor += (ltcgiDiff + ltcgiBaseSpec + ltcgiCCSpec) * _LTCGI_Int;
+                finalColor += (ltcgiDiff + (ltcgiBaseSpec + ltcgiCCSpec) * reflMask) * _LTCGI_Int;
             }
             #endif
 
@@ -1270,22 +1430,15 @@ Shader "VixenWear/Latex Ultra SPS"
             float2 finalUV        = ParallaxRaymarching(cUV + glitchOffset, viewDirTangent, o.ParallaxDepth);
 
             // Base textures
-            fixed4 c      = tex2D(_MainTex, finalUV) * _Color;
+            fixed4 c      = UNITY_SAMPLE_TEX2D(_MainTex, finalUV) * _Color;
             fixed4 packed = tex2D(_MetallicGlossMap, finalUV);
 
-            // Vertex-fracture per-pixel shard clip - also runtime-gated by the AL master toggle so silent worlds don't punch holes.
-            if (_UseAudioLink > 0.5 && _UseVtxKinetic > 0.5 && _Vtx_Fracture_Str > 0.001)
+            // Fracture dissolve clip - the body opens up as the fracture progresses (manual _Vtx_Fracture_Amount plus AudioLink jitter). SPS dissolves only (no shard pass); non-SPS additionally flies the region off as shards.
+            float fracProg = saturate(_Vtx_Fracture_Amount + (_UseAudioLink > 0.5 ? GET_AL_BAND(amps, _Vtx_Fracture_Band) * _Vtx_Fracture_Str * 0.2 : 0.0));
+            if (_UseVtxKinetic > 0.5 && fracProg > 0.001)
             {
-                float fractureNoise =
-                    frac(
-                        sin(
-                            dot(finalUV * 512.0,
-                                float2(12.9898,78.233))
-                        ) * 43758.5453
-                    );
-
-                float fractureCut = GET_AL_BAND(amps, _Vtx_Fracture_Band) * _Vtx_Fracture_Str;
-                clip(fractureNoise - fractureCut);
+                float fractureNoise = frac(sin(dot(finalUV * 512.0, float2(12.9898,78.233))) * 43758.5453);
+                clip(fractureNoise - fracProg);
             }
 
             // Alpha workflow - Cutout: hard clip on _CutOff (also clips addshadow so shadows match silhouette); Fade/Transparent: discard fully invisible pixels so the shadow caster doesn't punch opaque shadow holes; Opaque: no clip, alpha ignored.
@@ -1322,8 +1475,8 @@ Shader "VixenWear/Latex Ultra SPS"
             o.Smoothness    = saturate(pbrSmooth + amp_film * _AL_Film_Mod * 0.25);
             o.BaseRoughness = 1.0 - o.Smoothness;
 
-            // AO (channel selectable)
-            float pbrAO = ChannelPick(packed, _PBR_AO_Ch);
+            // AO (channel selectable); "None" (channel 4) yields a constant 1.0 so Poiyomi/Mochie packs without an AO channel don't read a wrong channel.
+            float pbrAO = (_PBR_AO_Ch > 3.5) ? 1.0 : ChannelPick(packed, _PBR_AO_Ch);
             o.Occlusion = saturate(pbrAO * _AO_Str);
             if (_AL_Scanlines > 0.0 && _UseAudioLink > 0.5)
                 o.Occlusion = lerp(o.Occlusion, 1.0, amp_scan * 0.2);
@@ -1331,6 +1484,20 @@ Shader "VixenWear/Latex Ultra SPS"
             // Height (channel selectable; parallax raymarch and BRDF shadow trace use the same channel).
             float pbrHeight = ChannelPick(packed, _PBR_Height_Ch);
             o.Height = pbrHeight * _Disp_Str;
+
+            // Poiyomi/Mochie packed-map masks - reads reflection + specular masks from the packed PBR map so a Mochie "Metallic Maps" texture (R:Met G:Smooth B:ReflMask A:SpecMask) drives our masking. Default off keeps both masks neutral (1.0); applied in the BRDF combine - reflection mask dims environment/probe specular, specular mask dims direct highlights.
+            o.ReflectionMask = 1.0;
+            o.SpecularMask   = 1.0;
+            if (_UsePackedMasks > 0.5)
+            {
+                float reflM = ChannelPick(packed, _ReflMask_Ch);
+                if (_ReflMask_Inv > 0.5) reflM = 1.0 - reflM;
+                o.ReflectionMask = lerp(1.0, reflM, saturate(_ReflMask_Str));
+
+                float specM = ChannelPick(packed, _SpecMask_Ch);
+                if (_SpecMask_Inv > 0.5) specM = 1.0 - specM;
+                o.SpecularMask = lerp(1.0, specM, saturate(_SpecMask_Str));
+            }
 
             // Normals
             float3 normalTS = UnpackNormal(tex2D(_BumpMap, finalUV));
@@ -1360,6 +1527,57 @@ Shader "VixenWear/Latex Ultra SPS"
 
             // Transmission (thin-part back-light), modulated by bio so SSS bleeds through audio-reactive regions.
             o.Transmission = saturate(_Trans_Str + bio * 0.1);
+
+            // Polish layer master gate + B&W mask - sampled once here, applied to the whole polish layer in the BRDF. Default white mask + toggle on = 1 (full polish, historical look).
+            o.PolishMask = _UsePolish * ChannelPick(UNITY_SAMPLE_TEX2D_SAMPLER(_PolishMask, _MainTex, finalUV), _PolishMaskCh);
+
+            // WET - full "soaked / just out of the shower" look plus run-off rivulets. The soak (darken + near-mirror gloss + water-film sheen + flattened micro-normal) covers the whole masked area; animated UV-vertical rivulets add concentrated run-off streaks on top. UV-space keeps it stable on skinned avatars. Own toggle so it costs nothing when off.
+            if (_UseDrip > 0.5)
+            {
+                float wetMaskTex = ChannelPick(UNITY_SAMPLE_TEX2D_SAMPLER(_DripMask, _MainTex, finalUV), _DripMaskCh);
+                if (wetMaskTex > 0.001)
+                {
+                    // Run-off rivulets: animated vertical streaks where extra water is pouring down. Computed first; the normal tilt is applied last so streaks still pop over the flattened film.
+                    float rivulet = 0;
+                    float rivuletSlope = 0;
+                    if (_Drip_Strength > 0.0001)
+                    {
+                        float colF    = finalUV.x * _Drip_Density;
+                        float col     = floor(colF);
+                        float colHash = frac(sin(col * 91.17) * 43758.5453);
+                        // Coverage gate - only a fraction of columns carry a rivulet.
+                        float hasCol  = step(1.0 - saturate(_Drip_Coverage), colHash);
+                        // Gaussian rivulet across the column (centre is wettest); higher _Drip_Width = thinner streak.
+                        float xInCol  = frac(colF) - 0.5;
+                        float ridge   = exp(-xInCol * xInCol * _Drip_Width);
+                        // Downward flow - per-column speed/phase variance so streaks don't march in lockstep.
+                        float flow    = finalUV.y - _Time.y * _Drip_Speed * (0.6 + colHash) - colHash * 7.0;
+                        // Travelling beads so it reads as running water; 0.35 floor keeps a continuous trickle between beads.
+                        float bead    = sin(flow * 18.0) * 0.5 + 0.5;
+                        bead          = bead * bead;
+                        rivulet       = ridge * hasCol * saturate(0.35 + bead) * _Drip_Strength;
+                        // Gaussian derivative across the streak - rounds it so it catches a glint.
+                        rivuletSlope  = clamp(-2.0 * xInCol * _Drip_Width * ridge * hasCol, -4.0, 4.0);
+                    }
+
+                    // Total wetness: global soak + rivulet streaks, masked and clamped.
+                    float wetness = saturate(_Wet_Amount + rivulet) * wetMaskTex;
+                    if (wetness > 0.001)
+                    {
+                        // 1. Water absorption darkens the surface (deeper in the most-soaked areas).
+                        o.Albedo *= lerp(1.0, 1.0 - _Wet_Darken * 0.65, wetness);
+                        // 2. A water film is near-mirror smooth - drive smoothness toward the wet target.
+                        o.Smoothness    = lerp(o.Smoothness, _Wet_Smoothness, wetness);
+                        o.BaseRoughness = 1.0 - o.Smoothness;
+                        // 3. The film fills micro-detail, flattening the shading normal toward the surface.
+                        o.Normal = normalize(lerp(o.Normal, float3(0,0,1), wetness * _Wet_Flatten));
+                        // 4. The thin water sheet reads as an extra dielectric clearcoat (F0~0.04 = water), giving the bright wet Fresnel sheen. Gated by the Polish layer in the BRDF.
+                        o.ClearcoatStrength = saturate(o.ClearcoatStrength + wetness * _Wet_Sheen);
+                        // Run-off streak tilt applied last so it survives the film flattening.
+                        o.Normal = normalize(o.Normal + float3(rivuletSlope * _Drip_Normal * 0.15, 0, 0));
+                    }
+                }
+            }
 
             // Matcap - world-anchored sphere mapping. The basis vectors come from view-direction + world-up instead of UNITY_MATRIX_V, because UNITY_MATRIX_V carries the camera's full rotation including roll - head tilt in VR (or any camera roll) would spin the matcap pattern around the view axis, making highlights swim instead of staying world-locked the way a real metal/latex surface would behave. vw_WorldViewDir reads from the actual rendering camera (UNITY_MATRIX_I_V), so this stays mirror-correct.
             float3 nWorld   = normalize(WorldNormalVector(IN, float3(0,0,1)));
@@ -1407,7 +1625,8 @@ Shader "VixenWear/Latex Ultra SPS"
             float2 emisUV = finalUV;
             if (_UseAudioLink > 0.5 && _AL_AutoCorr_Mod > 0.001)
             {
-                emisUV.y += (autoCorr - 0.5) * _AL_AutoCorr_Mod * 0.05;
+                // autoCorr is now zero-centered via the 0.007 scale; removed the -0.5 offset.
+                emisUV.y += autoCorr * _AL_AutoCorr_Mod * 0.2;
             }
             float4 emisTex = tex2D(_EmissionMap, emisUV);
             float emisMask = emisTex.a;
@@ -1473,100 +1692,7 @@ Shader "VixenWear/Latex Ultra SPS"
 
             // Autocorrelator ripple → EMISSION block; glitch tear → UV AUDIO DISTORTION CHAIN above.
 
-            // CYBER HUD (masked, additive)
-            float3 hud = 0;
-
-            if (_UseCyber > 0.5)
-            {
-                // PARALLAX-OUT: shift HUD UV along tangent-space view direction so the panel reads as a plane floating at height h above the body; subtle vertical bob adds "alive" drift without rotating the panel.
-                float hoverHeight = _Cyber_Hover + sin(_Time.y * 1.6) * _Cyber_Hover * _Cyber_Hover_Bob * 0.25;
-                float2 hoverOffset = viewDirTangent.xy / max(viewDirTangent.z, 0.001) * hoverHeight;
-                float2 hudUV = finalUV + hoverOffset;
-
-                float cyberMask = tex2D(_CyberMask, hudUV).r;
-
-                // VU Meter
-                if (_UseCyberVU > 0.5)
-                {
-                    float vu = GET_AL_BAND(amps, _Cyber_VU_Band);
-                    float2 vuUV = TransformHUD(hudUV, _Cyber_VU_Transform);
-                    float vuInBounds = step(0.0, vuUV.x) * step(vuUV.x, 1.0)
-                                     * step(0.0, vuUV.y) * step(vuUV.y, 1.0);
-                    float bar =
-                        step(vuUV.x, vu) *
-                        step(abs(vuUV.y - 0.5), 0.04) *
-                        vuInBounds;
-                    hud += bar * _Cyber_VU_Str * al_color.rgb;
-                }
-
-                // Spectrum (CC) bars - sample N bars from the AudioLink band row
-                if (_UseCyberCC > 0.5)
-                {
-                    float2 ccUV = TransformHUD(hudUV, _Cyber_CC_Transform);
-                    float density = max(2.0, _Cyber_CC_Density);
-                    if (ccUV.x >= 0.0 && ccUV.x <= 1.0 && ccUV.y >= 0.0 && ccUV.y <= 1.0)
-                    {
-                        int barIdx = (int)floor(ccUV.x * density);
-                        int sampleX = (int)((float)barIdx / density * 127.0);
-
-                        float magnitude = 0;
-                        if (_UseAudioLink > 0.5 && AudioLinkIsAvailable())
-                            magnitude = AudioLinkData(ALPASS_AUDIOLINK + int2(sampleX, (int)_Cyber_CC_Band)).r;
-
-                        // Vertical bar grows from bottom (y=0) up
-                        float barShape = step(1.0 - ccUV.y, saturate(magnitude * 4.0));
-                        // Inter-bar gap
-                        float barCenter = (floor(ccUV.x * density) + 0.5) / density;
-                        float inBar = step(abs(ccUV.x - barCenter), 0.45 / density);
-                        hud += barShape * inBar * _Cyber_CC_Str * al_color.rgb;
-                    }
-                }
-
-                // Waveform
-                if (_UseCyberWave > 0.5)
-                {
-                    float2 waveUV = TransformHUD(hudUV, _Cyber_Wave_Transform);
-                    float waveInBounds = step(0.0, waveUV.x) * step(waveUV.x, 1.0)
-                                       * step(0.0, waveUV.y) * step(waveUV.y, 1.0);
-                    float wave = abs((waveUV.y - 0.5) - raw_waveform * 0.2);
-                    wave = (1.0 - smoothstep(0.0, 0.02, wave)) * waveInBounds;
-                    hud += wave * _Cyber_Wave_Str * al_color.rgb;
-                }
-
-                // DMX grid mini-readout
-                if (_UseCyberDMX > 0.5)
-                {
-                    float2 dmxUV = TransformHUD(hudUV, _Cyber_DMX_Transform);
-                    if (dmxUV.x >= 0.0 && dmxUV.x <= 1.0 && dmxUV.y >= 0.0 && dmxUV.y <= 1.0)
-                    {
-                        float3 dmxSample = tex2D(_Udon_DMXGridRenderTexture, dmxUV).rgb;
-                        hud += dmxSample * _Cyber_DMX_Str;
-                    }
-                }
-
-                // Autocorrelator radial ring
-                if (_UseCyberAuto > 0.5)
-                {
-                    float2 acUV = TransformHUD(hudUV, _Cyber_Auto_Transform);
-                    float2 centered = acUV - 0.5;
-                    float r = length(centered) * 2.0;
-                    if (r <= 1.0)
-                    {
-                        float acVal = 0;
-                        if (_UseAudioLink > 0.5 && AudioLinkIsAvailable())
-                            acVal = AudioLinkData(ALPASS_AUTOCORRELATOR + int2((int)(saturate(r) * 127.0), 0)).r;
-
-                        float angle = atan2(centered.y, centered.x);
-                        float spoke = 0.5 + 0.5 * sin(angle * 12.0 + animTime * 1.5);
-                        float ring = exp(-pow((r - acVal), 2.0) * 80.0);
-                        hud += ring * spoke * _Cyber_AutoCorr_Str * al_color.rgb;
-                    }
-                }
-
-                // Float the HUD off the body - cyberMask (lifted UV) is the holographic viewport; emisMask provides a soft "kinship with emission" tint, never a hard clip.
-                float hudLift = lerp(0.65, 1.0, saturate(emisMask));
-                emisBase += hud * cyberMask * hudLift;
-            }
+            // CYBER HUD intentionally omitted on the SPS variant - geometry-shader HUD passes are incompatible with VRCFury's SPS vertex patcher, so the floating HUD ships on the non-SPS shader only.
 
             // Amplitude-driven flicker sparkle on top of the steady AL emission (decoration only) - gated by _AL_Emis_Mod so users can fully disable AL emission response with the slider.
             if (_UseAudioLink > 0.5 && amp_emis > 0.001 && _AL_Emis_Mod > 0.001)

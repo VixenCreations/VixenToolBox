@@ -73,8 +73,9 @@ A fully isolated, high-fidelity Quest conversion system.
 
 ### 5. Native Shader Architecture
 
-**Latex Ultra** - a proprietary, high-fidelity dual-lobe PBR surface shader engineered for synthetic materials.
+**Latex Ultra** - a proprietary, high-fidelity dual-lobe PBR surface shader engineered for synthetic materials, shipping alongside a tessellation-free **Latex Ultra SPS** variant for VRCFury SPS patching.
 
+* **Liquid Surface System:** A master Polish gate, Poiyomi/Mochie reflection & specular masks with one-click setup, a wet/run-off layer (soaked look, animated rivulets, PC-only geometry water droplets), and gravity-aligned melting goo bring physical liquid behaviour to the latex.
 * **VectorLabelDrawer & Hybrid UI Architecture:** Features a custom `MaterialPropertyDrawer` natively hooked into ShaderLab's Vector arrays, eliminating standard 4-float structural UI clutter. Wrapped in an overhauled UITK & IMGUI hybrid inspector with secure `EditorPrefs` caching.
 * **Aggressive Baseline Optimization:** Variables are deeply consolidated into highly optimized packed `Vector` attributes (`_PBRParams`, `_GeoEmisParams`, etc.) to slash uniform overhead. Expensive rendering calculations (Parallax, Displacement, Iridescence, AudioLink) are zeroed out by default.
 * **Ecosystem Wiring:** Natively wired into the AudioLink FFT ecosystem for bass-pulsed iridescence and treble-reactive emissives. Integrates directly with LTCGI and VRC Light Volumes.

@@ -126,6 +126,8 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
+                        <fluent-option value="v2.4.0">v2.4.0</fluent-option>
+                        <fluent-option value="v2.3.4">v2.3.4</fluent-option>
                         <fluent-option value="v2.3.3">v2.3.3</fluent-option>
                         <fluent-option value="v2.3.2">v2.3.2</fluent-option>
                         <fluent-option value="v2.3.1">v2.3.1</fluent-option>
@@ -160,7 +162,40 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
-                <div class="changelog-entry" data-version="v2.3.3">
+                <div class="changelog-entry" data-version="v2.4.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.4.0 - 2026-06-08</h5>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Wet &amp; Run-Off Layer (`_UseDrip`, Both Shaders):</strong> New POLISH-tab effect that soaks the latex like it just came out of the pool. The "Soaked Look" stack (`_Wet_Amount`, `_Wet_Darken`, `_Wet_Smoothness`, `_Wet_Sheen`, `_Wet_Flatten`) darkens the masked area for water absorption, drives reflections toward a near-mirror water film, layers a dielectric Fresnel sheen on the clearcoat, and flattens micro-detail. Layered on top, animated "Run-Off Rivulets" (`_Drip_Density`, `_Drip_Width`, `_Drip_Coverage`, `_Drip_Speed`, `_Drip_Strength`, `_Drip_Normal`) stream vertical water trails down the UV. A B&amp;W `_DripMask` + `_DripMaskCh` channel picker scopes the whole effect. The soak and rivulets run on both the base and SPS shaders.</li>
+                        <li class="mb-2"><strong>Clear 3D Drips (Geometry, PC Only):</strong> On the base `VixenWear/Latex Ultra` shader, `_Drip3D_Strength` adds real water droplets emitted by a dedicated geometry stage: they swell on downward-facing wet areas, form a neck, pinch off, then fall away as free geometry and dry out. Tuned by `_Drip3D_Scale` (droplet size), `_Drip3D_Sheen` (glassiness), and `_Drip3D_Fall` (fall distance), tinted to the Clearcoat Tint. Physics: `_Drip_Sway` adds surface-tension wobble and a breeze that grows with fall distance, `_Drip_BodyFollow` makes attached drops run down along the body before detaching, and `_Drip_FloorCollide` pins drops to the shared world floor and spreads them into a fading puddle. Not present on the SPS shader or Quest.</li>
+                        <li class="mb-2"><strong>Goo Melting Sag (`_UseGoo`, Both Shaders):</strong> Gravity-aligned vertex melt that mimics runny/melting latex, running in the displacement stage so it benefits from tessellation on the base shader. `_Goo_Strength` is the master intensity, `_Goo_Reach` extends how far it sags in world units, and `_Goo_Variation` drives procedural FBM noise from uniform to wildly uneven strands, with `_Goo_Noise`, `_Goo_Speed`, and `_Goo_Droop` shaping the tendrils. `_Goo_ToGround` + `_Goo_GroundY` pull the melt toward the world floor regardless of avatar height. Physics: `_Goo_Sway` / `_Goo_SwaySpeed` give a per-strand pendulum swing, `_Goo_BodyFollow` flows goo along the body, `_Goo_FloorCollide` clamps to the floor height, and `_Goo_Pool` spreads landed strands into a puddle. Scoped by `_GooMask` + `_GooMaskCh`.</li>
+                        <li class="mb-2"><strong>Reflection / Specular Masks (Poiyomi / Mochie Compatibility):</strong> New `_UsePackedMasks` gate on the SURFACE tab with `_ReflMask_Ch/_Inv/_Str` and `_SpecMask_Ch/_Inv/_Str`. The Reflection Mask dims environment / reflection-probe specular (including clearcoat env, Light Volume, and LTCGI reflections); the Specular Mask dims direct-light highlights. Channel defaults match Mochie packing (B = reflection, A = specular); matcaps keep their own masks and are untouched.</li>
+                        <li class="mb-2"><strong>One-Click Poiyomi / Mochie Metallic Map Setup:</strong> New "Set Up for Poiyomi / Mochie Metallic Map" button on the SURFACE tab translates a Mochie/Poiyomi "Metallic Maps" texture (R:Metallic G:Smoothness B:Reflection Mask A:Specular Mask) onto the packed PBR in one shot - sets the four channel selectors, disables AO, and enables the reflection + specular masks.</li>
+                        <li class="mb-2"><strong>Polish Layer Master Gate (`_UsePolish`):</strong> New top-of-POLISH toggle (default ON) that wraps the entire polish lighting layer - clearcoat, thin film, SSS, transmission, anisotropy, rim, and multi-scatter compensation - behind a single switch. Off collapses the material to a flat GGX base for a clean matte look or a cheaper variant. A per-pixel `_PolishMask` + `_PolishMaskCh` scopes the layer to painted regions.</li>
+                        <li class="mb-2"><strong>Flying-Shard Fracture Engine (PC Only):</strong> The 2.3.0 single-value `_Vtx_Fracture_Str` scatter is replaced by a full shard system driven by new geometry passes. `_Vtx_Fracture_Amount` is a manual hold/animate dissolve, `_Vtx_Fracture_Dist` sets shard hover distance, `_Vtx_Fracture_Spin` tumbles them, `_Vtx_Fracture_Str` is now an AudioLink jitter, and `_Vtx_Fracture_Spiral`, `_Vtx_Fracture_Lift`, `_Vtx_Fracture_Float`, and `_Vtx_Fracture_Trail` shape the dispersal and motion trails. Shard coloring adds `_Shard_ColorMod` (hue shift) + `_Shard_ColorMod_Speed`, and `_UseShardCC` + `_Shard_CC_Str` blend the shards toward the live AudioLink ColorChord. The SPS shader dissolves via the main-pass clip only (no flying shards).</li>
+                        <li class="mb-2"><strong>Autocorrelator Ring Effects (PC HUD):</strong> The cyber HUD autocorrelator ring gains four independent, per-band effects - `_Cyber_Auto_Shimmer`, `_Cyber_Auto_Pop`, `_Cyber_Auto_Sizzle`, and `_Cyber_Auto_Electrify` - each with its own band selector so a different AudioLink band can drive each effect. When AudioLink isn't running, each effect falls back to a `_Time`-driven idle level so it stays visible while authoring. The SPS shader declares the props inert for inspector/copy-paste parity.</li>
+                        <li class="mb-2"><strong>Self-Playing AudioLink Console (VU "Console" Style):</strong> New `_Cyber_VU_Style` selector (Console / Bar) replaces the old `_Cyber_VU_Band`. The Console style renders a full self-playing AudioLink control panel (gain/threshold/hit-fade/falloff sliders, 4-band readout, theme/ColorChord swatches, and an autocorrelator scope) ported from the upstream `AudioLinkUI-Functions.cginc`, now vendored into the package's `cginc/` folder.</li>
+                        <li class="mb-2"><strong>Per-Widget HUD Reaction Bands:</strong> The Waveform, DMX Grid, and Autocorrelator HUD segments each gain their own band selector (`_Cyber_Wave_Band`, `_Cyber_DMX_Band`, `_Cyber_Auto_Band`) so every widget can react to a different AudioLink band instead of sharing one global selection.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>LTCGI Avatar Mode On By Default:</strong> `cginc/LTCGI_config.cginc` now enables `LTCGI_AVATAR_MODE` and `LTCGI_BLENDED_DIFFUSE_SAMPLING` out of the box, tuning the vendored LTCGI path for avatar use and smoothing diffuse area-light contribution. The LTCGI AudioLink no-op fallback `#include` was re-pointed from the upstream `at.pimaker.ltcgi` package path to the package-local `cginc/LTCGI_AudioLinkNoOp.cginc`, so the LTCGI AudioLink branch resolves even when the LTCGI package isn't installed.</li>
+                        <li class="mb-2"><strong>POLISH Tab Reorganization:</strong> The POLISH tab now opens with the Polish Layer gate, followed by the new "Wet &amp; Run-Off" and "Goo (Melting Sag)" sections, then the existing Outline section. Each new effect carries inline help boxes explaining the soak-vs-rivulet split, the PC-only geometry drips, and the shader limits on true inertial physics.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="v2.3.4" hidden>
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.3.4 - 2026-06-04</h5>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Changelog Backfill (Maintenance):</strong> Version-bump release that backfilled the `2.3.3` changelog entries that shipped late. No functional, shader, or editor changes - documentation only.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="v2.3.3" hidden>
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.3.3 - 2026-06-04</h5>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>

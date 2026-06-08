@@ -1,6 +1,6 @@
 # VIXENWEAR : SHADER USAGE
 
-The **VixenWear Latex Ultra** is a high-fidelity, dual-lobe PBR surface shader engineered for complex synthetic materials. It bypasses standard Unity lighting models to provide a full GGX BRDF stack (Burley diffuse, Smith-Joint visibility, Schlick Fresnel, Karis split-sum environment, optional Filament multi-scatter compensation), true tangent-space micro-shadowing, hardware tessellation, dynamic thin-film interference, anisotropic specular for stretched latex, thin-part transmission, and fully integrated SM5 hardware processing for AudioLink and VRSL DMX.
+The **VixenWear Latex Ultra** is a high-fidelity, dual-lobe PBR surface shader engineered for complex synthetic materials. It bypasses standard Unity lighting models to provide a full GGX BRDF stack (Burley diffuse, Smith-Joint visibility, Schlick Fresnel, Karis split-sum environment, optional Filament multi-scatter compensation), true tangent-space micro-shadowing, hardware tessellation, dynamic thin-film interference, anisotropic specular for stretched latex, thin-part transmission, wet/run-off and melting-goo surface FX, and fully integrated SM5 hardware processing for AudioLink and VRSL DMX.
 
 To achieve flawless high-gloss black materials, deep atmospheric reflections, and reactive neon emissives, you must adhere to this pipeline architecture.
 
@@ -40,6 +40,19 @@ The SURFACE tab now exposes per-channel selectors under the Packed PBR Mask:
 * `Height Channel` (R/G/B/A)
 
 The selector is honored everywhere the height/metallic/smoothness/AO values are consumed: parallax raymarch, BRDF parallax shadow trace, surface stage, and vertex displacement. Drop in a Poiyomi-packed mask, flip the four selectors, and you're done.
+
+### Reflection & Specular Masks (New in 2.4.0)
+
+`Enable Reflection / Specular Masks` (`_UsePackedMasks`) reads two extra channels off the same packed PBR map to dim specular response without a second texture:
+
+* **Reflection Mask** (`_ReflMask_Ch` / `_ReflMask_Inv` / `_ReflMask_Str`): attenuates environment / reflection-probe specular - including the clearcoat environment lobe, Light Volume specular, and LTCGI reflections.
+* **Specular Mask** (`_SpecMask_Ch` / `_SpecMask_Inv` / `_SpecMask_Str`): attenuates direct-light highlights only.
+
+Both default to `1.0` (no effect) until the gate is on. Channel defaults match Mochie packing (`B` = reflection, `A` = specular). Matcaps keep their own masks and are unaffected.
+
+### One-Click Mochie / Poiyomi Metallic Map (New in 2.4.0)
+
+If you already have a Mochie or Poiyomi **Metallic Maps** texture (`R:Metallic G:Smoothness B:Reflection Mask A:Specular Mask`), drop it into `Packed PBR Map` and hit **Set Up for Poiyomi / Mochie Metallic Map** on the SURFACE tab. The button sets the four channel selectors, disables AO (None), and enables the reflection + specular masks in one shot - no manual channel-routing required.
 
 ### Substance Painter Export Workflow (Native Pack)
 
@@ -106,6 +119,10 @@ VixenWear no longer uses Unity's legacy `BRDF3` lighting model. Direct and indir
 ---
 
 ## 5. CLEARCOAT & THIN-FILM INTERFERENCE
+
+### Polish Layer Master Gate (New in 2.4.0)
+
+The POLISH tab now opens with `Enable Polish Layer` (`_UsePolish`, default ON). This is the master switch for the entire polish lighting layer - clearcoat, thin film, SSS, transmission, anisotropy, rim, and multi-scatter compensation all collapse under it. Turn it off and the material drops to a flat GGX base for a clean matte look or a lighter variant. A per-pixel `Polish Mask` (`_PolishMask` + `_PolishMaskCh`) scopes the layer to painted regions, so you can keep panels glossy while the rest reads matte. The Wet, Goo, and Outline effects below the gate have their own independent toggles.
 
 The "Latex" visual relies on a dual-lobe specular BRDF. The base fabric utilizes its own GGX lobe, while a secondary **Clearcoat** layer floats above it, calculating independent environmental reflections and Fresnel curves.
 
@@ -248,13 +265,16 @@ The HUD now floats *off* the body surface as a holographic plane:
 * **HUD Hover Height:** Parallax-out distance. The HUD UV is shifted along the tangent-space view direction so the panel reads as a true overlay above the geometry.
 * **HUD Hover Bob:** Subtle vertical drift (`sin(_Time.y * 1.6) * _Cyber_Hover * 0.25 * _Cyber_Hover_Bob`) - keeps the HUD feeling "alive" without rotating the panel.
 
+> **Per-widget reaction bands (New in 2.4.0):** the Waveform, DMX Grid, and Autocorrelator segments each carry their own band selector (`_Cyber_Wave_Band`, `_Cyber_DMX_Band`, `_Cyber_Auto_Band`) so every widget can react to a different AudioLink band instead of sharing one global selection.
+
 ### Overlays
 
-* **VU Meter:** A segmented volume unit readout mapped to a specific AudioLink band.
+* **VU Meter:** A volume unit readout. New in 2.4.0: `VU Meter Style` (`_Cyber_VU_Style`) switches between **Console** and **Bar**. The Console style renders a full self-playing AudioLink control panel - gain / threshold / hit-fade / falloff sliders, a 4-band readout, theme + ColorChord swatches, and an autocorrelator scope - ported from the upstream `AudioLinkUI-Functions.cginc` (now vendored into the package's `cginc/` folder). The sliders are live display-only readouts of the AudioLink state, not interactive controls.
 * **Spectrum:** Sample N bars from an AudioLink band row. New in 2.3.0: `Spectrum Bar Count` (4-64) makes this a true bar chart with proper inter-bar gaps.
 * **Waveform:** An oscilloscope line reading the raw AudioLink waveform buffer with smoothstep edge glow.
 * **DMX Grid Readout:** Real-time grid visualizing VRSL DMX universe activity (requires VRSL enabled).
 * **Autocorrelator Ring:** New in 2.3.0. Renders a radial ring from `ALPASS_AUTOCORRELATOR` with animated angular spokes (12-spoke sine wave + `_Time.y * 1.5` rotation) and a gaussian falloff envelope. Reads like a holographic compass spinning to the beat.
+  * **Ring Effects (New in 2.4.0):** four independent per-band reactors layer onto the ring - `Shimmer` (`_Cyber_Auto_Shimmer`), `Pop` (`_Cyber_Auto_Pop`), `Sizzle` (`_Cyber_Auto_Sizzle`), and `Electrify` (`_Cyber_Auto_Electrify`). Each has its own `..._Band` enum so one band can drive the shimmer while another drives the pop. With AudioLink off, each effect falls back to a `_Time`-driven idle level so the ring still animates while you author. PC HUD only; the SPS shader declares the props inert for inspector and copy/paste parity.
 
 ---
 
@@ -273,7 +293,7 @@ Transforms the mathematical surface of the material without altering the mesh.
 In 2.3.0 the dual-pass geometry shader from 2.1.5 has been **removed** - it desynced under hardware tessellation. The replacement runs entirely inside the `disp()` vertex stage and the surface fragment, and is more stable while producing an equivalent (or better) shatter.
 
 * **Normal Inflate Distance (`_Vtx_Pump_Str`):** Pushes vertices outward along their world normal to physically inflate the avatar to the bass.
-* **Geometry Shard Scatter (`_Vtx_Fracture_Str`):** Snaps vertices to a 3D grid (`floor(vertex.xyz * 25.0)`), hashes each cell for a deterministic per-shard random axis, applies Rodrigues rotation around that axis, scales the shard, and offsets it along a pivot. All gated by `_UseVtxKinetic` and strictly driven by AudioLink band amplitude so silent worlds never shatter the avatar.
+* **Flying-Shard Fracture (overhauled in 2.4.0, PC only):** The old single-value scatter is replaced by a full shard system driven by dedicated geometry passes. `_Vtx_Fracture_Amount` is a manual hold/animate dissolve (the body opens up as it rises), `_Vtx_Fracture_Dist` sets how far shards hover, `_Vtx_Fracture_Spin` tumbles them, `_Vtx_Fracture_Str` is now an AudioLink jitter, and `_Vtx_Fracture_Spiral`, `_Vtx_Fracture_Lift`, `_Vtx_Fracture_Float`, and `_Vtx_Fracture_Trail` shape the dispersal and motion trails. Shard coloring adds `_Shard_ColorMod` (hue shift) + `_Shard_ColorMod_Speed`, and `_UseShardCC` + `_Shard_CC_Str` blend the shards toward the live AudioLink ColorChord. On the **SPS shader** there is no geometry pass, so the suit dissolves via the main-pass clip only - no flying shards.
 * **Vertex Autocorrelator Ripple (`_Vtx_AutoCorr_Str`):** New in 2.3.0. Reads `AudioLinkGetSphericalMappedAutoCorrelatorValue(normalize(v.vertex.xyz))` per-vertex and drives a smooth volumetric ripple. No band selection needed - every vertex samples its own object-space direction.
 
 The surface fragment also performs a per-pixel fracture clip (`clip(fractureNoise - fractureCut)`) so the visible mesh punches holes in sync with the vertex scatter. This survives tessellation cleanly.
@@ -321,3 +341,39 @@ The package now ships a `VixenWearVariantStripper` (`IPreprocessShaders`) that h
 3. Dead built-in keywords leaking past the surface pragma (`LIGHTMAP_ON`, `DIRLIGHTMAP_COMBINED`, `DYNAMICLIGHTMAP_ON`, `LIGHTMAP_SHADOW_MIXING`, `SHADOWS_SHADOWMASK`, `LIGHTPROBE_SH`, `LOD_FADE_CROSSFADE`) - dropped any variant that has one set.
 
 `VixenWearVariantStripReporter` posts a `kept / stripped / total` log line after every build so you can verify the speedup.
+
+---
+
+## 18. WET, RUN-OFF & GOO (NEW IN 2.4.0)
+
+Three new POLISH-tab effects bring physical liquid behaviour to the latex. Each has its own enable toggle and B&W mask, so they layer independently over the polish lighting.
+
+### Wet & Run-Off (`_UseDrip`)
+
+Soaks the masked area like the avatar just stepped out of the pool.
+
+* **Soaked Look:** `Wetness` (`_Wet_Amount`) is the master amount. `Darkening` (`_Wet_Darken`) deepens the latex for water absorption, `Wet Smoothness` (`_Wet_Smoothness`) drives reflections toward a near-mirror water film, `Film Sheen` (`_Wet_Sheen`) adds a dielectric Fresnel sheen that rides on the clearcoat (keep the Polish layer enabled for the strongest highlight), and `Normal Flatten` (`_Wet_Flatten`) smooths out micro-detail.
+* **Run-Off Rivulets:** Animated vertical water streaks layered on top of the soak. `Density` (`_Drip_Density`) sets the column count, `Rivulet Thinness` (`_Drip_Width`) narrows each streak, and `Coverage`, `Flow Speed`, `Streak Strength`, and `Streak Normal Bump` (`_Drip_Coverage` / `_Drip_Speed` / `_Drip_Strength` / `_Drip_Normal`) shape the flow. Set Streak Strength to `0` for a still, evenly-soaked look.
+* **Mask:** `_DripMask` + `_DripMaskCh` scope the entire effect.
+
+The soak and rivulets run on **both** the base and SPS shaders.
+
+### Clear 3D Drips (Geometry, PC Only)
+
+`Clear Drip Amount` (`_Drip3D_Strength`) emits real water droplets from a geometry stage on the base `VixenWear/Latex Ultra` shader: they swell on downward-facing wet areas, form a neck, pinch off, then fall away as free geometry and dry out (fade).
+
+* `Droplet Size` (`_Drip3D_Scale`, roughly millimetres), `Glassiness` (`_Drip3D_Sheen`), and `Fall Distance` (`_Drip3D_Fall`) tune the look; drops are tinted to the Clearcoat Tint and share Coverage / Flow Speed with the rivulets.
+* **Physics:** `Sway / Wobble` (`_Drip_Sway`) adds surface-tension wobble and a breeze that grows the further a drop falls. `Surface Slide (Body)` (`_Drip_BodyFollow`) makes an attached drop run down along the body before it detaches (a faked body collision). `Floor Splat` (`_Drip_FloorCollide`) pins drops to the shared world floor and spreads them into a fading puddle - the floor height is the Goo `Ground / Floor Height` below.
+
+Not present on the SPS shader or Quest - the droplet emitter is a geometry stage that gets stripped on those targets. Drops always fall under world gravity, so they already track movement; true inertial trailing would need a PhysBone, not a shader.
+
+### Goo (Melting Sag) (`_UseGoo`)
+
+Gravity-aligned vertex melt that mimics runny / melting latex. Runs in the displacement stage, so on the base shader it benefits from tessellation (more verts = smoother strands).
+
+* **Shape:** `Melt Amount` (`_Goo_Strength`) is the master intensity; `Stretch Distance` (`_Goo_Reach`) dramatically extends how far it sags in world units; `Strand Variation` (`_Goo_Variation`) adds procedural FBM noise so tendrils range from uniform (`0`) to wildly uneven (`1`). `Tendril Scale`, `Flow Speed`, and `Underside Bias` (`_Goo_Noise` / `_Goo_Speed` / `_Goo_Droop`) refine the strands.
+* **Reach the floor:** `Melt To Ground` (`_Goo_ToGround`) pulls the goo toward the world ground plane; set `Ground / Floor Height` (`_Goo_GroundY`) to your world floor's Y (usually `0`) so strands reach the floor regardless of avatar height.
+* **Physics:** `Sway Amount` / `Sway Speed` (`_Goo_Sway` / `_Goo_SwaySpeed`) give a per-strand pendulum swing; `Surface Follow (Body Collide)` (`_Goo_BodyFollow`) flows goo along the body instead of through it; `Floor Collision` (`_Goo_FloorCollide`) clamps the melt to the floor height; `Floor Pooling` (`_Goo_Pool`) spreads landed strands into a puddle.
+* **Mask:** `_GooMask` + `_GooMaskCh`.
+
+Goo runs on **both** shaders (it is a vertex/displacement effect). Note: extreme stretch can be frustum-culled when the body is off-screen unless the mesh bounds (or an Anchor Override) are expanded. The goo re-aligns to gravity and the body surface every frame, so it tracks posing and locomotion; true inertial lag and per-bone body collision are not possible in a shader - drive a PhysBone chain over the goo region for that.

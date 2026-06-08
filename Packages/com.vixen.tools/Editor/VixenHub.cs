@@ -281,7 +281,9 @@ namespace VixenTools.Editor
         private Button _btnCoreModules;
         private Button _btnSupportedModules;
         private Button _btnShaderDocs;
+#if UDON
         private Button _btnMetricsDocs;
+#endif
         private Button _btnNetwork;
         private Button _btnSupport;
         private Button _btnChangelog;
@@ -398,7 +400,10 @@ namespace VixenTools.Editor
             _btnCoreModules = new Button(() => SwitchMode(TabMode.CoreModules)) { text = "Core Modules" };
             _btnSupportedModules = new Button(() => SwitchMode(TabMode.SupportedModules)) { text = "Supported Modules" };
             _btnShaderDocs = new Button(() => SwitchMode(TabMode.ShaderDocs)) { text = "Shader Pipeline" };
+#if UDON
+            // Metrics Engine docs (HOWITWORKS.md) describe the World Profiler, so only surface the tab in World SDK (Udon) projects.
             _btnMetricsDocs = new Button(() => SwitchMode(TabMode.MetricsDocs)) { text = "Metrics Engine" };
+#endif
             _btnNetwork = new Button(() => SwitchMode(TabMode.Network)) { text = "Network" };
             _btnSupport = new Button(() => SwitchMode(TabMode.Support)) { text = "Support" };
             _btnChangelog = new Button(() => SwitchMode(TabMode.Changelog)) { text = "Changelogs" };
@@ -407,7 +412,9 @@ namespace VixenTools.Editor
             _btnCoreModules.AddToClassList("tab-btn");
             _btnSupportedModules.AddToClassList("tab-btn");
             _btnShaderDocs.AddToClassList("tab-btn");
+#if UDON
             _btnMetricsDocs.AddToClassList("tab-btn");
+#endif
             _btnNetwork.AddToClassList("tab-btn");
             _btnSupport.AddToClassList("tab-btn");
             _btnChangelog.AddToClassList("tab-btn");
@@ -416,7 +423,9 @@ namespace VixenTools.Editor
             tabContainer.Add(_btnCoreModules);
             tabContainer.Add(_btnSupportedModules);
             tabContainer.Add(_btnShaderDocs);
+#if UDON
             tabContainer.Add(_btnMetricsDocs);
+#endif
             tabContainer.Add(_btnNetwork);
             tabContainer.Add(_btnSupport);
             tabContainer.Add(_btnChangelog);
@@ -454,7 +463,9 @@ namespace VixenTools.Editor
             _btnCoreModules.RemoveFromClassList("tab-btn-active"); _btnCoreModules.AddToClassList("tab-btn-inactive");
             _btnSupportedModules.RemoveFromClassList("tab-btn-active"); _btnSupportedModules.AddToClassList("tab-btn-inactive");
             _btnShaderDocs.RemoveFromClassList("tab-btn-active"); _btnShaderDocs.AddToClassList("tab-btn-inactive");
+#if UDON
             _btnMetricsDocs.RemoveFromClassList("tab-btn-active"); _btnMetricsDocs.AddToClassList("tab-btn-inactive");
+#endif
             _btnNetwork.RemoveFromClassList("tab-btn-active"); _btnNetwork.AddToClassList("tab-btn-inactive");
             _btnSupport.RemoveFromClassList("tab-btn-active"); _btnSupport.AddToClassList("tab-btn-inactive");
             _btnChangelog.RemoveFromClassList("tab-btn-active"); _btnChangelog.AddToClassList("tab-btn-inactive");
@@ -483,11 +494,13 @@ namespace VixenTools.Editor
                     _tabDescription.text = "Comprehensive architecture breakdown of the VixenWear Latex Ultra shader pipeline, texture packing, and ecosystem integrations.";
                     RenderShaderDocs();
                     break;
+#if UDON
                 case TabMode.MetricsDocs:
                     _btnMetricsDocs.RemoveFromClassList("tab-btn-inactive"); _btnMetricsDocs.AddToClassList("tab-btn-active");
                     _tabDescription.text = "Transparent breakdown of the 4D-Chess heuristic multipliers powering the World Profiler.";
                     RenderMetricsDocs();
                     break;
+#endif
                 case TabMode.Network:
                     _btnNetwork.RemoveFromClassList("tab-btn-inactive"); _btnNetwork.AddToClassList("tab-btn-active");
                     _tabDescription.text = "Connect with the ecosystem, access open-source repositories, and monitor pipeline updates.";
@@ -571,11 +584,14 @@ namespace VixenTools.Editor
         // DOCUMENTATION LOADERS
         // =========================================================================
         
+#if UDON
+        // World-only: HOWITWORKS.md documents the World Profiler heuristics, so it is only loaded when the Udon (World SDK) define is present.
         private void RenderMetricsDocs()
         {
             string markdown = LoadMarkdownFile("HOWITWORKS.md");
             ParseMarkdownAndInject(markdown, _contentContainer);
         }
+#endif
 
         private void RenderShaderDocs()
         {

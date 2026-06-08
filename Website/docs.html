@@ -334,18 +334,21 @@
             <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">VixenWear Latex Ultra Shader</h2>
-                    <div class="badge">VixenWear Latex.shader | VixenWearEditor.cs | v2.3.0</div>
+                    <div class="badge">VixenWear Latex.shader | VixenWearEditor.cs | v2.4.0</div>
                 </div>
 
                 <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
                     A high-fidelity, dual-lobe PBR surface shader engineered for complex synthetic materials.
-                    Version 2.3.0 tears out the legacy <code>BRDF3</code> lighting model and ships a full
+                    The 2.3.x line tears out the legacy <code>BRDF3</code> lighting model and ships a full
                     industry-standard GGX stack: <code>D_GGX</code> (Trowbridge-Reitz), <code>V_SmithJointGGX</code>,
                     <code>F_Schlick</code>, <code>Burley_Diffuse</code>, and a Karis split-sum
                     (<code>EnvBRDFApprox_AB</code>) for indirect specular. Optional Filament/Frostbite multi-scatter
                     energy compensation preserves bright metal highlights at high roughness, while anisotropy,
                     thin-part transmission, tinted clearcoat, and a deep Light Volumes integration round out the
-                    new physical model.
+                    physical model. It now ships in two variants - the base shader plus a tessellation-free
+                    <code>VixenWear/Latex Ultra SPS</code> clone for VRCFury SPS patching - and 2.4.0 adds a liquid
+                    surface system: a master Polish gate, Poiyomi/Mochie reflection &amp; specular masks, a wet /
+                    run-off layer with geometry water droplets, and gravity-aligned melting goo.
                 </p>
 
                 <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">Physical Lighting Model</h3>
@@ -414,6 +417,16 @@
                         <code>ChannelPick</code> helper wires the choice through every consumer - parallax raymarch,
                         BRDF shadow trace, surface stage, and vertex displacement - so drop-in Poiyomi packings
                         work without re-authoring.
+                    </li>
+                    <li>
+                        <strong>Reflection &amp; Specular Masks (2.4.0):</strong>
+                        <code>_UsePackedMasks</code> reads two more channels off the packed map:
+                        <code>_ReflMask_*</code> dims environment / reflection-probe specular (including clearcoat
+                        env, Light Volume, and LTCGI reflections), while <code>_SpecMask_*</code> dims direct-light
+                        highlights. Channel defaults match Mochie packing (B = reflection, A = specular); matcaps keep
+                        their own masks. A one-click <em>Set Up for Poiyomi / Mochie Metallic Map</em> button maps a
+                        Mochie "Metallic Maps" texture (R:Met G:Smooth B:Reflection A:Specular) onto the packed PBR in
+                        one shot.
                     </li>
                     <li>
                         <strong>Standard-Style Render Mode Selector:</strong>
@@ -496,6 +509,44 @@
                     </li>
                 </ul>
 
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">Polish Gate, Wet, Goo & Outline</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li>
+                        <strong>Polish Layer Master Gate (2.4.0):</strong>
+                        <code>_UsePolish</code> (default on) wraps the entire polish lighting layer - clearcoat, thin
+                        film, SSS, transmission, anisotropy, rim, and multi-scatter - behind one switch. Off collapses
+                        the material to a flat GGX base; a per-pixel <code>_PolishMask</code> + <code>_PolishMaskCh</code>
+                        scopes it to painted regions.
+                    </li>
+                    <li>
+                        <strong>Wet &amp; Run-Off (2.4.0):</strong>
+                        <code>_UseDrip</code> soaks the masked area like fresh out of the pool - <code>_Wet_Amount</code>,
+                        <code>_Wet_Darken</code>, <code>_Wet_Smoothness</code>, <code>_Wet_Sheen</code>, and
+                        <code>_Wet_Flatten</code> drive water absorption, a near-mirror film, a dielectric Fresnel
+                        sheen, and detail flattening, with animated vertical run-off rivulets layered on top. On the
+                        base shader a geometry stage also emits real <em>Clear 3D Drips</em> (<code>_Drip3D_*</code>)
+                        that swell, neck, pinch off, and fall away as free geometry, with sway, body-slide, and
+                        floor-splat physics. Soak + rivulets run on both shaders; the geometry droplets are PC-only.
+                    </li>
+                    <li>
+                        <strong>Goo / Melting Sag (2.4.0):</strong>
+                        <code>_UseGoo</code> is a gravity-aligned vertex melt that runs in the displacement stage
+                        (benefits from tessellation on the base shader). <code>_Goo_Strength</code>,
+                        <code>_Goo_Reach</code>, and <code>_Goo_Variation</code> shape how far and how unevenly the
+                        latex sags; <code>_Goo_ToGround</code> + <code>_Goo_GroundY</code> pull strands toward the
+                        world floor; sway, body-follow, floor-collision, and pooling controls add procedural physics.
+                        Runs on both shaders.
+                    </li>
+                    <li>
+                        <strong>Backface-Extrusion Outline (2.3.3):</strong>
+                        A keyword-gated (<code>_OUTLINE_ON</code>) Cull Front outline rendered as PASS 0 ahead of the
+                        main forward pass - <code>_OutlineColor</code>, an HDR <code>_OutlineEmis</code> glow,
+                        <code>_OutlineWidth</code> / <code>_MaxOutlineWidth</code> distance clamp, an
+                        <code>_OutlineMask</code> with channel selector, and AudioLink reactivity. The off state is the
+                        no-keyword default, so a material without outlines compiles at zero added cost.
+                    </li>
+                </ul>
+
                 <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">AudioLink, HUD & Kinetics</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li>
@@ -516,9 +567,14 @@
                     <li>
                         <strong>God Tier Cybernetics HUD:</strong>
                         Black-and-white masked UI overlays for VU meters, oscilloscope waveform, DMX grid readouts,
-                        plus a new <code>_Cyber_CC_Density</code> (4-64 bars) true bar-chart spectrum and an
-                        <code>_UseCyberAuto</code> autocorrelator ring with animated angular spokes
-                        (<code>sin(angle * 12.0 + animTime)</code>) and gaussian falloff envelope.
+                        plus a <code>_Cyber_CC_Density</code> (4-64 bars) true bar-chart spectrum and an
+                        <code>_UseCyberAuto</code> autocorrelator ring with animated angular spokes and gaussian
+                        falloff envelope. New in 2.4.0: a <code>_Cyber_VU_Style</code> <em>Console</em> mode renders a
+                        full self-playing AudioLink control panel ported from the upstream
+                        <code>AudioLinkUI-Functions.cginc</code>; the Waveform, DMX, and Autocorrelator widgets each
+                        gain their own reaction band; and the autocorrelator ring picks up four per-band effects
+                        (Shimmer, Pop, Sizzle, Electrify). HUD passes are PC-only - the SPS variant declares the props
+                        inert for inspector parity.
                     </li>
                     <li>
                         <strong>HUD Hover-Off-Body Engine:</strong>
@@ -527,18 +583,16 @@
                         as a holographic plane floating above the avatar surface.
                     </li>
                     <li>
-                        <strong>Kinetic Vertex Engine (Rewritten):</strong>
-                        The dual-pass SM5 geometry shader was removed in 2.3.0 - it desynced under hardware
-                        tessellation. The replacement runs entirely inside the <code>disp()</code> vertex stage and
-                        the surface fragment. Vertices snap to a 3D grid (<code>floor(vertex.xyz * 25.0)</code>),
-                        each cell is hashed for a deterministic per-shard random axis, then Rodrigues-rotated, scaled,
-                        and offset along a pivot. The fragment performs a per-pixel
-                        <code>clip(fractureNoise - fractureCut)</code> with a tiny parallax pop on shard edges, so
-                        the visible mesh punches holes in sync with the vertex scatter and survives tessellation
-                        cleanly. Plus a new <code>_Vtx_AutoCorr_Str</code> reads
-                        <code>AudioLinkGetSphericalMappedAutoCorrelatorValue</code> per-vertex for a smooth
-                        volumetric ripple. All gated by <code>_UseVtxKinetic</code> and strictly band-amplitude
-                        driven so silent worlds never shatter the avatar.
+                        <strong>Kinetic Vertex Engine &amp; Flying Shards:</strong>
+                        Normal-inflate bass pump plus a per-pixel fracture clip
+                        (<code>clip(fractureNoise - fractureCut)</code>) that punches holes in the mesh and survives
+                        tessellation cleanly, alongside <code>_Vtx_AutoCorr_Str</code> reading
+                        <code>AudioLinkGetSphericalMappedAutoCorrelatorValue</code> per-vertex for a volumetric ripple.
+                        New in 2.4.0 (PC only): the fracture becomes a full flying-shard system driven by geometry
+                        passes - <code>_Vtx_Fracture_Amount</code> opens the body up as a manual hold/animate dissolve,
+                        with hover, tumble, spiral, lift, float, and trail controls, plus shard hue-shift and AudioLink
+                        ColorChord blending (<code>_UseShardCC</code>). The SPS shader dissolves via the main-pass clip
+                        only - no flying shards. All gated by <code>_UseVtxKinetic</code>.
                     </li>
                     <li>
                         <strong>Kinetic UV Engine (Surface Maps):</strong>

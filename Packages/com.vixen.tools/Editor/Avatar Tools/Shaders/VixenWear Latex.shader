@@ -26,8 +26,17 @@ Shader "VixenWear/Latex Ultra"
         [Toggle] _PBR_Met_Inv ("Invert Metallic", Float) = 0
         [Enum(R,0,G,1,B,2,A,3)] _PBR_Smooth_Ch ("Smoothness Channel", Float) = 3
         [Toggle] _PBR_Smooth_Inv ("Channel Stores Roughness (Invert)", Float) = 0
-        [Enum(R,0,G,1,B,2,A,3)] _PBR_AO_Ch ("AO Channel", Float) = 1
+        [Enum(R,0,G,1,B,2,A,3,None,4)] _PBR_AO_Ch ("AO Channel", Float) = 1
         [Enum(R,0,G,1,B,2,A,3)] _PBR_Height_Ch ("Height Channel", Float) = 2
+
+        // Poiyomi/Mochie packed-map masks - reflection mask dims environment/probe reflections, specular mask dims direct highlights. Channel defaults (B/A) match Mochie "Metallic Maps" packing (R:Met G:Smooth B:ReflMask A:SpecMask). Default off so existing materials are unchanged.
+        [Toggle] _UsePackedMasks ("Enable Reflection / Specular Masks", Float) = 0
+        [Enum(R,0,G,1,B,2,A,3)] _ReflMask_Ch ("Reflection Mask Channel", Float) = 2
+        [Toggle] _ReflMask_Inv ("Invert Reflection Mask", Float) = 0
+        _ReflMask_Str ("Reflection Mask Strength", Range(0,1)) = 1
+        [Enum(R,0,G,1,B,2,A,3)] _SpecMask_Ch ("Specular Mask Channel", Float) = 3
+        [Toggle] _SpecMask_Inv ("Invert Specular Mask", Float) = 0
+        _SpecMask_Str ("Specular Mask Strength", Range(0,1)) = 1
 
         _AO_Str ("AO Strength", Range(0,1)) = 1.0
         _Spec_Occ ("Specular Occlusion", Range(0,1)) = 1.0
@@ -63,6 +72,60 @@ Shader "VixenWear/Latex Ultra"
         _Trans_Power ("Transmission Falloff", Range(0.1,10)) = 2.0
 
         [Toggle] _UseMultiScatter ("Multi-Scatter Energy Compensation", Float) = 1
+
+        // Polish layer master gate + B&W mask - scales the entire polish lighting layer (clearcoat, thin film, SSS, transmission, anisotropy, rim, multi-scatter) per-pixel. Toggle on + white mask preserves the historical look; runtime-gated (no keyword) so VRCFury can animate it.
+        [Toggle] _UsePolish ("Enable Polish Layer", Float) = 1
+        [NoScaleOffset] _PolishMask ("Polish Mask (B&W)", 2D) = "white" {}
+        [Enum(R,0,G,1,B,2,A,3)] _PolishMaskCh ("Polish Mask Channel", Float) = 0
+
+        // Drip - procedural vertical rivulets that mimic water running off the latex (per-pixel wet streaks). Own toggle so off = no cost.
+        [Toggle] _UseDrip ("Enable Drip (Water Run-Off)", Float) = 0
+        [NoScaleOffset] _DripMask ("Drip Mask (B&W)", 2D) = "white" {}
+        [Enum(R,0,G,1,B,2,A,3)] _DripMaskCh ("Drip Mask Channel", Float) = 0
+        _Drip_Density ("Drip Density (Columns)", Range(2, 200)) = 40
+        _Drip_Width ("Rivulet Thinness", Range(1, 300)) = 90
+        _Drip_Coverage ("Drip Coverage", Range(0, 1)) = 0.4
+        _Drip_Speed ("Drip Flow Speed", Range(0, 2)) = 0.25
+        _Drip_Strength ("Drip Run-Off Streak Strength", Range(0, 1)) = 0.7
+        _Drip_Normal ("Drip Normal Bump", Range(0, 1)) = 0.5
+
+        // Clear 3D drips - water beads that swell and pinch off, then run down the surface and dry out (fade away); shaded as clear water tinted to the clearcoat color. Vertex bulge plus surface glass, gated under the Wet toggle.
+        _Drip3D_Strength ("Clear Drip Amount", Range(0, 1)) = 0
+        _Drip3D_Scale ("Clear Drip Droplet Scale", Range(0.1, 20)) = 8.0
+        _Drip3D_Sheen ("Clear Drip Glassiness", Range(0, 1)) = 0.8
+        _Drip3D_Fall ("Clear Drip Fall Length", Range(0, 1)) = 0.6
+
+        // Clear drip physics + collision - ambient sway/wobble, surface-slide down the body while attached, and a floor splat that pools on the shared world floor (_Goo_GroundY). All default off so existing droplet materials are unchanged.
+        _Drip_Sway ("Droplet Sway / Wobble", Range(0, 1)) = 0
+        _Drip_BodyFollow ("Droplet Surface Slide", Range(0, 1)) = 0
+        [Toggle] _Drip_FloorCollide ("Droplet Floor Splat", Float) = 0
+
+        // Wet soak - global "just out of the shower/pool" wetness layered under the run-off rivulets above.
+        _Wet_Amount ("Wetness (Soaked)", Range(0, 1)) = 0.7
+        _Wet_Darken ("Wet Darkening", Range(0, 1)) = 0.6
+        _Wet_Smoothness ("Wet Smoothness", Range(0, 1)) = 0.95
+        _Wet_Sheen ("Wet Film Sheen", Range(0, 1)) = 0.5
+        _Wet_Flatten ("Wet Normal Flatten", Range(0, 1)) = 0.5
+
+        // Goo - gravity-aligned vertex sag that mimics melting/runny latex or wax. Runs in disp(); own toggle.
+        [Toggle] _UseGoo ("Enable Goo (Melting Sag)", Float) = 0
+        [NoScaleOffset] _GooMask ("Goo Mask (B&W)", 2D) = "white" {}
+        [Enum(R,0,G,1,B,2,A,3)] _GooMaskCh ("Goo Mask Channel", Float) = 0
+        _Goo_Strength ("Goo Sag Distance", Range(0, 1)) = 0.0
+        _Goo_Noise ("Goo Tendril Scale", Range(0.1, 20)) = 6.0
+        _Goo_Speed ("Goo Flow Speed", Range(0, 2)) = 0.3
+        _Goo_Droop ("Goo Underside Bias", Range(0, 1)) = 0.6
+        _Goo_Reach ("Goo Stretch Distance", Range(0, 10)) = 0.3
+        _Goo_Variation ("Goo Strand Variation", Range(0, 1)) = 0.7
+        _Goo_ToGround ("Goo Melt To Ground", Range(0, 1)) = 0
+        _Goo_GroundY ("Goo Ground Height (World Y)", Float) = 0
+
+        // Goo physics + collision - ambient pendulum sway, surface-follow body collision, and a floor clamp with pooling. All default off so existing materials are unchanged; _Goo_GroundY is the shared world floor for both goo and droplet collision.
+        _Goo_Sway ("Goo Sway Amount", Range(0, 1)) = 0
+        _Goo_SwaySpeed ("Goo Sway Speed", Range(0, 3)) = 1.0
+        _Goo_BodyFollow ("Goo Surface Follow (Body)", Range(0, 1)) = 0
+        [Toggle] _Goo_FloorCollide ("Goo Floor Collision", Float) = 0
+        _Goo_Pool ("Goo Floor Pooling", Range(0, 1)) = 0.3
 
         [Toggle(_DETAIL_NORMAL)] _UseDetailNormal ("Enable Micro Detail", Float) = 0
         [NoScaleOffset][Normal] _DetailNormalMap ("Micro Detail Map", 2D) = "bump" {}
@@ -136,12 +199,12 @@ Shader "VixenWear/Latex Ultra"
         [Toggle] _UseChronoFX ("Enable Chronotensity FX", Float) = 0
 
         [Toggle] _UseCyber ("Enable Cybernetic Overlays", Float) = 0
-        [NoScaleOffset] _CyberMask ("Cyber Mask (B&W Window)", 2D) = "white" {}
+        [NoScaleOffset] _CyberMask ("Cyber Mask (B&W Window)", 2D) = "black" {}
         _Cyber_Hover ("HUD Hover Height (Float Off Body)", Range(0, 0.15)) = 0.03
         _Cyber_Hover_Bob ("HUD Hover Bob (Subtle Drift)", Range(0, 1)) = 0.25
 
         [Toggle] _UseCyberVU ("Enable VU Meter", Float) = 0
-        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Cyber_VU_Band ("VU Band", Float) = 0
+        [Enum(Console,0,Bar,1)] _Cyber_VU_Style ("VU Meter Style", Float) = 0
         _Cyber_VU_Str ("VU Meter Intensity", Range(0,5)) = 1.0
         [VectorLabel(X Offset, Y Offset, Scale, Rotation)] _Cyber_VU_Transform ("VU Transform", Vector) = (0,0,1,0)
 
@@ -152,16 +215,28 @@ Shader "VixenWear/Latex Ultra"
         [VectorLabel(X Offset, Y Offset, Scale, Rotation)] _Cyber_CC_Transform ("Spectrum Transform", Vector) = (0,0,1,0)
 
         [Toggle] _UseCyberWave ("Enable Waveform", Float) = 0
+        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Cyber_Wave_Band ("Waveform Band", Float) = 0
         _Cyber_Wave_Str ("Waveform Intensity", Range(0,5)) = 1.0
         [VectorLabel(X Offset, Y Offset, Scale, Rotation)] _Cyber_Wave_Transform ("Waveform Transform", Vector) = (0,0,1,0)
 
         [Toggle] _UseCyberDMX ("Enable DMX Grid Readout", Float) = 0
+        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Cyber_DMX_Band ("DMX Grid Band", Float) = 0
         _Cyber_DMX_Str ("DMX Grid Intensity", Range(0,5)) = 1.0
         [VectorLabel(X Offset, Y Offset, Scale, Rotation)] _Cyber_DMX_Transform ("DMX Grid Transform", Vector) = (0,0,1,0)
 
         [Toggle] _UseCyberAuto ("Enable Autocorrelator Ring", Float) = 0
+        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Cyber_Auto_Band ("Autocorrelator Band", Float) = 0
         _Cyber_AutoCorr_Str ("Autocorrelator Intensity", Range(0,5)) = 1.0
         [VectorLabel(X Offset, Y Offset, Scale, Rotation)] _Cyber_Auto_Transform ("Autocorrelator Transform", Vector) = (0,0,1,0)
+        // Per-effect reactors for the Autocorrelator HUD ring. Each effect is toggled on/off and driven by its own AudioLink band.
+        [Toggle] _Cyber_Auto_Shimmer ("AC Shimmer Effect", Float) = 1
+        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Cyber_Auto_Shimmer_Band ("AC Shimmer Band", Float) = 3
+        [Toggle] _Cyber_Auto_Pop ("AC Pop Effect", Float) = 1
+        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Cyber_Auto_Pop_Band ("AC Pop Band", Float) = 0
+        [Toggle] _Cyber_Auto_Sizzle ("AC Sizzle Effect", Float) = 1
+        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Cyber_Auto_Sizzle_Band ("AC Sizzle Band", Float) = 2
+        [Toggle] _Cyber_Auto_Electrify ("AC Electrify Effect", Float) = 1
+        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Cyber_Auto_Electrify_Band ("AC Electrify Band", Float) = 1
 
         [Toggle] _UseVtxKinetic ("Enable Vertex Displacement", Float) = 0
         [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Vtx_Pump_Band ("Vertex Pump Band", Float) = 0
@@ -169,6 +244,17 @@ Shader "VixenWear/Latex Ultra"
 
         [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3)] _Vtx_Fracture_Band ("Vertex Fracture Band", Float) = 3
         _Vtx_Fracture_Str ("Vertex Fracture Scatter", Range(0, 5)) = 0.0
+        _Vtx_Fracture_Amount ("Vertex Fracture Amount (Hold/Animate)", Range(0,1)) = 0.0
+        _Vtx_Fracture_Dist ("Vertex Fracture Hover Distance", Range(0,2)) = 0.35
+        _Vtx_Fracture_Spin ("Vertex Fracture Tumble", Range(0,1)) = 0.6
+        _Vtx_Fracture_Spiral ("Vertex Fracture Spiral", Range(0,1)) = 0.0
+        _Vtx_Fracture_Lift ("Vertex Fracture Lift (Up/Down, Animate)", Range(-2,2)) = 0.0
+        _Vtx_Fracture_Float ("Vertex Fracture Float Drift", Range(0,1)) = 0.0
+        _Vtx_Fracture_Trail ("Vertex Fracture Trail Length", Range(0,1)) = 0.0
+        _Shard_ColorMod ("Shard Hue Shift", Range(0,1)) = 0.0
+        _Shard_ColorMod_Speed ("Shard Hue Cycle Speed", Range(0,5)) = 0.0
+        [Toggle] _UseShardCC ("Shard AudioLink ColorChord", Float) = 0
+        _Shard_CC_Str ("Shard ColorChord Blend", Range(0,1)) = 0.0
 
         _Vtx_AutoCorr_Str ("Vertex Autocorrelator Ripple", Range(0,5)) = 0.0
 
@@ -419,6 +505,9 @@ Shader "VixenWear/Latex Ultra"
             half  Anisotropy;
             half  AnisoRotation;
             half  Transmission;
+            half  PolishMask;
+            half  ReflectionMask;
+            half  SpecularMask;
         };
 
         struct Input
@@ -431,7 +520,12 @@ Shader "VixenWear/Latex Ultra"
             INTERNAL_DATA
         };
 
-        sampler2D _MainTex, _MetallicGlossMap, _BumpMap, _DetailNormalMap, _EmissionMap, _EmissionMap2, _RegionMask, _MatCap, _MatCapMask, _MatCap2, _MatCap2_Mask, _CyberMask;
+        // _MainTex uses an explicit texture + sampler so the fragment-stage B&W masks (_PolishMask, _DripMask, _CyberMask) can borrow its sampler instead of each consuming one of the 16 ps_5_0 sampler registers. A borrowed sampler only resolves in a stage where its donor texture is actually sampled, so _GooMask keeps its own combined sampler: it is read in the vertex/displacement stage (and the auto-generated shadow caster), where _MainTex is not sampled. Net sampler count is unchanged versus before these effects: _CyberMask gives up its register, _GooMask takes one.
+        UNITY_DECLARE_TEX2D(_MainTex);
+        UNITY_DECLARE_TEX2D_NOSAMPLER(_PolishMask);
+        UNITY_DECLARE_TEX2D_NOSAMPLER(_DripMask);
+        UNITY_DECLARE_TEX2D_NOSAMPLER(_CyberMask);
+        sampler2D _MetallicGlossMap, _BumpMap, _DetailNormalMap, _EmissionMap, _EmissionMap2, _RegionMask, _MatCap, _MatCapMask, _MatCap2, _MatCap2_Mask, _GooMask;
         fixed4 _Color, _EmissionColor, _EmissionColor2, _CC_Tint;
         fixed4 _Region_R_Tint, _Region_G_Tint, _Region_B_Tint;
         fixed4 _MatCap_Tint, _MatCap2_Tint;
@@ -441,6 +535,7 @@ Shader "VixenWear/Latex Ultra"
         float _Parallax, _Disp_Str, _Tess_Edge, _Emis_Exp;
         // Poiyomi compat: PBR mask channel selectors + invert toggles.
         float _PBR_Met_Ch, _PBR_Met_Inv, _PBR_Smooth_Ch, _PBR_Smooth_Inv, _PBR_AO_Ch, _PBR_Height_Ch;
+        float _UsePackedMasks, _ReflMask_Ch, _ReflMask_Inv, _ReflMask_Str, _SpecMask_Ch, _SpecMask_Inv, _SpecMask_Str;
         // Poiyomi compat: secondary emission layer + multi-region color mask.
         float _UseEmission2, _Emis2_MaskCh, _AL_Band_Emis2, _AL_Emis2_Mod;
         float _UseRegionMask, _Region_R_Emis, _Region_G_Emis, _Region_B_Emis;
@@ -450,6 +545,12 @@ Shader "VixenWear/Latex Ultra"
         float _Aniso, _AnisoRot;
         float _Trans_Str, _Trans_Dist, _Trans_Power;
         float _UseMultiScatter;
+        // Polish master gate + B&W mask, plus the drip (surface) and goo (vertex) latex effects.
+        float _UsePolish, _PolishMaskCh;
+        float _UseDrip, _DripMaskCh, _Drip_Density, _Drip_Width, _Drip_Coverage, _Drip_Speed, _Drip_Strength, _Drip_Normal;
+        float _Wet_Amount, _Wet_Darken, _Wet_Smoothness, _Wet_Sheen, _Wet_Flatten;
+        float _UseGoo, _GooMaskCh, _Goo_Strength, _Goo_Noise, _Goo_Speed, _Goo_Droop, _Goo_Reach, _Goo_Variation, _Goo_ToGround, _Goo_GroundY;
+        float _Goo_Sway, _Goo_SwaySpeed, _Goo_BodyFollow, _Goo_FloorCollide, _Goo_Pool;
         float _Det_Strength, _Det_UV_Tiling;
         float _MatCap_Int, _MatCap_Lit, _MatCap_MaskCh;
         float _UseMatCap2, _MatCap2_MaskCh, _MatCap2_Int, _MatCap2_Rot, _MatCap2_Blend;
@@ -464,9 +565,10 @@ Shader "VixenWear/Latex Ultra"
 
         float _UseVtxKinetic, _Vtx_Pump_Band, _Vtx_Pump_Str;
         float _Vtx_Fracture_Band, _Vtx_Fracture_Str, _Vtx_AutoCorr_Str;
+        float _Vtx_Fracture_Amount, _Vtx_Fracture_Dist, _Vtx_Fracture_Spin;
 
         float _UseCyber, _Cyber_AutoCorr_Str, _Cyber_Hover, _Cyber_Hover_Bob;
-        float _UseCyberVU, _Cyber_VU_Band, _Cyber_VU_Str; float4 _Cyber_VU_Transform;
+        float _UseCyberVU, _Cyber_VU_Str; float4 _Cyber_VU_Transform;
         float _UseCyberCC, _Cyber_CC_Band, _Cyber_CC_Str, _Cyber_CC_Density; float4 _Cyber_CC_Transform;
         float _UseCyberWave, _Cyber_Wave_Str; float4 _Cyber_Wave_Transform;
         float _UseCyberDMX, _Cyber_DMX_Str; float4 _Cyber_DMX_Transform;
@@ -566,6 +668,28 @@ Shader "VixenWear/Latex Ultra"
                  :              packed.a;
         }
 
+        // Hash + smooth 3D value noise (0..1) driving the Goo melt's procedural per-strand variation.
+        float gooHash3(float3 p) { return frac(sin(dot(p, float3(12.9898, 78.233, 37.719))) * 43758.5453); }
+        float gooNoise3(float3 p)
+        {
+            float3 i = floor(p);
+            float3 f = frac(p);
+            f = f * f * (3.0 - 2.0 * f);
+            float n000 = gooHash3(i + float3(0, 0, 0));
+            float n100 = gooHash3(i + float3(1, 0, 0));
+            float n010 = gooHash3(i + float3(0, 1, 0));
+            float n110 = gooHash3(i + float3(1, 1, 0));
+            float n001 = gooHash3(i + float3(0, 0, 1));
+            float n101 = gooHash3(i + float3(1, 0, 1));
+            float n011 = gooHash3(i + float3(0, 1, 1));
+            float n111 = gooHash3(i + float3(1, 1, 1));
+            float nx00 = lerp(n000, n100, f.x);
+            float nx10 = lerp(n010, n110, f.x);
+            float nx01 = lerp(n001, n101, f.x);
+            float nx11 = lerp(n011, n111, f.x);
+            return lerp(lerp(nx00, nx10, f.y), lerp(nx01, nx11, f.y), f.z);
+        }
+
         // Returns true if AudioLink should be considered active for this frame.
         bool AL_Active()
         {
@@ -609,7 +733,7 @@ Shader "VixenWear/Latex Ultra"
                 int colorMode = (int)_AL_ColorMode;
                 // CCCOLORS index 0 is always black, so band → note is offset by +1.
                 if (colorMode == 1)
-                    al_color = AudioLinkData(ALPASS_CCCOLORS + int2(((int)_AL_Band_Emission % 11) + 1, 0));
+                    al_color = AudioLinkData(ALPASS_CCCOLORS + int2((int)((uint)_AL_Band_Emission % 11u) + 1, 0));
                 // Theme 0..3 live at uint2(0..3, 23), not CCCOLORS row+1.
                 else if (colorMode >= 2 && colorMode <= 5)
                     al_color = AudioLinkData(ALPASS_THEME_COLOR0 + int2(colorMode - 2, 0));
@@ -618,7 +742,7 @@ Shader "VixenWear/Latex Ultra"
 
                 float wavePhase = frac(uv.y * 2.0 - _Time.y * 0.2);
                 raw_waveform = AudioLinkData(ALPASS_WAVEFORM + int2((int)(wavePhase * 128.0), 0)).r - 0.5;
-                autoCorr = AudioLinkData(ALPASS_AUTOCORRELATOR + int2((int)(frac(uv.x) * 128.0), 0)).r;
+                autoCorr = AudioLinkData(ALPASS_AUTOCORRELATOR + int2((int)(frac(uv.x) * 128.0), 0)).r * 0.007;
             }
 
             // Respect media state: when enabled, mute effects if media is NOT playing
@@ -675,39 +799,76 @@ Shader "VixenWear/Latex Ultra"
                     v.vertex.xyz += v.normal * (ac - 0.6) * _Vtx_AutoCorr_Str * 0.1;
                 }
 
-                // Vertex fracture: scatter + pivot+rotate. Driven strictly by AL band amplitude - no manual fallback so the avatar isn't shattered in silent worlds.
-                if (_Vtx_Fracture_Str > 0.0001)
+                // Vertex fracture is now a real geometry-shader effect (see "PASS 4: FRACTURE SHARDS"), driven by _Vtx_Fracture_Amount; the old in-place vertex scatter is removed.
+            }
+
+            // GOO - melting/runny latex. Gravity-aligned, masked, and procedurally varied so it forms uneven runny tendrils. Range is dramatically extendable via _Goo_Reach, and it can optionally melt all the way down to the world ground plane (_Goo_ToGround). Runs in disp(); own toggle, independent of the AL kinetic gate.
+            if (_UseGoo > 0.5 && _Goo_Strength > 0.0001)
+            {
+                float gooMask = ChannelPick(tex2Dlod(_GooMask, float4(uv, 0, 0)), _GooMaskCh);
+                if (gooMask > 0.001)
                 {
-                    int fracBand = (int)_Vtx_Fracture_Band;
-                    float fracAmp = (fracBand == 0) ? amps.x : (fracBand == 1) ? amps.y : (fracBand == 2) ? amps.z : amps.w;
-                    fracAmp *= _Vtx_Fracture_Str;
+                    // World position (for melt-to-ground) and world normal (downward-facing surfaces melt more).
+                    float3 gooWorldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+                    float3 worldN = UnityObjectToWorldNormal(v.normal);
+                    float facingDown = saturate(dot(worldN, float3(0, -1, 0)));
+                    float faceWeight = lerp(1.0, facingDown, saturate(_Goo_Droop));
 
-                    if (fracAmp > 0.0001)
+                    // PROCEDURAL GENERATION - coarse per-strand identity (coherent tendrils) plus two octaves of value noise for organic, uneven melting. _Goo_Variation blends from a uniform melt (0) to wildly varying strand lengths (1).
+                    float3 gooNP = v.vertex.xyz * _Goo_Noise;
+                    float gooFbm = gooNoise3(gooNP) * 0.65 + gooNoise3(gooNP * 2.7 + 13.1) * 0.35;
+                    float3 gooCell = floor(v.vertex.xyz * _Goo_Noise * 0.5);
+                    float strandHash = gooHash3(gooCell);
+                    float procReach = saturate(gooFbm * 0.6 + strandHash * 0.6);
+                    float strandReach = lerp(1.0, procReach * 1.6, saturate(_Goo_Variation));
+
+                    // Slow time wobble so the melt stays alive and runny; staggered per strand.
+                    float wobble = 0.75 + 0.25 * sin(_Time.y * _Goo_Speed * 6.2831 + strandHash * 6.2831);
+
+                    // Common melt weight (0..~1.5); some strands reach further than others.
+                    float meltWeight = gooMask * faceWeight * strandReach * wobble * saturate(_Goo_Strength);
+
+                    // DRAMATICALLY EXTENDED RANGE. Distance mode stretches down a large, settable distance (_Goo_Reach world units). Ground mode pulls each vertex down toward the world ground plane (Y = _Goo_GroundY) so strands reach the floor regardless of avatar height. Computed in world space, then converted to object space so non-uniform scale is handled.
+                    float distDown   = _Goo_Reach * meltWeight;
+                    float groundDown = max(gooWorldPos.y - _Goo_GroundY, 0.0) * saturate(meltWeight);
+                    float down = lerp(distDown, groundDown, saturate(_Goo_ToGround));
+
+                    // PHYSICS - lateral pendulum sway, growing with how far the strand has melted so the tip swings most, like a weighted strand. Staggered per strand so tendrils never move in lock-step.
+                    float3 lateral = 0;
+                    float swayPh = _Time.y * _Goo_SwaySpeed * 2.0 + strandHash * 6.2831;
+                    lateral.x = sin(swayPh) * _Goo_Sway;
+                    lateral.z = sin(swayPh * 0.8 + 1.7) * _Goo_Sway;
+                    lateral *= down * 0.4;
+
+                    float3 meltWorld = float3(lateral.x, -down, lateral.z);
+
+                    // BODY COLLISION (best-effort) - project the melt onto the surface tangent plane so goo flows ALONG the body instead of tunnelling straight through it (1 = pure surface flow, 0 = straight gravity).
+                    if (_Goo_BodyFollow > 0.0001)
                     {
-                        // Snap to a 3D grid so same-chunk verts hash identically and move together under tessellation.
-                        float3 cell = floor(v.vertex.xyz * 25.0); // 25.0 controls physical shard size
-                        float hash = frac(sin(dot(cell, float3(12.9898,78.233,37.719))) * 43758.5453);
-
-                        float3 randDir = normalize(float3(frac(hash * 1.0) * 2.0 - 1.0, frac(hash * 1.37) * 2.0 - 1.0, frac(hash * 3.11) * 2.0 - 1.0));
-                        float rotSeed = frac(hash * 7.13);
-
-                        float scatter = fracAmp * 0.06;
-                        float3 pivotOffset = v.normal * (0.02 + fracAmp * 0.02);
-                        float3 pivot = v.vertex.xyz - pivotOffset;
-
-                        // rotation around random axis (Rodrigues)
-                        float angle = rotSeed * fracAmp * 6.2831853;
-                        float s = sin(angle), c = cos(angle);
-                        float3 axis = normalize(randDir + 0.0001);
-                        float3 rel = v.vertex.xyz - pivot;
-                        float3 relRot = rel * c + cross(axis, rel) * s + axis * dot(axis, rel) * (1.0 - c);
-                        v.vertex.xyz = pivot + relRot;
-
-                        // scatter and subtle scale
-                        v.vertex.xyz += randDir * scatter;
-                        float scale = 1.0 + fracAmp * 0.08;
-                        v.vertex.xyz = pivot + (v.vertex.xyz - pivot) * scale;
+                        float3 tangentFlow = meltWorld - worldN * dot(meltWorld, worldN);
+                        float lenM = length(meltWorld);
+                        float tfl = length(tangentFlow);
+                        tangentFlow = (tfl > 1e-5) ? (tangentFlow / tfl * lenM) : meltWorld;
+                        meltWorld = lerp(meltWorld, tangentFlow, saturate(_Goo_BodyFollow));
                     }
+
+                    // FLOOR COLLISION - clamp the melted world position to the floor plane (_Goo_GroundY) and splay sideways into a shallow pool where it lands.
+                    float3 meltedWP = gooWorldPos + meltWorld;
+                    if (_Goo_FloorCollide > 0.5)
+                    {
+                        float below = _Goo_GroundY - meltedWP.y;
+                        if (below > 0.0)
+                        {
+                            meltedWP.y = _Goo_GroundY;
+                            float2 splay = float2(strandHash - 0.5, gooHash3(gooCell + 7.3) - 0.5);
+                            float sl = length(splay);
+                            splay = (sl > 1e-5) ? splay / sl : float2(1, 0);
+                            meltedWP.xz += splay * below * _Goo_Pool;
+                        }
+                    }
+
+                    // Back to object space (handles non-uniform scale).
+                    v.vertex.xyz += mul((float3x3)unity_WorldToObject, meltedWP - gooWorldPos);
                 }
             }
 
@@ -718,34 +879,42 @@ Shader "VixenWear/Latex Ultra"
         // PBR HELPERS
         float2 ParallaxRaymarching(float2 uv, float3 viewDirTangent, float parallaxDepth)
         {
+            // Derivatives are taken up front in uniform control flow so the tex2Dgrad calls inside the dynamic loop stay valid, and the function uses a single return path so FXC can prove every local is initialized (silences the "potentially uninitialized variable" warning in the shadow caster).
+            float2 dx = ddx(uv);
+            float2 dy = ddy(uv);
+            float2 result = uv;
+
             // Early-out when depth ~= 0 - otherwise the loop below re-samples the same texel up to 50 times (stepUVOffset collapses to zero) and exits only when the heightmap value rises above the descending layer height, burning ~35 tex2Dgrad samples per pixel on any non-white surface map.
-            [branch] if (parallaxDepth < 1e-4) return uv;
-            float parallaxLimit = -length(viewDirTangent.xy) / max(viewDirTangent.z, 0.001);
-            parallaxLimit *= parallaxDepth;
-            float2 vOffsetDir = normalize(viewDirTangent.xy);
-            float2 vMaxOffset = vOffsetDir * parallaxLimit;
-            int numSteps = (int)lerp(48.0, 8.0, max(viewDirTangent.z, 0.0));
-            float stepSize = 1.0 / (float)numSteps;
-            float2 dx = ddx(uv); float2 dy = ddy(uv);
-
-            float currentLayerHeight = 1.0; float2 currentUVOffset = 0.0;
-            float2 stepUVOffset = vMaxOffset * stepSize;
-            float currentMapHeight = ChannelPick(tex2Dgrad(_MetallicGlossMap, uv, dx, dy), _PBR_Height_Ch);
-
-            UNITY_LOOP
-            for(int i = 0; i < 50; i++)
+            [branch] if (parallaxDepth >= 1e-4)
             {
-                if (currentMapHeight >= currentLayerHeight) break;
-                currentLayerHeight -= stepSize;
-                currentUVOffset += stepUVOffset;
-                currentMapHeight = ChannelPick(tex2Dgrad(_MetallicGlossMap, uv + currentUVOffset, dx, dy), _PBR_Height_Ch);
-            }
+                float parallaxLimit = -length(viewDirTangent.xy) / max(viewDirTangent.z, 0.001);
+                parallaxLimit *= parallaxDepth;
+                float2 vOffsetDir = normalize(viewDirTangent.xy);
+                float2 vMaxOffset = vOffsetDir * parallaxLimit;
+                int numSteps = (int)lerp(48.0, 8.0, max(viewDirTangent.z, 0.0));
+                float stepSize = 1.0 / (float)numSteps;
 
-            float prevLayerHeight = currentLayerHeight + stepSize;
-            float prevMapHeight = ChannelPick(tex2Dgrad(_MetallicGlossMap, uv + currentUVOffset - stepUVOffset, dx, dy), _PBR_Height_Ch);
-            float weight = (currentLayerHeight - currentMapHeight) /
-                           max((currentLayerHeight - currentMapHeight) + (prevMapHeight - prevLayerHeight), 0.0001);
-            return uv + (currentUVOffset - stepUVOffset * weight);
+                float currentLayerHeight = 1.0;
+                float2 currentUVOffset = 0.0;
+                float2 stepUVOffset = vMaxOffset * stepSize;
+                float currentMapHeight = ChannelPick(tex2Dgrad(_MetallicGlossMap, uv, dx, dy), _PBR_Height_Ch);
+
+                UNITY_LOOP
+                for(int i = 0; i < 50; i++)
+                {
+                    if (currentMapHeight >= currentLayerHeight) break;
+                    currentLayerHeight -= stepSize;
+                    currentUVOffset += stepUVOffset;
+                    currentMapHeight = ChannelPick(tex2Dgrad(_MetallicGlossMap, uv + currentUVOffset, dx, dy), _PBR_Height_Ch);
+                }
+
+                float prevLayerHeight = currentLayerHeight + stepSize;
+                float prevMapHeight = ChannelPick(tex2Dgrad(_MetallicGlossMap, uv + currentUVOffset - stepUVOffset, dx, dy), _PBR_Height_Ch);
+                float weight = (currentLayerHeight - currentMapHeight) /
+                               max((currentLayerHeight - currentMapHeight) + (prevMapHeight - prevLayerHeight), 0.0001);
+                result = uv + (currentUVOffset - stepUVOffset * weight);
+            }
+            return result;
         }
 
         inline half HDRPSpecularOcclusion(half NdotV, half AO, half roughness)
@@ -866,6 +1035,13 @@ Shader "VixenWear/Latex Ultra"
 
             half rawAO = s.Occlusion;
 
+            // Polish layer master gate + per-pixel B&W mask. polish=0 collapses the whole polish layer to a flat GGX base: clearcoat off (so baseEnergy returns to 1), thin film neutral, no transmission, isotropic spec. Clearcoat/film/transmission/aniso scale here; SSS, rim, and multi-scatter pick it up below.
+            half polish = saturate(s.PolishMask);
+            s.ClearcoatStrength *= polish;
+            s.ThinFilmStrength  *= polish;
+            s.Transmission      *= polish;
+            s.Anisotropy        *= polish;
+
             // Geometric specular AA: roughens normals based on screen-space variance.
             half aBase   = GeometricSpecAA(N,  s.BaseRoughness, s.SpecAA);
             half ccRough = max(1.0 - s.ClearcoatSmoothness, 0.0089);
@@ -959,7 +1135,7 @@ Shader "VixenWear/Latex Ultra"
             // SSS - wrap + back-scatter
             float wrap = saturate((NdotL + _SSS_Dist) / max(1e-5, 1.0 + _SSS_Dist));
             float back = pow(saturate(dot(V, -L)), _SSS_Power);
-            float sssTerm = (wrap * 0.6 + back * 0.4) * _SSS_Str;
+            float sssTerm = (wrap * 0.6 + back * 0.4) * _SSS_Str * polish;
             half3 absorption = 1.0 - diffColor;
             half3 sssProfile = exp2(-s.Thickness * absorption * 4.0);
             half3 sssColor = diffColor * light.color * sssTerm * sssProfile * s.Thickness;
@@ -978,7 +1154,7 @@ Shader "VixenWear/Latex Ultra"
 
             // Rim - fake atmospheric edge
             half rimExponent = lerp(30.0, 0.1, saturate(_Rim_Power / 10.0));
-            half rim = pow(saturate(1.0 - NcV), rimExponent) * _Rim_Str *
+            half rim = pow(saturate(1.0 - NcV), rimExponent) * _Rim_Str * polish *
                        saturate(_Rim_Power * 100.0);
             half3 rimColor = rim * diffColor * (gi.diffuse + 0.1);
 
@@ -990,7 +1166,7 @@ Shader "VixenWear/Latex Ultra"
 
             // Multi-scatter compensation (Filament). Skipped when toggle off.
             half3 baseMS = 1.0;
-            if (_UseMultiScatter > 0.5)
+            if (_UseMultiScatter > 0.5 && polish > 0.001)
             {
                 baseMS = EnergyCompensation(specColor, dfg_base);
                 baseSpecular *= baseMS;
@@ -1002,18 +1178,22 @@ Shader "VixenWear/Latex Ultra"
             // Indirect clearcoat specular (uses its own roughness-mip env color).
             half3 indirectCCSpec = clearcoatEnv * envBRDF_cc * thinFilmColor * ccSpecOcc;
 
+            // Poiyomi/Mochie packed-map masks - specular mask dims direct light highlights, reflection mask dims environment/probe reflections (incl. clearcoat env, Light Volume, and LTCGI specular). Both are 1.0 (no effect) unless _UsePackedMasks is on.
+            half specMask = s.SpecularMask;
+            half reflMask = s.ReflectionMask;
+
             // Combine
             half3 finalColor =
                 gi.diffuse * diffColor * baseEnergy * rawAO +           // indirect diffuse (Poiyomi-realistic: raw scalar AO, no multi-bounce)
                 baseDiffuse +                                            // direct diffuse (Burley)
                 sssColor +
                 transmission +
-                baseSpecular +
-                ccSpecular +
-                indirectBaseSpec +
-                indirectCCSpec +
-                s.LVSpec * baseEnergy * baseSpecOcc +
-                s.LVCCSpec * s.ClearcoatStrength * thinFilmColor * ccSpecOcc +
+                baseSpecular * specMask +
+                ccSpecular * specMask +
+                indirectBaseSpec * reflMask +
+                indirectCCSpec * reflMask +
+                s.LVSpec * baseEnergy * baseSpecOcc * reflMask +
+                s.LVCCSpec * s.ClearcoatStrength * thinFilmColor * ccSpecOcc * reflMask +
                 rimColor;
 
             // LTCGI (area lights)
@@ -1031,7 +1211,7 @@ Shader "VixenWear/Latex Ultra"
                 half3 ltcgiBaseSpec = base_ltc_s * specColor * baseEnergy * baseSpecOcc * _LTCGI_Spec_Mix * baseMS;
                 half3 ltcgiCCSpec   = cc_ltc_s * ccFresEnv * thinFilmColor * ccSpecOcc * _LTCGI_Spec_Mix;
 
-                finalColor += (ltcgiDiff + ltcgiBaseSpec + ltcgiCCSpec) * _LTCGI_Int;
+                finalColor += (ltcgiDiff + (ltcgiBaseSpec + ltcgiCCSpec) * reflMask) * _LTCGI_Int;
             }
             #endif
 
@@ -1273,22 +1453,15 @@ Shader "VixenWear/Latex Ultra"
             float2 finalUV        = ParallaxRaymarching(cUV + glitchOffset, viewDirTangent, o.ParallaxDepth);
 
             // Base textures
-            fixed4 c      = tex2D(_MainTex, finalUV) * _Color;
+            fixed4 c      = UNITY_SAMPLE_TEX2D(_MainTex, finalUV) * _Color;
             fixed4 packed = tex2D(_MetallicGlossMap, finalUV);
 
-            // Vertex-fracture per-pixel shard clip - also runtime-gated by the AL master toggle so silent worlds don't punch holes.
-            if (_UseAudioLink > 0.5 && _UseVtxKinetic > 0.5 && _Vtx_Fracture_Str > 0.001)
+            // Fracture dissolve clip - the body opens up as the fracture progresses (manual _Vtx_Fracture_Amount plus AudioLink jitter). On non-SPS the removed region flies off as real shards in PASS 4; on SPS it simply dissolves.
+            float fracProg = saturate(_Vtx_Fracture_Amount + (_UseAudioLink > 0.5 ? GET_AL_BAND(amps, _Vtx_Fracture_Band) * _Vtx_Fracture_Str * 0.2 : 0.0));
+            if (_UseVtxKinetic > 0.5 && fracProg > 0.001)
             {
-                float fractureNoise =
-                    frac(
-                        sin(
-                            dot(finalUV * 512.0,
-                                float2(12.9898,78.233))
-                        ) * 43758.5453
-                    );
-
-                float fractureCut = GET_AL_BAND(amps, _Vtx_Fracture_Band) * _Vtx_Fracture_Str;
-                clip(fractureNoise - fractureCut);
+                float fractureNoise = frac(sin(dot(finalUV * 512.0, float2(12.9898,78.233))) * 43758.5453);
+                clip(fractureNoise - fracProg);
             }
 
             // Alpha workflow - Cutout: hard clip on _CutOff (also clips addshadow so shadows match silhouette); Fade/Transparent: discard fully invisible pixels so the shadow caster doesn't punch opaque shadow holes; Opaque: no clip, alpha ignored.
@@ -1325,8 +1498,8 @@ Shader "VixenWear/Latex Ultra"
             o.Smoothness    = saturate(pbrSmooth + amp_film * _AL_Film_Mod * 0.25);
             o.BaseRoughness = 1.0 - o.Smoothness;
 
-            // AO (channel selectable)
-            float pbrAO = ChannelPick(packed, _PBR_AO_Ch);
+            // AO (channel selectable); "None" (channel 4) yields a constant 1.0 so Poiyomi/Mochie packs without an AO channel don't read a wrong channel.
+            float pbrAO = (_PBR_AO_Ch > 3.5) ? 1.0 : ChannelPick(packed, _PBR_AO_Ch);
             o.Occlusion = saturate(pbrAO * _AO_Str);
             if (_AL_Scanlines > 0.0 && _UseAudioLink > 0.5)
                 o.Occlusion = lerp(o.Occlusion, 1.0, amp_scan * 0.2);
@@ -1334,6 +1507,20 @@ Shader "VixenWear/Latex Ultra"
             // Height (channel selectable; parallax raymarch and BRDF shadow trace use the same channel).
             float pbrHeight = ChannelPick(packed, _PBR_Height_Ch);
             o.Height = pbrHeight * _Disp_Str;
+
+            // Poiyomi/Mochie packed-map masks - reads reflection + specular masks from the packed PBR map so a Mochie "Metallic Maps" texture (R:Met G:Smooth B:ReflMask A:SpecMask) drives our masking. Default off keeps both masks neutral (1.0); applied in the BRDF combine - reflection mask dims environment/probe specular, specular mask dims direct highlights.
+            o.ReflectionMask = 1.0;
+            o.SpecularMask   = 1.0;
+            if (_UsePackedMasks > 0.5)
+            {
+                float reflM = ChannelPick(packed, _ReflMask_Ch);
+                if (_ReflMask_Inv > 0.5) reflM = 1.0 - reflM;
+                o.ReflectionMask = lerp(1.0, reflM, saturate(_ReflMask_Str));
+
+                float specM = ChannelPick(packed, _SpecMask_Ch);
+                if (_SpecMask_Inv > 0.5) specM = 1.0 - specM;
+                o.SpecularMask = lerp(1.0, specM, saturate(_SpecMask_Str));
+            }
 
             // Normals
             float3 normalTS = UnpackNormal(tex2D(_BumpMap, finalUV));
@@ -1363,6 +1550,57 @@ Shader "VixenWear/Latex Ultra"
 
             // Transmission (thin-part back-light), modulated by bio so SSS bleeds through audio-reactive regions.
             o.Transmission = saturate(_Trans_Str + bio * 0.1);
+
+            // Polish layer master gate + B&W mask - sampled once here, applied to the whole polish layer in the BRDF. Default white mask + toggle on = 1 (full polish, historical look).
+            o.PolishMask = _UsePolish * ChannelPick(UNITY_SAMPLE_TEX2D_SAMPLER(_PolishMask, _MainTex, finalUV), _PolishMaskCh);
+
+            // WET - full "soaked / just out of the shower" look plus run-off rivulets. The soak (darken + near-mirror gloss + water-film sheen + flattened micro-normal) covers the whole masked area; animated UV-vertical rivulets add concentrated run-off streaks on top. UV-space keeps it stable on skinned avatars. Own toggle so it costs nothing when off.
+            if (_UseDrip > 0.5)
+            {
+                float wetMaskTex = ChannelPick(UNITY_SAMPLE_TEX2D_SAMPLER(_DripMask, _MainTex, finalUV), _DripMaskCh);
+                if (wetMaskTex > 0.001)
+                {
+                    // Run-off rivulets: animated vertical streaks where extra water is pouring down. Computed first; the normal tilt is applied last so streaks still pop over the flattened film.
+                    float rivulet = 0;
+                    float rivuletSlope = 0;
+                    if (_Drip_Strength > 0.0001)
+                    {
+                        float colF    = finalUV.x * _Drip_Density;
+                        float col     = floor(colF);
+                        float colHash = frac(sin(col * 91.17) * 43758.5453);
+                        // Coverage gate - only a fraction of columns carry a rivulet.
+                        float hasCol  = step(1.0 - saturate(_Drip_Coverage), colHash);
+                        // Gaussian rivulet across the column (centre is wettest); higher _Drip_Width = thinner streak.
+                        float xInCol  = frac(colF) - 0.5;
+                        float ridge   = exp(-xInCol * xInCol * _Drip_Width);
+                        // Downward flow - per-column speed/phase variance so streaks don't march in lockstep.
+                        float flow    = finalUV.y - _Time.y * _Drip_Speed * (0.6 + colHash) - colHash * 7.0;
+                        // Travelling beads so it reads as running water; 0.35 floor keeps a continuous trickle between beads.
+                        float bead    = sin(flow * 18.0) * 0.5 + 0.5;
+                        bead          = bead * bead;
+                        rivulet       = ridge * hasCol * saturate(0.35 + bead) * _Drip_Strength;
+                        // Gaussian derivative across the streak - rounds it so it catches a glint.
+                        rivuletSlope  = clamp(-2.0 * xInCol * _Drip_Width * ridge * hasCol, -4.0, 4.0);
+                    }
+
+                    // Total wetness: global soak + rivulet streaks, masked and clamped.
+                    float wetness = saturate(_Wet_Amount + rivulet) * wetMaskTex;
+                    if (wetness > 0.001)
+                    {
+                        // 1. Water absorption darkens the surface (deeper in the most-soaked areas).
+                        o.Albedo *= lerp(1.0, 1.0 - _Wet_Darken * 0.65, wetness);
+                        // 2. A water film is near-mirror smooth - drive smoothness toward the wet target.
+                        o.Smoothness    = lerp(o.Smoothness, _Wet_Smoothness, wetness);
+                        o.BaseRoughness = 1.0 - o.Smoothness;
+                        // 3. The film fills micro-detail, flattening the shading normal toward the surface.
+                        o.Normal = normalize(lerp(o.Normal, float3(0,0,1), wetness * _Wet_Flatten));
+                        // 4. The thin water sheet reads as an extra dielectric clearcoat (F0~0.04 = water), giving the bright wet Fresnel sheen. Gated by the Polish layer in the BRDF.
+                        o.ClearcoatStrength = saturate(o.ClearcoatStrength + wetness * _Wet_Sheen);
+                        // Run-off streak tilt applied last so it survives the film flattening.
+                        o.Normal = normalize(o.Normal + float3(rivuletSlope * _Drip_Normal * 0.15, 0, 0));
+                    }
+                }
+            }
 
             // Matcap - world-anchored sphere mapping. The basis vectors come from view-direction + world-up instead of UNITY_MATRIX_V, because UNITY_MATRIX_V carries the camera's full rotation including roll - head tilt in VR (or any camera roll) would spin the matcap pattern around the view axis, making highlights swim instead of staying world-locked the way a real metal/latex surface would behave. vw_WorldViewDir reads from the actual rendering camera (UNITY_MATRIX_I_V), so this stays mirror-correct.
             float3 nWorld   = normalize(WorldNormalVector(IN, float3(0,0,1)));
@@ -1410,7 +1648,8 @@ Shader "VixenWear/Latex Ultra"
             float2 emisUV = finalUV;
             if (_UseAudioLink > 0.5 && _AL_AutoCorr_Mod > 0.001)
             {
-                emisUV.y += (autoCorr - 0.5) * _AL_AutoCorr_Mod * 0.05;
+                // autoCorr is zero-centered via the 0.007 scale (matches the SPS variant); no -0.5 offset.
+                emisUV.y += autoCorr * _AL_AutoCorr_Mod * 0.2;
             }
             float4 emisTex = tex2D(_EmissionMap, emisUV);
             float emisMask = emisTex.a;
@@ -1476,100 +1715,7 @@ Shader "VixenWear/Latex Ultra"
 
             // Autocorrelator ripple → EMISSION block; glitch tear → UV AUDIO DISTORTION CHAIN above.
 
-            // CYBER HUD (masked, additive)
-            float3 hud = 0;
-
-            if (_UseCyber > 0.5)
-            {
-                // PARALLAX-OUT: shift HUD UV along tangent-space view direction so the panel reads as a plane floating at height h above the body; subtle vertical bob adds "alive" drift without rotating the panel.
-                float hoverHeight = _Cyber_Hover + sin(_Time.y * 1.6) * _Cyber_Hover * _Cyber_Hover_Bob * 0.25;
-                float2 hoverOffset = viewDirTangent.xy / max(viewDirTangent.z, 0.001) * hoverHeight;
-                float2 hudUV = finalUV + hoverOffset;
-
-                float cyberMask = tex2D(_CyberMask, hudUV).r;
-
-                // VU Meter
-                if (_UseCyberVU > 0.5)
-                {
-                    float vu = GET_AL_BAND(amps, _Cyber_VU_Band);
-                    float2 vuUV = TransformHUD(hudUV, _Cyber_VU_Transform);
-                    float vuInBounds = step(0.0, vuUV.x) * step(vuUV.x, 1.0)
-                                     * step(0.0, vuUV.y) * step(vuUV.y, 1.0);
-                    float bar =
-                        step(vuUV.x, vu) *
-                        step(abs(vuUV.y - 0.5), 0.04) *
-                        vuInBounds;
-                    hud += bar * _Cyber_VU_Str * al_color.rgb;
-                }
-
-                // Spectrum (CC) bars - sample N bars from the AudioLink band row
-                if (_UseCyberCC > 0.5)
-                {
-                    float2 ccUV = TransformHUD(hudUV, _Cyber_CC_Transform);
-                    float density = max(2.0, _Cyber_CC_Density);
-                    if (ccUV.x >= 0.0 && ccUV.x <= 1.0 && ccUV.y >= 0.0 && ccUV.y <= 1.0)
-                    {
-                        int barIdx = (int)floor(ccUV.x * density);
-                        int sampleX = (int)((float)barIdx / density * 127.0);
-
-                        float magnitude = 0;
-                        if (_UseAudioLink > 0.5 && AudioLinkIsAvailable())
-                            magnitude = AudioLinkData(ALPASS_AUDIOLINK + int2(sampleX, (int)_Cyber_CC_Band)).r;
-
-                        // Vertical bar grows from bottom (y=0) up
-                        float barShape = step(1.0 - ccUV.y, saturate(magnitude * 4.0));
-                        // Inter-bar gap
-                        float barCenter = (floor(ccUV.x * density) + 0.5) / density;
-                        float inBar = step(abs(ccUV.x - barCenter), 0.45 / density);
-                        hud += barShape * inBar * _Cyber_CC_Str * al_color.rgb;
-                    }
-                }
-
-                // Waveform
-                if (_UseCyberWave > 0.5)
-                {
-                    float2 waveUV = TransformHUD(hudUV, _Cyber_Wave_Transform);
-                    float waveInBounds = step(0.0, waveUV.x) * step(waveUV.x, 1.0)
-                                       * step(0.0, waveUV.y) * step(waveUV.y, 1.0);
-                    float wave = abs((waveUV.y - 0.5) - raw_waveform * 0.2);
-                    wave = (1.0 - smoothstep(0.0, 0.02, wave)) * waveInBounds;
-                    hud += wave * _Cyber_Wave_Str * al_color.rgb;
-                }
-
-                // DMX grid mini-readout
-                if (_UseCyberDMX > 0.5)
-                {
-                    float2 dmxUV = TransformHUD(hudUV, _Cyber_DMX_Transform);
-                    if (dmxUV.x >= 0.0 && dmxUV.x <= 1.0 && dmxUV.y >= 0.0 && dmxUV.y <= 1.0)
-                    {
-                        float3 dmxSample = tex2D(_Udon_DMXGridRenderTexture, dmxUV).rgb;
-                        hud += dmxSample * _Cyber_DMX_Str;
-                    }
-                }
-
-                // Autocorrelator radial ring
-                if (_UseCyberAuto > 0.5)
-                {
-                    float2 acUV = TransformHUD(hudUV, _Cyber_Auto_Transform);
-                    float2 centered = acUV - 0.5;
-                    float r = length(centered) * 2.0;
-                    if (r <= 1.0)
-                    {
-                        float acVal = 0;
-                        if (_UseAudioLink > 0.5 && AudioLinkIsAvailable())
-                            acVal = AudioLinkData(ALPASS_AUTOCORRELATOR + int2((int)(saturate(r) * 127.0), 0)).r;
-
-                        float angle = atan2(centered.y, centered.x);
-                        float spoke = 0.5 + 0.5 * sin(angle * 12.0 + animTime * 1.5);
-                        float ring = exp(-pow((r - acVal), 2.0) * 80.0);
-                        hud += ring * spoke * _Cyber_AutoCorr_Str * al_color.rgb;
-                    }
-                }
-
-                // Float the HUD off the body - cyberMask (lifted UV) is the holographic viewport; emisMask provides a soft "kinship with emission" tint, never a hard clip.
-                float hudLift = lerp(0.65, 1.0, saturate(emisMask));
-                emisBase += hud * cyberMask * hudLift;
-            }
+            // CYBER HUD now renders as real lifted geometry in its own pass (see "PASS 3: CYBER HUD HOVER" below) instead of being parallax-faked onto the surface here.
 
             // Amplitude-driven flicker sparkle on top of the steady AL emission (decoration only) - gated by _AL_Emis_Mod so users can fully disable AL emission response with the slider.
             if (_UseAudioLink > 0.5 && amp_emis > 0.001 && _AL_Emis_Mod > 0.001)
@@ -1647,6 +1793,1392 @@ Shader "VixenWear/Latex Ultra"
             o.UV = finalUV;
         }
         ENDCG
+
+        // PASS 2: CLEAR DRIP (geometry-amplified water droplets) - PC only. A real geometry stage emits camera-facing droplet billboards from downward-facing, wet-masked triangles; each droplet swells, forms a neck, pinches off, then falls away as free geometry and dries out (fades). Surface shaders cannot host a geometry stage, so this is its own custom vert/geom/frag pass. Runtime-gated by _UseDrip and _Drip3D_Strength so it stays VRCFury-animatable and emits zero vertices when off. Droplets are tinted to the clearcoat color.
+        Pass
+        {
+            Tags { "LightMode" = "ForwardBase" }
+            Blend SrcAlpha OneMinusSrcAlpha
+            ZWrite Off
+            ZTest LEqual
+            Cull Off
+
+            CGPROGRAM
+            #pragma vertex dripVert
+            #pragma geometry dripGeom
+            #pragma fragment dripFrag
+            #pragma target 5.0
+            #pragma require geometry
+            #pragma multi_compile_instancing
+            #include "UnityCG.cginc"
+
+            sampler2D _DripMask;
+            float _DripMaskCh;
+            fixed4 _CC_Tint;
+            float _UseDrip, _Drip3D_Strength, _Drip3D_Scale, _Drip3D_Sheen, _Drip3D_Fall;
+            float _Drip_Coverage, _Drip_Speed;
+            float _Drip_Sway, _Drip_BodyFollow, _Drip_FloorCollide, _Goo_GroundY;
+
+            struct dripAppdata
+            {
+                float4 vertex : POSITION;
+                float3 normal : NORMAL;
+                float2 uv : TEXCOORD0;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct dripV2G
+            {
+                float3 wpos : TEXCOORD0;
+                float3 wnormal : TEXCOORD1;
+                float2 uv : TEXCOORD2;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct dripG2F
+            {
+                float4 pos : SV_POSITION;
+                float2 luv : TEXCOORD0;       // billboard local coords: x in [-1,1], y in [0,1] (top to bottom)
+                float3 wpos : TEXCOORD1;
+                float3 params : TEXCOORD2;    // x = beadCenterY, y = neck width factor, z = envelope alpha
+                float3 bRight : TEXCOORD3;
+                float3 bUp : TEXCOORD4;
+                UNITY_VERTEX_OUTPUT_STEREO
+            };
+
+            float dripHash(float3 p) { return frac(sin(dot(p, float3(12.9898, 78.233, 37.719))) * 43758.5453); }
+            float dripChan(fixed4 t, float c) { return (c < 0.5) ? t.r : (c < 1.5) ? t.g : (c < 2.5) ? t.b : t.a; }
+
+            dripV2G dripVert(dripAppdata v)
+            {
+                dripV2G o;
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_TRANSFER_INSTANCE_ID(v, o);
+                o.wpos = mul(unity_ObjectToWorld, v.vertex).xyz;
+                o.wnormal = UnityObjectToWorldNormal(v.normal);
+                o.uv = v.uv;
+                return o;
+            }
+
+            [maxvertexcount(4)]
+            void dripGeom(triangle dripV2G p[3], inout TriangleStream<dripG2F> stream)
+            {
+                // Runtime gate - emit nothing when the effect is off.
+                if (_UseDrip < 0.5 || _Drip3D_Strength < 0.0001) return;
+
+                UNITY_SETUP_INSTANCE_ID(p[0]);
+
+                float3 C = (p[0].wpos + p[1].wpos + p[2].wpos) / 3.0;
+                float3 N = normalize(p[0].wnormal + p[1].wnormal + p[2].wnormal);
+                float2 uv = (p[0].uv + p[1].uv + p[2].uv) / 3.0;
+
+                // Drips form on downward-facing surfaces - skip up-facing triangles.
+                float facingDown = saturate(-N.y);
+                if (facingDown < 0.08) return;
+
+                // Wet mask gate (same mask as the Wet layer).
+                float mask = dripChan(tex2Dlod(_DripMask, float4(uv, 0, 0)), _DripMaskCh);
+                if (mask < 0.1) return;
+
+                // Per-triangle identity + sparse coverage so droplets scatter instead of covering every triangle.
+                float h = dripHash(floor(C * 80.0));
+                if (h > saturate(_Drip_Coverage) * 0.5) return;
+
+                // Lifecycle phase (staggered per emitter).
+                float phase = frac(_Time.y * _Drip_Speed * (0.5 + h) + h);
+                float swell = smoothstep(0.0, 0.18, phase);
+                float pinch = smoothstep(0.34, 0.46, phase);            // 0 attached, 1 detached
+                float fall  = saturate((phase - 0.42) / 0.5);
+                float dry   = 1.0 - smoothstep(0.85, 1.0, phase);
+                float envAlpha = swell * dry * mask * facingDown;
+                if (envAlpha < 0.01) return;
+
+                // Sizes in world units (a droplet is a few millimetres).
+                float beadR = (0.5 + 0.5 * swell) * _Drip3D_Scale * 0.004;
+                float hangLen = beadR * 3.0 * (1.0 - pinch);            // neck length, retracts at pinch
+                float fallDist = fall * fall * _Drip3D_Fall * 1.5;      // accelerating free-fall distance
+
+                float3 worldDown = float3(0, -1, 0);
+
+                // BODY SLIDE - while still attached, the bead clings and runs DOWN ALONG the surface (downhill tangent) rather than hanging straight from the centroid; a detached drop falls under gravity.
+                float3 hangDir = worldDown;
+                if (_Drip_BodyFollow > 0.0001)
+                {
+                    float3 tang = worldDown - N * dot(worldDown, N);
+                    float tl = length(tang);
+                    float3 surfDown = (tl > 1e-4) ? tang / tl : worldDown;
+                    hangDir = normalize(lerp(worldDown, surfDown, saturate(_Drip_BodyFollow)) + 1e-5);
+                }
+
+                float3 beadCenter = C + hangDir * (hangLen + beadR) + worldDown * fallDist;
+
+                // PHYSICS - sway (surface-tension wobble + breeze) grows with fall distance so a fresh bead barely moves while a long thread trails and swings.
+                float swayPh = _Time.y * 3.0 + h * 6.2831;
+                float2 swayXZ = float2(sin(swayPh), sin(swayPh * 0.7 + 1.3)) * (_Drip_Sway * 0.15 * fallDist);
+                beadCenter.xz += swayXZ;
+
+                float3 topPoint = lerp(C, beadCenter - worldDown * beadR, pinch);
+
+                // FLOOR COLLISION - when the bead reaches the shared world floor (_Goo_GroundY) it pins to the floor and splats into a spreading puddle that fades as it dries.
+                float splat = 0.0;
+                if (_Drip_FloorCollide > 0.5)
+                {
+                    float below = (_Goo_GroundY + beadR) - beadCenter.y;
+                    splat = saturate(below / max(beadR * 2.0, 1e-4));
+                    if (splat > 0.0) beadCenter.y = _Goo_GroundY + beadR * 0.2;
+                }
+
+                // Camera-facing billboard basis with world-up kept vertical so the drop hangs naturally.
+                float3 viewDir = normalize(_WorldSpaceCameraPos - beadCenter);
+                float3 bRight = normalize(cross(float3(0, 1, 0), viewDir));
+                float3 bUp = normalize(cross(viewDir, bRight));
+
+                float3 colTop = topPoint;
+                float3 colBot = beadCenter - bUp * beadR;
+                float halfW = beadR * 1.3;
+                float totalLen = max(length(colTop - colBot), 1e-4);
+                float beadCenterY = saturate(length(colTop - beadCenter) / totalLen);
+                float neckW = 1.0 - pinch;
+
+                float3 vTL = colTop - bRight * halfW;
+                float3 vTR = colTop + bRight * halfW;
+                float3 vBL = colBot - bRight * halfW;
+                float3 vBR = colBot + bRight * halfW;
+
+                // SPLAT MORPH - collapse the vertical drop into a flat, ground-aligned puddle disc that grows as it spreads and fades out.
+                if (splat > 0.001)
+                {
+                    float pr = beadR * (1.0 + splat * 4.0);
+                    float3 pc = float3(beadCenter.x, _Goo_GroundY + 0.0005, beadCenter.z);
+                    float3 pX = float3(pr, 0, 0);
+                    float3 pZ = float3(0, 0, pr);
+                    vTL = pc - pX - pZ; vTR = pc + pX - pZ;
+                    vBL = pc - pX + pZ; vBR = pc + pX + pZ;
+                    bRight = float3(1, 0, 0);
+                    bUp = float3(0, 0, 1);
+                    beadCenterY = 0.5;
+                    neckW = 0.0;
+                    envAlpha *= (1.0 - splat * 0.85);
+                }
+
+                dripG2F o;
+                UNITY_INITIALIZE_OUTPUT(dripG2F, o);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+                o.params = float3(beadCenterY, neckW, envAlpha);
+                o.bRight = bRight;
+                o.bUp = bUp;
+
+                o.pos = UnityWorldToClipPos(vTL); o.luv = float2(-1, 0); o.wpos = vTL; stream.Append(o);
+                o.pos = UnityWorldToClipPos(vTR); o.luv = float2( 1, 0); o.wpos = vTR; stream.Append(o);
+                o.pos = UnityWorldToClipPos(vBL); o.luv = float2(-1, 1); o.wpos = vBL; stream.Append(o);
+                o.pos = UnityWorldToClipPos(vBR); o.luv = float2( 1, 1); o.wpos = vBR; stream.Append(o);
+            }
+
+            fixed4 dripFrag(dripG2F i) : SV_Target
+            {
+                float beadCenterY = i.params.x;
+                float neckW = i.params.y;
+                float envAlpha = i.params.z;
+
+                float x = i.luv.x;
+                float y = i.luv.y;
+
+                // Bead - a soft disc centred at (0, beadCenterY).
+                float2 bp = float2(x, (y - beadCenterY) / max(1.0 - beadCenterY, 1e-4));
+                float beadD = length(bp);
+                float bead = smoothstep(1.0, 0.6, beadD);
+
+                // Neck - a tapering column above the bead that vanishes as the drop pinches off.
+                float neckHalf = lerp(0.12, 0.5, saturate(y / max(beadCenterY, 1e-4))) * neckW;
+                float neck = smoothstep(neckHalf, neckHalf - 0.06, abs(x)) * step(y, beadCenterY) * neckW;
+
+                float shape = saturate(max(bead, neck));
+                if (shape < 0.02) discard;
+
+                // Spherical normal across the bead for a glassy fresnel + reflection.
+                float2 sp = clamp(bp, -1.0, 1.0);
+                float3 nLocal = normalize(float3(sp.x, -sp.y, sqrt(saturate(1.0 - dot(sp, sp))) + 0.2));
+                float3 viewDir = normalize(_WorldSpaceCameraPos - i.wpos);
+                float3 nWorld = normalize(i.bRight * nLocal.x + i.bUp * nLocal.y + viewDir * nLocal.z);
+
+                float fres = pow(1.0 - saturate(dot(nWorld, viewDir)), 3.0);
+                half4 cube = UNITY_SAMPLE_TEXCUBE_LOD(unity_SpecCube0, reflect(-viewDir, nWorld), 2);
+                half3 sky = DecodeHDR(cube, unity_SpecCube0_HDR);
+
+                float3 waterCol = _CC_Tint.rgb;
+                float3 col = waterCol * 0.35 + sky * _Drip3D_Sheen * (0.4 + fres);
+                float spec = pow(saturate(nLocal.z), 60.0);
+                col += spec * _Drip3D_Sheen;
+
+                float alpha = saturate(shape * envAlpha * (0.4 + 0.6 * fres) * _Drip3D_Strength);
+                return fixed4(col, alpha);
+            }
+            ENDCG
+        }
+
+        // PASS 3: CYBER HUD HOVER (geometry-amplified holographic shell) - PC only. Each body triangle whose centroid falls inside the Cyber mask is duplicated and pushed out along its world normal by _Cyber_Hover (plus a subtle bob), so the masked HUD window literally floats off the suit instead of being parallax-faked onto it; the five HUD layers (VU, Spectrum, Waveform, DMX, Autocorrelator) are drawn on that lifted shell. Surface shaders cannot host a geometry stage, so this is its own vert/geom/frag pass, runtime-gated by _UseCyber so it emits zero vertices when off. Kept off the SPS variant because VRCFury's SPS patcher rewrites the vertex stage.
+        Pass
+        {
+            Tags { "LightMode" = "ForwardBase" }
+            Blend One One
+            ZWrite Off
+            ZTest LEqual
+            Cull Off
+
+            CGPROGRAM
+            #pragma vertex hudVert
+            #pragma geometry hudGeom
+            #pragma fragment hudFrag
+            #pragma target 5.0
+            #pragma require geometry
+            #pragma multi_compile_instancing
+            #include "UnityCG.cginc"
+            #include "Packages/com.vixencreations.vixens-toolbox/Editor/Avatar Tools/Shaders/cginc/AudioLink.cginc"
+
+            sampler2D _CyberMask;
+            sampler2D _Udon_DMXGridRenderTexture;
+            fixed4 _EmissionColor;
+            float _UseCyber, _Cyber_Hover, _Cyber_Hover_Bob;
+            float _UseCyberVU, _Cyber_VU_Style, _Cyber_VU_Str; float4 _Cyber_VU_Transform;
+            float _UseCyberCC, _Cyber_CC_Band, _Cyber_CC_Str, _Cyber_CC_Density; float4 _Cyber_CC_Transform;
+            float _UseCyberWave, _Cyber_Wave_Band, _Cyber_Wave_Str; float4 _Cyber_Wave_Transform;
+            float _UseCyberDMX, _Cyber_DMX_Band, _Cyber_DMX_Str; float4 _Cyber_DMX_Transform;
+            float _UseCyberAuto, _Cyber_Auto_Band, _Cyber_AutoCorr_Str; float4 _Cyber_Auto_Transform;
+            float _Cyber_Auto_Shimmer, _Cyber_Auto_Shimmer_Band, _Cyber_Auto_Pop, _Cyber_Auto_Pop_Band;
+            float _Cyber_Auto_Sizzle, _Cyber_Auto_Sizzle_Band, _Cyber_Auto_Electrify, _Cyber_Auto_Electrify_Band;
+            float _UseAudioLink, _UseMediaState, _AL_ColorMode, _AL_Strip_Pos, _AL_Band_Emission;
+            uniform float _MediaPlaying;
+
+            // Safe vector indexing, mirror of the surf-pass GET_AL_BAND macro.
+            #define HUD_AL_BAND(vec, bandIdx) ( \
+                ((int)(bandIdx) == 0) ? vec.x : \
+                ((int)(bandIdx) == 1) ? vec.y : \
+                ((int)(bandIdx) == 2) ? vec.z : \
+                vec.w )
+
+            // HUD layer placement (offset/scale/rotation), identical to the surf-pass TransformHUD.
+            float2 HudTransform(float2 uv, float4 transform)
+            {
+                float2 outUV = uv - 0.5 - transform.xy;
+                outUV /= max(0.001, transform.z);
+                float rad = transform.w * (UNITY_PI / 180.0);
+                float s = sin(rad), c = cos(rad);
+                outUV = mul(outUV, float2x2(c, -s, s, c));
+                return outUV + 0.5;
+            }
+
+            // Footprint placement only (offset + scale, rotation ignored). Effect bounds use this so spinning
+            // an effect via Rotation never reshapes its lit/emission area - it only orients the meter graphic,
+            // which is still sampled from the full HudTransform above.
+            float2 HudPlace(float2 uv, float4 transform)
+            {
+                return HudTransform(uv, float4(transform.xy, transform.z, 0.0));
+            }
+
+            // Per-effect ColorChord/Theme colour. Each HUD layer passes its own band so it can light up
+            // with a different note colour; Theme and Strip modes ignore the band. Emission is the idle
+            // fallback when AudioLink is off or paused.
+            float3 HudBandColor(int band)
+            {
+                float3 c = _EmissionColor.rgb;
+                bool active = (_UseAudioLink > 0.5) && !(_UseMediaState > 0.5 && _MediaPlaying < 0.5);
+                if (active && AudioLinkIsAvailable())
+                {
+                    int colorMode = (int)_AL_ColorMode;
+                    if (colorMode == 1)
+                        c = AudioLinkData(ALPASS_CCCOLORS + int2((int)((uint)band % 11u) + 1, 0)).rgb;
+                    else if (colorMode >= 2 && colorMode <= 5)
+                        c = AudioLinkData(ALPASS_THEME_COLOR0 + int2(colorMode - 2, 0)).rgb;
+                    else if (colorMode == 6)
+                        c = AudioLinkData(ALPASS_CCSTRIP + int2((int)(saturate(_AL_Strip_Pos) * 127.0), 0)).rgb;
+                }
+                return c;
+            }
+
+            // The VU meter listens to every band at once: an amplitude-weighted blend of the four band
+            // colours (a small floor keeps a silent mix as an even blend instead of going black).
+            float3 HudAllBandColor(float4 amps)
+            {
+                float4 w = amps + 0.05;
+                float3 c = HudBandColor(0) * w.x + HudBandColor(1) * w.y
+                         + HudBandColor(2) * w.z + HudBandColor(3) * w.w;
+                return c / (w.x + w.y + w.z + w.w);
+            }
+
+            // Band-independent feeds shared by every HUD layer: the four band amplitudes and the scrolling
+            // raw waveform. Per-effect colour now comes from HudBandColor so each layer can pick its own band.
+            void HudFetchAL(float2 uv, out float4 amps, out float raw_waveform)
+            {
+                amps = 0;
+                raw_waveform = 0;
+
+                bool active = (_UseAudioLink > 0.5) && !(_UseMediaState > 0.5 && _MediaPlaying < 0.5);
+                if (active && AudioLinkIsAvailable())
+                {
+                    float4 a;
+                    a.x = AudioLinkData(ALPASS_AUDIOLINK + int2(0, 0)).r;
+                    a.y = AudioLinkData(ALPASS_AUDIOLINK + int2(0, 1)).r;
+                    a.z = AudioLinkData(ALPASS_AUDIOLINK + int2(0, 2)).r;
+                    a.w = AudioLinkData(ALPASS_AUDIOLINK + int2(0, 3)).r;
+                    amps = saturate(pow(a * 4.0, 0.35));
+
+                    float wavePhase = frac(uv.y * 2.0 - _Time.y * 0.2);
+                    raw_waveform = AudioLinkData(ALPASS_WAVEFORM + int2((int)(wavePhase * 128.0), 0)).r - 0.5;
+                }
+            }
+
+            struct hudAppdata
+            {
+                float4 vertex : POSITION;
+                float3 normal : NORMAL;
+                float2 uv : TEXCOORD0;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct hudV2G
+            {
+                float3 opos : TEXCOORD0;
+                float3 onormal : TEXCOORD1;
+                float2 uv : TEXCOORD2;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct hudG2F
+            {
+                float4 pos : SV_POSITION;
+                float2 uv : TEXCOORD0;
+                UNITY_VERTEX_OUTPUT_STEREO
+            };
+
+            hudV2G hudVert(hudAppdata v)
+            {
+                hudV2G o;
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_TRANSFER_INSTANCE_ID(v, o);
+                o.opos = v.vertex.xyz;
+                o.onormal = v.normal;
+                o.uv = v.uv;
+                return o;
+            }
+
+            [maxvertexcount(3)]
+            void hudGeom(triangle hudV2G p[3], inout TriangleStream<hudG2F> stream)
+            {
+                // Runtime gate - emit nothing when the HUD is off.
+                if (_UseCyber < 0.5) return;
+
+                UNITY_SETUP_INSTANCE_ID(p[0]);
+
+                // Mask gate: lift any triangle with at least one corner on the white side of the mask, so
+                // boundary triangles survive for the fragment stage to razor-clip and the shell never covers
+                // the black (transparent) region of the body.
+                float m0 = tex2Dlod(_CyberMask, float4(p[0].uv, 0, 0)).r;
+                float m1 = tex2Dlod(_CyberMask, float4(p[1].uv, 0, 0)).r;
+                float m2 = tex2Dlod(_CyberMask, float4(p[2].uv, 0, 0)).r;
+                if (max(m0, max(m1, m2)) < 0.5) return;
+
+                // World-space lift distance along the surface normal, with the subtle bob from the old hover sliders.
+                float lift = _Cyber_Hover + sin(_Time.y * 1.6) * _Cyber_Hover * _Cyber_Hover_Bob * 0.25;
+
+                hudG2F o;
+                UNITY_INITIALIZE_OUTPUT(hudG2F, o);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+
+                [unroll]
+                for (int k = 0; k < 3; k++)
+                {
+                    float3 wp = mul(unity_ObjectToWorld, float4(p[k].opos, 1.0)).xyz;
+                    float3 wn = UnityObjectToWorldNormal(p[k].onormal);
+                    wp += wn * lift;
+                    o.pos = UnityWorldToClipPos(wp);
+                    o.uv = p[k].uv;
+                    stream.Append(o);
+                }
+            }
+
+            // ===== LIVING VU CONSOLE =====
+            // A self-playing AudioLink control panel ported from AudioLinkUI-Functions.cginc. The slider/handle INPUTS
+            // (band thresholds, gain, hit-fade, exp-falloff) are fed live audio instead of user values, so the console
+            // animates itself. MSDF icon buttons (power/reset/autogain) and the HSV theme pickers are omitted - they need
+            // textures this shader doesn't ship. SDF primitives transcribed from the upstream panel.
+            static const float3 VU_BG       = 0.033;
+            static const float3 VU_FG       = 0.075;
+            static const float3 VU_INACTIVE = 0.13;
+            static const float3 VU_ACTIVE   = 0.8;
+            static const float3 VU_BASS    = pow(float3(147.0/255.0, 39.0/255.0, 143.0/255.0), 2.2);
+            static const float3 VU_LOWMID  = pow(float3(76.0/255.0, 53.0/255.0, 18.0/255.0), 2.2);
+            static const float3 VU_HIGHMID = pow(float3(42.0/255.0, 60.0/255.0, 19.0/255.0), 2.2);
+            static const float3 VU_HIGH    = pow(float3(12.0/255.0, 52.0/255.0, 68.0/255.0), 2.2);
+            static const float VU_CORNER  = 0.025;
+            static const float VU_MARGIN  = 0.03;
+            static const float VU_HANDLE  = 0.007;
+            static const float VU_OUTLINE = 0.002;
+
+            // Shared HDR glow multiplier so every HUD toggle reaches comparable brightness at a given
+            // intensity slider value. The VU console scales this up (its SDR panel palette tops out well
+            // below 1.0 once the dark background floor is subtracted, see hudFrag).
+            #define HUD_GLOW 10.0
+
+            #define vu_remap(value, low1, high1, low2, high2) ((low2) + ((value) - (low1)) * ((high2) - (low2)) / ((high1) - (low1)))
+            #define VU_COHERENT(condition) ((condition) || any(fwidth(condition)))
+            #define VU_ADD(existing, elementColor, elementDist) [branch] if (VU_COHERENT(elementDist <= 0.01)) vuAddElement(existing, elementColor, elementDist)
+
+            float3 vuSelectColor(uint i, float3 a, float3 b, float3 c, float3 d)
+            {
+                return float4x4(float4(a, 0.0), float4(b, 0.0), float4(c, 0.0), float4(d, 0.0))[i % 4];
+            }
+            float3 vuGetBandColor(uint i) { return vuSelectColor(i, VU_BASS, VU_LOWMID, VU_HIGHMID, VU_HIGH); }
+            float3 vuSelectColorLerp(float i, float3 a, float3 b, float3 c, float3 d)
+            {
+                int me = floor(i);
+                float3 meColor = vuSelectColor(me, a, b, c, d);
+                if (VU_COHERENT(distance(frac(i), 0.5) < 0.1)) return meColor;
+                int side = sign(frac(i) - 0.5);
+                int other = clamp(me + side, 0, 3);
+                float3 otherColor = vuSelectColor(other, a, b, c, d);
+                float dist = round(i) - i;
+                const float pd = sqrt(2.0) / 2.0 * side;
+                float ddl = sqrt(pow(ddx(dist), 2) + pow(ddy(dist), 2));
+                return lerp(otherColor, meColor, smoothstep(-pd, pd, dist / ddl));
+            }
+            float3 vuGetBandColorLerp(float i) { return vuSelectColorLerp(i, VU_BASS, VU_LOWMID, VU_HIGHMID, VU_HIGH); }
+            float vuGetBandAmplitudeLerp(float i, float delay)
+            {
+                int me = floor(i);
+                float meStrength = AudioLinkLerp(float2(delay, me)).r;
+                if (VU_COHERENT(distance(frac(i), 0.5) < 0.1)) return meStrength;
+                int side = sign(frac(i) - 0.5);
+                int other = clamp(me + side, 0, 3);
+                float otherStrength = AudioLinkLerp(float2(delay, other)).r;
+                float dist = round(i) - i;
+                const float pd = sqrt(2.0) / 2.0 * side;
+                float ddl = sqrt(pow(ddx(dist), 2) + pow(ddy(dist), 2));
+                return lerp(otherStrength, meStrength, smoothstep(-pd, pd, dist / ddl));
+            }
+
+            float2x2 vuRotMat(float a) { return float2x2(cos(a), -sin(a), sin(a), cos(a)); }
+            float2 vuTranslate(float2 p, float2 o) { return p - o; }
+            float2 vuRotate(float2 p, float a) { return mul(vuRotMat(a), p); }
+            float vuShell(float d, float t) { return abs(d) - t; }
+            float vuInflate(float d, float t) { return d - t; }
+            float vuLerpstep(float a, float b, float x) { return saturate((x - a) / (b - a)); }
+            void vuAddElement(inout float3 existing, float3 elementColor, float elementDist)
+            {
+                const float pd = sqrt(2.0) / 2.0;
+                float ddl = sqrt(pow(ddx(elementDist), 2) + pow(ddy(elementDist), 2));
+                existing = lerp(elementColor, existing, vuLerpstep(-pd, pd, elementDist / ddl));
+            }
+            float vuRoundedBoxC(float2 p, float2 b, float4 r)
+            {
+                r.xy = (p.x > 0.0) ? r.xy : r.zw;
+                r.x = (p.y > 0.0) ? r.x : r.y;
+                float2 q = abs(p) - b * 0.5 + r.x;
+                return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r.x;
+            }
+            float vuRoundedBoxTL(float2 p, float2 b, float4 r) { return vuRoundedBoxC(vuTranslate(p, b * 0.5), b, r); }
+            float vuRoundedBoxBR(float2 p, float2 b, float4 r) { return vuRoundedBoxC(vuTranslate(p, float2(b.x, -b.y) * 0.5), b, r); }
+            float vuSphere(float2 p, float r) { return length(p) - r; }
+            float vuTriIso(float2 p, float2 q)
+            {
+                p.x = abs(p.x);
+                float2 a = p - q * clamp(dot(p, q) / dot(q, q), 0.0, 1.0);
+                float2 b = p - q * float2(clamp(p.x / q.x, 0.0, 1.0), 1.0);
+                float s = -sign(q.y);
+                float2 d = min(float2(dot(a, a), s * (p.x * q.y - p.y * q.x)), float2(dot(b, b), s * (p.y - q.y)));
+                return -sqrt(d.x) * sign(d.y);
+            }
+            float vuTriRight(float2 p, float hw, float hh)
+            {
+                float2 end = float2(hw, -hh);
+                float2 d = p - end * clamp(dot(p, end) / dot(end, end), -1.0, 1.0);
+                if (max(d.x, d.y) > 0.0) return length(d);
+                p += float2(hw, hh);
+                if (max(p.x, p.y) > 0.0) return -min(length(d), min(p.x, p.y));
+                return length(p);
+            }
+
+            // Top spectrum area: 4 threshold/crossover boxes + handles over the live DFT waveform. threshold[]/crossover[]/gain are audio-driven.
+            float3 vuDrawTopArea(float2 uv, float threshold[4], float crossover[4], float gain)
+            {
+                float3 color = VU_FG;
+                float areaWidth = 1.0 - VU_MARGIN * 2;
+                float areaHeight = 0.35;
+                float handleWidth = 0.015 * areaWidth;
+                float xo[4] = { crossover[0] * areaWidth, crossover[1] * areaWidth, crossover[2] * areaWidth, crossover[3] * areaWidth };
+
+                uint start = 0; uint stop = 4;
+                float currentBoxOffset = xo[0];
+                float boxOffsets[4] = {0, 0, 0, 0};
+                float boxWidths[4] = {0, 0, 0, 0};
+                for (uint bi = 0; bi < 4; bi++)
+                {
+                    // if/else (not a ternary) so FXC dead-code-eliminates the xo[bi+1] read at bi==3 - a ternary evaluates both operands and reads xo[4] out of bounds (X3504).
+                    float boxWidth;
+                    if (bi == 3)
+                        boxWidth = areaWidth - currentBoxOffset;
+                    else
+                        boxWidth = xo[bi + 1] - xo[bi];
+                    boxOffsets[bi] = currentBoxOffset;
+                    boxWidths[bi] = boxWidth;
+                    if (VU_COHERENT(uv.x > currentBoxOffset + VU_OUTLINE)) start = bi;
+                    if (VU_COHERENT(uv.x < currentBoxOffset + boxWidth - handleWidth)) stop = min(stop, bi + 1);
+                    currentBoxOffset += boxWidth;
+                }
+
+                uint totalBins = AUDIOLINK_EXPBINS * AUDIOLINK_EXPOCT;
+                uint noteno = AudioLinkRemap(uv.x, 0., 1., AUDIOLINK_4BAND_FREQFLOOR * totalBins, AUDIOLINK_4BAND_FREQCEILING * totalBins);
+                float notenof = AudioLinkRemap(uv.x, 0., 1., AUDIOLINK_4BAND_FREQFLOOR * totalBins, AUDIOLINK_4BAND_FREQCEILING * totalBins);
+                float4 specLow  = AudioLinkData(float2(fmod(noteno, 128), (noteno / 128) + 4.0));
+                float4 specHigh = AudioLinkData(float2(fmod(noteno + 1, 128), ((noteno + 1) / 128) + 4.0));
+                float4 intensity = lerp(specLow, specHigh, frac(notenof)) * gain;
+                float bandIntensity = AudioLinkData(float2(0., start ^ 0));
+                float funcY = areaHeight - (intensity.g * areaHeight);
+                float waveformDist = smoothstep(0.005, 0.003, funcY - uv.y);
+                float waveformDistAbs = abs(smoothstep(0.005, 0.003, abs(funcY - uv.y)));
+                color = lerp(color, color * 2, waveformDist);
+                color = lerp(color, color * 2, waveformDistAbs);
+
+                #if defined(UNITY_PBS_USE_BRDF2) || defined(SHADER_API_MOBILE)
+                [loop] for (uint i = start; i < min(stop, 4); i++)
+                #else
+                for (uint i = 0; i < 4; i++)
+                #endif
+                {
+                    float boxHeight = threshold[i] * areaHeight;
+                    float boxWidth = boxWidths[i];
+                    float boxOffset = boxOffsets[i];
+                    float leftR = i == 0 ? VU_CORNER : 0.0;
+                    float rightR = i == 3 ? VU_CORNER : 0.0;
+                    float boxDist = vuRoundedBoxBR(vuTranslate(uv, float2(boxOffset, areaHeight)), float2(boxWidth, boxHeight), float4(rightR, VU_CORNER, leftR, VU_CORNER));
+                    float3 innerColor = vuGetBandColor(i);
+                    innerColor = lerp(innerColor, innerColor * 3, waveformDist);
+                    innerColor = lerp(innerColor, lerp(innerColor * 3, 1.0, bandIntensity > threshold[i]), waveformDistAbs);
+                    VU_ADD(color, innerColor, boxDist + VU_OUTLINE);
+                    float shellDist = vuShell(boxDist, VU_OUTLINE);
+                    VU_ADD(color, VU_ACTIVE, shellDist);
+                    float handleDist = vuSphere(vuTranslate(uv, float2(boxWidth * 0.5 + boxOffset, areaHeight - boxHeight)), VU_HANDLE);
+                    VU_ADD(color, 1.0, handleDist);
+                    handleDist = vuRoundedBoxC(vuTranslate(uv, float2(boxOffset, areaHeight - boxHeight * 0.5)), float2(handleWidth, 0.35 * boxHeight), VU_HANDLE);
+                    VU_ADD(color, 1.0, handleDist);
+                }
+                return color;
+            }
+
+            float3 vuDrawGainArea(float2 uv, float2 size, float gain)
+            {
+                float3 color = VU_FG;
+                float t = gain / 2.0;
+                const float sliderOffsetLeft = 0.04;
+                const float sliderOffsetRight = 0.02;
+                float maxTriangleWidth = size.x - sliderOffsetLeft - sliderOffsetRight;
+                float bgTri = vuInflate(vuTriIso(vuRotate(vuTranslate(uv, float2(sliderOffsetLeft, size.y * 0.5)), UNITY_PI * 0.5), float2(size.y * 0.3, maxTriangleWidth)), 0.002);
+                VU_ADD(color, VU_INACTIVE, bgTri);
+                float curW = maxTriangleWidth * t;
+                float curTri = max(bgTri, uv.x - curW - sliderOffsetLeft);
+                VU_ADD(color, VU_ACTIVE, curTri);
+                float handleDist = vuSphere(vuTranslate(uv, float2(curW + sliderOffsetLeft, size.y * 0.5)), VU_HANDLE);
+                VU_ADD(color, VU_ACTIVE, handleDist);
+                float gripDist = abs(uv.x - curW - sliderOffsetLeft) - VU_OUTLINE;
+                VU_ADD(color, VU_ACTIVE, gripDist);
+                return color;
+            }
+
+            float3 vuDrawHitFadeArea(float2 uv, float2 size, float hitFade)
+            {
+                float3 color = VU_FG;
+                float2 triUV = -(uv - float2(size.x / 2, size.y / 2));
+                float hw = 0.45 * size.x; float hh = 0.37 * size.y;
+                float fullW = hw * 2;
+                float bgTri = vuInflate(vuTriRight(triUV, hw, hh), 0.002);
+                VU_ADD(color, VU_INACTIVE, bgTri);
+                float marginX = (size.x - fullW) / 2;
+                float invHF = 1 - hitFade;
+                triUV.x += hw * invHF;
+                float fgTri = vuInflate(vuTriRight(triUV, hw * hitFade, hh), 0.002);
+                VU_ADD(color, VU_ACTIVE, fgTri);
+                float handleDist = vuSphere(vuTranslate(uv, float2(invHF * fullW + marginX, size.y * 0.5)), VU_HANDLE);
+                VU_ADD(color, VU_ACTIVE, handleDist);
+                float gripDist = abs(uv.x - invHF * hw * 2 - marginX) - VU_OUTLINE;
+                VU_ADD(color, VU_ACTIVE, gripDist);
+                return color;
+            }
+
+            float3 vuDrawExpFalloffArea(float2 uv, float2 size, float expFalloff)
+            {
+                float3 color = VU_FG;
+                float2 triUV = -(uv - float2(size.x / 2, size.y / 2));
+                float hw = 0.45 * size.x; float hh = 0.37 * size.y;
+                float fullW = hw * 2; float fullH = hh * 2;
+                float bgTri = vuInflate(vuTriRight(triUV, hw, hh), 0.002);
+                VU_ADD(color, VU_INACTIVE, bgTri);
+                float marginX = (size.x - fullW) / 2; float marginY = (size.y - fullH) / 2;
+                float tx = vu_remap(uv.x, marginX, size.x - marginX, 0, 1);
+                float ty = vu_remap(uv.y, marginY, size.y - marginY, 0, 1);
+                float efY = (1.0 + (pow(tx, 4.0) * expFalloff) - expFalloff) * tx;
+                float fgD = vuInflate((1.0 - ty) - efY, 0.02);
+                VU_ADD(color, VU_ACTIVE, max(bgTri, fgD * 0.1));
+                float handleDist = vuSphere(vuTranslate(uv, float2(expFalloff * fullW + marginX, size.y * 0.5)), VU_HANDLE);
+                VU_ADD(color, VU_ACTIVE, handleDist);
+                float gripDist = abs(uv.x - expFalloff * hw * 2 - marginX) - VU_OUTLINE;
+                VU_ADD(color, VU_ACTIVE, gripDist);
+                return color;
+            }
+
+            float3 vuDrawFourBandArea(float2 uv, float2 size)
+            {
+                float2 sliceSize = float2(size.x, size.y / 4.0);
+                float strength = vuGetBandAmplitudeLerp((uv.y / size.y) * 4.0, uv.x / size.x * 64.0);
+                float3 sliceColor = vuGetBandColorLerp(uv.y / sliceSize.y);
+                return saturate(lerp(sliceColor, sliceColor * 15, strength));
+            }
+
+            // Cheap hash used for the autocorrelator's electric fizzle sparks.
+            float hudHash21(float2 p)
+            {
+                p = frac(p * float2(123.34, 345.45));
+                p += dot(p, p + 34.345);
+                return frac(p.x * p.y);
+            }
+
+            float3 vuDrawAutoCorr(float2 uv, float2 size)
+            {
+                float2 scaledUV = uv / size;
+                float2 mirroredUV = abs(2 * (scaledUV - 0.5));
+                float3 ac = AudioLinkLerp(ALPASS_AUTOCORRELATOR + float2(mirroredUV.x * AUDIOLINK_WIDTH, 0)).rrr;
+                float scaledAC = abs(ac.r * 0.007);
+                float middle = size.y * 0.5;
+                float acDistAbs = abs(smoothstep(0.005, 0.003, abs(middle - uv.y) - scaledAC));
+                float vuI = saturate(AudioLinkData(ALPASS_FILTEREDVU_INTENSITY).r * 2.5);
+                float3 acColor = lerp(VU_FG, VU_ACTIVE, vuI);
+                acColor = lerp(acColor, VU_FG, smoothstep(0, 1, mirroredUV.x));
+                return lerp(VU_BG * 0.8, acColor, acDistAbs);
+            }
+
+            // Lay out the console in a normalized panel and feed every slider live audio.
+            float3 vuDrawConsole(float2 uv, float4 amps, float vuLevel, float3 tint)
+            {
+                float3 color = VU_BG;
+
+                // ===== the "manipulate its sliders to match the audio" part =====
+                float threshold[4] = { amps.x, amps.y, amps.z, amps.w };       // box heights pulse per band
+                float crossover[4] = { 0.0, 0.25, 0.5, 0.75 };                 // stable layout
+                float gain = saturate(vuLevel) * 2.0;                          // gain handle tracks the VU level
+                float hitFade = saturate(amps.x * 0.8 + 0.1);                  // bass drives hit-fade
+                float expFalloff = saturate(amps.w * 0.8 + 0.1);               // treble drives exp-falloff
+
+                float currentY = 0;
+                float2 topO = vuTranslate(uv, VU_MARGIN);
+                float2 topS = float2(1.0 - VU_MARGIN * 2, 0.35);
+                VU_ADD(color, vuDrawTopArea(topO, threshold, crossover, gain), vuRoundedBoxTL(topO, topS, VU_CORNER));
+                currentY += topS.y + VU_MARGIN;
+
+                const float gainH = 0.13;
+                const float fadeH = 0.19;
+
+                float2 gO = vuTranslate(uv, VU_MARGIN + float2(0, currentY));
+                float2 gS = float2(topS.x, gainH);
+                VU_ADD(color, vuDrawGainArea(gO, gS, gain), vuRoundedBoxTL(gO, gS, VU_CORNER));
+                currentY += gS.y + VU_MARGIN;
+
+                float2 hfO = vuTranslate(uv, VU_MARGIN + float2(0, currentY));
+                float2 hfS = float2(topS.x * 0.5 - VU_MARGIN * 0.5, fadeH);
+                VU_ADD(color, vuDrawHitFadeArea(hfO, hfS, hitFade), vuRoundedBoxTL(hfO, hfS, VU_CORNER));
+
+                float2 efO = vuTranslate(uv, VU_MARGIN + float2(hfS.x + VU_MARGIN, currentY));
+                float2 efS = float2(topS.x * 0.5 - VU_MARGIN * 0.5, fadeH);
+                VU_ADD(color, vuDrawExpFalloffArea(efO, efS, expFalloff), vuRoundedBoxTL(efO, efS, VU_CORNER));
+                currentY += fadeH + VU_MARGIN;
+
+                float2 fbO = vuTranslate(uv, VU_MARGIN + float2(0, currentY));
+                float2 fbS = float2(topS.x, fadeH);
+                VU_ADD(color, vuDrawFourBandArea(fbO, fbS), vuRoundedBoxTL(fbO, fbS, VU_CORNER));
+                currentY += fbS.y + VU_MARGIN;
+
+                float2 acO = vuTranslate(uv, VU_MARGIN + float2(0, currentY));
+                float2 acS = float2(topS.x, gainH);
+                VU_ADD(color, vuDrawAutoCorr(acO, acS), vuRoundedBoxTL(acO, acS, VU_CORNER));
+
+                // Gentle ColorChord/Theme tint so the console takes on the music's color.
+                color = lerp(color, color * (tint * 1.5 + 0.001), 0.25);
+                return color;
+            }
+
+            fixed4 hudFrag(hudG2F i) : SV_Target
+            {
+                float2 hudUV = i.uv;
+
+                // Razor-edged mask: a hard 0.5 cutoff with a 1px antialiased rim, so the HUD lands exactly
+                // on the white of the emission mask. Black is fully transparent (discarded) with no soft
+                // bleed past the edge; white shows at full strength. fwidth keeps the edge ~1px regardless
+                // of how blurry the mask texture's ramp is, collapsing it to the 0.5 contour.
+                float maskRaw = tex2D(_CyberMask, hudUV).r;
+                float maskEdge = max(fwidth(maskRaw), 1e-5);
+                float cyberMask = smoothstep(0.5 - maskEdge, 0.5 + maskEdge, maskRaw);
+                if (cyberMask <= 0.0) discard;
+
+                float4 amps; float raw_waveform;
+                HudFetchAL(hudUV, amps, raw_waveform);
+
+                float3 hud = 0;
+
+                // VU Meter
+                if (_UseCyberVU > 0.5)
+                {
+                    float2 vuUV = HudTransform(hudUV, _Cyber_VU_Transform);
+                    float2 vuPlace = HudPlace(hudUV, _Cyber_VU_Transform);
+                    float vuInBounds = step(0.0, vuPlace.x) * step(vuPlace.x, 1.0)
+                                     * step(0.0, vuPlace.y) * step(vuPlace.y, 1.0);
+
+                    if (_Cyber_VU_Style < 0.5)
+                    {
+                        // Living AudioLink console, lifted from SDR into HDR (see consoleCol below). Listens to
+                        // all bands: overall level drives the gain handle, the all-band blend tints it.
+                        float3 al_color = HudAllBandColor(amps);
+                        float vu = max(max(amps.x, amps.y), max(amps.z, amps.w));
+                        float2 cUV = float2(vuUV.x, vuUV.y * 1.14);
+                        // The console palette is SDR and dominated by dark chrome (VU_BG); on an additive HUD that
+                        // floor reads as a dim grey wash, which is why the meter looked extremely dim even at
+                        // max intensity. Subtract it so only the lit content glows, then push it into HDR.
+                        float3 consoleCol = max(0.0, vuDrawConsole(cUV, amps, vu, al_color) - VU_BG);
+                        hud += consoleCol * _Cyber_VU_Str * vuInBounds * (HUD_GLOW * 1.4);
+                    }
+                    else
+                    {
+                        // Multi-band bar - one horizontal lane per band, filled to its own level and lit in
+                        // its own ColorChord colour, so the bar displays every band across the HUD emission.
+                        float lane = saturate(vuUV.y) * 4.0;
+                        int bandIdx = clamp((int)lane, 0, 3);
+                        float bandAmp = HUD_AL_BAND(amps, bandIdx);
+                        float laneGap = step(0.12, frac(lane)) * step(frac(lane), 0.88);
+                        float bar = step(vuUV.x, bandAmp) * laneGap * vuInBounds;
+                        hud += bar * _Cyber_VU_Str * HudBandColor(bandIdx) * HUD_GLOW;
+                    }
+                }
+
+                // Spectrum (CC) bars
+                if (_UseCyberCC > 0.5)
+                {
+                    float3 al_color = HudBandColor((int)_Cyber_CC_Band);
+                    float2 ccUV = HudTransform(hudUV, _Cyber_CC_Transform);
+                    float2 ccPlace = HudPlace(hudUV, _Cyber_CC_Transform);
+                    float density = max(2.0, _Cyber_CC_Density);
+                    if (ccPlace.x >= 0.0 && ccPlace.x <= 1.0 && ccPlace.y >= 0.0 && ccPlace.y <= 1.0)
+                    {
+                        int barIdx = (int)floor(ccUV.x * density);
+                        int sampleX = (int)((float)barIdx / density * 127.0);
+
+                        float magnitude = 0;
+                        if (_UseAudioLink > 0.5 && AudioLinkIsAvailable())
+                            magnitude = AudioLinkData(ALPASS_AUDIOLINK + int2(sampleX, (int)_Cyber_CC_Band)).r;
+
+                        float barShape = step(1.0 - ccUV.y, saturate(magnitude * 4.0));
+                        float barCenter = (floor(ccUV.x * density) + 0.5) / density;
+                        float inBar = step(abs(ccUV.x - barCenter), 0.45 / density);
+                        hud += barShape * inBar * _Cyber_CC_Str * al_color * HUD_GLOW;
+                    }
+                }
+
+                // Waveform
+                if (_UseCyberWave > 0.5)
+                {
+                    float3 al_color = HudBandColor((int)_Cyber_Wave_Band);
+                    float waveBand = HUD_AL_BAND(amps, _Cyber_Wave_Band);
+                    float2 waveUV = HudTransform(hudUV, _Cyber_Wave_Transform);
+                    float2 wavePlace = HudPlace(hudUV, _Cyber_Wave_Transform);
+                    float waveInBounds = step(0.0, wavePlace.x) * step(wavePlace.x, 1.0)
+                                       * step(0.0, wavePlace.y) * step(wavePlace.y, 1.0);
+                    // The waveform feed is full-spectrum PCM, so the selected band breathes its amplitude
+                    // (and tints it) to give this layer a distinct band source.
+                    float wave = abs((waveUV.y - 0.5) - raw_waveform * lerp(0.1, 0.3, waveBand));
+                    wave = (1.0 - smoothstep(0.0, 0.02, wave)) * waveInBounds;
+                    hud += wave * _Cyber_Wave_Str * al_color * HUD_GLOW;
+                }
+
+                // DMX grid mini-readout
+                if (_UseCyberDMX > 0.5)
+                {
+                    float dmxBand = HUD_AL_BAND(amps, _Cyber_DMX_Band);
+                    float2 dmxUV = HudTransform(hudUV, _Cyber_DMX_Transform);
+                    float2 dmxPlace = HudPlace(hudUV, _Cyber_DMX_Transform);
+                    if (dmxPlace.x >= 0.0 && dmxPlace.x <= 1.0 && dmxPlace.y >= 0.0 && dmxPlace.y <= 1.0)
+                    {
+                        float3 dmxSample = tex2D(_Udon_DMXGridRenderTexture, dmxUV).rgb;
+                        // The DMX feed is VRSL data, not audio, so the selected band pulses the readout
+                        // brightness (floored so the grid stays legible) to give it a band source.
+                        hud += dmxSample * lerp(0.4, 1.0, dmxBand) * _Cyber_DMX_Str * HUD_GLOW;
+                    }
+                }
+
+                // Autocorrelator scope ring - a polar-wrapped mirror of the in-world panel oscilloscope
+                // trace (drawAutoCorrelatorArea / vuDrawAutoCorr): the autocorrelation swells a soft scope
+                // line out from a baseline circle and the brightness tracks FilteredVU intensity.
+                if (_UseCyberAuto > 0.5)
+                {
+                    float3 al_color = HudBandColor((int)_Cyber_Auto_Band);
+                    float autoBand = HUD_AL_BAND(amps, _Cyber_Auto_Band);
+                    float2 acUV = HudTransform(hudUV, _Cyber_Auto_Transform);
+                    float2 centered = acUV - 0.5;
+                    float r = length(centered) * 2.0;
+                    
+                    if (r <= 1.0)
+                    {
+                        float angle = atan2(centered.y, centered.x);
+                        float acPos = abs(angle / UNITY_PI); // Maps radial angle to linear 0-1
+                        
+                        float acVal = 0;
+                        float vuI = 0;
+                        bool alLive = (_UseAudioLink > 0.5 && AudioLinkIsAvailable());
+                        if (alLive)
+                        {
+                            // Identical fetch + 0.007 deflection scale to the panel trace; abs() so the
+                            // band swells symmetrically. FilteredVU drives brightness like the panel.
+                            acVal = abs(AudioLinkLerp(ALPASS_AUTOCORRELATOR + float2(acPos * AUDIOLINK_WIDTH, 0)).r * 0.007);
+                            vuI   = saturate(AudioLinkData(ALPASS_FILTEREDVU_INTENSITY).r * 2.5);
+                        }
+
+                        // Per-effect drivers: each effect listens to its OWN AudioLink band, so the user can route
+                        // bass / low-mid / high-mid / treble to shimmer / pop / sizzle / electrify independently, and
+                        // each is gated by its toggle. With no live AudioLink we fall back to an idle animated level so
+                        // every enabled effect stays visible while authoring in the editor.
+                        float shimmerAmp   = alLive ? HUD_AL_BAND(amps, _Cyber_Auto_Shimmer_Band)   : 0.6;
+                        float popAmp       = alLive ? HUD_AL_BAND(amps, _Cyber_Auto_Pop_Band)       : pow(0.5 + 0.5 * sin(_Time.y * 3.0), 8.0);
+                        float sizzleAmp    = alLive ? HUD_AL_BAND(amps, _Cyber_Auto_Sizzle_Band)    : 0.6;
+                        float electrifyAmp = alLive ? HUD_AL_BAND(amps, _Cyber_Auto_Electrify_Band) : 0.6;
+                        shimmerAmp   *= _Cyber_Auto_Shimmer;
+                        popAmp       *= _Cyber_Auto_Pop;
+                        sizzleAmp    *= _Cyber_Auto_Sizzle;
+                        electrifyAmp *= _Cyber_Auto_Electrify;
+
+                        // POP: sharp beat flash that swells the ring and goes white-hot, driven by its band.
+                        float pop = pow(saturate(popAmp), 3.0);
+                        acVal += pop * 0.05;
+
+                        // SIZZLE: crackling noise jitters the swell radius so the trace spits, scaled by its band.
+                        float crackle = hudHash21(float2(floor(acPos * 90.0), floor(_Time.y * 28.0))) - 0.5;
+                        acVal += crackle * 0.014 * sizzleAmp;
+
+                        // Soft filled band around the baseline radius - the ring equivalent of the panel
+                        // trace that swells out from its centerline as the correlation grows.
+                        const float baselineR = 0.6;
+                        float bandDist = abs(r - baselineR) - acVal;
+                        float trace = abs(smoothstep(0.02, 0.01, bandDist));
+
+                        // SHIMMER: thin highlight bands chasing around the ring, intensity tied to its band.
+                        float shimmer = pow(0.5 + 0.5 * sin(acPos * 36.0 - _Time.y * 6.0 + acVal * 400.0), 4.0) * shimmerAmp;
+
+                        // ELECTRIFY: lightning arc filaments crossing the disc, brightening with its band.
+                        float arcField = sin(acPos * 64.0 + _Time.y * 9.0) + sin(r * 26.0 - _Time.y * 7.0 + acPos * 12.0);
+                        float electrify = pow(saturate(1.0 - abs(arcField) * 2.5), 3.0) * electrifyAmp;
+
+                        // POP blooms a soft halo just off the trace.
+                        float halo = smoothstep(0.06 + pop * 0.06, 0.0, abs(bandDist)) * pop;
+
+                        // Base ring brightness; shimmer lifts it, pop punches it.
+                        float bright = lerp(0.15, 1.0, max(vuI, autoBand));
+                        bright *= 1.0 + shimmer * 1.6 + pop * 2.0;
+                        float tailFade = 1.0 - smoothstep(0.0, 1.0, acPos);
+
+                        // SIZZLE sparks: rare bright specks skittering along the trace edge, density on its band.
+                        float spark = pow(hudHash21(float2(floor(acPos * 160.0), floor(_Time.y * 36.0))), 9.0);
+                        float sizzle = spark * smoothstep(0.025, 0.0, abs(bandDist)) * (0.3 + sizzleAmp * 3.0);
+
+                        float3 acRing = al_color * trace * bright + al_color * halo * 0.6;
+                        acRing = lerp(acRing, 1.0, saturate(trace * pop));          // POP white-hot core
+                        acRing += float3(0.5, 0.8, 1.0) * sizzle;                   // SIZZLE electric-blue sparks
+                        acRing += float3(0.45, 0.8, 1.0) * electrify;              // ELECTRIFY arc filaments
+
+                        hud += acRing * tailFade * _Cyber_AutoCorr_Str * HUD_GLOW;
+                    }
+                }
+
+                float3 col = hud * cyberMask;
+                if (max(col.r, max(col.g, col.b)) < 0.002) discard;
+                return fixed4(col, 1);
+            }
+            ENDCG
+        }
+
+        // PASS 4: FRACTURE SHARDS (geometry-amplified solid chunks) - PC only. Each triangle in the fracturing region (manual _Vtx_Fracture_Amount + AudioLink jitter) detaches as a real tetrahedral shard that tumbles around its centroid and flies outward along its face normal to a hover distance, while the main pass clips that region of the body away so the suit appears to break apart. Surface shaders cannot host a geometry stage, so this is its own vert/geom/frag pass, gated by _UseVtxKinetic and per-shard progress so it emits nothing where the suit is still intact. Kept off the SPS variant because VRCFury's SPS patcher rewrites the vertex stage.
+        Pass
+        {
+            Tags { "LightMode" = "ForwardBase" }
+            ZWrite On
+            ZTest LEqual
+            Cull Off
+            Blend Off
+
+            CGPROGRAM
+            #pragma vertex shardVert
+            #pragma geometry shardGeom
+            #pragma fragment shardFrag
+            #pragma target 5.0
+            #pragma require geometry
+            #pragma multi_compile_instancing
+            #pragma multi_compile_fwdbase
+            #pragma shader_feature_local _ALPHATEST_ON
+            #include "UnityCG.cginc"
+            #include "Lighting.cginc"
+            #include "Packages/com.vixencreations.vixens-toolbox/Editor/Avatar Tools/Shaders/cginc/AudioLink.cginc"
+
+            UNITY_DECLARE_TEX2D(_MainTex);
+            sampler2D _MetallicGlossMap, _BumpMap, _EmissionMap, _RegionMask;
+            float4 _MainTex_ST;
+            fixed4 _Color;
+            fixed4 _EmissionColor;
+            fixed4 _Region_R_Tint, _Region_G_Tint, _Region_B_Tint;
+            half _CutOff;
+            float _Emis_Exp, _Norm_Str;
+            float _PBR_Met_Ch, _PBR_Met_Inv, _PBR_Smooth_Ch, _PBR_Smooth_Inv;
+            float _UseRegionMask, _Region_R_Emis, _Region_G_Emis, _Region_B_Emis;
+            float _UseVtxKinetic, _UseAudioLink, _UseMediaState;
+            float _Vtx_Fracture_Band, _Vtx_Fracture_Str;
+            float _Vtx_Fracture_Amount, _Vtx_Fracture_Dist, _Vtx_Fracture_Spin;
+            float _Vtx_Fracture_Spiral, _Vtx_Fracture_Lift, _Vtx_Fracture_Float;
+            float _Shard_ColorMod, _Shard_ColorMod_Speed, _UseShardCC, _Shard_CC_Str;
+            uniform float _MediaPlaying;
+
+            // Rotate vector v around unit axis by angle (Rodrigues).
+            float3 shardRotate(float3 v, float3 axis, float angle)
+            {
+                float s = sin(angle), c = cos(angle);
+                return v * c + cross(axis, v) * s + axis * dot(axis, v) * (1.0 - c);
+            }
+
+            // Packed-map channel picker (mirror of the surf-pass ChannelPick - this pass is its own program).
+            inline float shardChannel(fixed4 packed, float ch)
+            {
+                return (ch < 0.5) ? packed.r : (ch < 1.5) ? packed.g : (ch < 2.5) ? packed.b : packed.a;
+            }
+
+            // Hue-rotate an RGB color by 'angle' radians in YIQ space (cheap, no HSV stack). Drives shard color-mod.
+            float3 shardHueRotate(float3 col, float angle)
+            {
+                float c = cos(angle), s = sin(angle);
+                float3x3 toYIQ = float3x3(0.299, 0.587, 0.114, 0.596, -0.274, -0.322, 0.211, -0.523, 0.312);
+                float3x3 toRGB = float3x3(1.0, 0.956, 0.621, 1.0, -0.272, -0.647, 1.0, -1.106, 1.703);
+                float3 yiq = mul(toYIQ, col);
+                float2 iq = float2(yiq.y * c - yiq.z * s, yiq.y * s + yiq.z * c);
+                return mul(toRGB, float3(yiq.x, iq.x, iq.y));
+            }
+
+            // Shared shard motion: returns object-space displacement (push) for a chunk and outputs its tumble axis/angle and velocity direction.
+            // Keeps PASS 4 (solid shards) and PASS 5 (trails) in lockstep so a tail always trails its own shard.
+            void shardMotion(float3 center, float3 faceN, float h, float shardProg,
+                             out float3 push, out float3 axis, out float ang, out float3 velDir)
+            {
+                axis = normalize(float3(frac(h * 1.0) * 2.0 - 1.0, frac(h * 1.37) * 2.0 - 1.0, frac(h * 3.11) * 2.0 - 1.0) + 1e-4);
+                ang = shardProg * _Vtx_Fracture_Spin * 6.2831853 + _Time.y * 0.6 * _Vtx_Fracture_Spin * (h - 0.5);
+
+                // Outward fly-out, eased (sqrt pops fast then holds = hover), with a subtle bob.
+                float travel = sqrt(shardProg) * _Vtx_Fracture_Dist + sin(_Time.y * 1.3 + h * 6.2831) * 0.01 * shardProg;
+
+                // Spiral: orbit the fly-out direction around object-up and add a helical rise.
+                const float3 up = float3(0.0, 1.0, 0.0);
+                float spiralAng = (_Time.y * 1.2 + shardProg * 6.2831853) * _Vtx_Fracture_Spiral;
+                float3 pushDir = shardRotate(faceN, up, spiralAng);
+                push = pushDir * travel;
+                push += up * _Vtx_Fracture_Spiral * shardProg * _Vtx_Fracture_Dist * 0.5;
+
+                // Float: per-shard buoyant low-frequency drift on all axes.
+                push += float3(sin(_Time.y * 0.8 + h * 6.2831),
+                               sin(_Time.y * 0.6 + h * 12.566 + 1.3),
+                               cos(_Time.y * 0.7 + h * 9.42 + 2.1)) * (_Vtx_Fracture_Float * 0.08 * shardProg);
+
+                // Lift: net vertical offset (animatable up/down).
+                push += up * (_Vtx_Fracture_Lift * shardProg);
+
+                velDir = (length(push) > 1e-4) ? normalize(push) : pushDir;
+            }
+
+            struct shardAppdata
+            {
+                float4 vertex : POSITION;
+                float3 normal : NORMAL;
+                float2 uv : TEXCOORD0;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct shardV2G
+            {
+                float3 opos : TEXCOORD0;
+                float3 onormal : TEXCOORD1;
+                float2 uv : TEXCOORD2;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct shardG2F
+            {
+                float4 pos : SV_POSITION;
+                float2 uv : TEXCOORD0;
+                float3 worldNormal : TEXCOORD1;
+                float3 worldPos : TEXCOORD2;
+                float3 worldTangent : TEXCOORD3;
+                nointerpolation float2 shardData : TEXCOORD4; // x = per-shard hash, y = detach progress
+                UNITY_VERTEX_OUTPUT_STEREO
+            };
+
+            shardV2G shardVert(shardAppdata v)
+            {
+                shardV2G o;
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_TRANSFER_INSTANCE_ID(v, o);
+                o.opos = v.vertex.xyz;
+                o.onormal = v.normal;
+                o.uv = v.uv;
+                return o;
+            }
+
+            [maxvertexcount(12)]
+            void shardGeom(triangle shardV2G p[3], inout TriangleStream<shardG2F> stream)
+            {
+                if (_UseVtxKinetic < 0.5) return;
+
+                UNITY_SETUP_INSTANCE_ID(p[0]);
+
+                float3 center = (p[0].opos + p[1].opos + p[2].opos) / 3.0;
+                float3 faceN  = normalize(cross(p[1].opos - p[0].opos, p[2].opos - p[0].opos));
+                float2 uvC    = (p[0].uv + p[1].uv + p[2].uv) / 3.0;
+
+                // Per-shard hash from the grid-snapped centroid (stable per chunk).
+                float h = frac(sin(dot(floor(center * 23.0), float3(12.9898, 78.233, 37.719))) * 43758.5453);
+
+                // AudioLink jitter layered on the manual amount.
+                float jitter = 0;
+                if (_UseAudioLink > 0.5 && !(_UseMediaState > 0.5 && _MediaPlaying < 0.5) && AudioLinkIsAvailable())
+                {
+                    int band = (int)_Vtx_Fracture_Band;
+                    float amp = AudioLinkData(ALPASS_AUDIOLINK + int2(0, clamp(band, 0, 3))).r;
+                    amp = saturate(pow(amp * 4.0, 0.35));
+                    jitter = amp * _Vtx_Fracture_Str * 0.2;
+                }
+                float progress = saturate(_Vtx_Fracture_Amount + jitter);
+
+                // Stagger onset per shard; emit nothing until this shard detaches (the body still covers it).
+                float onset = h * 0.35;
+                float shardProg = saturate((progress - onset) / max(1.0 - onset, 1e-3));
+                if (shardProg <= 0.001) return;
+
+                // Tumble + fly-out + spiral/float/lift (shared with the trail pass so a tail always follows its shard).
+                float3 push, axis, velDir; float ang;
+                shardMotion(center, faceN, h, shardProg, push, axis, ang, velDir);
+
+                // Rotated/translated base verts (object space).
+                float3 v0 = center + shardRotate(p[0].opos - center, axis, ang) + push;
+                float3 v1 = center + shardRotate(p[1].opos - center, axis, ang) + push;
+                float3 v2 = center + shardRotate(p[2].opos - center, axis, ang) + push;
+
+                // Tetra apex for thickness (along the rotated face normal).
+                float3 rotN = shardRotate(faceN, axis, ang);
+                float avgEdge = (length(p[1].opos - p[0].opos) + length(p[2].opos - p[0].opos) + length(p[2].opos - p[1].opos)) / 3.0;
+                float3 apex = center + push + rotN * avgEdge * 0.5 * (0.4 + 0.6 * shardProg);
+
+                // Tangent basis from the base-tri UV gradient (rotated with the shard), reused for all faces - good enough for small tumbling chunks.
+                float3 te1 = p[1].opos - p[0].opos;
+                float3 te2 = p[2].opos - p[0].opos;
+                float2 tduv1 = p[1].uv - p[0].uv;
+                float2 tduv2 = p[2].uv - p[0].uv;
+                float tDenom = tduv1.x * tduv2.y - tduv2.x * tduv1.y;
+                float tR = (abs(tDenom) < 1e-8) ? 0.0 : 1.0 / tDenom;
+                float3 tangentO = (te1 * tduv2.y - te2 * tduv1.y) * tR;
+                tangentO = (dot(tangentO, tangentO) > 1e-10) ? normalize(tangentO) : normalize(te1);
+                float3 wTan = normalize(UnityObjectToWorldDir(shardRotate(tangentO, axis, ang)));
+
+                // World-space verts.
+                float3 wv0 = mul(unity_ObjectToWorld, float4(v0, 1.0)).xyz;
+                float3 wv1 = mul(unity_ObjectToWorld, float4(v1, 1.0)).xyz;
+                float3 wv2 = mul(unity_ObjectToWorld, float4(v2, 1.0)).xyz;
+                float3 wap = mul(unity_ObjectToWorld, float4(apex, 1.0)).xyz;
+
+                shardG2F o;
+                UNITY_INITIALIZE_OUTPUT(shardG2F, o);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+                o.worldTangent = wTan;
+                o.shardData = float2(h, shardProg);
+
+                // Base
+                o.worldNormal = normalize(cross(wv1 - wv0, wv2 - wv0));
+                o.worldPos = wv0; o.uv = p[0].uv; o.pos = UnityWorldToClipPos(wv0); stream.Append(o);
+                o.worldPos = wv1; o.uv = p[1].uv; o.pos = UnityWorldToClipPos(wv1); stream.Append(o);
+                o.worldPos = wv2; o.uv = p[2].uv; o.pos = UnityWorldToClipPos(wv2); stream.Append(o);
+                stream.RestartStrip();
+
+                // Side 1
+                o.worldNormal = normalize(cross(wv1 - wv0, wap - wv0));
+                o.worldPos = wv0; o.uv = p[0].uv; o.pos = UnityWorldToClipPos(wv0); stream.Append(o);
+                o.worldPos = wv1; o.uv = p[1].uv; o.pos = UnityWorldToClipPos(wv1); stream.Append(o);
+                o.worldPos = wap; o.uv = uvC;     o.pos = UnityWorldToClipPos(wap); stream.Append(o);
+                stream.RestartStrip();
+
+                // Side 2
+                o.worldNormal = normalize(cross(wv2 - wv1, wap - wv1));
+                o.worldPos = wv1; o.uv = p[1].uv; o.pos = UnityWorldToClipPos(wv1); stream.Append(o);
+                o.worldPos = wv2; o.uv = p[2].uv; o.pos = UnityWorldToClipPos(wv2); stream.Append(o);
+                o.worldPos = wap; o.uv = uvC;     o.pos = UnityWorldToClipPos(wap); stream.Append(o);
+                stream.RestartStrip();
+
+                // Side 3
+                o.worldNormal = normalize(cross(wv0 - wv2, wap - wv2));
+                o.worldPos = wv2; o.uv = p[2].uv; o.pos = UnityWorldToClipPos(wv2); stream.Append(o);
+                o.worldPos = wv0; o.uv = p[0].uv; o.pos = UnityWorldToClipPos(wv0); stream.Append(o);
+                o.worldPos = wap; o.uv = uvC;     o.pos = UnityWorldToClipPos(wap); stream.Append(o);
+                stream.RestartStrip();
+            }
+
+            fixed4 shardFrag(shardG2F i) : SV_Target
+            {
+                float2 uv = i.uv * _MainTex_ST.xy + _MainTex_ST.zw;
+                fixed4 c = UNITY_SAMPLE_TEX2D(_MainTex, uv) * _Color;
+                #if defined(_ALPHATEST_ON)
+                    clip(c.a - _CutOff);
+                #endif
+
+                float h = i.shardData.x;
+                float shardProg = i.shardData.y;
+                float3 albedo = c.rgb;
+
+                // Region tints + region emission boost (mirror of the body surface).
+                float regionEmis = 0.0;
+                if (_UseRegionMask > 0.5)
+                {
+                    fixed4 rm = tex2D(_RegionMask, uv);
+                    albedo = lerp(albedo, albedo * _Region_R_Tint.rgb, rm.r);
+                    albedo = lerp(albedo, albedo * _Region_G_Tint.rgb, rm.g);
+                    albedo = lerp(albedo, albedo * _Region_B_Tint.rgb, rm.b);
+                    regionEmis = rm.r * _Region_R_Emis + rm.g * _Region_G_Emis + rm.b * _Region_B_Emis;
+                }
+
+                // Metallic / smoothness from the packed PBR map (Poiyomi-style channel pick + invert).
+                fixed4 mg = tex2D(_MetallicGlossMap, uv);
+                float metallic = shardChannel(mg, _PBR_Met_Ch);
+                if (_PBR_Met_Inv > 0.5) metallic = 1.0 - metallic;
+                float smoothness = shardChannel(mg, _PBR_Smooth_Ch);
+                if (_PBR_Smooth_Inv > 0.5) smoothness = 1.0 - smoothness;
+
+                // Two-sided geometric normal (flip toward camera under Cull Off), then apply the tangent-space normal map.
+                float3 N = normalize(i.worldNormal);
+                float3 V = normalize(_WorldSpaceCameraPos - i.worldPos);
+                if (dot(N, V) < 0.0) N = -N;
+                float3 T = normalize(i.worldTangent - N * dot(N, i.worldTangent));
+                float3 B = normalize(cross(N, T));
+                float3 nTS = UnpackNormal(tex2D(_BumpMap, uv));
+                nTS.xy *= _Norm_Str;
+                float3 Nm = normalize(T * nTS.x + B * nTS.y + N * nTS.z);
+
+                // Emission (map * color + region boost).
+                float3 emis = tex2D(_EmissionMap, uv).rgb * _EmissionColor.rgb * _Emis_Exp;
+                emis += albedo * regionEmis;
+
+                // Color-mod: per-shard hue cycle (speed 0 = static per-shard offset = shattered rainbow).
+                if (_Shard_ColorMod > 0.001)
+                {
+                    float hueAng = (_Time.y * _Shard_ColorMod_Speed + h) * 6.2831853;
+                    albedo = lerp(albedo, shardHueRotate(albedo, hueAng), _Shard_ColorMod);
+                    emis   = lerp(emis,   shardHueRotate(emis,   hueAng), _Shard_ColorMod);
+                }
+
+                // AudioLink ColorChord: each shard takes a different live note color from the CC strip.
+                if (_UseShardCC > 0.5 && _UseAudioLink > 0.5 && !(_UseMediaState > 0.5 && _MediaPlaying < 0.5) && AudioLinkIsAvailable())
+                {
+                    float ccPos = frac(h + _Time.y * 0.05);
+                    float3 ccCol = AudioLinkData(ALPASS_CCSTRIP + int2((int)(saturate(ccPos) * 127.0), 0)).rgb;
+                    albedo = lerp(albedo, ccCol, _Shard_CC_Str * 0.8);
+                    emis  += ccCol * _Shard_CC_Str * shardProg;
+                }
+
+                // Compact metallic-workflow BRDF + SH9 ambient - keeps shards consistent with the body without the full surface stack.
+                float3 Ldir = normalize(_WorldSpaceLightPos0.xyz);
+                float ndl = saturate(dot(Nm, Ldir));
+                float3 Hh = normalize(Ldir + V);
+                float ndh = saturate(dot(Nm, Hh));
+                float specPow = exp2(smoothness * 10.0 + 1.0);
+                float3 F0 = lerp(0.04, albedo, metallic);
+                float3 spec = F0 * pow(ndh, specPow) * (specPow + 8.0) / 25.13274;
+                float3 diffuse = albedo * (1.0 - metallic);
+                float3 amb = ShadeSH9(float4(Nm, 1.0));
+                float3 lit = diffuse * (_LightColor0.rgb * ndl + amb) + spec * _LightColor0.rgb * ndl;
+                lit += emis;
+                return fixed4(lit, 1.0);
+            }
+            ENDCG
+        }
+
+        // PASS 5: FRACTURE SHARD TRAILS (additive comet tails) - PC only. Optional per-shard streak trailing each flying chunk along its velocity, gated by _Vtx_Fracture_Trail (0 = off, emits nothing). Re-derives the exact PASS 4 motion via shardMotion so a tail always follows its own shard, and inherits the shard's hue-mod / ColorChord color. Separate additive pass so tails glow without disturbing the solid shards. Kept off the SPS variant for the same reason as the shard pass.
+        Pass
+        {
+            Tags { "LightMode" = "ForwardBase" }
+            Blend One One
+            ZWrite Off
+            ZTest LEqual
+            Cull Off
+
+            CGPROGRAM
+            #pragma vertex trailVert
+            #pragma geometry trailGeom
+            #pragma fragment trailFrag
+            #pragma target 5.0
+            #pragma require geometry
+            #pragma multi_compile_instancing
+            #include "UnityCG.cginc"
+            #include "Packages/com.vixencreations.vixens-toolbox/Editor/Avatar Tools/Shaders/cginc/AudioLink.cginc"
+
+            sampler2D _MainTex;     // plain sampler here (own program) so the geometry stage can use tex2Dlod - no derivatives in a geom shader.
+            float4 _MainTex_ST;
+            fixed4 _Color;
+            float _UseVtxKinetic, _UseAudioLink, _UseMediaState;
+            float _Vtx_Fracture_Band, _Vtx_Fracture_Str;
+            float _Vtx_Fracture_Amount, _Vtx_Fracture_Dist, _Vtx_Fracture_Spin;
+            float _Vtx_Fracture_Spiral, _Vtx_Fracture_Lift, _Vtx_Fracture_Float, _Vtx_Fracture_Trail;
+            float _Shard_ColorMod, _Shard_ColorMod_Speed, _UseShardCC, _Shard_CC_Str;
+            uniform float _MediaPlaying;
+
+            // Duplicated from the shard pass - separate CGPROGRAMs cannot share functions; kept byte-for-byte identical so trails track shards exactly.
+            float3 shardRotate(float3 v, float3 axis, float angle)
+            {
+                float s = sin(angle), c = cos(angle);
+                return v * c + cross(axis, v) * s + axis * dot(axis, v) * (1.0 - c);
+            }
+
+            float3 shardHueRotate(float3 col, float angle)
+            {
+                float c = cos(angle), s = sin(angle);
+                float3x3 toYIQ = float3x3(0.299, 0.587, 0.114, 0.596, -0.274, -0.322, 0.211, -0.523, 0.312);
+                float3x3 toRGB = float3x3(1.0, 0.956, 0.621, 1.0, -0.272, -0.647, 1.0, -1.106, 1.703);
+                float3 yiq = mul(toYIQ, col);
+                float2 iq = float2(yiq.y * c - yiq.z * s, yiq.y * s + yiq.z * c);
+                return mul(toRGB, float3(yiq.x, iq.x, iq.y));
+            }
+
+            void shardMotion(float3 center, float3 faceN, float h, float shardProg,
+                             out float3 push, out float3 axis, out float ang, out float3 velDir)
+            {
+                axis = normalize(float3(frac(h * 1.0) * 2.0 - 1.0, frac(h * 1.37) * 2.0 - 1.0, frac(h * 3.11) * 2.0 - 1.0) + 1e-4);
+                ang = shardProg * _Vtx_Fracture_Spin * 6.2831853 + _Time.y * 0.6 * _Vtx_Fracture_Spin * (h - 0.5);
+                float travel = sqrt(shardProg) * _Vtx_Fracture_Dist + sin(_Time.y * 1.3 + h * 6.2831) * 0.01 * shardProg;
+                const float3 up = float3(0.0, 1.0, 0.0);
+                float spiralAng = (_Time.y * 1.2 + shardProg * 6.2831853) * _Vtx_Fracture_Spiral;
+                float3 pushDir = shardRotate(faceN, up, spiralAng);
+                push = pushDir * travel;
+                push += up * _Vtx_Fracture_Spiral * shardProg * _Vtx_Fracture_Dist * 0.5;
+                push += float3(sin(_Time.y * 0.8 + h * 6.2831),
+                               sin(_Time.y * 0.6 + h * 12.566 + 1.3),
+                               cos(_Time.y * 0.7 + h * 9.42 + 2.1)) * (_Vtx_Fracture_Float * 0.08 * shardProg);
+                push += up * (_Vtx_Fracture_Lift * shardProg);
+                velDir = (length(push) > 1e-4) ? normalize(push) : pushDir;
+            }
+
+            struct trailAppdata
+            {
+                float4 vertex : POSITION;
+                float3 normal : NORMAL;
+                float2 uv : TEXCOORD0;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct trailV2G
+            {
+                float3 opos : TEXCOORD0;
+                float3 onormal : TEXCOORD1;
+                float2 uv : TEXCOORD2;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct trailG2F
+            {
+                float4 pos : SV_POSITION;
+                float3 col : TEXCOORD0;
+                float2 luv : TEXCOORD1;   // x = cross (-1..1), y = lengthwise (1 head -> 0 tail)
+                UNITY_VERTEX_OUTPUT_STEREO
+            };
+
+            trailV2G trailVert(trailAppdata v)
+            {
+                trailV2G o;
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_TRANSFER_INSTANCE_ID(v, o);
+                o.opos = v.vertex.xyz;
+                o.onormal = v.normal;
+                o.uv = v.uv;
+                return o;
+            }
+
+            [maxvertexcount(4)]
+            void trailGeom(triangle trailV2G p[3], inout TriangleStream<trailG2F> stream)
+            {
+                if (_UseVtxKinetic < 0.5 || _Vtx_Fracture_Trail < 0.001) return;
+                UNITY_SETUP_INSTANCE_ID(p[0]);
+
+                float3 center = (p[0].opos + p[1].opos + p[2].opos) / 3.0;
+                float3 faceN  = normalize(cross(p[1].opos - p[0].opos, p[2].opos - p[0].opos));
+                float2 uvC    = (p[0].uv + p[1].uv + p[2].uv) / 3.0;
+
+                float h = frac(sin(dot(floor(center * 23.0), float3(12.9898, 78.233, 37.719))) * 43758.5453);
+
+                float jitter = 0;
+                if (_UseAudioLink > 0.5 && !(_UseMediaState > 0.5 && _MediaPlaying < 0.5) && AudioLinkIsAvailable())
+                {
+                    int band = (int)_Vtx_Fracture_Band;
+                    float amp = AudioLinkData(ALPASS_AUDIOLINK + int2(0, clamp(band, 0, 3))).r;
+                    amp = saturate(pow(amp * 4.0, 0.35));
+                    jitter = amp * _Vtx_Fracture_Str * 0.2;
+                }
+                float progress = saturate(_Vtx_Fracture_Amount + jitter);
+                float onset = h * 0.35;
+                float shardProg = saturate((progress - onset) / max(1.0 - onset, 1e-3));
+                if (shardProg <= 0.02) return;
+
+                float3 push, axis, velDir; float ang;
+                shardMotion(center, faceN, h, shardProg, push, axis, ang, velDir);
+
+                float3 headW = mul(unity_ObjectToWorld, float4(center + push, 1.0)).xyz;
+                float3 wVel  = normalize(UnityObjectToWorldDir(velDir) + 1e-5);
+
+                float len = _Vtx_Fracture_Trail * _Vtx_Fracture_Dist * (0.4 + 0.6 * shardProg) * 1.5;
+                if (len < 1e-4) return;
+                float3 tailW = headW - wVel * len;
+
+                float3 viewDir = normalize(_WorldSpaceCameraPos - headW);
+                float3 side = normalize(cross(wVel, viewDir) + 1e-5);
+                float halfW = _Vtx_Fracture_Dist * 0.04 * (0.5 + 0.5 * shardProg);
+
+                float3 col = (tex2Dlod(_MainTex, float4(uvC * _MainTex_ST.xy + _MainTex_ST.zw, 0, 0)) * _Color).rgb;
+                if (_Shard_ColorMod > 0.001)
+                {
+                    float hueAng = (_Time.y * _Shard_ColorMod_Speed + h) * 6.2831853;
+                    col = lerp(col, shardHueRotate(col, hueAng), _Shard_ColorMod);
+                }
+                if (_UseShardCC > 0.5 && _UseAudioLink > 0.5 && !(_UseMediaState > 0.5 && _MediaPlaying < 0.5) && AudioLinkIsAvailable())
+                {
+                    float ccPos = frac(h + _Time.y * 0.05);
+                    float3 ccCol = AudioLinkData(ALPASS_CCSTRIP + int2((int)(saturate(ccPos) * 127.0), 0)).rgb;
+                    col = lerp(col, ccCol, _Shard_CC_Str);
+                }
+
+                trailG2F o;
+                UNITY_INITIALIZE_OUTPUT(trailG2F, o);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+                o.col = col;
+
+                float3 hL = headW - side * halfW;
+                float3 hR = headW + side * halfW;
+                float3 tL = tailW - side * halfW * 0.15;
+                float3 tR = tailW + side * halfW * 0.15;
+
+                o.pos = UnityWorldToClipPos(hL); o.luv = float2(-1, 1); stream.Append(o);
+                o.pos = UnityWorldToClipPos(hR); o.luv = float2( 1, 1); stream.Append(o);
+                o.pos = UnityWorldToClipPos(tL); o.luv = float2(-1, 0); stream.Append(o);
+                o.pos = UnityWorldToClipPos(tR); o.luv = float2( 1, 0); stream.Append(o);
+            }
+
+            fixed4 trailFrag(trailG2F i) : SV_Target
+            {
+                float along = i.luv.y;
+                float edge = 1.0 - smoothstep(0.5, 1.0, abs(i.luv.x));
+                float fade = along * along * edge;
+                if (fade < 0.003) discard;
+                return fixed4(i.col * fade * 1.5, 1.0);
+            }
+            ENDCG
+        }
     }
 
     CustomEditor "VixenWearEditor"
