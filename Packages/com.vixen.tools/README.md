@@ -114,5 +114,3 @@ This architecture requires immense R&D and community synergy. Massive thanks to 
 * **DJ Red_Panda:** Suggested advanced LOD fixes and other critical miscellaneous pipeline items.
 * **RBN's World Creators:** Suggested specific mechanics for the VRAM estimation matrices.
 * **flickfluff:** Caught the Avatar Validator failing to strip Quest face-tracking components, directly inspiring the "Hunter-Killer" Biometric Purge.
-* **lukawawa:** Tier 3 Support fuel.
-* **statichex:** Continued foundational support.
