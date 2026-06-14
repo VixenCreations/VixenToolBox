@@ -5,13 +5,6 @@ using UnityEngine;
 
 public static class CurveOperations
 {
-    /// <summary>
-    /// Rebuilds a curve so that between [sTime, eTime] it transitions from sVal to eVal
-    /// with the given easing and intermediate key count.
-    ///
-    /// Keys BEFORE sTime are preserved.
-    /// Keys AFTER eTime are intentionally dropped, so the generated region defines the tail.
-    /// </summary>
     public static AnimationCurve BuildStretchedCurve(
         AnimationCurve original,
         float sTime,
@@ -24,7 +17,6 @@ public static class CurveOperations
         AnimationCurve result = new AnimationCurve();
         var buffer = new List<Keyframe>();
 
-        // 1. Preserve keys strictly before the edit region
         if (original != null && original.keys != null)
         {
             foreach (var k in original.keys)
@@ -34,10 +26,8 @@ public static class CurveOperations
             }
         }
 
-        // 2. Insert explicit start key
         buffer.Add(new Keyframe(sTime, sVal));
 
-        // 3. Insert intermediate easing keys
         if (intermediates > 0)
         {
             for (int i = 1; i <= intermediates; ++i)
@@ -49,13 +39,10 @@ public static class CurveOperations
             }
         }
 
-        // 4. Insert explicit end key
         buffer.Add(new Keyframe(eTime, eVal));
 
-        // 5. Sort keys by time
         buffer.Sort((a, b) => a.time.CompareTo(b.time));
 
-        // 6. Deduplicate same-time keys (Unity hates identical times)
         var dedup = new List<Keyframe>();
         float lastTime = float.NaN;
 
@@ -68,12 +55,10 @@ public static class CurveOperations
             }
             else
             {
-                // Prefer the later key (usually the generated easing one)
                 dedup[dedup.Count - 1] = k;
             }
         }
 
-        // 7. Build final curve and smooth tangents
         result.keys = dedup.ToArray();
 
         for (int i = 0; i < result.keys.Length; i++)

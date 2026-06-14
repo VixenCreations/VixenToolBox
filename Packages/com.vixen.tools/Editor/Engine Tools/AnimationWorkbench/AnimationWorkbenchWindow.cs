@@ -10,18 +10,12 @@ using UnityEngine.UIElements;
 
 namespace Vixenlicious.AnimationWorkbench
 {
-    /// <summary>
-    /// VixForge Editor: Advanced Animation Curve editor with programmatic
-    /// easing generation, property discovery, and bulk management.
-    /// </summary>
     public class AnimationWorkbenchWindow : EditorWindow
     {
-        // UI root
         private VisualElement root;
         private Font _cyberFont;
         private const string PackageFontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
 
-        // Models
         private AnimationClip currentClip;
         private GameObject previewTarget;
         private readonly List<EditorCurveBinding> allBindings = new List<EditorCurveBinding>();
@@ -29,7 +23,6 @@ namespace Vixenlicious.AnimationWorkbench
         private readonly Dictionary<EditorCurveBinding, AnimationCurve> stagedCurves =
             new Dictionary<EditorCurveBinding, AnimationCurve>();
 
-        // UI
         private ObjectField clipField;
         private ObjectField previewTargetField;
         private Button newClipBtn;
@@ -45,11 +38,9 @@ namespace Vixenlicious.AnimationWorkbench
         private PreviewEngine previewEngine;
         private Label statusLabel;
 
-        // Zoom
         private SliderInt zoomSlider;
         private int zoomPercent = 100;
 
-        // Material property binding helpers
         private Button materialPickerButton;
         private Label materialSelectedLabel;
         private Button addMaterialBindingBtn;
@@ -57,7 +48,6 @@ namespace Vixenlicious.AnimationWorkbench
             new List<MaterialPropertySearchPopup.Entry>();
         private MaterialPropertySearchPopup.Entry currentMaterialEntry;
 
-        // time / sampling
         private float startTime = 0f;
         private float endTime = 1f;
         private bool sampleStart = false;
@@ -69,7 +59,7 @@ namespace Vixenlicious.AnimationWorkbench
         public static void ShowWindow()
         {
             var w = GetWindow<AnimationWorkbenchWindow>("Workbench Pro");
-            w.minSize = new Vector2(500, 600); // Lowered minimum size to allow deep resizing
+            w.minSize = new Vector2(500, 600);
             w.Show();
         }
 
@@ -102,7 +92,7 @@ namespace Vixenlicious.AnimationWorkbench
             {
                 Debug.LogWarning(
                     "[VixForge] Stylesheet not found. Expected at: " +
-                    "Packages/com.vixencreations.vixens-toolbox/Editor/Avatar Tools/AnimationWorkbench/Editor/Resources/AnimationWorkbenchStyles.uss");
+                    "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/AnimationWorkbenchStyles.uss");
             }
         }
 
@@ -110,16 +100,13 @@ namespace Vixenlicious.AnimationWorkbench
         {
             root.Clear();
 
-            // --------------------------------------------------------------------
-            // SIGNATURE BRANDING HEADER
-            // --------------------------------------------------------------------
             var headerRect = new VisualElement();
             headerRect.style.height = 60;
-            headerRect.style.backgroundColor = new Color(0.08f, 0.04f, 0.12f); 
+            headerRect.style.backgroundColor = new Color(0.08f, 0.04f, 0.12f);
             headerRect.style.justifyContent = Justify.Center;
             headerRect.style.alignItems = Align.Center;
             headerRect.style.borderBottomWidth = 2;
-            headerRect.style.borderBottomColor = new Color(1f, 0f, 0.66f, 0.8f); 
+            headerRect.style.borderBottomColor = new Color(1f, 0f, 0.66f, 0.8f);
 
             var headerLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> ANIMATION WORKBENCH");
             headerLabel.enableRichText = true;
@@ -132,16 +119,13 @@ namespace Vixenlicious.AnimationWorkbench
             headerRect.Add(headerLabel);
             root.Add(headerRect);
 
-            // --------------------------------------------------------------------
-            // TOP TOOLBAR
-            // --------------------------------------------------------------------
             var topToolbar = new VisualElement { name = "top-toolbar" };
             topToolbar.style.flexDirection = FlexDirection.Row;
-            topToolbar.style.flexWrap = Wrap.Wrap; // FIX: Allow toolbar to wrap
+            topToolbar.style.flexWrap = Wrap.Wrap;
             topToolbar.style.alignItems = Align.Center;
             topToolbar.style.paddingLeft = 6;
             topToolbar.style.paddingRight = 6;
-            topToolbar.style.backgroundColor = new Color(0.12f, 0.12f, 0.14f); 
+            topToolbar.style.backgroundColor = new Color(0.12f, 0.12f, 0.14f);
 
             clipField = new ObjectField("Animation Clip")
             {
@@ -149,7 +133,7 @@ namespace Vixenlicious.AnimationWorkbench
                 allowSceneObjects = false
             };
             clipField.tooltip = "The animation clip currently being edited.";
-            clipField.style.minWidth = 200; // Flex constraints
+            clipField.style.minWidth = 200;
             clipField.style.flexGrow = 1;
             clipField.RegisterValueChangedCallback(evt =>
             {
@@ -168,7 +152,7 @@ namespace Vixenlicious.AnimationWorkbench
                 allowSceneObjects = true
             };
             previewTargetField.tooltip = "Scene GameObject used for material discovery and animated preview.";
-            previewTargetField.style.minWidth = 200; // Flex constraints
+            previewTargetField.style.minWidth = 200;
             previewTargetField.style.flexGrow = 1;
             previewTargetField.RegisterValueChangedCallback(evt =>
             {
@@ -184,9 +168,6 @@ namespace Vixenlicious.AnimationWorkbench
             topToolbar.Add(previewTargetField);
             root.Add(topToolbar);
 
-            // --------------------------------------------------------------------
-            // MAIN SCROLL AREA
-            // --------------------------------------------------------------------
             var mainScroll = new ScrollView(ScrollViewMode.Vertical) { name = "main-scroll" };
             mainScroll.style.flexGrow = 1f;
 
@@ -195,23 +176,17 @@ namespace Vixenlicious.AnimationWorkbench
             scrollContent.style.flexGrow = 1f;
             mainScroll.Add(scrollContent);
 
-            // --------------------------------------------------------------------
-            // CONTROLS ROW (Responsive 3-column layout)
-            // --------------------------------------------------------------------
             var controlRow = new VisualElement();
             controlRow.style.flexDirection = FlexDirection.Row;
-            controlRow.style.flexWrap = Wrap.Wrap; // FIX: This allows panels to stack if the window is crushed
+            controlRow.style.flexWrap = Wrap.Wrap;
             controlRow.style.marginTop = 6;
             controlRow.style.paddingLeft = 6;
             controlRow.style.paddingRight = 6;
 
-            // ---------------------------
-            // Selection Panel
-            // ---------------------------
             var selectionBox = new VisualElement { name = "selection-panel" };
             selectionBox.AddToClassList("cyber-panel");
-            selectionBox.style.minWidth = 280; // FIX: Baseline width
-            selectionBox.style.flexGrow = 1;   // FIX: Expand to fill dead space
+            selectionBox.style.minWidth = 280;
+            selectionBox.style.flexGrow = 1;
             selectionBox.style.flexDirection = FlexDirection.Column;
 
             var selectionHeader = new Label("Selection / Range") { style = { unityFontStyleAndWeight = FontStyle.Bold, fontSize = 14 } };
@@ -279,13 +254,10 @@ namespace Vixenlicious.AnimationWorkbench
 
             controlRow.Add(selectionBox);
 
-            // ---------------------------
-            // BINDINGS PANEL
-            // ---------------------------
             var bindingBox = new VisualElement { name = "bindings-panel" };
             bindingBox.AddToClassList("cyber-panel");
-            bindingBox.style.minWidth = 350; // FIX: Baseline width
-            bindingBox.style.flexGrow = 2;   // FIX: Give this panel 2x priority when stretching horizontally
+            bindingBox.style.minWidth = 350;
+            bindingBox.style.flexGrow = 2;
             bindingBox.style.flexDirection = FlexDirection.Column;
 
             var bindingsHeader = new Label("Bindings System") { style = { unityFontStyleAndWeight = FontStyle.Bold, fontSize = 14 } };
@@ -316,16 +288,14 @@ namespace Vixenlicious.AnimationWorkbench
             { text = "None" };
             bindingToolbar.Add(deselectAllBtn);
 
-            // DESTRUCTIVE ACTION
             var deleteSelectedBtn = new Button(DeleteSelectedBindings) { text = "Delete Selected" };
-            deleteSelectedBtn.style.backgroundColor = new Color(0.6f, 0.1f, 0.1f); 
+            deleteSelectedBtn.style.backgroundColor = new Color(0.6f, 0.1f, 0.1f);
             deleteSelectedBtn.style.color = Color.white;
             deleteSelectedBtn.style.marginLeft = 10;
             bindingToolbar.Add(deleteSelectedBtn);
 
             bindingBox.Add(bindingToolbar);
 
-            // Material property row
             var materialRow = new VisualElement();
             materialRow.style.flexDirection = FlexDirection.Row;
             materialRow.style.marginTop = 10;
@@ -355,7 +325,7 @@ namespace Vixenlicious.AnimationWorkbench
             { text = "Choose…" };
 
             addMaterialBindingBtn = new Button(AddBindingFromMaterialProperty) { text = "Add Binding" };
-            addMaterialBindingBtn.style.backgroundColor = new Color(0.2f, 0.7f, 0.8f); 
+            addMaterialBindingBtn.style.backgroundColor = new Color(0.2f, 0.7f, 0.8f);
             addMaterialBindingBtn.style.color = Color.black;
             addMaterialBindingBtn.SetEnabled(false);
 
@@ -370,10 +340,9 @@ namespace Vixenlicious.AnimationWorkbench
             bindingsListContainer.style.maxHeight = 180;
             bindingBox.Add(bindingsListContainer);
 
-            // Defaults row
             var defaultsRow = new VisualElement();
             defaultsRow.style.flexDirection = FlexDirection.Row;
-            defaultsRow.style.flexWrap = Wrap.Wrap; // Allow wrapping inside the box
+            defaultsRow.style.flexWrap = Wrap.Wrap;
             defaultsRow.style.marginTop = 10;
 
             intermediateDefaultField = new IntegerField("Default Intermediate Keys") { value = 4 };
@@ -398,13 +367,10 @@ namespace Vixenlicious.AnimationWorkbench
 
             controlRow.Add(bindingBox);
 
-            // ---------------------------
-            // ACTION PANEL (VixForge Styled)
-            // ---------------------------
             var actionBox = new VisualElement();
             actionBox.AddToClassList("cyber-panel");
-            actionBox.style.minWidth = 220; // FIX: Baseline width
-            actionBox.style.flexGrow = 1;   // FIX: Expand to fill dead space
+            actionBox.style.minWidth = 220;
+            actionBox.style.flexGrow = 1;
             actionBox.style.flexDirection = FlexDirection.Column;
 
             applyBtn = new Button(ApplyStagedToClip) { text = "Apply (Stage → Clip)" };
@@ -453,9 +419,6 @@ namespace Vixenlicious.AnimationWorkbench
             controlRow.Add(actionBox);
             scrollContent.Add(controlRow);
 
-            // --------------------------------------------------------------------
-            // ZOOM ROW
-            // --------------------------------------------------------------------
             var zoomRow = new VisualElement();
             zoomRow.style.flexDirection = FlexDirection.Row;
             zoomRow.style.marginTop = 6;
@@ -473,9 +436,6 @@ namespace Vixenlicious.AnimationWorkbench
             zoomRow.Add(zoomSlider);
             scrollContent.Add(zoomRow);
 
-            // --------------------------------------------------------------------
-            // GRAPH
-            // --------------------------------------------------------------------
             var graphContainer = new VisualElement { name = "curve-graph-container" };
             graphContainer.style.flexGrow = 1;
             graphContainer.style.minHeight = 240;
@@ -488,9 +448,6 @@ namespace Vixenlicious.AnimationWorkbench
             graphContainer.Add(graphView);
             scrollContent.Add(graphContainer);
 
-            // --------------------------------------------------------------------
-            // TIMELINE
-            // --------------------------------------------------------------------
             timelineRibbon = new TimelineRibbon();
             timelineRibbon.name = "timeline-ribbon";
             timelineRibbon.OnRangeChanged = (s, e) =>
@@ -503,9 +460,6 @@ namespace Vixenlicious.AnimationWorkbench
             timelineRibbon.SetClip(currentClip);
             scrollContent.Add(timelineRibbon);
 
-            // --------------------------------------------------------------------
-            // STATUS BAR
-            // --------------------------------------------------------------------
             var bottomRow = new VisualElement { name = "status-bar" };
             bottomRow.style.flexDirection = FlexDirection.Row;
             bottomRow.style.marginTop = 6;
@@ -599,9 +553,9 @@ namespace Vixenlicious.AnimationWorkbench
                     {
                         ShaderPropertyType propType = mat.shader.GetPropertyType(i);
 
-                        bool supported = propType == ShaderPropertyType.Float || 
-                                         propType == ShaderPropertyType.Range || 
-                                         propType == ShaderPropertyType.Color || 
+                        bool supported = propType == ShaderPropertyType.Float ||
+                                         propType == ShaderPropertyType.Range ||
+                                         propType == ShaderPropertyType.Color ||
                                          propType == ShaderPropertyType.Vector;
 
                         if (!supported) continue;
@@ -715,7 +669,7 @@ namespace Vixenlicious.AnimationWorkbench
                 if (t != null)
                 {
                     var r = t.GetComponent<Renderer>();
-            
+
                     if (TryGetMaterialFloat(r, binding.propertyName, out float matValue))
                     {
                         if (sampleStart) sampledStart = matValue;

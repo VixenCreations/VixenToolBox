@@ -1,0 +1,25 @@
+{
+    "name": "VixenWear.AreaLitBroadcaster",
+    "references": [
+        "VRCSDKBase",
+        "VRC.Udon",
+        "UdonSharp.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "VW_UDONSHARP_READY"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.vrchat.udonsharp",
+            "expression": "1.0.0",
+            "define": "VW_UDONSHARP_READY"
+        }
+    ],
+    "noEngineReferences": false
+}

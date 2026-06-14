@@ -13,13 +13,8 @@ using VRC.SDK3.Dynamics.PhysBone.Components;
 
 namespace VixenTools.Editor
 {
-    /// <summary>
-    /// VixForge Editor: Extracts and Injects complete PhysBone architectures across avatars.
-    /// Safely degrades in non-VRChat Unity environments.
-    /// </summary>
     public class PhysBoneTopologyMapper : EditorWindow
     {
-        // Centralized styling paths
         private const string FontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/PhysBoneTopologyMapperStyles.uss";
 
@@ -50,19 +45,16 @@ namespace VixenTools.Editor
             VisualElement root = rootVisualElement;
             root.name = "topology-root";
 
-            // Load USS
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath);
             if (styleSheet != null) root.styleSheets.Add(styleSheet);
             else Debug.LogWarning($"[VixForge] Could not load Stylesheet at {UssPath}");
 
-            // --- HEADER ---
             var headerRect = new VisualElement { name = "tool-header" };
             var titleLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> TOPOLOGY MAPPER") { enableRichText = true };
             if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             headerRect.Add(titleLabel);
             root.Add(headerRect);
 
-            // --- SCROLL CONTENT ---
             var scrollContainer = new ScrollView(ScrollViewMode.Vertical) { name = "main-scroll" };
             var scrollContent = new VisualElement();
             scrollContainer.Add(scrollContent);
@@ -137,7 +129,6 @@ namespace VixenTools.Editor
             EnsureDirectoryExists(baseDir);
             EnsureDirectoryExists($"{baseDir}/Presets");
 
-            // Create the Blueprint Asset
             PhysBoneBlueprint blueprint = ScriptableObject.CreateInstance<PhysBoneBlueprint>();
 
             VRCPhysBone[] physBones = _sourceAvatar.GetComponentsInChildren<VRCPhysBone>(true);
@@ -146,19 +137,19 @@ namespace VixenTools.Editor
             foreach (var pb in physBones)
             {
                 string relativePath = AnimationUtility.CalculateTransformPath(pb.transform, _sourceAvatar.transform);
-                
+
                 Preset pbPreset = new Preset(pb);
                 string cleanPathName = relativePath.Replace("/", "_");
-                if (string.IsNullOrEmpty(cleanPathName)) cleanPathName = "Root"; 
-                
+                if (string.IsNullOrEmpty(cleanPathName)) cleanPathName = "Root";
+
                 string presetPath = AssetDatabase.GenerateUniqueAssetPath($"{baseDir}/Presets/{cleanPathName}.preset");
                 AssetDatabase.CreateAsset(pbPreset, presetPath);
 
-                blueprint.nodes.Add(new PhysBoneBlueprint.Node { 
-                    bonePath = relativePath, 
-                    preset = pbPreset 
+                blueprint.nodes.Add(new PhysBoneBlueprint.Node {
+                    bonePath = relativePath,
+                    preset = pbPreset
                 });
-                
+
                 count++;
             }
 
@@ -184,8 +175,8 @@ namespace VixenTools.Editor
             foreach (var node in _loadedBlueprint.nodes)
             {
                 Transform targetBone = _targetAvatar.transform.Find(node.bonePath);
-                
-                if (string.IsNullOrEmpty(node.bonePath)) 
+
+                if (string.IsNullOrEmpty(node.bonePath))
                     targetBone = _targetAvatar.transform;
 
                 if (targetBone != null)

@@ -14,11 +14,11 @@ namespace VixenTools.Editor
             ShaderDictionaryAsset dict = (ShaderDictionaryAsset)target;
 
             GUILayout.Space(15);
-            
+
             GUIStyle targetBtnStyle = new GUIStyle(GUI.skin.button);
             targetBtnStyle.fontStyle = FontStyle.Bold;
             targetBtnStyle.normal.textColor = ColorUtility.TryParseHtmlString("#00e5ff", out Color c1) ? c1 : Color.cyan;
-            
+
             if (GUILayout.Button("Populate PBR Replacement Targets", targetBtnStyle, GUILayout.Height(30)))
             {
                 Undo.RecordObject(dict, "Populate Targets");
@@ -39,7 +39,6 @@ namespace VixenTools.Editor
 
             GUILayout.Space(15);
 
-            // --- THE SOFT NUKE & REBUILD BUTTON ---
             GUIStyle resetBtnStyle = new GUIStyle(GUI.skin.button);
             resetBtnStyle.fontStyle = FontStyle.Bold;
             resetBtnStyle.normal.textColor = ColorUtility.TryParseHtmlString("#ff3333", out Color c3) ? c3 : Color.red;
@@ -49,19 +48,17 @@ namespace VixenTools.Editor
                 if (EditorUtility.DisplayDialog("VIXEN SYSTEM WARNING", "This will completely wipe this dictionary and rebuild it from the default schema. Any custom shaders you added will be lost.\n\nExecute Protocol?", "NUKE & REBUILD", "ABORT"))
                 {
                     Undo.RecordObject(dict, "Factory Reset Dictionary");
-                    
-                    // Nuke the current data
+
                     dict.shaders.Clear();
 
-                    // Smart repopulate: Check the filename to know which default schema to run
                     string path = AssetDatabase.GetAssetPath(dict);
                     if (!string.IsNullOrEmpty(path))
                     {
-                        if (path.Contains("Target")) 
+                        if (path.Contains("Target"))
                         {
                             ShaderDictionaryAsset.AutoPopulateTargets(dict);
                         }
-                        else if (path.Contains("Whitelist")) 
+                        else if (path.Contains("Whitelist"))
                         {
                             ShaderDictionaryAsset.AutoPopulateWhitelist(dict);
                         }
@@ -69,11 +66,11 @@ namespace VixenTools.Editor
 
                     EditorUtility.SetDirty(dict);
                     AssetDatabase.SaveAssets();
-                    
+
                     Debug.Log($"[Vixen System] Dictionary '{dict.name}' has been factory reset.");
                 }
             }
-            
+
             GUILayout.Space(5);
             EditorGUILayout.HelpBox("Use the Cyan button for your Target Dictionary (PBR Shaders).\nUse the Pink button for your Whitelist Dictionary (Video/AudioLink).\nUse the Red button to nuke and pave the current list.", MessageType.Info);
         }

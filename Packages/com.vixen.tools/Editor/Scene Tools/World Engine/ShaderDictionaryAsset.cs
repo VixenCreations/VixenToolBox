@@ -52,18 +52,15 @@ namespace VixenTools.Editor
 
         public static bool IsGloballyProtected(Shader s)
         {
-            if (s == null) return false; // Allows the Null Material Recovery Protocol to fix missing shaders
-            
+            if (s == null) return false;
+
             string name = s.name;
 
-            // === 1. EXPLICIT NAME OVERRIDES ===
             if (name == "Particles/Standard Unlit" || name == "Unlit/Color") return true;
 
-            // === 2. NATIVE UNITY & ENVIRONMENT PROTECTION ===
-            // Tightly guard structural rendering pipelines but leave "Standard" and "Legacy" exposed
             if (name.StartsWith("Skybox/", System.StringComparison.OrdinalIgnoreCase) ||
                 name.StartsWith("Nature/", System.StringComparison.OrdinalIgnoreCase) ||
-                name.StartsWith("Terrain", System.StringComparison.OrdinalIgnoreCase) || 
+                name.StartsWith("Terrain", System.StringComparison.OrdinalIgnoreCase) ||
                 name.StartsWith("Hidden/", System.StringComparison.OrdinalIgnoreCase) ||
                 name.StartsWith("UI/", System.StringComparison.OrdinalIgnoreCase) ||
                 name.StartsWith("GUI/", System.StringComparison.OrdinalIgnoreCase) ||
@@ -80,7 +77,6 @@ namespace VixenTools.Editor
             string path = AssetDatabase.GetAssetPath(s);
             if (string.IsNullOrEmpty(path)) return false;
 
-            // Deeply embedded Unity default resources protection
             if (path == "Resources/unity_builtin_extra" || path == "Library/unity default resources")
             {
                 if (name != "Standard" && name != "Standard (Specular setup)" && !name.StartsWith("Legacy Shaders/"))
@@ -89,13 +85,12 @@ namespace VixenTools.Editor
                 }
             }
 
-            path = path.Replace("\\", "/"); 
+            path = path.Replace("\\", "/");
 
-            // === 3. 3RD-PARTY ECOSYSTEM PROTECTION ===
             string[] protectedPaths = new string[]
             {
-                "Packages/com.llealloo.audiolink/", // PROTECT AUDIOLINK
-                "Assets/AudioLink/",                // PROTECT LEGACY AUDIOLINK
+                "Packages/com.llealloo.audiolink/",
+                "Assets/AudioLink/",
                 "Packages/idv.jlchntoz.vvmw/",
                 "Packages/com.texelsaur.video/",
                 "Packages/red.sim.lightvolumes/",
@@ -121,7 +116,7 @@ namespace VixenTools.Editor
                 "Assets/Mochie/Unity/",
                 "Assets/Mochie/Water Shader/",
                 "Assets/House/Shader",
-                "/OptimizedShaders/" 
+                "/OptimizedShaders/"
             };
 
             foreach (var p in protectedPaths)
@@ -129,7 +124,6 @@ namespace VixenTools.Editor
                 if (path.Contains(p)) return true;
             }
 
-            // === 4. DYNAMIC REGEX PROTECTION ===
             if (System.Text.RegularExpressions.Regex.IsMatch(path, @"Packages/com\.acchosen\.vr-stage-lighting/Runtime/Shaders/.*"))
             {
                 return true;
@@ -141,14 +135,14 @@ namespace VixenTools.Editor
         public static void AutoPopulateWhitelist(ShaderDictionaryAsset dict)
         {
             if (dict == null) return;
-            
+
             int addedCount = 0;
             var allShaders = ShaderUtil.GetAllShaderInfo();
 
             foreach (var info in allShaders)
             {
                 Shader s = Shader.Find(info.name);
-                
+
                 if (s != null && IsGloballyProtected(s) && !dict.shaders.Contains(s))
                 {
                     dict.shaders.Add(s);

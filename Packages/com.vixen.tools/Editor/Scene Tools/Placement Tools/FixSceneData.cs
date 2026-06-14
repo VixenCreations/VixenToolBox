@@ -6,13 +6,8 @@ using UnityEditor.SceneManagement;
 
 namespace VixenTools.Editor
 {
-    /// <summary>
-    /// VixForge Utility: Forces serialization of lighting data to resolve
-    /// missing or unlinked lightmap references in the active scene.
-    /// </summary>
     public class FixSceneData
     {
-        // Placed at the root of the VixenTools menu for immediate access
         [MenuItem("VixenTools/Scene/Fix Scene Data")]
         public static void FixLightingDataAssignment()
         {
@@ -24,7 +19,6 @@ namespace VixenTools.Editor
                 return;
             }
 
-            // Reference the existing lighting data asset for the active scene
             var lightingData = Lightmapping.lightingDataAsset;
 
             if (lightingData == null)
@@ -33,13 +27,10 @@ namespace VixenTools.Editor
                 return;
             }
 
-            // Re-assigning the asset forces Unity to refresh the serialized reference in the scene file
             Lightmapping.lightingDataAsset = lightingData;
 
-            // Mark the scene as 'dirty' so the Editor knows it has unsaved changes
             EditorSceneManager.MarkSceneDirty(currentScene);
 
-            // Save the scene and flush all asset changes to disk (Serialization)
             bool saveSuccess = EditorSceneManager.SaveScene(currentScene);
             AssetDatabase.SaveAssets();
 

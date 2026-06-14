@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     // --- FOUC Guard: reveal the page once Fluent UI is hydrated ---
     // styles.css cloaks <body> until .app-ready is added. We wait for the
     // critical fluent custom elements to register, then flip the class.

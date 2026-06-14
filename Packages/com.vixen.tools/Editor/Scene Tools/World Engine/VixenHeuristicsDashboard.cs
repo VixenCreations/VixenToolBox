@@ -15,17 +15,15 @@ namespace VixenTools.Editor
         private HashSet<AudioClip> _detectedAudio = new HashSet<AudioClip>();
         private HashSet<Texture> _detectedUITextures = new HashSet<Texture>();
 
-        // 4D-Chess: Static reflection cache. Eliminates the massive AppDomain assembly sweep bottleneck.
         private static Dictionary<string, Type> _typeCache = new Dictionary<string, Type>();
-        
-        // 4D-Chess: Tuple-keyed Scene Object Cache. Prevents cache poisoning between Active/Inactive queries.
+
         private Dictionary<(Type, bool), UnityEngine.Object[]> _sceneObjectCache = new Dictionary<(Type, bool), UnityEngine.Object[]>();
 
         private T[] GetCachedObjects<T>(bool includeInactive = false) where T : UnityEngine.Object
         {
             var key = (typeof(T), includeInactive);
             if (_sceneObjectCache.TryGetValue(key, out var cached)) return cached as T[];
-            
+
             var objs = FindObjectsOfType<T>(includeInactive);
             _sceneObjectCache[key] = objs;
             return objs;
@@ -34,10 +32,10 @@ namespace VixenTools.Editor
         private UnityEngine.Object[] GetCachedObjects(Type t, bool includeInactive = false)
         {
             if (t == null) return new UnityEngine.Object[0];
-            
+
             var key = (t, includeInactive);
             if (_sceneObjectCache.TryGetValue(key, out var cached)) return cached;
-            
+
             var objs = FindObjectsOfType(t, includeInactive);
             _sceneObjectCache[key] = objs;
             return objs;
@@ -63,47 +61,43 @@ namespace VixenTools.Editor
         private void RenderDashboard()
         {
             rootVisualElement.Clear();
-            _sceneObjectCache.Clear(); 
+            _sceneObjectCache.Clear();
 
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/VixenWorldSpider.uss");
             if (styleSheet != null) rootVisualElement.styleSheets.Add(styleSheet);
 
-            rootVisualElement.style.backgroundColor = new StyleColor(new Color(0.04f, 0.04f, 0.06f)); 
+            rootVisualElement.style.backgroundColor = new StyleColor(new Color(0.04f, 0.04f, 0.06f));
             var scroll = new ScrollView { style = { flexGrow = 1 } };
             rootVisualElement.Add(scroll);
 
             var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
 
-            // === BASE VRAM SWEEPS (Memory loads regardless of active state) ===
             long texBytes = _detectedTextures.Sum(t => t != null ? UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(t) : 0);
             long meshBytes = _detectedMeshes.Sum(m => m != null ? UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(m) : 0);
             long audioBytes = _detectedAudio.Sum(a => a != null ? UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(a) : 0);
             long uiBytes = _detectedUITextures.Sum(t => t != null ? UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(t) : 0);
 
-            // === AUDIOLINK VRAM & COMPUTE ===
             long audioLinkBytes = 0;
             int audioLinkActive = 0;
-            
+
             Type audioLinkType = GetTypeSafe("AudioLink.AudioLink");
             if (audioLinkType != null)
             {
                 var alInstances = GetCachedObjects(audioLinkType, false);
-                // Bulletproof check: Is component enabled AND is the GameObject active?
                 audioLinkActive = alInstances.Cast<Behaviour>().Count(b => b != null && b.enabled && b.gameObject.activeInHierarchy);
-                
+
                 foreach (var al in alInstances)
                 {
                     var rtField = audioLinkType.GetField("audioData", flags);
                     if (rtField != null && rtField.GetValue(al) is Texture rt && rt != null)
                         audioLinkBytes += UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(rt);
-                        
+
                     var rt2DField = audioLinkType.GetField("audioData2D", flags);
                     if (rt2DField != null && rt2DField.GetValue(al) is Texture rt2d && rt2d != null)
                         audioLinkBytes += UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(rt2d);
                 }
             }
 
-            // === LTCGI VRAM & COMPUTE ===
             long ltcgiBytes = 0;
             int ltcgiScreens = 0;
             Type ltcgiAdapterType = GetTypeSafe("LTCGI_UdonAdapter");
@@ -139,7 +133,6 @@ namespace VixenTools.Editor
                         foreach (var lm in lmaps) if (lm != null) ltcgiBytes += UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(lm);
                     }
 
-                    // Bulletproof filter for active screen compute
                     if (((Behaviour)adapter).enabled && ((Component)adapter).gameObject.activeInHierarchy)
                     {
                         var countField = ltcgiAdapterType.GetField("_LTCGI_ScreenCount", flags);
@@ -148,7 +141,6 @@ namespace VixenTools.Editor
                 }
             }
 
-            // === LIGHTMAP VRAM ===
             long lightmapBytes = 0;
             if (LightmapSettings.lightmaps != null)
             {
@@ -160,12 +152,11 @@ namespace VixenTools.Editor
                 }
             }
 
-            // === LIGHT VOLUMES VRAM ===
             long lvBytes = 0;
             Type lvManagerType = GetTypeSafe("VRCLightVolumes.LightVolumeManager");
             if (lvManagerType != null)
             {
-                foreach (var manager in GetCachedObjects(lvManagerType, false)) 
+                foreach (var manager in GetCachedObjects(lvManagerType, false))
                 {
                     var atlasField = lvManagerType.GetField("LightVolumeAtlas", flags);
                     if (atlasField != null && atlasField.GetValue(manager) is Texture tex && tex != null)
@@ -192,16 +183,11 @@ namespace VixenTools.Editor
 
             float totalVramMB = texMB + meshMB + uiMB + lightmapMB + lvMB + audioLinkMB + ltcgiMB;
 
-            // === SCENE METRICS (COMPUTE COSTS) ===
-            // Unity explicit .enabled AND .activeInHierarchy checks to prevent compute score bloat
-
-            var renderers = GetCachedObjects<Renderer>(false); 
+            var renderers = GetCachedObjects<Renderer>(false);
             int estDrawCalls = renderers.Where(r => r != null && r.enabled && r.gameObject.activeInHierarchy).Sum(r => r.sharedMaterials.Length);
-            
-            // Rigidbodies don't have .enabled, so we strictly check activeInHierarchy
+
             int rigidbodies = GetCachedObjects<Rigidbody>(false).Count(rb => rb != null && rb.gameObject.activeInHierarchy);
 
-            // 4D-Chess: Pre-filter all lights with the absolute truth guard
             var activeLightsList = GetCachedObjects<Light>(false).Where(l => l != null && l.enabled && l.gameObject.activeInHierarchy).ToList();
             int totalActiveLights = activeLightsList.Count;
 
@@ -211,7 +197,6 @@ namespace VixenTools.Editor
 
             int audioSourceCount = GetCachedObjects<AudioSource>(false).Count(a => a != null && a.enabled && a.gameObject.activeInHierarchy);
 
-            // === VIDEO PLAYER DETECTION ===
             HashSet<Component> logicalPlayers = new HashSet<Component>();
             Type tvManagerType = GetTypeSafe("ArchiTech.ProTV.TVManager");
             Type iwaSyncType = GetTypeSafe("HoshinoLabs.IwaSync3.IwaSync3");
@@ -256,10 +241,8 @@ namespace VixenTools.Editor
 
             int totalVideoPlayers = logicalPlayers.Count;
 
-            // === SCREEN DETECTION ===
             HashSet<GameObject> uniqueScreens = new HashSet<GameObject>();
 
-            // PROTV SCREENS
             Type vpmType = GetTypeSafe("ArchiTech.ProTV.VPManager");
             if (vpmType != null)
             {
@@ -281,7 +264,6 @@ namespace VixenTools.Editor
                 }
             }
 
-            // AVPRO & IWA SCREENS
             Type avproScreenType = GetTypeSafe("VRC.SDK3.Video.Components.AVPro.VRCAVProVideoScreen");
             if (avproScreenType != null)
                 foreach (var s in GetCachedObjects(avproScreenType, false)) if (((Behaviour)s).enabled && ((Component)s).gameObject.activeInHierarchy) uniqueScreens.Add(((Component)s).gameObject);
@@ -294,7 +276,6 @@ namespace VixenTools.Editor
             if (iwaUdonScreenType != null)
                 foreach (var s in GetCachedObjects(iwaUdonScreenType, false)) if (((Behaviour)s).enabled && ((Component)s).gameObject.activeInHierarchy) uniqueScreens.Add(((Component)s).gameObject);
 
-            // VIZVID (VVMW) SCREENS
             if (vvmwCoreType != null)
             {
                 foreach (var core in GetCachedObjects(vvmwCoreType, false))
@@ -313,7 +294,6 @@ namespace VixenTools.Editor
                 }
             }
 
-            // DEFAULT UNITY SCREENS
             if (unityPlayerType != null)
             {
                 foreach (var uvp in GetCachedObjects(unityPlayerType, false))
@@ -328,7 +308,6 @@ namespace VixenTools.Editor
 
             int screenCount = uniqueScreens.Count;
 
-            // === SCENE OBJECT METRICS ===
             int activeCameras = GetCachedObjects<Camera>(false).Count(c =>
                 c != null && c.enabled && c.gameObject.activeInHierarchy &&
                 c.name != "VRCCam" &&
@@ -345,7 +324,6 @@ namespace VixenTools.Editor
             int staticLightVolumes = lvType != null ? GetCachedObjects(lvType, false).Cast<Behaviour>().Count(b => b != null && b.enabled && b.gameObject.activeInHierarchy) : 0;
             int pointLightVolumes = pointLvType != null ? GetCachedObjects(pointLvType, false).Cast<Behaviour>().Count(b => b != null && b.enabled && b.gameObject.activeInHierarchy) : 0;
 
-            // === COMPUTE SCORE ===
             float computeScore =
                 (estDrawCalls * 0.5f) +
                 (rigidbodies * 2.0f) +
@@ -356,8 +334,8 @@ namespace VixenTools.Editor
                 (meshColliders * 0.5f) +
                 (staticLightVolumes * 1.5f) +
                 (pointLightVolumes * 4.0f) +
-                (audioLinkActive * 150.0f) +   
-                (ltcgiScreens * 15.0f);        
+                (audioLinkActive * 150.0f) +
+                (ltcgiScreens * 15.0f);
 
             string threatLevel =
                 computeScore < 100 ? "<color=#00ff88>OPTIMAL</color>" :
@@ -365,7 +343,6 @@ namespace VixenTools.Editor
                 computeScore < 500 ? "<color=#ff5555>HIGH</color>" :
                 "<color=#ff00aa>SEVERE</color>";
 
-            // === UI PANEL ===
             var dash = new VisualElement();
             dash.AddToClassList("dashboard-panel");
 
@@ -434,8 +411,8 @@ namespace VixenTools.Editor
         private Type GetTypeSafe(string typeName)
         {
             if (string.IsNullOrEmpty(typeName)) return null;
-            
-            if (_typeCache.TryGetValue(typeName, out Type cachedType)) 
+
+            if (_typeCache.TryGetValue(typeName, out Type cachedType))
                 return cachedType;
 
             Type t = Type.GetType(typeName);

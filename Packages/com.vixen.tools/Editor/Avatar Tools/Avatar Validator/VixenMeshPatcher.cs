@@ -7,68 +7,46 @@ using System;
 
 namespace VixenTools.Editor
 {
-    /// <summary>
-    /// VixForge Core: Advanced Mesh Topology Engine.
-    /// Clones FBX mesh data into memory, applies vertex/bone transformations, 
-    /// and serializes the optimized mesh to disk for SDK compilation.
-    /// </summary>
     public static class VixenMeshPatcher
     {
         private const string GENERATED_ASSET_PATH = "Assets/VixenTools/Meshes/Patched/";
 
-        /// <summary>
-        /// Executes a destructive patch safely by cloning the mesh, applying an action, and saving it.
-        /// </summary>
         public static void PatchSkinnedMesh(SkinnedMeshRenderer smr, string patchLabel, System.Action<Mesh, SkinnedMeshRenderer> patchingLogic)
         {
             if (smr == null || smr.sharedMesh == null) return;
 
-            // 1. Memory Clone: Instantiate bypasses the FBX read-only lock.
             Mesh clonedMesh = UnityEngine.Object.Instantiate(smr.sharedMesh);
             clonedMesh.name = $"{smr.sharedMesh.name}_VixenPatched_{patchLabel}";
 
-            // 2. Execute Custom Topology System (Vertices, UVs, Bones)
             patchingLogic?.Invoke(clonedMesh, smr);
 
-            // 3. Recalculate structural integrity
             clonedMesh.RecalculateBounds();
-            clonedMesh.RecalculateNormals(); 
+            clonedMesh.RecalculateNormals();
             clonedMesh.RecalculateTangents();
 
-            // 4. Persistence: Step-through folder validation to ensure the path exists
             if (!AssetDatabase.IsValidFolder("Assets/VixenTools"))
                 AssetDatabase.CreateFolder("Assets", "VixenTools");
-                
+
             if (!AssetDatabase.IsValidFolder("Assets/VixenTools/Meshes"))
                 AssetDatabase.CreateFolder("Assets/VixenTools", "Meshes");
-                
+
             if (!AssetDatabase.IsValidFolder("Assets/VixenTools/Meshes/Patched"))
                 AssetDatabase.CreateFolder("Assets/VixenTools/Meshes", "Patched");
 
-            // 5. Serialize to Disk
             string assetPath = $"{GENERATED_ASSET_PATH}{clonedMesh.name}_{System.Guid.NewGuid().ToString().Substring(0, 5)}.asset";
             AssetDatabase.CreateAsset(clonedMesh, assetPath);
             AssetDatabase.SaveAssets();
 
-            // 6. Apply the swap with Undo support
             Undo.RecordObject(smr, "Apply Patched Mesh");
             smr.sharedMesh = clonedMesh;
 
             Debug.Log($"[VixForge] Topology Patched: {clonedMesh.name} serialized to {assetPath}");
         }
 
-        // ====================================================================
-        // DESTRUCTIVE TOPOLOGY PIPELINES (VERTEX WELDING + BLENDSHAPE RECOVERY)
-        // ====================================================================
-
-        /// <summary>
-        /// Precision Microwelder: Seals sub-millimeter splits while strictly preserving UV texture seams.
-        /// Utilizes a 5D Hash System (X, Y, Z, U, V) to ensure rendering integrity is never compromised.
-        /// </summary>
         public static void WeldVertices(
-            SkinnedMeshRenderer smr, 
-            float threshold = 0.0001f, 
-            HashSet<int> protectedSubmeshes = null, 
+            SkinnedMeshRenderer smr,
+            float threshold = 0.0001f,
+            HashSet<int> protectedSubmeshes = null,
             HashSet<int> protectedBones = null)
         {
             if (protectedSubmeshes == null) protectedSubmeshes = new HashSet<int>();
@@ -80,8 +58,7 @@ namespace VixenTools.Editor
                 Vector3[] oldNormals = mesh.normals;
                 Vector2[] oldUvs = mesh.uv;
                 BoneWeight[] oldWeights = mesh.boneWeights;
-                
-                // 1. SURGICAL EXCLUSION SCAN (MATERIALS)
+
                 HashSet<int> protectedVertIndices = new HashSet<int>();
                 for (int s = 0; s < mesh.subMeshCount; s++)
                 {
@@ -92,10 +69,9 @@ namespace VixenTools.Editor
                     }
                 }
 
-                // 2. BLENDSHAPE MEMORY EXTRACTION
                 int blendShapeCount = mesh.blendShapeCount;
                 var extractedBlendShapes = new List<BlendShapeExtract>();
-                
+
                 for (int b = 0; b < blendShapeCount; b++)
                 {
                     string shapeName = mesh.GetBlendShapeName(b);
@@ -108,26 +84,24 @@ namespace VixenTools.Editor
                         Vector3[] deltaVerts = new Vector3[oldVerts.Length];
                         Vector3[] deltaNormals = new Vector3[oldVerts.Length];
                         Vector3[] deltaTangents = new Vector3[oldVerts.Length];
-                        
+
                         mesh.GetBlendShapeFrameVertices(b, f, deltaVerts, deltaNormals, deltaTangents);
                         frames.Add(new BlendShapeFrame { Weight = weight, DeltaVerts = deltaVerts, DeltaNormals = deltaNormals, DeltaTangents = deltaTangents });
                     }
                     extractedBlendShapes.Add(new BlendShapeExtract { Name = shapeName, Frames = frames });
                 }
 
-                // 3. THE 5D PRECISION HASH SYSTEM (Zero-GC, UV-Safe)
                 List<Vector3> newVerts = new List<Vector3>();
                 List<Vector3> newNormals = new List<Vector3>();
                 List<Vector2> newUvs = new List<Vector2>();
                 List<BoneWeight> newWeights = new List<BoneWeight>();
-                
+
                 int[] map = new int[oldVerts.Length];
-                
-                // UPGRADED: 5D Tuple (X, Y, Z, U, V) protects UV texture seams from collapsing.
+
                 var spatialHash = new Dictionary<(long, long, long, long, long), int>();
-                
+
                 float multiplier = 1f / Mathf.Max(threshold, 0.00001f);
-                float uvMultiplier = 10000f; // Fixed high-precision scale for UV maps (0.0 to 1.0 space)
+                float uvMultiplier = 10000f;
 
                 for (int i = 0; i < oldVerts.Length; i++)
                 {
@@ -149,7 +123,6 @@ namespace VixenTools.Editor
 
                     if (isProtected)
                     {
-                        // Absolute unique key. i guarantees it never merges.
                         key = (long.MaxValue, long.MaxValue, long.MaxValue, 0, i);
                     }
                     else
@@ -157,8 +130,8 @@ namespace VixenTools.Editor
                         long hashX = (long)(Mathf.Round(oldVerts[i].x * multiplier));
                         long hashY = (long)(Mathf.Round(oldVerts[i].y * multiplier));
                         long hashZ = (long)(Mathf.Round(oldVerts[i].z * multiplier));
-                        
-                        long uvHashX = 0; 
+
+                        long uvHashX = 0;
                         long uvHashY = 0;
                         if (oldUvs != null && oldUvs.Length > i)
                         {
@@ -171,7 +144,7 @@ namespace VixenTools.Editor
 
                     if (spatialHash.TryGetValue(key, out int existingIndex))
                     {
-                        map[i] = existingIndex; 
+                        map[i] = existingIndex;
                     }
                     else
                     {
@@ -186,7 +159,6 @@ namespace VixenTools.Editor
                     }
                 }
 
-                // 4. SUBMESH TRIANGLE REBUILD
                 int subMeshCount = mesh.subMeshCount;
                 List<int[]> newSubMeshes = new List<int[]>();
 
@@ -211,23 +183,21 @@ namespace VixenTools.Editor
                     newSubMeshes.Add(newSubTris.ToArray());
                 }
 
-                // 5. TOPOLOGY APPLICATION
-                mesh.Clear(); 
-                
+                mesh.Clear();
+
                 mesh.vertices = newVerts.ToArray();
                 if (newNormals.Count > 0) mesh.normals = newNormals.ToArray();
                 if (newUvs.Count > 0) mesh.uv = newUvs.ToArray();
                 if (newWeights.Count > 0) mesh.boneWeights = newWeights.ToArray();
-                
+
                 mesh.subMeshCount = subMeshCount;
                 for (int s = 0; s < subMeshCount; s++)
                 {
                     mesh.SetTriangles(newSubMeshes[s], s);
                 }
 
-                mesh.RecalculateNormals(); 
+                mesh.RecalculateNormals();
 
-                // 6. BLENDSHAPE RE-MAPPING SYSTEM
                 foreach (var shape in extractedBlendShapes)
                 {
                     foreach (var frame in shape.Frames)
@@ -262,18 +232,13 @@ namespace VixenTools.Editor
             });
         }
 
-        /// <summary>
-        /// Vixen Core: Multi-Pass Precision Microwelder.
-        /// Iteratively seals spatial seams while STRICTLY locking UV coordinates.
-        /// Prioritizes absolute visual integrity over reaching polygon targets.
-        /// </summary>
         public static void MultipassTargetedWeld(
-            SkinnedMeshRenderer smr, 
-            int targetTriangles = 15000, 
-            float startThreshold = 0.0001f, 
-            float maxThreshold = 0.005f, // Hard cap at 5mm. Extreme precision only.
-            float step = 0.0005f, 
-            HashSet<int> protectedSubmeshes = null, 
+            SkinnedMeshRenderer smr,
+            int targetTriangles = 15000,
+            float startThreshold = 0.0001f,
+            float maxThreshold = 0.005f,
+            float step = 0.0005f,
+            HashSet<int> protectedSubmeshes = null,
             HashSet<int> protectedBones = null)
         {
             if (protectedSubmeshes == null) protectedSubmeshes = new HashSet<int>();
@@ -281,24 +246,21 @@ namespace VixenTools.Editor
 
             PatchSkinnedMesh(smr, $"MicroWeld_{targetTriangles}Tri", (mesh, renderer) =>
             {
-                // 1. INITIAL STATE EXTRACTION
                 Vector3[] originalVerts = mesh.vertices;
                 Vector3[] currentVerts = mesh.vertices;
                 Vector3[] currentNormals = mesh.normals;
                 Vector2[] currentUvs = mesh.uv;
                 BoneWeight[] currentWeights = mesh.boneWeights;
-                
+
                 List<int[]> currentSubmeshes = new List<int[]>();
                 for (int s = 0; s < mesh.subMeshCount; s++) currentSubmeshes.Add(mesh.GetTriangles(s));
 
-                // 2. THE MASTER TRANSLATION MAP
                 int[] masterMap = new int[originalVerts.Length];
                 for (int i = 0; i < masterMap.Length; i++) masterMap[i] = i;
 
-                // 3. BLENDSHAPE MEMORY ISOLATION
                 int blendShapeCount = mesh.blendShapeCount;
                 var extractedBlendShapes = new List<BlendShapeExtract>();
-                
+
                 for (int b = 0; b < blendShapeCount; b++)
                 {
                     string shapeName = mesh.GetBlendShapeName(b);
@@ -311,15 +273,14 @@ namespace VixenTools.Editor
                         Vector3[] deltaVerts = new Vector3[originalVerts.Length];
                         Vector3[] deltaNormals = new Vector3[originalVerts.Length];
                         Vector3[] deltaTangents = new Vector3[originalVerts.Length];
-                        
+
                         mesh.GetBlendShapeFrameVertices(b, f, deltaVerts, deltaNormals, deltaTangents);
                         frames.Add(new BlendShapeFrame { Weight = weight, DeltaVerts = deltaVerts, DeltaNormals = deltaNormals, DeltaTangents = deltaTangents });
                     }
                     extractedBlendShapes.Add(new BlendShapeExtract { Name = shapeName, Frames = frames });
                 }
-                mesh.ClearBlendShapes(); 
+                mesh.ClearBlendShapes();
 
-                // 4. THE IN-MEMORY ITERATION SYSTEM (UV-Locked 5D Hash)
                 int currentTriCount = mesh.triangles.Length / 3;
                 float currentThreshold = startThreshold;
                 int pass = 1;
@@ -339,14 +300,13 @@ namespace VixenTools.Editor
                     List<Vector3> newNormals = new List<Vector3>();
                     List<Vector2> newUvs = new List<Vector2>();
                     List<BoneWeight> newWeights = new List<BoneWeight>();
-                    
+
                     int[] passMap = new int[currentVerts.Length];
-                    
-                    // STRICT UV LOCK: Re-introduced U and V to the system. Textures physically cannot tear.
+
                     var spatialHash = new Dictionary<(long, long, long, long, long), int>();
-                    
+
                     float multiplier = 1f / Mathf.Max(currentThreshold, 0.00001f);
-                    float uvMultiplier = 10000f; // High-precision UV quantization
+                    float uvMultiplier = 10000f;
 
                     for (int i = 0; i < currentVerts.Length; i++)
                     {
@@ -375,7 +335,7 @@ namespace VixenTools.Editor
                             long hashX = (long)(Mathf.Round(currentVerts[i].x * multiplier));
                             long hashY = (long)(Mathf.Round(currentVerts[i].y * multiplier));
                             long hashZ = (long)(Mathf.Round(currentVerts[i].z * multiplier));
-                            
+
                             long uvHashX = 0; long uvHashY = 0;
                             if (currentUvs != null && currentUvs.Length > i)
                             {
@@ -388,7 +348,7 @@ namespace VixenTools.Editor
 
                         if (spatialHash.TryGetValue(key, out int existingIndex))
                         {
-                            passMap[i] = existingIndex; 
+                            passMap[i] = existingIndex;
                         }
                         else
                         {
@@ -433,23 +393,21 @@ namespace VixenTools.Editor
                     currentWeights = newWeights.ToArray();
                     currentSubmeshes = newSubmeshes;
                     currentTriCount = newTriCount;
-                    
+
                     currentThreshold += step;
                     pass++;
                 }
 
-                // 5. TOPOLOGY APPLICATION
-                mesh.Clear(); 
+                mesh.Clear();
                 mesh.vertices = currentVerts;
                 if (currentNormals.Length > 0) mesh.normals = currentNormals;
                 if (currentUvs.Length > 0) mesh.uv = currentUvs;
                 if (currentWeights.Length > 0) mesh.boneWeights = currentWeights;
-                
+
                 mesh.subMeshCount = currentSubmeshes.Count;
                 for (int s = 0; s < currentSubmeshes.Count; s++) mesh.SetTriangles(currentSubmeshes[s], s);
-                mesh.RecalculateNormals(); 
+                mesh.RecalculateNormals();
 
-                // 6. MASTER BLENDSHAPE RE-MAPPING
                 foreach (var shape in extractedBlendShapes)
                 {
                     foreach (var frame in shape.Frames)
@@ -480,31 +438,21 @@ namespace VixenTools.Editor
                         mesh.AddBlendShapeFrame(shape.Name, frame.Weight, newDV, newDN, newDT);
                     }
                 }
-                
+
                 Debug.Log($"[VixForge] Precision Microweld Halted. Passes: {pass}. Final Tris: {currentTriCount}");
             });
         }
 
-        // ====================================================================
-        // KINEMATIC ISOLATION & PROTECTION SYSTEM
-        // ====================================================================
-
-        /// <summary>
-        /// Intelligently maps Humanoid Avatar bones (and their entire descendent hierarchies) 
-        /// to specific SMR bone indices. Essential for protecting delicate features like 
-        /// hands, face, and jaw from the welder.
-        /// </summary>
         public static HashSet<int> GenerateProtectedBoneIndices(Animator animator, SkinnedMeshRenderer smr, params HumanBodyBones[] protectedHumanBones)
         {
             HashSet<int> protectedIndices = new HashSet<int>();
-            
-            if (animator == null || !animator.isHuman || smr == null) 
+
+            if (animator == null || !animator.isHuman || smr == null)
             {
                 Debug.LogWarning("[VixForge] Warning: Missing Animator, Non-Humanoid Rig, or missing SMR. Returning empty protection system.");
                 return protectedIndices;
             }
 
-            // 1. Gather all Transforms that need protection (Base bone + all recursive children)
             HashSet<Transform> protectedTransforms = new HashSet<Transform>();
 
             foreach (var humanBone in protectedHumanBones)
@@ -512,7 +460,6 @@ namespace VixenTools.Editor
                 Transform boneTransform = animator.GetBoneTransform(humanBone);
                 if (boneTransform != null)
                 {
-                    // Traverse and collect the entire hierarchy under this bone
                     CollectTransformsRecursive(boneTransform, protectedTransforms);
                 }
                 else
@@ -521,7 +468,6 @@ namespace VixenTools.Editor
                 }
             }
 
-            // 2. Map Physical Transforms to the SMR's internal bone array indices
             Transform[] smrBones = smr.bones;
             for (int i = 0; i < smrBones.Length; i++)
             {
@@ -535,10 +481,6 @@ namespace VixenTools.Editor
             return protectedIndices;
         }
 
-        /// <summary>
-        /// Recursively spiders down a transform hierarchy to ensure all child joints 
-        /// (e.g., finger joints, ear pivots, hair roots) are caught in the protection net.
-        /// </summary>
         private static void CollectTransformsRecursive(Transform current, HashSet<Transform> collection)
         {
             collection.Add(current);
@@ -548,10 +490,6 @@ namespace VixenTools.Editor
             }
         }
 
-        /// <summary>
-        /// Evaluates a BoneWeight struct to determine which bone has the highest 
-        /// structural influence over the vertex. Used for kinematic isolation.
-        /// </summary>
         private static int GetDominantBone(BoneWeight bw)
         {
             float maxWeight = bw.weight0;
@@ -564,7 +502,6 @@ namespace VixenTools.Editor
             return maxIndex;
         }
 
-        // --- Data structures for the BlendShape memory cache ---
         private struct BlendShapeExtract
         {
             public string Name;
@@ -579,24 +516,16 @@ namespace VixenTools.Editor
             public Vector3[] DeltaTangents;
         }
 
-        // ====================================================================
-        // KINEMATIC OPTIMIZATION PIPELINES
-        // ====================================================================
-
-        /// <summary>
-        /// Heuristic to collapse specific bones and transfer their vertex weights to a parent bone.
-        /// </summary>
         public static void CollapseBonesToParent(SkinnedMeshRenderer smr, List<Transform> bonesToCull)
         {
-            PatchSkinnedMesh(smr, "BoneCollapse", (mesh, renderer) => 
+            PatchSkinnedMesh(smr, "BoneCollapse", (mesh, renderer) =>
             {
                 Transform[] currentBones = renderer.bones;
                 BoneWeight[] weights = mesh.boneWeights;
-                
+
                 Dictionary<Transform, int> boneIndexMap = new Dictionary<Transform, int>();
                 for (int i = 0; i < currentBones.Length; i++)
                 {
-                    // [Vixen Core Fix] Guard against null joints in dirty SMR bone arrays.
                     if (currentBones[i] != null)
                     {
                         boneIndexMap[currentBones[i]] = i;
@@ -624,8 +553,7 @@ namespace VixenTools.Editor
             if (weight > 0 && targetIndex >= 0 && targetIndex < allBones.Length)
             {
                 Transform currentBone = allBones[targetIndex];
-                
-                // [Vixen Core Fix] Ensure currentBone is not null before checking hierarchy to prevent NREs
+
                 if (currentBone != null && cullList.Contains(currentBone) && currentBone.parent != null)
                 {
                     if (indexMap.TryGetValue(currentBone.parent, out int parentIndex))

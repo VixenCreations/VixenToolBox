@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using UnityEngine.Profiling;
-using UnityEditor.IMGUI.Controls; 
+using UnityEditor.IMGUI.Controls;
 using VRC.Udon;
 using VRC.SDK3.Components;
 using UdonSharp;
@@ -22,7 +22,7 @@ namespace VixenTools.Editor
     {
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/VixenWorldSpider.uss";
         private const string FontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
-        
+
         private const string TargetDictPath = "Assets/VixenTools/Asset Database/World Engine/VixenReplacementTargets.asset";
         private const string WhitelistDictPath = "Assets/VixenTools/Asset Database/World Engine/VixenShaderWhitelist.asset";
 
@@ -32,23 +32,22 @@ namespace VixenTools.Editor
 
         private int _targetTextureResolution = 2048;
         private readonly List<string> _resolutionOptions = new List<string> { "512", "1024", "2048", "4096" };
-        
-        // Font Swap Targets
-        private TMP_FontAsset _targetTMPFont; 
-        private Font _targetLegacyFont; 
-        
+
+        private TMP_FontAsset _targetTMPFont;
+        private Font _targetLegacyFont;
+
         private Shader _targetReplacementShader;
         private ShaderDictionaryAsset _targetShaderAsset;
         private ShaderDictionaryAsset _shaderWhitelistAsset;
-        private Button _shaderSelectButton; 
-        private List<string> _validShaderList = new List<string>(); 
+        private Button _shaderSelectButton;
+        private List<string> _validShaderList = new List<string>();
 
         private HashSet<Texture> _detectedTextures = new HashSet<Texture>();
         private readonly HashSet<string> _processedTexturePaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private HashSet<AudioClip> _detectedAudio = new HashSet<AudioClip>();
         private HashSet<Mesh> _detectedMeshes = new HashSet<Mesh>();
         private HashSet<Texture> _detectedUITextures = new HashSet<Texture>();
-        private HashSet<string> _expandedCategories = new HashSet<string>(); // <-- NEW: Tracks open UI folders
+        private HashSet<string> _expandedCategories = new HashSet<string>();
 
         private class EngineDiagnostic
         {
@@ -57,7 +56,7 @@ namespace VixenTools.Editor
             public string Description;
             public string HexColor;
             public UnityEngine.Object Context;
-            public bool IsSelected = false; // FIX 1: Default to unchecked
+            public bool IsSelected = false;
             public Action FixPayload;
             public Action OnFixedUIUpdate;
         }
@@ -71,26 +70,25 @@ namespace VixenTools.Editor
             _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
             _targetTMPFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset");
             _targetLegacyFont = AssetDatabase.LoadAssetAtPath<Font>("Assets/TextMesh Pro/Fonts/LiberationSans.ttf");
-            
+
             if (_targetLegacyFont == null)
             {
                 _targetLegacyFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             }
-            
+
             minSize = new Vector2(650, 850);
         }
 
         private void CreateGUI()
         {
-            EnsureDictionariesExist(); 
+            EnsureDictionariesExist();
 
             var root = rootVisualElement;
             root.name = "world-spider-root";
-            
+
             StyleSheet styles = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath);
             if (styles != null) root.styleSheets.Add(styles);
 
-            // HEADER
             var header = new VisualElement { name = "tool-header", style = { justifyContent = Justify.Center, alignItems = Align.Center, paddingLeft = 0 } };
             var title = new Label();
             title.AddToClassList("panel-header");
@@ -108,23 +106,19 @@ namespace VixenTools.Editor
             infoBox.AddToClassList("info-box-styled");
             _mainScroll.Add(infoBox);
 
-            // CONTROL PANEL
             var controlPanel = new VisualElement();
             controlPanel.AddToClassList("spider-panel");
 
-            // Texture Resolution (replace existing block)
             var resRow = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 5 } };
             var resLabel = new Label("TARGET MAX TEXTURE SIZE:");
             resLabel.AddToClassList("control-label");
 
-            // Determine initial index from current _targetTextureResolution
             int initialIndex = _resolutionOptions.IndexOf(_targetTextureResolution.ToString());
-            if (initialIndex < 0) initialIndex = Mathf.Clamp(_resolutionOptions.Count - 1, 0, _resolutionOptions.Count - 1); // fallback to last option
+            if (initialIndex < 0) initialIndex = Mathf.Clamp(_resolutionOptions.Count - 1, 0, _resolutionOptions.Count - 1);
 
             var resDropdown = new DropdownField(_resolutionOptions, initialIndex);
             resDropdown.AddToClassList("vixen-dropdown");
 
-            // Ensure the dropdown text matches the runtime value
             resDropdown.value = _targetTextureResolution.ToString();
 
             resDropdown.RegisterValueChangedCallback(evt =>
@@ -140,7 +134,6 @@ namespace VixenTools.Editor
             resRow.Add(resDropdown);
             controlPanel.Add(resRow);
 
-            // TMP Font Swap
             var fontRow = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 5 } };
             var fontLabel = new Label("GLOBAL TMP FONT SWAP:");
             fontLabel.AddToClassList("control-label");
@@ -151,7 +144,6 @@ namespace VixenTools.Editor
             fontRow.Add(fontField);
             controlPanel.Add(fontRow);
 
-            // Legacy Font Swap
             var legacyFontRow = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 15 } };
             var legacyFontLabel = new Label("GLOBAL LEGACY FONT SWAP:");
             legacyFontLabel.AddToClassList("control-label");
@@ -162,12 +154,11 @@ namespace VixenTools.Editor
             legacyFontRow.Add(legacyFontField);
             controlPanel.Add(legacyFontRow);
 
-            // Global Shader Replacer Target
             var shaderTargetRow = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 5 } };
             var shaderTargetLabel = new Label("REPLACEMENT TARGET:");
             shaderTargetLabel.AddToClassList("control-label");
-            shaderTargetLabel.style.color = ColorUtility.TryParseHtmlString("#ff00aa", out Color p) ? p : Color.magenta; 
-            
+            shaderTargetLabel.style.color = ColorUtility.TryParseHtmlString("#ff00aa", out Color p) ? p : Color.magenta;
+
             _shaderSelectButton = new Button();
             _shaderSelectButton.AddToClassList("vixen-dropdown");
             _shaderSelectButton.style.backgroundColor = ColorUtility.TryParseHtmlString("#0a0a0f", out Color bg) ? bg : Color.black;
@@ -195,14 +186,13 @@ namespace VixenTools.Editor
                     _targetReplacementShader = Shader.Find(selectedName);
                     _shaderSelectButton.text = selectedName;
                 });
-                dropdown.Show(_shaderSelectButton.worldBound); 
+                dropdown.Show(_shaderSelectButton.worldBound);
             };
 
             shaderTargetRow.Add(shaderTargetLabel);
             shaderTargetRow.Add(_shaderSelectButton);
             controlPanel.Add(shaderTargetRow);
 
-            // Target Dictionary (.asset)
             var targetDictRow = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 5 } };
             var targetDictLabel = new Label("TARGET DICTIONARY (.ASSET):");
             targetDictLabel.AddToClassList("control-label");
@@ -216,7 +206,6 @@ namespace VixenTools.Editor
             targetDictRow.Add(targetDictField);
             controlPanel.Add(targetDictRow);
 
-            // Whitelist Dictionary (.asset)
             var whitelistRow = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 10 } };
             var whitelistLabel = new Label("WHITELIST DICTIONARY (.ASSET):");
             whitelistLabel.AddToClassList("control-label");
@@ -231,7 +220,6 @@ namespace VixenTools.Editor
 
             RefreshCustomDropdown();
 
-            // Action Buttons
             var btnRow = new VisualElement { style = { flexDirection = FlexDirection.Row } };
             var scanBtn = new Button(InitiateFullSystemScan) { text = "SCAN SCENE" };
             scanBtn.AddToClassList("spider-action-btn");
@@ -252,15 +240,14 @@ namespace VixenTools.Editor
 
         private void EnsureDictionariesExist(bool forceRebuild = false)
         {
-            string targetPath = Path.GetFullPath(TargetDictPath); 
+            string targetPath = Path.GetFullPath(TargetDictPath);
             string targetDir = Path.GetDirectoryName(targetPath);
             if (!Directory.Exists(targetDir)) Directory.CreateDirectory(targetDir);
 
-            string whitelistPath = Path.GetFullPath(WhitelistDictPath); 
+            string whitelistPath = Path.GetFullPath(WhitelistDictPath);
             string whitelistDir = Path.GetDirectoryName(whitelistPath);
             if (!Directory.Exists(whitelistDir)) Directory.CreateDirectory(whitelistDir);
 
-            // THE NUKE: Delete existing files if a rebuild is triggered
             if (forceRebuild)
             {
                 AssetDatabase.DeleteAsset(TargetDictPath);
@@ -275,7 +262,7 @@ namespace VixenTools.Editor
             {
                 _targetShaderAsset = ScriptableObject.CreateInstance<ShaderDictionaryAsset>();
                 AssetDatabase.CreateAsset(_targetShaderAsset, TargetDictPath);
-                ShaderDictionaryAsset.AutoPopulateTargets(_targetShaderAsset); 
+                ShaderDictionaryAsset.AutoPopulateTargets(_targetShaderAsset);
             }
 
             _shaderWhitelistAsset = AssetDatabase.LoadAssetAtPath<ShaderDictionaryAsset>(WhitelistDictPath);
@@ -283,11 +270,10 @@ namespace VixenTools.Editor
             {
                 _shaderWhitelistAsset = ScriptableObject.CreateInstance<ShaderDictionaryAsset>();
                 AssetDatabase.CreateAsset(_shaderWhitelistAsset, WhitelistDictPath);
-                ShaderDictionaryAsset.AutoPopulateWhitelist(_shaderWhitelistAsset); 
+                ShaderDictionaryAsset.AutoPopulateWhitelist(_shaderWhitelistAsset);
             }
 
-            // Force Unity to acknowledge the new files immediately so the UI doesn't hitch
-            if (forceRebuild) AssetDatabase.Refresh(); 
+            if (forceRebuild) AssetDatabase.Refresh();
         }
 
         private void RefreshCustomDropdown()
@@ -311,27 +297,25 @@ namespace VixenTools.Editor
                     }
                     else
                     {
-                        string fallback = _validShaderList.Contains("VRChat/Mobile/Toon Standard") 
-                            ? "VRChat/Mobile/Toon Standard" 
+                        string fallback = _validShaderList.Contains("VRChat/Mobile/Toon Standard")
+                            ? "VRChat/Mobile/Toon Standard"
                             : _validShaderList[0];
-                        
+
                         _shaderSelectButton.text = fallback;
                         _targetReplacementShader = Shader.Find(fallback);
                     }
                     return;
                 }
             }
-            
+
             _validShaderList.Clear();
             _shaderSelectButton.text = "No Valid Targets Found";
             _targetReplacementShader = null;
         }
 
-        // === 4D-CHESS CACHING: Prevents brutal O(N) Scene Sweeps ===
         private Dictionary<Type, UnityEngine.Object[]> _sceneObjectCache = new Dictionary<Type, UnityEngine.Object[]>();
         private Dictionary<string, Texture2D> _textureRecoveryCache = new Dictionary<string, Texture2D>(StringComparer.OrdinalIgnoreCase);
 
-        // Accepts the 'includeInactive' boolean
         private T[] GetCachedObjects<T>(bool includeInactive = true) where T : UnityEngine.Object
         {
             Type t = typeof(T);
@@ -341,7 +325,6 @@ namespace VixenTools.Editor
             return objs;
         }
 
-        // Accepts the 'includeInactive' boolean for the Type-based lookups
         private UnityEngine.Object[] GetCachedObjects(Type t, bool includeInactive = true)
         {
             if (t == null) return new UnityEngine.Object[0];
@@ -351,7 +334,6 @@ namespace VixenTools.Editor
             return objs;
         }
 
-        // === 4D-CHESS CACHING: Persistent JSON Scene Checksum (Failure-Aware) ===
         [Serializable]
         public class AssetRecord
         {
@@ -373,7 +355,6 @@ namespace VixenTools.Editor
 
         private WorldEngineCache _worldCache = new WorldEngineCache();
 
-        // Fast lookup maps (RAM only)
         private Dictionary<string, AssetRecord> _textureRecordMap = new Dictionary<string, AssetRecord>(StringComparer.OrdinalIgnoreCase);
         private Dictionary<string, AssetRecord> _meshRecordMap = new Dictionary<string, AssetRecord>(StringComparer.OrdinalIgnoreCase);
 
@@ -509,12 +490,11 @@ namespace VixenTools.Editor
             }
 
             rec.hash = hash;
-            rec.lastResolution = _targetTextureResolution; // Keeps schema consistent
+            rec.lastResolution = _targetTextureResolution;
             rec.version = CURRENT_ENGINE_CACHE_VERSION;
             rec.failed = !success;
         }
 
-        // === 4D-CHESS CACHING: Reflection & Background Queue ===
         private static Dictionary<(Type, string), System.Reflection.FieldInfo> _fieldCache = new Dictionary<(Type, string), System.Reflection.FieldInfo>();
 
         private System.Reflection.FieldInfo GetFieldCached(Type t, string name, System.Reflection.BindingFlags flags)
@@ -537,20 +517,20 @@ namespace VixenTools.Editor
             if (_workQueue.Count == 0) return;
 
             _isProcessingQueue = true;
-            AssetDatabase.StartAssetEditing(); // Suspends Unity's file watcher (CRITICAL for I/O speed)
+            AssetDatabase.StartAssetEditing();
             EditorApplication.update += ProcessQueueTick;
         }
 
         private void ProcessQueueTick()
         {
-            int perTick = 2; // Process 2 heavy ImageMagick files per frame to keep the Editor responsive
+            int perTick = 2;
             for (int i = 0; i < perTick && _workQueue.Count > 0; i++)
             {
-                try 
+                try
                 {
                     _workQueue.Dequeue().Invoke();
-                } 
-                catch (Exception e) 
+                }
+                catch (Exception e)
                 {
                     Debug.LogError($"[VixenWorldSpider] Queue Execution Failed on an asset: {e.Message}");
                 }
@@ -560,16 +540,14 @@ namespace VixenTools.Editor
             {
                 EditorApplication.update -= ProcessQueueTick;
                 AssetDatabase.StopAssetEditing();
-                AssetDatabase.Refresh(); // One single refresh for all modified textures
-                
-                // Save the persistent JSON database
-                SaveLookupCache(); 
-                
+                AssetDatabase.Refresh();
+
+                SaveLookupCache();
+
                 _isProcessingQueue = false;
                 EditorUtility.ClearProgressBar();
-                
-                // Re-render the UI system to clear the ghosts
-                InitiateFullSystemScan(); 
+
+                InitiateFullSystemScan();
                 Debug.Log("[Vixen System] Background Asset Queue Completed. Lookup Checksum Saved.");
             }
             else
@@ -580,42 +558,38 @@ namespace VixenTools.Editor
 
         private void InitiateFullSystemScan()
         {
-            // === INTERNAL ENGINE CALLS ===
-            LoadLookupCache(); // <-- Added 05/10/26
+            LoadLookupCache();
             EnsureDictionariesExist();
             RefreshCustomDropdown();
 
             _diagnosticsDb.Clear();
-            _detectedTextures.Clear(); 
-            _detectedAudio.Clear(); 
+            _detectedTextures.Clear();
+            _detectedAudio.Clear();
             _detectedMeshes.Clear();
             _detectedUITextures.Clear();
 
-            // === ENGINE ARCHITECTURE AUDITS ===
             AuditUdonAndNetwork();
             AuditLightingAndCameras();
             AuditPhysics();
-            AuditTerrainAndEnvironment(); // <-- Added 05/06/26
+            AuditTerrainAndEnvironment();
             AuditGeometryAndMaterials();
             AnalyzeTextures();
-            AuditExplicitTextComponents(); 
+            AuditExplicitTextComponents();
             AuditCanvasesAndUIMemory();
-            AuditUdonPersistence(); 
+            AuditUdonPersistence();
 
-            // === THIRD-PARTY ECOSYSTEM AUDITS ===
             AuditNativeVideoPipelines();
-            AuditLightVolumesEcosystem(); // <-- Added 05/07/26
-            AuditProTVEcosystem(); 
-            AuditTxlEcosystem(); 
+            AuditLightVolumesEcosystem();
+            AuditProTVEcosystem();
+            AuditTxlEcosystem();
             AuditIwaSyncEcosystem();
-            AuditVizVidEcosystem(); // <-- Added 05/07/26
-            AuditRinvoSearchEcosystem(); // <-- Added 05/07/26
-            AuditAudioLinkEcosystem(); // <-- Added 05/07/26
-            AuditLTCGIPipeline(); // <-- Added 05/09/26
+            AuditVizVidEcosystem();
+            AuditRinvoSearchEcosystem();
+            AuditAudioLinkEcosystem();
+            AuditLTCGIPipeline();
 
             RenderDiagnosticSystem();
 
-            // POP OUT THE NEW HEURISTICS WINDOW
             VixenHeuristicsDashboard.Open(_detectedTextures, _detectedMeshes, _detectedAudio, _detectedUITextures);
         }
 
@@ -626,30 +600,27 @@ namespace VixenTools.Editor
 
             foreach (var category in categories)
             {
-                // Check if the user had this specific category open before the live refresh
                 bool isExpanded = _expandedCategories.Contains(category);
-                
+
                 var foldout = new Foldout { text = category, value = isExpanded };
                 foldout.AddToClassList("system-foldout");
-                
+
                 var contentContainer = new VisualElement();
                 contentContainer.AddToClassList("topology-container");
                 foldout.Add(contentContainer);
 
                 bool isLoaded = false;
-                
-                // If it was already expanded from a previous scan, populate it immediately
+
                 if (isExpanded)
                 {
                     PopulateCategoryRows(category, contentContainer);
                     isLoaded = true;
                 }
 
-                // LAZY LOAD DOM: Only build the UI nodes when the user clicks the category open
                 foldout.RegisterValueChangedCallback(evt => {
                     if (evt.newValue)
                     {
-                        _expandedCategories.Add(category); // Memorize state
+                        _expandedCategories.Add(category);
                         if (!isLoaded)
                         {
                             PopulateCategoryRows(category, contentContainer);
@@ -658,7 +629,7 @@ namespace VixenTools.Editor
                     }
                     else
                     {
-                        _expandedCategories.Remove(category); // Forget state
+                        _expandedCategories.Remove(category);
                     }
                 });
 
@@ -674,7 +645,7 @@ namespace VixenTools.Editor
             if (catIssues.Count > 0)
             {
                 var toggleAllRow = new VisualElement { style = { flexDirection = FlexDirection.Row, justifyContent = Justify.FlexEnd, marginBottom = 4 } };
-                
+
                 var toggleAllBtn = new Button(() => {
                     bool anyUnchecked = catIssues.Any(i => !i.IsSelected);
                     for (int i = 0; i < catIssues.Count; i++)
@@ -686,7 +657,7 @@ namespace VixenTools.Editor
                         }
                     }
                 }) { text = "Toggle All Fixes", style = { fontSize = 10, paddingLeft = 10, paddingRight = 10 } };
-                
+
                 toggleAllRow.Add(toggleAllBtn);
                 contentContainer.Add(toggleAllRow);
             }
@@ -711,7 +682,7 @@ namespace VixenTools.Editor
                     {
                         toggle = new Toggle { value = issue.IsSelected };
                         toggle.AddToClassList("vixen-toggle");
-                        var currentIssue = issue; 
+                        var currentIssue = issue;
                         toggle.RegisterValueChangedCallback(e => currentIssue.IsSelected = e.newValue);
                         row.Add(toggle);
                         categoryToggles.Add(toggle);
@@ -725,7 +696,7 @@ namespace VixenTools.Editor
                     var issueForGhost = issue;
                     issueForGhost.OnFixedUIUpdate = () => {
                         row.SetEnabled(false);
-                        row.style.opacity = 0.35f; 
+                        row.style.opacity = 0.35f;
                         if (toggle != null) toggle.SetValueWithoutNotify(false);
                     };
 
@@ -740,7 +711,7 @@ namespace VixenTools.Editor
 
                     if (issue.Context != null)
                     {
-                        var ctx = issue.Context; 
+                        var ctx = issue.Context;
                         row.RegisterCallback<MouseDownEvent>(e => { EditorGUIUtility.PingObject(ctx); Selection.activeObject = ctx; });
                     }
 
@@ -751,11 +722,11 @@ namespace VixenTools.Editor
 
         private void LogDiagnostic(string category, string type, string desc, string hex, UnityEngine.Object context, Action fixPayload = null)
         {
-            _diagnosticsDb.Add(new EngineDiagnostic { 
-                Category = category, 
-                IssueType = type, 
-                Description = desc, 
-                HexColor = hex, 
+            _diagnosticsDb.Add(new EngineDiagnostic {
+                Category = category,
+                IssueType = type,
+                Description = desc,
+                HexColor = hex,
                 Context = context,
                 FixPayload = fixPayload
             });
@@ -774,22 +745,17 @@ namespace VixenTools.Editor
         private static System.Reflection.MethodInfo _getUdonTypeMethod;
         private static bool _udonReflectionInitialized = false;
 
-        // Instance-level cache to deduplicate lookups during a scan
         private Dictionary<VRC.Udon.AbstractUdonProgramSource, string> _udonTypeNameCache = new Dictionary<VRC.Udon.AbstractUdonProgramSource, string>();
 
         private string GetUdonTypeNameSafe(UdonBehaviour udon)
         {
-            // Fast exit if there is no program source to identify
             if (udon == null || udon.programSource == null) return string.Empty;
 
-            // 1. O(1) Memoization: Have we already resolved this exact script asset during this scan?
-            // If you have 500 toggle buttons sharing the same script, 499 of them will instantly return here.
             if (_udonTypeNameCache.TryGetValue(udon.programSource, out string cachedName))
             {
                 return cachedName;
             }
 
-            // 2. Initialize AppDomain reflection exactly ONCE per Unity session.
             if (!_udonReflectionInitialized)
             {
                 try
@@ -801,7 +767,7 @@ namespace VixenTools.Editor
                         _getUdonTypeMethod = utilityType?.GetMethod("GetUdonSharpBehaviourType", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
                     }
                 }
-                catch (Exception) { } // Fail silently
+                catch (Exception) { }
                 finally
                 {
                     _udonReflectionInitialized = true;
@@ -810,7 +776,6 @@ namespace VixenTools.Editor
 
             string resolvedName = string.Empty;
 
-            // 3. Attempt to invoke the statically cached reflection method
             if (_getUdonTypeMethod != null)
             {
                 try
@@ -818,22 +783,19 @@ namespace VixenTools.Editor
                     Type backingType = _getUdonTypeMethod.Invoke(null, new object[] { udon }) as Type;
                     if (backingType != null) resolvedName = backingType.FullName;
                 }
-                catch (Exception) { } // Let the fallback take over if invocation fails
+                catch (Exception) { }
             }
 
-            // 4. Heuristic Fallback to the physical program asset name
             if (string.IsNullOrEmpty(resolvedName))
             {
                 resolvedName = udon.programSource.name;
             }
 
-            // 5. Cache the final result to protect the CPU on all future iterations
             _udonTypeNameCache[udon.programSource] = resolvedName;
 
             return resolvedName;
         }
 
-        // Struct to hold the validation results
         public struct LTCGIValidationReport
         {
             public int TotalScreens;
@@ -842,7 +804,6 @@ namespace VixenTools.Editor
             public bool RequiresRebuild;
         }
 
-        // The Validator: Safely extracts and checks data without hard-linking to the LTCGI assembly
         public LTCGIValidationReport CheckForStaleLTCGIData(Component adapter)
         {
             var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
@@ -850,14 +811,13 @@ namespace VixenTools.Editor
 
             var screenCountField = adapterType.GetField("_LTCGI_ScreenCount", flags);
             var dynamicCountField = adapterType.GetField("_LTCGI_ScreenCountDynamic", flags);
-            
+
             int totalScreens = screenCountField != null ? Convert.ToInt32(screenCountField.GetValue(adapter)) : 0;
             int dynamicScreens = dynamicCountField != null ? Convert.ToInt32(dynamicCountField.GetValue(adapter)) : 0;
 
             var report = new LTCGIValidationReport { TotalScreens = totalScreens };
             bool needsRebuild = false;
 
-            // Extract Arrays
             var screensField = adapterType.GetField("_Screens", flags);
             var extraDataField = adapterType.GetField("_LTCGI_ExtraData", flags);
             var transformsField = adapterType.GetField("_LTCGI_ScreenTransforms", flags);
@@ -868,7 +828,6 @@ namespace VixenTools.Editor
             Transform[] transforms = transformsField?.GetValue(adapter) as Transform[];
             Renderer[] renderers = renderersField?.GetValue(adapter) as Renderer[];
 
-            // 1. Validate Screens (The Emitters)
             if (screens != null && extraData != null)
             {
                 for (int i = 0; i < totalScreens; i++)
@@ -876,50 +835,41 @@ namespace VixenTools.Editor
                     if (i >= screens.Length || i >= extraData.Length) break;
 
                     GameObject screenObj = screens[i];
-                    
-                    // Check for nulls (destroyed objects) or objects that have been moved out of active scenes
+
                     if (screenObj == null || !screenObj.activeInHierarchy)
                     {
-                        // Read the ExtraData. If w-component (flags) or color isn't zeroed out, we have a ghost light.
                         Vector4 data = extraData[i];
-                        if (data.sqrMagnitude > 0.01f) // It's disabled in hierarchy but active in shader memory
+                        if (data.sqrMagnitude > 0.01f)
                         {
                             report.StaleScreenCount++;
                             needsRebuild = true;
-                            
-                            // Immediate Mitigation: Zero out the data to kill the light in the shader immediately in editor
-                            extraData[i] = Vector4.zero; 
+
+                            extraData[i] = Vector4.zero;
                         }
                     }
                     else if (transforms != null && i < transforms.Length && transforms[i] != null)
                     {
-                        // 4D Chess: Verify Transform bounds on STATIC screens.
-                        // Dynamic screens update at runtime, but static screens bake their position. 
-                        // If a static screen moved in the editor, its emission bounds are permanently desynced until a rebuild.
                         Transform t = transforms[i];
                         if (t.hasChanged)
                         {
-                            if (i >= dynamicScreens) 
+                            if (i >= dynamicScreens)
                             {
                                 report.StaleScreenCount++;
                                 needsRebuild = true;
                             }
-                            t.hasChanged = false; 
+                            t.hasChanged = false;
                         }
                     }
                 }
             }
 
-            // 2. Validate Renderers (The Receivers)
             if (renderers != null)
             {
                 for (int i = 0; i < renderers.Length; i++)
                 {
                     Renderer r = renderers[i];
-                    
-                    // We only strictly flag NULL renderers (deleted objects). 
-                    // Disabled renderers (!r.enabled) are fine as Udon logic might toggle them on during gameplay.
-                    if (r == null) 
+
+                    if (r == null)
                     {
                         report.OrphanedRenderers++;
                         needsRebuild = true;
@@ -931,11 +881,10 @@ namespace VixenTools.Editor
             return report;
         }
 
-        // The Execution Block: Hooks the validation report into the UI/Auto-Fixer
         private void AuditLTCGIPipeline()
         {
             var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static;
-            
+
             Type adapterType = GetTypeSafe("LTCGI_UdonAdapter");
             Type controllerType = GetTypeSafe("pi.LTCGI.LTCGI_Controller");
             Type screenType = GetTypeSafe("pi.LTCGI.LTCGI_Screen");
@@ -947,7 +896,6 @@ namespace VixenTools.Editor
                 {
                     var comp = (Component)ctrl;
 
-                    // === 1. NRE DEADLOCK FIX (BAKE CACHE PURGE) ===
                     var bakeKeyField = controllerType.GetField("bakeMaterialReset_key", flags);
                     var bakeProgField = controllerType.GetField("bakeInProgress", flags);
 
@@ -956,18 +904,16 @@ namespace VixenTools.Editor
                         bool isBaking = Convert.ToBoolean(bakeProgField.GetValue(ctrl));
                         object keys = bakeKeyField.GetValue(ctrl);
 
-                        // If Unity serialization lost the list reference while bakeInProgress is stuck true
                         if (isBaking && (keys == null || keys.Equals(null)))
                         {
                             LogDiagnostic("LTCGI PIPELINE: FATAL DESYNC", "Bake Cache Deadlock (NRE)",
                                 $"The LTCGI Controller '{comp.gameObject.name}' is stuck in a 'Bake In Progress' state, but its material cache is corrupted. Clicking 'Reset Settings' in the inspector will throw a MissingReferenceException. Click Fix to force-clear the deadlock.",
                                 "#ff00aa", comp, () => {
                                     Undo.RecordObject(comp, "Nuke LTCGI Bake Cache");
-                                    
-                                    // Atomically reconstruct the lists in memory to satisfy the SerializedObject
+
                                     Type matListType = typeof(System.Collections.Generic.List<Material>);
                                     bakeKeyField.SetValue(ctrl, Activator.CreateInstance(matListType));
-                                    
+
                                     var bakeValField = controllerType.GetField("bakeMaterialReset_val", flags);
                                     if (bakeValField != null)
                                     {
@@ -982,16 +928,14 @@ namespace VixenTools.Editor
                         }
                     }
 
-                    // === 2. VIDEO PLAYER AUTO-LINKING ===
                     var videoTexField = controllerType.GetField("VideoTexture", flags);
                     if (videoTexField != null && screenType != null)
                     {
                         Texture currentVideoTex = videoTexField.GetValue(ctrl) as Texture;
-                        
-                        // Check if dynamic screens actually exist
+
                         var screens = GetCachedObjects(screenType);
                         bool hasDynamicScreens = false;
-                        foreach(var s in screens) 
+                        foreach(var s in screens)
                         {
                             var dynField = screenType.GetField("Dynamic", flags);
                             if (dynField != null && Convert.ToBoolean(dynField.GetValue(s))) {
@@ -1002,11 +946,9 @@ namespace VixenTools.Editor
 
                         if (hasDynamicScreens && currentVideoTex == null)
                         {
-                            // Hunt for a valid Video Player CRT
                             Texture detectedVideoTex = null;
                             string detectedPlayer = "";
 
-                            // Target A: ProTV
                             Type protvType = GetTypeSafe("ArchiTech.ProTV.TVManager");
                             if (protvType != null) {
                                 var tvs = GetCachedObjects(protvType);
@@ -1017,7 +959,6 @@ namespace VixenTools.Editor
                                 }
                             }
 
-                            // Target B: TXL
                             if (detectedVideoTex == null) {
                                 Type txlScreenMgrType = GetTypeSafe("Texel.ScreenManager");
                                 if (txlScreenMgrType != null) {
@@ -1050,7 +991,6 @@ namespace VixenTools.Editor
                     }
                 }
 
-                // === 3. ARRAY FRAGMENTATION / GHOST SCREEN VALIDATION ===
                 if (adapterType != null)
                 {
                     foreach (var adapter in GetCachedObjects(adapterType))
@@ -1067,13 +1007,12 @@ namespace VixenTools.Editor
                             LogDiagnostic("LTCGI PIPELINE: FRAGMENTATION", "Stale Data Rebuild Required",
                                 $"Adapter '{component.gameObject.name}' has accumulated fragmented memory arrays.{issueDesc}\nThis causes ghost lighting and wastes GPU cycles.",
                                 "#ff4444", component, () => {
-                                    
+
                                     var singletonField = controllerType.GetField("Singleton", flags);
                                     var singleton = singletonField?.GetValue(null);
-                                    
+
                                     if (singleton != null)
                                     {
-                                        // 4D Chess: Try to invoke the parameterless UpdateMaterials(), if pi changed the signature, fallback to the bool override.
                                         var updateMethodParamless = controllerType.GetMethod("UpdateMaterials", new Type[0]);
                                         if (updateMethodParamless != null) {
                                             updateMethodParamless.Invoke(singleton, null);
@@ -1086,7 +1025,6 @@ namespace VixenTools.Editor
                                 });
                         }
 
-                        // --- VIDEO TEXTURE BINDING GUARD ---
                         var blurCrtField = adapterType.GetField("BlurCRTInput", flags);
                         if (blurCrtField != null)
                         {
@@ -1098,7 +1036,7 @@ namespace VixenTools.Editor
                                 {
                                     LogDiagnostic("LTCGI PIPELINE: TOPOLOGY", "Unbound Video Texture",
                                         $"Adapter '{component.gameObject.name}' has no VideoTexture bound to its Blur Chain. Dynamic video lighting will fail.",
-                                        "#00e5ff", component, null); 
+                                        "#00e5ff", component, null);
                                 }
                             }
                         }
@@ -1111,25 +1049,22 @@ namespace VixenTools.Editor
         {
             var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
-            // PRE-AUDIT: Locate AudioLink Core for connectivity handshake
             Type audioLinkType = GetTypeSafe("AudioLink.AudioLink");
             var alInstances = audioLinkType != null ? GetCachedObjects(audioLinkType, true) : null;
             Component alCore = (alInstances != null && alInstances.Length > 0) ? (Component)alInstances[0] : null;
 
-            // === 1. AVPRO NATIVE PIPELINE ===
             Type avProType = GetTypeSafe("VRC.SDK3.Video.Components.AVPro.VRCAVProVideoPlayer");
             if (avProType != null)
             {
                 foreach (var player in GetCachedObjects(avProType))
                 {
                     var component = (Component)player;
-                    
-                    // --- Resolution & Latency Guard ---
+
                     var maxResField = avProType.GetField("maximumResolution", flags);
                     if (maxResField != null)
                     {
                         int res = Convert.ToInt32(maxResField.GetValue(player));
-                        if (res == 0 || res > 1080) 
+                        if (res == 0 || res > 1080)
                         {
                             string resStr = res == 0 ? "UNLIMITED (0)" : $"{res}p";
                             LogDiagnostic("VIDEO PIPELINE: BANDWIDTH NUKE", "Extreme AVPro Resolution",
@@ -1154,7 +1089,6 @@ namespace VixenTools.Editor
                             });
                     }
 
-                    // --- AUDIOLINK TOPOLOGY HANDSHAKE ---
                     if (alCore != null)
                     {
                         var audioSourcesField = avProType.GetField("targetAudioSources", flags);
@@ -1167,8 +1101,8 @@ namespace VixenTools.Editor
                             bool linked = sources.Any(s => s != null && s == currentAlSource);
                             if (!linked)
                             {
-                                LogDiagnostic("AUDIOLINK: TOPOLOGY", "AVPro Not Linked to AudioLink", 
-                                    $"AVPro Player '{component.name}' outputs audio to '{sources[0].name}', but AudioLink is not listening to it. Reactive materials will not pulse.", 
+                                LogDiagnostic("AUDIOLINK: TOPOLOGY", "AVPro Not Linked to AudioLink",
+                                    $"AVPro Player '{component.name}' outputs audio to '{sources[0].name}', but AudioLink is not listening to it. Reactive materials will not pulse.",
                                     "#00e5ff", component, () => {
                                         Undo.RecordObject(alCore, "Link AVPro to AudioLink");
                                         alSourceField.SetValue(alCore, sources[0]);
@@ -1180,15 +1114,13 @@ namespace VixenTools.Editor
                 }
             }
 
-            // === 2. UNITY NATIVE PIPELINE ===
             Type unityVideoType = GetTypeSafe("VRC.SDK3.Video.Components.VRCUnityVideoPlayer");
             if (unityVideoType != null)
             {
                 foreach (var player in GetCachedObjects(unityVideoType))
                 {
                     var component = (Component)player;
-                    
-                    // --- Resolution Guard ---
+
                     var maxResField = unityVideoType.GetField("maximumResolution", flags);
                     if (maxResField != null)
                     {
@@ -1206,7 +1138,6 @@ namespace VixenTools.Editor
                         }
                     }
 
-                    // --- AUDIOLINK TOPOLOGY HANDSHAKE ---
                     if (alCore != null)
                     {
                         var audioSourcesField = unityVideoType.GetField("targetAudioSources", flags);
@@ -1219,8 +1150,8 @@ namespace VixenTools.Editor
                             bool linked = sources.Any(s => s != null && s == currentAlSource);
                             if (!linked)
                             {
-                                LogDiagnostic("AUDIOLINK: TOPOLOGY", "Unity Video Not Linked to AudioLink", 
-                                    $"Unity Video Player '{component.name}' outputs audio to '{sources[0].name}', but AudioLink is not listening to it.", 
+                                LogDiagnostic("AUDIOLINK: TOPOLOGY", "Unity Video Not Linked to AudioLink",
+                                    $"Unity Video Player '{component.name}' outputs audio to '{sources[0].name}', but AudioLink is not listening to it.",
                                     "#00e5ff", component, () => {
                                         Undo.RecordObject(alCore, "Link Unity Video to AudioLink");
                                         alSourceField.SetValue(alCore, sources[0]);
@@ -1237,12 +1168,10 @@ namespace VixenTools.Editor
         {
             var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
-            // PRE-AUDIT: Locate AudioLink Core for connectivity handshake
             Type audioLinkType = GetTypeSafe("AudioLink.AudioLink");
             var alInstances = audioLinkType != null ? GetCachedObjects(audioLinkType, true) : null;
             Component alCore = (alInstances != null && alInstances.Length > 0) ? (Component)alInstances[0] : null;
 
-            // === 1. BASIC UDON HYGIENE ===
             var udonBehaviours = GetCachedObjects<UdonBehaviour>(true);
             foreach (var udon in udonBehaviours)
             {
@@ -1254,7 +1183,6 @@ namespace VixenTools.Editor
                 }
             }
 
-            // === 2. TEXEL UTILITY AUDITS ===
             Type debugUserListType = GetTypeSafe("Texel.DebugUserList");
             if (debugUserListType != null)
             {
@@ -1282,12 +1210,11 @@ namespace VixenTools.Editor
                 }
             }
 
-            // === 3. TXL PLAYER -> AUDIOLINK HANDSHAKE ===
             if (alCore != null)
             {
                 Type syncPlayerType = GetTypeSafe("Texel.SyncPlayer") ?? GetTypeSafe("Texel.Video.SyncPlayer");
                 Type txlPlayerType = GetTypeSafe("Texel.TXLVideoPlayer");
-                
+
                 var players = new List<Component>();
                 if (syncPlayerType != null) players.AddRange(GetCachedObjects(syncPlayerType, true).Cast<Component>());
                 if (txlPlayerType != null) players.AddRange(GetCachedObjects(txlPlayerType, true).Cast<Component>());
@@ -1303,8 +1230,8 @@ namespace VixenTools.Editor
                     {
                         if (!sources.Any(s => s != null && s == currentAlSource))
                         {
-                            LogDiagnostic("AUDIOLINK: TOPOLOGY", "TXL Player Not Linked to AudioLink", 
-                                $"TXL Video Player '{player.gameObject.name}' outputs audio to '{sources[0].name}', but AudioLink is not listening. Reactive materials will not pulse during video playback.", 
+                            LogDiagnostic("AUDIOLINK: TOPOLOGY", "TXL Player Not Linked to AudioLink",
+                                $"TXL Video Player '{player.gameObject.name}' outputs audio to '{sources[0].name}', but AudioLink is not listening. Reactive materials will not pulse during video playback.",
                                 "#00e5ff", player.gameObject, () => {
                                     Undo.RecordObject(alCore, "Link TXL to AudioLink");
                                     alSourceField.SetValue(alCore, sources[0]);
@@ -1315,7 +1242,6 @@ namespace VixenTools.Editor
                 }
             }
 
-            // === 4. TXL SCREEN MANAGER & CRT ECOSYSTEM ===
             Type screenManagerType = GetTypeSafe("Texel.ScreenManager");
             if (screenManagerType != null)
             {
@@ -1324,11 +1250,11 @@ namespace VixenTools.Editor
                     var smComp = (Component)sm;
                     SerializedObject smSO = new SerializedObject(smComp);
                     List<CustomRenderTexture> crtsToCheck = new List<CustomRenderTexture>();
-                    
+
                     var legacyCrtProp = smSO.FindProperty("outputCRT");
                     if (legacyCrtProp != null && legacyCrtProp.objectReferenceValue != null)
                         crtsToCheck.Add(legacyCrtProp.objectReferenceValue as CustomRenderTexture);
-                    
+
                     var crtArrayProp = smSO.FindProperty("renderOutCrt");
                     if (crtArrayProp != null && crtArrayProp.isArray)
                     {
@@ -1349,18 +1275,18 @@ namespace VixenTools.Editor
 
                         if (crt.updateMode != CustomRenderTextureUpdateMode.Realtime)
                         {
-                            LogDiagnostic("TXL RENDER ECOSYSTEM", "CRT Update Mode Not Realtime", 
-                                $"CRT '{crt.name}' on '{smComp.gameObject.name}' is OnDemand. Force to Realtime to prevent frozen video frames in VRChat.", 
+                            LogDiagnostic("TXL RENDER ECOSYSTEM", "CRT Update Mode Not Realtime",
+                                $"CRT '{crt.name}' on '{smComp.gameObject.name}' is OnDemand. Force to Realtime to prevent frozen video frames in VRChat.",
                                 "#ffaa00", crt, () => {
                                     Undo.RecordObject(crt, "Fix CRT Update Mode");
                                     crt.updateMode = CustomRenderTextureUpdateMode.Realtime;
                                 });
                         }
-                        
+
                         if (!crt.doubleBuffered)
                         {
-                            LogDiagnostic("TXL RENDER ECOSYSTEM", "CRT Screen Tearing Risk", 
-                                $"CRT '{crt.name}' is not double buffered. This will cause visible flickering/tearing on screens.", 
+                            LogDiagnostic("TXL RENDER ECOSYSTEM", "CRT Screen Tearing Risk",
+                                $"CRT '{crt.name}' is not double buffered. This will cause visible flickering/tearing on screens.",
                                 "#ffaa00", crt, () => {
                                     Undo.RecordObject(crt, "Enable CRT Double Buffering");
                                     crt.doubleBuffered = true;
@@ -1370,7 +1296,6 @@ namespace VixenTools.Editor
                 }
             }
 
-            // === 5. TXL QUEUE + ACCESS CONTROL ECOSYSTEM ===
             Type rinvoType = GetTypeSafe("Rinvo.YoutubeSearchManager");
             bool hasRinvo = rinvoType != null && GetCachedObjects(rinvoType, true).Length > 0;
 
@@ -1384,8 +1309,8 @@ namespace VixenTools.Editor
 
                     if (interruptProp != null && !interruptProp.boolValue && hasRinvo)
                     {
-                        LogDiagnostic("TXL QUEUE ECOSYSTEM", "Queue Auto-Play Deadlock", 
-                            $"The Playlist Queue '{comp.gameObject.name}' has 'Can Interrupt Sources' disabled. This will block Rinvo instant-play requests.", 
+                        LogDiagnostic("TXL QUEUE ECOSYSTEM", "Queue Auto-Play Deadlock",
+                            $"The Playlist Queue '{comp.gameObject.name}' has 'Can Interrupt Sources' disabled. This will block Rinvo instant-play requests.",
                             "#00e5ff", comp, () => {
                                 Undo.RecordObject(comp, "Enable Queue Source Interruption");
                                 queueSO.Update();
@@ -1396,8 +1321,8 @@ namespace VixenTools.Editor
 
                     if (allowProxyProp != null && hasRinvo && !allowProxyProp.boolValue)
                     {
-                        LogDiagnostic("TXL QUEUE & ACCESS", "Proxy Queue Rejection", 
-                            $"'{comp.gameObject.name}' has 'Allow Add From Proxy' disabled. This breaks the link with Rinvo search.", 
+                        LogDiagnostic("TXL QUEUE & ACCESS", "Proxy Queue Rejection",
+                            $"'{comp.gameObject.name}' has 'Allow Add From Proxy' disabled. This breaks the link with Rinvo search.",
                             "#ff00aa", comp, () => {
                                 Undo.RecordObject(comp, "Enable Proxy Adding");
                                 queueSO.Update();
@@ -1418,15 +1343,13 @@ namespace VixenTools.Editor
             Type audioLinkType = GetTypeSafe("AudioLink.AudioLink");
             Type proTvAlAdapterType = GetTypeSafe("ArchiTech.ProTV.AudioLinkAdapter");
 
-            // Locate AudioLink Core for connectivity handshake
             var alInstances = audioLinkType != null ? GetCachedObjects(audioLinkType, true) : null;
             Component alCore = (alInstances != null && alInstances.Length > 0) ? (Component)alInstances[0] : null;
 
             if (proTvType != null)
             {
-                // === 1. PROTV TOPOLOGY & AUDIOLINK HANDSHAKE ===
                 var tvs = GetCachedObjects(proTvType, true);
-                
+
                 if (tvs.Length > 0 && alCore != null)
                 {
                     Component mainTv = (Component)tvs[0];
@@ -1434,7 +1357,6 @@ namespace VixenTools.Editor
 
                     if (adapters.Length == 0)
                     {
-                        // Fallback check: If no adapter, is AudioLink directly listening to ANY of the TV's speakers?
                         var alSourceField = audioLinkType.GetField("audioSource", flags);
                         var currentAlSource = alSourceField?.GetValue(alCore) as AudioSource;
                         bool isLinked = false;
@@ -1456,8 +1378,8 @@ namespace VixenTools.Editor
 
                         if (!isLinked && firstAvailableSpeaker != null)
                         {
-                            LogDiagnostic("PROTV TOPOLOGY", "AudioLink Disconnected from TV", 
-                                $"AudioLink is not listening to any of '{mainTv.gameObject.name}'s speakers. Reactive materials will not pulse. (Note: Using the official ProTV AudioLinkAdapter prefab is recommended for multi-player switching).", 
+                            LogDiagnostic("PROTV TOPOLOGY", "AudioLink Disconnected from TV",
+                                $"AudioLink is not listening to any of '{mainTv.gameObject.name}'s speakers. Reactive materials will not pulse. (Note: Using the official ProTV AudioLinkAdapter prefab is recommended for multi-player switching).",
                                 "#00e5ff", alCore, () => {
                                     Undo.RecordObject(alCore, "Link TV to AudioLink");
                                     alSourceField.SetValue(alCore, firstAvailableSpeaker);
@@ -1467,7 +1389,6 @@ namespace VixenTools.Editor
                     }
                     else
                     {
-                        // Verify ProTV AudioLinkAdapter bindings
                         foreach (var adapter in adapters)
                         {
                             var comp = (Component)adapter;
@@ -1479,8 +1400,8 @@ namespace VixenTools.Editor
 
                             if (linkedTv == null)
                             {
-                                LogDiagnostic("PROTV TOPOLOGY", "Adapter Missing TV", 
-                                    $"ProTV AudioLink Adapter '{comp.gameObject.name}' is not linked to a TVManager. It will not receive hot-swap events.", 
+                                LogDiagnostic("PROTV TOPOLOGY", "Adapter Missing TV",
+                                    $"ProTV AudioLink Adapter '{comp.gameObject.name}' is not linked to a TVManager. It will not receive hot-swap events.",
                                     "#00e5ff", comp, () => {
                                         Undo.RecordObject(comp, "Link Adapter to TV");
                                         tvField.SetValue(adapter, mainTv);
@@ -1490,8 +1411,8 @@ namespace VixenTools.Editor
 
                             if (linkedAl == null)
                             {
-                                LogDiagnostic("PROTV TOPOLOGY", "Adapter Missing AudioLink", 
-                                    $"ProTV AudioLink Adapter '{comp.gameObject.name}' is not linked to the AudioLink Core.", 
+                                LogDiagnostic("PROTV TOPOLOGY", "Adapter Missing AudioLink",
+                                    $"ProTV AudioLink Adapter '{comp.gameObject.name}' is not linked to the AudioLink Core.",
                                     "#00e5ff", comp, () => {
                                         Undo.RecordObject(comp, "Link Adapter to AudioLink");
                                         alField.SetValue(adapter, alCore);
@@ -1502,7 +1423,6 @@ namespace VixenTools.Editor
                     }
                 }
 
-                // === 2. TV MANAGER CONFIGURATION ===
                 int globalTextureCount = 0;
                 foreach (var tv in tvs)
                 {
@@ -1539,14 +1459,12 @@ namespace VixenTools.Editor
                         });
                     }
 
-                    // Ensure aspect ratio is strictly managed via SerializedObject to survive recompiles
                     SerializedProperty aspectProp = tvSO.FindProperty("defaultAspectRatio");
-                    if (aspectProp == null) aspectProp = tvSO.FindProperty("aspectRatio"); // Fallback for older versions
+                    if (aspectProp == null) aspectProp = tvSO.FindProperty("aspectRatio");
 
                     if (aspectProp != null)
                     {
                         float tvAspect = aspectProp.floatValue;
-                        // 1.777777f is ProTV's exact internal default for 16:9
                         if (tvAspect <= 0f || Math.Abs(tvAspect - 1.777777f) > 0.05f && Math.Abs(tvAspect - 1.333333f) > 0.05f && Math.Abs(tvAspect - 2.333333f) > 0.05f)
                         {
                             LogDiagnostic("PROTV CONFIG: INVALID ASPECT", "Non-Standard Aspect Ratio", $"'{component.gameObject.name}' has its default aspect ratio set to {tvAspect:F3}. This breaks shader system bounds and UV calculations. Click Fix to force standard 16:9.", "#ff00aa", component, () => {
@@ -1559,7 +1477,7 @@ namespace VixenTools.Editor
 
                     var enableGSVField = proTvType.GetField("enableGSV", flags);
                     if (enableGSVField != null && Convert.ToBoolean(enableGSVField.GetValue(tv))) globalTextureCount++;
-                    
+
                     var videoManagersField = proTvType.GetField("videoManagers", flags);
                     if (videoManagersField != null)
                     {
@@ -1570,7 +1488,6 @@ namespace VixenTools.Editor
                         }
                     }
 
-                    // Safely query the custom texture and correct sizing to 1920x1080
                     SerializedProperty customTexProp = tvSO.FindProperty("customTexture");
                     if (customTexProp != null && customTexProp.objectReferenceValue != null)
                     {
@@ -1580,14 +1497,14 @@ namespace VixenTools.Editor
                             if (customTex.width != 1920 || customTex.height != 1080)
                             {
                                 float mb = (customTex.width * customTex.height * 4) / 1048576f;
-                                LogDiagnostic("PROTV VRAM: OPTIMIZATION", "Non-Standard Render Texture", 
-                                    $"'{component.gameObject.name}' has a custom RenderTexture assigned of {customTex.width}x{customTex.height} (~{mb:F2} MB). ProTV operates optimally at exactly 1920x1080. Click fix to resize the asset.", 
+                                LogDiagnostic("PROTV VRAM: OPTIMIZATION", "Non-Standard Render Texture",
+                                    $"'{component.gameObject.name}' has a custom RenderTexture assigned of {customTex.width}x{customTex.height} (~{mb:F2} MB). ProTV operates optimally at exactly 1920x1080. Click fix to resize the asset.",
                                     "#ffaa00", customTex, () => {
                                         Undo.RecordObject(customTex, "Resize Custom RenderTexture");
-                                        customTex.Release(); // Flush GPU memory
+                                        customTex.Release();
                                         customTex.width = 1920;
                                         customTex.height = 1080;
-                                        customTex.Create(); // Reallocate
+                                        customTex.Create();
                                         EditorUtility.SetDirty(customTex);
                                         AssetDatabase.SaveAssets();
                                     });
@@ -1602,7 +1519,6 @@ namespace VixenTools.Editor
                 }
             }
 
-            // === 3. SUB-COMPONENTS & UI ===
             Type mediaControlsType = GetTypeSafe("ArchiTech.ProTV.MediaControls");
             if (mediaControlsType != null)
             {
@@ -1610,7 +1526,7 @@ namespace VixenTools.Editor
                 {
                     var component = (Component)controls;
                     var realtimeSeekField = mediaControlsType.GetField("realtimeSeek", flags);
-                    
+
                     if (realtimeSeekField != null && Convert.ToBoolean(realtimeSeekField.GetValue(controls)))
                     {
                         LogDiagnostic("PROTV COMPUTE: GC ALLOCATION SINK", "GC Allocation Sink", $"'{component.gameObject.name}' has Realtime Seek enabled. Updating TMP clock strings per-frame causes severe Garbage Collection spikes.", "#ffaa00", component, () => {
@@ -1629,7 +1545,7 @@ namespace VixenTools.Editor
                 {
                     var component = (Component)playlistData;
                     var imagesField = playlistDataType.GetField("images", flags);
-                    
+
                     if (imagesField != null)
                     {
                         Sprite[] images = imagesField.GetValue(playlistData) as Sprite[];
@@ -1689,7 +1605,7 @@ namespace VixenTools.Editor
                     var component = (Component)queue;
                     var maxEntriesField = queueType.GetField("maxEntriesPerPlayer", flags);
                     var maxBurstField = queueType.GetField("maxBurstEntriesPerPlayer", flags);
-                    
+
                     if (maxEntriesField != null && maxBurstField != null)
                     {
                         int maxEntries = Convert.ToInt32(maxEntriesField.GetValue(queue));
@@ -1735,7 +1651,7 @@ namespace VixenTools.Editor
                 foreach (var vpm in GetCachedObjects(vpManagerType))
                 {
                     var component = (Component)vpm;
-                    
+
                     Component parentTv = null;
                     bool parentHasGSV = false;
                     if (proTvType != null)
@@ -1757,11 +1673,11 @@ namespace VixenTools.Editor
                             foreach (var speaker in speakers)
                             {
                                 if (speaker == null) continue;
-                                
+
                                 if (speaker.spatialBlend > 0.8f && speaker.maxDistance > 100f)
                                 {
-                                    LogDiagnostic("PROTV AUDIO: SPATIALIZATION BLEED", "Excessive 3D Max Distance", 
-                                        $"The speaker '{speaker.name}' on '{component.gameObject.name}' is set to 3D, but has a maxDistance of {speaker.maxDistance}m. This essentially forces it to behave as 2D audio that bleeds through walls, destroying occlusion logic.", 
+                                    LogDiagnostic("PROTV AUDIO: SPATIALIZATION BLEED", "Excessive 3D Max Distance",
+                                        $"The speaker '{speaker.name}' on '{component.gameObject.name}' is set to 3D, but has a maxDistance of {speaker.maxDistance}m. This essentially forces it to behave as 2D audio that bleeds through walls, destroying occlusion logic.",
                                         "#00e5ff", speaker);
                                 }
                             }
@@ -1780,7 +1696,7 @@ namespace VixenTools.Editor
 
                                 float aspect = 0f;
                                 string dimensions = "";
-                                
+
                                 RectTransform rect = scr.GetComponent<RectTransform>();
                                 if (rect != null)
                                 {
@@ -1789,7 +1705,7 @@ namespace VixenTools.Editor
                                 }
                                 else
                                 {
-                                    Vector3 scale = scr.transform.lossyScale; 
+                                    Vector3 scale = scr.transform.lossyScale;
                                     if (scale.y != 0) aspect = Math.Abs(scale.x / scale.y);
                                     dimensions = $"Scale: {scale.x:F2}x{scale.y:F2} (Mesh)";
                                 }
@@ -1798,8 +1714,8 @@ namespace VixenTools.Editor
                                 {
                                     if (Math.Abs(aspect - 1.0f) < 0.05f)
                                     {
-                                        LogDiagnostic("PROTV DESIGN: UNCALIBRATED SCREEN MESH", "1:1 Screen Mesh Scale", 
-                                            $"The screen '{scr.name}' assigned to '{component.gameObject.name}' has a 1:1 physical aspect ratio [{dimensions}]. Unless you are explicitly relying on the shader's aspect-correction (which wastes fragment operations), scale it to a standard ratio like 16:9 (e.g., X: 1.6, Y: 0.9).", 
+                                        LogDiagnostic("PROTV DESIGN: UNCALIBRATED SCREEN MESH", "1:1 Screen Mesh Scale",
+                                            $"The screen '{scr.name}' assigned to '{component.gameObject.name}' has a 1:1 physical aspect ratio [{dimensions}]. Unless you are explicitly relying on the shader's aspect-correction (which wastes fragment operations), scale it to a standard ratio like 16:9 (e.g., X: 1.6, Y: 0.9).",
                                             "#00e5ff", scr);
                                     }
                                 }
@@ -1813,8 +1729,8 @@ namespace VixenTools.Editor
 
                                         if (parentHasGSV && mat.HasProperty("_UseGlobalTexture") && !mat.IsKeywordEnabled("_USEGLOBALTEXTURE"))
                                         {
-                                            LogDiagnostic("PROTV SHADER: GSV DESYNC", "Missing Global Texture Keyword", 
-                                                $"The TV '{parentTv.name}' has Global Video Texture (GSV) enabled, but the screen material on '{scr.name}' is missing the _USEGLOBALTEXTURE keyword. The TV is running an expensive blit pass that this material ignores.", 
+                                            LogDiagnostic("PROTV SHADER: GSV DESYNC", "Missing Global Texture Keyword",
+                                                $"The TV '{parentTv.name}' has Global Video Texture (GSV) enabled, but the screen material on '{scr.name}' is missing the _USEGLOBALTEXTURE keyword. The TV is running an expensive blit pass that this material ignores.",
                                                 "#ff00aa", scr, () => {
                                                     Undo.RecordObject(mat, "Enable GSV Keyword");
                                                     mat.SetFloat("_UseGlobalTexture", 1f);
@@ -1825,8 +1741,8 @@ namespace VixenTools.Editor
 
                                         if (mat.globalIlluminationFlags == MaterialGlobalIlluminationFlags.RealtimeEmissive)
                                         {
-                                            LogDiagnostic("PROTV RENDER: REALTIME GI SINK", "Realtime GI on Screen", 
-                                                $"The screen '{scr.name}' assigned to '{component.gameObject.name}' has Realtime Emissive enabled. This forces Unity to recalculate the entire room's Global Illumination every frame the video plays.", 
+                                            LogDiagnostic("PROTV RENDER: REALTIME GI SINK", "Realtime GI on Screen",
+                                                $"The screen '{scr.name}' assigned to '{component.gameObject.name}' has Realtime Emissive enabled. This forces Unity to recalculate the entire room's Global Illumination every frame the video plays.",
                                                 "#ff00aa", scr, () => {
                                                     Undo.RecordObject(mat, "Disable Realtime GI");
                                                     mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
@@ -1843,7 +1759,7 @@ namespace VixenTools.Editor
 
             Type queueUiType = GetTypeSafe("ArchiTech.ProTV.QueueUI");
             Type historyUiType = GetTypeSafe("ArchiTech.ProTV.HistoryUI");
-            Type playlistUiType = GetTypeSafe("ArchiTech.ProTV.PlaylistUI"); 
+            Type playlistUiType = GetTypeSafe("ArchiTech.ProTV.PlaylistUI");
 
             var complexUis = new List<Component>();
             if (queueUiType != null) complexUis.AddRange(GetCachedObjects(queueUiType).Cast<Component>());
@@ -1859,22 +1775,21 @@ namespace VixenTools.Editor
                 }
 
                 var casters = uiComp.GetComponentsInChildren<UnityEngine.UI.GraphicRaycaster>(true);
-                if (casters.Length > 1) 
+                if (casters.Length > 1)
                 {
-                    LogDiagnostic("PROTV UI: RAYCASTER BLOAT", "Nested GraphicRaycasters", 
-                        $"'{uiComp.gameObject.name}' contains {casters.Length} GraphicRaycaster components. VRChat evaluates every raycaster in the hierarchy against the VRCUiShape per-frame. Remove redundant raycasters from nested elements to recover CPU overhead.", 
+                    LogDiagnostic("PROTV UI: RAYCASTER BLOAT", "Nested GraphicRaycasters",
+                        $"'{uiComp.gameObject.name}' contains {casters.Length} GraphicRaycaster components. VRChat evaluates every raycaster in the hierarchy against the VRCUiShape per-frame. Remove redundant raycasters from nested elements to recover CPU overhead.",
                         "#ffaa00", uiComp.gameObject);
                 }
             }
 
-            // === 4. UMBRELLA & EXTRAS ===
             Type atToggleType = GetTypeSafe("ArchiTech.Umbrella.ATToggle");
             if (atToggleType != null)
             {
                 foreach (var toggle in GetCachedObjects(atToggleType))
                 {
                     var component = (Component)toggle;
-                    var actionsField = atToggleType.BaseType.GetField("actions", flags); 
+                    var actionsField = atToggleType.BaseType.GetField("actions", flags);
                     if (actionsField != null && actionsField.GetValue(toggle) is int[] actions && actions.Length > 15)
                     {
                         LogDiagnostic("UMBRELLA COMPUTE: MASSIVE TOGGLE EVENT", "Massive Toggle Event", $"'{component.gameObject.name}' iterates over {actions.Length} actions on state change. Toggling this many objects simultaneously will cause a noticeable frame hitch.", "#ffaa00", component);
@@ -1889,7 +1804,7 @@ namespace VixenTools.Editor
                 {
                     var component = (Component)trigger;
                     var typeField = zoneTriggerType.GetField("triggerType", flags);
-                    if (typeField != null && Convert.ToInt32(typeField.GetValue(trigger)) == 2) 
+                    if (typeField != null && Convert.ToInt32(typeField.GetValue(trigger)) == 2)
                     {
                         if (component.GetComponents<Collider>().Length == 0)
                         {
@@ -1921,7 +1836,7 @@ namespace VixenTools.Editor
                     var component = (Component)proxy;
                     var animatorsField = proxyType.GetField("animators", flags);
                     var parametersField = proxyType.GetField("parameters", flags);
-                    
+
                     if (animatorsField != null && parametersField != null)
                     {
                         var animators = animatorsField.GetValue(proxy) as Animator[];
@@ -1941,11 +1856,11 @@ namespace VixenTools.Editor
                 }
             }
 
-            int forcedError = SessionState.GetInt("FORCE-VIDEO-ERROR", -1); 
+            int forcedError = SessionState.GetInt("FORCE-VIDEO-ERROR", -1);
             if (forcedError != -1)
             {
-                LogDiagnostic("SHIM CONFIG: FORCED ERROR ACTIVE", "Forced Video Error Active", 
-                    $"The PlayMode URL Resolver is currently configured to simulate a VideoError ({(VRC.SDK3.Components.Video.VideoError)forcedError}). Video playback in Editor will artificially fail until cleared.", 
+                LogDiagnostic("SHIM CONFIG: FORCED ERROR ACTIVE", "Forced Video Error Active",
+                    $"The PlayMode URL Resolver is currently configured to simulate a VideoError ({(VRC.SDK3.Components.Video.VideoError)forcedError}). Video playback in Editor will artificially fail until cleared.",
                     "#ffaa00", null, () => {
                         SessionState.SetInt("FORCE-VIDEO-ERROR", -1);
                     });
@@ -1956,11 +1871,11 @@ namespace VixenTools.Editor
             {
                 var buildTargetGroup = BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget);
                 string defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
-                
+
                 if (!defines.Contains("AVPRO_IMPORTED"))
                 {
-                    LogDiagnostic("SHIM CONFIG: AVPRO DEFINE MISSING", "AVPro Define Missing", 
-                        "AVPro is installed in the project, but the 'AVPRO_IMPORTED' scripting define is missing from Player Settings. Editor playmode AVPro simulation will not function correctly.", 
+                    LogDiagnostic("SHIM CONFIG: AVPRO DEFINE MISSING", "AVPro Define Missing",
+                        "AVPro is installed in the project, but the 'AVPRO_IMPORTED' scripting define is missing from Player Settings. Editor playmode AVPro simulation will not function correctly.",
                         "#ff00aa", null, () => {
                             string newDefines = string.IsNullOrWhiteSpace(defines) ? "AVPRO_IMPORTED" : defines + ";AVPRO_IMPORTED";
                             PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, newDefines);
@@ -1973,12 +1888,10 @@ namespace VixenTools.Editor
         {
             var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
-            // PRE-AUDIT: Locate AudioLink Core for connectivity handshake
             Type audioLinkType = GetTypeSafe("AudioLink.AudioLink");
             var alInstances = audioLinkType != null ? GetCachedObjects(audioLinkType, true) : null;
             Component alCore = (alInstances != null && alInstances.Length > 0) ? (Component)alInstances[0] : null;
 
-            // === 1. CORE & RESOLUTION ===
             Type iwaType = GetTypeSafe("HoshinoLabs.IwaSync3.IwaSync3");
             if (iwaType != null)
             {
@@ -1991,8 +1904,8 @@ namespace VixenTools.Editor
                         int res = Convert.ToInt32(maxResField.GetValue(iwa));
                         if (res > 720)
                         {
-                            LogDiagnostic("IWASYNC3 ECOSYSTEM", "High Default Resolution", 
-                                $"'{component.gameObject.name}' defaults to {res}p. Forcing high resolutions can cripple instance bandwidth and Quest frame rates.", 
+                            LogDiagnostic("IWASYNC3 ECOSYSTEM", "High Default Resolution",
+                                $"'{component.gameObject.name}' defaults to {res}p. Forcing high resolutions can cripple instance bandwidth and Quest frame rates.",
                                 "#ffaa00", component, () => {
                                     Undo.RecordObject(component, "Throttle IwaSync3 Resolution");
                                     maxResField.SetValue(iwa, 720);
@@ -2003,7 +1916,6 @@ namespace VixenTools.Editor
                 }
             }
 
-            // === 2. NETWORK QUEUE (PLAYLISTS) ===
             Type playlistType = GetTypeSafe("HoshinoLabs.IwaSync3.Playlist");
             if (playlistType != null)
             {
@@ -2016,8 +1928,8 @@ namespace VixenTools.Editor
                         int limit = Convert.ToInt32(limitField.GetValue(pl));
                         if (limit <= 0 || limit > 50)
                         {
-                            LogDiagnostic("IWASYNC3 ECOSYSTEM", "Unbounded Playlist Fetch", 
-                                $"'{component.gameObject.name}' has no strict playlist fetch limit ({limit}). Massive YouTube playlists will choke Udon's network queue on load.", 
+                            LogDiagnostic("IWASYNC3 ECOSYSTEM", "Unbounded Playlist Fetch",
+                                $"'{component.gameObject.name}' has no strict playlist fetch limit ({limit}). Massive YouTube playlists will choke Udon's network queue on load.",
                                 "#ff00aa", component, () => {
                                     Undo.RecordObject(component, "Set Safe Playlist Limit");
                                     limitField.SetValue(pl, 50);
@@ -2028,7 +1940,6 @@ namespace VixenTools.Editor
                 }
             }
 
-            // === 3. AUDIO TOPOLOGY & AUDIOLINK HANDSHAKE ===
             Type speakerType = GetTypeSafe("HoshinoLabs.IwaSync3.Speaker");
             if (speakerType != null)
             {
@@ -2039,16 +1950,15 @@ namespace VixenTools.Editor
                 foreach (var spk in speakers)
                 {
                     var component = (Component)spk;
-                    
-                    // Spatialization Check
+
                     var spatializeField = speakerType.GetField("spatialize", flags);
                     if (spatializeField != null)
                     {
                         bool spatialize = Convert.ToBoolean(spatializeField.GetValue(spk));
                         if (!spatialize)
                         {
-                            LogDiagnostic("IWASYNC3 ECOSYSTEM", "Global 2D Speaker", 
-                                $"'{component.gameObject.name}' has spatialization disabled. This forces 2D global audio, which can cause voice starvation if not strictly intended for BGM.", 
+                            LogDiagnostic("IWASYNC3 ECOSYSTEM", "Global 2D Speaker",
+                                $"'{component.gameObject.name}' has spatialization disabled. This forces 2D global audio, which can cause voice starvation if not strictly intended for BGM.",
                                 "#ffaa00", component, () => {
                                     Undo.RecordObject(component, "Enable Speaker Spatialization");
                                     spatializeField.SetValue(spk, true);
@@ -2057,7 +1967,6 @@ namespace VixenTools.Editor
                         }
                     }
 
-                    // Extract AudioSource for Handshake
                     AudioSource speakerSource = component.GetComponent<AudioSource>();
                     if (speakerSource != null)
                     {
@@ -2072,11 +1981,10 @@ namespace VixenTools.Editor
                     }
                 }
 
-                // Execute AudioLink Handshake
                 if (alCore != null && speakers.Length > 0 && !isAudioLinkConnected && firstValidSpeakerSource != null)
                 {
-                    LogDiagnostic("AUDIOLINK: TOPOLOGY", "IwaSync3 Not Linked to AudioLink", 
-                        $"AudioLink is not listening to any of IwaSync3's Speakers. Reactive materials will not pulse during video playback.", 
+                    LogDiagnostic("AUDIOLINK: TOPOLOGY", "IwaSync3 Not Linked to AudioLink",
+                        $"AudioLink is not listening to any of IwaSync3's Speakers. Reactive materials will not pulse during video playback.",
                         "#00e5ff", alCore, () => {
                             var alSourceField = audioLinkType.GetField("audioSource", flags);
                             Undo.RecordObject(alCore, "Link IwaSync3 to AudioLink");
@@ -2086,7 +1994,6 @@ namespace VixenTools.Editor
                 }
             }
 
-            // === 4. SCREEN SHADERS & RENDER TARGETS ===
             Type screenType = GetTypeSafe("HoshinoLabs.IwaSync3.Screen");
             if (screenType != null)
             {
@@ -2094,11 +2001,11 @@ namespace VixenTools.Editor
                 {
                     var component = (Component)scr;
                     var matIndexField = screenType.GetField("materialIndex", flags);
-                    var screenRendererField = screenType.GetField("screen", flags); 
-                    
+                    var screenRendererField = screenType.GetField("screen", flags);
+
                     if (screenRendererField != null && matIndexField != null)
                     {
-                        var renderer = screenRendererField.GetValue(scr) as Renderer; 
+                        var renderer = screenRendererField.GetValue(scr) as Renderer;
                         if (renderer != null)
                         {
                             int idx = Convert.ToInt32(matIndexField.GetValue(scr));
@@ -2107,8 +2014,8 @@ namespace VixenTools.Editor
                                 Material targetMat = renderer.sharedMaterials[idx];
                                 if (targetMat != null && targetMat.globalIlluminationFlags == MaterialGlobalIlluminationFlags.RealtimeEmissive)
                                 {
-                                    LogDiagnostic("IWASYNC3 ECOSYSTEM", "Realtime GI Compute Sink", 
-                                        $"'{component.gameObject.name}' drives a screen material set to Realtime Emissive. This forces Unity to recalculate Global Illumination every frame the video plays.", 
+                                    LogDiagnostic("IWASYNC3 ECOSYSTEM", "Realtime GI Compute Sink",
+                                        $"'{component.gameObject.name}' drives a screen material set to Realtime Emissive. This forces Unity to recalculate Global Illumination every frame the video plays.",
                                         "#ff00aa", component, () => {
                                             Undo.RecordObject(targetMat, "Disable Realtime GI on Screen");
                                             targetMat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
@@ -2121,7 +2028,6 @@ namespace VixenTools.Editor
                 }
             }
 
-            // === 5. CORE UDON LOGIC & INSTANTIATION TIMING ===
             Type videoCoreType = GetTypeSafe("HoshinoLabs.IwaSync3.Udon.VideoCore");
             if (videoCoreType != null)
             {
@@ -2138,7 +2044,7 @@ namespace VixenTools.Editor
                                 $"'{component.gameObject.name}' has a sync frequency of {freq}s. Syncing video state this rapidly consumes severe network bandwidth and causes player IK to lag.",
                                 "#ffaa00", component, () => {
                                     Undo.RecordObject(component, "Throttle Sync Frequency");
-                                    syncFreqField.SetValue(core, 9.2f); 
+                                    syncFreqField.SetValue(core, 9.2f);
                                     PrefabUtility.RecordPrefabInstancePropertyModifications(component);
                                 });
                         }
@@ -2186,8 +2092,7 @@ namespace VixenTools.Editor
         private void AuditVizVidEcosystem()
         {
             var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-    
-            // Soft-dependency resolution
+
             Type vvmwCoreType = GetTypeSafe("JLChnToZ.VRC.VVMW.Core");
             Type vvmwRateLimitType = GetTypeSafe("JLChnToZ.VRC.VVMW.RateLimitResolver");
             Type vvmwFrontendType = GetTypeSafe("JLChnToZ.VRC.VVMW.FrontendHandler");
@@ -2201,14 +2106,13 @@ namespace VixenTools.Editor
 
             if (vvmwCoreType != null)
             {
-                // 1. Singleton Enforcement: Global Settings
                 if (vvmwGlobalSettingsType != null)
                 {
                     var globalSettings = GetCachedObjects(vvmwGlobalSettingsType, true);
                     if (globalSettings.Length > 1)
                     {
-                        LogDiagnostic("VIZVID ECOSYSTEM", "Singleton Violation: Global Settings", 
-                            $"System detected {globalSettings.Length} GlobalSettings instances. VVMW architecture strictly dictates a single global settings module. Multiple instances will trigger race conditions and initialization failures.", 
+                        LogDiagnostic("VIZVID ECOSYSTEM", "Singleton Violation: Global Settings",
+                            $"System detected {globalSettings.Length} GlobalSettings instances. VVMW architecture strictly dictates a single global settings module. Multiple instances will trigger race conditions and initialization failures.",
                             "#ff00aa", (Component)globalSettings[1]);
                     }
                 }
@@ -2218,34 +2122,32 @@ namespace VixenTools.Editor
                 {
                     var component = (Component)core;
 
-                    // 2. Audit Player Handlers & Cross-Platform Fallbacks
                     var handlersField = vvmwCoreType.GetField("playerHandlers", flags);
                     if (handlersField != null)
                     {
                         var handlers = handlersField.GetValue(core) as Component[];
                         if (handlers == null || handlers.Length == 0)
                         {
-                            LogDiagnostic("VIZVID ECOSYSTEM", "Disconnected Player Handlers", 
-                                $"'{component.gameObject.name}' has no registered Player Handlers. The video backend is orphaned and will silently fail to load media.", 
+                            LogDiagnostic("VIZVID ECOSYSTEM", "Disconnected Player Handlers",
+                                $"'{component.gameObject.name}' has no registered Player Handlers. The video backend is orphaned and will silently fail to load media.",
                                 "#ff00aa", component);
                         }
                         else if (vvmwVideoPlayerHandlerType != null)
                         {
-                            // Scan for Android/Quest compatibility gaps
                             foreach(var handler in handlers)
                             {
                                 if (handler != null && handler.GetType() == vvmwVideoPlayerHandlerType)
                                 {
                                     var isAvProField = vvmwVideoPlayerHandlerType.GetField("isAvPro", flags);
                                     var fallbackField = vvmwVideoPlayerHandlerType.GetField("fallbackHandler", flags);
-                            
+
                                     bool isAvPro = isAvProField != null && (bool)isAvProField.GetValue(handler);
                                     var fallback = fallbackField != null ? fallbackField.GetValue(handler) as Component : null;
 
                                     if (isAvPro && fallback == null)
                                     {
-                                        LogDiagnostic("VIZVID TOPOLOGY: CROSS-PLATFORM", "Missing Quest Fallback (AVPro)", 
-                                            $"Video Handler '{handler.gameObject.name}' is an AVPro player but lacks a Unity Video Fallback Handler. Android/Quest clients cannot natively process AVPro and will be locked out of the stream.", 
+                                        LogDiagnostic("VIZVID TOPOLOGY: CROSS-PLATFORM", "Missing Quest Fallback (AVPro)",
+                                            $"Video Handler '{handler.gameObject.name}' is an AVPro player but lacks a Unity Video Fallback Handler. Android/Quest clients cannot natively process AVPro and will be locked out of the stream.",
                                             "#00e5ff", handler);
                                     }
                                 }
@@ -2253,7 +2155,6 @@ namespace VixenTools.Editor
                         }
                     }
 
-                    // 3. Audio Spatialization
                     var audioSourcesField = vvmwCoreType.GetField("audioSources", flags);
                     if (audioSourcesField != null)
                     {
@@ -2264,8 +2165,8 @@ namespace VixenTools.Editor
                             {
                                 if (src != null && src.spatialBlend < 1f)
                                 {
-                                    LogDiagnostic("VIZVID AUDIO: SPATIALIZATION", "2D Audio Bleed Risk", 
-                                        $"AudioSource '{src.gameObject.name}' linked to VVMW is not fully 3D spatialized (Blend: {src.spatialBlend}). This will broadcast instance-wide unless specifically intended.", 
+                                    LogDiagnostic("VIZVID AUDIO: SPATIALIZATION", "2D Audio Bleed Risk",
+                                        $"AudioSource '{src.gameObject.name}' linked to VVMW is not fully 3D spatialized (Blend: {src.spatialBlend}). This will broadcast instance-wide unless specifically intended.",
                                         "#00e5ff", src, () => {
                                             Undo.RecordObject(src, "Force 3D Spatialization");
                                             src.spatialBlend = 1f;
@@ -2276,15 +2177,14 @@ namespace VixenTools.Editor
                         }
                     }
 
-                    // 4. AUDIOLINK TOPOLOGY HANDSHAKE
                     var alRefField = vvmwCoreType.GetField("audioLink", flags);
                     if (alRefField != null)
                     {
                         var linkedAl = alRefField.GetValue(core);
                         if (linkedAl == null && alCore != null)
                         {
-                            LogDiagnostic("VIZVID: TOPOLOGY", "AudioLink Not Linked", 
-                                $"VizVid Core '{component.gameObject.name}' is not linked to the AudioLink prefab. VizVid cannot automatically sync media states (Play/Pause) or pipe audio into the shaders.", 
+                            LogDiagnostic("VIZVID: TOPOLOGY", "AudioLink Not Linked",
+                                $"VizVid Core '{component.gameObject.name}' is not linked to the AudioLink prefab. VizVid cannot automatically sync media states (Play/Pause) or pipe audio into the shaders.",
                                 "#00e5ff", component, () => {
                                     Undo.RecordObject(component, "Link VizVid to AudioLink");
                                     alRefField.SetValue(core, alCore);
@@ -2293,7 +2193,6 @@ namespace VixenTools.Editor
                         }
                     }
 
-                    // 5. Material Color Space & Shader Compatibility
                     var screenTargetsField = vvmwCoreType.GetField("screenTargets", flags);
                     if (screenTargetsField != null)
                     {
@@ -2308,8 +2207,8 @@ namespace VixenTools.Editor
                                     {
                                         if (mat != null && !mat.shader.name.StartsWith("JLChnToZ/Video") && !_validShaderList.Contains(mat.shader.name))
                                         {
-                                            LogDiagnostic("VIZVID RENDER PIPELINE", "Non-Whitelisted Target Shader", 
-                                                $"VVMW Screen '{rend.name}' uses '{mat.shader.name}'. Video color spaces (Gamma to Linear) or inverted UVs from AVPro may render incorrectly unless the shader actively supports '_IsAVProVideo'.", 
+                                            LogDiagnostic("VIZVID RENDER PIPELINE", "Non-Whitelisted Target Shader",
+                                                $"VVMW Screen '{rend.name}' uses '{mat.shader.name}'. Video color spaces (Gamma to Linear) or inverted UVs from AVPro may render incorrectly unless the shader actively supports '_IsAVProVideo'.",
                                                 "#ffaa00", rend);
                                         }
                                     }
@@ -2320,19 +2219,17 @@ namespace VixenTools.Editor
                 }
             }
 
-            // 6. Rate Limiter Validation
             if (vvmwRateLimitType != null)
             {
                 var resolvers = GetCachedObjects(vvmwRateLimitType, true);
                 if (resolvers.Length == 0 && vvmwCoreType != null && GetCachedObjects(vvmwCoreType, true).Length > 0)
                 {
-                    LogDiagnostic("VIZVID NETWORK TOPOLOGY", "Missing Rate Limit Resolver", 
-                        $"The scene utilizes VizVid but lacks a RateLimitResolver. Rapid video switching requests from late-joiners may trigger VRChat API rate limits, causing instance desyncs.", 
+                    LogDiagnostic("VIZVID NETWORK TOPOLOGY", "Missing Rate Limit Resolver",
+                        $"The scene utilizes VizVid but lacks a RateLimitResolver. Rapid video switching requests from late-joiners may trigger VRChat API rate limits, causing instance desyncs.",
                         "#ff00aa", null);
                 }
             }
 
-            // 7. Interface Decoupling Checks (Orphaned UI/Frontends)
             if (vvmwFrontendType != null)
             {
                 var frontends = GetCachedObjects(vvmwFrontendType, true);
@@ -2344,14 +2241,14 @@ namespace VixenTools.Editor
                         var linkedCore = coreField.GetValue(frontend) as Component;
                         if (linkedCore == null)
                         {
-                            LogDiagnostic("VIZVID INTERFACE", "Orphaned Frontend Handler", 
-                                $"FrontendHandler '{((Component)frontend).gameObject.name}' is decoupled. It has no linked VizVid Core and will fail to execute logic.", 
+                            LogDiagnostic("VIZVID INTERFACE", "Orphaned Frontend Handler",
+                                $"FrontendHandler '{((Component)frontend).gameObject.name}' is decoupled. It has no linked VizVid Core and will fail to execute logic.",
                                 "#ff00aa", (Component)frontend);
                         }
                     }
                 }
             }
-    
+
             if (vvmwUiHandlerType != null)
             {
                 var uiHandlers = GetCachedObjects(vvmwUiHandlerType, true);
@@ -2363,8 +2260,8 @@ namespace VixenTools.Editor
                         var linkedCore = coreField.GetValue(ui) as Component;
                         if (linkedCore == null)
                         {
-                            LogDiagnostic("VIZVID INTERFACE", "Orphaned UI Handler", 
-                                $"UIHandler '{((Component)ui).gameObject.name}' is decoupled. It has no linked VizVid Core, meaning all local UI inputs will hit a dead end.", 
+                            LogDiagnostic("VIZVID INTERFACE", "Orphaned UI Handler",
+                                $"UIHandler '{((Component)ui).gameObject.name}' is decoupled. It has no linked VizVid Core, meaning all local UI inputs will hit a dead end.",
                                 "#ff00aa", (Component)ui);
                         }
                     }
@@ -2375,14 +2272,12 @@ namespace VixenTools.Editor
         private void AuditAudioLinkEcosystem()
         {
             var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-            
-            // Core Type Definitions
+
             Type audioLinkType = GetTypeSafe("AudioLink.AudioLink");
             Type reactiveType = GetTypeSafe("AudioLink.AudioReactive");
             Type vvmwCoreType = GetTypeSafe("JLChnToZ.VRC.VVMW.Core");
             Type proTvType = GetTypeSafe("ArchiTech.ProTV.TVManager");
 
-            // 1. DATA VORTEX: FIND THE CORE
             var alInstances = audioLinkType != null ? GetCachedObjects(audioLinkType, true) : null;
             Component alCore = (alInstances != null && alInstances.Length > 0) ? (Component)alInstances[0] : null;
             bool coreExists = alCore != null;
@@ -2391,18 +2286,16 @@ namespace VixenTools.Editor
             {
                 if (alInstances.Length > 1)
                 {
-                    LogDiagnostic("AUDIOLINK: TOPOLOGY", "Multiple Cores Detected", 
-                        "Found more than one AudioLink core. This causes global shader keyword collisions and doubles DFT compute cost.", 
+                    LogDiagnostic("AUDIOLINK: TOPOLOGY", "Multiple Cores Detected",
+                        "Found more than one AudioLink core. This causes global shader keyword collisions and doubles DFT compute cost.",
                         "#ff00aa", (Component)alInstances[1]);
                 }
 
-                // --- PIPELINE SYNC: VIDEO PLAYER -> AUDIOLINK ---
                 var sourceField = audioLinkType.GetField("audioSource", flags);
                 AudioSource currentAlSource = sourceField?.GetValue(alCore) as AudioSource;
                 AudioSource detectedMasterSource = null;
                 string sourceSystem = "None";
 
-                // Scan for VizVid (VVMW) Master Source
                 if (vvmwCoreType != null)
                 {
                     var vvmw = FindObjectOfType(vvmwCoreType, true);
@@ -2413,14 +2306,11 @@ namespace VixenTools.Editor
                     }
                 }
 
-                // Scan for ProTV Master Source (Fallback)
                 if (detectedMasterSource == null && proTvType != null)
                 {
-                    // FIX: Explicitly cast the returned UnityEngine.Object to a Component
                     var tv = FindObjectOfType(proTvType, true) as Component;
                     if (tv != null)
                     {
-                        // ProTV stores speakers in VPManagers, but often has a main audio source
                         detectedMasterSource = tv.GetComponentInChildren<AudioSource>();
                         sourceSystem = "ProTV";
                     }
@@ -2428,8 +2318,8 @@ namespace VixenTools.Editor
 
                 if (detectedMasterSource != null && currentAlSource != detectedMasterSource)
                 {
-                    LogDiagnostic("AUDIOLINK: PIPELINE", "Desynced Audio Input", 
-                        $"AudioLink is listening to '{(currentAlSource != null ? currentAlSource.name : "Nothing")}', but your {sourceSystem} master audio is '{detectedMasterSource.name}'. Click Fix to pipe the audio correctly.", 
+                    LogDiagnostic("AUDIOLINK: PIPELINE", "Desynced Audio Input",
+                        $"AudioLink is listening to '{(currentAlSource != null ? currentAlSource.name : "Nothing")}', but your {sourceSystem} master audio is '{detectedMasterSource.name}'. Click Fix to pipe the audio correctly.",
                         "#00e5ff", alCore, () => {
                             Undo.RecordObject(alCore, "Link Audio Source");
                             sourceField.SetValue(alCore, detectedMasterSource);
@@ -2437,24 +2327,21 @@ namespace VixenTools.Editor
                         });
                 }
 
-                // --- PERFORMANCE: QUEST READBACK CHECK ---
                 var readbackField = audioLinkType.GetField("audioDataToggle", flags);
                 if (readbackField != null && (bool)readbackField.GetValue(alCore))
                 {
-                    LogDiagnostic("AUDIOLINK: PERFORMANCE", "Quest GPU Stall (Readback Enabled)", 
-                        "GPU Data Readback is ENABLED. This causes a sync-point stall on Android/Quest. Disable this if you only use AudioLink for shaders to gain ~5-10 FPS on mobile.", 
+                    LogDiagnostic("AUDIOLINK: PERFORMANCE", "Quest GPU Stall (Readback Enabled)",
+                        "GPU Data Readback is ENABLED. This causes a sync-point stall on Android/Quest. Disable this if you only use AudioLink for shaders to gain ~5-10 FPS on mobile.",
                         "#ffaa00", alCore);
                 }
             }
             else
             {
-                LogDiagnostic("AUDIOLINK: TOPOLOGY", "System Missing", 
-                    "No AudioLink Core found. All sound-reactive materials and stage lighting will remain static.", 
+                LogDiagnostic("AUDIOLINK: TOPOLOGY", "System Missing",
+                    "No AudioLink Core found. All sound-reactive materials and stage lighting will remain static.",
                     "#ffaa00", null);
             }
 
-            // 2. SHADER PROBE: POIYOMI / LILTOON
-            // We use the scene-scraped materials from AuditGeometryAndMaterials for efficiency
             var sceneMaterials = GetCachedObjects<Renderer>(true)
                 .SelectMany(r => r.sharedMaterials)
                 .Distinct()
@@ -2465,32 +2352,27 @@ namespace VixenTools.Editor
                 if (mat.shader == null) continue;
                 string sName = mat.shader.name;
 
-                // Poiyomi Detection
                 if (sName.Contains("Poiyomi") && mat.HasProperty("_AudioLinkEnable"))
                 {
                     if (mat.GetFloat("_AudioLinkEnable") > 0 && !coreExists)
                     {
-                        LogDiagnostic("3RD PARTY: SHADER", "Orphaned Poiyomi AudioLink", 
-                            $"Material '{mat.name}' is trying to use AudioLink, but no controller exists in the scene.", 
+                        LogDiagnostic("3RD PARTY: SHADER", "Orphaned Poiyomi AudioLink",
+                            $"Material '{mat.name}' is trying to use AudioLink, but no controller exists in the scene.",
                             "#ffaa00", mat);
                     }
                 }
 
-                // lilToon Detection
                 if (sName.Contains("lilToon") && mat.HasProperty("_AudioLink"))
                 {
                     if (mat.GetFloat("_AudioLink") > 0 && !coreExists)
                     {
-                        LogDiagnostic("3RD PARTY: SHADER", "Orphaned lilToon AudioLink", 
-                            $"lilToon material '{mat.name}' is listening for a missing AudioLink Core.", 
+                        LogDiagnostic("3RD PARTY: SHADER", "Orphaned lilToon AudioLink",
+                            $"lilToon material '{mat.name}' is listening for a missing AudioLink Core.",
                             "#ffaa00", mat);
                     }
                 }
             }
 
-            // 3. SCRIPT PROBE: VRSL / LTCGI / VVMW
-            
-            // VRSL Check
             Type vrslAdapterType = GetTypeSafe("VRSL.AudioLinkAdapter.VRSL_AudioLinkAdapter");
             if (vrslAdapterType != null)
             {
@@ -2500,21 +2382,19 @@ namespace VixenTools.Editor
                 }
             }
 
-            // LTCGI Check
             Type ltcgiControllerType = GetTypeSafe("LTCGI.LTCGI_Controller");
             if (ltcgiControllerType != null)
             {
                 foreach (var ltcgi in GetCachedObjects(ltcgiControllerType, true))
                 {
                     var alInput = ltcgiControllerType.GetField("audioLinkInput", flags);
-                    if (alInput != null && (int)alInput.GetValue(ltcgi) == 1 && !coreExists) // 1 = AL Mode
+                    if (alInput != null && (int)alInput.GetValue(ltcgi) == 1 && !coreExists)
                     {
                         LogDiagnostic("3RD PARTY: LTCGI", "LTCGI Disconnect", "LTCGI set to AudioLink mode but no core found.", "#ff00aa", (Component)ltcgi);
                     }
                 }
             }
 
-            // VizVid (VVMW) Internal Reference Check
             if (vvmwCoreType != null && coreExists)
             {
                 foreach (var vvmw in GetCachedObjects(vvmwCoreType, true))
@@ -2522,8 +2402,8 @@ namespace VixenTools.Editor
                     var alRefField = vvmwCoreType.GetField("audioLink", flags);
                     if (alRefField != null && alRefField.GetValue(vvmw) == null)
                     {
-                        LogDiagnostic("VIZVID: TOPOLOGY", "AudioLink Not Linked", 
-                            "VizVid Core is not linked to AudioLink. VizVid cannot automatically sync track time and media states (Play/Pause) to your shaders.", 
+                        LogDiagnostic("VIZVID: TOPOLOGY", "AudioLink Not Linked",
+                            "VizVid Core is not linked to AudioLink. VizVid cannot automatically sync track time and media states (Play/Pause) to your shaders.",
                             "#00e5ff", (Component)vvmw, () => {
                                 Undo.RecordObject((Component)vvmw, "Link VVMW to AudioLink");
                                 alRefField.SetValue(vvmw, alCore);
@@ -2533,7 +2413,6 @@ namespace VixenTools.Editor
                 }
             }
 
-            // 4. NATIVE REACTIVE ORPHANS
             if (reactiveType != null)
             {
                 foreach (var r in GetCachedObjects(reactiveType, true))
@@ -2542,8 +2421,8 @@ namespace VixenTools.Editor
                     var alField = component.GetType().GetField("audioLink", flags);
                     if (alField != null && alField.GetValue(r) == null && coreExists)
                     {
-                        LogDiagnostic("AUDIOLINK: ORPHAN", "Unlinked Reactive Object", 
-                            $"'{component.gameObject.name}' has no core assigned. It will never move or glow.", 
+                        LogDiagnostic("AUDIOLINK: ORPHAN", "Unlinked Reactive Object",
+                            $"'{component.gameObject.name}' has no core assigned. It will never move or glow.",
                             "#ff00aa", component, () => {
                                 Undo.RecordObject(component, "Auto-Link Reactive Object");
                                 alField.SetValue(r, alCore);
@@ -2563,8 +2442,7 @@ namespace VixenTools.Editor
             foreach (var searchManager in GetCachedObjects(rinvoType, true))
             {
                 var component = (Component)searchManager;
-                
-                // Fetch Core Fields
+
                 var uiControllerField = rinvoType.GetField("VideoPlayerUIController", flags);
                 var urlField = rinvoType.GetField("UrlInputField", flags);
                 var playerTypeField = rinvoType.GetField("videoPlayerType", flags);
@@ -2573,7 +2451,6 @@ namespace VixenTools.Editor
                 var currentUrlInput = urlField?.GetValue(searchManager) as VRC.SDK3.Components.VRCUrlInputField;
                 int currentPlayerType = playerTypeField != null ? Convert.ToInt32(playerTypeField.GetValue(searchManager)) : 0;
 
-                // === 1. MISSING REFERENCES & AUTO-LINKING ===
                 if (currentUiController == null || currentUrlInput == null)
                 {
                     UdonBehaviour detectedUi = null;
@@ -2581,7 +2458,6 @@ namespace VixenTools.Editor
                     int detectedEnum = 0;
                     string detectedName = "";
 
-                    // Attempt A: ProTV 3
                     Type protvUrlInputType = GetTypeSafe("ArchiTech.ProTV.UrlInput");
                     if (protvUrlInputType != null)
                     {
@@ -2590,12 +2466,11 @@ namespace VixenTools.Editor
                         {
                             detectedUi = protvInput as UdonBehaviour;
                             detectedInput = ((Component)protvInput).GetComponentInChildren<VRC.SDK3.Components.VRCUrlInputField>(true);
-                            detectedEnum = 2; // VideoPlayerType.ProTV3
+                            detectedEnum = 2;
                             detectedName = "ProTV 3";
                         }
                     }
-                    
-                    // Attempt B: IwaSync3
+
                     if (detectedUi == null)
                     {
                         Type iwaControllerType = GetTypeSafe("HoshinoLabs.IwaSync3.Udon.VideoController");
@@ -2606,13 +2481,12 @@ namespace VixenTools.Editor
                             {
                                 detectedUi = iwaController as UdonBehaviour;
                                 detectedInput = ((Component)iwaController).GetComponentInChildren<VRC.SDK3.Components.VRCUrlInputField>(true);
-                                detectedEnum = 3; // VideoPlayerType.IwaSync3
+                                detectedEnum = 3;
                                 detectedName = "IwaSync3";
                             }
                         }
                     }
 
-                    // Attempt C: TXL (Texel) Input Proxy
                     if (detectedUi == null)
                     {
                         Type txlProxyType = GetTypeSafe("Texel.InputProxy") ?? GetTypeSafe("Texel.Video.UI.InputProxy");
@@ -2628,13 +2502,12 @@ namespace VixenTools.Editor
                                 {
                                     detectedInput = urlProp.objectReferenceValue as VRC.SDK3.Components.VRCUrlInputField;
                                 }
-                                detectedEnum = 6; // VideoPlayerType.Other (TXL hooks natively)
+                                detectedEnum = 6;
                                 detectedName = "TXL Input Proxy";
                             }
                         }
                     }
 
-                    // Attempt D: USharpVideo
                     if (detectedUi == null)
                     {
                         Type usharpType = GetTypeSafe("UdonSharpVideo.USharpVideoPlayer");
@@ -2649,7 +2522,7 @@ namespace VixenTools.Editor
                                 {
                                      detectedInput = ((Component)usharpPlayer).transform.parent.GetComponentInChildren<VRC.SDK3.Components.VRCUrlInputField>(true);
                                 }
-                                detectedEnum = 0; // VideoPlayerType.USharpVideo
+                                detectedEnum = 0;
                                 detectedName = "USharpVideo";
                             }
                         }
@@ -2657,8 +2530,8 @@ namespace VixenTools.Editor
 
                     if (detectedUi != null && detectedInput != null)
                     {
-                        LogDiagnostic("YOUTUBE SEARCH ECOSYSTEM", "Missing Video Player Link", 
-                            $"'{component.gameObject.name}' is missing references to a Video Player. Auto-detected {detectedName} in the scene. Ready to link and configure UI components.", 
+                        LogDiagnostic("YOUTUBE SEARCH ECOSYSTEM", "Missing Video Player Link",
+                            $"'{component.gameObject.name}' is missing references to a Video Player. Auto-detected {detectedName} in the scene. Ready to link and configure UI components.",
                             "#00e5ff", component, () => {
                                 Undo.RecordObject(component, "Auto-Link YouTube Search");
                                 uiControllerField?.SetValue(searchManager, detectedUi);
@@ -2666,15 +2539,15 @@ namespace VixenTools.Editor
                                 playerTypeField?.SetValue(searchManager, detectedEnum);
                                 PrefabUtility.RecordPrefabInstancePropertyModifications(component);
                             });
-                        
+
                         currentUiController = detectedUi;
                         currentUrlInput = detectedInput;
                         currentPlayerType = detectedEnum;
                     }
                     else
                     {
-                        LogDiagnostic("YOUTUBE SEARCH ECOSYSTEM", "Orphaned Search Manager", 
-                            $"'{component.gameObject.name}' is missing Video Player UI references and no compatible video player could be automatically detected in the scene. Manual setup required.", 
+                        LogDiagnostic("YOUTUBE SEARCH ECOSYSTEM", "Orphaned Search Manager",
+                            $"'{component.gameObject.name}' is missing Video Player UI references and no compatible video player could be automatically detected in the scene. Manual setup required.",
                             "#ff00aa", component);
                     }
                 }
@@ -2685,7 +2558,6 @@ namespace VixenTools.Editor
                     int expectedEnum = currentPlayerType;
                     string expectedName = "";
 
-                    // === 2. ARCHITECTURAL DECOUPLING (CORE VS UI LAYER) ===
                     Type protvTvType = GetTypeSafe("ArchiTech.ProTV.TVManager");
                     Type protvInputType = GetTypeSafe("ArchiTech.ProTV.UrlInput");
                     if (protvTvType != null && currentUiController.GetComponent(protvTvType) != null)
@@ -2696,20 +2568,20 @@ namespace VixenTools.Editor
                             var actualInput = currentUiController.GetComponentInChildren(protvInputType) ?? FindObjectOfType(protvInputType);
                             if (actualInput != null)
                             {
-                                LogDiagnostic("PROTV + RINVO ECOSYSTEM", "Invalid ProTV UI Target", 
-                                    $"'{component.gameObject.name}' is pointing directly to the TVManager instead of the UrlInput component. Rinvo's custom event ('EndEditUrlInput') exclusively targets the UrlInput script.", 
+                                LogDiagnostic("PROTV + RINVO ECOSYSTEM", "Invalid ProTV UI Target",
+                                    $"'{component.gameObject.name}' is pointing directly to the TVManager instead of the UrlInput component. Rinvo's custom event ('EndEditUrlInput') exclusively targets the UrlInput script.",
                                     "#ff00aa", component, () => {
                                         Undo.RecordObject(component, "Fix ProTV Target");
                                         uiControllerField?.SetValue(searchManager, actualInput as UdonBehaviour);
                                         PrefabUtility.RecordPrefabInstancePropertyModifications(component);
                                     });
-                                
+
                                 currentUiController = actualInput as UdonBehaviour;
                                 uiName = GetUdonTypeNameSafe(currentUiController);
                             }
                         }
                     }
-                    
+
                     Type iwaCoreType = GetTypeSafe("HoshinoLabs.IwaSync3.IwaSync3");
                     Type iwaControllerType = GetTypeSafe("HoshinoLabs.IwaSync3.Udon.VideoController");
                     if (iwaCoreType != null && currentUiController.GetComponent(iwaCoreType) != null)
@@ -2720,14 +2592,14 @@ namespace VixenTools.Editor
                             var actualController = currentUiController.GetComponentInChildren(iwaControllerType) ?? FindObjectOfType(iwaControllerType);
                             if (actualController != null)
                             {
-                                LogDiagnostic("IWASYNC3 + RINVO ECOSYSTEM", "Invalid IwaSync3 UI Target", 
-                                    $"'{component.gameObject.name}' is pointing directly to the core IwaSync3 manager instead of its UI VideoController. Rinvo's custom events ('OnURLChanged') only exist on the UI component.", 
+                                LogDiagnostic("IWASYNC3 + RINVO ECOSYSTEM", "Invalid IwaSync3 UI Target",
+                                    $"'{component.gameObject.name}' is pointing directly to the core IwaSync3 manager instead of its UI VideoController. Rinvo's custom events ('OnURLChanged') only exist on the UI component.",
                                     "#ff00aa", component, () => {
                                         Undo.RecordObject(component, "Fix IwaSync Target");
                                         uiControllerField?.SetValue(searchManager, actualController as UdonBehaviour);
                                         PrefabUtility.RecordPrefabInstancePropertyModifications(component);
                                     });
-                                
+
                                 currentUiController = actualController as UdonBehaviour;
                                 uiName = GetUdonTypeNameSafe(currentUiController);
                             }
@@ -2744,21 +2616,20 @@ namespace VixenTools.Editor
                             var actualInput = currentUiController.GetComponentInChildren(txlProxyType) ?? FindObjectOfType(txlProxyType);
                             if (actualInput != null)
                             {
-                                LogDiagnostic("TXL + RINVO ECOSYSTEM", "Invalid TXL UI Target", 
-                                    $"'{component.gameObject.name}' is pointing directly to the Core TXL Video Player instead of the InputProxy. Rinvo must be linked to the InputProxy component for events and queues to execute properly.", 
+                                LogDiagnostic("TXL + RINVO ECOSYSTEM", "Invalid TXL UI Target",
+                                    $"'{component.gameObject.name}' is pointing directly to the Core TXL Video Player instead of the InputProxy. Rinvo must be linked to the InputProxy component for events and queues to execute properly.",
                                     "#ff00aa", component, () => {
                                         Undo.RecordObject(component, "Fix TXL Target");
                                         uiControllerField?.SetValue(searchManager, actualInput as UdonBehaviour);
                                         PrefabUtility.RecordPrefabInstancePropertyModifications(component);
                                     });
-                                
+
                                 currentUiController = actualInput as UdonBehaviour;
                                 uiName = GetUdonTypeNameSafe(currentUiController);
                             }
                         }
                     }
 
-                    // === 3. ENUM / TARGET MISMATCH LOGIC ===
                     if (uiName.Contains("UrlInput") && currentPlayerType != 2) { expectedEnum = 2; expectedName = "ProTV 3"; }
                     else if ((uiName.Contains("VideoController") || uiName.Contains("IwaSync3")) && currentPlayerType != 3) { expectedEnum = 3; expectedName = "IwaSync3"; }
                     else if (uiName.Contains("USharpVideo") && currentPlayerType != 0) { expectedEnum = 0; expectedName = "USharpVideo"; }
@@ -2766,8 +2637,8 @@ namespace VixenTools.Editor
 
                     if (expectedEnum != currentPlayerType && !string.IsNullOrEmpty(expectedName))
                     {
-                        LogDiagnostic("YOUTUBE SEARCH ECOSYSTEM", "Mismatched Player Target Enum", 
-                            $"'{component.gameObject.name}' is linked to {expectedName}, but its VideoPlayerType enum is incorrectly targeting Enum ID {currentPlayerType}. This will cause Rinvo to send the wrong playback events.", 
+                        LogDiagnostic("YOUTUBE SEARCH ECOSYSTEM", "Mismatched Player Target Enum",
+                            $"'{component.gameObject.name}' is linked to {expectedName}, but its VideoPlayerType enum is incorrectly targeting Enum ID {currentPlayerType}. This will cause Rinvo to send the wrong playback events.",
                             "#ffaa00", component, () => {
                                 Undo.RecordObject(component, "Fix Search Player Target Enum");
                                 playerTypeField?.SetValue(searchManager, expectedEnum);
@@ -2775,9 +2646,8 @@ namespace VixenTools.Editor
                             });
                     }
 
-                    // === 4. TEXEL (TXL) CONFLICT RESOLUTION ===
-                    if (uiName.IndexOf("InputProxy", StringComparison.OrdinalIgnoreCase) >= 0 || 
-                        uiName.IndexOf("Texel", StringComparison.OrdinalIgnoreCase) >= 0 || 
+                    if (uiName.IndexOf("InputProxy", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        uiName.IndexOf("Texel", StringComparison.OrdinalIgnoreCase) >= 0 ||
                         uiName.IndexOf("TXL", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         Component proxyComp = null;
@@ -2803,11 +2673,10 @@ namespace VixenTools.Editor
                             bool usingQ = usingQueueField != null && Convert.ToBoolean(usingQueueField.GetValue(searchManager));
                             bool onlyQ = usingOnlyQueueField != null && Convert.ToBoolean(usingOnlyQueueField.GetValue(searchManager));
 
-                            // "ALWAYS USE QUEUE" UX MISMATCH (Align Rinvo to TXL)
                             if (alwaysQ && usingQ && !onlyQ)
                             {
-                                LogDiagnostic("TXL + RINVO ECOSYSTEM", "Play Button Hijacked (Queue Mismatch)", 
-                                    $"Rinvo Search displays BOTH Play and Queue buttons, but the TXL Input Proxy '{proxyComp.gameObject.name}' has 'Always Use Queue' enabled. The Play button will secretly act as a Queue button. Click fix to align Rinvo to TXL by enabling 'Only Queue'.", 
+                                LogDiagnostic("TXL + RINVO ECOSYSTEM", "Play Button Hijacked (Queue Mismatch)",
+                                    $"Rinvo Search displays BOTH Play and Queue buttons, but the TXL Input Proxy '{proxyComp.gameObject.name}' has 'Always Use Queue' enabled. The Play button will secretly act as a Queue button. Click fix to align Rinvo to TXL by enabling 'Only Queue'.",
                                     "#ffaa00", component, () => {
                                         Undo.RecordObject(component, "Align Rinvo to TXL Queue Mode");
                                         if (usingOnlyQueueField != null) usingOnlyQueueField.SetValue(searchManager, true);
@@ -2817,14 +2686,13 @@ namespace VixenTools.Editor
                         }
                     }
 
-                    // === 5. UNITY BASE / USHARPVIDEO CONFLICT RESOLUTION ===
                     if (expectedEnum == 0 || uiName.Contains("USharpVideo"))
                     {
                         var swapAvproField = rinvoType.GetField("swapToAvproForLivestreams", flags);
                         if (swapAvproField != null && !Convert.ToBoolean(swapAvproField.GetValue(searchManager)))
                         {
-                            LogDiagnostic("USHARPVIDEO + RINVO ECOSYSTEM", "Live Stream Auto-Swap Disabled", 
-                                $"'{component.gameObject.name}' is linked to USharpVideo but 'Swap To Avpro For Livestreams' is disabled. The Unity Base VideoPlayer cannot parse YouTube Live Streams, causing silent sync failures for all users when a stream is clicked.", 
+                            LogDiagnostic("USHARPVIDEO + RINVO ECOSYSTEM", "Live Stream Auto-Swap Disabled",
+                                $"'{component.gameObject.name}' is linked to USharpVideo but 'Swap To Avpro For Livestreams' is disabled. The Unity Base VideoPlayer cannot parse YouTube Live Streams, causing silent sync failures for all users when a stream is clicked.",
                                 "#ffaa00", component, () => {
                                     Undo.RecordObject(component, "Enable Livestream Auto-Swap");
                                     swapAvproField.SetValue(searchManager, true);
@@ -2834,16 +2702,14 @@ namespace VixenTools.Editor
                     }
                 }
 
-                // === 6. FALLBACK QUEUE AUTO-LINKING (For ProTV / Non-TXL) ===
                 var usingQueueFieldCheck = rinvoType.GetField("UsingQueue", flags);
                 if (usingQueueFieldCheck != null && Convert.ToBoolean(usingQueueFieldCheck.GetValue(searchManager)))
                 {
                     var queueUiField = rinvoType.GetField("QueueUIController", flags);
                     var queueUrlField = rinvoType.GetField("UrlInputFieldQueue", flags);
-                    
+
                     if ((queueUiField?.GetValue(searchManager) as UdonBehaviour) == null || (queueUrlField?.GetValue(searchManager) as VRC.SDK3.Components.VRCUrlInputField) == null)
                     {
-                        // Note: TXL Queue linking is already handled comprehensively in Step 4A. This is a fallback for ProTV
                         Type protvQueueType = GetTypeSafe("ArchiTech.ProTV.Queue");
                         if (protvQueueType != null)
                         {
@@ -2853,8 +2719,8 @@ namespace VixenTools.Editor
                                 var queueInput = ((Component)protvQueue).GetComponentInChildren<VRC.SDK3.Components.VRCUrlInputField>(true);
                                 if (queueInput != null)
                                 {
-                                    LogDiagnostic("YOUTUBE SEARCH ECOSYSTEM", "Missing Queue Link", 
-                                        $"'{component.gameObject.name}' has UsingQueue enabled but no targets. Auto-detected ProTV Queue in the scene. Ready to link.", 
+                                    LogDiagnostic("YOUTUBE SEARCH ECOSYSTEM", "Missing Queue Link",
+                                        $"'{component.gameObject.name}' has UsingQueue enabled but no targets. Auto-detected ProTV Queue in the scene. Ready to link.",
                                         "#00e5ff", component, () => {
                                             Undo.RecordObject(component, "Auto-Link Search Queue");
                                             queueUiField?.SetValue(searchManager, protvQueue as UdonBehaviour);
@@ -2867,15 +2733,14 @@ namespace VixenTools.Editor
                     }
                 }
 
-                // === 7. POOL SIZE BOUNDS CHECKS ===
                 var poolSizeFieldCheck = rinvoType.GetField("poolSize", flags);
                 if (poolSizeFieldCheck != null)
                 {
                     int poolSize = Convert.ToInt32(poolSizeFieldCheck.GetValue(searchManager));
                     if (poolSize < 100)
                     {
-                        LogDiagnostic("YOUTUBE SEARCH ECOSYSTEM", "Critically Low API Pool Size", 
-                            $"'{component.gameObject.name}' has a pool size of {poolSize}. The creator recommends a minimum of 100 to avoid severe Udon API rate limits/errors.", 
+                        LogDiagnostic("YOUTUBE SEARCH ECOSYSTEM", "Critically Low API Pool Size",
+                            $"'{component.gameObject.name}' has a pool size of {poolSize}. The creator recommends a minimum of 100 to avoid severe Udon API rate limits/errors.",
                             "#ffaa00", component, () => {
                                 Undo.RecordObject(component, "Normalize Pool Size");
                                 poolSizeFieldCheck.SetValue(searchManager, 100);
@@ -2884,8 +2749,8 @@ namespace VixenTools.Editor
                     }
                     else if (poolSize > 100000)
                     {
-                        LogDiagnostic("YOUTUBE SEARCH ECOSYSTEM", "Massive API Pool Size", 
-                            $"'{component.gameObject.name}' has a pool size of {poolSize}. This exceeds the maximum safe limit (100,000) and will permanently bloat network serialization.", 
+                        LogDiagnostic("YOUTUBE SEARCH ECOSYSTEM", "Massive API Pool Size",
+                            $"'{component.gameObject.name}' has a pool size of {poolSize}. This exceeds the maximum safe limit (100,000) and will permanently bloat network serialization.",
                             "#ff00aa", component, () => {
                                 Undo.RecordObject(component, "Normalize Pool Size");
                                 poolSizeFieldCheck.SetValue(searchManager, 100000);
@@ -2900,20 +2765,18 @@ namespace VixenTools.Editor
         {
             var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
 
-            // 1. Manager Integrity
             Type managerType = GetTypeSafe("VRCLightVolumes.LightVolumeManager");
             if (managerType != null)
             {
                 var managers = GetCachedObjects(managerType, true);
                 if (managers.Length > 1)
                 {
-                    LogDiagnostic("LIGHT VOLUMES ECOSYSTEM", "Multiple Managers Detected", 
-                        "Found more than one LightVolumeManager in the scene. There should strictly be only one to avoid global shader variable tearing.", 
+                    LogDiagnostic("LIGHT VOLUMES ECOSYSTEM", "Multiple Managers Detected",
+                        "Found more than one LightVolumeManager in the scene. There should strictly be only one to avoid global shader variable tearing.",
                         "#ff00aa", (Component)managers[1]);
                 }
             }
 
-            // 2. Setup Thresholds & Bounding Spheres
             Type setupType = GetTypeSafe("VRCLightVolumes.LightVolumeSetup");
             if (setupType != null)
             {
@@ -2926,8 +2789,8 @@ namespace VixenTools.Editor
                         float cutoff = Convert.ToSingle(cutoffField.GetValue(setup));
                         if (cutoff < 0.15f)
                         {
-                            LogDiagnostic("LIGHT VOLUMES ECOSYSTEM", "Aggressive Brightness Cutoff", 
-                                $"'{comp.gameObject.name}' has a LightsBrightnessCutoff of {cutoff}. Extremely low values cause point lights to generate massive bounding spheres, drastically increasing GPU overlap calculations.", 
+                            LogDiagnostic("LIGHT VOLUMES ECOSYSTEM", "Aggressive Brightness Cutoff",
+                                $"'{comp.gameObject.name}' has a LightsBrightnessCutoff of {cutoff}. Extremely low values cause point lights to generate massive bounding spheres, drastically increasing GPU overlap calculations.",
                                 "#ffaa00", comp, () => {
                                     Undo.RecordObject(comp, "Optimize Brightness Cutoff");
                                     cutoffField.SetValue(setup, 0.35f);
@@ -2938,7 +2801,6 @@ namespace VixenTools.Editor
                 }
             }
 
-            // 3. Point Light Compute Loads
             Type plvType = GetTypeSafe("VRCLightVolumes.PointLightVolume");
             if (plvType != null)
             {
@@ -2949,17 +2811,16 @@ namespace VixenTools.Editor
                     if (typeField != null)
                     {
                         int typeVal = Convert.ToInt32(typeField.GetValue(plv));
-                        if (typeVal == 2) // 2 corresponds to AreaLight in the Enum
+                        if (typeVal == 2)
                         {
-                            LogDiagnostic("LIGHT VOLUMES COMPUTE", "Area Light Detected", 
-                                $"'{comp.gameObject.name}' is set to Area Light. This is the heaviest mathematical light shape. Unless it is a dynamic moving panel, consider baking a standard Light Volume instead.", 
+                            LogDiagnostic("LIGHT VOLUMES COMPUTE", "Area Light Detected",
+                                $"'{comp.gameObject.name}' is set to Area Light. This is the heaviest mathematical light shape. Unless it is a dynamic moving panel, consider baking a standard Light Volume instead.",
                                 "#ffaa00", comp);
                         }
                     }
                 }
             }
 
-            // 4. TVGI Integration & Strobe Safety
             Type tvgiType = GetTypeSafe("VRCLightVolumes.LightVolumeTVGI");
             if (tvgiType != null)
             {
@@ -2969,16 +2830,16 @@ namespace VixenTools.Editor
                     var rtField = tvgiType.GetField("TargetRenderTexture", flags);
                     if (rtField != null && rtField.GetValue(tvgi) == null)
                     {
-                        LogDiagnostic("LIGHT VOLUMES TVGI", "Missing Render Target", 
-                            $"'{comp.gameObject.name}' has no Target RenderTexture assigned. It is eating CPU cycles calculating nothing.", 
+                        LogDiagnostic("LIGHT VOLUMES TVGI", "Missing Render Target",
+                            $"'{comp.gameObject.name}' has no Target RenderTexture assigned. It is eating CPU cycles calculating nothing.",
                             "#ff00aa", comp);
                     }
 
                     var flickerField = tvgiType.GetField("AntiFlickering", flags);
                     if (flickerField != null && !Convert.ToBoolean(flickerField.GetValue(tvgi)))
                     {
-                        LogDiagnostic("LIGHT VOLUMES TVGI", "Anti-Flicker Disabled", 
-                            $"'{comp.gameObject.name}' has Anti-Flickering disabled. Rapidly changing video pixels will cause seizure-inducing strobe lighting across the room.", 
+                        LogDiagnostic("LIGHT VOLUMES TVGI", "Anti-Flicker Disabled",
+                            $"'{comp.gameObject.name}' has Anti-Flickering disabled. Rapidly changing video pixels will cause seizure-inducing strobe lighting across the room.",
                             "#ff00aa", comp, () => {
                                 Undo.RecordObject(comp, "Enable Anti-Flicker");
                                 flickerField.SetValue(tvgi, true);
@@ -2988,7 +2849,6 @@ namespace VixenTools.Editor
                 }
             }
 
-            // 5. AudioLink Strobe Safety
             Type alType = GetTypeSafe("VRCLightVolumes.LightVolumeAudioLink");
             if (alType != null)
             {
@@ -2998,8 +2858,8 @@ namespace VixenTools.Editor
                     var smoothField = alType.GetField("SmoothingEnabled", flags);
                     if (smoothField != null && !Convert.ToBoolean(smoothField.GetValue(al)))
                     {
-                        LogDiagnostic("LIGHT VOLUMES AUDIOLINK", "Smoothing Disabled", 
-                            $"'{comp.gameObject.name}' has smoothing disabled. Unfiltered AudioLink raw data can cause rapid visual flickering.", 
+                        LogDiagnostic("LIGHT VOLUMES AUDIOLINK", "Smoothing Disabled",
+                            $"'{comp.gameObject.name}' has smoothing disabled. Unfiltered AudioLink raw data can cause rapid visual flickering.",
                             "#ffaa00", comp, () => {
                                 Undo.RecordObject(comp, "Enable AudioLink Smoothing");
                                 smoothField.SetValue(al, true);
@@ -3016,12 +2876,11 @@ namespace VixenTools.Editor
             Type cacheType = editorAsm?.GetType("UdonSharp.UdonSharpEditorCache");
             var cache = cacheType?.GetProperty("Instance", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)?.GetValue(null);
             var getUasm = cacheType?.GetMethod("GetUASMStr", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            
+
             Type udbSyncModeAttrType = GetTypeSafe("UdonSharp.UdonBehaviourSyncModeAttribute");
 
             foreach (var udon in GetCachedObjects<UdonBehaviour>(true))
             {
-                // === C# SOURCE-OF-TRUTH CROSS-REFERENCE ===
                 bool isDeclaredNoSync = false;
                 string typeName = GetUdonTypeNameSafe(udon);
                 Type backingType = GetTypeSafe(typeName);
@@ -3032,12 +2891,10 @@ namespace VixenTools.Editor
                     if (attributes.Length > 0)
                     {
                         var attr = attributes[0];
-                        
-                        // 4D Chess: UdonSharp API volatility protection. 
-                        // We check for both a Property and a Field, as internal implementations shift between SDK versions.
+
                         var propInfo = udbSyncModeAttrType.GetProperty("behaviourSyncMode", BindingFlags.Public | BindingFlags.Instance);
                         var fieldInfo = udbSyncModeAttrType.GetField("behaviourSyncMode", BindingFlags.Public | BindingFlags.Instance);
-                        
+
                         string syncModeStr = null;
 
                         if (propInfo != null)
@@ -3056,43 +2913,37 @@ namespace VixenTools.Editor
                     }
                 }
 
-                // === CONTINUOUS SYNC HEURISTICS ===
                 if (udon.SyncMethod == VRC.SDKBase.Networking.SyncType.Continuous)
                 {
                     if (isDeclaredNoSync)
                     {
-                        LogDiagnostic("UDON BANDWIDTH: SERIALIZATION DESYNC", "Ghost Continuous Sync", 
-                            $"'{udon.gameObject.name}' is set to Continuous in the inspector, but its C# script '{typeName}' explicitly declares NoVariableSync. This is a Unity serialization ghost wasting network IDs. Click Fix to align the inspector to the code.", 
+                        LogDiagnostic("UDON BANDWIDTH: SERIALIZATION DESYNC", "Ghost Continuous Sync",
+                            $"'{udon.gameObject.name}' is set to Continuous in the inspector, but its C# script '{typeName}' explicitly declares NoVariableSync. This is a Unity serialization ghost wasting network IDs. Click Fix to align the inspector to the code.",
                             "#ff00aa", udon.gameObject, () => {
                                 Undo.RecordObject(udon, "Align Udon Sync Mode");
-                                // 4 is the integer value for SyncType.None in modern VRChat SDKs. 
-                                // We cast to prevent compiler errors on older SDKs where 'None' didn't exist in the enum.
-                                udon.SyncMethod = (VRC.SDKBase.Networking.SyncType)4; 
+                                udon.SyncMethod = (VRC.SDKBase.Networking.SyncType)4;
                                 PrefabUtility.RecordPrefabInstancePropertyModifications(udon);
                             });
                     }
                     else
                     {
-                        // Only flag actual Continuous syncs if they lack physical movement components
                         bool hasPhysics = udon.GetComponent<Rigidbody>() != null;
                         bool hasPickup = udon.GetComponent<VRC.SDKBase.VRC_Pickup>() != null;
 
                         if (!hasPhysics && !hasPickup)
                         {
-                            LogDiagnostic("UDON BANDWIDTH: UNJUSTIFIED CONTINUOUS SYNC", "Continuous Sync Active", 
-                                $"'{udon.gameObject.name}' consumes high bandwidth but lacks a Rigidbody/Pickup. Verify if manual sync is possible.", 
+                            LogDiagnostic("UDON BANDWIDTH: UNJUSTIFIED CONTINUOUS SYNC", "Continuous Sync Active",
+                                $"'{udon.gameObject.name}' consumes high bandwidth but lacks a Rigidbody/Pickup. Verify if manual sync is possible.",
                                 "#ffaa00", udon.gameObject);
                         }
                     }
                 }
 
-                // === COMPUTE INSTRUCTION HEURISTICS ===
                 if (udon.programSource is UdonSharpProgramAsset uAsset && getUasm != null && cache != null)
                 {
                     string uasm = (string)getUasm.Invoke(cache, new object[] { uAsset });
                     if (!string.IsNullOrEmpty(uasm))
                     {
-                        // Micro-optimization: Avoid .Split allocating a massive string array for heavy scripts
                         int count = 0;
                         using (var reader = new System.IO.StringReader(uasm))
                         {
@@ -3102,7 +2953,7 @@ namespace VixenTools.Editor
                                 if (line.Contains(',') || line.TrimEnd().EndsWith("EXTERN")) count++;
                             }
                         }
-                        
+
                         if (count > 4000) LogDiagnostic("UDON COMPUTE: HEAVY INSTRUCTIONS", "Heavy Instruction Count", $"'{uAsset.name}' executes ~{count} UASM lines.", "#ffaa00", udon.gameObject);
                     }
                 }
@@ -3110,7 +2961,6 @@ namespace VixenTools.Editor
 
             foreach (var objSync in GetCachedObjects<VRCObjectSync>(true))
             {
-                // Ensure we don't flag static objects just because they have VRCObjectSync attached
                 var rb = objSync.GetComponent<Rigidbody>();
                 if (rb == null || rb.isKinematic)
                 {
@@ -3121,20 +2971,18 @@ namespace VixenTools.Editor
 
         private void AuditLightingAndCameras()
         {
-            // === LIGHTING ===
             foreach (var light in GetCachedObjects<Light>(true))
             {
-                if (light == null) continue; 
-                
-                // 4D-CHESS FIX: Ignore lights that are explicitly disabled in the hierarchy or component
+                if (light == null) continue;
+
                 if (!light.enabled || !light.gameObject.activeInHierarchy) continue;
-                
+
                 var component = (Component)light;
-                
+
                 if (light.type != LightType.Directional && light.lightmapBakeType == LightmapBakeType.Realtime)
                 {
-                    LogDiagnostic("LIGHTING & SHADOWS", "Realtime Point/Spot Light", 
-                        $"'{light.name}' is fully dynamic. Overlapping realtime point/spot lights cause severe draw call multiplication. Bake this light or use Mixed mode.", 
+                    LogDiagnostic("LIGHTING & SHADOWS", "Realtime Point/Spot Light",
+                        $"'{light.name}' is fully dynamic. Overlapping realtime point/spot lights cause severe draw call multiplication. Bake this light or use Mixed mode.",
                         "#ffaa00", component, () => {
                             Undo.RecordObject(component, "Change Light to Baked");
                             light.lightmapBakeType = LightmapBakeType.Baked;
@@ -3144,37 +2992,35 @@ namespace VixenTools.Editor
 
                 if (light.lightmapBakeType == LightmapBakeType.Realtime && light.shadows != LightShadows.None)
                 {
-                    LogDiagnostic("LIGHTING & SHADOWS", "Realtime Shadow Caster", 
-                        $"'{light.name}' is casting realtime shadows. This essentially renders the entire scene geometry an additional time per light. Limit to one directional light.", 
+                    LogDiagnostic("LIGHTING & SHADOWS", "Realtime Shadow Caster",
+                        $"'{light.name}' is casting realtime shadows. This essentially renders the entire scene geometry an additional time per light. Limit to one directional light.",
                         "#ff00aa", component, () => {
                             Undo.RecordObject(component, "Disable Realtime Shadows");
                             light.shadows = LightShadows.None;
                             PrefabUtility.RecordPrefabInstancePropertyModifications(component);
                         });
                 }
-                
+
                 if (light.range > 50f && light.type != LightType.Directional)
                 {
-                    LogDiagnostic("LIGHTING & SHADOWS", "Massive Light Range", 
-                        $"'{light.name}' has a range of {light.range}m. Large overlapping light volumes cripple pixel fillrate. Clamp the range to the immediate affected area.", 
+                    LogDiagnostic("LIGHTING & SHADOWS", "Massive Light Range",
+                        $"'{light.name}' has a range of {light.range}m. Large overlapping light volumes cripple pixel fillrate. Clamp the range to the immediate affected area.",
                         "#00e5ff", component);
                 }
             }
 
-            // === REFLECTION PROBES ===
             foreach (var probe in GetCachedObjects<ReflectionProbe>(true))
             {
                 if (probe == null) continue;
 
-                // 4D-CHESS FIX: Ignore disabled reflection probes to prevent false positives
                 if (!probe.enabled || !probe.gameObject.activeInHierarchy) continue;
 
                 var component = (Component)probe;
 
                 if (probe.mode == UnityEngine.Rendering.ReflectionProbeMode.Realtime)
                 {
-                    LogDiagnostic("LIGHTING & SHADOWS", "Realtime Reflection Probe", 
-                        $"'{probe.name}' is rendering the scene dynamically. This acts as 6 extra cameras rendering every frame or time-slice. Bake it unless absolutely necessary for mirrors.", 
+                    LogDiagnostic("LIGHTING & SHADOWS", "Realtime Reflection Probe",
+                        $"'{probe.name}' is rendering the scene dynamically. This acts as 6 extra cameras rendering every frame or time-slice. Bake it unless absolutely necessary for mirrors.",
                         "#ff00aa", component, () => {
                             Undo.RecordObject(component, "Bake Reflection Probe");
                             probe.mode = UnityEngine.Rendering.ReflectionProbeMode.Baked;
@@ -3184,8 +3030,8 @@ namespace VixenTools.Editor
 
                 if (probe.resolution > 512)
                 {
-                    LogDiagnostic("LIGHTING & SHADOWS", "VRAM Nuke: 4K/2K Probe", 
-                        $"'{probe.name}' has a resolution of {probe.resolution}. Reflection probes are cubemaps (6 textures). A 1024+ probe will nuke VRAM. Drop this to 256 or 512.", 
+                    LogDiagnostic("LIGHTING & SHADOWS", "VRAM Nuke: 4K/2K Probe",
+                        $"'{probe.name}' has a resolution of {probe.resolution}. Reflection probes are cubemaps (6 textures). A 1024+ probe will nuke VRAM. Drop this to 256 or 512.",
                         "#ff00aa", component, () => {
                             Undo.RecordObject(component, "Throttle Probe Resolution");
                             probe.resolution = 256;
@@ -3194,31 +3040,23 @@ namespace VixenTools.Editor
                 }
             }
 
-            // === CAMERAS ===
             foreach (var cam in GetCachedObjects<Camera>(true))
             {
                 if (cam == null) continue;
 
                 var component = (Component)cam;
-                
-                // 1. Skip VRChat's safe reference cameras
+
                 if (cam.name == "VRCCam" || cam.gameObject.tag == "MainCamera") continue;
 
-                // 2. Skip cameras that are physically disabled
                 if (!cam.gameObject.activeInHierarchy || !cam.enabled) continue;
 
-                // 3. UI Event Camera Protection
-                // If the Culling Mask is 0 ("Nothing"), it renders no geometry. 
-                // It is functionally safe and operates purely for UI Raycasts.
                 bool isEventCamera = cam.cullingMask == 0;
 
-                // If it renders to the screen (no target texture) and actually draws geometry...
                 if (cam.targetTexture == null && !isEventCamera)
                 {
-                    LogDiagnostic("RENDER PIPELINE", "Rogue Active Camera", 
-                        $"'{cam.name}' is active, rendering the world (Culling Mask != Nothing), and outputs directly to the screen. This forces the engine to double-render the world geometry. Disable it, assign a RenderTexture, or set Culling Mask to 'Nothing' if it's an Event Camera.", 
+                    LogDiagnostic("RENDER PIPELINE", "Rogue Active Camera",
+                        $"'{cam.name}' is active, rendering the world (Culling Mask != Nothing), and outputs directly to the screen. This forces the engine to double-render the world geometry. Disable it, assign a RenderTexture, or set Culling Mask to 'Nothing' if it's an Event Camera.",
                         "#ff00aa", component, () => {
-                            // Safely disable the component rather than the GameObject
                             Undo.RecordObject(cam, "Disable Rogue Camera");
                             cam.enabled = false;
                             PrefabUtility.RecordPrefabInstancePropertyModifications(cam);
@@ -3227,8 +3065,8 @@ namespace VixenTools.Editor
 
                 if (cam.targetTexture != null && cam.targetTexture.width > 2048)
                 {
-                    LogDiagnostic("RENDER PIPELINE", "Massive Render Target", 
-                        $"'{cam.name}' renders to a {cam.targetTexture.width}x{cam.targetTexture.height} texture. This causes massive VRAM allocation and pixel fillrate lag.", 
+                    LogDiagnostic("RENDER PIPELINE", "Massive Render Target",
+                        $"'{cam.name}' renders to a {cam.targetTexture.width}x{cam.targetTexture.height} texture. This causes massive VRAM allocation and pixel fillrate lag.",
                         "#ffaa00", component);
                 }
             }
@@ -3236,15 +3074,14 @@ namespace VixenTools.Editor
 
         private void AuditPhysics()
         {
-            // === COLLIDERS ===
             foreach (var collider in GetCachedObjects<MeshCollider>(true))
             {
                 var component = (Component)collider;
 
                 if (!collider.convex)
                 {
-                    LogDiagnostic("PHYSICS & COLLIDERS", "Non-Convex Mesh Collider", 
-                        $"'{collider.gameObject.name}' uses a non-convex mesh collider. The physics engine must calculate collision against every single polygon. Switch to Convex, or better, use primitive box/sphere colliders.", 
+                    LogDiagnostic("PHYSICS & COLLIDERS", "Non-Convex Mesh Collider",
+                        $"'{collider.gameObject.name}' uses a non-convex mesh collider. The physics engine must calculate collision against every single polygon. Switch to Convex, or better, use primitive box/sphere colliders.",
                         "#ff00aa", component, () => {
                             Undo.RecordObject(component, "Make Convex");
                             collider.convex = true;
@@ -3253,21 +3090,20 @@ namespace VixenTools.Editor
                 }
                 else if (collider.sharedMesh != null && collider.sharedMesh.vertexCount > 255)
                 {
-                    LogDiagnostic("PHYSICS & COLLIDERS", "High-Poly Convex Collider", 
-                        $"'{collider.gameObject.name}' uses a complex mesh ({collider.sharedMesh.vertexCount} verts) for physics. Unity restricts convex hulls to 255 polygons, forcing an expensive internal bake. Use a low-poly proxy mesh.", 
+                    LogDiagnostic("PHYSICS & COLLIDERS", "High-Poly Convex Collider",
+                        $"'{collider.gameObject.name}' uses a complex mesh ({collider.sharedMesh.vertexCount} verts) for physics. Unity restricts convex hulls to 255 polygons, forcing an expensive internal bake. Use a low-poly proxy mesh.",
                         "#ffaa00", component);
                 }
             }
 
-            // === RIGIDBODIES ===
             foreach (var rb in GetCachedObjects<Rigidbody>(true))
             {
                 var component = (Component)rb;
 
                 if (rb.collisionDetectionMode == CollisionDetectionMode.ContinuousDynamic)
                 {
-                    LogDiagnostic("PHYSICS & COLLIDERS", "Continuous Dynamic Physics", 
-                        $"'{rb.gameObject.name}' is using Continuous Dynamic collision. This uses continuous swept collision detection which causes severe CPU spikes. Only use this for extreme high-speed projectiles.", 
+                    LogDiagnostic("PHYSICS & COLLIDERS", "Continuous Dynamic Physics",
+                        $"'{rb.gameObject.name}' is using Continuous Dynamic collision. This uses continuous swept collision detection which causes severe CPU spikes. Only use this for extreme high-speed projectiles.",
                         "#ffaa00", component, () => {
                             Undo.RecordObject(component, "Throttle Collision Detection");
                             rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
@@ -3279,10 +3115,8 @@ namespace VixenTools.Editor
 
         private void AuditTerrainAndEnvironment()
         {
-            // === TERRAINS ===
             foreach (var terrain in GetCachedObjects<Terrain>(true))
             {
-                // Null-safety check for objects in transition
                 if (terrain == null) continue;
 
                 var component = (Component)terrain;
@@ -3291,16 +3125,16 @@ namespace VixenTools.Editor
                 {
                     if (terrain.terrainData.heightmapResolution > 1025)
                     {
-                        LogDiagnostic("ENVIRONMENT", "Insane Heightmap Resolution", 
-                            $"'{terrain.name}' has a heightmap resolution of {terrain.terrainData.heightmapResolution}. This allocates massive memory overhead. VRChat terrain should rarely exceed 1025 (1024x1024).", 
+                        LogDiagnostic("ENVIRONMENT", "Insane Heightmap Resolution",
+                            $"'{terrain.name}' has a heightmap resolution of {terrain.terrainData.heightmapResolution}. This allocates massive memory overhead. VRChat terrain should rarely exceed 1025 (1024x1024).",
                             "#ff00aa", component);
                     }
                 }
 
                 if (!terrain.drawInstanced)
                 {
-                    LogDiagnostic("ENVIRONMENT", "Draw Instanced Disabled", 
-                        $"'{terrain.name}' has Draw Instanced disabled. Instancing significantly reduces CPU draw call overhead for terrain trees and geometry. Enable this in the terrain settings.", 
+                    LogDiagnostic("ENVIRONMENT", "Draw Instanced Disabled",
+                        $"'{terrain.name}' has Draw Instanced disabled. Instancing significantly reduces CPU draw call overhead for terrain trees and geometry. Enable this in the terrain settings.",
                         "#00e5ff", component, () => {
                             Undo.RecordObject(component, "Enable Terrain Instancing");
                             terrain.drawInstanced = true;
@@ -3310,8 +3144,8 @@ namespace VixenTools.Editor
 
                 if (terrain.heightmapPixelError < 5f)
                 {
-                    LogDiagnostic("ENVIRONMENT", "Low Pixel Error", 
-                        $"'{terrain.name}' has a Pixel Error of {terrain.heightmapPixelError}. Low values force high-poly LODs even at a distance. Increase this to 5 or higher for better framerates.", 
+                    LogDiagnostic("ENVIRONMENT", "Low Pixel Error",
+                        $"'{terrain.name}' has a Pixel Error of {terrain.heightmapPixelError}. Low values force high-poly LODs even at a distance. Increase this to 5 or higher for better framerates.",
                         "#ffaa00", component, () => {
                             Undo.RecordObject(component, "Optimize Pixel Error");
                             terrain.heightmapPixelError = 5f;
@@ -3320,11 +3154,10 @@ namespace VixenTools.Editor
                 }
             }
 
-            // === GLOBAL ILLUMINATION & LIGHTMAPS ===
             if (Lightmapping.realtimeGI)
             {
-                LogDiagnostic("ENVIRONMENT & LIGHTING", "Global Realtime GI Enabled", 
-                    "The scene Lighting Settings have 'Realtime Global Illumination' enabled. This forces the CPU to calculate bouncing light rays at runtime. Disable this and use Baked GI for VRChat.", 
+                LogDiagnostic("ENVIRONMENT & LIGHTING", "Global Realtime GI Enabled",
+                    "The scene Lighting Settings have 'Realtime Global Illumination' enabled. This forces the CPU to calculate bouncing light rays at runtime. Disable this and use Baked GI for VRChat.",
                     "#ff00aa", null, () => {
                         Lightmapping.realtimeGI = false;
                     });
@@ -3332,28 +3165,26 @@ namespace VixenTools.Editor
 
             if (LightmapSettings.lightmaps != null && LightmapSettings.lightmaps.Length > 10)
             {
-                LogDiagnostic("ENVIRONMENT & LIGHTING", "Excessive Lightmap Count", 
-                    $"The scene contains {LightmapSettings.lightmaps.Length} lightmaps. This causes heavy VRAM bloat and memory bandwidth limits. Reduce lightmap resolution or bake less objects.", 
+                LogDiagnostic("ENVIRONMENT & LIGHTING", "Excessive Lightmap Count",
+                    $"The scene contains {LightmapSettings.lightmaps.Length} lightmaps. This causes heavy VRAM bloat and memory bandwidth limits. Reduce lightmap resolution or bake less objects.",
                     "#ffaa00", null);
             }
 
-            // 4D-CHESS FIX: Unity 2022+ throws an exception here if no asset is assigned.
             LightingSettings lightingSettings = null;
-            try 
+            try
             {
                 lightingSettings = Lightmapping.lightingSettings;
             }
-            catch 
+            catch
             {
-                // Explicitly swallow API exception to prevent scan interruption
             }
 
             if (lightingSettings != null)
             {
                 if (lightingSettings.lightmapMaxSize > 2048)
                 {
-                    LogDiagnostic("ENVIRONMENT & LIGHTING", "Massive Lightmap Atlas Size", 
-                        $"The max lightmap atlas size is set to {lightingSettings.lightmapMaxSize}. Values above 2048 exponentially increase VRAM usage and world download size. Consider capping it to 2048 or 1024.", 
+                    LogDiagnostic("ENVIRONMENT & LIGHTING", "Massive Lightmap Atlas Size",
+                        $"The max lightmap atlas size is set to {lightingSettings.lightmapMaxSize}. Values above 2048 exponentially increase VRAM usage and world download size. Consider capping it to 2048 or 1024.",
                         "#ffaa00", null, () => {
                             Undo.RecordObject(lightingSettings, "Optimize Max Atlas Size");
                             lightingSettings.lightmapMaxSize = 2048;
@@ -3363,19 +3194,19 @@ namespace VixenTools.Editor
 
                 if (lightingSettings.directionalityMode == LightmapsMode.CombinedDirectional)
                 {
-                    LogDiagnostic("ENVIRONMENT & LIGHTING", "Directional Lightmaps Enabled", 
-                        "Directional Lightmaps are enabled. This effectively doubles the VRAM and file size of your baked lightmaps to store specular direction data. If you are struggling with world size, change this to Non-Directional.", 
+                    LogDiagnostic("ENVIRONMENT & LIGHTING", "Directional Lightmaps Enabled",
+                        "Directional Lightmaps are enabled. This effectively doubles the VRAM and file size of your baked lightmaps to store specular direction data. If you are struggling with world size, change this to Non-Directional.",
                         "#00e5ff", null, () => {
                             Undo.RecordObject(lightingSettings, "Change to Non-Directional Lightmaps");
                             lightingSettings.directionalityMode = LightmapsMode.NonDirectional;
                             EditorUtility.SetDirty(lightingSettings);
                         });
                 }
-                
+
                 if (lightingSettings.lightmapResolution > 40f)
                 {
-                    LogDiagnostic("ENVIRONMENT & LIGHTING", "High Lightmap Bake Resolution", 
-                        $"The bake resolution is set to {lightingSettings.lightmapResolution} texels per unit. High values cause exponentially longer bake times and massive lightmap memory. Ensure this is necessary, or drop it to 40 or lower.", 
+                    LogDiagnostic("ENVIRONMENT & LIGHTING", "High Lightmap Bake Resolution",
+                        $"The bake resolution is set to {lightingSettings.lightmapResolution} texels per unit. High values cause exponentially longer bake times and massive lightmap memory. Ensure this is necessary, or drop it to 40 or lower.",
                         "#ffaa00", null, () => {
                             Undo.RecordObject(lightingSettings, "Lower Bake Resolution");
                             lightingSettings.lightmapResolution = 40f;
@@ -3385,50 +3216,34 @@ namespace VixenTools.Editor
             }
         }
 
-        // === 4D-CHESS CACHING: Prevents AssetDatabase spam during material loops ===
         private HashSet<string> _failedTextureSearches = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         private void AttemptTextureRecovery(Material mat)
         {
             if (mat == null) return;
 
-            // Strip common Unity suffixes to find the true root name (e.g., "Floor01 (Instance)" -> "Floor01")
             string baseName = mat.name.Replace(" (Instance)", "").Replace("_Mat", "").Replace("_Material", "").Trim();
 
-            // The Omni-Schema: Maps common Shader Property Names -> Suffixes to search for on disk
             var recoverySchema = new Dictionary<string[], string[]>
             {
-                // Core PBR / Diffuse
                 { new[] { "_MainTex", "_BaseMap", "_BaseColorMap", "_ColorMap" }, new[] { "_BaseMap", "_Albedo", "_Color", "_Diffuse", "_Main", "_Base" } },
-                // Normal / Bump
                 { new[] { "_BumpMap", "_NormalMap", "_Normal" }, new[] { "_Normal", "_NormalMap", "_Bump", "_Nrm", "_NRM" } },
-                // Metallic / Smoothness / Roughness / Masks
                 { new[] { "_MetallicGlossMap", "_MaskMap", "_SpecGlossMap", "_MetallicMap", "_RoughnessMap" }, new[] { "_MaskMap", "_Metallic", "_Smoothness", "_Specular", "_Roughness", "_Mask", "_Rgh", "_Met" } },
-                // Emission / Glow
                 { new[] { "_EmissionMap", "_Emissive", "_Emission" }, new[] { "_Emission", "_Emissive", "_Glow", "_Illum" } },
-                // Ambient Occlusion
                 { new[] { "_OcclusionMap", "_AmbientOcclusionMap", "_AO" }, new[] { "_AO", "_Occlusion", "_AmbientOcclusion" } },
-                // Height / Parallax
                 { new[] { "_ParallaxMap", "_HeightMap" }, new[] { "_Height", "_HeightMap", "_Parallax", "_Displacement" } },
-                // --- POIYOMI / TOON SPECIFIC ---
-                // Matcaps
                 { new[] { "_MatcapTex", "_Matcap", "_MatcapTexture", "_Matcap1", "_Matcap2" }, new[] { "_Matcap", "_MC", "_MatcapTex" } },
                 { new[] { "_MatcapMask", "_Matcap1Mask", "_Matcap2Mask" }, new[] { "_MatcapMask", "_MCMask" } },
-                // Shadows / Ramps
                 { new[] { "_ShadowTex", "_ShadowMap", "_ShadowRamp" }, new[] { "_Shadow", "_ShadowMap", "_Ramp" } },
                 { new[] { "_ShadowMask" }, new[] { "_ShadowMask" } },
-                // Outlines
                 { new[] { "_OutlineTexture", "_OutlineTex" }, new[] { "_Outline", "_OutlineTex" } },
                 { new[] { "_OutlineMask" }, new[] { "_OutlineMask" } },
-                // Fur (Poiyomi Fur)
                 { new[] { "_FurNormalMap", "_FurNormal" }, new[] { "_FurNormal", "_FurNrm" } },
                 { new[] { "_FurMask", "_FurAlphaMask" }, new[] { "_FurMask", "_FurAlpha" } },
                 { new[] { "_FurLengthMask", "_FurLengthMap" }, new[] { "_FurLength", "_FurHeight" } },
-                // Details (Filamented & Poiyomi)
                 { new[] { "_DetailTex", "_DetailAlbedoMap" }, new[] { "_Detail", "_DetailAlbedo" } },
                 { new[] { "_DetailNormalMap", "_DetailNormal" }, new[] { "_DetailNormal", "_DetailNrm" } },
                 { new[] { "_DetailMask" }, new[] { "_DetailMask" } },
-                // Decals
                 { new[] { "_DecalTexture", "_DecalTex", "_DecalColorMap", "_Decal0", "_Decal1" }, new[] { "_Decal", "_DecalTex", "_Logo" } },
                 { new[] { "_DecalMask" }, new[] { "_DecalMask" } }
             };
@@ -3449,7 +3264,7 @@ namespace VixenTools.Editor
                     {
                         activeProp = prop;
                         if (mat.GetTexture(prop) == null) slotNeedsRepair = true;
-                        break; 
+                        break;
                     }
                 }
 
@@ -3489,7 +3304,7 @@ namespace VixenTools.Editor
                         if (foundTex != null)
                         {
                             _textureRecoveryCache[expectedName] = foundTex;
-                            break; 
+                            break;
                         }
                         else
                         {
@@ -3507,9 +3322,9 @@ namespace VixenTools.Editor
             if (recoveryPlan.Count > 0)
             {
                 string recoveredList = string.Join(", ", recoveryPlan.Values.Select(t => t.name));
-                
-                LogDiagnostic("MATERIAL PIPELINE: AUTORECOVERY", "Orphaned Textures Found", 
-                    $"'{mat.name}' is missing maps. Discovered {recoveryPlan.Count} matching textures in the project via schema: {recoveredList}. Ready to re-bind.", 
+
+                LogDiagnostic("MATERIAL PIPELINE: AUTORECOVERY", "Orphaned Textures Found",
+                    $"'{mat.name}' is missing maps. Discovered {recoveryPlan.Count} matching textures in the project via schema: {recoveredList}. Ready to re-bind.",
                     "#00e5ff", mat, () => {
                         Undo.RecordObject(mat, "Auto-Recover Textures");
                         foreach (var kvp in recoveryPlan)
@@ -3541,20 +3356,19 @@ namespace VixenTools.Editor
                 bool hasMissingMats = false;
                 foreach (var mat in renderer.sharedMaterials)
                 {
-                    if (mat == null) 
-                    { 
-                        hasMissingMats = true; 
-                        continue; 
+                    if (mat == null)
+                    {
+                        hasMissingMats = true;
+                        continue;
                     }
                     sceneMaterials.Add(mat);
-                    ScrapeTexturesFromMaterial(mat); 
+                    ScrapeTexturesFromMaterial(mat);
                 }
 
-                // === 0. NULL MATERIAL RECOVERY PROTOCOL ===
                 if (hasMissingMats)
                 {
-                    LogDiagnostic("MESHES & GEOMETRY", "Missing Material Reference", 
-                        $"'{renderer.name}' has null material slots. This results in the infamous Unity pink/invisible mesh bug. Ready to auto-generate and bind replacement materials.", 
+                    LogDiagnostic("MESHES & GEOMETRY", "Missing Material Reference",
+                        $"'{renderer.name}' has null material slots. This results in the infamous Unity pink/invisible mesh bug. Ready to auto-generate and bind replacement materials.",
                         "#ff00aa", renderer.gameObject, () => {
                             Undo.RecordObject(renderer, "Auto-Generate Missing Materials");
                             var mats = renderer.sharedMaterials;
@@ -3562,7 +3376,7 @@ namespace VixenTools.Editor
 
                             string saveDir = "Assets/VixenTools/RecoveredMaterials";
                             var prefab = PrefabUtility.GetCorrespondingObjectFromSource(renderer.gameObject);
-                            
+
                             if (prefab != null)
                             {
                                 string prefabPath = AssetDatabase.GetAssetPath(prefab);
@@ -3596,10 +3410,10 @@ namespace VixenTools.Editor
                                 {
                                     Shader targetShader = _targetReplacementShader != null ? _targetReplacementShader : Shader.Find("Standard");
                                     Material newMat = new Material(targetShader);
-                                    
+
                                     string cleanName = string.Join("_", renderer.gameObject.name.Split(System.IO.Path.GetInvalidFileNameChars()));
                                     string fullPath = AssetDatabase.GenerateUniqueAssetPath($"{saveDir}/{cleanName}_Recovered_{i}.mat");
-                                    
+
                                     AssetDatabase.CreateAsset(newMat, fullPath);
                                     mats[i] = newMat;
                                     changed = true;
@@ -3616,7 +3430,6 @@ namespace VixenTools.Editor
                         });
                 }
 
-                // === 1. STATIC GEOMETRY PROTECTION ===
                 bool isProtectedVideoComponent = false;
                 if (vvmwCoreType != null && renderer.GetComponentInParent(vvmwCoreType, true) != null) isProtectedVideoComponent = true;
                 else if (proTvType != null && renderer.GetComponentInParent(proTvType, true) != null) isProtectedVideoComponent = true;
@@ -3626,13 +3439,13 @@ namespace VixenTools.Editor
 
                 if (!isProtectedVideoComponent && renderer is MeshRenderer && !renderer.gameObject.isStatic)
                 {
-                    if (renderer.GetComponentInParent<Rigidbody>() == null && 
+                    if (renderer.GetComponentInParent<Rigidbody>() == null &&
                         renderer.GetComponentInParent<VRC.SDK3.Components.VRCPickup>() == null &&
                         renderer.GetComponentInParent<Animator>() == null &&
                         renderer.GetComponentInParent<VRC.Udon.UdonBehaviour>() == null)
                     {
-                        LogDiagnostic("MESHES & GEOMETRY", "Unprotected Dynamic Mesh", 
-                            $"'{renderer.name}' is not marked as Static, meaning Unity assumes its transform will be modified at runtime. If this is a structural or environmental prop, mark it Static to lock it and enable heavy draw-call batching.", 
+                        LogDiagnostic("MESHES & GEOMETRY", "Unprotected Dynamic Mesh",
+                            $"'{renderer.name}' is not marked as Static, meaning Unity assumes its transform will be modified at runtime. If this is a structural or environmental prop, mark it Static to lock it and enable heavy draw-call batching.",
                             "#ffaa00", renderer.gameObject, () => {
                                 Undo.RecordObject(renderer.gameObject, "Mark Static");
                                 renderer.gameObject.isStatic = true;
@@ -3641,15 +3454,15 @@ namespace VixenTools.Editor
                     }
                 }
 
-                if (renderer is SkinnedMeshRenderer smr && smr.sharedMesh != null) 
+                if (renderer is SkinnedMeshRenderer smr && smr.sharedMesh != null)
                 {
                     _detectedMeshes.Add(smr.sharedMesh);
                     submeshCount = smr.sharedMesh.subMeshCount;
 
                     if (!isProtectedVideoComponent && smr.updateWhenOffscreen)
                     {
-                        LogDiagnostic("MESHES & GEOMETRY", "Always Updating Bounds", 
-                            $"'{renderer.name}' calculates bone bounds even when completely offscreen. This eats CPU.", 
+                        LogDiagnostic("MESHES & GEOMETRY", "Always Updating Bounds",
+                            $"'{renderer.name}' calculates bone bounds even when completely offscreen. This eats CPU.",
                             "#ffaa00", renderer.gameObject, () => {
                                 Undo.RecordObject(smr, "Disable Update When Offscreen");
                                 smr.updateWhenOffscreen = false;
@@ -3667,13 +3480,13 @@ namespace VixenTools.Editor
 
                         if (!isProtectedVideoComponent && filter.sharedMesh.vertexCount > 5000 && renderer.GetComponentInParent<LODGroup>() == null)
                         {
-                            LogDiagnostic("MESHES & GEOMETRY", "Missing LOD Group", 
-                                $"'{renderer.name}' has {filter.sharedMesh.vertexCount} verts but no LODs. Will generate a Culling LODGroup.", 
+                            LogDiagnostic("MESHES & GEOMETRY", "Missing LOD Group",
+                                $"'{renderer.name}' has {filter.sharedMesh.vertexCount} verts but no LODs. Will generate a Culling LODGroup.",
                                 "#00e5ff", renderer.gameObject, () => {
                                     Undo.RecordObject(renderer.gameObject, "Generate Culling LODGroup");
                                     LODGroup lodGroup = renderer.gameObject.AddComponent<LODGroup>();
                                     LOD[] lods = new LOD[1];
-                                    lods[0] = new LOD(0.05f, new Renderer[] { renderer }); 
+                                    lods[0] = new LOD(0.05f, new Renderer[] { renderer });
                                     lodGroup.SetLODs(lods);
                                     lodGroup.RecalculateBounds();
                                     PrefabUtility.RecordPrefabInstancePropertyModifications(renderer.gameObject);
@@ -3684,8 +3497,8 @@ namespace VixenTools.Editor
 
                 if (!isProtectedVideoComponent && submeshCount > 0 && matCount > submeshCount)
                 {
-                    LogDiagnostic("MESHES & GEOMETRY", "Material Slot Bloat", 
-                        $"'{renderer.name}' has {matCount} materials but its mesh only has {submeshCount} submeshes. This wastes draw calls.", 
+                    LogDiagnostic("MESHES & GEOMETRY", "Material Slot Bloat",
+                        $"'{renderer.name}' has {matCount} materials but its mesh only has {submeshCount} submeshes. This wastes draw calls.",
                         "#ff00aa", renderer.gameObject, () => {
                             Undo.RecordObject(renderer, "Clean Material Slots");
                             var newMats = new Material[submeshCount];
@@ -3696,37 +3509,34 @@ namespace VixenTools.Editor
                 }
             }
 
-            // === 1.5 OMNI-HARVESTER ===
             if (RenderSettings.skybox != null) { sceneMaterials.Add(RenderSettings.skybox); ScrapeTexturesFromMaterial(RenderSettings.skybox); }
             foreach (var sky in GetCachedObjects<Skybox>(true)) if (sky.material != null) { sceneMaterials.Add(sky.material); ScrapeTexturesFromMaterial(sky.material); }
 
             foreach (var graphic in GetCachedObjects<UnityEngine.UI.Graphic>(true))
                 if (graphic.material != null && graphic.material != graphic.defaultMaterial) { sceneMaterials.Add(graphic.material); ScrapeTexturesFromMaterial(graphic.material); }
-            
+
             foreach (var tmp in GetCachedObjects<TMPro.TMP_Text>(true))
             {
                 if (tmp == null) continue;
-                
-                try 
+
+                try
                 {
-                    // 4D-Chess: Only attempt to read materials if the font asset physically exists.
-                    // This prevents internal TMPro NullReferenceExceptions on corrupted UI elements.
                     if (tmp.font != null)
                     {
-                        if (tmp.fontSharedMaterial != null) 
-                        { 
-                            sceneMaterials.Add(tmp.fontSharedMaterial); 
-                            ScrapeTexturesFromMaterial(tmp.fontSharedMaterial); 
-                        }
-                        
-                        if (tmp.fontSharedMaterials != null) 
+                        if (tmp.fontSharedMaterial != null)
                         {
-                            foreach (var m in tmp.fontSharedMaterials) 
+                            sceneMaterials.Add(tmp.fontSharedMaterial);
+                            ScrapeTexturesFromMaterial(tmp.fontSharedMaterial);
+                        }
+
+                        if (tmp.fontSharedMaterials != null)
+                        {
+                            foreach (var m in tmp.fontSharedMaterials)
                             {
-                                if (m != null) 
-                                { 
-                                    sceneMaterials.Add(m); 
-                                    ScrapeTexturesFromMaterial(m); 
+                                if (m != null)
+                                {
+                                    sceneMaterials.Add(m);
+                                    ScrapeTexturesFromMaterial(m);
                                 }
                             }
                         }
@@ -3734,8 +3544,6 @@ namespace VixenTools.Editor
                 }
                 catch (Exception)
                 {
-                    // Explicitly swallow internal TMP crashes on ghost objects
-                    // to prevent the system scan from halting.
                 }
             }
 
@@ -3781,12 +3589,12 @@ namespace VixenTools.Editor
             var allBehaviours = GetCachedObjects<MonoBehaviour>(true);
             var monoFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
             Dictionary<Type, System.Reflection.FieldInfo[]> fieldCache = new Dictionary<Type, System.Reflection.FieldInfo[]>();
-            
+
             foreach (var b in allBehaviours)
             {
                 if (b == null) continue;
                 Type t = b.GetType();
-                
+
                 if (t.Namespace != null && (t.Namespace.StartsWith("UnityEngine") || t.Namespace.StartsWith("UnityEditor") || t.Namespace.StartsWith("VRC.SDKBase"))) continue;
 
                 if (!fieldCache.TryGetValue(t, out var fields))
@@ -3807,7 +3615,7 @@ namespace VixenTools.Editor
                         var mats = f.GetValue(b) as Material[];
                         if (mats != null) foreach(var m in mats) if (m != null) { sceneMaterials.Add(m); ScrapeTexturesFromMaterial(m); }
                     }
-                    else if (typeof(Texture).IsAssignableFrom(f.FieldType)) 
+                    else if (typeof(Texture).IsAssignableFrom(f.FieldType))
                     {
                         var tex = f.GetValue(b) as Texture;
                         if (tex != null) _detectedTextures.Add(tex);
@@ -3830,7 +3638,6 @@ namespace VixenTools.Editor
                 }
             }
 
-            // === 2. SCRIPT ASSET SCRAPER ===
             Type txlScreenMgrType = GetTypeSafe("Texel.ScreenManager");
             if (txlScreenMgrType != null)
             {
@@ -3860,7 +3667,7 @@ namespace VixenTools.Editor
                     if (customTexField != null && customTexField.GetValue(tv) is Texture t && t != null) _detectedTextures.Add(t);
                 }
             }
-            
+
             Type proTvPlaylistType = GetTypeSafe("ArchiTech.ProTV.PlaylistData");
             if (proTvPlaylistType != null)
             {
@@ -3886,13 +3693,12 @@ namespace VixenTools.Editor
 
                     var rtField = audioLinkType.GetField("audioData", monoFlags);
                     if (rtField != null && rtField.GetValue(al) is Texture t && t != null) _detectedTextures.Add(t);
-                    
+
                     var tex2DField = audioLinkType.GetField("audioData2D", monoFlags);
                     if (tex2DField != null && tex2DField.GetValue(al) is Texture t2 && t2 != null) _detectedTextures.Add(t2);
                 }
             }
 
-            // === 3. IMPORTER LEAKS & COMPRESSION (CACHE GUARDED) ===
             bool cacheUpdatedDuringScan = false;
 
             foreach (var mesh in _detectedMeshes)
@@ -3903,32 +3709,32 @@ namespace VixenTools.Editor
                 if (string.IsNullOrEmpty(meshPath) || (!meshPath.StartsWith("Assets") && !meshPath.StartsWith("Packages"))) continue;
 
                 string guid = AssetDatabase.AssetPathToGUID(meshPath);
-                
+
                 if (!ShouldProcessMeshAsset(guid, meshPath)) continue;
 
                 bool isCompliant = true;
 
-                if (mesh.vertexCount > 10000) 
+                if (mesh.vertexCount > 10000)
                 {
                     LogDiagnostic("MESHES & GEOMETRY", "High Poly Counts", $"'{mesh.name}' has {mesh.vertexCount} vertices.", "#ff00aa", mesh);
-                    isCompliant = false; 
+                    isCompliant = false;
                 }
 
                 string ext = System.IO.Path.GetExtension(meshPath).ToLowerInvariant();
-                
+
                 if (ext == ".fbx" || ext == ".obj" || ext == ".dae" || ext == ".blend")
                 {
                     ModelImporter imp = AssetImporter.GetAtPath(meshPath) as ModelImporter;
-                    if (imp != null) 
+                    if (imp != null)
                     {
                         if (mesh.isReadable)
                         {
                             isCompliant = false;
-                            LogDiagnostic("MESHES & GEOMETRY", "Read/Write Enabled", 
-                                $"'{mesh.name}' keeps a duplicate copy in CPU RAM. Disable this unless accessed by C#/Udon scripts.", 
+                            LogDiagnostic("MESHES & GEOMETRY", "Read/Write Enabled",
+                                $"'{mesh.name}' keeps a duplicate copy in CPU RAM. Disable this unless accessed by C#/Udon scripts.",
                                 "#ffaa00", mesh, () => {
-                                    imp.isReadable = false; 
-                                    imp.SaveAndReimport(); 
+                                    imp.isReadable = false;
+                                    imp.SaveAndReimport();
                                     RecordMeshResult(guid, meshPath, true);
                             });
                         }
@@ -3936,8 +3742,8 @@ namespace VixenTools.Editor
                         if (imp.meshCompression == ModelImporterMeshCompression.Off && mesh.vertexCount > 1000)
                         {
                             isCompliant = false;
-                            LogDiagnostic("MESHES & GEOMETRY", "Uncompressed Mesh", 
-                                $"'{mesh.name}' has no mesh compression. Applying 'Low' compression significantly reduces VRAM.", 
+                            LogDiagnostic("MESHES & GEOMETRY", "Uncompressed Mesh",
+                                $"'{mesh.name}' has no mesh compression. Applying 'Low' compression significantly reduces VRAM.",
                                 "#00e5ff", mesh, () => {
                                     imp.meshCompression = ModelImporterMeshCompression.Low;
                                     imp.SaveAndReimport();
@@ -3955,13 +3761,12 @@ namespace VixenTools.Editor
             }
             if (cacheUpdatedDuringScan) SaveLookupCache();
 
-            // === 4. MATERIAL PROTECTION & SHADER COMPLIANCE ===
             foreach (var mat in sceneMaterials)
             {
                 string shaderName = mat.shader != null ? mat.shader.name : "Missing Shader";
                 string materialName = mat.name;
                 bool isMissingOrInvalid = mat.shader == null || mat.shader.name == "Hidden/InternalErrorShader";
-                
+
                 if (isMissingOrInvalid)
                 {
                     LogDiagnostic("SHADER PIPELINE & REPLACER", "Invalid/Missing Shader (Magenta)", $"'{mat.name}' is broken. Ready to swap to target.", "#ff00aa", mat, () => {
@@ -3975,10 +3780,9 @@ namespace VixenTools.Editor
                 }
                 else
                 {
-                    // === A. SHADER ENFORCER (WHITELIST & REPLACER) ===
-                    bool isInternalPluginShader = shaderName.IndexOf("AudioLink", StringComparison.OrdinalIgnoreCase) >= 0 || 
-                                                  shaderName.IndexOf("VideoTXL", StringComparison.OrdinalIgnoreCase) >= 0 || 
-                                                  shaderName.IndexOf("ProTV", StringComparison.OrdinalIgnoreCase) >= 0 || 
+                    bool isInternalPluginShader = shaderName.IndexOf("AudioLink", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                                  shaderName.IndexOf("VideoTXL", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                                  shaderName.IndexOf("ProTV", StringComparison.OrdinalIgnoreCase) >= 0 ||
                                                   shaderName.IndexOf("AVPro", StringComparison.OrdinalIgnoreCase) >= 0 ||
                                                   shaderName.IndexOf("JLChnToZ", StringComparison.OrdinalIgnoreCase) >= 0 ||
                                                   shaderName.IndexOf("VVMW", StringComparison.OrdinalIgnoreCase) >= 0 ||
@@ -3986,13 +3790,13 @@ namespace VixenTools.Editor
 
                     bool isProtectedMaterialName = materialName.IndexOf("VideoTXL", StringComparison.OrdinalIgnoreCase) >= 0 ||
                                                    materialName.IndexOf("ProTV", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                                   materialName.IndexOf("VideoSurface", StringComparison.OrdinalIgnoreCase) >= 0 || 
+                                                   materialName.IndexOf("VideoSurface", StringComparison.OrdinalIgnoreCase) >= 0 ||
                                                    materialName.IndexOf("IwaSync", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                                   (materialName.IndexOf("Screen", StringComparison.OrdinalIgnoreCase) >= 0 && iwaSyncType != null); 
+                                                   (materialName.IndexOf("Screen", StringComparison.OrdinalIgnoreCase) >= 0 && iwaSyncType != null);
 
                     if (!isInternalPluginShader && !isProtectedMaterialName)
                     {
-                        if (_targetReplacementShader != null && mat.shader != _targetReplacementShader && !ShaderDictionaryAsset.IsGloballyProtected(mat.shader)) 
+                        if (_targetReplacementShader != null && mat.shader != _targetReplacementShader && !ShaderDictionaryAsset.IsGloballyProtected(mat.shader))
                         {
                             bool isWhitelisted = false;
                             if (_shaderWhitelistAsset != null && _shaderWhitelistAsset.shaders != null)
@@ -4014,23 +3818,22 @@ namespace VixenTools.Editor
                         }
                     }
 
-                    // === B. GLOBAL MATERIAL OPTIMIZATION ===
-                    if (shaderName.IndexOf("Poiyomi", StringComparison.OrdinalIgnoreCase) >= 0 || 
+                    if (shaderName.IndexOf("Poiyomi", StringComparison.OrdinalIgnoreCase) >= 0 ||
                         shaderName.IndexOf("lilToon", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        if (shaderName.IndexOf("Locked", StringComparison.OrdinalIgnoreCase) < 0 && 
+                        if (shaderName.IndexOf("Locked", StringComparison.OrdinalIgnoreCase) < 0 &&
                             shaderName.IndexOf("Optimized", StringComparison.OrdinalIgnoreCase) < 0)
                         {
-                            LogDiagnostic("MATERIAL SECURITY & COMPUTE", "Unlocked Toon Shader", 
-                                $"'{mat.name}' is using an unlocked {shaderName}. Unlocked materials leave hundreds of properties exposed to the CPU because Unity assumes they might be modified at runtime. Lock this material in its inspector to bake it.", 
+                            LogDiagnostic("MATERIAL SECURITY & COMPUTE", "Unlocked Toon Shader",
+                                $"'{mat.name}' is using an unlocked {shaderName}. Unlocked materials leave hundreds of properties exposed to the CPU because Unity assumes they might be modified at runtime. Lock this material in its inspector to bake it.",
                                 "#ff00aa", mat);
                         }
                     }
 
                     if (!mat.enableInstancing && !isProtectedMaterialName)
                     {
-                        LogDiagnostic("MATERIAL OPTIMIZATION", "GPU Instancing Disabled", 
-                            $"'{mat.name}' has GPU Instancing disabled. Instancing protects CPU threads by allowing Unity to render multiple identical meshes in a single draw call. Enable this for environmental materials.", 
+                        LogDiagnostic("MATERIAL OPTIMIZATION", "GPU Instancing Disabled",
+                            $"'{mat.name}' has GPU Instancing disabled. Instancing protects CPU threads by allowing Unity to render multiple identical meshes in a single draw call. Enable this for environmental materials.",
                             "#00e5ff", mat, () => {
                                 Undo.RecordObject(mat, "Enable GPU Instancing");
                                 mat.enableInstancing = true;
@@ -4038,7 +3841,7 @@ namespace VixenTools.Editor
                             });
                     }
                 }
-                
+
                 AttemptTextureRecovery(mat);
             }
         }
@@ -4129,7 +3932,7 @@ namespace VixenTools.Editor
                             });
                     }
                 }
-                
+
                 importer.GetSourceTextureWidthAndHeight(out int srcWidth, out int srcHeight);
                 int targetMax = Mathf.Clamp(_targetTextureResolution, 32, 16384);
 
@@ -4185,17 +3988,12 @@ namespace VixenTools.Editor
                     cacheUpdatedDuringScan = true;
                 }
             }
-            
+
             if (cacheUpdatedDuringScan) SaveLookupCache();
         }
 
-        // ==========================================
-        // IMAGEMAGICK DEPLOYMENT PROTOCOLS
-        // ==========================================
-
         private bool ResizeTextureWithMagick(string fullPath, string assetPath, int maxWidth, int maxHeight)
         {
-            // Never resize shader-internal or HDR data textures (Poiyomi internals, .exr, etc.).
             if (VixenMagickKit.IsProtectedAsset(assetPath)) return false;
             try
             {
@@ -4225,7 +4023,6 @@ namespace VixenTools.Editor
 
         private bool OptimizeTextureWithMagick(string fullPath, string assetPath)
         {
-            // Never re-encode shader-internal or HDR data textures (Poiyomi internals, .exr, etc.).
             if (VixenMagickKit.IsProtectedAsset(assetPath)) return false;
             try
             {
@@ -4282,25 +4079,25 @@ namespace VixenTools.Editor
                 if ((canvas.renderMode == RenderMode.WorldSpace || canvas.renderMode == RenderMode.ScreenSpaceCamera) && canvas.worldCamera == null)
                 {
                     var raycaster = canvas.GetComponent<UnityEngine.UI.GraphicRaycaster>();
-                    if (raycaster != null || canvas.renderMode == RenderMode.ScreenSpaceCamera) 
+                    if (raycaster != null || canvas.renderMode == RenderMode.ScreenSpaceCamera)
                     {
                         string issueLevel = canvas.renderMode == RenderMode.ScreenSpaceCamera ? "#ff00aa" : "#ffaa00";
-                        string issueDesc = canvas.renderMode == RenderMode.ScreenSpaceCamera 
+                        string issueDesc = canvas.renderMode == RenderMode.ScreenSpaceCamera
                             ? $"'{canvas.name}' is Screen Space - Camera but has no Camera assigned. It will fail to render."
                             : $"'{canvas.name}' is World Space but lacks an Event Camera. Unity will throw continuous warnings and UI events may fail.";
 
                         LogDiagnostic("UI & CANVAS OPTIMIZATION", "Missing Event Camera", issueDesc, issueLevel, canvas, () => {
                             Undo.RecordObject(canvas, "Assign Event Camera");
                             Camera eventCam = GameObject.Find("Vixen UI Event Camera")?.GetComponent<Camera>();
-                            if (eventCam == null) 
+                            if (eventCam == null)
                             {
                                 GameObject camObj = new GameObject("Vixen UI Event Camera");
                                 eventCam = camObj.AddComponent<Camera>();
                                 eventCam.clearFlags = CameraClearFlags.Nothing;
-                                eventCam.cullingMask = 0; 
+                                eventCam.cullingMask = 0;
                                 eventCam.useOcclusionCulling = false;
-                                eventCam.stereoTargetEye = StereoTargetEyeMask.None; 
-                                eventCam.enabled = false; 
+                                eventCam.stereoTargetEye = StereoTargetEyeMask.None;
+                                eventCam.enabled = false;
                                 Undo.RegisterCreatedObjectUndo(camObj, "Create UI Event Camera");
                             }
                             canvas.worldCamera = eventCam;
@@ -4312,16 +4109,16 @@ namespace VixenTools.Editor
 
             foreach (var img in GetCachedObjects<UnityEngine.UI.Image>(true))
                 if (img.sprite != null && img.sprite.texture != null) _detectedUITextures.Add(img.sprite.texture);
-                
+
             foreach (var raw in GetCachedObjects<UnityEngine.UI.RawImage>(true))
                 if (raw.texture != null) _detectedUITextures.Add(raw.texture);
-                
+
             foreach (var txt in GetCachedObjects<TMP_Text>(true))
-                if (txt.font != null && txt.font.material != null && txt.font.material.mainTexture != null) 
+                if (txt.font != null && txt.font.material != null && txt.font.material.mainTexture != null)
                     _detectedUITextures.Add(txt.font.material.mainTexture);
-                    
+
             foreach (var legacyTxt in GetCachedObjects<UnityEngine.UI.Text>(true))
-                if (legacyTxt.font != null && legacyTxt.font.material != null && legacyTxt.font.material.mainTexture != null) 
+                if (legacyTxt.font != null && legacyTxt.font.material != null && legacyTxt.font.material.mainTexture != null)
                     _detectedUITextures.Add(legacyTxt.font.material.mainTexture);
         }
 
@@ -4329,7 +4126,7 @@ namespace VixenTools.Editor
         {
             if (_targetTMPFont != null)
             {
-                var text3DComps = GetCachedObjects<TextMeshPro>(true); 
+                var text3DComps = GetCachedObjects<TextMeshPro>(true);
                 foreach (var txt3D in text3DComps)
                 {
                     if (txt3D.font != _targetTMPFont)
@@ -4394,7 +4191,7 @@ namespace VixenTools.Editor
                         imp.forceToMono = true;
                         imp.SaveAndReimport();
                     });
-                
+
                 if (imp.defaultSampleSettings.loadType == AudioClipLoadType.DecompressOnLoad && clip.length > 5f)
                     LogDiagnostic("AUDIO OPTIMIZATION", "Decompress On Load", $"'{clip.name}' causes loading lag.", "#ff00aa", clip, () => {
                         var settings = imp.defaultSampleSettings;
@@ -4419,15 +4216,15 @@ namespace VixenTools.Editor
 
                     if (objSync == null && udon == null)
                     {
-                        LogDiagnostic("UDON PERSISTENCE", "Empty Player Object", 
-                            $"'{component.gameObject.name}' has a VRCPlayerObject component but no VRCObjectSync or UdonBehaviour. It will not persist any data and serves no purpose.", 
+                        LogDiagnostic("UDON PERSISTENCE", "Empty Player Object",
+                            $"'{component.gameObject.name}' has a VRCPlayerObject component but no VRCObjectSync or UdonBehaviour. It will not persist any data and serves no purpose.",
                             "#ff00aa", component.gameObject);
                     }
 
                     if (udon != null && udon.SyncMethod == VRC.SDKBase.Networking.SyncType.Continuous)
                     {
-                        LogDiagnostic("UDON PERSISTENCE", "Continuous Player Object Sync", 
-                            $"'{component.gameObject.name}' is a Player Object set to Continuous sync. This will cause extreme bandwidth bloat when instances scale. Set to Manual unless physical transform syncing is strictly required.", 
+                        LogDiagnostic("UDON PERSISTENCE", "Continuous Player Object Sync",
+                            $"'{component.gameObject.name}' is a Player Object set to Continuous sync. This will cause extreme bandwidth bloat when instances scale. Set to Manual unless physical transform syncing is strictly required.",
                             "#ffaa00", component.gameObject, () => {
                                 Undo.RecordObject(udon, "Set PlayerObject to Manual Sync");
                                 udon.SyncMethod = VRC.SDKBase.Networking.SyncType.Manual;
@@ -4453,7 +4250,7 @@ namespace VixenTools.Editor
                     {
                         checkedAssets.Add(uAsset);
                         string uasm = (string)getUasm.Invoke(cache, new object[] { uAsset });
-                        
+
                         if (!string.IsNullOrEmpty(uasm))
                         {
                             bool usesPlayerData = uasm.Contains("Persistence") && uasm.Contains("PlayerData");
@@ -4466,15 +4263,15 @@ namespace VixenTools.Editor
                             {
                                 if (usesSet && hasUpdate)
                                 {
-                                    LogDiagnostic("UDON PERSISTENCE", "PlayerData in Update Loop", 
-                                        $"'{uAsset.name}' executes PlayerData.Set() alongside an Update loop. Writing to persistence every frame will instantly trigger VRChat's rate limits and cause total data loss for the player. Refactor to only save on discrete state changes.", 
+                                    LogDiagnostic("UDON PERSISTENCE", "PlayerData in Update Loop",
+                                        $"'{uAsset.name}' executes PlayerData.Set() alongside an Update loop. Writing to persistence every frame will instantly trigger VRChat's rate limits and cause total data loss for the player. Refactor to only save on discrete state changes.",
                                         "#ff00aa", udon.gameObject);
                                 }
-                                
-                                if (usesGet && !usesOnPlayerDataUpdated) 
+
+                                if (usesGet && !usesOnPlayerDataUpdated)
                                 {
-                                    LogDiagnostic("UDON PERSISTENCE", "Unmonitored PlayerData", 
-                                        $"'{uAsset.name}' reads PlayerData but doesn't implement OnPlayerDataUpdated. VRChat cloud data can take several seconds to load after joining. This script will likely read null/default data and permanently desync.", 
+                                    LogDiagnostic("UDON PERSISTENCE", "Unmonitored PlayerData",
+                                        $"'{uAsset.name}' reads PlayerData but doesn't implement OnPlayerDataUpdated. VRChat cloud data can take several seconds to load after joining. This script will likely read null/default data and permanently desync.",
                                         "#00e5ff", udon.gameObject);
                                 }
                             }
@@ -4504,7 +4301,7 @@ namespace VixenTools.Editor
             {
                 foreach (var diag in actionableDiagnostics)
                 {
-                    try 
+                    try
                     {
                         diag.FixPayload.Invoke();
                     }
@@ -4512,34 +4309,28 @@ namespace VixenTools.Editor
                     {
                         Debug.LogError($"[Vixen System] Fix execution failed for '{diag.IssueType}': {ex.Message}");
                     }
-                    
-                    diag.FixPayload = null; // Prevent double execution
+
+                    diag.FixPayload = null;
                     diag.IsSelected = false;
-                    diag.OnFixedUIUpdate?.Invoke(); // Keeps visual continuity during the split-second before the rescan hits
+                    diag.OnFixedUIUpdate?.Invoke();
                 }
             }
             finally
             {
-                // Persist all standard Unity structural changes (Materials, Prefabs, Shaders, etc.)
-                AssetDatabase.SaveAssets(); 
-                
-                // 4D-Chess: Check if the fixes generated heavy I/O operations (ImageMagick)
+                AssetDatabase.SaveAssets();
+
                 if (_workQueue.Count > 0)
                 {
-                    // Offload to the background thread to prevent Editor freezing.
-                    // ProcessQueueTick() will handle the Refresh(), SaveLookupCache(), and InitiateFullSystemScan() when finished.
                     StartProcessingQueue();
                 }
                 else
                 {
-                    // If there was no heavy IO, execute the Live Refresh instantly
                     AssetDatabase.Refresh();
-                    
-                    // Force a save to the JSON database just in case any instant-fixes modified the cache
+
                     SaveLookupCache();
-                    
+
                     InitiateFullSystemScan();
-                    
+
                     EditorUtility.DisplayDialog("VIXEN SYSTEM", "Targeted purges complete. System updated.", "ACKNOWLEDGE");
                 }
             }
@@ -4581,7 +4372,7 @@ namespace VixenTools.Editor
                         string part = splits[i];
 
                         var existingChild = currentParent.children.FirstOrDefault(c => c.name == part);
-                        
+
                         if (existingChild == null)
                         {
                             var newItem = isLeaf ? new ShaderDropdownItem(part, shaderName) : new AdvancedDropdownItem(part);

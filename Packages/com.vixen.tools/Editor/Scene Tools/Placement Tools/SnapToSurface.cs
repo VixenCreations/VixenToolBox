@@ -5,37 +5,26 @@ using System.Collections.Generic;
 
 namespace VixenTools.Editor
 {
-    /// <summary>
-    /// VixForge Utility: Enterprise-grade surface snapping, locked to the VRChat Worlds SDK.
-    /// Features Dual-System Gravity Detection and the new 'Precision Click-to-Place' Camera Raycaster
-    /// for flawless architectural decorating and shelf placement.
-    /// </summary>
     [InitializeOnLoad]
     public static class SnapToSurface
     {
         private const string LIVE_SNAP_MENU = "VixenTools/Scene/Live Surface Snapping";
         private const string PRECISION_SNAP_MENU = "VixenTools/Scene/Precision Click-to-Place";
-        private const string DROP_MENU_PATH = "VixenTools/Scene/Drop to Surface %&s"; // Ctrl+Alt+S
+        private const string DROP_MENU_PATH = "VixenTools/Scene/Drop to Surface %&s";
 
         private static bool _liveSnappingEnabled;
         private static bool _precisionPlacementEnabled;
 
-        // VRChat specific layer mask: 
-        // 2: Ignore Raycast | 4: Water | 5: UI | 9: Player | 10: PlayerLocal | 12: UiMenu | 13: Pickup
         private const int VRC_SNAP_LAYER_MASK = ~((1 << 2) | (1 << 4) | (1 << 5) | (1 << 9) | (1 << 10) | (1 << 12) | (1 << 13));
 
         static SnapToSurface()
         {
             _liveSnappingEnabled = EditorPrefs.GetBool(LIVE_SNAP_MENU, false);
             _precisionPlacementEnabled = EditorPrefs.GetBool(PRECISION_SNAP_MENU, false);
-            
+
             EditorApplication.update += OnEditorUpdate;
             SceneView.duringSceneGui += OnSceneGUI;
         }
-
-        // =================================================================================
-        // MENU TOGGLES
-        // =================================================================================
 
         [MenuItem(LIVE_SNAP_MENU, priority = 100)]
         private static void ToggleLiveSnap()
@@ -68,22 +57,16 @@ namespace VixenTools.Editor
             foreach (var t in Selection.transforms) ExecuteGravitySnap(t);
         }
 
-        // =================================================================================
-        // PRECISION CLICK-TO-PLACE (THE SNIPER DOT)
-        // =================================================================================
-
         private static void OnSceneGUI(SceneView sceneView)
         {
             if (!_precisionPlacementEnabled || Selection.transforms.Length == 0) return;
 
-            // Take control of the mouse to prevent Unity from box-selecting while we paint
             int controlID = GUIUtility.GetControlID(FocusType.Passive);
             if (Event.current.type == EventType.Layout) HandleUtility.AddDefaultControl(controlID);
 
             Event e = Event.current;
             Ray ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
 
-            // 1. SURGICAL SHIELDING: Disable selected colliders so the raycast doesn't hit the prop you're holding
             List<Collider> disabledColliders = new List<Collider>();
             foreach (var t in Selection.transforms)
             {
@@ -96,7 +79,6 @@ namespace VixenTools.Editor
             bool foundSurface = false;
             RaycastHit bestHit = new RaycastHit();
 
-            // 2. CAMERA-TO-WORLD MATRIX
             RaycastHit[] hits = Physics.RaycastAll(ray, 1000f, VRC_SNAP_LAYER_MASK);
             float closestDist = float.MaxValue;
 
@@ -111,21 +93,17 @@ namespace VixenTools.Editor
                 }
             }
 
-            // 3. RESTORE SHIELDING
             foreach (var c in disabledColliders) if (c != null) c.enabled = true;
 
-            // 4. EXECUTE PLACEMENT & UI
             if (foundSurface)
             {
-                // Draw the cyber-aesthetic UV Mapper dot in the Scene View
-                Handles.color = new Color(0f, 0.898f, 1f, 0.6f); 
+                Handles.color = new Color(0f, 0.898f, 1f, 0.6f);
                 Handles.DrawSolidDisc(bestHit.point, bestHit.normal, 0.04f);
-                Handles.color = new Color(1f, 0f, 0.66f, 1f); 
+                Handles.color = new Color(1f, 0f, 0.66f, 1f);
                 Handles.DrawWireDisc(bestHit.point, bestHit.normal, 0.04f);
                 sceneView.Repaint();
 
-                // If user clicks or click-drags (paint mode). Allow Shift to bypass rotation alignment
-                if ((e.type == EventType.MouseDown || e.type == EventType.MouseDrag) && e.button == 0 && 
+                if ((e.type == EventType.MouseDown || e.type == EventType.MouseDrag) && e.button == 0 &&
                     (e.modifiers == EventModifiers.None || e.modifiers == EventModifiers.Shift))
                 {
                     bool alignRotation = (e.modifiers != EventModifiers.Shift);
@@ -137,43 +115,35 @@ namespace VixenTools.Editor
 
                         if (alignRotation)
                         {
-                            // Temporarily reset rotation/position to calculate the pure local Y bottom offset
                             Vector3 originalPos = t.position;
                             Quaternion originalRot = t.rotation;
-                            
+
                             t.position = Vector3.zero;
                             t.rotation = Quaternion.identity;
                             bottomOffset = CalculateFeetOffset(t);
-                            
+
                             t.position = originalPos;
                             t.rotation = originalRot;
 
-                            // Tilt the object to match the surface normal while preserving its local spin (yaw)
                             t.rotation = Quaternion.FromToRotation(t.up, bestHit.normal) * t.rotation;
 
-                            // Snap to point and push out along the normal by the bottom offset
                             t.position = bestHit.point + (bestHit.normal * bottomOffset);
                         }
                         else
                         {
-                            // Legacy vertical-only drop
                             bottomOffset = CalculateFeetOffset(t);
                             t.position = new Vector3(bestHit.point.x, bestHit.point.y + bottomOffset, bestHit.point.z);
                         }
 
-                        t.hasChanged = false; // Prevent Live Snapping from fighting the Precision Snapping
+                        t.hasChanged = false;
 
                         var udonBehaviour = t.GetComponent("VRC.Udon.UdonBehaviour");
                         if (udonBehaviour != null) EditorUtility.SetDirty(udonBehaviour);
                     }
-                    e.Use(); 
+                    e.Use();
                 }
             }
         }
-
-        // =================================================================================
-        // LEGACY LIVE GRAVITY SNAPPING
-        // =================================================================================
 
         private static void OnEditorUpdate()
         {
@@ -186,7 +156,7 @@ namespace VixenTools.Editor
                 if (t.hasChanged)
                 {
                     ExecuteGravitySnap(t);
-                    t.hasChanged = false; 
+                    t.hasChanged = false;
                 }
             }
         }
@@ -195,7 +165,7 @@ namespace VixenTools.Editor
         {
             float bottomOffset = CalculateFeetOffset(t);
             int originalLayer = t.gameObject.layer;
-            t.gameObject.layer = 2; // Ignore Raycast
+            t.gameObject.layer = 2;
 
             bool foundSurface = false;
             float targetY = float.MinValue;

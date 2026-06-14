@@ -1,6 +1,6 @@
 # VIXENWEAR : SHADER USAGE
 
-The **VixenWear Latex Ultra** is a high-fidelity, dual-lobe PBR surface shader engineered for complex synthetic materials. It bypasses standard Unity lighting models to provide a full GGX BRDF stack (Burley diffuse, Smith-Joint visibility, Schlick Fresnel, Karis split-sum environment, optional Filament multi-scatter compensation), true tangent-space micro-shadowing, hardware tessellation, dynamic thin-film interference, anisotropic specular for stretched latex, thin-part transmission, wet/run-off and melting-goo surface FX, and fully integrated SM5 hardware processing for AudioLink and VRSL DMX.
+The **VixenWear Latex Ultra** is a high-fidelity, dual-lobe PBR surface shader engineered for complex synthetic materials. It bypasses standard Unity lighting models to provide a full GGX BRDF stack (Burley diffuse, Smith-Joint visibility, Schlick Fresnel, Karis split-sum environment, optional Filament multi-scatter compensation), true tangent-space micro-shadowing, hardware tessellation, dynamic thin-film interference, anisotropic specular for stretched latex, thin-part transmission, wet/run-off and melting-goo surface FX, and fully integrated SM5 hardware processing for AudioLink, VRSL DMX (stage hijack + GI wash), LTCGI and AreaLit area lights, and VRC Light Volumes. Built-in Render Pipeline only (VRChat); as a surface shader it does not compile under HDRP/URP.
 
 To achieve flawless high-gloss black materials, deep atmospheric reflections, and reactive neon emissives, you must adhere to this pipeline architecture.
 
@@ -97,7 +97,7 @@ The shader utilizes a 50-step adaptive Gradient Raymarcher mapped to the height 
 
 * **Parallax Depth:** Controls the structural extrusion of the fabric.
 * **Shadow Hardness:** Calculates physical light intersection against the raymarched heightmap. This creates true tangent-space shadows inside the recessed seams of your geometry, coupled to the parallax displacement.
-* **Hardware Tessellation:** If the GPU supports DX11/Tessellation, the geometry is physically sub-divided up to 50 times based on the `Tessellation Edge Length` and physically extruded using the `Displacement Strength`.
+* **Hardware Tessellation:** If the GPU supports DX11/Tessellation, the geometry is physically sub-divided and extruded using the `Displacement Strength`. The `Tessellation Detail` slider (0–1) sets how dense that subdivision is — **higher = more detail and GPU cost, lower = cheaper** — and the amount is distance/screen-adaptive (far or small-on-screen surfaces are automatically cheaper) and capped so it can't run away. Leave it at 0 if you aren't using Displacement Strength. (Base shader only; the SPS variant has no tessellation stage.)
 
 ---
 
@@ -195,6 +195,7 @@ Drive the `Emission Color` via HDR values; the emission map RGB tints and its al
 * **MatCap 1:** Now exposes `Mask Channel` (R/G/B/A) and per-layer `Tint` so a single RGB region mask can drive different matcaps in different zones.
 * **MatCap 2 Layer:** New in 2.3.0. Full second matcap with own `Texture`, `Mask`, `Mask Channel`, `Tint`, `Intensity`, `Rotation`, and a `Blend Mode` (`Add` / `Replace` / `Multiply`).
 * **Matcap Lighting Mix:** Governs how much the MatCap respects realtime shadows; same for both layers.
+* **Tiling / Scroll (per layer):** Each layer has a `Tiling (XY)` vector and a `Scroll (X pan, Y pan, Z spin)` vector. Tiling repeats the matcap around its centre (set the matcap texture's Wrap Mode to **Repeat** to see it actually repeat; Clamp just stretches the border). Scroll animates it smoothly off real time: `X`/`Y` pan and `Z` spins the matcap in degrees per second. Leave Tiling at `(1,1)` and Scroll at `(0,0,0)` for the classic static matcap.
 
 A common workflow is to drop the same red/blue/black region mask into both layers and pick `R` for layer 1, `B` for layer 2 - each zone shows a different matcap.
 
@@ -219,6 +220,17 @@ LTCGI gains independent diffuse and specular mix:
 * **LTCGI Specular Mix:** Area-light specular only.
 * **LTCGI Diffuse Mix:** Area-light diffuse only.
 
+### AreaLit (New in 2.5.0)
+
+AreaLit area lights are vendored in as analytic Linearly-Transformed-Cosines (`Editor/cginc/AreaLit/AreaLit_Latex.cginc`, `AL_`-prefixed, no LUT texture). AreaLit itself ships **no scene-wide broadcast** (its LightCam renders into a per-material `LightMesh` RenderTexture), so VixenWear reads it two ways, preferring the global path so the suit intercepts AreaLit **at the GI level like LTCGI**:
+
+* **Scene globals (primary):** `_Udon_AreaLit_LightMesh` / `_Udon_AreaLit_Tex0` / `_Udon_AreaLit_Enable`, published by the world-side `AreaLitGlobalBroadcaster` Udon helper (`Runtime/AreaLitGlobalBroadcaster.cs`, `VRCShader.SetGlobalTexture` in `Start`). When `_Udon_AreaLit_Enable > 0.5` the dispatcher reads these - no per-material assignment, every avatar in the world lit automatically.
+* **Per-material fallback:** `_AreaLit_LightMesh` + `_AreaLit_LightTex0` slots, used when no broadcaster is live.
+* Both sources funnel through one `AL_ShadeCore(Texture2D<float4> lmesh, Texture2D ltex0, ...)` (a runtime branch on `_Udon_AreaLit_Enable` selects the pair). LightMesh is read with `.Load` (no sampler); the light texture is `UNITY_DECLARE_TEX2D_NOSAMPLER` sampled through `_MainTex`'s sampler - so AreaLit adds **zero** sampler registers.
+* **AreaLit Intensity / Specular Mix / Diffuse Mix:** mirror the LTCGI mixes.
+
+Gated by the `AREALIT_ENABLE` keyword (compiled in when Intensity > 0, stripped otherwise). The include is wrapped in `#ifndef SHADER_TARGET_SURFACE_ANALYSIS_MOJOSHADER` (with a no-op stub) because Unity's surface-analysis pass uses MojoShader, which can't parse object textures - the same guard the vendored LTCGI uniforms use. Trimmed for avatar cost: single light texture, 16-quad cap, no MSBuffer/checkerboard. An unbound global, empty slots, or a non-AreaLit world all contribute nothing.
+
 ---
 
 ## 11. VRSL STAGE HIJACK PROTOCOL
@@ -228,6 +240,7 @@ This shader intercepts world-space DMX buffers to mimic a **Standard 13-Channel 
 * Override native emission with the stage's RGB and Strobe data via `_VRSL_Intensity`.
 * **Kinetic Geo-Warping:** Utilize DMX Pan (Base+1) and Tilt (Base+2) to physically warp and bend the tessellated vertices of the avatar toward the active light beam, scaled by `_VRSL_Geo_Warp`.
 * **VRSL Color Hijack:** New in 2.3.0. Independent slider that lerps the AudioLink color toward live DMX RGB (sector channels +3/+4/+5) without disabling AL color reactivity entirely. Let the stage wash the palette without losing the FFT-driven movement.
+* **VRSL GI Wash:** New in 2.5.0. A *lighting* contribution, distinct from the emission hijack above. Instead of overriding the suit's emission, it spills the DMX fixtures' colour onto the surface as real additive light (the stage illuminating you). `_VRSL_GI_Int` is the master, `_VRSL_GI_Spec` adds a fresnel-weighted highlight, and `_VRSL_GI_Sat` desaturates toward luma so the wash tints rather than repaints. Decoded from the same DMX grid + channel offsets the Color Hijack reads (so the two agree), it rides the `VRSL_ENABLE` keyword + `_UseVRSL` gate and skips itself via a DMX-grid TexelSize liveness probe in worlds with no node.
 
 ---
 

@@ -7,10 +7,6 @@ using UnityEngine.UIElements;
 
 namespace Vixenlicious.AnimationWorkbench
 {
-    /// <summary>
-    /// Lightweight easing selector for UI Toolkit, backed by GenericMenu.
-    /// No EditorWindow, no HostView issues.
-    /// </summary>
     public class EasingDropdown : VisualElement
     {
         public event Action<EasingFunctions.EaseType> OnValueChanged;
@@ -46,13 +42,11 @@ namespace Vixenlicious.AnimationWorkbench
                 (EasingFunctions.EaseType[])Enum.GetValues(typeof(EasingFunctions.EaseType))
             );
 
-            // Label shows the currently selected easing
             _label = new Label(defaultValue.ToString());
             _label.AddToClassList("easing-dropdown-label");
             _label.style.flexGrow = 1;
             Add(_label);
 
-            // Button opens a GenericMenu near the mouse
             _button = new Button(OpenPopup)
             {
                 text = "▼"
@@ -72,7 +66,6 @@ namespace Vixenlicious.AnimationWorkbench
                 bool isCurrent = opt.Equals(_value);
                 string label = RenderPreview(opt);
 
-                // Capture local variable
                 var captured = opt;
                 menu.AddItem(new GUIContent(label), isCurrent, () =>
                 {
@@ -80,11 +73,9 @@ namespace Vixenlicious.AnimationWorkbench
                 });
             }
 
-            // Show near mouse; safe in UI Toolkit / editor context
             menu.ShowAsContext();
         }
 
-        // Text preview for each easing type
         private string RenderPreview(EasingFunctions.EaseType t)
         {
             return t switch

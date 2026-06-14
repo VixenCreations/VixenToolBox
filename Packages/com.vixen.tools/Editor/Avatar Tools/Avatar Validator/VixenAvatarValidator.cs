@@ -8,7 +8,7 @@ using System.Linq;
 using System.Collections.Generic;
 using VRC.SDK3.Avatars.Components;
 using VRC.SDK3.Validation;
-using VRC.Dynamics; 
+using VRC.Dynamics;
 using VRC.SDK3.Dynamics.Contact.Components;
 using UnityEngine.Profiling;
 using ImageMagick;
@@ -18,10 +18,6 @@ using VRC.SDKBase.Validation.Performance.Stats;
 
 namespace VixenTools.Editor
 {
-    /// <summary>
-    /// VixForge Core: Advanced dual-pipeline validation and automated optimization engine.
-    /// Incorporates proprietary VixForge Topology Erasure and tight-fit bounding constraints.
-    /// </summary>
     public static class AvatarSDKValidator
     {
         public enum PCPerformanceRank { Excellent, Good, Medium, Poor }
@@ -49,7 +45,7 @@ namespace VixenTools.Editor
             public Component Component;
             public string Name;
             public string TypeName;
-            public bool Cull = false; 
+            public bool Cull = false;
         }
 
         public class ValidationReport
@@ -61,7 +57,6 @@ namespace VixenTools.Editor
             public float TotalVRAM_MB = 0f;
             public HashSet<Texture> UniqueTextures = new HashSet<Texture>();
 
-            // Hard Cap Raw Data
             public int PolyCount = 0;
             public int SkinnedMeshCount = 0;
             public int MaterialSlotCount = 0;
@@ -78,8 +73,6 @@ namespace VixenTools.Editor
             public List<Anomaly> Warnings = new List<Anomaly>();
             public List<OptimizationTask> OptimizationSuite = new List<OptimizationTask>();
 
-            // Authoritative results from VRChat's own performance calculator (additive to the
-            // hand-rolled hardware-cap panel). Null rating = SDK calc was unavailable.
             public string OfficialOverallRating = null;
             public List<Anomaly> OfficialPerfWarnings = new List<Anomaly>();
         }
@@ -89,11 +82,10 @@ namespace VixenTools.Editor
             var report = new ValidationReport();
             if (avatarRoot == null) return report;
 
-            // --- 1. ARMATURE & DEPENDENCY GRAPH MAPPING ---
             var animator = avatarRoot.GetComponent<Animator>();
             HashSet<Transform> protectedTransforms = new HashSet<Transform>();
             HashSet<Transform> humanoidBones = new HashSet<Transform>();
-            
+
             if (animator != null && animator.isHuman)
             {
                 Transform hips = animator.GetBoneTransform(HumanBodyBones.Hips);
@@ -102,11 +94,11 @@ namespace VixenTools.Editor
                     report.ArmatureRoot = hips.parent.gameObject;
                     report.BoneCount = hips.parent.GetComponentsInChildren<Transform>(true).Length;
                 }
-                
+
                 for (int i = 0; i < (int)HumanBodyBones.LastBone; i++)
                 {
                     Transform b = animator.GetBoneTransform((HumanBodyBones)i);
-                    if (b != null) 
+                    if (b != null)
                     {
                         protectedTransforms.Add(b);
                         humanoidBones.Add(b);
@@ -122,11 +114,10 @@ namespace VixenTools.Editor
                 report.IsQuestUploadReady = false;
             }
 
-            // --- 2. DESTRUCTIVE TOPOLOGY ERASURE SYSTEM ---
             var allTransforms = avatarRoot.GetComponentsInChildren<Transform>(true);
             var renderers = avatarRoot.GetComponentsInChildren<Renderer>(true);
             var skinnedRenderers = avatarRoot.GetComponentsInChildren<SkinnedMeshRenderer>(true);
-            
+
             foreach (var smr in skinnedRenderers)
             {
                 if (smr.bones == null) continue;
@@ -136,10 +127,10 @@ namespace VixenTools.Editor
             foreach (var pb in avatarRoot.GetComponentsInChildren<VRCPhysBoneBase>(true))
             {
                 Transform root = pb.GetRootTransform();
-                if (root != null) 
-                { 
-                    protectedTransforms.Add(root); 
-                    foreach(var t in root.GetComponentsInChildren<Transform>(true)) 
+                if (root != null)
+                {
+                    protectedTransforms.Add(root);
+                    foreach(var t in root.GetComponentsInChildren<Transform>(true))
                     {
                         bool ignored = false;
                         if (pb.ignoreTransforms != null)
@@ -161,7 +152,6 @@ namespace VixenTools.Editor
                 if (comp != null) protectedTransforms.Add(comp.transform);
             }
 
-            // Task: Purge Orphaned Transforms
             List<Transform> orphanedTransforms = new List<Transform>();
             foreach (var t in allTransforms)
             {
@@ -184,7 +174,6 @@ namespace VixenTools.Editor
                 });
             }
 
-            // Task: Strip Disabled Components
             List<Behaviour> disabledComponents = new List<Behaviour>();
             foreach (var b in avatarRoot.GetComponentsInChildren<Behaviour>(true))
             {
@@ -206,7 +195,6 @@ namespace VixenTools.Editor
                 });
             }
 
-            // Task: Per-Mesh Auto-Fit Bounds (PhysBone aware)
             report.OptimizationSuite.Add(new OptimizationTask
             {
                 ID = "OPTIMIZE_BOUNDS",
@@ -215,19 +203,10 @@ namespace VixenTools.Editor
                 Execute = () => {
                     int meshesProcessed = 0;
 
-                    // 1.5x = +25% per side: covers normal animation drift on static meshes.
-                    // 3.0x = +100% per side: covers PhysBone swing on hair/tail/cape/breast bones,
-                    //   which Unity's import-time bounds CANNOT account for (PhysBones move bones
-                    //   at runtime; the SMR docs explicitly list this as a case where the imported
-                    //   bounds may be exceeded).
-                    // minBoundsSize floors near-zero bounds on degenerate meshes so they don't
-                    //   instantly cull.
                     const float staticMargin = 1.5f;
                     const float physBoneMargin = 3.0f;
                     const float minBoundsSize = 0.3f;
 
-                    // Walk every PhysBone's root subtree once and record affected bones.
-                    // Any SMR whose bone list touches this set gets the larger margin.
                     var physBoneAffected = new HashSet<Transform>();
                     foreach (var pb in avatarRoot.GetComponentsInChildren<VRCPhysBoneBase>(true))
                     {
@@ -243,11 +222,8 @@ namespace VixenTools.Editor
 
                         Undo.RecordObject(smr, "Auto-Fit Bounds");
 
-                        // We strictly keep this false. updateWhenOffscreen=true recalculates bounds
-                        // every frame which Unity's docs admit is fine but a perf killer in VRChat.
                         smr.updateWhenOffscreen = false;
 
-                        // Pick margin per-mesh based on whether this SMR is skinned to any PhysBone subtree.
                         bool hasPhysBone = false;
                         if (smr.bones != null)
                         {
@@ -261,10 +237,6 @@ namespace VixenTools.Editor
                         Bounds fitted;
                         if (smr.sharedMesh != null)
                         {
-                            // sharedMesh.bounds is the bind-pose AABB in MESH local space (the SMR's
-                            // transform space). smr.localBounds is in ROOT BONE local space — Unity
-                            // docs: "the bounds move along with [the root bone] transform". So we
-                            // convert by transforming the 8 corners through both spaces.
                             Bounds bind = smr.sharedMesh.bounds;
                             Transform rootBone = smr.rootBone != null ? smr.rootBone : smr.transform;
                             Bounds rootSpace = TransformBoundsToSpace(bind, smr.transform, rootBone);
@@ -287,7 +259,6 @@ namespace VixenTools.Editor
                 }
             });
 
-            // Task: Topology Erasure (Leaf Bone Weight Transfer)
             List<Transform> deepLeafBones = new List<Transform>();
             if (report.ArmatureRoot != null)
             {
@@ -319,7 +290,6 @@ namespace VixenTools.Editor
                 });
             }
 
-            // Task: Destructive Vertex Welding
             List<SkinnedMeshRenderer> heavyMeshes = skinnedRenderers.Where(s => s.sharedMesh != null && CountTriangles(s.sharedMesh) > 15000).ToList();
             if (heavyMeshes.Count > 0)
             {
@@ -336,8 +306,7 @@ namespace VixenTools.Editor
                         foreach (var smr in heavyMeshes)
                         {
                             originalTotal += smr.sharedMesh.vertexCount;
-                            
-                            // 1. Map protected material slots
+
                             HashSet<int> protectedSlots = new HashSet<int>();
                             for (int m = 0; m < smr.sharedMaterials.Length; m++)
                             {
@@ -345,31 +314,29 @@ namespace VixenTools.Editor
                                 if (mat != null && shieldKeywords.Any(k => mat.name.ToLower().Contains(k))) protectedSlots.Add(m);
                             }
 
-                            // 2. Build 4D-Chess Kinematic Protection System
                             HashSet<int> protectedBoneIndices = new HashSet<int>();
                             if (animator != null && animator.isHuman)
                             {
                                 protectedBoneIndices = VixenMeshPatcher.GenerateProtectedBoneIndices(
-                                    animator, 
-                                    smr, 
-                                    HumanBodyBones.Head, 
+                                    animator,
+                                    smr,
+                                    HumanBodyBones.Head,
                                     HumanBodyBones.Neck,
-                                    HumanBodyBones.LeftHand, 
+                                    HumanBodyBones.LeftHand,
                                     HumanBodyBones.RightHand
                                 );
                             }
 
-                            // 3. Engage the Multipass Microwelder (EXTREME PRECISION)
                             VixenMeshPatcher.MultipassTargetedWeld(
-                                smr, 
-                                targetTriangles: 14500, 
-                                startThreshold: 0.0001f, 
-                                maxThreshold: 0.005f, // HARD CAP at 5mm. Absolute visual safety.
-                                step: 0.0005f, 
-                                protectedSubmeshes: protectedSlots, 
+                                smr,
+                                targetTriangles: 14500,
+                                startThreshold: 0.0001f,
+                                maxThreshold: 0.005f,
+                                step: 0.0005f,
+                                protectedSubmeshes: protectedSlots,
                                 protectedBones: protectedBoneIndices
                             );
-                            
+
                             newTotal += smr.sharedMesh.vertexCount;
                         }
                         Debug.Log($"[VixForge] Topology Welded: Erased {originalTotal - newTotal} vertices. Kinematic shielding active.");
@@ -377,7 +344,6 @@ namespace VixenTools.Editor
                 });
             }
 
-            // --- 3. VRAM HEURISTICS & DEEP MATERIAL SYSTEM SCAN ---
             HashSet<Material> allMaterials = new HashSet<Material>();
 
             foreach (var r in renderers)
@@ -415,18 +381,12 @@ namespace VixenTools.Editor
             }
             report.TotalVRAM_MB = totalBytes / (1024f * 1024f);
 
-            // Official VRChat performance pass: authoritative ratings + the ~19 categories the
-            // hand-rolled hardware-cap panel doesn't measure. Additive and fully guarded.
             RunOfficialPerformanceScan(avatarRoot, report);
 
-            // Count only textures we will actually touch: skips RenderTextures, out-of-project
-            // assets, and protected shader/data textures (Poiyomi internals, .exr LUTs, etc.).
             int processableTextures = 0;
             foreach (var t in report.UniqueTextures)
                 if (IsProcessableTexture(t, out _)) processableTextures++;
 
-            // Gating: both modes require at least one processable texture. Downscale additionally
-            // requires the VRAM threshold (it's a perf fix); Upscale fires on intent alone.
             bool showResizeTask = processableTextures > 0 &&
                 (resizeMode == ResizeMode.Upscale || report.TotalVRAM_MB > 40f);
 
@@ -444,9 +404,6 @@ namespace VixenTools.Editor
                 });
             }
 
-            // --- NEW: VIXFORGE CORE HEURISTICS (TEXTURE OPTIMIZATION & DATA INTEGRITY) ---
-
-            // 1. Mipmap Streaming Validation
             foreach (var tex in report.UniqueTextures)
             {
                 if (tex is RenderTexture) continue;
@@ -463,16 +420,15 @@ namespace VixenTools.Editor
                         FixLabel = "ENABLE STREAMING",
                         AutoFix = () => {
                             var imp = AssetImporter.GetAtPath(texPath) as TextureImporter;
-                            if (imp != null) { 
-                                imp.streamingMipmaps = true; 
-                                imp.SaveAndReimport(); 
+                            if (imp != null) {
+                                imp.streamingMipmaps = true;
+                                imp.SaveAndReimport();
                             }
                         }
                     });
                 }
             }
 
-            // 2. Deep Shader Inspection: Packed Map sRGB Validation
             foreach (var mat in allMaterials)
             {
                 if (mat == null || mat.shader == null) continue;
@@ -486,8 +442,7 @@ namespace VixenTools.Editor
                         if (!string.IsNullOrEmpty(texPath))
                         {
                             TextureImporter importer = AssetImporter.GetAtPath(texPath) as TextureImporter;
-                            
-                            // Packed PBR maps MUST be linear. sRGB corrupts the structural data.
+
                             if (importer != null && importer.sRGBTexture)
                             {
                                 report.PCPerformanceWarnings.Add(new Anomaly {
@@ -496,9 +451,9 @@ namespace VixenTools.Editor
                                     FixLabel = "FORCE LINEAR",
                                     AutoFix = () => {
                                         var imp = AssetImporter.GetAtPath(texPath) as TextureImporter;
-                                        if (imp != null) { 
-                                            imp.sRGBTexture = false; 
-                                            imp.SaveAndReimport(); 
+                                        if (imp != null) {
+                                            imp.sRGBTexture = false;
+                                            imp.SaveAndReimport();
                                         }
                                     }
                                 });
@@ -508,7 +463,6 @@ namespace VixenTools.Editor
                 }
             }
 
-            // --- 4. PC PIPELINE SYSTEM (RAW DATA & WARNINGS) ---
             var illegalPC = AvatarValidation.FindIllegalComponents(avatarRoot).ToList();
             foreach (var comp in illegalPC)
             {
@@ -521,12 +475,12 @@ namespace VixenTools.Editor
                 });
             }
 
-            foreach (var smr in skinnedRenderers) 
-            { 
+            foreach (var smr in skinnedRenderers)
+            {
                 if (smr.sharedMesh != null) report.PolyCount += CountTriangles(smr.sharedMesh);
-                report.MaterialSlotCount += smr.sharedMaterials.Length; 
+                report.MaterialSlotCount += smr.sharedMaterials.Length;
             }
-            
+
             foreach (var mr in avatarRoot.GetComponentsInChildren<MeshRenderer>(true))
             {
                 var filter = mr.GetComponent<MeshFilter>();
@@ -537,16 +491,15 @@ namespace VixenTools.Editor
             report.SkinnedMeshCount = skinnedRenderers.Length;
             report.AnimatorsCount = avatarRoot.GetComponentsInChildren<Animator>(true).Length;
 
-            // Deep Physics Extraction
             HashSet<Transform> uniquePbTransforms = new HashSet<Transform>();
-            
-            foreach (var pb in avatarRoot.GetComponentsInChildren<VRCPhysBoneBase>(true)) 
-            { 
-                report.PBComponents++; 
+
+            foreach (var pb in avatarRoot.GetComponentsInChildren<VRCPhysBoneBase>(true))
+            {
+                report.PBComponents++;
                 report.PhysicsNodes.Add(new PhysicsNode { Component = pb, Name = pb.gameObject.name, TypeName = "PhysBone" });
 
-                Transform root = pb.GetRootTransform(); 
-                if (root != null) 
+                Transform root = pb.GetRootTransform();
+                if (root != null)
                 {
                     foreach(var t in root.GetComponentsInChildren<Transform>(true))
                     {
@@ -560,7 +513,7 @@ namespace VixenTools.Editor
                         }
                         if (!ignored) uniquePbTransforms.Add(t);
                     }
-                } 
+                }
             }
 
             foreach (var col in avatarRoot.GetComponentsInChildren<VRCPhysBoneColliderBase>(true))
@@ -586,20 +539,18 @@ namespace VixenTools.Editor
 
             report.PBTransforms = uniquePbTransforms.Count;
 
-            // Sort physics nodes by depth (leaf nodes first for safe culling)
             report.PhysicsNodes.Sort((a, b) => GetDepth(b.Component.transform).CompareTo(GetDepth(a.Component.transform)));
 
-            // Dynamic Limit Warning Logic
             int maxPb = 32;
             int maxContacts = 32;
             int maxAnimators = 2;
-            
+
             switch (targetRank)
             {
                 case PCPerformanceRank.Excellent: maxPb = 4; maxContacts = 4; maxAnimators = 1; break;
                 case PCPerformanceRank.Good: maxPb = 8; maxContacts = 8; maxAnimators = 1; break;
                 case PCPerformanceRank.Medium: maxPb = 16; maxContacts = 16; maxAnimators = 2; break;
-                case PCPerformanceRank.Poor: 
+                case PCPerformanceRank.Poor:
                 default: maxPb = 32; maxContacts = 32; maxAnimators = 2; break;
             }
 
@@ -613,7 +564,6 @@ namespace VixenTools.Editor
             if (report.PBComponents > maxPb) report.PCPerformanceWarnings.Add(new Anomaly { Description = $"<b>Exceeds Target:</b> PhysBones ({report.PBComponents} / {maxPb})", ContextObject = avatarRoot });
             if (report.Contacts > maxContacts) report.PCPerformanceWarnings.Add(new Anomaly { Description = $"<b>Exceeds Target:</b> Contacts ({report.Contacts} / {maxContacts})", ContextObject = avatarRoot });
 
-            // --- 5. QUEST PIPELINE SYSTEM ---
             var mobileShaderWhitelist = new HashSet<string>(VRC.SDKBase.Validation.AvatarValidation.ShaderWhiteList);
             foreach (var r in renderers)
             {
@@ -675,9 +625,6 @@ namespace VixenTools.Editor
             return false;
         }
 
-        // Re-expresses an axis-aligned bounds (originally in `sourceSpace` local coords) as an
-        // axis-aligned bounds in `targetSpace` local coords. Walks all 8 corners through both
-        // transforms; the result encompasses the rotated source AABB. Identity when spaces match.
         private static Bounds TransformBoundsToSpace(Bounds source, Transform sourceSpace, Transform targetSpace)
         {
             if (sourceSpace == targetSpace || targetSpace == null) return source;
@@ -702,8 +649,6 @@ namespace VixenTools.Editor
             return new Bounds((min + max) * 0.5f, max - min);
         }
 
-        // Non-allocating triangle count. Mesh.triangles allocates a full int[] copy on every
-        // access; GetIndexCount returns each submesh's index count with zero allocation.
         private static int CountTriangles(Mesh mesh)
         {
             if (mesh == null) return 0;
@@ -713,9 +658,6 @@ namespace VixenTools.Editor
             return (int)(indices / 3);
         }
 
-        // Runs VRChat's own performance calculator so our rating matches the upload screen
-        // exactly, and surfaces categories (particles, lights, cloth, audio, constraints,
-        // contacts, PhysBone collision checks, etc.) the hardware-cap panel doesn't measure.
         private static void RunOfficialPerformanceScan(GameObject avatarRoot, ValidationReport report)
         {
             if (avatarRoot == null) return;
@@ -738,7 +680,6 @@ namespace VixenTools.Editor
                         perfStats, category, out string statText, out string errorText,
                         out PerformanceInfoDisplayLevel level);
 
-                    // Anything above "Info" is a real concern worth surfacing to the user.
                     if (level != PerformanceInfoDisplayLevel.None && level != PerformanceInfoDisplayLevel.Info)
                     {
                         string msg = string.IsNullOrEmpty(errorText) ? statText : $"{statText} — {errorText}";
@@ -753,9 +694,6 @@ namespace VixenTools.Editor
             }
         }
 
-        // Single policy gate for which textures the resize/optimize pass may touch.
-        // Excludes RenderTextures, assets outside the project's Assets folder, and anything
-        // VixenMagickKit flags as protected (shader-internal textures, .exr/.hdr data, etc.).
         private static bool IsProcessableTexture(Texture tex, out string assetPath)
         {
             assetPath = null;
@@ -779,13 +717,8 @@ namespace VixenTools.Editor
                 foreach (var tex in textures)
                 {
                     processed++;
-                    // Skip RenderTextures, out-of-project assets, and protected shader/data
-                    // textures (Poiyomi internals, .exr LUTs, etc.) in one policy check.
                     if (!IsProcessableTexture(tex, out string path)) continue;
 
-                    // Cancelable progress bar — essential because Magick.NET resize + sharpen + lossless
-                    // re-encode can run for minutes on big upscale targets, during which Unity is
-                    // otherwise frozen with no feedback.
                     if (EditorUtility.DisplayCancelableProgressBar(
                             $"VixForge: {activeVerb} Textures",
                             $"({processed}/{total}) {System.IO.Path.GetFileName(path)}",
@@ -800,19 +733,16 @@ namespace VixenTools.Editor
                     {
                         using (MagickImage img = new MagickImage(File.ReadAllBytes(path)))
                         {
-                            // Downscale: any dim over target → shrink. Upscale: both dims under target → grow.
                             bool needsWork = mode == ResizeMode.Downscale
                                 ? (img.Width > targetSize || img.Height > targetSize)
                                 : (img.Width < targetSize && img.Height < targetSize);
 
                             if (needsWork)
                             {
-                                // Lanczos preserves detail best on downscale. Mitchell avoids ringing on upscale.
                                 img.FilterType = mode == ResizeMode.Downscale ? FilterType.Lanczos : FilterType.Mitchell;
                                 img.Resize(new MagickGeometry((uint)targetSize, (uint)targetSize));
                                 if (mode == ResizeMode.Upscale)
                                 {
-                                    // Mild sharpening to recover crispness that Mitchell smooths out.
                                     img.AdaptiveSharpen(0, 0.6);
                                 }
                                 img.Strip();
@@ -820,8 +750,6 @@ namespace VixenTools.Editor
                                 count++;
                             }
                         }
-                        // TryLosslessOptimize internally drops to single-pass mode for files >10MB
-                        // so this is safe to call regardless of target size.
                         VixenMagickKit.TryLosslessOptimize(path);
                     }
                     catch (System.Exception e) { Debug.LogWarning($"[VixForge] Magick failed for {tex.name}: {e.Message}"); }
@@ -843,12 +771,11 @@ namespace VixenTools.Editor
     {
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/VixenAvatarValidatorStyles.uss";
         private const string FontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
-        
+
         private Font _cyberFont;
         private VisualElement _resultsContainer;
         private ObjectField _targetField;
         private PopupField<int> _sizePopup;
-        // Same preset ladder Unity uses for the TextureImporter Max Size dropdown.
         private static readonly List<int> SizePresets = new List<int> { 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384 };
         private EnumField _rankEnum;
         private AvatarSDKValidator.PCPerformanceRank _targetRank = AvatarSDKValidator.PCPerformanceRank.Poor;
@@ -863,17 +790,12 @@ namespace VixenTools.Editor
             window.minSize = new Vector2(480, 650);
             window.Show();
         }
-        
+
         private void OnEnable() => _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
 
-        // ====================================================================
-        // REACTIVE UI (DEBOUNCED)
-        // ====================================================================
-        
         private double _nextScanTime = 0;
         private bool _scanQueued = false;
 
-        // Taps into the Editor's frame update loop
         private void Update()
         {
             if (_scanQueued && EditorApplication.timeSinceStartup > _nextScanTime)
@@ -886,10 +808,8 @@ namespace VixenTools.Editor
             }
         }
 
-        // Queues a scan with a 500ms delay to prevent Editor lockup during rapid changes
         private void QueueDeepScan()
         {
-            // Only queue if we already have an active session
             if (_lastReport != null && _targetField != null && _targetField.value != null)
             {
                 _scanQueued = true;
@@ -897,13 +817,10 @@ namespace VixenTools.Editor
             }
         }
 
-        // Triggered when anything in the scene hierarchy is added, deleted, or reparented
         private void OnHierarchyChange() => QueueDeepScan();
 
-        // Triggered when assets are modified (e.g., textures reimported, materials changed)
         private void OnProjectChange() => QueueDeepScan();
 
-        // Optional Quality-of-Life: Auto-target if you click a new avatar root in the hierarchy
         private void OnSelectionChange()
         {
             var selected = Selection.activeGameObject;
@@ -931,11 +848,11 @@ namespace VixenTools.Editor
             root.Add(header);
 
             var scroll = new ScrollView() { style = { flexGrow = 1, paddingLeft = 15, paddingRight = 15, paddingTop = 15 } };
-            
+
             var configPanel = CreateCyberPanel("Target Parameters", "#00e5ff");
             _targetField = new ObjectField("Avatar Root") { objectType = typeof(GameObject), allowSceneObjects = true };
             configPanel.Add(_targetField);
-            
+
             _sizePopup = new PopupField<int>("Optimization Target (px)", SizePresets, 1024);
             configPanel.Add(_sizePopup);
 
@@ -962,22 +879,20 @@ namespace VixenTools.Editor
         {
             _resultsContainer.Clear();
             var target = _targetField.value as GameObject;
-            
+
             _lastReport = AvatarSDKValidator.RunFullSweep(target, _sizePopup.value, _targetRank, _resizeMode);
 
-            // --- 1. HIERARCHY TOPOLOGY ---
             var archPanel = CreateCyberPanel("Hierarchy Topology", "#00e5ff");
-            if (_lastReport.ArmatureRoot != null) 
+            if (_lastReport.ArmatureRoot != null)
             {
                 archPanel.Add(CreateRow($"<b>Armature Root:</b> {_lastReport.ArmatureRoot.name}", _lastReport.ArmatureRoot, "#00e5ff"));
                 archPanel.Add(CreateRow($"<b>Bone Density:</b> {_lastReport.BoneCount} Transforms", null, "#00e5ff"));
-                
+
                 string vramHex = _lastReport.TotalVRAM_MB > 150f ? "#ff0033" : (_lastReport.TotalVRAM_MB > 40f ? "#ffaa00" : "#00e5ff");
                 archPanel.Add(CreateRow($"<b>Hardware VRAM Footprint:</b> {_lastReport.TotalVRAM_MB:F2} MB ({_lastReport.UniqueTextures.Count} Textures)", null, vramHex));
             }
             _resultsContainer.Add(archPanel);
 
-            // --- 1.5. OFFICIAL VRCHAT PERFORMANCE (authoritative SDK calculator) ---
             if (_lastReport.OfficialOverallRating != null)
             {
                 var perfPanel = CreateCyberPanel("VRChat Official Performance", "#00ff66");
@@ -994,7 +909,6 @@ namespace VixenTools.Editor
                 _resultsContainer.Add(perfPanel);
             }
 
-            // --- 2. HARDWARE CAP ANALYSIS (Persistent Stats Panel) ---
             int maxPb = 32; int maxContacts = 32; int maxAnimators = 2;
             switch (_targetRank) {
                 case AvatarSDKValidator.PCPerformanceRank.Excellent: maxPb=4; maxContacts=4; maxAnimators=1; break;
@@ -1004,7 +918,7 @@ namespace VixenTools.Editor
             }
 
             var statsPanel = CreateCyberPanel("Hardware Cap Analysis", "#00ff66");
-            
+
             string triColor = _lastReport.PolyCount > 70000 ? "#ff0033" : "#00ff66";
             string smrColor = _lastReport.SkinnedMeshCount > 16 ? "#ff0033" : "#00ff66";
             string matColor = _lastReport.MaterialSlotCount > 32 ? "#ff0033" : "#00ff66";
@@ -1012,8 +926,8 @@ namespace VixenTools.Editor
             string pbCColor = _lastReport.PBComponents > maxPb ? "#ff0033" : "#00ff66";
             string conColor = _lastReport.Contacts > maxContacts ? "#ff0033" : "#00ff66";
             string aniColor = _lastReport.AnimatorsCount > maxAnimators ? "#ff0033" : "#00ff66";
-            
-            string statsText = 
+
+            string statsText =
                 $"<b><color=#00e5ff>■</color> STATIC VRC LIMITS (VERY POOR):</b>\n" +
                 $"  • Total Triangles: <color={triColor}><b>{_lastReport.PolyCount:N0}</b></color> / 70,000\n" +
                 $"  • Skinned Meshes: <color={smrColor}><b>{_lastReport.SkinnedMeshCount}</b></color> / 16\n" +
@@ -1029,31 +943,30 @@ namespace VixenTools.Editor
             statsPanel.Add(statsLabel);
             _resultsContainer.Add(statsPanel);
 
-            // --- 3. INTERACTIVE PHYSICS SYSTEM ---
             if (_lastReport.PhysicsNodes.Count > 0)
             {
                 var physPanel = CreateCyberPanel("Interactive Physics System", "#ffaa00");
-                
+
                 var info = new Label("Select specific physics components to violently purge from the hierarchy to meet Target Rank constraints. Sorted by depth (Leaf nodes first).");
                 info.AddToClassList("md-p");
                 physPanel.Add(info);
 
                 var controlRow = new VisualElement { style = { flexDirection = FlexDirection.Row, marginTop = 10, marginBottom = 10 } };
-                
+
                 var physCountLabel = new Label($"Queued for Eradication: <color=#ff0033><b>0</b></color> / {_lastReport.PhysicsNodes.Count}") { enableRichText = true, style = { flexGrow = 1, unityTextAlign = TextAnchor.MiddleLeft } };
                 controlRow.Add(physCountLabel);
 
                 List<Toggle> nodeToggles = new List<Toggle>();
 
-                var btnSelectAll = new Button(() => { 
-                    _lastReport.PhysicsNodes.ForEach(n => n.Cull = true); 
+                var btnSelectAll = new Button(() => {
+                    _lastReport.PhysicsNodes.ForEach(n => n.Cull = true);
                     foreach (var t in nodeToggles) t.SetValueWithoutNotify(true);
                     physCountLabel.text = $"Queued for Eradication: <color=#ff0033><b>{_lastReport.PhysicsNodes.Count}</b></color> / {_lastReport.PhysicsNodes.Count}";
                 }) { text = "Select All" };
                 btnSelectAll.AddToClassList("data-tag-btn"); btnSelectAll.AddToClassList("data-tag-destructive");
-                
-                var btnDeselectAll = new Button(() => { 
-                    _lastReport.PhysicsNodes.ForEach(n => n.Cull = false); 
+
+                var btnDeselectAll = new Button(() => {
+                    _lastReport.PhysicsNodes.ForEach(n => n.Cull = false);
                     foreach (var t in nodeToggles) t.SetValueWithoutNotify(false);
                     physCountLabel.text = $"Queued for Eradication: <color=#ff0033><b>0</b></color> / {_lastReport.PhysicsNodes.Count}";
                 }) { text = "Deselect All" };
@@ -1064,7 +977,7 @@ namespace VixenTools.Editor
                 physPanel.Add(controlRow);
 
                 var physScroll = new ScrollView(ScrollViewMode.Vertical) { style = { maxHeight = 250, backgroundColor = new Color(0,0,0,0.2f), paddingBottom = 5, paddingTop = 5, borderTopLeftRadius = 4, borderTopRightRadius = 4, borderBottomLeftRadius = 4, borderBottomRightRadius = 4 } };
-                
+
                 foreach(var node in _lastReport.PhysicsNodes)
                 {
                     var row = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, paddingLeft = 5, paddingRight = 5, paddingTop = 2, paddingBottom = 2 } };
@@ -1109,11 +1022,10 @@ namespace VixenTools.Editor
                 _resultsContainer.Add(physPanel);
             }
 
-            // --- 4. OPTIMIZATION SELECTION SYSTEM ---
             if (_lastReport.OptimizationSuite.Count > 0)
             {
                 var suitePanel = CreateCyberPanel("Destructive Topology Engine", "#ff00aa");
-                
+
                 foreach (var task in _lastReport.OptimizationSuite)
                 {
                     var taskRow = new VisualElement();
@@ -1122,19 +1034,19 @@ namespace VixenTools.Editor
                     var toggle = new Toggle { value = task.IsSelected };
                     toggle.RegisterValueChangedCallback(e => task.IsSelected = e.newValue);
                     taskRow.Add(toggle);
-                    
+
                     var descLabel = new Label($"<b>{task.Label}</b>\n<color=#aaaaaa>{task.Description}</color>") { enableRichText = true };
                     descLabel.AddToClassList("opt-task-desc");
                     taskRow.Add(descLabel);
 
                     suitePanel.Add(taskRow);
                 }
-                
+
                 var applyBtn = new Button(ApplySelected) { text = "EXECUTE DESTRUCTIVE TOPOLOGY FIXES" };
                 applyBtn.AddToClassList("cyber-action-btn");
-                applyBtn.AddToClassList("danger-btn"); 
+                applyBtn.AddToClassList("danger-btn");
                 suitePanel.Add(applyBtn);
-                
+
                 _resultsContainer.Add(suitePanel);
             }
 
@@ -1145,14 +1057,14 @@ namespace VixenTools.Editor
         private void ApplySelected()
         {
             foreach (var task in _lastReport.OptimizationSuite.Where(t => t.IsSelected)) task.Execute?.Invoke();
-            ExecuteDeepScan(); 
+            ExecuteDeepScan();
         }
 
         private void BuildPlatformResult(string title, bool ready, List<AvatarSDKValidator.Anomaly> errors, List<AvatarSDKValidator.Anomaly> warnings)
         {
             var p = CreateCyberPanel(title, ready ? "#00e5ff" : "#ff00aa");
             string status = ready ? "SYSTEM GREEN: VALIDATED" : "SYSTEM RED: BLOCKED";
-            
+
             var headLabel = new Label($"<color={(ready ? "#00e5ff" : "#ff00aa")}>{title}</color> - {status}") { enableRichText = true };
             headLabel.AddToClassList("md-h1");
             if (_cyberFont != null) headLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
@@ -1164,7 +1076,7 @@ namespace VixenTools.Editor
             if (hasErrors) foreach (var err in errors) p.Add(CreateRow(err.Description, err.ContextObject, "#ff0033", err.AutoFix, err.FixLabel));
             if (hasWarns) foreach (var warn in warnings) p.Add(CreateRow(warn.Description, warn.ContextObject, "#ffaa00", warn.AutoFix, warn.FixLabel));
             if (!hasErrors && !hasWarns) p.Add(CreateRow("Zero anomalies detected. Platform constraints perfectly mapped.", null, "#00e5ff"));
-            
+
             _resultsContainer.Add(p);
         }
 
@@ -1172,12 +1084,12 @@ namespace VixenTools.Editor
         {
             var row = new VisualElement { style = { alignItems = Align.Center, flexDirection = FlexDirection.Row } };
             row.AddToClassList("md-row");
-            
+
             ColorUtility.TryParseHtmlString(hexColor, out Color col);
             var bullet = new Label(">>") { style = { color = col } };
             bullet.AddToClassList("md-bullet");
             row.Add(bullet);
-            
+
             var contentLabel = new Label(text) { enableRichText = true, style = { flexGrow = 1 } };
             contentLabel.AddToClassList("md-p");
             row.Add(contentLabel);
@@ -1193,16 +1105,16 @@ namespace VixenTools.Editor
             {
                 var optimize = new Button(() => { fix.Invoke(); ExecuteDeepScan(); }) { text = fixLabel };
                 optimize.AddToClassList("data-tag-btn");
-                
-                if (hexColor == "#ff0033" || hexColor == "#ff00aa" || fixLabel.Contains("CULL") || fixLabel.Contains("PURGE") || fixLabel.Contains("STRIP")) 
+
+                if (hexColor == "#ff0033" || hexColor == "#ff00aa" || fixLabel.Contains("CULL") || fixLabel.Contains("PURGE") || fixLabel.Contains("STRIP"))
                 {
                     optimize.AddToClassList("data-tag-destructive");
-                } 
-                else if (hexColor == "#ffaa00") 
+                }
+                else if (hexColor == "#ffaa00")
                 {
                     optimize.AddToClassList("data-tag-warning");
                 }
-                else 
+                else
                 {
                     optimize.AddToClassList("data-tag-optimize");
                 }
@@ -1221,7 +1133,7 @@ namespace VixenTools.Editor
                 header.AddToClassList("panel-header");
                 if (_cyberFont != null) header.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
                 panel.Add(header);
-                
+
                 var sep = new VisualElement();
                 sep.AddToClassList("md-separator");
                 ColorUtility.TryParseHtmlString(hex, out Color c); c.a = 0.3f;

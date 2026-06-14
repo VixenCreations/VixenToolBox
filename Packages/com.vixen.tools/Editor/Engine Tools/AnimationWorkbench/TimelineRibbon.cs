@@ -42,7 +42,6 @@ public class TimelineRibbon : VisualElement
 
         if (clip != null)
         {
-            // Fix: Allows expanding bounds past the current clip length and prevents 0-length slider collapse.
             float maxLen = Mathf.Max(1f, clip.length, start, end);
 
             EditorGUI.BeginChangeCheck();

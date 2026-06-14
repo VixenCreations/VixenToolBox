@@ -10,41 +10,31 @@ using System.Linq;
 
 namespace VixenTools.Editor
 {
-    /// <summary>
-    /// VixForge Core: A unified pipeline tool that handles both bulk extraction of presets
-    /// from existing assets, and the programmatic authoring of standardized Importer presets 
-    /// from scratch using a Phantom Asset architecture.
-    /// </summary>
     public class BulkPresetGenerator : EditorWindow
     {
         private enum ToolMode { Extraction, Authoring }
         private ToolMode _currentMode = ToolMode.Extraction;
 
-        // Centralized styling paths
         private const string FontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/BulkPresetGeneratorStyles.uss";
 
         private Font _cyberFont;
 
-        // --- Shared Configuration ---
         private string _outputDirectory = "Assets/VixenTools/GeneratedPresets";
 
-        // --- Extraction Variables ---
         private bool _ignoreTransforms = true;
         private bool _includeChildren = false;
         private bool _registerExtractionToManager = true;
         private string _extractionFilter = "";
 
-        // --- Authoring Variables (Texture Standards) ---
         private string _authoringPresetName = "Global_4K_Texture_Standard";
         private int _maxTextureSize = 4096;
         private TextureImporterType _textureType = TextureImporterType.Default;
         private bool _enableMipMaps = true;
         private bool _isReadable = false;
         private bool _registerAuthoringToManager = true;
-        private string _authoringFilter = ""; 
+        private string _authoringFilter = "";
 
-        // --- UI Elements ---
         private Button _btnExtractionTab;
         private Button _btnAuthoringTab;
         private VisualElement _extractionContainer;
@@ -71,35 +61,30 @@ namespace VixenTools.Editor
             VisualElement root = rootVisualElement;
             root.name = "preset-manager-root";
 
-            // Load USS
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath);
             if (styleSheet != null) root.styleSheets.Add(styleSheet);
             else Debug.LogWarning($"[VixForge] Could not load Stylesheet at {UssPath}");
 
-            // --- HEADER ---
             var headerRect = new VisualElement { name = "tool-header" };
             var titleLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> PRESET MANAGER") { enableRichText = true };
             if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             headerRect.Add(titleLabel);
             root.Add(headerRect);
 
-            // --- TABS ---
             var tabContainer = new VisualElement { name = "tab-toolbar" };
-            
+
             _btnExtractionTab = new Button(() => SwitchMode(ToolMode.Extraction)) { text = "EXTRACTION PIPELINE" };
             _btnAuthoringTab = new Button(() => SwitchMode(ToolMode.Authoring)) { text = "AUTHORING ENGINE" };
-            
+
             tabContainer.Add(_btnExtractionTab);
             tabContainer.Add(_btnAuthoringTab);
             root.Add(tabContainer);
 
-            // --- SCROLL CONTENT ---
             var scrollContainer = new ScrollView(ScrollViewMode.Vertical) { name = "main-scroll" };
             var scrollContent = new VisualElement();
             scrollContainer.Add(scrollContent);
             root.Add(scrollContainer);
 
-            // --- BUILD UI CONTAINERS ---
             _extractionContainer = new VisualElement();
             BuildExtractionUI(_extractionContainer);
             scrollContent.Add(_extractionContainer);
@@ -114,7 +99,7 @@ namespace VixenTools.Editor
         private void SwitchMode(ToolMode mode)
         {
             _currentMode = mode;
-            
+
             if (mode == ToolMode.Extraction)
             {
                 _btnExtractionTab.AddToClassList("tab-btn-active");
@@ -204,7 +189,7 @@ namespace VixenTools.Editor
             panel.Add(typeEnum);
 
             int initialSizeIndex = System.Array.IndexOf(_texSizeValues, _maxTextureSize);
-            if (initialSizeIndex == -1) initialSizeIndex = 2; // Default to 4096
+            if (initialSizeIndex == -1) initialSizeIndex = 2;
             var sizeDropdown = new DropdownField("Max Texture Size", _texSizeLabels, initialSizeIndex);
             sizeDropdown.RegisterValueChangedCallback(e => _maxTextureSize = _texSizeValues[_texSizeLabels.IndexOf(e.newValue)]);
             panel.Add(sizeDropdown);
@@ -263,12 +248,6 @@ namespace VixenTools.Editor
             EnsureDirectoryExists(_outputDirectory);
             int count = 0;
 
-            // Batch every CreateAsset into a single import pass. Safe here because nothing in the
-            // loop reads a created asset back from disk — the in-memory Preset objects are used
-            // directly — so deferring the import does not break anything. CreateAsset still
-            // registers each path synchronously, so GenerateUniqueAssetPath stays collision-free.
-            // try/finally guarantees StopAssetEditing runs even if a CreateAsset throws, so the
-            // editor can never be left in a locked asset-editing state.
             AssetDatabase.StartAssetEditing();
             try
             {
@@ -308,12 +287,10 @@ namespace VixenTools.Editor
         {
             EnsureDirectoryExists(_outputDirectory);
 
-            // 1. Create a "Phantom Asset" (Temporary file to base the importer on)
             string phantomPath = "Assets/VixenTools_PhantomTexture.png";
-            File.WriteAllBytes(phantomPath, new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A }); // Minimal valid PNG header
+            File.WriteAllBytes(phantomPath, new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A });
             AssetDatabase.ImportAsset(phantomPath, ImportAssetOptions.ForceUpdate);
 
-            // 2. Grab the importer and inject our standardized rules
             TextureImporter importer = AssetImporter.GetAtPath(phantomPath) as TextureImporter;
             if (importer != null)
             {
@@ -323,7 +300,6 @@ namespace VixenTools.Editor
                 importer.isReadable = _isReadable;
                 importer.SaveAndReimport();
 
-                // 3. Rip the configuration into a permanent Preset
                 Preset newPreset = new Preset(importer);
                 string presetPath = AssetDatabase.GenerateUniqueAssetPath($"{_outputDirectory}/{_authoringPresetName}.preset");
                 AssetDatabase.CreateAsset(newPreset, presetPath);
@@ -336,7 +312,6 @@ namespace VixenTools.Editor
                 Debug.Log($"[VixForge] Authored Master Texture Preset: {presetPath}");
             }
 
-            // 4. Clean up the Phantom Asset
             AssetDatabase.DeleteAsset(phantomPath);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -346,12 +321,12 @@ namespace VixenTools.Editor
         {
             PresetType targetType = newPreset.GetPresetType();
             DefaultPreset[] currentDefaults = Preset.GetDefaultPresetsForType(targetType);
-            
+
             if (currentDefaults.Any(dp => dp.preset == newPreset && dp.filter == filter))
                 return;
 
             List<DefaultPreset> updatedDefaults = new List<DefaultPreset>(currentDefaults);
-            
+
             updatedDefaults.Insert(0, new DefaultPreset
             {
                 preset = newPreset,

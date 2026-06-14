@@ -20,7 +20,7 @@ public class PreviewEngine
     {
         if (target == null || c == null) return;
 
-        StopPreview(); // reset if needed
+        StopPreview();
         clip = c;
         startTime = from;
         playStartEditorTime = EditorApplication.timeSinceStartup;

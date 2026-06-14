@@ -96,6 +96,11 @@
                 Shader Docs
             </fluent-anchor>
 
+            <fluent-anchor href="developer-docs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                Developer Docs
+            </fluent-anchor>
+
             <fluent-anchor href="why-choose-us.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                 Why Choose Us?
@@ -131,6 +136,7 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
+                        <fluent-option value="v2.5.0">v2.5.0</fluent-option>
                         <fluent-option value="v2.4.0">v2.4.0</fluent-option>
                         <fluent-option value="v2.3.4">v2.3.4</fluent-option>
                         <fluent-option value="v2.3.3">v2.3.3</fluent-option>
@@ -167,7 +173,38 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
-                <div class="changelog-entry" data-version="v2.4.0">
+                <div class="changelog-entry" data-version="v2.5.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.5.0 - 2026-06-13</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Full world-lighting integration pass: the latex now reacts to every supported stage / area-light system, and the legacy TV-GI tint is gone. Every integration is fail-safe - it strips or no-ops cleanly in worlds that don't have the system. Built-in Render Pipeline / VRChat only (HDRP/URP out of scope by design).</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>AreaLit Area-Light Support (Both Shaders, `AREALIT_ENABLE`):</strong> The latex now receives PiMaker <strong>AreaLit</strong> area lights, the same role as LTCGI. AreaLit ships no scene-wide broadcast, so the suit intercepts it <strong>at the GI level like LTCGI</strong> via a small world-side helper (`AreaLitGlobalBroadcaster.cs`, UdonSharp) that publishes the LightCam data as scene globals - every avatar in the world is lit automatically, with no per-material assignment. A per-material pair (`_AreaLit_LightMesh` / `_AreaLit_LightTex0`) remains as a manual fallback when no broadcaster is present. Zero new sampler registers; keyword-gated on `_AreaLit_Int &gt; 0` and stripped (zero cost) when off. On the INTEGRATION tab.</li>
+                        <li class="mb-2"><strong>VRSL GI Wash (Both Shaders):</strong> A new additive coloured <strong>stage wash</strong> on top of the existing VRSL stage-hijack. Instead of overriding emission, it spills the DMX fixtures' colour onto the suit as real light (the stage lighting you up), decoded from the same DMX grid + channel offsets the Color Hijack reads. Controls `_VRSL_GI_Int` / `_VRSL_GI_Spec` / `_VRSL_GI_Sat` on the STAGE tab. Rides the existing `VRSL_ENABLE` keyword + `_UseVRSL` runtime gate; a TexelSize liveness probe skips it in worlds with no DMX node.</li>
+                        <li class="mb-2"><strong>Fail-Safe Fallback Model (All World-Lighting Integrations):</strong> Formalised the "no system in this world = no cost, no artifact" guarantee. Heavy paths (VRSL, LTCGI, AreaLit, Light Volumes) are keyword-stripped when off; cheap global reads (VRSL GI) are runtime float-gated and probe their data source for liveness. All integration includes are vendored under the package's `cginc/` folder, so the shaders compile with every package absent.</li>
+                        <li class="mb-2"><strong>MatCap Tiling &amp; 3-Axis Scrolling (Both Shaders + Inspector):</strong> Both matcap layers gained a `Tiling (XY)` vector (`_MatCap_Tiling` / `_MatCap2_Tiling`) and a `Scroll (X pan, Y pan, Z spin)` vector (`_MatCap_Scroll` / `_MatCap2_Scroll`). Tiling repeats the matcap around its centre so the sphere highlight stays put as the pattern repeats; Scroll drives smooth continuous motion off real time, where `X` / `Y` pan the UV and `Z` spins the matcap in degrees per second (a matcap is a 2D sphere projection, so rotation is the only third axis that reads as a true scroll). The spin angle is wrapped so it stays precise and jitter-free over long sessions. Defaults (Tiling `(1,1)`, Scroll `(0,0,0)`) are identity, so existing materials render unchanged, with no new sampler registers. Visible repeat at tile &gt; 1 needs the matcap texture's Wrap Mode = Repeat. New rows under each matcap layer's Intensity on the INTEGRATION tab.</li>
+                        <li class="mb-2"><strong>Three New Custom MatCaps (Both Shaders):</strong> Released <strong>Realistic Neutral High Gloss</strong>, <strong>Realistic Studio HDRI Latex</strong>, and <strong>Realistic High Gloss</strong> MatCaps. Each is authored for physically coherent highlight behavior and calibrated for the shader’s Fresnel‑weighted blend model. All ship in linear color, mip‑stable, and compatible with the new Tiling &amp; Scroll system. No new sampler registers; assigned through the existing MatCap texture slots.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Removed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Screen Glow / "Any TV GI" Feature:</strong> Removed `_UseScreenGlow` and the whole `_ScreenGlow_*` stack (plus the standalone video / LTCGI-LOD0 texture declarations and the glow block) from both shaders and the inspector. The refined lighting model is unchanged; the dedicated area-light integrations (LTCGI + AreaLit) cover screen lighting properly with real screen geometry, so the Tier-B raw-texture tint is no longer needed.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Faster Shader Imports (Both Shaders, `only_renderers d3d11` + `SHADOWS_SOFT` skip):</strong> Every program now carries `#pragma only_renderers d3d11`, so Unity compiles a single graphics API instead of the whole desktop set (gles3 / metal / vulkan / glcore). VixenWear is PC / Built-in-RP only and PC VRChat runs DX11, so this cuts both the in-editor reimport and the VRCFury SPS patch + import (which force-synchronously compiles every pass twice) by a large factor. `SHADOWS_SOFT` was also added to the skip_variants list to roughly halve the ForwardBase shadow-receiving variant set, at the cost of slightly harder shadow edges. Heads up: because the shaders compile DX11 only, a player who force-launches VRChat in Vulkan or DX12 (experimental, uncommon) would see the material break; standard PC clients are unaffected.</li>
+                        <li class="mb-2"><strong>Built-in-Only Banner:</strong> Both shaders now carry a header note that they target the Built-in Render Pipeline / VRChat and that HDRP/URP are unsupported by design (a surface shader can't compile there). No functional change.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Tessellation Control Inverted &amp; Uncapped (Base Shader):</strong> The old `Tessellation Edge Length` slider (`_Tess_Edge`, range 1-50) was backwards and unbounded - its value is the target edge length fed to `UnityEdgeLengthBasedTess`, which sits in the denominator of the tessellation factor, so a lower number meant denser subdivision and the GPU's 64x per-edge cap was hit on dense displaced meshes, causing severe lag. Replaced with `Tessellation Detail` (`_Tess_Detail`, range 0-1) where higher = more detail / cost and lower = cheaper, mapped via `edgeLen = lerp(40, 2, detail)`. The distance / screen-adaptive LOD is preserved (far or small-on-screen surfaces stay cheap) and the per-edge factor is now capped so the close-up worst case can't melt the GPU. The SPS variant has no tessellation, so it's unaffected. Migration: the property was renamed, so existing materials reset to the new `0.5` default and the tessellation amount should be re-set once.</li>
+                        <li class="mb-2"><strong>Shader Compiler Warning (POM, Both Shaders):</strong> Eliminated the "gradient instruction used in a loop with varying iteration" warning on the ForwardBase pass. The parallax-occlusion height march now samples the height channel with `tex2Dlod` (explicit LOD 0) instead of `tex2Dgrad`, so the dynamic loop no longer carries a gradient instruction; the runtime early-out and its performance are preserved.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="v2.4.0" hidden>
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.4.0 - 2026-06-08</h5>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>

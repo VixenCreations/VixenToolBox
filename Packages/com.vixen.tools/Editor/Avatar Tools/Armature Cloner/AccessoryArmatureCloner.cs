@@ -31,7 +31,7 @@ namespace VixenTools.Editor
         [SerializeField] private Transform targetAccessoryRoot;
         [SerializeField] private MountStrategy strategy = MountStrategy.DestructiveAutoRig;
         [SerializeField] private List<AccessoryMapping> accessoryMappings = new List<AccessoryMapping>();
-        
+
         private SerializedObject _serializedObject;
 
         [MenuItem("VixenTools/Avatars/Accessory Engine", priority = 42)]
@@ -52,7 +52,7 @@ namespace VixenTools.Editor
         {
             var root = rootVisualElement;
             root.name = "hub-root";
-            
+
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath);
             if (styleSheet != null) root.styleSheets.Add(styleSheet);
 
@@ -65,7 +65,6 @@ namespace VixenTools.Editor
 
             var scroll = new ScrollView() { style = { flexGrow = 1, paddingLeft = 15, paddingRight = 15, paddingTop = 15 } };
 
-            // 1. Pipeline
             var modePanel = CreateCyberPanel("1. Pipeline Control", "#ffaa00");
             var pipelineField = new PropertyField(_serializedObject.FindProperty("activePipeline"), "Execution Mode");
             pipelineField.Bind(_serializedObject);
@@ -78,7 +77,6 @@ namespace VixenTools.Editor
             modePanel.Add(modeDesc);
             scroll.Add(modePanel);
 
-            // 2. Targets
             var configPanel = CreateCyberPanel("2. Armature Core Targets", "#00e5ff");
             var sourceField = new PropertyField(_serializedObject.FindProperty("sourceArmatureRoot"), "Source Armature");
             var targetField = new PropertyField(_serializedObject.FindProperty("targetAccessoryRoot"), "Target Accessory Root");
@@ -88,7 +86,6 @@ namespace VixenTools.Editor
             configPanel.Add(targetField);
             scroll.Add(configPanel);
 
-            // 3. Strategy
             var strategyPanel = CreateCyberPanel("3. Accessory Execution Strategy", "#ff00aa");
             var strategyField = new PropertyField(_serializedObject.FindProperty("strategy"), "Mounting Strategy");
             strategyField.Bind(_serializedObject);
@@ -135,13 +132,13 @@ namespace VixenTools.Editor
             header.AddToClassList("panel-header");
             if (_cyberFont != null) header.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             panel.Add(header);
-            
+
             var sep = new VisualElement();
             sep.AddToClassList("md-separator");
             ColorUtility.TryParseHtmlString(hex, out Color c); c.a = 0.3f;
             sep.style.backgroundColor = c;
             panel.Add(sep);
-            
+
             return panel;
         }
 
@@ -231,7 +228,7 @@ namespace VixenTools.Editor
         private void TraverseAndMap(Transform globalSourceRoot, Transform currentSourceNode, Transform actualSterileRoot, Dictionary<Transform, Transform> boneMap)
         {
             string relativePath = AnimationUtility.CalculateTransformPath(currentSourceNode, globalSourceRoot);
-            
+
             if (string.IsNullOrEmpty(relativePath)) boneMap[currentSourceNode] = actualSterileRoot;
             else
             {
@@ -254,7 +251,7 @@ namespace VixenTools.Editor
             Quaternion rotationOffset = Quaternion.Inverse(sterileBone.rotation) * accessoryRoot.transform.rotation;
 
             ConstraintSource source = new ConstraintSource { sourceTransform = sterileBone, weight = 1f };
-            
+
             Undo.RecordObject(constraint, "Configure Constraint");
             while (constraint.sourceCount > 0) constraint.RemoveSource(0);
             constraint.AddSource(source);
@@ -267,14 +264,10 @@ namespace VixenTools.Editor
             Debug.Log($"[VixForge] Kinematically mounted [{accessoryRoot.name}] (and children) to [{sterileBone.name}].");
         }
 
-        // ====================================================================
-        // UPGRADED ALGORITHM: RECURSIVE HIERARCHY AUTO-RIGGING
-        // ====================================================================
         private void BakeAndRigHierarchy(GameObject accessoryRoot, Transform sterileBone, Transform parentRoot)
         {
             Undo.RecordObject(accessoryRoot, "Auto-Rig Accessory Hierarchy");
 
-            // 1. GATHER PHASE
             List<System.Tuple<GameObject, Mesh, Material[]>> targetMeshes = new List<System.Tuple<GameObject, Mesh, Material[]>>();
 
             var smrs = accessoryRoot.GetComponentsInChildren<SkinnedMeshRenderer>(true);
@@ -303,25 +296,21 @@ namespace VixenTools.Editor
                 }
             }
 
-            // 2. EXECUTION PHASE
             foreach (var target in targetMeshes)
             {
                 ProcessSingleMesh(target.Item1, target.Item2, target.Item3, sterileBone);
             }
 
-            // 3. KINEMATIC SYNC (The PhysBone Fix)
-            // Instead of zeroing the root and breaking physics, we lock the GameObject to the sterile bone.
             Undo.SetTransformParent(accessoryRoot.transform, parentRoot, "Set Parent Root");
-            
+
             ParentConstraint constraint = accessoryRoot.GetComponent<ParentConstraint>();
             if (constraint == null) constraint = Undo.AddComponent<ParentConstraint>(accessoryRoot);
 
-            // Calculate exact offsets to maintain visual and physical integrity
             Vector3 positionOffset = sterileBone.InverseTransformPoint(accessoryRoot.transform.position);
             Quaternion rotationOffset = Quaternion.Inverse(sterileBone.rotation) * accessoryRoot.transform.rotation;
 
             ConstraintSource source = new ConstraintSource { sourceTransform = sterileBone, weight = 1f };
-            
+
             Undo.RecordObject(constraint, "Configure Constraint");
             while (constraint.sourceCount > 0) constraint.RemoveSource(0);
             constraint.AddSource(source);
@@ -339,7 +328,6 @@ namespace VixenTools.Editor
             Mesh bakedMesh = Instantiate(sourceMesh);
             bakedMesh.name = $"{sourceMesh.name}_Rigged_{System.Guid.NewGuid().ToString().Substring(0, 5)}";
 
-            // Calculate offset dynamically based on this specific child's world transform
             Matrix4x4 localToBoneOffset = sterileBone.worldToLocalMatrix * targetObj.transform.localToWorldMatrix;
 
             Vector3[] verts = bakedMesh.vertices;
@@ -392,20 +380,19 @@ namespace VixenTools.Editor
             string assetPath = $"{GENERATED_ASSET_PATH}{bakedMesh.name}.asset";
             AssetDatabase.CreateAsset(bakedMesh, assetPath);
 
-            // In-Place Component Swapping
             MeshFilter filter = targetObj.GetComponent<MeshFilter>();
             MeshRenderer mr = targetObj.GetComponent<MeshRenderer>();
-            
+
             if (filter != null) Undo.DestroyObjectImmediate(filter);
             if (mr != null) Undo.DestroyObjectImmediate(mr);
 
             SkinnedMeshRenderer smr = targetObj.GetComponent<SkinnedMeshRenderer>();
             if (smr == null) smr = Undo.AddComponent<SkinnedMeshRenderer>(targetObj);
-            
+
             Undo.RecordObject(smr, "Apply Rigged Mesh");
             smr.sharedMesh = bakedMesh;
             if (mats != null) smr.sharedMaterials = mats;
-            
+
             smr.bones = new Transform[] { sterileBone };
             smr.rootBone = sterileBone;
             smr.localBounds = new Bounds(Vector3.zero, new Vector3(2.5f, 2.5f, 2.5f));

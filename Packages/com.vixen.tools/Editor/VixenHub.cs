@@ -10,7 +10,6 @@ using ImageMagick;
 
 namespace VixenTools.Editor
 {
-    // --- AUTONOMOUS SCENE HUD NOTIFIER ---
     [InitializeOnLoad]
     public static class VixenUpdateNotifier
     {
@@ -21,10 +20,8 @@ namespace VixenTools.Editor
 
         static VixenUpdateNotifier()
         {
-            // 1. Autonomous Version Detection on Domain Reload
             CheckForPackageChanges();
-            
-            // 2. Bind the UI injector
+
             SceneView.duringSceneGui += OnSceneGUI;
         }
 
@@ -42,7 +39,6 @@ namespace VixenTools.Editor
                         string currentVersion = vMatch.Groups[1].Value;
                         string storedVersion = EditorPrefs.GetString(PREF_STORED_VER, "");
 
-                        // If the version changed (or it's a fresh install), trigger the HUD
                         if (string.IsNullOrEmpty(storedVersion) || storedVersion != currentVersion)
                         {
                             EditorPrefs.SetBool(PREF_UPDATE_PENDING, true);
@@ -51,7 +47,7 @@ namespace VixenTools.Editor
                     }
                 }
             }
-            catch { } // Fail silently to prevent disrupting editor loads if package is migrating
+            catch { }
         }
 
         private static void OnSceneGUI(SceneView sceneView)
@@ -79,33 +75,31 @@ namespace VixenTools.Editor
 
         private static Button BuildCyberBadge()
         {
-            var badge = new Button(() => 
+            var badge = new Button(() =>
             {
                 EditorPrefs.SetBool(PREF_UPDATE_PENDING, false);
                 VixenHub.ShowChangelogWindow();
-            }) 
-            { 
-                name = BADGE_NAME 
+            })
+            {
+                name = BADGE_NAME
             };
 
-            // --- LAYOUT & POSITIONING ---
             badge.style.position = Position.Absolute;
             badge.style.bottom = 20;
             badge.style.right = 20;
             badge.style.width = 240;
             badge.style.height = 36;
 
-            // --- CYBERPUNK STYLING ---
             badge.style.backgroundColor = new Color(0.05f, 0.05f, 0.08f, 0.95f);
-            
+
             badge.style.borderTopWidth = 0;
             badge.style.borderRightWidth = 0;
             badge.style.borderBottomWidth = 1;
             badge.style.borderLeftWidth = 4;
-            
-            badge.style.borderLeftColor = new Color(1f, 0f, 0.66f); // Hot Pink
-            badge.style.borderBottomColor = new Color(0f, 0.9f, 1f, 0.3f); // Cyan Glow
-            
+
+            badge.style.borderLeftColor = new Color(1f, 0f, 0.66f);
+            badge.style.borderBottomColor = new Color(0f, 0.9f, 1f, 0.3f);
+
             badge.style.marginLeft = 0;
             badge.style.marginRight = 0;
             badge.style.marginTop = 0;
@@ -118,15 +112,13 @@ namespace VixenTools.Editor
             badge.style.alignItems = Align.Center;
             badge.style.justifyContent = Justify.Center;
 
-            // --- INTERACTIVITY ---
             badge.style.transitionDuration = new List<TimeValue> { new TimeValue(0.15f) };
             badge.RegisterCallback<PointerEnterEvent>(e => badge.style.backgroundColor = new Color(0.12f, 0.12f, 0.18f, 0.95f));
             badge.RegisterCallback<PointerLeaveEvent>(e => badge.style.backgroundColor = new Color(0.05f, 0.05f, 0.08f, 0.95f));
 
-            // --- TYPOGRAPHY ---
             var label = new Label(">> <color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> UPDATE") { enableRichText = true };
             label.style.fontSize = 14;
-            
+
             Font cyberFont = AssetDatabase.LoadAssetAtPath<Font>("Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf");
             if (cyberFont != null) label.style.unityFontDefinition = new StyleFontDefinition(cyberFont);
 
@@ -136,18 +128,11 @@ namespace VixenTools.Editor
         }
     }
 
-    // Process-wide Magick.NET tuning + shared lossless re-encode helper.
-    // Used by every VixForge tool that emits images so Unity restarts are not required
-    // to release file handles and so all PNG/JPEG/GIF/ICO outputs get the best compression
-    // Magick.NET can produce.
     [InitializeOnLoad]
     public static class VixenMagickKit
     {
         static VixenMagickKit()
         {
-            // OpenMP defaults to 1 thread on some Windows configurations; force all cores.
-            // Resource limits are process-wide globals so re-running on each domain reload
-            // is safe and idempotent.
             try
             {
                 ResourceLimits.Thread = (ulong)System.Math.Max(1, System.Environment.ProcessorCount);
@@ -155,11 +140,6 @@ namespace VixenTools.Editor
             catch { }
         }
 
-        // Asset-path fragments that mark shader / tool package internals. Textures inside these
-        // are hardcoded by the shader (fallback LUTs, matcaps, ramps, noise, reflection probes);
-        // resizing or re-encoding them corrupts the shader and triggers a Unity reimport storm.
-        // Matched case-insensitively as substrings of the forward-slash-normalized path.
-        // Extend this list as new shader packages are encountered.
         private static readonly string[] ProtectedPathFragments =
         {
             "/_PoiyomiShaders/",
@@ -170,18 +150,11 @@ namespace VixenTools.Editor
             "/Editor Default Resources/",
         };
 
-        // Texture file formats that hold data, not visual content: HDR maps, color-grading LUTs,
-        // reflection probes, lightmaps. They must never be resampled or re-encoded — doing so
-        // destroys the data the shader reads. This alone catches the common ".exr fallback" case.
         private static readonly string[] ProtectedExtensions =
         {
             ".exr", ".hdr", ".cubemap", ".rendertexture",
         };
 
-        // Central policy: returns true when the asset at this path must not be touched by any
-        // image pass (resize, sharpen, lossless re-encode). Accepts both project-relative asset
-        // paths ("Assets/...") and absolute filesystem paths. A null/empty path is treated as
-        // protected (can't verify it, so don't touch it).
         public static bool IsProtectedAsset(string path)
         {
             if (string.IsNullOrEmpty(path)) return true;
@@ -199,29 +172,15 @@ namespace VixenTools.Editor
             return false;
         }
 
-        // Lossless re-encode that never holds the source file open.
-        // - Reads bytes via managed I/O (so the OS handle is released before Magick sees it).
-        // - Runs ImageOptimizer with OptimalCompression which tries multiple filter/strategy
-        //   combos and keeps the smallest output.
-        // - Only overwrites when the result is genuinely smaller.
-        // - Silently skips unsupported formats (TGA, DDS, EXR, etc.) so callers can fire it
-        //   blindly after any Write().
-        // Above this file size, OptimalCompression's 4x re-encode pass is disproportionately
-        // expensive (it tries qualities 91/94/95/97 sequentially). On a 30 MB PNG that's
-        // ~2 minutes per file, which is exactly what locked up the editor on the upscale path.
-        // Below the threshold we still do the full 4-pass search.
         private const long OptimalCompressionMaxBytes = 10L * 1024 * 1024;
 
         public static bool TryLosslessOptimize(string path)
         {
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return false;
-            // Backstop: never re-encode protected shader/data assets even if a caller asks.
             if (IsProtectedAsset(path)) return false;
             try
             {
                 long fileBytes = new FileInfo(path).Length;
-                // PngHelper.GetQualityList: returns 4 qualities when OptimalCompression=true,
-                // returns 1 quality when false. For big files we use the single-pass mode.
                 bool useOptimal = fileBytes <= OptimalCompressionMaxBytes;
 
                 byte[] original = File.ReadAllBytes(path);
@@ -261,14 +220,12 @@ namespace VixenTools.Editor
         private const string PackageRoot = "Packages/com.vixencreations.vixens-toolbox/";
         private const string FontPath = PackageRoot + "Editor/UiStyles/Cyberpunk-Regular.ttf";
         private const string UssPath = PackageRoot + "Editor/UiStyles/VixenHubStyles.uss";
-        
+
         private Font _cyberFont;
-        
-        // --- Dynamic Version States ---
-        private string _packageVersion = "Unknown"; 
+
+        private string _packageVersion = "Unknown";
         private string _sdkVersion = "Unknown";
-        
-        // --- Changelog Pagination State ---
+
         private class ChangelogEntry
         {
             public string VersionTitle;
@@ -287,7 +244,7 @@ namespace VixenTools.Editor
         private Button _btnNetwork;
         private Button _btnSupport;
         private Button _btnChangelog;
-        
+
         private Label _tabDescription;
         private ScrollView _contentScroll;
         private VisualElement _contentContainer;
@@ -305,8 +262,8 @@ namespace VixenTools.Editor
             var window = GetWindow<VixenHub>("VixForge Hub");
             window.minSize = new Vector2(450, 600);
             window.Show();
-            
-            window.OpenChangelogTab(); 
+
+            window.OpenChangelogTab();
         }
 
         public void OpenChangelogTab()
@@ -329,7 +286,7 @@ namespace VixenTools.Editor
             if (File.Exists(path))
             {
                 string json = File.ReadAllText(path);
-                
+
                 Match vMatch = Regex.Match(json, @"""version""\s*:\s*""([^""]+)""");
                 if (vMatch.Success) _packageVersion = vMatch.Groups[1].Value;
 
@@ -349,12 +306,12 @@ namespace VixenTools.Editor
             foreach (string rawLine in lines)
             {
                 string line = rawLine.TrimEnd();
-                
+
                 if (line.StartsWith("## ["))
                 {
-                    currentEntry = new ChangelogEntry { 
-                        VersionTitle = line.Replace("## ", "").Trim(), 
-                        Content = "" 
+                    currentEntry = new ChangelogEntry {
+                        VersionTitle = line.Replace("## ", "").Trim(),
+                        Content = ""
                     };
                     _changelogEntries.Add(currentEntry);
                 }
@@ -373,7 +330,6 @@ namespace VixenTools.Editor
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath);
             if (styleSheet != null) root.styleSheets.Add(styleSheet);
 
-            // --- HEADER BANNER ---
             var headerRect = new VisualElement { name = "hub-header" };
             var textContainer = new VisualElement();
             textContainer.AddToClassList("hub-header-text-container");
@@ -382,32 +338,30 @@ namespace VixenTools.Editor
             var titleLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> HUB") { enableRichText = true };
             titleLabel.AddToClassList("hub-header-title");
             if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
-            
+
             string sdkText = _sdkVersion != "Unknown" ? $" • VRCSDK {_sdkVersion}" : "";
             var versionLabel = new Label($"v{_packageVersion}{sdkText} • System Online") { style = { color = new Color(0.6f, 0.6f, 0.6f) } };
-            
+
             textContainer.Add(titleLabel);
             textContainer.Add(versionLabel);
             headerRect.Add(textContainer);
             root.Add(headerRect);
 
-            // --- TABS NAVIGATION ---
             var tabContainer = new VisualElement { name = "tab-container" };
-            tabContainer.style.flexWrap = Wrap.Wrap; 
+            tabContainer.style.flexWrap = Wrap.Wrap;
             tabContainer.style.flexDirection = FlexDirection.Row;
-            
+
             _btnDashboard = new Button(() => SwitchMode(TabMode.Dashboard)) { text = "Architecture" };
             _btnCoreModules = new Button(() => SwitchMode(TabMode.CoreModules)) { text = "Core Modules" };
             _btnSupportedModules = new Button(() => SwitchMode(TabMode.SupportedModules)) { text = "Supported Modules" };
             _btnShaderDocs = new Button(() => SwitchMode(TabMode.ShaderDocs)) { text = "Shader Pipeline" };
 #if UDON
-            // Metrics Engine docs (HOWITWORKS.md) describe the World Profiler, so only surface the tab in World SDK (Udon) projects.
             _btnMetricsDocs = new Button(() => SwitchMode(TabMode.MetricsDocs)) { text = "Metrics Engine" };
 #endif
             _btnNetwork = new Button(() => SwitchMode(TabMode.Network)) { text = "Network" };
             _btnSupport = new Button(() => SwitchMode(TabMode.Support)) { text = "Support" };
             _btnChangelog = new Button(() => SwitchMode(TabMode.Changelog)) { text = "Changelogs" };
-            
+
             _btnDashboard.AddToClassList("tab-btn");
             _btnCoreModules.AddToClassList("tab-btn");
             _btnSupportedModules.AddToClassList("tab-btn");
@@ -431,24 +385,22 @@ namespace VixenTools.Editor
             tabContainer.Add(_btnChangelog);
             root.Add(tabContainer);
 
-            // --- TAB DESCRIPTION BOX ---
             var descContainer = new VisualElement { name = "desc-container" };
             _tabDescription = new Label() { enableRichText = true };
             _tabDescription.AddToClassList("tab-desc-label");
             descContainer.Add(_tabDescription);
             root.Add(descContainer);
 
-            // --- CONTENT AREA ---
             _contentScroll = new ScrollView(ScrollViewMode.Vertical) { name = "main-scroll" };
-            
+
             _contentScroll.style.flexGrow = 1;
             _contentScroll.style.flexShrink = 1;
-            
+
             _contentContainer = new VisualElement();
             _contentContainer.style.flexShrink = 1;
             _contentContainer.style.flexGrow = 1;
-            _contentContainer.style.paddingBottom = 40; 
-            
+            _contentContainer.style.paddingBottom = 40;
+
             _contentScroll.Add(_contentContainer);
             root.Add(_contentScroll);
 
@@ -458,7 +410,7 @@ namespace VixenTools.Editor
         private void SwitchMode(TabMode mode)
         {
             _currentMode = mode;
-            
+
             _btnDashboard.RemoveFromClassList("tab-btn-active"); _btnDashboard.AddToClassList("tab-btn-inactive");
             _btnCoreModules.RemoveFromClassList("tab-btn-active"); _btnCoreModules.AddToClassList("tab-btn-inactive");
             _btnSupportedModules.RemoveFromClassList("tab-btn-active"); _btnSupportedModules.AddToClassList("tab-btn-inactive");
@@ -504,7 +456,7 @@ namespace VixenTools.Editor
                 case TabMode.Network:
                     _btnNetwork.RemoveFromClassList("tab-btn-inactive"); _btnNetwork.AddToClassList("tab-btn-active");
                     _tabDescription.text = "Connect with the ecosystem, access open-source repositories, and monitor pipeline updates.";
-                    RenderNetwork(); 
+                    RenderNetwork();
                     break;
                 case TabMode.Support:
                     _btnSupport.RemoveFromClassList("tab-btn-inactive"); _btnSupport.AddToClassList("tab-btn-active");
@@ -514,13 +466,13 @@ namespace VixenTools.Editor
                 case TabMode.Changelog:
                     _btnChangelog.RemoveFromClassList("tab-btn-inactive"); _btnChangelog.AddToClassList("tab-btn-active");
                     _tabDescription.text = "Review version history, architecture upgrades, and pipeline fixes.";
-                    
+
                     if (_changelogEntries.Count == 0) ParseChangelogData();
 
                     if (_changelogEntries.Count > 0)
                     {
                         var controlRow = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 15, marginTop = 10, paddingLeft = 5, paddingRight = 5 } };
-                        
+
                         var dropLabel = new Label("Target Release:") { style = { color = new Color(0.67f, 0.67f, 0.67f), marginRight = 10, fontSize = 14 } };
                         if (_cyberFont != null) dropLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
                         controlRow.Add(dropLabel);
@@ -532,7 +484,7 @@ namespace VixenTools.Editor
 
                         var dropdown = new DropdownField(versionNames, _selectedChangelogIndex);
                         dropdown.style.flexGrow = 1;
-                        
+
                         dropdown.style.backgroundColor = new Color(0.12f, 0.12f, 0.12f);
                         dropdown.style.borderTopColor = new Color(0f, 0.898f, 1f, 0.4f);
                         dropdown.style.borderBottomColor = new Color(0f, 0.898f, 1f, 0.4f);
@@ -541,7 +493,7 @@ namespace VixenTools.Editor
                         dropdown.style.color = new Color(0.9f, 0.9f, 0.9f);
 
                         var logContentContainer = new VisualElement();
-                        
+
                         dropdown.RegisterValueChangedCallback(e => {
                             _selectedChangelogIndex = versionNames.IndexOf(e.newValue);
                             logContentContainer.Clear();
@@ -573,19 +525,14 @@ namespace VixenTools.Editor
             string path = PackageRoot + fileName;
             TextAsset asset = AssetDatabase.LoadAssetAtPath<TextAsset>(path);
             if (asset != null) return asset.text;
-            
+
             string fullPath = Path.GetFullPath(path);
             if (File.Exists(fullPath)) return File.ReadAllText(fullPath);
 
             return $"### Error: File Not Found\nCould not locate `{fileName}` at `{PackageRoot}`. Ensure the VPM package is installed correctly.";
         }
 
-        // =========================================================================
-        // DOCUMENTATION LOADERS
-        // =========================================================================
-        
 #if UDON
-        // World-only: HOWITWORKS.md documents the World Profiler heuristics, so it is only loaded when the Udon (World SDK) define is present.
         private void RenderMetricsDocs()
         {
             string markdown = LoadMarkdownFile("HOWITWORKS.md");
@@ -598,10 +545,6 @@ namespace VixenTools.Editor
             string markdown = LoadMarkdownFile("SHADERSETUP.md");
             ParseMarkdownAndInject(markdown, _contentContainer);
         }
-
-        // =========================================================================
-        // BUTTON GRIDS (Core Modules, Network, Support, Supported Modules)
-        // =========================================================================
 
         private void RenderCoreModules()
         {
@@ -624,41 +567,34 @@ namespace VixenTools.Editor
 
             RenderActionGrid("Avatar Pipeline Tools", "#ff00aa", avatarList);
 #elif UDON
-            // Read the live state directly from EditorPrefs for both tools
             bool isSnapActive = EditorPrefs.GetBool("VixenTools/Scene/Live Surface Snapping", false);
-            // Injecting Cyan rich text for the active state to pop against the UI
-            string snapTitle = isSnapActive 
-                ? "<color=#00e5ff>Live Surface Snapping [ ACTIVE ]</color>" 
+            string snapTitle = isSnapActive
+                ? "<color=#00e5ff>Live Surface Snapping [ ACTIVE ]</color>"
                 : "Live Surface Snapping [ OFF ]";
 
             bool isPrecisionActive = EditorPrefs.GetBool("VixenTools/Scene/Precision Click-to-Place", false);
-            string precisionTitle = isPrecisionActive 
-                ? "<color=#00e5ff>Precision Click-to-Place [ ACTIVE ]</color>" 
+            string precisionTitle = isPrecisionActive
+                ? "<color=#00e5ff>Precision Click-to-Place [ ACTIVE ]</color>"
                 : "Precision Click-to-Place [ OFF ]";
 
             var worldList = new List<(System.Action action, string title, string desc)>
             {
-                (() => 
+                (() =>
                 {
-                    // Execute the core logic
                     EditorApplication.ExecuteMenuItem("VixenTools/Scene/Live Surface Snapping");
-                    // Force the UIElements layout to flush and rebuild to catch the new EditorPrefs state
                     SwitchMode(TabMode.CoreModules);
-                }, 
-                snapTitle, 
+                },
+                snapTitle,
                 "Enterprise-grade gravity snapper. Automatically drops selected objects to the nearest floor or shelf when moved."),
-                
-                (() => 
+
+                (() =>
                 {
                     EditorApplication.ExecuteMenuItem("VixenTools/Scene/Precision Click-to-Place");
                     SwitchMode(TabMode.CoreModules);
-                }, 
-                precisionTitle, 
+                },
+                precisionTitle,
                 "Sniper-rifle camera raycaster. Click anywhere in the Scene View to instantly teleport objects to complex shelf polygons."),
 
-                // -------------------------
-                // NEW: World Engine entry
-                // -------------------------
                 (() =>
                 {
                     EditorApplication.ExecuteMenuItem("VixenTools/Scene/Vixen World Engine");
@@ -681,40 +617,40 @@ The **VixForge Architecture** is engineered to interoperate flawlessly with indu
 
             var list = new List<(System.Action action, string title, string desc)>
             {
-                (() => Application.OpenURL("https://protv.dev/"), 
-                    "ProTV (Techanon)", 
+                (() => Application.OpenURL("https://protv.dev/"),
+                    "ProTV (Techanon)",
                     "Comprehensive pipeline auditing, GSV conflict resolution, and AudioLink topology handshakes."),
 
-                (() => Application.OpenURL("https://github.com/llealloo/audiolink"), 
-                    "AudioLink", 
+                (() => Application.OpenURL("https://github.com/llealloo/audiolink"),
+                    "AudioLink",
                     "Reflective extraction of internal FFT textures, orphan detection, and global whitelist protection."),
 
-                (() => Application.OpenURL("https://ltcgi.dev/"), 
-                    "LTCGI", 
+                (() => Application.OpenURL("https://ltcgi.dev/"),
+                    "LTCGI",
                     "Real-time polygonal area lighting matrices, ghost screen eradication, and bake cache deadlock resolution."),
 
-                (() => Application.OpenURL("https://xtlcdn.github.io/VizVid/"), 
-                    "VizVid (VVMW)", 
+                (() => Application.OpenURL("https://xtlcdn.github.io/VizVid/"),
+                    "VizVid (VVMW)",
                     "Comprehensive video pipeline analysis, interface decoupling checks, and Quest fallback validation."),
 
-                (() => Application.OpenURL("https://github.com/vrctxl/VideoTXL"), 
-                    "Video TXL", 
+                (() => Application.OpenURL("https://github.com/vrctxl/VideoTXL"),
+                    "Video TXL",
                     "CRT render ecosystem validation, GC sink detection, and Playlist Queue access control integration."),
 
-                (() => Application.OpenURL("https://booth.pm/en/items/2666275"), 
-                    "iwaSync3", 
+                (() => Application.OpenURL("https://booth.pm/en/items/2666275"),
+                    "iwaSync3",
                     "Network sync frequency tuning, blinding emissive bounds detection, and global 2D audio isolation."),
 
-                (() => Application.OpenURL("https://rinvo.booth.pm/items/5757644"), 
-                    "YouTube Search (Rinvo)", 
+                (() => Application.OpenURL("https://rinvo.booth.pm/items/5757644"),
+                    "YouTube Search (Rinvo)",
                     "Autonomous video player target linking, UI architectural decoupling, and API pool size validation."),
 
-                (() => Application.OpenURL("https://github.com/REDSIM/VRCLightVolumes"), 
-                    "VRC Light Volumes", 
+                (() => Application.OpenURL("https://github.com/REDSIM/VRCLightVolumes"),
+                    "VRC Light Volumes",
                     "Compute load detection, sphere threshold optimization, and TVGI/AudioLink strobe safety enforcement."),
 
-                (() => Application.OpenURL("https://github.com/AcChosen/VR-Stage-Lighting"), 
-                    "VR Stage Lighting", 
+                (() => Application.OpenURL("https://github.com/AcChosen/VR-Stage-Lighting"),
+                    "VR Stage Lighting",
                     "Regex-based heuristic protection and DMX audit support.")
             };
 
@@ -791,10 +727,6 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
             _contentContainer.Add(grid);
         }
 
-        // ================
-        // MARKDOWN PARSER
-        // ================
-
         private void ParseMarkdownAndInject(string text, VisualElement container)
         {
             string[] lines = text.Split('\n');
@@ -817,18 +749,18 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
                 {
                     int hashes = 0;
                     while (hashes < line.Length && line[hashes] == '#') hashes++;
-                    
+
                     string hText = line.Substring(hashes).Trim();
                     hText = ParseMarkdownFormatting(hText);
                     var lbl = new Label(hText) { enableRichText = true };
-                    
+
                     if (hashes == 1) lbl.AddToClassList("md-h1");
                     else if (hashes == 2) lbl.AddToClassList("md-h2");
                     else lbl.AddToClassList("md-h3");
-                    
+
                     if (_cyberFont != null) lbl.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
                     container.Add(lbl);
-                    
+
                     if (hashes <= 2)
                     {
                         var sep = new VisualElement();
@@ -841,27 +773,27 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
                 {
                     string pText = line.Substring(2).Trim();
                     pText = ParseMarkdownFormatting(pText);
-                    
-                    var row = new VisualElement(); 
-                    row.AddToClassList("md-row"); 
-                    
-                    row.style.width = new StyleLength(Length.Percent(100)); 
-                    row.style.maxWidth = new StyleLength(Length.Percent(100)); 
+
+                    var row = new VisualElement();
+                    row.AddToClassList("md-row");
+
+                    row.style.width = new StyleLength(Length.Percent(100));
+                    row.style.maxWidth = new StyleLength(Length.Percent(100));
                     row.style.flexShrink = 1;
-                    
+
                     var bullet = new Label(">>") { style = { color = new Color(1f, 0f, 0.66f) } };
                     bullet.AddToClassList("md-bullet");
-                    bullet.style.flexShrink = 0; 
-                    
+                    bullet.style.flexShrink = 0;
+
                     var lbl = new Label(pText) { enableRichText = true };
                     lbl.AddToClassList("md-p");
-                    
-                    lbl.style.whiteSpace = WhiteSpace.Normal; 
-                    lbl.style.flexShrink = 1; 
-                    lbl.style.flexGrow = 1;   
-                    lbl.style.width = new StyleLength(Length.Percent(100)); 
-                    lbl.style.maxWidth = new StyleLength(Length.Percent(100)); 
-                    
+
+                    lbl.style.whiteSpace = WhiteSpace.Normal;
+                    lbl.style.flexShrink = 1;
+                    lbl.style.flexGrow = 1;
+                    lbl.style.width = new StyleLength(Length.Percent(100));
+                    lbl.style.maxWidth = new StyleLength(Length.Percent(100));
+
                     row.Add(bullet);
                     row.Add(lbl);
                     container.Add(row);
@@ -872,12 +804,12 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
                     pText = ParseMarkdownFormatting(pText);
                     var lbl = new Label(pText) { enableRichText = true };
                     lbl.AddToClassList("md-p");
-                    
+
                     lbl.style.whiteSpace = WhiteSpace.Normal;
                     lbl.style.flexShrink = 1;
                     lbl.style.width = new StyleLength(Length.Percent(100));
                     lbl.style.maxWidth = new StyleLength(Length.Percent(100));
-                    
+
                     lbl.style.color = new Color(0.7f, 0.7f, 0.7f);
                     lbl.style.borderLeftWidth = 3;
                     lbl.style.borderLeftColor = new Color(0f, 0.9f, 1f);
@@ -891,10 +823,10 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
                 {
                     string pText = ParseMarkdownFormatting(line);
                     var lbl = new Label(pText) { enableRichText = true };
-                    
+
                     if (pText.StartsWith("<b>")) lbl.AddToClassList("md-h2");
                     else lbl.AddToClassList("md-p");
-                    
+
                     container.Add(lbl);
                 }
             }

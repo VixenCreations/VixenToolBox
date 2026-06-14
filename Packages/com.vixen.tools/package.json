@@ -1,6 +1,6 @@
 {
   "name": "com.vixencreations.vixens-toolbox",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "displayName": "Vixen Tool Box",
   "description": "Collection of Tools Hand Made to make creators lives easier and make everyone's lives better!",
   "unity": "2022.3",
@@ -25,7 +25,6 @@
   "documentationUrl": "https://vixencreations.github.io/VixenToolBox/",
   "license": "MIT",
   "legacyFolders": {
-    "Assets\\VixenWear": ""
   },
   "legacyFiles": {}
 }

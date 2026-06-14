@@ -10,7 +10,6 @@ namespace Vixenlicious.AnimationWorkbench
 {
     public class MaterialPropertySearchPopup : EditorWindow
     {
-        // DATA MODEL =====================================================================
         public class Entry
         {
             public string displayName;
@@ -29,9 +28,6 @@ namespace Vixenlicious.AnimationWorkbench
         private TextField _search;
         private ScrollView _scroll;
 
-        // ================================================================================
-        // SHOW WINDOW
-        // ================================================================================
         public static void Show(
             List<Entry> entries,
             Entry selected,
@@ -53,8 +49,8 @@ namespace Vixenlicious.AnimationWorkbench
             Rect ownerPos = owner != null ? owner.position : new Rect(200, 200, 800, 600);
             Vector2 initialSize = new Vector2(420, 480);
 
-            wnd.minSize = new Vector2(300, 240);       // user cannot shrink too small
-            wnd.position = new Rect(                  // start centered
+            wnd.minSize = new Vector2(300, 240);
+            wnd.position = new Rect(
                 ownerPos.x + (ownerPos.width - initialSize.x) * 0.5f,
                 ownerPos.y + (ownerPos.height - initialSize.y) * 0.5f,
                 initialSize.x,
@@ -64,33 +60,26 @@ namespace Vixenlicious.AnimationWorkbench
             wnd.Focus();
         }
 
-        // ================================================================================
-        // UI BUILD
-        // ================================================================================
         private void OnEnable()
         {
             var root = rootVisualElement;
             root.style.flexDirection = FlexDirection.Column;
             root.AddToClassList("popup-root");
 
-            // ─ Search Field ───────────────────────────────────────
             _search = new TextField("Search");
             _search.AddToClassList("popup-search");
             _search.RegisterValueChangedCallback(evt =>
             {
                 Filter(evt.newValue);
-                // Lazy rebuild for performance
                 EditorApplication.delayCall += RebuildList;
             });
             root.Add(_search);
 
-            // ─ ScrollView ─────────────────────────────────────────
             _scroll = new ScrollView();
             _scroll.AddToClassList("popup-scroll");
             _scroll.style.flexGrow = 1f;
             root.Add(_scroll);
 
-            // ─ Close Row ──────────────────────────────────────────
             var closeRow = new VisualElement();
             closeRow.AddToClassList("popup-footer");
             closeRow.style.flexDirection = FlexDirection.Row;
@@ -101,13 +90,9 @@ namespace Vixenlicious.AnimationWorkbench
             closeRow.Add(closeBtn);
             root.Add(closeRow);
 
-            // Initial build
             EditorApplication.delayCall += RebuildList;
         }
 
-        // ================================================================================
-        // SEARCH FILTER
-        // ================================================================================
         private void Filter(string txt)
         {
             if (string.IsNullOrWhiteSpace(txt))
@@ -126,9 +111,6 @@ namespace Vixenlicious.AnimationWorkbench
             ).ToList();
         }
 
-        // ================================================================================
-        // CATEGORY DETECTION (Poiyomi Friendly)
-        // ================================================================================
         private static string DetectCategory(string prop)
         {
             prop = prop.ToLowerInvariant();
@@ -148,9 +130,6 @@ namespace Vixenlicious.AnimationWorkbench
             return "General";
         }
 
-        // ================================================================================
-        // MAIN LIST BUILD (MATERIAL → CATEGORY → PROPERTY)
-        // ================================================================================
         private void RebuildList()
         {
             if (_scroll == null) return;
@@ -162,7 +141,6 @@ namespace Vixenlicious.AnimationWorkbench
                 return;
             }
 
-            // Group by material
             var mats = _filtered
                 .GroupBy(e => e.materialName)
                 .OrderBy(g => g.Key);
@@ -176,10 +154,8 @@ namespace Vixenlicious.AnimationWorkbench
                 };
                 matFold.AddToClassList("mat-foldout");
 
-                // CONTENT MUST BE ADDED TO matFold.contentContainer
                 var matContainer = matFold.contentContainer;
 
-                // Group categories under each material
                 var categories = matGroup
                     .GroupBy(e => e.category)
                     .OrderBy(g => g.Key);
@@ -193,7 +169,6 @@ namespace Vixenlicious.AnimationWorkbench
                     };
                     catFold.AddToClassList("cat-foldout");
 
-                    // CONTENT MUST BE ADDED TO catFold.contentContainer
                     var catContainer = catFold.contentContainer;
 
                     foreach (var e in catGroup.OrderBy(x => x.shaderProperty))

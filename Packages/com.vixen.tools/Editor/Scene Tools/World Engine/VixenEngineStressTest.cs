@@ -15,7 +15,6 @@ using System.Reflection;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
-
 namespace VixenTools.Editor.QA
 {
     public class VixenEngineStressTest : EditorWindow
@@ -29,12 +28,11 @@ namespace VixenTools.Editor.QA
         [MenuItem("VixenTools/QA/Generate Omni-Chaos Environment")]
         public static void GenerateChaos()
         {
-            // --- SCENE MANAGEMENT PROTOCOL ---
             Scene activeScene = EditorSceneManager.GetActiveScene();
             if (activeScene.name != SceneName)
             {
-                if (EditorUtility.DisplayDialog("Vixen QA Environment", 
-                    "You are not in the 'Stress Test' scene.\n\nWould you like to save your current scene, unload it, and generate a dedicated VRChat Stress Test environment?", 
+                if (EditorUtility.DisplayDialog("Vixen QA Environment",
+                    "You are not in the 'Stress Test' scene.\n\nWould you like to save your current scene, unload it, and generate a dedicated VRChat Stress Test environment?",
                     "Save & Generate", "Abort"))
                 {
                     EditorSceneManager.SaveOpenScenes();
@@ -43,30 +41,26 @@ namespace VixenTools.Editor.QA
                 }
                 else
                 {
-                    return; // User aborted
+                    return;
                 }
             }
 
-            // --- VRC BASE WORLD GENERATION ---
             GenerateVRChatBaseArchitecture();
 
             GameObject root = new GameObject("== VIXEN OMNI-CHAOS ROOT ==");
-            
-            // Deploy Base Pods (Always Available via Unity/VRCSDK)
+
             CreateStandardPerformanceIssues(root.transform, "1. Performance & Physics Pit", 0, 0);
             CreateUIAndCanvasIssues(root.transform, "2. UI Void & Rebuild Cascades", 1, 0);
             CreateVramNightmare(root.transform, "5. VRAM Nightmare", 4, 0);
             CreatePersistenceAndNetworkIssues(root.transform, "7. Network & Persistence Void", 1, 1);
             CreateVideoPipelineIssues(root.transform, "8. Video Pipeline Collapse", 2, 1);
 
-            // Deploy Third-Party Pods (Verified via Reflection first)
             CreateProTVIssues(root.transform, "3. ProTV Logic Sink", 2, 0);
             CreateTXLIssues(root.transform, "4. TXL Death-Trap", 3, 0);
             CreateIwaSyncIssues(root.transform, "6. IwaSync3 Apocalypse", 0, 1);
             CreateUmbrellaIssues(root.transform, "9. Umbrella Logic Collapse", 3, 1);
             CreateExtrasIssues(root.transform, "10. Extras Proxy Desyncs", 4, 1);
 
-            // New Omni-Chaos Pods
             CreateGeometryAndMaterialNightmare(root.transform, "11. Geometry & Material Hell", 0, 2);
             CreateLightingAndEnvironmentApocalypse(root.transform, "12. Lighting & Environment Nuke", 1, 2);
             CreateVizVidIssues(root.transform, "13. VizVid (VVMW) Ecosystem Collapse", 2, 2);
@@ -79,7 +73,6 @@ namespace VixenTools.Editor.QA
 
         private static void GenerateVRChatBaseArchitecture()
         {
-            // 1. Lighting
             if (RenderSettings.sun == null && !GameObject.Find("Directional Light"))
             {
                 GameObject dirLightObj = new GameObject("Directional Light");
@@ -90,7 +83,6 @@ namespace VixenTools.Editor.QA
                 dirLightObj.transform.rotation = Quaternion.Euler(50, -30, 0);
             }
 
-            // 2. Floor
             if (!GameObject.Find("Floor"))
             {
                 GameObject floor = GameObject.CreatePrimitive(PrimitiveType.Plane);
@@ -101,16 +93,15 @@ namespace VixenTools.Editor.QA
                 floor.GetComponent<MeshRenderer>().sharedMaterial = mat;
             }
 
-            // 3. VRC Scene Descriptor
             if (Object.FindObjectOfType<VRCSceneDescriptor>() == null)
             {
                 GameObject vrcWorldObj = new GameObject("VRCWorld");
                 var descriptor = vrcWorldObj.AddComponent<VRCSceneDescriptor>();
-                
+
                 GameObject spawnPoint = new GameObject("Spawn Point");
                 spawnPoint.transform.SetParent(vrcWorldObj.transform);
-                spawnPoint.transform.position = new Vector3(0, 0, -5); 
-                
+                spawnPoint.transform.position = new Vector3(0, 0, -5);
+
                 descriptor.spawns = new Transform[] { spawnPoint.transform };
                 descriptor.ReferenceCamera = GameObject.FindObjectOfType<Camera>()?.gameObject;
             }
@@ -120,7 +111,7 @@ namespace VixenTools.Editor.QA
         {
             GameObject pod = new GameObject(name);
             pod.transform.SetParent(root);
-            pod.transform.position = new Vector3(x * 20f, 0, z * 20f); // 20-meter spread
+            pod.transform.position = new Vector3(x * 20f, 0, z * 20f);
             return pod.transform;
         }
 
@@ -128,7 +119,6 @@ namespace VixenTools.Editor.QA
         {
             Transform parent = DeployPod(root, name, x, z);
 
-            // --- LIGHTING & PROBES ---
             GameObject lightObj = new GameObject("Expensive Realtime Light");
             lightObj.transform.SetParent(parent);
             var light = lightObj.AddComponent<Light>();
@@ -139,45 +129,41 @@ namespace VixenTools.Editor.QA
             pLightObj.transform.SetParent(parent);
             var pLight = pLightObj.AddComponent<Light>();
             pLight.type = LightType.Point;
-            pLight.range = 500f; // Fillrate executioner
+            pLight.range = 500f;
 
             GameObject probeObj = new GameObject("Per-Frame Reflection Probe");
             probeObj.transform.SetParent(parent);
             var probe = probeObj.AddComponent<ReflectionProbe>();
             probe.mode = UnityEngine.Rendering.ReflectionProbeMode.Realtime;
 
-            // --- PHYSICS DRAG ---
             GameObject physObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             physObj.name = "Non-Convex Physics Drag";
             physObj.transform.SetParent(parent);
             physObj.transform.localPosition = new Vector3(0, 5, 0);
             Object.DestroyImmediate(physObj.GetComponent<SphereCollider>());
             var mc = physObj.AddComponent<MeshCollider>();
-            mc.convex = false; // Trigger non-convex warning
+            mc.convex = false;
 
             GameObject rbObj = new GameObject("Continuous Dynamic RB");
             rbObj.transform.SetParent(parent);
             var rb = rbObj.AddComponent<Rigidbody>();
-            rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic; // CPU Executioner
+            rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
             GameObject audioObj = new GameObject("2D Audio Source");
             audioObj.transform.SetParent(parent);
             var source = audioObj.AddComponent<AudioSource>();
-            source.spatialBlend = 0f; 
+            source.spatialBlend = 0f;
 
-            // --- SAFE MESH CREATION (replace existing block inside CreateStandardPerformanceIssues) ---
             if (!File.Exists(TestMeshPath))
             {
                 Mesh heavyMesh = new Mesh { name = "Vixen_Poly_Nuke" };
 
-                // Create a small valid tetrahedron for collision indices
                 Vector3[] baseVerts = new Vector3[4];
                 baseVerts[0] = new Vector3(0, 0, 0);
                 baseVerts[1] = new Vector3(1, 0, 0);
                 baseVerts[2] = new Vector3(0, 1, 0);
                 baseVerts[3] = new Vector3(0, 0, 1);
 
-                // Create a large vertex buffer to simulate heavy vertex count (visual/CPU weight)
                 Vector3[] verts = new Vector3[66000];
                 for (int i = 0; i < verts.Length; i++)
                 {
@@ -185,16 +171,14 @@ namespace VixenTools.Editor.QA
                     else verts[i] = Random.insideUnitSphere * 5f;
                 }
 
-                // Triangles reference the first 4 vertices (valid tetrahedron)
                 int[] tris = new int[] { 0, 1, 2,  0, 2, 3,  0, 3, 1,  1, 3, 2 };
 
-                heavyMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; // allow large vertex counts
+                heavyMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
                 heavyMesh.vertices = verts;
                 heavyMesh.triangles = tris;
                 heavyMesh.RecalculateNormals();
                 heavyMesh.RecalculateBounds();
 
-                // Ensure the asset directory exists before creating the asset
                 var dir = Path.GetDirectoryName(TestMeshPath);
                 if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir)) Directory.CreateDirectory(dir);
 
@@ -206,24 +190,23 @@ namespace VixenTools.Editor.QA
             heavyObj.transform.SetParent(parent);
             var mf = heavyObj.AddComponent<MeshFilter>();
             var mr = heavyObj.AddComponent<MeshRenderer>();
-            
+
             Mesh loadedMesh = AssetDatabase.LoadAssetAtPath<Mesh>(TestMeshPath);
             mf.sharedMesh = loadedMesh;
-            
-            // Importer logic: Force Read/Write and disable compression
+
             ModelImporter imp = AssetImporter.GetAtPath(TestMeshPath) as ModelImporter;
-            if (imp != null) 
-            { 
-                imp.isReadable = true; 
-                imp.meshCompression = ModelImporterMeshCompression.Off; 
-                imp.SaveAndReimport(); 
-            } 
+            if (imp != null)
+            {
+                imp.isReadable = true;
+                imp.meshCompression = ModelImporterMeshCompression.Off;
+                imp.SaveAndReimport();
+            }
 
             GameObject cvxObj = new GameObject("Convex High Poly Collider");
             cvxObj.transform.SetParent(parent);
             var cvxMc = cvxObj.AddComponent<MeshCollider>();
-            cvxMc.sharedMesh = loadedMesh; 
-            cvxMc.convex = true; 
+            cvxMc.sharedMesh = loadedMesh;
+            cvxMc.convex = true;
         }
 
         private static void CreateGeometryAndMaterialNightmare(Transform root, string name, int x, int z)
@@ -240,14 +223,14 @@ namespace VixenTools.Editor.QA
             GameObject matBloatObj = new GameObject("Material Slot Bloat");
             matBloatObj.transform.SetParent(parent);
             var mrBloat = matBloatObj.AddComponent<MeshRenderer>();
-            matBloatObj.AddComponent<MeshFilter>().sharedMesh = loadedMesh; // 1 submesh
+            matBloatObj.AddComponent<MeshFilter>().sharedMesh = loadedMesh;
             mrBloat.sharedMaterials = new Material[] { new Material(Shader.Find("Standard")), new Material(Shader.Find("Standard")), new Material(Shader.Find("Standard")) };
 
             GameObject dynamicObj = new GameObject("Unprotected Dynamic Mesh");
             dynamicObj.transform.SetParent(parent);
             dynamicObj.AddComponent<MeshFilter>().sharedMesh = loadedMesh;
             dynamicObj.AddComponent<MeshRenderer>();
-            dynamicObj.isStatic = false; // explicitly not static
+            dynamicObj.isStatic = false;
         }
 
         private static void CreateLightingAndEnvironmentApocalypse(Transform root, string name, int x, int z)
@@ -266,15 +249,14 @@ namespace VixenTools.Editor.QA
             var terrain = terrainObj.AddComponent<Terrain>();
             terrain.terrainData = AssetDatabase.LoadAssetAtPath<TerrainData>(TestTerrainPath);
             terrain.drawInstanced = false;
-            terrain.heightmapPixelError = 1f; // Massive LOD rendering
+            terrain.heightmapPixelError = 1f;
 
             GameObject camObj = new GameObject("Rogue Active Screen Camera");
             camObj.transform.SetParent(parent);
             var cam = camObj.AddComponent<Camera>();
             cam.targetTexture = null;
-            cam.cullingMask = -1; // Everything (double rendering geometry)
+            cam.cullingMask = -1;
 
-            // Global Lighting Sabotage
             Lightmapping.realtimeGI = true;
             LightingSettings lightingSettings = new LightingSettings();
             lightingSettings.lightmapMaxSize = 4096;
@@ -291,14 +273,13 @@ namespace VixenTools.Editor.QA
             canvasObj.transform.SetParent(parent);
             var canvas = canvasObj.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.WorldSpace;
-            canvas.additionalShaderChannels = AdditionalCanvasShaderChannels.None; 
+            canvas.additionalShaderChannels = AdditionalCanvasShaderChannels.None;
             canvasObj.AddComponent<GraphicRaycaster>();
 
-            // Auditor Trigger: Nested Raycaster Bloat
             GameObject nestedCanvasObj = new GameObject("Nested GraphicRaycaster");
             nestedCanvasObj.transform.SetParent(canvasObj.transform);
             nestedCanvasObj.AddComponent<GraphicRaycaster>();
-            
+
             GameObject legacyText = new GameObject("Legacy Font");
             legacyText.transform.SetParent(canvasObj.transform);
             var text = legacyText.AddComponent<Text>();
@@ -312,30 +293,28 @@ namespace VixenTools.Editor.QA
         private static void CreateProTVIssues(Transform root, string name, int x, int z)
         {
             System.Type tvType = GetTypeSafe("ArchiTech.ProTV.TVManager");
-            if (tvType == null) return; 
+            if (tvType == null) return;
 
             Transform parent = DeployPod(root, name, x, z);
 
-            // --- TV FIGHTING INSTANCES ---
             for (int i = 1; i <= 2; i++)
             {
                 GameObject tvObj = new GameObject($"ProTV Fighting Instance {i}");
                 tvObj.transform.SetParent(parent);
                 var tv = tvObj.AddComponent(tvType);
-                
+
                 SetField(tv, "enableHDR", true);
                 SetField(tv, "bakeGlobalVideoTexture", true);
-                SetField(tv, "enableGSV", true); 
+                SetField(tv, "enableGSV", true);
                 SetField(tv, "preferAlternateUrlForQuest", false);
             }
 
-            // --- SUB-COMPONENT ERRORS ---
             System.Type rtgiType = GetTypeSafe("ArchiTech.ProTV.RTGIUpdater");
             if (rtgiType != null)
             {
                 GameObject rtgiObj = new GameObject("ProTV RTGI (Mobile Sink)");
                 rtgiObj.transform.SetParent(parent);
-                rtgiObj.AddComponent<MeshRenderer>(); 
+                rtgiObj.AddComponent<MeshRenderer>();
                 var rtgi = rtgiObj.AddComponent(rtgiType);
                 SetField(rtgi, "runOnMobile", true);
             }
@@ -346,8 +325,7 @@ namespace VixenTools.Editor.QA
                 GameObject searchObj = new GameObject("Aggressive Playlist Search");
                 searchObj.transform.SetParent(parent);
                 var search = searchObj.AddComponent(searchType);
-                // FIX: Explicit byte cast for reflection strictly typed fields
-                SetField(search, "searchAggressionLevel", (byte)20); 
+                SetField(search, "searchAggressionLevel", (byte)20);
             }
 
             System.Type queueType = GetTypeSafe("ArchiTech.ProTV.Queue");
@@ -366,7 +344,7 @@ namespace VixenTools.Editor.QA
                 GameObject pdObj = new GameObject("Playlist Thumbnail Bloat");
                 pdObj.transform.SetParent(parent);
                 var pd = pdObj.AddComponent(pdType);
-                SetField(pd, "images", new Sprite[50]); 
+                SetField(pd, "images", new Sprite[50]);
             }
 
             System.Type togglesType = GetTypeSafe("ArchiTech.ProTV.TVToggles");
@@ -402,7 +380,7 @@ namespace VixenTools.Editor.QA
             GameObject toggleObj = new GameObject("Massive ATToggle Event");
             toggleObj.transform.SetParent(parent);
             var toggle = toggleObj.AddComponent(toggleType);
-            SetField(toggle, "actions", new int[20]); // Trigger > 15 massive array hitch warning
+            SetField(toggle, "actions", new int[20]);
 
             System.Type ztType = GetTypeSafe("ArchiTech.Umbrella.ZoneTrigger");
             if (ztType != null)
@@ -410,7 +388,7 @@ namespace VixenTools.Editor.QA
                 GameObject ztObj = new GameObject("Empty ZoneTrigger Collider");
                 ztObj.transform.SetParent(parent);
                 var zt = ztObj.AddComponent(ztType);
-                SetField(zt, "triggerType", 2); // 2 = COLLIDER (missing physical collider attachment)
+                SetField(zt, "triggerType", 2);
             }
 
             System.Type proxyType = GetTypeSafe("ArchiTech.Umbrella.ColliderActionProxy");
@@ -418,9 +396,9 @@ namespace VixenTools.Editor.QA
             {
                 GameObject proxyObj = new GameObject("Dead ColliderActionProxy");
                 proxyObj.transform.SetParent(parent);
-                proxyObj.AddComponent<BoxCollider>(); // Required to pass unity compile
+                proxyObj.AddComponent<BoxCollider>();
                 var proxy = proxyObj.AddComponent(proxyType);
-                SetField(proxy, "eventTarget", null); // Silent collision failure
+                SetField(proxy, "eventTarget", null);
             }
         }
 
@@ -440,13 +418,13 @@ namespace VixenTools.Editor.QA
             var animator = animObj.AddComponent<Animator>();
 
             SetField(proxy, "animators", new Animator[] { animator, animator });
-            SetField(proxy, "parameters", new string[] { "ValidParam", "" }); // Mismatch/empty string out of bounds
+            SetField(proxy, "parameters", new string[] { "ValidParam", "" });
         }
 
         private static void CreateTXLIssues(Transform root, string name, int x, int z)
         {
             System.Type tztType = GetTypeSafe("Texel.TrackedZoneTrigger");
-            if (tztType == null) return; 
+            if (tztType == null) return;
 
             Transform parent = DeployPod(root, name, x, z);
 
@@ -477,7 +455,7 @@ namespace VixenTools.Editor.QA
                 var trans = transObj.AddComponent(transType);
                 SetField(trans, "languages", new string[] { "en", "jp" });
                 SetField(trans, "keys", new string[] { "key1", "key2" });
-                SetField(trans, "values", new string[] { "val1" }); 
+                SetField(trans, "values", new string[] { "val1" });
             }
 
             System.Type digestType = GetTypeSafe("Texel.DigestValidator");
@@ -522,7 +500,7 @@ namespace VixenTools.Editor.QA
         private static void CreateIwaSyncIssues(Transform root, string name, int x, int z)
         {
             System.Type iwaType = GetTypeSafe("HoshinoLabs.IwaSync3.IwaSync3");
-            if (iwaType == null) return; 
+            if (iwaType == null) return;
 
             Transform parent = DeployPod(root, name, x, z);
 
@@ -555,17 +533,17 @@ namespace VixenTools.Editor.QA
             {
                 GameObject scrObj = new GameObject("Iwa Blinding Screen");
                 scrObj.transform.SetParent(parent);
-                
+
                 var rend = scrObj.AddComponent<MeshRenderer>();
                 var mat = new Material(Shader.Find("Standard"));
-                mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive; 
+                mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
                 rend.sharedMaterial = mat;
 
                 var scrEditor = scrObj.AddComponent(screenType);
                 SetField(scrEditor, "screen", rend);
 
                 var scrUdon = scrObj.AddComponent(udonScreenType);
-                SetField(scrUdon, "defaultEmissiveBoost", 2.5f); 
+                SetField(scrUdon, "defaultEmissiveBoost", 2.5f);
             }
 
             System.Type videoCoreType = GetTypeSafe("HoshinoLabs.IwaSync3.Udon.VideoCore");
@@ -597,7 +575,7 @@ namespace VixenTools.Editor.QA
                 {
                     GameObject gsObj = new GameObject($"VVMW GlobalSettings {i}");
                     gsObj.transform.SetParent(parent);
-                    gsObj.AddComponent(gsType); // Multi-Singleton violation
+                    gsObj.AddComponent(gsType);
                 }
             }
 
@@ -608,23 +586,23 @@ namespace VixenTools.Editor.QA
                 GameObject coreObj = new GameObject("VVMW Core Orphaned");
                 coreObj.transform.SetParent(parent);
                 var core = coreObj.AddComponent(vvmwCoreType);
-                SetField(core, "playerHandlers", new Component[0]); // Disconnected handler array
+                SetField(core, "playerHandlers", new Component[0]);
 
                 GameObject coreObj2 = new GameObject("VVMW AVPro No Fallback");
                 coreObj2.transform.SetParent(parent);
                 var core2 = coreObj2.AddComponent(vvmwCoreType);
-                
+
                 GameObject handlerObj = new GameObject("AVPro Handler");
                 handlerObj.transform.SetParent(coreObj2.transform);
                 var handler = handlerObj.AddComponent(vpHandlerType);
                 SetField(handler, "isAvPro", true);
-                SetField(handler, "fallbackHandler", null); // Quest Failure Point
+                SetField(handler, "fallbackHandler", null);
                 SetField(core2, "playerHandlers", new Component[] { handler });
 
                 var audio = coreObj2.AddComponent<AudioSource>();
-                audio.spatialBlend = 0f; // 2D Audio Bleed Risk
+                audio.spatialBlend = 0f;
                 SetField(core2, "audioSources", new AudioSource[] { audio });
-                SetField(core2, "audioLink", null); // Topology disconnect
+                SetField(core2, "audioLink", null);
             }
 
             System.Type frontendType = GetTypeSafe("JLChnToZ.VRC.VVMW.FrontendHandler");
@@ -633,7 +611,7 @@ namespace VixenTools.Editor.QA
                 GameObject frontObj = new GameObject("VVMW Orphaned Frontend");
                 frontObj.transform.SetParent(parent);
                 var front = frontObj.AddComponent(frontendType);
-                SetField(front, "core", null); // Dead UI layer
+                SetField(front, "core", null);
             }
         }
 
@@ -649,7 +627,7 @@ namespace VixenTools.Editor.QA
                     GameObject alObj = new GameObject($"AudioLink Core {i}");
                     alObj.transform.SetParent(parent);
                     var al = alObj.AddComponent(alType);
-                    SetField(al, "audioDataToggle", true); // Quest GPU Stall Readback
+                    SetField(al, "audioDataToggle", true);
                 }
 
                 System.Type reactType = GetTypeSafe("AudioLink.AudioReactive");
@@ -669,27 +647,27 @@ namespace VixenTools.Editor.QA
                 {
                     GameObject lvMgr = new GameObject($"LV Manager {i}");
                     lvMgr.transform.SetParent(parent);
-                    lvMgr.AddComponent(lvMgrType); // Multi-Manager Tearing
+                    lvMgr.AddComponent(lvMgrType);
                 }
 
                 System.Type lvSetupType = GetTypeSafe("VRCLightVolumes.LightVolumeSetup");
                 GameObject setupObj = new GameObject("LV Setup Cutoff Nuke");
                 setupObj.transform.SetParent(parent);
                 var setup = setupObj.AddComponent(lvSetupType);
-                SetField(setup, "LightsBrightnessCutoff", 0.05f); // Impossible sphere sizes
+                SetField(setup, "LightsBrightnessCutoff", 0.05f);
 
                 System.Type plvType = GetTypeSafe("VRCLightVolumes.PointLightVolume");
                 GameObject plvObj = new GameObject("Area Light Volume");
                 plvObj.transform.SetParent(parent);
                 var plv = plvObj.AddComponent(plvType);
-                SetField(plv, "Type", 2); // Area Light math sink
+                SetField(plv, "Type", 2);
 
                 System.Type tvgiType = GetTypeSafe("VRCLightVolumes.LightVolumeTVGI");
                 GameObject tvgiObj = new GameObject("TVGI Seizure Risk");
                 tvgiObj.transform.SetParent(parent);
                 var tvgi = tvgiObj.AddComponent(tvgiType);
                 SetField(tvgi, "TargetRenderTexture", null);
-                SetField(tvgi, "AntiFlickering", false); // Strobe warning
+                SetField(tvgi, "AntiFlickering", false);
 
                 System.Type alLvType = GetTypeSafe("VRCLightVolumes.LightVolumeAudioLink");
                 GameObject alLvObj = new GameObject("LV AudioLink Flicker Risk");
@@ -709,7 +687,7 @@ namespace VixenTools.Editor.QA
                 GameObject rinvoObj = new GameObject("Rinvo Search Bounds Failure");
                 rinvoObj.transform.SetParent(parent);
                 var rinvo = rinvoObj.AddComponent(rinvoType);
-                SetField(rinvo, "poolSize", 500000); // Serialization death limit
+                SetField(rinvo, "poolSize", 500000);
                 SetField(rinvo, "VideoPlayerUIController", null);
                 SetField(rinvo, "UrlInputField", null);
             }
@@ -753,8 +731,8 @@ namespace VixenTools.Editor.QA
                 GameObject avObj = new GameObject("AVPro 4K Unlimited Sink");
                 avObj.transform.SetParent(parent);
                 var avPro = avObj.AddComponent(avProType);
-                SetField(avPro, "maximumResolution", 0); 
-                SetField(avPro, "useLowLatency", true);  
+                SetField(avPro, "maximumResolution", 0);
+                SetField(avPro, "useLowLatency", true);
             }
 
             System.Type proTvType = GetTypeSafe("ArchiTech.ProTV.TVManager");
@@ -764,36 +742,36 @@ namespace VixenTools.Editor.QA
                 GameObject tvObj = new GameObject("ProTV VRAM Nuke & GSV Desync");
                 tvObj.transform.SetParent(parent);
                 var tv = tvObj.AddComponent(proTvType);
-                SetField(tv, "enableGSV", true); // Enable Global Texture
-                
+                SetField(tv, "enableGSV", true);
+
                 RenderTexture massiveTex = new RenderTexture(4096, 4096, 0);
                 SetField(tv, "customTexture", massiveTex);
 
                 GameObject vpmObj = new GameObject("VPManager (GI Sink & Uncalibrated & Bleed)");
-                vpmObj.transform.SetParent(tvObj.transform); // Set parent so it finds the TV Manager
+                vpmObj.transform.SetParent(tvObj.transform);
                 var vpm = vpmObj.AddComponent(vpmType);
-                
+
                 GameObject screenObj = GameObject.CreatePrimitive(PrimitiveType.Quad);
                 screenObj.name = "1:1 Uncalibrated Screen Surface";
                 screenObj.transform.SetParent(vpmObj.transform);
-                screenObj.transform.localScale = new Vector3(1, 1, 1); // Exact 1:1 physical bounds
+                screenObj.transform.localScale = new Vector3(1, 1, 1);
 
                 var mat = new Material(Shader.Find("Standard"));
                 Shader proTvShader = Shader.Find("ProTV/VideoScreen");
                 if (proTvShader != null)
                 {
                     mat = new Material(proTvShader);
-                    mat.DisableKeyword("_USEGLOBALTEXTURE"); // Force GSV missing keyword desync
+                    mat.DisableKeyword("_USEGLOBALTEXTURE");
                 }
-                
-                mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive; 
+
+                mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
                 screenObj.GetComponent<MeshRenderer>().sharedMaterial = mat;
 
                 GameObject audioObj = new GameObject("Spatialization Bleed Speaker");
                 audioObj.transform.SetParent(vpmObj.transform);
                 var audioSrc = audioObj.AddComponent<AudioSource>();
-                audioSrc.spatialBlend = 1.0f; // 3D
-                audioSrc.maxDistance = 500f;  // Massive Bleed Range
+                audioSrc.spatialBlend = 1.0f;
+                audioSrc.maxDistance = 500f;
 
                 SetField(vpm, "screens", new GameObject[] { screenObj });
                 SetField(vpm, "speakers", new AudioSource[] { audioSrc });
@@ -804,10 +782,8 @@ namespace VixenTools.Editor.QA
         {
             Transform parent = DeployPod(root, name, x, z);
 
-            // --- SAFE TEXTURE CREATION & IMPORT ---
             if (!File.Exists(TestTexturePath))
             {
-                // Ensure directory exists
                 var texDir = Path.GetDirectoryName(TestTexturePath);
                 if (!string.IsNullOrEmpty(texDir) && !Directory.Exists(texDir)) Directory.CreateDirectory(texDir);
 
@@ -817,24 +793,20 @@ namespace VixenTools.Editor.QA
                 nukeTex.SetPixels(colors);
                 nukeTex.Apply();
 
-                // Try to write PNG and import, but guard against postprocessor exceptions
                 try
                 {
                     byte[] bytes = nukeTex.EncodeToPNG();
                     File.WriteAllBytes(TestTexturePath, bytes);
 
-                    // Prefer ImportAsset only if path exists and AssetDatabase is available
                     AssetDatabase.ImportAsset(TestTexturePath, ImportAssetOptions.ForceUpdate);
                 }
                 catch (System.Exception ex)
                 {
                     Debug.LogWarning($"Failed to create/import texture at {TestTexturePath}: {ex.Message}");
-                    // As a fallback, create an in-memory asset (less persistent) to avoid breaking the generator
                     AssetDatabase.CreateAsset(nukeTex, TestTexturePath);
                 }
             }
 
-            // Configure importer safely
             TextureImporter importer = AssetImporter.GetAtPath(TestTexturePath) as TextureImporter;
             if (importer != null)
             {
@@ -851,7 +823,6 @@ namespace VixenTools.Editor.QA
                 }
             }
 
-            // --- VISUAL REPRESENTATION ---
             GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             cube.name = "VRAM_NUKE_DISPLAY";
             cube.transform.SetParent(parent);
@@ -893,7 +864,6 @@ namespace VixenTools.Editor.QA
                 {
                     if (fieldType.IsValueType && Nullable.GetUnderlyingType(fieldType) == null)
                     {
-                        // cannot assign null to non-nullable value type; skip
                         return;
                     }
                     field.SetValue(target, null);
@@ -902,14 +872,12 @@ namespace VixenTools.Editor.QA
 
                 Type valueType = value.GetType();
 
-                // Directly assignable
                 if (fieldType.IsAssignableFrom(valueType))
                 {
                     field.SetValue(target, value);
                     return;
                 }
 
-                // Enums
                 if (fieldType.IsEnum)
                 {
                     object enumVal = null;
@@ -919,7 +887,6 @@ namespace VixenTools.Editor.QA
                     return;
                 }
 
-                // Numeric conversions (int -> byte, etc.)
                 if (IsNumericType(fieldType) && IsNumericType(valueType))
                 {
                     object converted = Convert.ChangeType(value, fieldType);
@@ -927,7 +894,6 @@ namespace VixenTools.Editor.QA
                     return;
                 }
 
-                // Arrays: try to convert element-wise
                 if (fieldType.IsArray && valueType.IsArray)
                 {
                     var elemType = fieldType.GetElementType();
@@ -948,14 +914,13 @@ namespace VixenTools.Editor.QA
                     return;
                 }
 
-                // Last resort: try Convert.ChangeType for simple conversions
                 try
                 {
                     var converted = Convert.ChangeType(value, fieldType);
                     field.SetValue(target, converted);
                     return;
                 }
-                catch { } // incompatible - fall through
+                catch { }
             }
             catch (Exception ex)
             {

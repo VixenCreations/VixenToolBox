@@ -12,7 +12,6 @@ using UnityEngine.UIElements;
 
 namespace VixenTools.Editor
 {
-    // JSON Wrapper for dynamic template layouts
     [Serializable]
     public class BadgeLayout
     {
@@ -20,16 +19,15 @@ namespace VixenTools.Editor
         public float nameRotation = 0f;
         public int titleX = 2701, titleY = 1677, titleW = 1554, titleH = 257;
         public float titleRotation = 0f;
-        
-        // Legacy variable preserved for backwards compatibility with old layout.json files
-        public Color neonColor = Color.white; 
-        
+
+        public Color neonColor = Color.white;
+
         public Color matBaseColor = Color.white;
         public Color emiMaskColor = Color.white;
-        
+
         public bool emitName = false;
         public bool emitTitle = true;
-        public bool hasUpgradedBools = true; // Safety flag for older JSON files
+        public bool hasUpgradedBools = true;
     }
 
     public class VixenBadgeMaker : EditorWindow
@@ -37,17 +35,16 @@ namespace VixenTools.Editor
         private enum ToolMode { BadgeGenerator, TemplateBuilder, UVMapper }
         private enum AuthoringType { ProceduralBase, IngestFromSource }
         private enum Ecosystem { VixenTools, FuralitySDK }
-        
-        private enum TargetShader 
-        { 
-            AutoDetect, Standard, PoiyomiToon, LilToon, FuralityAqua, 
+
+        private enum TargetShader
+        {
+            AutoDetect, Standard, PoiyomiToon, LilToon, FuralityAqua,
             FuralitySylva, FuralitySomna, FuralityUmbra, VRCToonStandard, VRCMobileToonLit,
-            FuralityModular // <-- Added new shader
+            FuralityModular
         }
 
         private ToolMode _currentMode = ToolMode.BadgeGenerator;
 
-        // --- Shared State ---
         private const string VixenRootPath = "Assets/VixenTools/Badges/Template Files";
         private const string FuralityRootPath = "Assets/Furality";
         private const string PackageFontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
@@ -55,19 +52,18 @@ namespace VixenTools.Editor
 
         private Font _cyberFont;
 
-        // --- Generator State ---
         private string _badgeName = "";
         private string _title = "";
-        
-        private Color _matBaseColor = new Color(1f, 1f, 1f, 1f); 
-        private Color _mainTextColor = new Color(1f, 1f, 1f, 1f); 
-        private Color _emiMaskColor = new Color(1f, 1f, 1f, 1f); 
-        
+
+        private Color _matBaseColor = new Color(1f, 1f, 1f, 1f);
+        private Color _mainTextColor = new Color(1f, 1f, 1f, 1f);
+        private Color _emiMaskColor = new Color(1f, 1f, 1f, 1f);
+
         private bool _emitName = false;
         private bool _emitTitle = true;
         private bool _applyToMaterial = true;
-        
-        private TargetShader _targetShader = TargetShader.AutoDetect; 
+
+        private TargetShader _targetShader = TargetShader.AutoDetect;
         private List<TargetShader> _validShaders = new List<TargetShader>();
         private List<string> _validShaderNames = new List<string>();
         private int _selectedShaderIndex = 0;
@@ -86,7 +82,6 @@ namespace VixenTools.Editor
         private float _titleRotation = 0f;
         private bool _showAdvancedLayout = false;
 
-        // --- Template Builder State ---
         private AuthoringType _authoringType = AuthoringType.IngestFromSource;
         private string _newTemplateName = "Custom_Base";
         private int _templateResolution = 4096;
@@ -94,24 +89,22 @@ namespace VixenTools.Editor
         private Texture2D _sourceDiffuse;
         private Texture2D _sourceEmission;
 
-        // --- UV Mapper State ---
         public bool IsMappingActive { get; private set; } = false;
         public Vector3 LastHitPoint { get; private set; } = Vector3.zero;
         public Vector3 LastHitNormal { get; private set; } = Vector3.back;
         private Tool _previousTool = Tool.None;
-        
+
         private GameObject _mapperTargetMesh;
-        private MeshCollider _tempCollider; 
+        private MeshCollider _tempCollider;
         private int _mapperTexWidth = 4096;
         private int _mapperTexHeight = 4096;
         private int _lastPixelX = 0;
         private int _lastPixelY = 0;
 
-        // --- UI Elements ---
         private VisualElement _generatorContainer;
         private VisualElement _templateContainer;
         private VisualElement _uvMapperContainer;
-        
+
         private VisualElement _vixenRoutingUI;
         private VisualElement _furalityRoutingUI;
         private DropdownField _vixenTemplateDropdown;
@@ -125,7 +118,7 @@ namespace VixenTools.Editor
         private ColorField _matBaseColorField;
         private ColorField _mainTextColorField;
         private ColorField _emiMaskColorField;
-        
+
         private IntegerField _nxField, _nyField, _nwField, _nhField;
         private FloatField _nrField;
         private IntegerField _txField, _tyField, _twField, _thField;
@@ -150,7 +143,7 @@ namespace VixenTools.Editor
         private void OnEnable()
         {
             _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(PackageFontPath);
-            ValidateInstalledShaders(); 
+            ValidateInstalledShaders();
             RefreshEcosystems();
             SceneView.duringSceneGui += OnSceneGUI;
         }
@@ -163,7 +156,7 @@ namespace VixenTools.Editor
                 IsMappingActive = false;
                 Tools.current = _previousTool == Tool.None ? Tool.Move : _previousTool;
             }
-            CleanupTempCollider(); 
+            CleanupTempCollider();
         }
 
         private void CreateGUI()
@@ -181,11 +174,11 @@ namespace VixenTools.Editor
             root.Add(headerRect);
 
             var tabContainer = new VisualElement { name = "tab-toolbar" };
-            
+
             _btnGeneratorTab = new Button(() => SwitchMode(ToolMode.BadgeGenerator)) { text = "High-Fidelity Generator" };
             _btnTemplateTab = new Button(() => SwitchMode(ToolMode.TemplateBuilder)) { text = "Template Authoring" };
             _btnUVMapperTab = new Button(() => SwitchMode(ToolMode.UVMapper)) { text = "Scene UV Mapper" };
-            
+
             tabContainer.Add(_btnGeneratorTab);
             tabContainer.Add(_btnTemplateTab);
             tabContainer.Add(_btnUVMapperTab);
@@ -215,7 +208,7 @@ namespace VixenTools.Editor
         private void SwitchMode(ToolMode mode)
         {
             _currentMode = mode;
-            
+
             _btnGeneratorTab.AddToClassList("tab-btn-inactive");
             _btnGeneratorTab.RemoveFromClassList("tab-btn-active");
             _btnTemplateTab.AddToClassList("tab-btn-inactive");
@@ -251,7 +244,7 @@ namespace VixenTools.Editor
         {
             var routingPanel = CreateCyberPanel("Ecosystem Routing", "#00e5ff");
             var ecoEnum = new EnumField("Source Network", _activeEcosystem);
-            ecoEnum.RegisterValueChangedCallback(e => 
+            ecoEnum.RegisterValueChangedCallback(e =>
             {
                 _activeEcosystem = (Ecosystem)e.newValue;
                 SyncUIToEcosystem();
@@ -260,7 +253,7 @@ namespace VixenTools.Editor
 
             _vixenRoutingUI = new VisualElement();
             _vixenTemplateDropdown = new DropdownField("Template Base", _vixenTemplates, _selectedVixenTemplate);
-            _vixenTemplateDropdown.RegisterValueChangedCallback(e => 
+            _vixenTemplateDropdown.RegisterValueChangedCallback(e =>
             {
                 _selectedVixenTemplate = _vixenTemplates.IndexOf(e.newValue);
                 if (_selectedVixenTemplate >= 0) LoadLayoutConfig(Path.Combine(VixenRootPath, _vixenTemplates[_selectedVixenTemplate]));
@@ -269,13 +262,13 @@ namespace VixenTools.Editor
 
             _furalityRoutingUI = new VisualElement();
             _furalityConvDropdown = new DropdownField("Convention", _furalityConventions, _selectedFuralityConv);
-            _furalityConvDropdown.RegisterValueChangedCallback(e => 
+            _furalityConvDropdown.RegisterValueChangedCallback(e =>
             {
                 _selectedFuralityConv = _furalityConventions.IndexOf(e.newValue);
                 UpdateFuralityTiers();
                 AutoAssignLayoutBounds(_furalityConventions[_selectedFuralityConv]);
             });
-            
+
             _furalityTierDropdown = new DropdownField("Badge Tier", _furalityTiers, _selectedFuralityTier);
             _furalityTierDropdown.RegisterValueChangedCallback(e => _selectedFuralityTier = _furalityTiers.IndexOf(e.newValue));
 
@@ -287,7 +280,7 @@ namespace VixenTools.Editor
             container.Add(routingPanel);
 
             var idPanel = CreateCyberPanel("Identity & Aesthetics", "#ff00aa");
-            
+
             var nameField = new TextField("Display Name") { value = _badgeName };
             nameField.RegisterValueChangedCallback(e => _badgeName = e.newValue);
             idPanel.Add(nameField);
@@ -296,7 +289,6 @@ namespace VixenTools.Editor
             titleField.RegisterValueChangedCallback(e => _title = e.newValue);
             idPanel.Add(titleField);
 
-            // COLOR CONTROLS
             var colorLabel = new Label("Material & Map Colors") { style = { unityFontStyleAndWeight = FontStyle.Bold, marginTop = 10, marginBottom = 5 } };
             idPanel.Add(colorLabel);
 
@@ -312,7 +304,6 @@ namespace VixenTools.Editor
             _emiMaskColorField.RegisterValueChangedCallback(e => _emiMaskColor = e.newValue);
             idPanel.Add(_emiMaskColorField);
 
-            // PIPELINE PROCESS CONTROLS
             var processLabel = new Label("Pipeline Processing") { style = { unityFontStyleAndWeight = FontStyle.Bold, marginTop = 10, marginBottom = 5 } };
             idPanel.Add(processLabel);
 
@@ -325,7 +316,7 @@ namespace VixenTools.Editor
             idPanel.Add(emitTitleToggle);
 
             _generatorShaderDropdown = new DropdownField("Target Shader", _validShaderNames, _selectedShaderIndex);
-            _generatorShaderDropdown.RegisterValueChangedCallback(e => 
+            _generatorShaderDropdown.RegisterValueChangedCallback(e =>
             {
                 _selectedShaderIndex = _validShaderNames.IndexOf(e.newValue);
                 _targetShader = _validShaders[_selectedShaderIndex];
@@ -336,10 +327,10 @@ namespace VixenTools.Editor
             var autoApplyToggle = new Toggle("Auto-Apply to Material") { value = _applyToMaterial };
             autoApplyToggle.RegisterValueChangedCallback(e => _applyToMaterial = e.newValue);
             idPanel.Add(autoApplyToggle);
-            
+
             container.Add(idPanel);
 
-            var layoutPanel = CreateCyberPanel("", "#ffffff"); 
+            var layoutPanel = CreateCyberPanel("", "#ffffff");
             var foldout = new Foldout { text = "Advanced UV Layout Bounds", value = _showAdvancedLayout };
             foldout.RegisterValueChangedCallback(e => _showAdvancedLayout = e.newValue);
             foldout.AddToClassList("bold-foldout");
@@ -348,20 +339,20 @@ namespace VixenTools.Editor
             var nameBox = new VisualElement { style = { flexGrow = 1, marginRight = 5 } };
             nameBox.AddToClassList("help-box-styled");
             nameBox.Add(new Label("Display Name") { style = { unityTextAlign = TextAnchor.MiddleCenter, unityFontStyleAndWeight = FontStyle.Bold, marginBottom = 5 }});
-            
+
             _nxField = new IntegerField("Position X") { value = _nameX }; _nxField.RegisterValueChangedCallback(e => _nameX = e.newValue);
             _nyField = new IntegerField("Position Y") { value = _nameY }; _nyField.RegisterValueChangedCallback(e => _nameY = e.newValue);
             _nwField = new IntegerField("Width") { value = _nameW }; _nwField.RegisterValueChangedCallback(e => _nameW = e.newValue);
             _nhField = new IntegerField("Height") { value = _nameH }; _nhField.RegisterValueChangedCallback(e => _nameH = e.newValue);
             _nrField = new FloatField("Rotation") { value = _nameRotation }; _nrField.RegisterValueChangedCallback(e => _nameRotation = e.newValue);
-            
+
             nameBox.Add(_nxField); nameBox.Add(_nyField); nameBox.Add(_nwField); nameBox.Add(_nhField); nameBox.Add(_nrField);
             layoutGrid.Add(nameBox);
 
             var titleBox = new VisualElement { style = { flexGrow = 1, marginLeft = 5 } };
             titleBox.AddToClassList("help-box-styled");
             titleBox.Add(new Label("Title/Pronouns") { style = { unityTextAlign = TextAnchor.MiddleCenter, unityFontStyleAndWeight = FontStyle.Bold, marginBottom = 5 }});
-            
+
             _txField = new IntegerField("Position X") { value = _titleX }; _txField.RegisterValueChangedCallback(e => _titleX = e.newValue);
             _tyField = new IntegerField("Position Y") { value = _titleY }; _tyField.RegisterValueChangedCallback(e => _titleY = e.newValue);
             _twField = new IntegerField("Width") { value = _titleW }; _twField.RegisterValueChangedCallback(e => _titleW = e.newValue);
@@ -373,9 +364,9 @@ namespace VixenTools.Editor
 
             foldout.Add(layoutGrid);
 
-            var saveBtn = new Button(() => 
+            var saveBtn = new Button(() =>
             {
-                if (_activeEcosystem == Ecosystem.VixenTools && _vixenTemplates.Count > 0) 
+                if (_activeEcosystem == Ecosystem.VixenTools && _vixenTemplates.Count > 0)
                     SaveLayoutConfig(Path.Combine(VixenRootPath, _vixenTemplates[_selectedVixenTemplate]));
                 else if (_activeEcosystem == Ecosystem.FuralitySDK && _furalityConventions.Count > 0)
                 {
@@ -409,7 +400,7 @@ namespace VixenTools.Editor
             authPanel.Add(nameField);
 
             var modeEnum = new EnumField("Authoring Mode", _authoringType);
-            modeEnum.RegisterValueChangedCallback(e => 
+            modeEnum.RegisterValueChangedCallback(e =>
             {
                 _authoringType = (AuthoringType)e.newValue;
                 SyncTemplateUIToMode();
@@ -419,7 +410,7 @@ namespace VixenTools.Editor
             _proceduralBaseUI = new VisualElement();
             var resChoices = new List<string> { "512x", "1K", "2K", "4K" };
             var resDropdown = new DropdownField("Base Resolution", resChoices, 3);
-            resDropdown.RegisterValueChangedCallback(e => 
+            resDropdown.RegisterValueChangedCallback(e =>
             {
                 int[] vals = { 512, 1024, 2048, 4096 };
                 _templateResolution = vals[resChoices.IndexOf(e.newValue)];
@@ -443,7 +434,7 @@ namespace VixenTools.Editor
 
             _templateShaderDropdown = new DropdownField("Master Shader Default", _validShaderNames, _selectedShaderIndex);
             _templateShaderDropdown.style.marginTop = 10;
-            _templateShaderDropdown.RegisterValueChangedCallback(e => 
+            _templateShaderDropdown.RegisterValueChangedCallback(e =>
             {
                 _selectedShaderIndex = _validShaderNames.IndexOf(e.newValue);
                 _targetShader = _validShaders[_selectedShaderIndex];
@@ -459,19 +450,19 @@ namespace VixenTools.Editor
             container.Add(execBtn);
 
             var devPanel = CreateCyberPanel("Furality Master Layouts", "#00e5ff");
-            
+
             var furalityLabel = new Label("Autonomously scaffold directories and format perfect layout.json boundary configurations for all Furality convention templates.");
             furalityLabel.AddToClassList("info-box-styled");
             devPanel.Add(furalityLabel);
 
-            var genFuralityBtn = new Button(() => { 
-                GenerateFuralityLayouts(); 
-                RefreshEcosystems(); 
+            var genFuralityBtn = new Button(() => {
+                GenerateFuralityLayouts();
+                RefreshEcosystems();
             }) { text = "Generate Furality JSON Layouts" };
             genFuralityBtn.AddToClassList("cyber-action-btn");
             genFuralityBtn.AddToClassList("cyan-btn");
             devPanel.Add(genFuralityBtn);
-            
+
             container.Add(devPanel);
 
             SyncTemplateUIToMode();
@@ -480,15 +471,15 @@ namespace VixenTools.Editor
         private void BuildUVMapperUI(VisualElement container)
         {
             var targetPanel = CreateCyberPanel("Target Parameters", "#00e5ff");
-            
+
             var infoLabel = new Label("Select the badge GameObject. Unity requires a MeshCollider to calculate UV intersections. Enable mapping, then click the Scene View.");
             infoLabel.AddToClassList("info-box-styled");
             targetPanel.Add(infoLabel);
 
             var targetField = new ObjectField("Target Badge Mesh") { objectType = typeof(GameObject), allowSceneObjects = true, value = _mapperTargetMesh };
-            targetField.RegisterValueChangedCallback(e => 
+            targetField.RegisterValueChangedCallback(e =>
             {
-                CleanupTempCollider(); 
+                CleanupTempCollider();
                 _mapperTargetMesh = e.newValue as GameObject;
                 ValidateCollider();
             });
@@ -512,12 +503,12 @@ namespace VixenTools.Editor
             var coordPanel = CreateCyberPanel("Live Scene Coordinates", "#ff00aa");
 
             var flexRow = new VisualElement { style = { flexDirection = FlexDirection.Row, justifyContent = Justify.SpaceBetween, marginTop = 10 } };
-            
+
             var boxX = new VisualElement(); boxX.AddToClassList("coord-box");
             boxX.Add(new Label("PIXEL X") { style = { unityFontStyleAndWeight = FontStyle.Bold, color = new Color(0f, 0.9f, 1f) } });
             _coordLabelX = new Label("0") { style = { fontSize = 24, unityFontStyleAndWeight = FontStyle.Bold } };
             boxX.Add(_coordLabelX);
-            
+
             var boxY = new VisualElement(); boxY.AddToClassList("coord-box");
             boxY.Add(new Label("PIXEL Y") { style = { unityFontStyleAndWeight = FontStyle.Bold, color = new Color(1f, 0f, 0.66f) } });
             _coordLabelY = new Label("0") { style = { fontSize = 24, unityFontStyleAndWeight = FontStyle.Bold } };
@@ -622,7 +613,7 @@ namespace VixenTools.Editor
         private void RefreshEcosystems()
         {
             if (!Directory.Exists(VixenRootPath)) Directory.CreateDirectory(VixenRootPath);
-            
+
             _vixenTemplates = AssetDatabase.GetSubFolders(VixenRootPath)
                 .Select(Path.GetFileName)
                 .Where(folder => !folder.Equals("Furality", StringComparison.OrdinalIgnoreCase))
@@ -641,7 +632,7 @@ namespace VixenTools.Editor
 
             UpdateFuralityTiers();
 
-            if (_vixenTemplateDropdown != null) 
+            if (_vixenTemplateDropdown != null)
             {
                 _vixenTemplateDropdown.choices = _vixenTemplates;
                 if (_vixenTemplates.Count > 0 && _selectedVixenTemplate >= _vixenTemplates.Count) _selectedVixenTemplate = 0;
@@ -686,12 +677,11 @@ namespace VixenTools.Editor
                     var layout = JsonUtility.FromJson<BadgeLayout>(File.ReadAllText(jsonPath));
                     _nameX = layout.nameX; _nameY = layout.nameY; _nameW = layout.nameW; _nameH = layout.nameH; _nameRotation = layout.nameRotation;
                     _titleX = layout.titleX; _titleY = layout.titleY; _titleW = layout.titleW; _titleH = layout.titleH; _titleRotation = layout.titleRotation;
-                    
-                    _mainTextColor = layout.neonColor; 
+
+                    _mainTextColor = layout.neonColor;
                     _emiMaskColor = (layout.emiMaskColor.a == 0f) ? Color.white : layout.emiMaskColor;
                     _matBaseColor = (layout.matBaseColor.a == 0f) ? Color.white : layout.matBaseColor;
-                    
-                    // Fallback safety to prevent old templates from disabling glows
+
                     if (!layout.hasUpgradedBools)
                     {
                         _emitName = false;
@@ -757,7 +747,7 @@ namespace VixenTools.Editor
                 {
                     _nameX = 1968; _nameY = 1273; _nameW = 1650; _nameH = 450;
                     _titleX = 2005; _titleY = 1707; _titleW = 1250; _titleH = 300;
-                    _mainTextColor = ColorUtility.TryParseHtmlString("#66ff00", out Color c) ? c : Color.green; 
+                    _mainTextColor = ColorUtility.TryParseHtmlString("#66ff00", out Color c) ? c : Color.green;
                     _emiMaskColor = Color.white;
                     _matBaseColor = Color.white;
                 }
@@ -806,7 +796,7 @@ namespace VixenTools.Editor
                 case TargetShader.FuralitySylva: return "Furality Sylva";
                 case TargetShader.FuralitySomna: return "Furality Somna";
                 case TargetShader.FuralityUmbra: return "Furality Umbra";
-                case TargetShader.FuralityModular: return "Furality Modular (Ultra)"; // <-- Added
+                case TargetShader.FuralityModular: return "Furality Modular (Ultra)";
                 case TargetShader.VRCToonStandard: return "VRChat Mobile Toon Standard";
                 case TargetShader.VRCMobileToonLit: return "VRChat Mobile Toon Lit";
                 default: return shader.ToString();
@@ -823,10 +813,10 @@ namespace VixenTools.Editor
                 case TargetShader.FuralitySylva: return "Furality/Sylva Shader/Sylva Opaque";
                 case TargetShader.FuralitySomna: return "Furality/Somna Shader";
                 case TargetShader.FuralityUmbra: return "Furality/Umbra Shader/Umbra Opaque";
-                case TargetShader.FuralityModular: return "Furality/Modular/Standard"; // <-- Added
+                case TargetShader.FuralityModular: return "Furality/Modular/Standard";
                 case TargetShader.VRCToonStandard: return "VRChat/Mobile/Toon Standard";
                 case TargetShader.VRCMobileToonLit: return "VRChat/Mobile/Toon Lit";
-                case TargetShader.PoiyomiToon: return ".poiyomi/Poiyomi Toon"; 
+                case TargetShader.PoiyomiToon: return ".poiyomi/Poiyomi Toon";
                 default: return "Standard";
             }
         }
@@ -838,7 +828,7 @@ namespace VixenTools.Editor
             if (foundShader == null && target == TargetShader.PoiyomiToon)
             {
                 foundShader = Shader.Find(".poiyomi/Old Versions/9.3/Poiyomi Toon");
-                if (foundShader == null) foundShader = Shader.Find("Hidden/Locked/poiyomi/Toon"); 
+                if (foundShader == null) foundShader = Shader.Find("Hidden/Locked/poiyomi/Toon");
             }
             return foundShader;
         }
@@ -858,7 +848,7 @@ namespace VixenTools.Editor
                 outDir = Path.Combine(texDir, "Output");
                 outPrefix = $"VIXEN_{Regex.Replace(_badgeName, @"[<>:""/\\|?* ]", "")}";
             }
-            else 
+            else
             {
                 conventionName = _furalityConventions[_selectedFuralityConv];
                 tierName = _furalityTiers[_selectedFuralityTier];
@@ -897,18 +887,15 @@ namespace VixenTools.Editor
 
             string fontAbsolutePath = Path.GetFullPath(PackageFontPath).Replace("\\", "/");
 
-            // Hardcode Alpha channel to 65535 (fully opaque) to prevent invisible text renders
             MagickColor mMainText = new MagickColor((ushort)(_mainTextColor.r * 65535), (ushort)(_mainTextColor.g * 65535), (ushort)(_mainTextColor.b * 65535), 65535);
             MagickColor mEmiText = new MagickColor((ushort)(_emiMaskColor.r * 65535), (ushort)(_emiMaskColor.g * 65535), (ushort)(_emiMaskColor.b * 65535), 65535);
             MagickColor mWhite = new MagickColor(65535, 65535, 65535, 65535);
 
             EditorUtility.DisplayProgressBar("Badge Studio", "Rendering Text Plates...", 0.3f);
-            
-            // Generate plates for the DIFFUSE map
+
             using MagickImage nameImg = GenerateTextPlate(fontAbsolutePath, _badgeName, _nameW, _nameH, mMainText, _nameRotation);
             using MagickImage titleImg = GenerateTextPlate(fontAbsolutePath, _title, _titleW, _titleH, mWhite, _titleRotation);
-            
-            // Generate targeted plates for the EMISSION map based on UI Toggles
+
             using MagickImage nameImgEmi = _emitName ? GenerateTextPlate(fontAbsolutePath, _badgeName, _nameW, _nameH, mEmiText, _nameRotation) : null;
             using MagickImage titleImgEmi = _emitTitle ? GenerateTextPlate(fontAbsolutePath, _title, _titleW, _titleH, mEmiText, _titleRotation) : null;
 
@@ -931,7 +918,6 @@ namespace VixenTools.Editor
             if (string.IsNullOrEmpty(text)) text = " ";
             var settings = new MagickReadSettings { BackgroundColor = MagickColors.Transparent, FillColor = color, Font = "@" + fontPath, Width = (uint)w, Height = (uint)h };
 
-            // @filename indirection avoids the label: parser choking on ' " ` @ : in user text.
             string tempFile = Path.Combine(Path.GetTempPath(), $"vixen_label_{Guid.NewGuid():N}.txt").Replace("\\", "/");
             MagickImage image;
             try
@@ -952,20 +938,17 @@ namespace VixenTools.Editor
         private void CompositeTexture(string baseTexPath, MagickImage namePlate, MagickImage titlePlate, string outPath, bool applyGrayscale, bool isEmission)
         {
             if (string.IsNullOrEmpty(baseTexPath) || !File.Exists(baseTexPath)) { Debug.LogWarning($"[VixForge] Missing base texture at: {baseTexPath}"); return; }
-            
+
             using MagickImage img = new MagickImage(File.ReadAllBytes(baseTexPath));
-            img.HasAlpha = true; // Force alpha channel support for the incoming plate blending
-            
-            if (applyGrayscale) img.Grayscale(); 
-            
+            img.HasAlpha = true;
+
+            if (applyGrayscale) img.Grayscale();
+
             if (namePlate != null) img.Composite(namePlate, _nameX - (int)(namePlate.Width / 2), _nameY - (int)(namePlate.Height / 2), CompositeOperator.Over);
             if (titlePlate != null) img.Composite(titlePlate, _titleX - (int)(titlePlate.Width / 2), _titleY - (int)(titlePlate.Height / 2), CompositeOperator.Over);
-            
+
             if (isEmission)
             {
-                // CRITICAL ARCHITECTURAL FIX: Flatten the mask to pure black.
-                // Unity completely ignores Alpha on emission maps and reads raw RGB.
-                // If Magick saves a cleared background as Transparent White (255,255,255,0), the whole badge blows out.
                 using MagickImage blackBg = new MagickImage(MagickColors.Black, img.Width, img.Height);
                 blackBg.Composite(img, CompositeOperator.Over);
                 blackBg.HasAlpha = false;
@@ -1034,22 +1017,21 @@ namespace VixenTools.Editor
                         Shader newShader = FindShaderSafely(_targetShader);
                         if (newShader != null) material.shader = newShader;
                     }
-                    
+
                     Texture2D difTex = AssetDatabase.LoadAssetAtPath<Texture2D>(difPath);
                     Texture2D emiTex = AssetDatabase.LoadAssetAtPath<Texture2D>(emiPath);
-                    
-                    if (material.HasProperty("_MainTex")) material.SetTexture("_MainTex", difTex); 
-                    else if (material.HasProperty("_BaseMap")) material.SetTexture("_BaseMap", difTex); 
-                    
+
+                    if (material.HasProperty("_MainTex")) material.SetTexture("_MainTex", difTex);
+                    else if (material.HasProperty("_BaseMap")) material.SetTexture("_BaseMap", difTex);
+
                     if (material.HasProperty("_EmissionMap")) material.SetTexture("_EmissionMap", emiTex);
-                    if (material.HasProperty("_EmissionStrength")) material.SetFloat("_EmissionStrength", 1f); 
-                    if (material.HasProperty("_EnableEmission")) material.SetFloat("_EnableEmission", 1f);     
-                    if (material.HasProperty("_UseEmission")) material.SetFloat("_UseEmission", 1f);           
-                    
-                    // CRITICAL FIX: Push explicit user colors to the material properties
+                    if (material.HasProperty("_EmissionStrength")) material.SetFloat("_EmissionStrength", 1f);
+                    if (material.HasProperty("_EnableEmission")) material.SetFloat("_EnableEmission", 1f);
+                    if (material.HasProperty("_UseEmission")) material.SetFloat("_UseEmission", 1f);
+
                     if (material.HasProperty("_Color")) material.SetColor("_Color", _matBaseColor);
                     else if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", _matBaseColor);
-                    
+
                     if (material.HasProperty("_EmissionColor")) material.SetColor("_EmissionColor", _emiMaskColor);
 
                     AssetDatabase.SaveAssets();
@@ -1088,7 +1070,7 @@ namespace VixenTools.Editor
 
             SaveLayoutConfig(templateDir);
             AssetDatabase.Refresh();
-            SetupTextureImporter(difPath, false); SetupTextureImporter(emiPath, false); 
+            SetupTextureImporter(difPath, false); SetupTextureImporter(emiPath, false);
 
             Shader matShader = Shader.Find("Standard");
             if (_targetShader != TargetShader.AutoDetect)
@@ -1101,10 +1083,10 @@ namespace VixenTools.Editor
             if (mat.HasProperty("_MainTex")) mat.SetTexture("_MainTex", AssetDatabase.LoadAssetAtPath<Texture2D>(difPath));
             if (mat.HasProperty("_EmissionMap")) mat.SetTexture("_EmissionMap", AssetDatabase.LoadAssetAtPath<Texture2D>(emiPath));
             if (mat.HasProperty("_EmissionStrength")) mat.SetFloat("_EmissionStrength", 1f);
-            
+
             AssetDatabase.CreateAsset(mat, Path.Combine(matDir, $"{safeName}.mat"));
             AssetDatabase.SaveAssets(); RefreshEcosystems();
-            SwitchMode(ToolMode.BadgeGenerator); 
+            SwitchMode(ToolMode.BadgeGenerator);
         }
 
         private void SetupTextureImporter(string path, bool isLinear)
@@ -1139,18 +1121,18 @@ namespace VixenTools.Editor
             if (IsMappingActive)
             {
                 _previousTool = Tools.current;
-                Tools.current = Tool.None; 
+                Tools.current = Tool.None;
             }
             else
             {
                 Tools.current = _previousTool == Tool.None ? Tool.Move : _previousTool;
                 LastHitPoint = Vector3.zero;
                 SceneView.RepaintAll();
-                CleanupTempCollider(); 
+                CleanupTempCollider();
             }
-            
+
             UpdateMappingUI();
-            ValidateCollider(); 
+            ValidateCollider();
         }
 
         private void UpdateMappingUI()
@@ -1185,17 +1167,17 @@ namespace VixenTools.Editor
             if (col == null)
             {
                 _statusLabel.text = "<color=#ffaa00>Warning: No MeshCollider detected. Raycast will fail.</color>";
-                
+
                 for (int i = _statusLabel.parent.childCount - 1; i >= 0; i--)
                 {
                     if (_statusLabel.parent[i] is Button b && b.text.Contains("Attach Temporary"))
                         _statusLabel.parent.RemoveAt(i);
                 }
 
-                var fixBtn = new Button(() => 
+                var fixBtn = new Button(() =>
                 {
                     _tempCollider = _mapperTargetMesh.AddComponent<MeshCollider>();
-                    
+
                     SkinnedMeshRenderer smr = _mapperTargetMesh.GetComponent<SkinnedMeshRenderer>();
                     if (smr != null)
                     {
@@ -1206,13 +1188,13 @@ namespace VixenTools.Editor
 
                     ValidateCollider();
                 }) { text = "Attach Temporary MeshCollider", style = { marginTop = 5 } };
-                
+
                 _statusLabel.parent.Add(fixBtn);
             }
             else
             {
                 _statusLabel.text = "<color=#00ff66>Status: MeshCollider OK. Ready for mapping.</color>";
-                
+
                 for (int i = _statusLabel.parent.childCount - 1; i >= 0; i--)
                 {
                     if (_statusLabel.parent[i] is Button b && b.text.Contains("Attach Temporary"))
@@ -1236,11 +1218,11 @@ namespace VixenTools.Editor
             HandleUtility.AddDefaultControl(controlID);
 
             Event e = Event.current;
-            
+
             if ((e.type == EventType.MouseDown || e.type == EventType.MouseDrag) && e.button == 0 && e.modifiers == EventModifiers.None)
             {
                 ProcessRaycast(e.mousePosition);
-                e.Use(); 
+                e.Use();
             }
         }
 
@@ -1250,7 +1232,7 @@ namespace VixenTools.Editor
 
             Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(ray);
-            
+
             foreach (RaycastHit hit in hits)
             {
                 if (hit.collider.gameObject == _mapperTargetMesh)
@@ -1266,7 +1248,7 @@ namespace VixenTools.Editor
                     LastHitPoint = hit.point;
                     LastHitNormal = hit.normal;
 
-                    Repaint(); 
+                    Repaint();
                     break;
                 }
             }
@@ -1285,21 +1267,18 @@ namespace VixenTools.Editor
                 Directory.CreateDirectory(basePath);
             }
 
-            // --- Furality Luma ---
             GenerateLayout(basePath, "Furality Luma", new BadgeLayout {
                 nameX = 2258, nameY = 1224, nameW = 2538, nameH = 855,
                 titleX = 2701, titleY = 1677, titleW = 1554, titleH = 257,
                 neonColor = Color.white, emiMaskColor = Color.white, matBaseColor = Color.white
             });
 
-            // --- Furality Umbra ---
             GenerateLayout(basePath, "Furality Umbra", new BadgeLayout {
                 nameX = 2258, nameY = 1224, nameW = 2538, nameH = 855,
                 titleX = 2701, titleY = 1677, titleW = 1554, titleH = 257,
                 neonColor = Color.white, emiMaskColor = Color.white, matBaseColor = Color.white
             });
 
-            // --- Furality Somna ---
             ColorUtility.TryParseHtmlString("#ffeead", out Color somnaColor);
             GenerateLayout(basePath, "Furality Somna", new BadgeLayout {
                 nameX = 375, nameY = 700, nameW = 610, nameH = 150,
@@ -1307,7 +1286,6 @@ namespace VixenTools.Editor
                 neonColor = somnaColor, emiMaskColor = Color.white, matBaseColor = Color.white
             });
 
-            // --- Furality Sylva ---
             ColorUtility.TryParseHtmlString("#66ff00", out Color sylvaColor);
             GenerateLayout(basePath, "Furality Sylva", new BadgeLayout {
                 nameX = 1968, nameY = 1273, nameW = 1650, nameH = 450,
@@ -1315,7 +1293,6 @@ namespace VixenTools.Editor
                 neonColor = sylvaColor, emiMaskColor = Color.white, matBaseColor = Color.white
             });
 
-            // --- Furality Ultra ---
             ColorUtility.TryParseHtmlString("#ff00aa", out Color ultraColor);
             GenerateLayout(basePath, "Furality Ultra", new BadgeLayout {
                 nameX = 500, nameY = 300, nameW = 750, nameH = 750,

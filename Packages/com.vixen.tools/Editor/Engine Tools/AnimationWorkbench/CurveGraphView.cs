@@ -27,7 +27,6 @@ namespace Vixenlicious.AnimationWorkbench
         private bool _isPanning = false;
         private Vector2 _panAnchor;
 
-        // Cached rendering bounds for mouse hit detection
         private float _minV = 0f;
         private float _maxV = 1f;
 
@@ -96,18 +95,18 @@ namespace Vixenlicious.AnimationWorkbench
         {
             if (!_graphRect.Contains(e.localMousePosition)) return;
 
-            if (e.button == 2) // Middle Click: Pan
+            if (e.button == 2)
             {
                 _isPanning = true;
                 _panAnchor = e.localMousePosition;
                 e.StopPropagation();
             }
-            else if (e.button == 0 && e.clickCount == 2) // Double Left Click: Add Key
+            else if (e.button == 0 && e.clickCount == 2)
             {
                 AddKeyframeAtMouse(e.localMousePosition);
                 e.StopPropagation();
             }
-            else if (e.button == 1) // Right Click: Delete Key
+            else if (e.button == 1)
             {
                 if (TryDeleteKeyframeAtMouse(e.localMousePosition))
                 {
@@ -254,7 +253,6 @@ namespace Vixenlicious.AnimationWorkbench
                 maxV += 1;
             }
 
-            // Cache for hit detection
             _minV = minV;
             _maxV = maxV;
 

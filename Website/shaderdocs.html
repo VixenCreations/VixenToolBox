@@ -196,6 +196,11 @@
                 Shader Docs
             </fluent-anchor>
 
+            <fluent-anchor href="developer-docs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                Developer Docs
+            </fluent-anchor>
+
             <fluent-anchor href="why-choose-us.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                 Why Choose Us?
@@ -235,6 +240,11 @@
                     of the shader inspector - click any panel to expand it. The six tabs are
                     <strong>BASE</strong>, <strong>SURFACE</strong>, <strong>POLISH</strong>,
                     <strong>INTEGRATION</strong>, <strong>AUDIOLINK</strong>, and <strong>STAGE</strong>.
+                </p>
+                <p class="caption1" style="font-size: 0.95rem; max-width: 850px; margin: 0.8rem auto 0; color: #bfa8d2;">
+                    Built-in Render Pipeline / VRChat only - as a surface shader it does not compile under HDRP or URP.
+                    Every world-lighting integration (Light Volumes, LTCGI, AreaLit, VRSL) is fail-safe: it strips or
+                    no-ops cleanly in worlds that lack the system.
                 </p>
 
                 <!-- QUICK JUMP -->
@@ -458,9 +468,11 @@
                         height channel (requires tessellation to have vertices to move).
                     </li>
                     <li class="mb-2">
-                        <strong>Tessellation Edge Length</strong> - Target screen-space edge length for DX11 hardware
-                        tessellation (up to 50x). Smaller values subdivide more finely for smoother displacement at a
-                        higher cost.
+                        <strong>Tessellation Detail</strong> - How densely DX11 hardware tessellation subdivides the mesh
+                        for displacement, from 0 (coarse / cheap) to 1 (dense / smoother). The amount is distance and
+                        screen-size adaptive, so far or small-on-screen surfaces stay cheap, and the per-edge factor is
+                        capped so it can't run away. Leave at 0 if you aren't using Displacement Strength. Base shader
+                        only; the SPS variant has no tessellation stage.
                     </li>
                 </ul>
 
@@ -775,7 +787,7 @@
                     <h2 class="text-glow-cyan m-0">INTEGRATION</h2>
                     <div class="badge">Tab 4 of 6</div>
                 </div>
-                <p class="tab-desc">Emission, MatCap, light volumes, and LTCGI illumination.</p>
+                <p class="tab-desc">Emission, MatCap, Light Volumes, LTCGI, and AreaLit illumination.</p>
 
                 <div class="shader-shot-grid">
                     <figure class="shader-shot">
@@ -847,6 +859,11 @@
                     <li class="mb-2"><strong>MatCap 1 Tint</strong> - Color tint applied to the matcap.</li>
                     <li class="mb-2"><strong>MatCap 1 Rotation</strong> - Rotates the matcap sample around the view.</li>
                     <li class="mb-2"><strong>MatCap 1 Intensity</strong> - Brightness / contribution of layer 1.</li>
+                    <li class="mb-2"><strong>MatCap 1 Tiling (XY)</strong> - Repeats the matcap around its centre. Set the
+                        matcap texture's Wrap Mode to Repeat to see tiling above 1 actually repeat.</li>
+                    <li class="mb-2"><strong>MatCap 1 Scroll (X pan, Y pan, Z spin)</strong> - Smooth continuous motion off
+                        real time: X / Y pan the matcap and Z spins it in degrees per second. Leave at (0,0,0) for a static
+                        matcap; great for flowing holographic or animated iridescent latex.</li>
                     <li class="mb-2"><strong>MatCap Lighting Mix (Both Layers)</strong> - How much scene lighting
                         modulates both matcap layers versus reading them as pure unlit overlays.</li>
                 </ul>
@@ -864,6 +881,10 @@
                     <li class="mb-2"><strong>MatCap 2 Tint</strong> - Color tint applied to layer 2.</li>
                     <li class="mb-2"><strong>MatCap 2 Rotation</strong> - Rotates the layer 2 sample around the view.</li>
                     <li class="mb-2"><strong>MatCap 2 Intensity</strong> - Brightness / contribution of layer 2.</li>
+                    <li class="mb-2"><strong>MatCap 2 Tiling (XY)</strong> - Repeats the layer 2 matcap around its centre
+                        (Wrap Mode = Repeat to see it tile).</li>
+                    <li class="mb-2"><strong>MatCap 2 Scroll (X pan, Y pan, Z spin)</strong> - X / Y pan and Z spins the
+                        layer 2 matcap over time; (0,0,0) is static.</li>
                     <li class="mb-2"><strong>MatCap 2 Blend Mode</strong> - How layer 2 combines with the result:
                         <code>Add</code>, <code>Replace</code>, or <code>Multiply</code>.</li>
                 </ul>
@@ -893,11 +914,32 @@
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">LTCGI (Area Lights)</h3>
-                <ul class="custom-list m-0 ps-4">
+                <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>LTCGI Intensity</strong> - Master contribution of LTCGI area lighting.</li>
                     <li class="mb-2"><strong>LTCGI Specular Mix</strong> - Area-light specular contribution, dialed
                         independently.</li>
                     <li class="mb-2"><strong>LTCGI Diffuse Mix</strong> - Area-light diffuse contribution, dialed
+                        independently.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">AreaLit (Area Lights, New in 2.5.0)</h3>
+                <p class="opt-note">
+                    AreaLit fills the same role as LTCGI. AreaLit itself ships no scene-wide broadcast, so the suit reads
+                    it two ways: if the world has the VixenWear AreaLit broadcaster (dropped next to the LightCam), every
+                    avatar intercepts the area lights <strong>automatically at the GI level</strong> - leave the two slots
+                    empty; otherwise assign the world's RenderTextures into the manual-fallback slots. Intensity &gt; 0
+                    compiles in the <code>AREALIT_ENABLE</code> keyword; the path is stripped (zero cost) otherwise.
+                </p>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>AreaLit Intensity</strong> - Master contribution of AreaLit area lighting.
+                        Above 0 reveals the rest of the group and compiles in the keyword.</li>
+                    <li class="mb-2"><strong>LightMesh RT (manual fallback)</strong> - The world's AreaLit LightMesh
+                        RenderTexture, assigned only when no broadcaster is present.</li>
+                    <li class="mb-2"><strong>Light Texture (manual fallback)</strong> - The AreaLit light / video
+                        RenderTexture, paired with the LightMesh slot for the manual path.</li>
+                    <li class="mb-2"><strong>Specular Mix</strong> - Area-light specular contribution, dialed
+                        independently (mirrors the LTCGI mix).</li>
+                    <li class="mb-2"><strong>Diffuse Mix</strong> - Area-light diffuse contribution, dialed
                         independently.</li>
                     <li class="mb-2"><strong>Reset INTEGRATION to Defaults</strong> - Restores this tab to shader
                         defaults. The shared render-state row follows - see
@@ -1136,7 +1178,7 @@
                     <h2 class="text-glow-cyan m-0">STAGE</h2>
                     <div class="badge">Tab 6 of 6</div>
                 </div>
-                <p class="tab-desc">VRSL DMX routing, intensity override, and kinetic geo-warping.</p>
+                <p class="tab-desc">VRSL DMX routing, intensity override, kinetic geo-warping, and the additive GI stage wash.</p>
 
                 <div class="shader-shot-grid">
                     <figure class="shader-shot">
@@ -1173,10 +1215,25 @@
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Color Hijack</h3>
-                <ul class="custom-list m-0 ps-4">
+                <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>DMX RGB Color Override</strong> - Lerps the AudioLink color toward live DMX
                         RGB (sector channels +3/+4/+5) so the stage can wash the palette without disabling FFT-driven
                         color movement.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Stage GI Wash (New in 2.5.0)</h3>
+                <p class="opt-note">
+                    Separate from the hijack above: instead of overriding emission, the GI wash spills the DMX fixtures'
+                    colour onto the suit as real additive light (the stage lighting you up). It reads the same DMX channels
+                    as the Color Override and contributes nothing in worlds with no DMX node.
+                </p>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>GI Wash Intensity</strong> - Master strength of the additive stage wash.
+                        Above 0 enables it.</li>
+                    <li class="mb-2"><strong>GI Specular Mix</strong> - Fresnel-weighted specular highlight from the
+                        wash.</li>
+                    <li class="mb-2"><strong>GI Color Saturation</strong> - Desaturates the wash toward luma so it tints
+                        the surface rather than repainting your design.</li>
                     <li class="mb-2"><strong>Reset STAGE to Defaults</strong> - Restores this tab to shader defaults. The
                         shared render-state row follows - see
                         <a href="#footer" style="color: var(--neon-cyan);">Shared Footer</a>.</li>
