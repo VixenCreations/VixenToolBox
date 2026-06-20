@@ -889,10 +889,19 @@
                         <code>Add</code>, <code>Replace</code>, or <code>Multiply</code>.</li>
                 </ul>
 
-                <h3 class="text-glow-pink opt-group">Light Volumes (VRC)</h3>
+                <h3 class="text-glow-pink opt-group">Light Volumes (VRCLV V3, New In 2.6.0)</h3>
                 <p class="opt-note">
                     A full Light Volumes stack rather than a single intensity slider. Output is clamped to suppress
                     negative SH reconstruction artifacts that historically blacked out avatars on probes-only worlds.
+                </p>
+                <p class="opt-note">
+                    Upgraded to <strong>Light Volumes V3</strong>: alongside baked volumes the suit now also receives
+                    <strong>Point Light Volumes</strong> - point lights, spot lights (parametric / attenuation-LUT /
+                    projected cookie), cubemap-tinted point lights, and <strong>quad area lights</strong> (the "TV GI"
+                    path: an area light driven by a video RenderTexture). Per-light EVSM shadows are supported as well.
+                    All of it projects into the same L1 spherical-harmonics path and rides the controls below, so no new
+                    sliders are needed. These lights only appear in worlds running the LV V3 runtime; older or no-LV
+                    worlds fall back to deringed light probes exactly as before.
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Light Volumes Intensity</strong> - Overall contribution of Light Volumes

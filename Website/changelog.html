@@ -136,6 +136,7 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
+                        <fluent-option value="v2.6.0">v2.6.0</fluent-option>
                         <fluent-option value="v2.5.0">v2.5.0</fluent-option>
                         <fluent-option value="v2.4.0">v2.4.0</fluent-option>
                         <fluent-option value="v2.3.4">v2.3.4</fluent-option>
@@ -173,7 +174,25 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
-                <div class="changelog-entry" data-version="v2.5.0">
+                <div class="changelog-entry" data-version="v2.6.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.6.0 - 2026-06-15</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Realtime point and spot lights light the suit again, and VRC Light Volumes is upgraded to V3 with its full point / spot / area-light set (including the proper "TV GI" path). Built-in Render Pipeline / VRChat only, as always.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>VRC Light Volumes V3 (Both Shaders, `LIGHTVOLUMES_ENABLE`):</strong> Upgraded the vendored Light Volumes include from V2 to upstream <strong>V3</strong>. The suit now receives <strong>Point Light Volumes</strong> in addition to baked volumes: point lights, spot lights (parametric / attenuation-LUT / projected cookie), cubemap-tinted point lights, and <strong>quad area lights</strong> - all projected into the same L1-SH path the volumes already used, so they flow through the existing diffuse + specular machinery and respond to the existing `_LV_*` controls. The surface now passes its shaded world normal so V3's normal-mask term applies. No new material properties.</li>
+                        <li class="mb-2"><strong>TV GI via LV V3 Area Lights (Both Shaders):</strong> The "TV lights the room" effect is back, now done correctly through V3 <strong>area lights</strong> instead of the old raw-texture tint that was pulled in 2.5.0. A world author points a Point Light Volume (AreaLight type) at a video screen's RenderTexture; the LV V3 runtime feeds its colour into the quad-light SH and the suit picks it up automatically, with no per-material setup. Appears only in worlds running the LV V3 runtime; older / no-LV worlds fall back to deringed light probes via the version gate.</li>
+                        <li class="mb-2"><strong>Point Light Volume Shadows (Both Shaders):</strong> V3's per-light <strong>EVSM shadows</strong> (cubemap and single-slice) are enabled. To stay inside the 16-sampler budget, the shadow texture array reuses the existing Light Volumes sampler, so V3 adds <strong>zero net sampler registers</strong> over V2.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Point / Spot Lights No Longer Leave the Surface Dark (Both Shaders):</strong> The main lighting pass carried `noforwardadd`, which deletes Unity's generated <strong>ForwardAdd</strong> pass. In the Built-in pipeline, point and spot lights are shaded per-pixel <strong>only</strong> in ForwardAdd, so with it removed the surface only picked them up as a weak per-vertex / SH approximation and read as unlit under them. Removed `noforwardadd`; the GI function and BRDF are split so the additive pass accumulates <strong>only</strong> direct-light terms, while all indirect / emissive terms (ambient, reflection probe, Light Volumes, LTCGI, AreaLit, VRSL-GI, matcap, emission) and their texture samples are gated to the base pass via `UNITY_PASS_FORWARDADD` - so the additive variant stays well under the 16-sampler cap, which is why `noforwardadd` had been used as a shortcut. Point lights illuminate without cookies / cube-shadows (those variants remain skipped to bound the variant count).</li>
+                        <li class="mb-2"><strong>VixenWorld Surface Ultra Parity:</strong> The world-surface shader received the same three fixes: ForwardAdd enabled (with the same base-pass guards), VRC Light Volumes V3, and the <strong>Tessellation Detail</strong> control (its `_Tess_Edge` slider had the identical inverted / uncapped problem fixed in the latex shader in 2.5.0, now `_Tess_Detail`, range 0-1, capped). Existing world materials reset to the new `0.5` tessellation default.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="v2.5.0" hidden>
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.5.0 - 2026-06-13</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Full world-lighting integration pass: the latex now reacts to every supported stage / area-light system, and the legacy TV-GI tint is gone. Every integration is fail-safe - it strips or no-ops cleanly in worlds that don't have the system. Built-in Render Pipeline / VRChat only (HDRP/URP out of scope by design).</em></p>
 
