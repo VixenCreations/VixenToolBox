@@ -179,8 +179,8 @@
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
                 <div class="changelog-entry" data-version="v2.9.0">
-                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.9.0 - 2026-06-28</h5>
-                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Decals arrive: a four-layer, in-scene-placed decal system for logos, stickers, brand art and tattoos on the latex, plus a small pair of realistic-lighting refinements. Both shaders. Built-in Render Pipeline / VRChat only, as always.</em></p>
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.9.0 - 2026-06-29</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Decals arrive: a four-layer, in-scene-placed decal system for logos, stickers, brand art and tattoos on the latex, a small pair of realistic-lighting refinements, plus a locking fix that keeps the procedural effects intact through Thry's optimizer. Both shaders. Built-in Render Pipeline / VRChat only, as always.</em></p>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
@@ -192,6 +192,11 @@
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Realistic Lighting, Refined (Both Shaders):</strong> The two controls above are surgical, opt-in additions to the existing realistic lighting model. Their defaults reproduce the previous look exactly, so nothing changes until you reach for them.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Locking No Longer Breaks the Procedural Effect Passes (Both Shaders):</strong> Locking a material with the Thry optimizer (required before an avatar upload, so unlocked shaders are not stripped from the build) was silently disabling the geometry stage of the procedural effect passes - the water drips, the melting goo, the AudioLink HUD ring, and the fracture shards and trails - leaving them to render incorrectly or fail to compile. The shader now tells the optimizer to keep its geometry passes when locking, so every effect survives the lock intact. No new controls, no cost, and unlocked materials are unchanged; re-lock any affected material to pick up the fix.</li>
                     </ul>
                 </div>
 
