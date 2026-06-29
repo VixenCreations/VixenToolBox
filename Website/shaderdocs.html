@@ -214,6 +214,7 @@
                     <a href="#base">BASE</a>
                     <a href="#normals">NORMAL MAPS</a>
                     <a href="#surface">SURFACE</a>
+                    <a href="#decals">DECALS</a>
                     <a href="#lighting">LIGHTING</a>
                     <a href="#polish">POLISH</a>
                     <a href="#wet">WET EFFECTS</a>
@@ -239,7 +240,7 @@
             <div id="base" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">BASE</h2>
-                    <div class="badge">Section 1 of 18</div>
+                    <div class="badge">Section 1 of 19</div>
                 </div>
                 <p class="tab-desc">Render mode, albedo, brightness floor, and UV animation.</p>
 
@@ -277,7 +278,7 @@
             <div id="normals" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">NORMAL MAPS</h2>
-                    <div class="badge">Section 2 of 18</div>
+                    <div class="badge">Section 2 of 19</div>
                 </div>
                 <p class="tab-desc">Macro normal map and the secondary micro-detail normal.</p>
 
@@ -301,7 +302,7 @@
             <div id="surface" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">SURFACE</h2>
-                    <div class="badge">Section 3 of 18</div>
+                    <div class="badge">Section 3 of 19</div>
                 </div>
                 <p class="tab-desc">The packed PBR map, its channel routing, reflection / specular masks, and surface shaping.</p>
 
@@ -363,12 +364,45 @@
             </div>
 
             <!-- ========================= -->
+            <!-- DECALS -->
+            <!-- ========================= -->
+            <div id="decals" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">DECALS</h2>
+                    <div class="badge">Section 4 of 19</div>
+                </div>
+                <p class="tab-desc">Place up to four logos, stickers, brand graphics or tattoos on the latex. Each layer is positioned right in the Scene view: select the material on your mesh and drag the on-screen gizmo handles to move, scale and rotate the decal. All four layers share one texture sampler, so they cost nothing against the texture budget, and the whole section stays off until you enable it.</p>
+
+                <h3 class="text-glow-pink opt-group">Setup</h3>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>Enable Decals</strong> - Master switch for the whole decal section. Off by default, so existing materials are untouched.</li>
+                    <li class="mb-2"><strong>Decal Masks (RGBA)</strong> - One optional packed texture whose Red, Green, Blue and Alpha channels can each limit where Decal 0, 1, 2 and 3 appear. Leave it white to let decals show wherever their placement allows.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Per Decal (0 - 3)</h3>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns this individual layer on.</li>
+                    <li class="mb-2"><strong>Decal</strong> - The image to place (logo, sticker, tattoo, and so on).</li>
+                    <li class="mb-2"><strong>Tint (A = Strength)</strong> - Colour multiplied over the decal; the colour's alpha sets the layer's overall opacity.</li>
+                    <li class="mb-2"><strong>Position / Scale / Rotation</strong> - Where the decal sits, how big it is, and its angle. Easiest to set by dragging the gizmo in the Scene view. Rotation Speed slowly spins the decal over time.</li>
+                    <li class="mb-2"><strong>Side Offset</strong> - Nudges the left, right, bottom and top edges independently to stretch or crop the decal box.</li>
+                    <li class="mb-2"><strong>UV Source</strong> - Which UV layout to place the decal on (the main set, or a secondary set if your mesh has one).</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the Decal Masks texture limits this layer.</li>
+                    <li class="mb-2"><strong>Color Blend</strong> - How the decal combines with the latex underneath: Normal, Darken, Multiply, Lighten, Screen, Add, Subtract or Overlay.</li>
+                    <li class="mb-2"><strong>Emission Strength</strong> - Makes the decal glow, for neon logos or lit signage.</li>
+                    <li class="mb-2"><strong>Smoothness Offset</strong> - Makes the decal read glossier (positive) or more matte (negative) than the surrounding latex, so a printed sticker can stand apart from the shine around it.</li>
+                    <li class="mb-2"><strong>Mirror UV / Symmetry</strong> - Flip the decal, restrict it to one side, or mirror it across the body's centre for symmetric placement.</li>
+                    <li class="mb-2"><strong>Tiled</strong> - Off keeps a single decal clamped to its box; on repeats it across the surface.</li>
+                </ul>
+            </div>
+
+            <!-- ========================= -->
             <!-- LIGHTING -->
             <!-- ========================= -->
             <div id="lighting" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">LIGHTING</h2>
-                    <div class="badge">Section 4 of 18</div>
+                    <div class="badge">Section 5 of 19</div>
                 </div>
                 <p class="tab-desc">AO, contact shadow, rim, subsurface, anisotropy, transmission, and energy conservation. Most of these belong to the polish layer and are gated by <a href="#polish" style="color: var(--neon-cyan);">Enable Polish Layer</a>.</p>
 
@@ -400,6 +434,13 @@
                     <li class="mb-2"><strong>Multi-Scatter Energy Compensation</strong> - Filament / Frostbite
                         multi-scatter compensation that adds back energy lost at high roughness, keeping bright metals
                         from going dull.</li>
+                    <li class="mb-2"><strong>Horizon Specular Occlusion</strong> - Fades reflections that surface
+                        detail would otherwise leak through the body at glancing angles, keeping reflection probes,
+                        Light Volumes and stage lighting from showing through. Full by default; lower toward 0 to relax
+                        it.</li>
+                    <li class="mb-2"><strong>Specular Highlight Clamp</strong> - Caps how bright a direct point-light
+                        highlight can get, taming the harsh sparkle very glossy latex can throw under bright lights.
+                        Effectively off at its default; lower it to clamp harder.</li>
                 </ul>
             </div>
 
@@ -409,7 +450,7 @@
             <div id="polish" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">POLISH</h2>
-                    <div class="badge">Section 5 of 18</div>
+                    <div class="badge">Section 6 of 19</div>
                 </div>
                 <p class="tab-desc">The polish master gate, clearcoat, and thin film.</p>
 
@@ -452,7 +493,7 @@
             <div id="wet" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">WET EFFECTS</h2>
-                    <div class="badge">Section 6 of 18</div>
+                    <div class="badge">Section 7 of 19</div>
                 </div>
                 <p class="tab-desc">The soaked look, animated run-off rivulets, and clear 3D drips.</p>
 
@@ -531,7 +572,7 @@
             <div id="goo" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">GOO EFFECTS</h2>
-                    <div class="badge">Section 7 of 18</div>
+                    <div class="badge">Section 8 of 19</div>
                 </div>
                 <p class="tab-desc">Gravity-aligned vertex melt that mimics runny / melting latex, with sway and floor collision.</p>
 
@@ -583,7 +624,7 @@
             <div id="outlines" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">OUTLINES</h2>
-                    <div class="badge">Section 8 of 18</div>
+                    <div class="badge">Section 9 of 19</div>
                 </div>
                 <p class="tab-desc">A keyword-gated backface-extrusion outline with an AudioLink emission boost.</p>
 
@@ -618,7 +659,7 @@
             <div id="emissions" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">EMISSIONS</h2>
-                    <div class="badge">Section 9 of 18</div>
+                    <div class="badge">Section 10 of 19</div>
                 </div>
                 <p class="tab-desc">Primary emission, a Poiyomi-style secondary layer, and the multi-region color mask.</p>
 
@@ -672,7 +713,7 @@
             <div id="matcap-global" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">GLOBAL MATCAP SETTINGS</h2>
-                    <div class="badge">Section 10 of 18</div>
+                    <div class="badge">Section 11 of 19</div>
                 </div>
                 <p class="tab-desc">The projection bias shared by all three matcap layers.</p>
 
@@ -691,7 +732,7 @@
             <div id="matcap1" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">MATCAP 1</h2>
-                    <div class="badge">Section 11 of 18</div>
+                    <div class="badge">Section 12 of 19</div>
                 </div>
                 <p class="tab-desc">The first material-capture layer.</p>
 
@@ -722,7 +763,7 @@
             <div id="matcap2" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">MATCAP 2</h2>
-                    <div class="badge">Section 12 of 18</div>
+                    <div class="badge">Section 13 of 19</div>
                 </div>
                 <p class="tab-desc">A second matcap layer (multi-zone stack).</p>
 
@@ -754,7 +795,7 @@
             <div id="matcap3" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">MATCAP 3</h2>
-                    <div class="badge">Section 13 of 18</div>
+                    <div class="badge">Section 14 of 19</div>
                 </div>
                 <p class="tab-desc">A third matcap layer, identical controls to layers 1 and 2 for a third stacked zone.</p>
 
@@ -783,7 +824,7 @@
             <div id="lightvolumes" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">LIGHT VOLUMES V3</h2>
-                    <div class="badge">Section 14 of 18</div>
+                    <div class="badge">Section 15 of 19</div>
                 </div>
                 <p class="tab-desc">The full VRC Light Volumes V3 stack.</p>
 
@@ -832,7 +873,7 @@
             <div id="ltcgi" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">LTCGI V2</h2>
-                    <div class="badge">Section 15 of 18</div>
+                    <div class="badge">Section 16 of 19</div>
                 </div>
                 <p class="tab-desc">LTCGI area lighting, with per-lobe mode and color tints.</p>
 
@@ -862,7 +903,7 @@
             <div id="techsane" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">TECHNICALLYSANE V3</h2>
-                    <div class="badge">Section 16 of 18</div>
+                    <div class="badge">Section 17 of 19</div>
                 </div>
                 <p class="tab-desc">Tints the material to a TechnicallySane lighting rig's live show colour, on avatars, with no scene reference.</p>
 
@@ -890,7 +931,7 @@
             <div id="audiolink" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">AUDIOLINK</h2>
-                    <div class="badge">Section 17 of 18</div>
+                    <div class="badge">Section 18 of 19</div>
                 </div>
                 <p class="tab-desc">The master AudioLink toggle and every reactive sub-group beneath it.</p>
 
@@ -1084,7 +1125,7 @@
             <div id="stage" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">STAGE LIGHTING &amp; VRSL</h2>
-                    <div class="badge">Section 18 of 18</div>
+                    <div class="badge">Section 19 of 19</div>
                 </div>
                 <p class="tab-desc">VRSL DMX routing, geo-warping, color hijack, and the additive GI stage wash.</p>
 
