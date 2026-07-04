@@ -210,12 +210,112 @@ namespace VixenTools.Editor
             }
             return false;
         }
+
+        public static bool TryGetDimensions(byte[] bytes, out uint width, out uint height)
+        {
+            width = 0;
+            height = 0;
+            if (bytes == null || bytes.Length == 0) return false;
+            try
+            {
+                var info = new MagickImageInfo(bytes);
+                width = info.Width;
+                height = info.Height;
+                return width > 0 && height > 0;
+            }
+            catch { return false; }
+        }
+
+        public static MagickReadSettings DownscaleReadSettings(uint targetMaxDim)
+        {
+            var settings = new MagickReadSettings();
+            if (targetMaxDim > 0)
+            {
+                uint hint = targetMaxDim <= (uint.MaxValue / 2u) ? targetMaxDim * 2u : targetMaxDim;
+                settings.SetDefine(MagickFormat.Jpeg, "size", $"{hint}x{hint}");
+            }
+            return settings;
+        }
+
+        public static bool IsLinearOrNormalData(string assetPath)
+        {
+            var importer = AssetImporter.GetAtPath(assetPath) as TextureImporter;
+            if (importer == null) return false;
+            if (importer.textureType == TextureImporterType.NormalMap) return true;
+            return !importer.sRGBTexture;
+        }
+
+        public static void HighQualityResize(MagickImage img, uint targetW, uint targetH, bool linearData, FilterType filter, bool onlyShrink, double sharpenSigma)
+        {
+            if (img == null) return;
+            img.FilterType = filter;
+
+            bool gammaCorrect = !linearData && img.ColorSpace == ImageMagick.ColorSpace.sRGB;
+            if (gammaCorrect) img.ColorSpace = ImageMagick.ColorSpace.RGB;
+
+            img.Resize(new MagickGeometry(targetW, targetH) { IgnoreAspectRatio = false, Greater = onlyShrink });
+
+            if (gammaCorrect) img.ColorSpace = ImageMagick.ColorSpace.sRGB;
+
+            if (sharpenSigma > 0.0) img.AdaptiveSharpen(0.0, sharpenSigma);
+        }
+
+        public static void ApplyOptimalEncoding(MagickImage img, int jpegQuality = 90)
+        {
+            if (img == null) return;
+            img.Strip();
+
+            var fmt = img.Format;
+            if (fmt == MagickFormat.Png)
+            {
+                img.Settings.SetDefine(MagickFormat.Png, "compression-level", 9);
+            }
+            else if (fmt == MagickFormat.Jpeg || fmt == MagickFormat.Jpg)
+            {
+                img.Quality = (uint)System.Math.Max(1, System.Math.Min(100, jpegQuality));
+            }
+        }
+
+        public static bool ProcessTextureFile(string path, uint targetSize, bool linearData, bool downscale)
+        {
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return false;
+            bool resized = false;
+            try
+            {
+                byte[] bytes = File.ReadAllBytes(path);
+                if (TryGetDimensions(bytes, out uint w, out uint h))
+                {
+                    bool needsWork = downscale ? (w > targetSize || h > targetSize) : (w < targetSize && h < targetSize);
+                    if (needsWork)
+                    {
+                        var readSettings = downscale ? DownscaleReadSettings(targetSize) : new MagickReadSettings();
+                        using (var img = new MagickImage(bytes, readSettings))
+                        {
+                            if (downscale)
+                                HighQualityResize(img, targetSize, targetSize, linearData, FilterType.Lanczos, true, 0.5);
+                            else
+                                HighQualityResize(img, targetSize, targetSize, linearData, FilterType.Mitchell, false, 0.6);
+
+                            ApplyOptimalEncoding(img);
+                            img.Write(path);
+                            resized = true;
+                        }
+                    }
+                }
+                TryLosslessOptimize(path);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"[VixForge] Magick failed for '{path}': {e.Message}");
+            }
+            return resized;
+        }
     }
 
     public class VixenHub : EditorWindow
     {
-        private enum TabMode { Dashboard, CoreModules, SupportedModules, ShaderDocs, MetricsDocs, Network, Support, Changelog }
-        private TabMode _currentMode = TabMode.Dashboard;
+        private enum TabMode { News, Dashboard, CoreModules, SupportedModules, ShaderDocs, MetricsDocs, Network, Support, Changelog }
+        private TabMode _currentMode = TabMode.News;
 
         private const string PackageRoot = "Packages/com.vixencreations.vixens-toolbox/";
         private const string FontPath = PackageRoot + "Editor/UiStyles/Cyberpunk-Regular.ttf";
@@ -234,6 +334,7 @@ namespace VixenTools.Editor
         private List<ChangelogEntry> _changelogEntries = new List<ChangelogEntry>();
         private int _selectedChangelogIndex = 0;
 
+        private Button _btnNews;
         private Button _btnDashboard;
         private Button _btnCoreModules;
         private Button _btnSupportedModules;
@@ -351,6 +452,7 @@ namespace VixenTools.Editor
             tabContainer.style.flexWrap = Wrap.Wrap;
             tabContainer.style.flexDirection = FlexDirection.Row;
 
+            _btnNews = new Button(() => SwitchMode(TabMode.News)) { text = "News" };
             _btnDashboard = new Button(() => SwitchMode(TabMode.Dashboard)) { text = "Architecture" };
             _btnCoreModules = new Button(() => SwitchMode(TabMode.CoreModules)) { text = "Core Modules" };
             _btnSupportedModules = new Button(() => SwitchMode(TabMode.SupportedModules)) { text = "Supported Modules" };
@@ -362,6 +464,7 @@ namespace VixenTools.Editor
             _btnSupport = new Button(() => SwitchMode(TabMode.Support)) { text = "Support" };
             _btnChangelog = new Button(() => SwitchMode(TabMode.Changelog)) { text = "Changelogs" };
 
+            _btnNews.AddToClassList("tab-btn");
             _btnDashboard.AddToClassList("tab-btn");
             _btnCoreModules.AddToClassList("tab-btn");
             _btnSupportedModules.AddToClassList("tab-btn");
@@ -373,6 +476,7 @@ namespace VixenTools.Editor
             _btnSupport.AddToClassList("tab-btn");
             _btnChangelog.AddToClassList("tab-btn");
 
+            tabContainer.Add(_btnNews);
             tabContainer.Add(_btnDashboard);
             tabContainer.Add(_btnCoreModules);
             tabContainer.Add(_btnSupportedModules);
@@ -404,13 +508,14 @@ namespace VixenTools.Editor
             _contentScroll.Add(_contentContainer);
             root.Add(_contentScroll);
 
-            SwitchMode(TabMode.Dashboard);
+            SwitchMode(TabMode.News);
         }
 
         private void SwitchMode(TabMode mode)
         {
             _currentMode = mode;
 
+            _btnNews.RemoveFromClassList("tab-btn-active"); _btnNews.AddToClassList("tab-btn-inactive");
             _btnDashboard.RemoveFromClassList("tab-btn-active"); _btnDashboard.AddToClassList("tab-btn-inactive");
             _btnCoreModules.RemoveFromClassList("tab-btn-active"); _btnCoreModules.AddToClassList("tab-btn-inactive");
             _btnSupportedModules.RemoveFromClassList("tab-btn-active"); _btnSupportedModules.AddToClassList("tab-btn-inactive");
@@ -426,6 +531,11 @@ namespace VixenTools.Editor
 
             switch (mode)
             {
+                case TabMode.News:
+                    _btnNews.RemoveFromClassList("tab-btn-inactive"); _btnNews.AddToClassList("tab-btn-active");
+                    _tabDescription.text = "Latest ecosystem news, partnerships, and announcements from <b>VixForge Interactive</b>.";
+                    RenderNews();
+                    break;
                 case TabMode.Dashboard:
                     _btnDashboard.RemoveFromClassList("tab-btn-inactive"); _btnDashboard.AddToClassList("tab-btn-active");
                     _tabDescription.text = "A comprehensive suite of custom Unity Editor utilities and automation scripts focused specifically on <b>High-Fidelity Avatar Pipeline & Topology Architecture</b>.";
@@ -655,6 +765,20 @@ The **VixForge Architecture** is engineered to interoperate flawlessly with indu
             };
 
             RenderActionGrid("Ecosystem Integrations", "#00e5ff", list);
+        }
+
+        private void RenderNews()
+        {
+            ParseMarkdownAndInject(LoadMarkdownFile("NEWS.md"), _contentContainer);
+
+            var list = new List<(System.Action action, string title, string desc)>
+            {
+                (() => Application.OpenURL("https://vixencreations.github.io/VixenToolBox/news.html"), "Read The Full Announcement", "The complete Enigma Industries x VixForge Interactive partnership write-up."),
+                (() => Application.OpenURL("https://discord.gg/clubenigmavr"), "Join Enigma's Discord", "Club Enigma / Enigma Industries community hub."),
+                (() => Application.OpenURL("https://vrc.group/ENIGMA.8607"), "Join Enigma's VRC Group", "Follow Enigma Industries in VRChat.")
+            };
+
+            RenderActionGrid("Partnership Links", "#ff00aa", list);
         }
 
         private void RenderNetwork()

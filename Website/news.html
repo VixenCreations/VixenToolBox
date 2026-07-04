@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary SEO -->
+    <title>VixForge Interactive | News &amp; Announcements</title>
+    <meta name="title" content="VixForge Interactive | News &amp; Announcements">
+    <meta name="description" content="News and announcements from VixForge Interactive, including studio updates, partnerships, and releases for the Vixens Toolbox VRChat creator suite.">
+    <meta name="keywords" content="VixForge Interactive, Vixens Toolbox, news, announcements, Enigma Industries partnership, VRChat, updates">
+    <meta name="author" content="Vixenlicous | VixForge Interactive">
+    <meta name="theme-color" content="#ff00aa">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://vixencreations.github.io/VixenToolBox/news.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/news.html">
+    <meta property="og:title" content="VixForge Interactive | News &amp; Announcements">
+    <meta property="og:description" content="Studio updates, partnerships, and releases from VixForge Interactive.">
+    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/partnership-enigma.png">
+    <meta property="og:site_name" content="VixForge Interactive | Vixens Toolbox">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/news.html">
+    <meta property="twitter:title" content="VixForge Interactive | News &amp; Announcements">
+    <meta property="twitter:description" content="Studio updates, partnerships, and releases from VixForge Interactive.">
+    <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/partnership-enigma.png">
+    <meta property="twitter:site" content="@VixenVRC">
+
+    <!-- Icons -->
+    <link rel="icon" href="./favicon.ico">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+
+    <!-- UI Framework -->
+    <script type="module" src="web-components.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Page-Specific Styling -->
+    <style>
+        .news-article {
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .news-hero-art {
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 0, 170, 0.3);
+        }
+
+        .news-hero-art img {
+            display: block;
+            width: 100%;
+            max-width: 880px;
+            height: auto;
+            margin: 0 auto;
+            border-radius: 8px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .news-body {
+            padding: 2rem;
+        }
+
+        .news-body p {
+            color: #bfa8d2;
+            line-height: 1.75;
+            margin-bottom: 1.1rem;
+        }
+
+        .news-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .news-tag {
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            color: var(--neon-cyan);
+        }
+
+        .news-date {
+            font-size: 0.85rem;
+            color: #8f7fa8;
+        }
+
+        .pledge-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 0.5rem 0 1.25rem;
+        }
+
+        .pledge-list li {
+            color: #e0d5eb;
+            line-height: 1.9;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .pledge-list li::before {
+            content: "\25B8";
+            color: var(--neon-pink);
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-art"></div>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <h2 class="text-glow-cyan">VIXENS TOOLBOX</h2>
+            <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">by VixForge Interactive</div>
+        </div>
+
+        <div class="nav-links">
+            <fluent-anchor href="index.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2.5L2 8.5H4V16.5H8V11.5H12V16.5H16V8.5H18L10 2.5Z" /></svg>
+                VPM Registry
+            </fluent-anchor>
+
+            <fluent-anchor href="about.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                About Us
+            </fluent-anchor>
+
+            <fluent-anchor href="news.html" class="nav-item active">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v13H4a2 2 0 0 0-2 2 2 2 0 0 0 2 2z"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8z"></path></svg>
+                News
+            </fluent-anchor>
+
+            <fluent-anchor href="ai-transparency.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                AI Transparency
+            </fluent-anchor>
+
+            <fluent-anchor href="why-choose-us.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                Why Choose Us?
+            </fluent-anchor>
+
+            <fluent-anchor href="tools.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2ZM11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14V10C9 9.44772 9.44772 9 10 9C10.5523 9 11 9.44772 11 10V14ZM10 8C9.44772 8 9 7.55228 9 7C9 6.44772 9.44772 6 10 6C10.5523 6 11 6.44772 11 7C11 7.55228 10.5523 8 10 8Z" /></svg>
+                List of Tools
+            </fluent-anchor>
+
+            <fluent-anchor href="docs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Deep-Dive Docs
+            </fluent-anchor>
+
+            <fluent-anchor href="shaderdocs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M7 9.5a5.5 5.5 0 0 1 5-3"></path><circle cx="9.5" cy="9.5" r="1.2" fill="currentColor" stroke="none"></circle></svg>
+                Shader Docs
+            </fluent-anchor>
+
+            <fluent-anchor href="changelog.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Changelog
+            </fluent-anchor>
+
+            <fluent-anchor href="developer-docs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                Developer Docs
+            </fluent-anchor>
+
+            <fluent-anchor href="support.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                Support the Projects
+            </fluent-anchor>
+
+            <fluent-anchor href="social.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                Get Help Here
+            </fluent-anchor>
+
+            <fluent-anchor href="extended-projects.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                Extended Projects
+            </fluent-anchor>
+        </div>
+    </nav>
+
+    <main class="main-wrapper">
+        <div class="col align-items-center content" style="max-width: 1000px;">
+
+            <div class="col w-100 text-center mb-4">
+                <h1 class="text-glow-cyan">News &amp; Announcements</h1>
+                <p class="caption1 mt-2" style="font-size: 1.1rem; max-width: 760px; margin: 0 auto;">
+                    Studio updates, partnerships, and releases from VixForge Interactive. The latest news lands here first.
+                </p>
+            </div>
+
+            <article class="glass-panel news-article w-100 mb-5">
+                <div class="news-hero-art">
+                    <img src="partnership-enigma.png" width="1536" height="1024" alt="VixForge Interactive x Enigma Industries strategic partnership announcement. Forging Realities. Building Experiences. Together, we're redefining immersive creation." />
+                </div>
+                <h2 class="sr-only">VixForge Interactive x Enigma Industries: Forging Realities. Building Experiences.</h2>
+
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Partnership</span>
+                        <span class="news-tag">Studio News</span>
+                        <span class="news-date">July 4, 2026</span>
+                    </div>
+
+                    <p>
+                        VixForge Interactive and Enigma Industries are joining forces. Two studios, two strengths, one shared goal: giving VRChat creators better tools, stronger communities, and bigger opportunities to bring their ideas to life. This is the first step in a much larger vision, and it starts now.
+                    </p>
+
+                    <h3 class="text-glow-cyan">Two Studios, One Vision</h3>
+                    <p>
+                        For years you knew them as <strong>Club Enigma</strong>, a community built around events and bringing people together. That vision grew into something far larger: building worlds, experimenting with new technology, exploring game development, and backing projects that reach well beyond the dance floor. Today that next step has a new name: <strong>Enigma Industries</strong>, a studio committed to innovation, creativity, and shaping the future of social VR.
+                    </p>
+                    <p>
+                        <strong>VixForge Interactive</strong> is recognized across the VRChat creator community for its Unity development and the <strong>Vixens Toolbox</strong>, our comprehensive Unity VRChat creator suite. It is built to simplify development, streamline workflows, assist with optimization, and automate the repetitive work, so creators spend more time building and less time managing technical overhead.
+                    </p>
+
+                    <h3 class="text-glow-cyan">What Enigma Industries Brings</h3>
+                    <p>
+                        Enigma Industries brings years of building community and unforgettable moments in VRChat. What began with events and bringing people together has grown into a studio focused on the experiences themselves:
+                    </p>
+                    <ul class="pledge-list">
+                        <li><strong>Immersive Worlds</strong> - ambitious, hand-crafted VRChat spaces designed to be lived in, not just visited.</li>
+                        <li><strong>Live Events and Community</strong> - the heartbeat of Club Enigma, now scaled up: shows, gatherings, and a community that shows up.</li>
+                        <li><strong>Innovative Experiences</strong> - new technology, game development, and projects that push what social VR can be.</li>
+                        <li><strong>A Bigger Vision</strong> - not just a rebrand, but the first step in a much larger transformation for social VR.</li>
+                    </ul>
+
+                    <h3 class="text-glow-cyan">What the Partnership Delivers</h3>
+                    <p>
+                        While VixForge Interactive continues empowering creators through advanced Unity tooling, Enigma Industries will keep focusing on immersive worlds, innovative experiences, and ambitious projects that push the boundaries of what is possible in VRChat. This partnership is about more than what we are building today:
+                    </p>
+                    <ul class="pledge-list">
+                        <li>It's about sharing knowledge.</li>
+                        <li>It's about inspiring innovation.</li>
+                        <li>It's about supporting creators.</li>
+                        <li>It's about helping shape the next generation of social VR.</li>
+                    </ul>
+
+                    <h3 class="text-glow-cyan">This Is Just the Beginning</h3>
+                    <p>
+                        Together, we're laying the foundation for a future where creators have better tools, stronger communities, and even greater opportunities to bring their ideas to life. This is the first step in a much larger transformation, and it's where the next chapter begins.
+                    </p>
+                    <p style="color: #e0d5eb; font-weight: bold;">
+                        The future starts now. Enigma Industries x VixForge Interactive.
+                    </p>
+
+                    <div class="row mt-4" style="gap: 10px; flex-wrap: wrap;">
+                        <fluent-anchor href="about.html" appearance="accent" class="custom-accent-btn">About VixForge Interactive</fluent-anchor>
+                        <fluent-anchor href="https://discord.gg/clubenigmavr" target="_blank" appearance="accent" class="custom-accent-btn">Join Enigma's Discord</fluent-anchor>
+                        <fluent-anchor href="https://x.com/VixenVRC" target="_blank" class="custom-stealth-btn">Follow on X</fluent-anchor>
+                        <fluent-anchor href="https://discord.gg/3vbJCKcPtJ" target="_blank" class="custom-stealth-btn">VixForge Discord</fluent-anchor>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+
+        <button id="jumpToTopBtn" class="jump-to-top" title="Back to top">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+            </svg>
+        </button>
+
+    </main>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

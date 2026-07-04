@@ -269,24 +269,24 @@
 - **L60** - ====================================================================  <br/><sub>↳ before `public static void WeldVertices(`</sub>
 - **L61** - DESTRUCTIVE TOPOLOGY PIPELINES (VERTEX WELDING + BLENDSHAPE RECOVERY)  <br/><sub>↳ before `public static void WeldVertices(`</sub>
 - **L62** - ====================================================================  <br/><sub>↳ before `public static void WeldVertices(`</sub>
-- **L65** - Precision Microwelder: Seals sub-millimeter splits while strictly preserving UV texture seams.  <br/><sub>↳ before `public static void WeldVertices(`</sub>
-- **L66** - Utilizes a 5D Hash System (X, Y, Z, U, V) to ensure rendering integrity is never compromised.  <br/><sub>↳ before `public static void WeldVertices(`</sub>
+- **L65** - Precision Smoothweld: Seals seams by clustering vertices within a true Euclidean radius (Blender remove-doubles style, greedy representative + 27-cell range search, no transitive chaining) rather than snapping to a hash grid, while strictly preserving UV texture seams.  <br/><sub>↳ before `public static void WeldVertices(`</sub>
+- **L66** - Each merged cluster folds into its Laplacian centroid via the `smoothing` factor (0 keeps the representative vertex exactly, 1 uses the full centroid), minimizing surface deviation. Vertices are partitioned by exact quantized UV cell (uvMultiplier 10000) so texture seams and hard UV borders cannot collapse. Optional `seamRelaxIterations`/`seamRelaxFactor` run a bounded Laplacian relaxation (Blender bmo_smooth_vert: average edge-connected neighbors, lerp by factor) on merged seam vertices only, never touching locked/protected verts.  <br/><sub>↳ before `public static void WeldVertices(`</sub>
 
 ### `HashSet<int> protectedBones = null)`
 <sub>L84–L268</sub>
 
 - **L84** - 1. SURGICAL EXCLUSION SCAN (MATERIALS)  <br/><sub>↳ before `HashSet<int> protectedVertIndices = new HashSet<int>();`</sub>
 - **L95** - 2. BLENDSHAPE MEMORY EXTRACTION  <br/><sub>↳ before `int blendShapeCount = mesh.blendShapeCount;`</sub>
-- **L118** - 3. THE 5D PRECISION HASH SYSTEM (Zero-GC, UV-Safe)  <br/><sub>↳ before `List<Vector3> newVerts = new List<Vector3>();`</sub>
-- **L126** - UPGRADED: 5D Tuple (X, Y, Z, U, V) protects UV texture seams from collapsing.  <br/><sub>↳ before `var spatialHash = new Dictionary<(long, long, long, long, long), int>();`</sub>
-- **L130** - Fixed high-precision scale for UV maps (0.0 to 1.0 space)  <br/><sub>↳ on `float uvMultiplier = 10000f;`</sub>
+- **L118** - 3. DISTANCE-CLUSTER RANGE SEARCH (Zero-GC, UV-Safe)  <br/><sub>↳ before `List<Vector3> newVerts = new List<Vector3>();`</sub>
+- **L126** - Vertices are bucketed into a spatial grid (cell size = merge radius) keyed by exact quantized UV cell; each unlocked vertex, in index order, becomes a representative and range-searches its 27 neighbor cells for untagged vertices within the true Euclidean radius, tagging them so no vertex chains across representatives.  <br/><sub>↳ before `var buckets = new Dictionary<(long, long, long, long, long), List<int>>();`</sub>
+- **L130** - Fixed high-precision scale for UV maps (0.0 to 1.0 space); the UV cell is part of the bucket key so verts with different UVs never share a cluster.  <br/><sub>↳ on `float uvMultiplier = 10000f;`</sub>
 - **L152** - Absolute unique key. i guarantees it never merges.  <br/><sub>↳ before `key = (long.MaxValue, long.MaxValue, long.MaxValue, 0, i);`</sub>
 - **L189** - 4. SUBMESH TRIANGLE REBUILD  <br/><sub>↳ before `int subMeshCount = mesh.subMeshCount;`</sub>
 - **L214** - 5. TOPOLOGY APPLICATION  <br/><sub>↳ before `mesh.Clear();`</sub>
 - **L230** - 6. BLENDSHAPE RE-MAPPING SYSTEM  <br/><sub>↳ before `foreach (var shape in extractedBlendShapes)`</sub>
-- **L266** - Vixen Core: Multi-Pass Precision Microwelder.  <br/><sub>↳ before `public static void MultipassTargetedWeld(`</sub>
-- **L267** - Iteratively seals spatial seams while STRICTLY locking UV coordinates.  <br/><sub>↳ before `public static void MultipassTargetedWeld(`</sub>
-- **L268** - Prioritizes absolute visual integrity over reaching polygon targets.  <br/><sub>↳ before `public static void MultipassTargetedWeld(`</sub>
+- **L266** - Vixen Core: Multi-Pass Precision Smoothweld. Shares the single-pass distance-cluster core (RunWeldPass); each pass ramps the merge radius from startThreshold toward maxThreshold by step and composes a masterMap so blendshape deltas remap correctly across all passes.  <br/><sub>↳ before `public static void MultipassTargetedWeld(`</sub>
+- **L267** - Iteratively seals spatial seams while STRICTLY locking UV coordinates and folding each cluster into its smoothed centroid (smoothing factor). Halts as soon as the triangle target is met or the radius exceeds maxThreshold, prioritizing visual integrity over hitting the polygon target.  <br/><sub>↳ before `public static void MultipassTargetedWeld(`</sub>
+- **L268** - Passes protected submeshes (eye/face/mouth material heuristics) and protected bone indices (head, neck, hands) through unchanged; those vertices are emitted 1:1 and never merged or relaxed.  <br/><sub>↳ before `public static void MultipassTargetedWeld(`</sub>
 
 ### `float startThreshold = 0.0001f,`
 <sub>L274</sub>
@@ -299,8 +299,8 @@
 - **L284** - 1. INITIAL STATE EXTRACTION  <br/><sub>↳ before `Vector3[] originalVerts = mesh.vertices;`</sub>
 - **L294** - 2. THE MASTER TRANSLATION MAP  <br/><sub>↳ before `int[] masterMap = new int[originalVerts.Length];`</sub>
 - **L298** - 3. BLENDSHAPE MEMORY ISOLATION  <br/><sub>↳ before `int blendShapeCount = mesh.blendShapeCount;`</sub>
-- **L322** - 4. THE IN-MEMORY ITERATION SYSTEM (UV-Locked 5D Hash)  <br/><sub>↳ before `int currentTriCount = mesh.triangles.Length / 3;`</sub>
-- **L345** - STRICT UV LOCK: Re-introduced U and V to the system. Textures physically cannot tear.  <br/><sub>↳ before `var spatialHash = new Dictionary<(long, long, long, long, long), int>();`</sub>
+- **L322** - 4. THE IN-MEMORY ITERATION SYSTEM (UV-locked distance clustering)  <br/><sub>↳ before `int currentTriCount = mesh.triangles.Length / 3;`</sub>
+- **L345** - STRICT UV LOCK: the UV cell is part of the cluster bucket key, so textures physically cannot tear across a weld.  <br/><sub>↳ before `var buckets = new Dictionary<(long, long, long, long, long), List<int>>();`</sub>
 - **L349** - High-precision UV quantization  <br/><sub>↳ on `float uvMultiplier = 10000f;`</sub>
 - **L441** - 5. TOPOLOGY APPLICATION  <br/><sub>↳ before `mesh.Clear();`</sub>
 - **L452** - 6. MASTER BLENDSHAPE RE-MAPPING  <br/><sub>↳ before `foreach (var shape in extractedBlendShapes)`</sub>
@@ -757,6 +757,29 @@
 - **L75** - Capture local variable  <br/><sub>↳ before `var captured = opt;`</sub>
 - **L83** - Show near mouse; safe in UI Toolkit / editor context  <br/><sub>↳ before `menu.ShowAsContext();`</sub>
 - **L87** - Text preview for each easing type  <br/><sub>↳ before `private string RenderPreview(EasingFunctions.EaseType t)`</sub>
+
+---
+
+## `Editor/Engine Tools/AnimationWorkbench/EasingFunctions.cs`
+
+*4 comment(s).*
+
+
+### `(file scope)`
+<sub>L4–L14</sub>
+
+- **L4** - Static easing library shared by the AnimationWorkbench curve tools; global namespace, editor-only (`#if UNITY_EDITOR`), stateless.  <br/><sub>↳ before `public static class EasingFunctions`</sub>
+- **L6** - `EaseType` enum lists the selectable curves: Linear, SmoothStep, EaseInOutCubic, EaseOutQuad, EaseInQuad, EaseOutCubic. Backs the EasingDropdown selector.  <br/><sub>↳ before `public enum EaseType`</sub>
+
+### `public static float EvaluateEasing(float a, float b, float t, EaseType ease)`
+<sub>L16</sub>
+
+- **L16** - Maps normalized time `t` through the chosen `EaseType` to an eased factor `u`, then returns `Mathf.Lerp(a, b, u)`. Unknown enum values fall back to Linear.  <br/><sub>↳ before `public static float EvaluateEasing(float a, float b, float t, EaseType ease)`</sub>
+
+### `private static float EaseInOutCubic(float x)`
+<sub>L33</sub>
+
+- **L33** - Cubic ease-in-out helper: `4x^3` below the midpoint, mirrored `1 - pow(-2x + 2, 3) / 2` above; used by EvaluateEasing's EaseInOutCubic case.  <br/><sub>↳ before `private static float EaseInOutCubic(float x)`</sub>
 
 ---
 
@@ -1797,6 +1820,21 @@ The three keyword toggles keep their built-in `[Toggle(VRSL_ENABLE)]` / `[Toggle
 ### Locking / optimizer (mirrors VixenWorld)
 
 Both shaders carry the Thry optimizer header: `shader_is_using_thry_editor`, `shader_master_label` (`<color=#00E5FF>VixenWear - Latex Ultra/SPS</color>`), the VixForge footer buttons (website/discord/x/github/kofi, icons in `Editor/Icons/VixForge_*.png`, found by name), and `[ThryShaderOptimizerLockButton] _ShaderOptimizerEnabled ("", Int) = 0`. This enables Thry's material lock/unlock. As with VixenWorld and Poiyomi, **materials must be locked before building** - Thry's `StripUnlockedShadersFromBuild` clears variants of any unlocked shader carrying these properties (unlocked = pink in build). VixenWorld confirms locking works on a tessellated `#pragma surface` shader, so the earlier surface-shader concern does not apply.
+
+### VRC Light Volumes restructure re-sync: `LV_PointLightVolumeSH` param reorder (2026-06-30)
+
+- **Upstream re-pull.** `Editor/cginc/LightVolumes.cginc` re-synced (verbatim) to the latest `red.sim.lightvolumes` revision (repo updated 2026-06-30). Upstream restructured the file twice ("LightVolumes.cginc restructured. Performance significantly improved." + "Individual speculars support / speculars now use light size / more physically correct"), so the vendored copy grew from 1032 to 1049 lines with ~660 lines changed. `VRCLV_VERSION` stays **3** and `VRCLV_MIN_SUPPORTED_VERSION` stays 2, so the Udon-side uniform contract is unchanged; the same 3 LV `SamplerState`s and the EVSM shadow uniforms (`_UdonPointLightVolumeShadowBleedReduction` / `…ShadowMinVariance`) the prior copy declared are still present, so the LV sampler count is unchanged.
+- **Only consumed API change: `LV_PointLightVolumeSH` parameter order.** Upstream moved `worldNormal` and `pointLightShading` to **precede** the `inout` SH outputs: `(worldPos, inout L0,L1r,L1g,L1b, worldNormal, pointLightShading)` → **`(worldPos, worldNormal, pointLightShading, inout L0,L1r,L1g,L1b)`**. Both `surf` twins updated their single call from `LV_PointLightVolumeSH(IN.worldPos, lv_L0, lv_L1r, lv_L1g, lv_L1b, nWorldStable, 1.0)` to `LV_PointLightVolumeSH(IN.worldPos, nWorldStable, 1.0, lv_L0, lv_L1r, lv_L1g, lv_L1b)`. Same args, same `nWorldStable` normal and `1.0` default shading strength: behaviour-preserving.
+- **Everything else VixenWear calls is signature-identical.** `LightVolumesEnabled`, `LV_LightVolumeRegularSH`, `LV_LightVolumeAdditiveSH`, `LightVolumeEvaluate`, and both overloads of `LightVolumeSpecular` / `LightVolumeSpecularDominant` are byte-identical declarations, so the more-physically-correct, light-size-aware specular math comes in transparently with no call-site edit.
+- **Internal-only churn (not called by VixenWear, no action).** Upstream split `LV_PointLightVolumeRawContribution` into `LV_PointLightVolumeContribution` + `LV_PointLightVolumeShadowMask`, renamed `lightSizeSqOverDistSq` → `lightSpreadSq`, and renamed params on `LV_PointLightShadow` / `LV_PointLightShading` / `LV_SphereSpotLightCookieUv` / `LV_SpecularBRDFDirection`. These are interior to the cginc (now the full new upstream, internally consistent); VixenWear never calls them.
+- **No cost delta.** No new material props, samplers, textures, keywords, or shader variants; the ps_5_0 16-sampler cap and the SPS `surf` compiler-OOM risk are unaffected. No visible change on existing materials/worlds (version gate + light-probe fallback identical). Supersedes the 2026-06-28 "point-light refresh" entry's call form below.
+
+### AudioLink cross-pass locking fix (Poiyomi/Thry inline-once) + VRC Light Volumes early-July re-sync (2026-07-04)
+
+Both twins (shared includes under `Editor/cginc/`, so one edit each covers base + SPS).
+
+- **Locked-material fix: `ALPASS_AUDIOLINK` / `AudioLinkIsAvailable` undeclared after Poiyomi lock (both twins).** Root cause is Poiyomi's fork of the Thry `ShaderOptimizer` (`_PoiyomiShaders/Scripts/ThryEditor/Editor/ShaderOptimizer.cs`). Standalone ThryEditor rewrites each non-default `#include` to a flattened per-file `#include` that is kept in every pass, so a file included in N passes still reaches all N. Poiyomi instead **inlines** each include's contents and de-duplicates by file path across the *whole* shader: `GetInlinedIncludeLines` (~L2004) does `if (alreadyProcessed.Exists(x => x.filePath == filePath)) return new string[0];`, keyed off the single `filesParsed` list built once (~L1325) and never reset at `CGPROGRAM`/`ENDCG` boundaries. Both twins `#include AudioLink.cginc` in several passes (SPS: outline + main `surf`; base: outline + main + three effect passes), so Poiyomi inlined `AudioLink.cginc` only into the **first** pass (outline) and emitted an empty inline for every later pass. The main `surf` pass then had no ALPASS map (`ALPASS_AUDIOLINK` undeclared, ~L2313) and the later effect passes had no functions either (`AudioLinkIsAvailable` undeclared, ~L4283+, `Unnamed Pass 3/4/5`). Unlocked shaders compiled because each pass really does include the file; only the locked/inlined output dropped it. **Fix (matches how Poiyomi's own shaders share code):** hoist the AudioLink include out of every pass into one SubShader-level block, `CGINCLUDE` / `#include "Assets/VixenWear/Editor/cginc/AudioLink.cginc"` / `ENDCG`, placed after the SubShader render states and before the first `CGPROGRAM`. Poiyomi inlines it once (into the CGINCLUDE); Unity then prepends that block to every `CGPROGRAM` in the SubShader, so all passes get the ALPASS map plus functions. Safe to globalise: `AudioLink.cginc` is self-contained (no `#include`; the only Unity macro it uses, `UNITY_UNROLL`, comes from auto-included HLSLSupport) and on d3d11 declares `_AudioTexture` as a `Texture2D` read by direct index, so it adds **no `SamplerState`** and costs zero of the 16-sampler budget, and it is already surface-analysis guarded. Only AudioLink needed this; `LightVolumes.cginc` and `LTCGI.cginc` are each `#include`d in a single pass, so Poiyomi's inline-once is correct for them and they stay per-pass (keeping their samplers off the effect passes). Removed the per-pass AudioLink `#include`s (2 in SPS, 5 in base) and added the one CGINCLUDE each. Secondary hardening kept from the first pass at this: `LTCGI_config.cginc`'s AudioLink self-guard fallback now pulls the real `AudioLink.cginc` rather than the empty `LTCGI_AudioLinkNoOp.cginc` (inert now that the CGINCLUDE always defines `AUDIOLINK_WIDTH` first, but strictly safer than a guard-setting empty stub). Re-lock materials to pick it up. **Note:** the VixenWorld Surface twin has the identical multi-pass per-`#include` pattern and will need the same CGINCLUDE hoist when it is next re-locked under this Poiyomi.
+- **VRC Light Volumes early-July re-sync.** `Editor/cginc/LightVolumes.cginc` re-synced (verbatim) to the current `red.sim.lightvolumes` revision (upstream 2026-07-01/07-03: "LightVolumes.cginc compilation time improved", "Compilation errors fixed", `LV_FastExp` replaced by an `exp2`-based fast path; the multithreaded atlas-packing change is Udon-side only). Vendored copy went 1049 → 1038 lines. `VRCLV_VERSION` stays **3**, `VRCLV_MIN_SUPPORTED_VERSION` stays 2. Every entry point VixenWear calls is signature-identical, verified against the new file: `LightVolumesEnabled`, `LV_LightVolumeRegularSH`, `LV_LightVolumeAdditiveSH`, `LV_PointLightVolumeSH` (still the 2.9.1 reordered `(worldPos, worldNormal, pointLightShading, inout L0,L1r,L1g,L1b)` form), `LightVolumeEvaluate`, and both `LightVolumeSpecular` / `LightVolumeSpecularDominant`. No call-site edits, no new props/samplers/textures/keywords/variants, no cost delta.
 
 ### Locking strips geometry passes without `GeometryShader_Enabled` (2026-06-29)
 

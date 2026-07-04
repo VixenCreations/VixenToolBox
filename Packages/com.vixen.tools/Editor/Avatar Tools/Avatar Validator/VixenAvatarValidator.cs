@@ -6,6 +6,8 @@ using UnityEditor.UIElements;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using VRC.SDK3.Avatars.Components;
 using VRC.SDK3.Validation;
 using VRC.Dynamics;
@@ -38,6 +40,7 @@ namespace VixenTools.Editor
             public string Description;
             public bool IsSelected = true;
             public System.Action Execute;
+            public System.Func<string> ComputeSignature;
         }
 
         public class PhysicsNode
@@ -46,6 +49,17 @@ namespace VixenTools.Editor
             public string Name;
             public string TypeName;
             public bool Cull = false;
+        }
+
+        public class TextureNode
+        {
+            public Texture Texture;
+            public string Name;
+            public string AssetPath;
+            public int Width;
+            public int Height;
+            public bool Linear;
+            public bool Process;
         }
 
         public class ValidationReport
@@ -66,6 +80,8 @@ namespace VixenTools.Editor
             public int AnimatorsCount = 0;
 
             public List<PhysicsNode> PhysicsNodes = new List<PhysicsNode>();
+            public List<TextureNode> TextureNodes = new List<TextureNode>();
+            public string AvatarKey;
 
             public List<Anomaly> PCErrors = new List<Anomaly>();
             public List<Anomaly> PCPerformanceWarnings = new List<Anomaly>();
@@ -77,10 +93,20 @@ namespace VixenTools.Editor
             public List<Anomaly> OfficialPerfWarnings = new List<Anomaly>();
         }
 
-        public static ValidationReport RunFullSweep(GameObject avatarRoot, int targetTexSize = 1024, PCPerformanceRank targetRank = PCPerformanceRank.Poor, ResizeMode resizeMode = ResizeMode.Downscale)
+        public static ValidationReport RunFullSweep(GameObject avatarRoot, int targetTexSize = 1024, PCPerformanceRank targetRank = PCPerformanceRank.Poor, ResizeMode resizeMode = ResizeMode.Downscale, int decimateTarget = 24000)
         {
             var report = new ValidationReport();
             if (avatarRoot == null) return report;
+
+            report.AvatarKey = OptimizationStateCache.GetAvatarKey(avatarRoot);
+
+            void AddTask(OptimizationTask task)
+            {
+                if (task == null) return;
+                string sig = task.ComputeSignature != null ? task.ComputeSignature() : task.ID;
+                if (OptimizationStateCache.IsHandled(report.AvatarKey, task.ID, sig)) return;
+                report.OptimizationSuite.Add(task);
+            }
 
             var animator = avatarRoot.GetComponent<Animator>();
             HashSet<Transform> protectedTransforms = new HashSet<Transform>();
@@ -161,11 +187,12 @@ namespace VixenTools.Editor
 
             if (orphanedTransforms.Count > 0)
             {
-                report.OptimizationSuite.Add(new OptimizationTask
+                AddTask(new OptimizationTask
                 {
                     ID = "FLATTEN_HIERARCHY",
                     Label = $"Purge {orphanedTransforms.Count} Orphaned Transforms",
                     Description = "Vixen Core Heuristic: Flattens the hierarchy by destroying empty GameObjects carrying zero vertex weights.",
+                    ComputeSignature = () => "orphans:" + orphanedTransforms.Count(t => t != null),
                     Execute = () => {
                         int culled = 0;
                         foreach (var t in orphanedTransforms) { if (t != null) { Undo.DestroyObjectImmediate(t.gameObject); culled++; } }
@@ -182,11 +209,12 @@ namespace VixenTools.Editor
 
             if (disabledComponents.Count > 0)
             {
-                report.OptimizationSuite.Add(new OptimizationTask
+                AddTask(new OptimizationTask
                 {
                     ID = "STRIP_DISABLED_COMPS",
                     Label = $"Strip {disabledComponents.Count} Disabled Components",
                     Description = "Vixen Core Heuristic: Destroys hard-disabled Behaviours to permanently reduce serialization overhead.",
+                    ComputeSignature = () => "disabled:" + disabledComponents.Count(b => b != null),
                     Execute = () => {
                         int culled = 0;
                         foreach (var b in disabledComponents) { if (b != null) { Undo.DestroyObjectImmediate(b); culled++; } }
@@ -195,25 +223,40 @@ namespace VixenTools.Editor
                 });
             }
 
-            report.OptimizationSuite.Add(new OptimizationTask
+            AddTask(new OptimizationTask
             {
                 ID = "OPTIMIZE_BOUNDS",
                 Label = $"<color=#00e5ff>Auto-Fit Per-Mesh Avatar Bounds</color>",
-                Description = "Vixen Core Fix: Sizes each renderer's culling bounds from its bind pose, transformed into root-bone local space (per Unity SMR docs). Static meshes get a 50% safety margin; meshes driven by VRCPhysBones get 200% to cover runtime swing. Floor at 0.3m guards against degenerate bounds on stub meshes.",
+                Description = "Vixen Core Fix: Fits each renderer's culling bounds to its real skinned geometry, sampled across every bound bone and bind pose so meshes driven by many bones or a scaled armature measure their true size (not the authored mesh AABB). Adds a small skinning margin and, for VRCPhysBone-driven meshes, the real swing reach of the affecting chains (no blunt multipliers). Uses a scale-aware world-space floor so meshes authored at odd scales aren't over-inflated, and sets Update When Offscreen off since VRChat culls on the static bounds.",
+                ComputeSignature = () => {
+                    var sb = new System.Text.StringBuilder("bounds:");
+                    foreach (var s in skinnedRenderers)
+                    {
+                        if (s == null) continue;
+                        Bounds b = s.localBounds;
+                        sb.Append(AnimationUtility.CalculateTransformPath(s.transform, avatarRoot.transform))
+                          .Append(s.updateWhenOffscreen ? '+' : '-')
+                          .Append(Vector3Sig(b.center)).Append('/').Append(Vector3Sig(b.size)).Append(';');
+                    }
+                    return sb.ToString();
+                },
                 Execute = () => {
                     int meshesProcessed = 0;
 
-                    const float staticMargin = 1.5f;
-                    const float physBoneMargin = 3.0f;
-                    const float minBoundsSize = 0.3f;
+                    const float staticMargin = 1.1f;
+                    const float physBoneReachSafety = 1.15f;
+                    const float minWorldFloor = 0.01f;
 
-                    var physBoneAffected = new HashSet<Transform>();
+                    var physBones = new List<PhysBoneReach>();
                     foreach (var pb in avatarRoot.GetComponentsInChildren<VRCPhysBoneBase>(true))
                     {
                         Transform pbRoot = pb.GetRootTransform();
                         if (pbRoot == null) continue;
+
+                        var boneDist = new Dictionary<Transform, float>();
                         foreach (var t in pbRoot.GetComponentsInChildren<Transform>(true))
-                            physBoneAffected.Add(t);
+                            boneDist[t] = Vector3.Distance(pbRoot.position, t.position);
+                        physBones.Add(new PhysBoneReach { RootWorld = pbRoot.position, BoneDist = boneDist });
                     }
 
                     foreach (var smr in skinnedRenderers)
@@ -221,41 +264,74 @@ namespace VixenTools.Editor
                         if (smr == null) continue;
 
                         Undo.RecordObject(smr, "Auto-Fit Bounds");
-
                         smr.updateWhenOffscreen = false;
 
-                        bool hasPhysBone = false;
-                        if (smr.bones != null)
+                        Transform rootBone = GetActualRootBone(smr);
+                        Vector3 ls = rootBone.lossyScale;
+                        Vector3 localFloor = new Vector3(
+                            minWorldFloor / Mathf.Max(1e-5f, Mathf.Abs(ls.x)),
+                            minWorldFloor / Mathf.Max(1e-5f, Mathf.Abs(ls.y)),
+                            minWorldFloor / Mathf.Max(1e-5f, Mathf.Abs(ls.z)));
+
+                        if (smr.sharedMesh == null)
                         {
-                            foreach (var b in smr.bones)
+                            smr.localBounds = new Bounds(Vector3.zero, localFloor);
+                            meshesProcessed++;
+                            continue;
+                        }
+
+                        if (!TryComputeSkinnedLocalBounds(smr, rootBone, out Bounds fitted))
+                            fitted = TransformBoundsCorners(smr.sharedMesh.bounds, p => rootBone.InverseTransformPoint(smr.transform.TransformPoint(p)));
+                        fitted.Expand(fitted.size * (staticMargin - 1f));
+
+                        if (smr.bones != null && smr.bones.Length > 0 && physBones.Count > 0)
+                        {
+                            HashSet<Transform> weightedBones = new HashSet<Transform>();
+                            BoneWeight[] meshWeights = smr.sharedMesh.boneWeights;
+                            if (meshWeights != null && meshWeights.Length > 0)
                             {
-                                if (b != null && physBoneAffected.Contains(b)) { hasPhysBone = true; break; }
+                                HashSet<int> wIdx = new HashSet<int>();
+                                foreach (var w in meshWeights)
+                                {
+                                    if (w.weight0 > 0f) wIdx.Add(w.boneIndex0);
+                                    if (w.weight1 > 0f) wIdx.Add(w.boneIndex1);
+                                    if (w.weight2 > 0f) wIdx.Add(w.boneIndex2);
+                                    if (w.weight3 > 0f) wIdx.Add(w.boneIndex3);
+                                }
+                                for (int bi = 0; bi < smr.bones.Length; bi++)
+                                    if (wIdx.Contains(bi) && smr.bones[bi] != null) weightedBones.Add(smr.bones[bi]);
+                            }
+                            else
+                            {
+                                foreach (var b in smr.bones) if (b != null) weightedBones.Add(b);
+                            }
+
+                            foreach (var pb in physBones)
+                            {
+                                float relevantReach = 0f;
+                                foreach (var b in weightedBones)
+                                {
+                                    if (pb.BoneDist.TryGetValue(b, out float d) && d > relevantReach)
+                                        relevantReach = d;
+                                }
+                                if (relevantReach > 0f)
+                                {
+                                    Bounds pbWorld = new Bounds(pb.RootWorld, Vector3.one * (relevantReach * physBoneReachSafety * 2f));
+                                    fitted.Encapsulate(TransformBoundsCorners(pbWorld, rootBone.InverseTransformPoint));
+                                }
                             }
                         }
-                        float margin = hasPhysBone ? physBoneMargin : staticMargin;
 
-                        Bounds fitted;
-                        if (smr.sharedMesh != null)
-                        {
-                            Bounds bind = smr.sharedMesh.bounds;
-                            Transform rootBone = smr.rootBone != null ? smr.rootBone : smr.transform;
-                            Bounds rootSpace = TransformBoundsToSpace(bind, smr.transform, rootBone);
-
-                            Vector3 size = rootSpace.size * margin;
-                            size.x = Mathf.Max(size.x, minBoundsSize);
-                            size.y = Mathf.Max(size.y, minBoundsSize);
-                            size.z = Mathf.Max(size.z, minBoundsSize);
-                            fitted = new Bounds(rootSpace.center, size);
-                        }
-                        else
-                        {
-                            fitted = new Bounds(Vector3.zero, Vector3.one * minBoundsSize);
-                        }
+                        Vector3 size = fitted.size;
+                        size.x = Mathf.Max(size.x, localFloor.x);
+                        size.y = Mathf.Max(size.y, localFloor.y);
+                        size.z = Mathf.Max(size.z, localFloor.z);
+                        fitted.size = size;
 
                         smr.localBounds = fitted;
                         meshesProcessed++;
                     }
-                    Debug.Log($"[VixForge] Geometry Culling System updated: Per-mesh bounds fitted on {meshesProcessed} renderers (PhysBone-aware margins).");
+                    Debug.Log($"[VixForge] Geometry Culling System updated: {meshesProcessed} renderers fitted (true skinned AABB across all bound bones + real PhysBone swing reach).");
                 }
             });
 
@@ -273,11 +349,15 @@ namespace VixenTools.Editor
 
             if (deepLeafBones.Count > 0)
             {
-                report.OptimizationSuite.Add(new OptimizationTask
+                AddTask(new OptimizationTask
                 {
                     ID = "COLLAPSE_LEAF_BONES",
                     Label = $"<color=#ff0033>Collapse {deepLeafBones.Count} Dead-End Leaf Bones</color>",
                     Description = "Destructive Topology: Clones meshes, folds terminal vertex weights into parent bones. Ignores elements shielded by Physics.",
+                    ComputeSignature = () => "collapse:" + string.Join("|", deepLeafBones
+                        .Where(b => b != null)
+                        .Select(b => AnimationUtility.CalculateTransformPath(b, avatarRoot.transform))
+                        .OrderBy(p => p, System.StringComparer.Ordinal)),
                     Execute = () => {
                         foreach (var smr in skinnedRenderers)
                         {
@@ -290,14 +370,21 @@ namespace VixenTools.Editor
                 });
             }
 
-            List<SkinnedMeshRenderer> heavyMeshes = skinnedRenderers.Where(s => s.sharedMesh != null && CountTriangles(s.sharedMesh) > 15000).ToList();
+            int decimateTargetTris = Mathf.Max(1000, decimateTarget);
+            List<SkinnedMeshRenderer> heavyMeshes = skinnedRenderers.Where(s =>
+                s.sharedMesh != null &&
+                !s.sharedMesh.name.Contains("VixenPatched") &&
+                CountTriangles(s.sharedMesh) > decimateTargetTris).ToList();
             if (heavyMeshes.Count > 0)
             {
-                report.OptimizationSuite.Add(new OptimizationTask
+                AddTask(new OptimizationTask
                 {
                     ID = "WELD_VERTICES",
-                    Label = $"<color=#00e5ff>Precision Multi-Pass Microweld ({heavyMeshes.Count} Meshes)</color>",
-                    Description = "Safe Topology Optimization: Iteratively seals sub-millimeter seams. <color=#00ff66><b>STRICTLY LOCKS UVs.</b></color> Visually preserves the avatar, but will intentionally halt before reaching extreme Quest limits to protect geometry.",
+                    Label = $"<color=#00e5ff>Precision QEM Decimation ({heavyMeshes.Count} Meshes)</color>",
+                    Description = $"Quadric Error Metric edge-collapse decimation (Garland-Heckbert), the same class of algorithm as Blender's Decimate. Drives each heavy mesh toward the slider target of ~{decimateTargetTris:N0} triangles while preventing face flips. <color=#00ff66><b>Preserves UV/normal seams, material (submesh) boundaries, open borders, and locks eye/face/hand submeshes plus humanoid Hand bones.</b></color> Interpolates UVs, colors and bone weights across each collapse, and remaps blendshapes. Halts early rather than shredding protected geometry.",
+                    ComputeSignature = () => "decimate:" + string.Join("|", heavyMeshes
+                        .Where(s => s != null && s.sharedMesh != null)
+                        .Select(s => AnimationUtility.CalculateTransformPath(s.transform, avatarRoot.transform) + ":" + CountTriangles(s.sharedMesh))),
                     Execute = () => {
                         int originalTotal = 0;
                         int newTotal = 0;
@@ -320,26 +407,24 @@ namespace VixenTools.Editor
                                 protectedBoneIndices = VixenMeshPatcher.GenerateProtectedBoneIndices(
                                     animator,
                                     smr,
-                                    HumanBodyBones.Head,
-                                    HumanBodyBones.Neck,
                                     HumanBodyBones.LeftHand,
                                     HumanBodyBones.RightHand
                                 );
                             }
 
-                            VixenMeshPatcher.MultipassTargetedWeld(
+                            VixenMeshPatcher.DecimateToTarget(
                                 smr,
-                                targetTriangles: 14500,
-                                startThreshold: 0.0001f,
-                                maxThreshold: 0.005f,
-                                step: 0.0005f,
+                                targetTriangles: decimateTargetTris,
                                 protectedSubmeshes: protectedSlots,
-                                protectedBones: protectedBoneIndices
+                                protectedBones: protectedBoneIndices,
+                                aggressiveness: 7.0,
+                                preserveBorders: true,
+                                smoothIterations: 0
                             );
 
                             newTotal += smr.sharedMesh.vertexCount;
                         }
-                        Debug.Log($"[VixForge] Topology Welded: Erased {originalTotal - newTotal} vertices. Kinematic shielding active.");
+                        Debug.Log($"[VixForge] QEM Decimation pass: Erased {originalTotal - newTotal} vertices across {heavyMeshes.Count} meshes. Kinematic shielding active.");
                     }
                 });
             }
@@ -383,26 +468,27 @@ namespace VixenTools.Editor
 
             RunOfficialPerformanceScan(avatarRoot, report);
 
-            int processableTextures = 0;
+            bool isUpscale = resizeMode == ResizeMode.Upscale;
             foreach (var t in report.UniqueTextures)
-                if (IsProcessableTexture(t, out _)) processableTextures++;
-
-            bool showResizeTask = processableTextures > 0 &&
-                (resizeMode == ResizeMode.Upscale || report.TotalVRAM_MB > 40f);
-
-            if (showResizeTask)
             {
-                bool isUp = resizeMode == ResizeMode.Upscale;
-                report.OptimizationSuite.Add(new OptimizationTask
+                if (!IsProcessableTexture(t, out string texPath)) continue;
+
+                bool defaultProcess = isUpscale
+                    ? (t.width < targetTexSize || t.height < targetTexSize)
+                    : (t.width > targetTexSize || t.height > targetTexSize);
+
+                report.TextureNodes.Add(new TextureNode
                 {
-                    ID = isUp ? "VRAM_UPSCALE" : "VRAM_REDUCE",
-                    Label = $"{(isUp ? "Upscale" : "Downscale")} {processableTextures} Textures to {targetTexSize}px",
-                    Description = isUp
-                        ? "Uses ImageMagick with Mitchell filter + adaptive sharpening to upscale undersized textures. Skips textures already at or above target."
-                        : "Uses ImageMagick for destructive zero-cloud VRAM control. Hits all textures, including VRCFury variants.",
-                    Execute = () => ProcessTexturesWithMagick(report.UniqueTextures, targetTexSize, resizeMode)
+                    Texture = t,
+                    Name = t.name,
+                    AssetPath = texPath,
+                    Width = t.width,
+                    Height = t.height,
+                    Linear = VixenMagickKit.IsLinearOrNormalData(texPath),
+                    Process = defaultProcess
                 });
             }
+            report.TextureNodes.Sort((a, b) => ((long)b.Width * b.Height).CompareTo((long)a.Width * a.Height));
 
             foreach (var tex in report.UniqueTextures)
             {
@@ -625,10 +711,14 @@ namespace VixenTools.Editor
             return false;
         }
 
-        private static Bounds TransformBoundsToSpace(Bounds source, Transform sourceSpace, Transform targetSpace)
+        private struct PhysBoneReach
         {
-            if (sourceSpace == targetSpace || targetSpace == null) return source;
+            public Vector3 RootWorld;
+            public Dictionary<Transform, float> BoneDist;
+        }
 
+        private static Bounds TransformBoundsCorners(Bounds source, System.Func<Vector3, Vector3> map)
+        {
             Vector3 c = source.center;
             Vector3 ext = source.extents;
             Vector3 min = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
@@ -640,13 +730,80 @@ namespace VixenTools.Editor
                     (i & 1) == 0 ? -ext.x : ext.x,
                     (i & 2) == 0 ? -ext.y : ext.y,
                     (i & 4) == 0 ? -ext.z : ext.z);
-                Vector3 world = sourceSpace.TransformPoint(corner);
-                Vector3 target = targetSpace.InverseTransformPoint(world);
-                min = Vector3.Min(min, target);
-                max = Vector3.Max(max, target);
+                Vector3 p = map(corner);
+                min = Vector3.Min(min, p);
+                max = Vector3.Max(max, p);
             }
 
             return new Bounds((min + max) * 0.5f, max - min);
+        }
+
+        private static string Vector3Sig(Vector3 v) => $"{v.x:F3},{v.y:F3},{v.z:F3}";
+
+        private static System.Reflection.PropertyInfo _actualRootBoneProp;
+
+        private static Transform GetActualRootBone(SkinnedMeshRenderer smr)
+        {
+            if (smr == null) return null;
+            if (smr.rootBone != null) return smr.rootBone;
+
+            try
+            {
+                if (_actualRootBoneProp == null)
+                    _actualRootBoneProp = typeof(SkinnedMeshRenderer).GetProperty(
+                        "actualRootBone",
+                        System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public);
+
+                Transform t = _actualRootBoneProp != null ? _actualRootBoneProp.GetValue(smr) as Transform : null;
+                if (t != null) return t;
+            }
+            catch { }
+
+            return smr.transform;
+        }
+
+        private static bool TryComputeSkinnedLocalBounds(SkinnedMeshRenderer smr, Transform rootBone, out Bounds bounds)
+        {
+            bounds = default;
+            if (smr == null || smr.sharedMesh == null || rootBone == null) return false;
+
+            Mesh baked = new Mesh();
+            try
+            {
+                smr.BakeMesh(baked, false);
+                Vector3[] verts = baked.vertices;
+                if (verts == null || verts.Length == 0) return false;
+
+                Matrix4x4 m = rootBone.worldToLocalMatrix * smr.transform.localToWorldMatrix;
+                return AccumulateBounds(verts, i => m.MultiplyPoint3x4(verts[i]), out bounds);
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(baked);
+            }
+        }
+
+        private static bool AccumulateBounds(Vector3[] verts, System.Func<int, Vector3> map, out Bounds bounds)
+        {
+            bounds = default;
+            Vector3 min = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+            Vector3 max = new Vector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
+
+            for (int i = 0; i < verts.Length; i++)
+            {
+                Vector3 p = map(i);
+                if (float.IsNaN(p.x) || float.IsInfinity(p.x)) continue;
+                min = Vector3.Min(min, p);
+                max = Vector3.Max(max, p);
+            }
+
+            if (min.x > max.x) return false;
+            bounds = new Bounds((min + max) * 0.5f, max - min);
+            return true;
         }
 
         private static int CountTriangles(Mesh mesh)
@@ -670,6 +827,8 @@ namespace VixenTools.Editor
                 var overall = perfStats.GetPerformanceRatingForCategory(AvatarPerformanceCategory.Overall);
                 report.OfficialOverallRating = AvatarPerformanceStats.GetPerformanceRatingDisplayName(overall);
 
+                var offenders = BuildOfficialOffenderMap(avatarRoot, report);
+
                 foreach (AvatarPerformanceCategory category in System.Enum.GetValues(typeof(AvatarPerformanceCategory)))
                 {
                     if (category == AvatarPerformanceCategory.Overall ||
@@ -682,9 +841,13 @@ namespace VixenTools.Editor
 
                     if (level != PerformanceInfoDisplayLevel.None && level != PerformanceInfoDisplayLevel.Info)
                     {
-                        string msg = string.IsNullOrEmpty(errorText) ? statText : $"{statText} — {errorText}";
+                        string msg = string.IsNullOrEmpty(errorText) ? statText : $"{statText}: {errorText}";
                         if (!string.IsNullOrEmpty(msg))
-                            report.OfficialPerfWarnings.Add(new Anomaly { Description = msg, ContextObject = avatarRoot });
+                        {
+                            UnityEngine.Object ctx = (offenders.TryGetValue(category, out var offender) && offender != null)
+                                ? offender : avatarRoot;
+                            report.OfficialPerfWarnings.Add(new Anomaly { Description = msg, ContextObject = ctx });
+                        }
                     }
                 }
             }
@@ -692,6 +855,105 @@ namespace VixenTools.Editor
             {
                 Debug.LogWarning($"[VixForge] Official VRChat performance scan unavailable: {e.Message}");
             }
+        }
+
+        private static Dictionary<AvatarPerformanceCategory, UnityEngine.Object> BuildOfficialOffenderMap(GameObject avatarRoot, ValidationReport report)
+        {
+            var map = new Dictionary<AvatarPerformanceCategory, UnityEngine.Object>();
+            if (avatarRoot == null) return map;
+
+            var skinned = avatarRoot.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+            var meshRenderers = avatarRoot.GetComponentsInChildren<MeshRenderer>(true);
+
+            Renderer heaviestPoly = null; int heaviestTris = -1;
+            Renderer widestBounds = null; float widestExtent = -1f;
+            Renderer mostSlots = null; int mostSlotCount = -1;
+            SkinnedMeshRenderer smallestSkinned = null; int smallestTris = int.MaxValue;
+
+            void Consider(Renderer r, Mesh mesh)
+            {
+                if (r == null) return;
+                int tris = CountTriangles(mesh);
+                if (tris > heaviestTris) { heaviestTris = tris; heaviestPoly = r; }
+
+                float ext = r.bounds.size.magnitude;
+                if (ext > widestExtent) { widestExtent = ext; widestBounds = r; }
+
+                int slots = r.sharedMaterials != null ? r.sharedMaterials.Length : 0;
+                if (slots > mostSlotCount) { mostSlotCount = slots; mostSlots = r; }
+            }
+
+            foreach (var smr in skinned)
+            {
+                Consider(smr, smr.sharedMesh);
+                if (smr.sharedMesh != null)
+                {
+                    int tris = CountTriangles(smr.sharedMesh);
+                    if (tris < smallestTris) { smallestTris = tris; smallestSkinned = smr; }
+                }
+            }
+            foreach (var mr in meshRenderers)
+            {
+                var mf = mr.GetComponent<MeshFilter>();
+                Consider(mr, mf != null ? mf.sharedMesh : null);
+            }
+
+            if (heaviestPoly != null) map[AvatarPerformanceCategory.PolyCount] = heaviestPoly.gameObject;
+            if (widestBounds != null) map[AvatarPerformanceCategory.AABB] = widestBounds.gameObject;
+            if (mostSlots != null) map[AvatarPerformanceCategory.MaterialCount] = mostSlots.gameObject;
+            if (smallestSkinned != null) map[AvatarPerformanceCategory.SkinnedMeshCount] = smallestSkinned.gameObject;
+            if (meshRenderers.Length > 0) map[AvatarPerformanceCategory.MeshCount] = meshRenderers[0].gameObject;
+            if (report.ArmatureRoot != null) map[AvatarPerformanceCategory.BoneCount] = report.ArmatureRoot;
+
+            foreach (var an in avatarRoot.GetComponentsInChildren<Animator>(true))
+            {
+                if (an != null && an.gameObject != avatarRoot) { map[AvatarPerformanceCategory.AnimatorCount] = an.gameObject; break; }
+            }
+
+            VRCPhysBoneBase biggestPb = null; int biggestChain = -1;
+            foreach (var pb in avatarRoot.GetComponentsInChildren<VRCPhysBoneBase>(true))
+            {
+                Transform root = pb.GetRootTransform();
+                int chain = root != null ? root.GetComponentsInChildren<Transform>(true).Length : 0;
+                if (chain > biggestChain) { biggestChain = chain; biggestPb = pb; }
+            }
+            if (biggestPb != null)
+            {
+                map[AvatarPerformanceCategory.PhysBoneComponentCount] = biggestPb.gameObject;
+                map[AvatarPerformanceCategory.PhysBoneTransformCount] = biggestPb.gameObject;
+            }
+
+            AddFirstComponent<VRCPhysBoneColliderBase>(map, avatarRoot, AvatarPerformanceCategory.PhysBoneColliderCount);
+
+            var contact = (Component)avatarRoot.GetComponentInChildren<VRCContactReceiver>(true)
+                          ?? avatarRoot.GetComponentInChildren<VRCContactSender>(true);
+            if (contact != null) map[AvatarPerformanceCategory.ContactCount] = contact.gameObject;
+
+            AddFirstComponent<ParticleSystem>(map, avatarRoot, AvatarPerformanceCategory.ParticleSystemCount);
+            AddFirstComponent<TrailRenderer>(map, avatarRoot, AvatarPerformanceCategory.TrailRendererCount);
+            AddFirstComponent<LineRenderer>(map, avatarRoot, AvatarPerformanceCategory.LineRendererCount);
+            AddFirstComponent<Light>(map, avatarRoot, AvatarPerformanceCategory.LightCount);
+            AddFirstComponent<Cloth>(map, avatarRoot, AvatarPerformanceCategory.ClothCount);
+            AddFirstComponent<AudioSource>(map, avatarRoot, AvatarPerformanceCategory.AudioSourceCount);
+            AddFirstComponent<Rigidbody>(map, avatarRoot, AvatarPerformanceCategory.PhysicsRigidbodyCount);
+            AddFirstComponent<Collider>(map, avatarRoot, AvatarPerformanceCategory.PhysicsColliderCount);
+
+            Texture heaviestTex = null; long heaviestBytes = -1;
+            foreach (var tex in report.UniqueTextures)
+            {
+                if (tex == null) continue;
+                long bytes = Profiler.GetRuntimeMemorySizeLong(tex);
+                if (bytes > heaviestBytes) { heaviestBytes = bytes; heaviestTex = tex; }
+            }
+            if (heaviestTex != null) map[AvatarPerformanceCategory.TextureMegabytes] = heaviestTex;
+
+            return map;
+        }
+
+        private static void AddFirstComponent<T>(Dictionary<AvatarPerformanceCategory, UnityEngine.Object> map, GameObject root, AvatarPerformanceCategory cat) where T : Component
+        {
+            var c = root.GetComponentInChildren<T>(true);
+            if (c != null) map[cat] = c.gameObject;
         }
 
         private static bool IsProcessableTexture(Texture tex, out string assetPath)
@@ -704,66 +966,158 @@ namespace VixenTools.Editor
             return true;
         }
 
-        private static void ProcessTexturesWithMagick(HashSet<Texture> textures, int targetSize, ResizeMode mode)
+        public static void ProcessTexturesWithMagick(IEnumerable<Texture> textures, int targetSize, ResizeMode mode)
         {
+            bool downscale = mode == ResizeMode.Downscale;
+            string activeVerb = downscale ? "Downscaling" : "Upscaling";
+
+            var jobPaths = new List<string>();
+            var jobLinear = new List<bool>();
+            foreach (var tex in textures)
+            {
+                if (tex == null) continue;
+                if (!IsProcessableTexture(tex, out string path)) continue;
+                jobPaths.Add(path);
+                jobLinear.Add(VixenMagickKit.IsLinearOrNormalData(path));
+            }
+
+            int total = jobPaths.Count;
             int count = 0;
-            int processed = 0;
-            int total = textures.Count;
-            string activeVerb = mode == ResizeMode.Downscale ? "Downscaling" : "Upscaling";
+            int done = 0;
             bool canceled = false;
+
+            int workers = Mathf.Clamp(total, 1, Mathf.Min(8, Mathf.Max(1, System.Environment.ProcessorCount)));
+            ulong prevThreads = 0;
+            bool threadsChanged = false;
+            try
+            {
+                prevThreads = ResourceLimits.Thread;
+                ResourceLimits.Thread = (ulong)Mathf.Max(1, System.Environment.ProcessorCount / workers);
+                threadsChanged = true;
+            }
+            catch { }
 
             try
             {
-                foreach (var tex in textures)
+                var options = new ParallelOptions { MaxDegreeOfParallelism = workers };
+                for (int start = 0; start < total; start += workers)
                 {
-                    processed++;
-                    if (!IsProcessableTexture(tex, out string path)) continue;
-
                     if (EditorUtility.DisplayCancelableProgressBar(
-                            $"VixForge: {activeVerb} Textures",
-                            $"({processed}/{total}) {System.IO.Path.GetFileName(path)}",
-                            (float)processed / Mathf.Max(1, total)))
+                            $"VixForge: {activeVerb} Textures (x{workers})",
+                            $"({done}/{total})",
+                            total == 0 ? 1f : (float)done / total))
                     {
                         canceled = true;
-                        Debug.LogWarning($"[VixForge] {activeVerb} canceled at {processed}/{total}.");
                         break;
                     }
 
-                    try
+                    int end = Mathf.Min(start + workers, total);
+                    Parallel.For(start, end, options, i =>
                     {
-                        using (MagickImage img = new MagickImage(File.ReadAllBytes(path)))
-                        {
-                            bool needsWork = mode == ResizeMode.Downscale
-                                ? (img.Width > targetSize || img.Height > targetSize)
-                                : (img.Width < targetSize && img.Height < targetSize);
-
-                            if (needsWork)
-                            {
-                                img.FilterType = mode == ResizeMode.Downscale ? FilterType.Lanczos : FilterType.Mitchell;
-                                img.Resize(new MagickGeometry((uint)targetSize, (uint)targetSize));
-                                if (mode == ResizeMode.Upscale)
-                                {
-                                    img.AdaptiveSharpen(0, 0.6);
-                                }
-                                img.Strip();
-                                img.Write(path);
-                                count++;
-                            }
-                        }
-                        VixenMagickKit.TryLosslessOptimize(path);
-                    }
-                    catch (System.Exception e) { Debug.LogWarning($"[VixForge] Magick failed for {tex.name}: {e.Message}"); }
+                        if (VixenMagickKit.ProcessTextureFile(jobPaths[i], (uint)targetSize, jobLinear[i], downscale))
+                            Interlocked.Increment(ref count);
+                        Interlocked.Increment(ref done);
+                    });
                 }
             }
             finally
             {
+                if (threadsChanged) { try { ResourceLimits.Thread = prevThreads; } catch { } }
                 EditorUtility.ClearProgressBar();
             }
 
             AssetDatabase.Refresh();
-            string verb = mode == ResizeMode.Downscale ? "compressed" : "upscaled";
+            string verb = downscale ? "compressed" : "upscaled";
             string tail = canceled ? " (canceled)" : "";
-            Debug.Log($"[VixForge] Optimization Engine: {count} textures {verb}{tail}.");
+            Debug.Log($"[VixForge] Optimization Engine: {count} textures {verb}{tail} (parallel x{workers}).");
+        }
+    }
+
+    internal static class OptimizationStateCache
+    {
+        private const int VERSION = 1;
+        private const string Dir = "Assets/VixenTools/Asset Database/Optimization Suite";
+        private const string CachePath = Dir + "/OptimizationState.json";
+
+        [System.Serializable]
+        private class Record
+        {
+            public string key;
+            public string signature;
+            public int version;
+        }
+
+        [System.Serializable]
+        private class Cache
+        {
+            public List<Record> records = new List<Record>();
+        }
+
+        private static Cache _cache;
+        private static Dictionary<string, Record> _map;
+
+        public static string GetAvatarKey(GameObject avatarRoot)
+        {
+            if (avatarRoot == null) return "null";
+            try { return GlobalObjectId.GetGlobalObjectIdSlow(avatarRoot).ToString(); }
+            catch { return avatarRoot.name; }
+        }
+
+        private static void EnsureLoaded()
+        {
+            if (_map != null) return;
+            _map = new Dictionary<string, Record>();
+            _cache = new Cache();
+
+            string abs = System.IO.Path.GetFullPath(CachePath);
+            if (System.IO.File.Exists(abs))
+            {
+                try
+                {
+                    string json = System.IO.File.ReadAllText(abs);
+                    _cache = JsonUtility.FromJson<Cache>(json) ?? new Cache();
+                }
+                catch { _cache = new Cache(); }
+            }
+
+            if (_cache.records == null) _cache.records = new List<Record>();
+            foreach (var r in _cache.records)
+                if (r != null && !string.IsNullOrEmpty(r.key)) _map[r.key] = r;
+        }
+
+        private static string MakeKey(string avatarKey, string taskId) => avatarKey + "|" + taskId;
+
+        public static bool IsHandled(string avatarKey, string taskId, string signature)
+        {
+            EnsureLoaded();
+            if (!_map.TryGetValue(MakeKey(avatarKey, taskId), out var rec)) return false;
+            return rec.version == VERSION && string.Equals(rec.signature, signature, System.StringComparison.Ordinal);
+        }
+
+        public static void RecordHandled(string avatarKey, string taskId, string signature)
+        {
+            EnsureLoaded();
+            string key = MakeKey(avatarKey, taskId);
+            if (!_map.TryGetValue(key, out var rec))
+            {
+                rec = new Record { key = key };
+                _map[key] = rec;
+            }
+            rec.signature = signature;
+            rec.version = VERSION;
+            Save();
+        }
+
+        private static void Save()
+        {
+            _cache.records = _map.Values.ToList();
+
+            string abs = System.IO.Path.GetFullPath(CachePath);
+            string dir = System.IO.Path.GetDirectoryName(abs);
+            if (!System.IO.Directory.Exists(dir)) System.IO.Directory.CreateDirectory(dir);
+
+            System.IO.File.WriteAllText(abs, JsonUtility.ToJson(_cache, true));
+            AssetDatabase.ImportAsset(CachePath, ImportAssetOptions.ForceUpdate);
         }
     }
 
@@ -781,6 +1135,8 @@ namespace VixenTools.Editor
         private AvatarSDKValidator.PCPerformanceRank _targetRank = AvatarSDKValidator.PCPerformanceRank.Poor;
         private EnumField _modeEnum;
         private AvatarSDKValidator.ResizeMode _resizeMode = AvatarSDKValidator.ResizeMode.Downscale;
+        private SliderInt _decimateSlider;
+        private int _decimateTarget = 24000;
         private AvatarSDKValidator.ValidationReport _lastReport;
 
         [MenuItem("VixenTools/Avatars/Optimization Suite", priority = 40)]
@@ -853,7 +1209,7 @@ namespace VixenTools.Editor
             _targetField = new ObjectField("Avatar Root") { objectType = typeof(GameObject), allowSceneObjects = true };
             configPanel.Add(_targetField);
 
-            _sizePopup = new PopupField<int>("Optimization Target (px)", SizePresets, 1024);
+            _sizePopup = new PopupField<int>("Optimization Target (px)", SizePresets, Mathf.Max(0, SizePresets.IndexOf(1024)));
             configPanel.Add(_sizePopup);
 
             _modeEnum = new EnumField("Resize Mode", _resizeMode);
@@ -863,6 +1219,14 @@ namespace VixenTools.Editor
             _rankEnum = new EnumField("Target PC Performance Rank", _targetRank);
             _rankEnum.RegisterValueChangedCallback(e => _targetRank = (AvatarSDKValidator.PCPerformanceRank)e.newValue);
             configPanel.Add(_rankEnum);
+
+            _decimateSlider = new SliderInt("Decimation Target (tris / mesh)", 2000, 70000) { value = _decimateTarget, showInputField = true };
+            _decimateSlider.RegisterValueChangedCallback(e => _decimateTarget = e.newValue);
+            configPanel.Add(_decimateSlider);
+
+            var decimateHint = new Label("Higher = softer / more detail. Lower = smaller / more aggressive. Only meshes above this triangle count are decimated down to it.");
+            decimateHint.AddToClassList("md-p");
+            configPanel.Add(decimateHint);
 
             var scanBtn = new Button(ExecuteDeepScan) { text = "EXECUTE DEEP SYSTEM SCAN" };
             scanBtn.AddToClassList("cyber-action-btn");
@@ -880,7 +1244,7 @@ namespace VixenTools.Editor
             _resultsContainer.Clear();
             var target = _targetField.value as GameObject;
 
-            _lastReport = AvatarSDKValidator.RunFullSweep(target, _sizePopup.value, _targetRank, _resizeMode);
+            _lastReport = AvatarSDKValidator.RunFullSweep(target, _sizePopup.value, _targetRank, _resizeMode, _decimateTarget);
 
             var archPanel = CreateCyberPanel("Hierarchy Topology", "#00e5ff");
             if (_lastReport.ArmatureRoot != null)
@@ -1050,13 +1414,99 @@ namespace VixenTools.Editor
                 _resultsContainer.Add(suitePanel);
             }
 
+            if (_lastReport.TextureNodes.Count > 0)
+            {
+                bool isUp = _resizeMode == AvatarSDKValidator.ResizeMode.Upscale;
+                var texPanel = CreateCyberPanel("Texture Optimization Targeting", "#00e5ff");
+
+                var info = new Label($"Select which textures to {(isUp ? "upscale" : "downscale")} to {_sizePopup.value}px. Defaults pre-select only textures that need it, but you have full manual control. Sorted largest first; runs ImageMagick destructively on the checked set only.");
+                info.AddToClassList("md-p");
+                texPanel.Add(info);
+
+                var controlRow = new VisualElement { style = { flexDirection = FlexDirection.Row, marginTop = 10, marginBottom = 10 } };
+                int initialSelected = _lastReport.TextureNodes.Count(n => n.Process);
+                var texCountLabel = new Label($"Queued for ImageMagick: <color=#00ff66><b>{initialSelected}</b></color> / {_lastReport.TextureNodes.Count}") { enableRichText = true, style = { flexGrow = 1, unityTextAlign = TextAnchor.MiddleLeft } };
+                controlRow.Add(texCountLabel);
+
+                List<Toggle> texToggles = new List<Toggle>();
+
+                void UpdateTexCount()
+                {
+                    int c = _lastReport.TextureNodes.Count(n => n.Process);
+                    texCountLabel.text = $"Queued for ImageMagick: <color=#00ff66><b>{c}</b></color> / {_lastReport.TextureNodes.Count}";
+                }
+
+                var btnSelectAll = new Button(() => {
+                    _lastReport.TextureNodes.ForEach(n => n.Process = true);
+                    foreach (var t in texToggles) t.SetValueWithoutNotify(true);
+                    UpdateTexCount();
+                }) { text = "Select All" };
+                btnSelectAll.AddToClassList("data-tag-btn"); btnSelectAll.AddToClassList("data-tag-optimize");
+
+                var btnDeselectAll = new Button(() => {
+                    _lastReport.TextureNodes.ForEach(n => n.Process = false);
+                    foreach (var t in texToggles) t.SetValueWithoutNotify(false);
+                    UpdateTexCount();
+                }) { text = "Deselect All" };
+                btnDeselectAll.AddToClassList("data-tag-btn"); btnDeselectAll.AddToClassList("data-tag-warning");
+
+                controlRow.Add(btnSelectAll);
+                controlRow.Add(btnDeselectAll);
+                texPanel.Add(controlRow);
+
+                var texScroll = new ScrollView(ScrollViewMode.Vertical) { style = { maxHeight = 250, backgroundColor = new Color(0, 0, 0, 0.2f), paddingBottom = 5, paddingTop = 5, borderTopLeftRadius = 4, borderTopRightRadius = 4, borderBottomLeftRadius = 4, borderBottomRightRadius = 4 } };
+
+                foreach (var node in _lastReport.TextureNodes)
+                {
+                    var row = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, paddingLeft = 5, paddingRight = 5, paddingTop = 2, paddingBottom = 2 } };
+                    row.AddToClassList("md-row");
+
+                    var toggle = new Toggle { value = node.Process };
+                    texToggles.Add(toggle);
+                    toggle.RegisterValueChangedCallback(e => { node.Process = e.newValue; UpdateTexCount(); });
+                    row.Add(toggle);
+
+                    string linTag = node.Linear ? " <color=#ffaa00><i>[linear/data]</i></color>" : "";
+                    var lbl = new Label($"<b>{node.Name}</b> <color=#aaaaaa>({node.Width}x{node.Height})</color>{linTag}") { enableRichText = true, style = { flexGrow = 1 } };
+                    row.Add(lbl);
+
+                    var locateBtn = new Button(() => { EditorGUIUtility.PingObject(node.Texture); Selection.activeObject = node.Texture; }) { text = "LOCATE" };
+                    locateBtn.AddToClassList("data-tag-btn"); locateBtn.AddToClassList("data-tag-locate");
+                    row.Add(locateBtn);
+
+                    texScroll.Add(row);
+                }
+                texPanel.Add(texScroll);
+
+                var executeTexBtn = new Button(() => {
+                    var selected = _lastReport.TextureNodes.Where(n => n.Process && n.Texture != null).Select(n => n.Texture).ToList();
+                    if (selected.Count == 0)
+                    {
+                        Debug.LogWarning("[VixForge] No textures selected. Check at least one texture to resize.");
+                        return;
+                    }
+                    AvatarSDKValidator.ProcessTexturesWithMagick(selected, _sizePopup.value, _resizeMode);
+                    ExecuteDeepScan();
+                }) { text = isUp ? "EXECUTE TARGETED UPSCALE" : "EXECUTE TARGETED DOWNSCALE" };
+                executeTexBtn.AddToClassList("cyber-action-btn");
+                executeTexBtn.AddToClassList("cyan-btn");
+                texPanel.Add(executeTexBtn);
+
+                _resultsContainer.Add(texPanel);
+            }
+
             BuildPlatformResult("PC Windows Pipeline", _lastReport.IsPCUploadReady, _lastReport.PCErrors, _lastReport.PCPerformanceWarnings);
             BuildPlatformResult("Quest Android Pipeline", _lastReport.IsQuestUploadReady, _lastReport.QuestErrors, null);
         }
 
         private void ApplySelected()
         {
-            foreach (var task in _lastReport.OptimizationSuite.Where(t => t.IsSelected)) task.Execute?.Invoke();
+            foreach (var task in _lastReport.OptimizationSuite.Where(t => t.IsSelected))
+            {
+                task.Execute?.Invoke();
+                string sig = task.ComputeSignature != null ? task.ComputeSignature() : task.ID;
+                OptimizationStateCache.RecordHandled(_lastReport.AvatarKey, task.ID, sig);
+            }
             ExecuteDeepScan();
         }
 

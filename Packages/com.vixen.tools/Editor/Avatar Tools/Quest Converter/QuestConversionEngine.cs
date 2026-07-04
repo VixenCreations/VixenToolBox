@@ -972,21 +972,14 @@ namespace VixenTools.Editor
 
             try
             {
-                using (MagickImage img = new MagickImage(File.ReadAllBytes(sourcePath)))
+                using (MagickImage img = new MagickImage(File.ReadAllBytes(sourcePath), VixenMagickKit.DownscaleReadSettings((uint)targetSize)))
                 {
                     if (img.Width > targetSize || img.Height > targetSize)
                     {
-                        MagickGeometry size = new MagickGeometry((uint)targetSize, (uint)targetSize);
-                        size.IgnoreAspectRatio = false;
-
-                        if (!isNormalMap && !isLinear) img.ColorSpace = ImageMagick.ColorSpace.RGB;
-                        img.FilterType = FilterType.Lanczos;
-                        img.Resize(size);
-                        if (!isNormalMap && !isLinear) img.ColorSpace = ImageMagick.ColorSpace.sRGB;
-
-                        img.AdaptiveSharpen(0, 1.0);
+                        bool linear = isNormalMap || isLinear;
+                        VixenMagickKit.HighQualityResize(img, (uint)targetSize, (uint)targetSize, linear, FilterType.Lanczos, true, 1.0);
                     }
-                    img.Quality = 100;
+                    VixenMagickKit.ApplyOptimalEncoding(img);
                     img.Write(newPath);
                 }
                 VixenMagickKit.TryLosslessOptimize(newPath);

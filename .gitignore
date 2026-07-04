@@ -61,7 +61,6 @@ crashlytics-build.properties
 .idea/.idea.vpm-package-maker/.idea
 .idea
 .vscode
-*.meta
 /UserSettings
 /Assets/VixenTools/Badges/Template Files/Custom_Base
 Assets/Default.unity

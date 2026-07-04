@@ -76,6 +76,16 @@
                 VPM Registry
             </fluent-anchor>
 
+            <fluent-anchor href="about.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                About Us
+            </fluent-anchor>
+
+            <fluent-anchor href="news.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v13H4a2 2 0 0 0-2 2 2 2 0 0 0 2 2z"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8z"></path></svg>
+                News
+            </fluent-anchor>
+
             <fluent-anchor href="ai-transparency.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                 AI Transparency
@@ -136,7 +146,7 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
-                        <fluent-option value="v2.9.0">v2.9.0</fluent-option>
+                        <fluent-option value="v2.10.0">v2.10.0</fluent-option>
                         <fluent-option value="v2.8.1">v2.8.1</fluent-option>
                         <fluent-option value="v2.8.0">v2.8.0</fluent-option>
                         <fluent-option value="v2.7.0">v2.7.0</fluent-option>
@@ -178,24 +188,34 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
-                <div class="changelog-entry" data-version="v2.9.0">
-                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.9.0 - 2026-06-29</h5>
-                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Decals arrive: a four-layer, in-scene-placed decal system for logos, stickers, brand art and tattoos on the latex, a small pair of realistic-lighting refinements, plus a locking fix that keeps the procedural effects intact through Thry's optimizer. Both shaders. Built-in Render Pipeline / VRChat only, as always.</em></p>
+                <div class="changelog-entry" data-version="v2.10.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.10.0 - 2026-07-04</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A combined release. VixForge Interactive and Enigma Industries join forces; the Latex Ultra shaders gain an in-scene four-layer decal system and two realistic-lighting refinements, re-sync to the current upstream VRC Light Volumes revision, and fix two Thry-locking regressions that dropped AudioLink and the procedural effect passes; and the Avatar Optimization Suite gets a ground-up overhaul with a real QEM mesh decimator, correct per-mesh bounds fitting, precise Locate navigation, selective texture targeting, and a per-avatar state flag. Built-in Render Pipeline / VRChat only, as always.</em></p>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>News Tab &amp; Enigma Industries Partnership (VixForge Hub):</strong> VixForge Interactive and Enigma Industries (the next chapter of Club Enigma) have partnered - two studios pooling tools, community, and immersive-world experience for VRChat. The VixForge Hub now opens on a new front-and-centre News tab with the full announcement and one-click buttons to the write-up, Enigma's Discord, and Enigma's VRChat group.</li>
+                        <li class="mb-2"><strong>QEM Mesh Decimation (Avatar Optimization Suite):</strong> A real Quadric Error Metric edge-collapse decimator (Garland-Heckbert), the same class of algorithm as Blender's Decimate, replaces the old "smoothweld" that could only merge duplicate seam vertices. It drives each heavy mesh toward a triangle target while preventing face flips, rejecting sliver triangles, and preserving UV / normal seams, material (submesh) boundaries, and open borders. It locks the eye / mouth / teeth submeshes and the hand bones, interpolates UVs, vertex colours and bone weights across every collapse, and remaps every blendshape. Applied non-destructively (a new patched mesh, reversible with undo).</li>
+                        <li class="mb-2"><strong>Decimation Target Slider (Avatar Optimization Suite):</strong> A new Decimation Target (tris / mesh) slider with a typed input box controls how aggressive the decimation is. Higher keeps more detail (softer); lower is smaller and more aggressive. Only meshes above the target are decimated, each down to the target.</li>
+                        <li class="mb-2"><strong>Selective Texture Targeting (Avatar Optimization Suite):</strong> The blanket "downscale everything" pass is replaced by a per-texture targeting panel. Every texture gets its own checkbox, dimensions, a linear/data tag, and a Locate button, plus Select All / Deselect All and a live count, so you pick exactly which textures to resize instead of processing them all. Smart defaults pre-select only textures that need it.</li>
+                        <li class="mb-2"><strong>Per-Avatar Optimization State Flag (Avatar Optimization Suite):</strong> A versioned per-avatar cache (mirroring the World Engine's lookup cache) records which Destructive Topology fixes have been applied, so a task clears from the list after a pass instead of re-listing forever. It only re-surfaces when the avatar actually changes or the target slider moves.</li>
                         <li class="mb-2"><strong>Four-Layer Decals (Both Shaders):</strong> A new Decals section places up to four independent decals on the material, each positioned right in the Scene view by dragging the gizmo handles. Per layer you get tint, position / scale / rotation (with optional spin), side offsets, a UV source, a packed RGBA mask channel, eight colour blend modes (Normal, Darken, Multiply, Lighten, Screen, Add, Subtract, Overlay), an emission glow, a smoothness offset so a sticker can read glossier or more matte than the latex, mirror and symmetry, and a clamp-or-tile toggle. All four decals share one texture sampler, so they add no sampler-budget cost. Off by default, so existing materials are unchanged.</li>
                         <li class="mb-2"><strong>Horizon Specular Occlusion (Both Shaders):</strong> A new control that fades reflections a normal map would otherwise leak through the surface at grazing angles, across reflection probes, Light Volumes, LTCGI and VRSL. Full by default; set to 0 to disable.</li>
                         <li class="mb-2"><strong>Specular Highlight Clamp (Both Shaders):</strong> A new control that caps direct point-light highlight intensity to tame sparkle on very glossy latex. Effectively off by default; lower it to clamp harder.</li>
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
-                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
-                        <li class="mb-2"><strong>Realistic Lighting, Refined (Both Shaders):</strong> The two controls above are surgical, opt-in additions to the existing realistic lighting model. Their defaults reproduce the previous look exactly, so nothing changes until you reach for them.</li>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-2" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Realistic Lighting, Refined (Both Shaders):</strong> The Horizon Specular Occlusion and Specular Highlight Clamp controls above are surgical, opt-in additions to the existing realistic lighting model. Their defaults reproduce the previous look exactly, so nothing changes until you reach for them.</li>
+                        <li class="mb-2"><strong>VRC Light Volumes Re-Sync (Both Shaders):</strong> Re-synced the vendored Light Volumes include across this cycle's upstream revisions - a structural performance pass that also reworked speculars to be more physically correct and light-source-size aware (larger point, spot, and area sources fall off more softly), followed by the current early-July revision that compiles faster, folds in upstream compile-error fixes, and swaps in a cheaper fast-exp path. The one entry point whose signature changed (the point-light sampler, whose parameters were reordered) was updated at both call sites to preserve the previous look exactly; every other entry point is unchanged. No new properties, samplers, textures, keywords, or shader variants, and existing materials and worlds render unchanged.</li>
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>"Locate" Now Jumps to the Real Offender (Avatar Optimization Suite):</strong> Every Locate button on a VRChat official performance warning used to just ping the avatar root. Each category now resolves to the actual worst offender - the heaviest renderer for the triangle count, the widest-reaching renderer for the bounding box, the renderer with the most material slots, the largest chain for PhysBone counts, the first matching component for collider / contact / light / particle / cloth / audio counts, and the heaviest texture for VRAM - so Locate takes you straight to the thing to fix.</li>
+                        <li class="mb-2"><strong>Per-Mesh Bounds Fit Was in the Wrong Space (Avatar Optimization Suite):</strong> On avatars whose body is skinned across a scaled armature, the auto-fit produced a culling box roughly twice the correct size and mis-centred, because it fit against the renderer's own transform while Unity stores and culls a Skinned Mesh Renderer's bounds in the root bone's space. It now resolves the true root bone and bakes the mesh through Unity's own skinner, so the fitted box matches Unity's default tight bounds.</li>
+                        <li class="mb-2"><strong>PhysBone Swing Inflation Over-Bloated Static Meshes (Avatar Optimization Suite):</strong> The bounds swing-reach inflation was applied whenever a mesh touched any bone in a PhysBone chain (including the anchored root) and tested against the whole skeleton, so a body would get inflated by an unrelated mane or tail chain it wasn't even weighted to. Inflation is now filtered to bones the mesh actually has vertex weight on, and scales with how far down the swinging chain that weight sits.</li>
+                        <li class="mb-2"><strong>AudioLink No Longer Fails to Compile on Locked Materials (Both Shaders):</strong> Locking a material with the Poiyomi / Thry optimizer (required before an avatar upload) could drop AudioLink from every shader pass except the first, so affected materials failed to compile with an "undeclared identifier" error. The optimizer inlines each shared include only once per shader, and the material had previously pulled the AudioLink helper in separately inside each pass, so only the first pass kept it. The AudioLink include is now hoisted into a single shared block that the engine applies to every pass, so all passes get it after locking. Affects both shaders; re-lock any affected material to pick it up. No new controls, no cost, and unlocked materials are unchanged.</li>
                         <li class="mb-2"><strong>Locking No Longer Breaks the Procedural Effect Passes (Both Shaders):</strong> Locking a material with the Thry optimizer (required before an avatar upload, so unlocked shaders are not stripped from the build) was silently disabling the geometry stage of the procedural effect passes - the water drips, the melting goo, the AudioLink HUD ring, and the fracture shards and trails - leaving them to render incorrectly or fail to compile. The shader now tells the optimizer to keep its geometry passes when locking, so every effect survives the lock intact. No new controls, no cost, and unlocked materials are unchanged; re-lock any affected material to pick up the fix.</li>
                     </ul>
                 </div>

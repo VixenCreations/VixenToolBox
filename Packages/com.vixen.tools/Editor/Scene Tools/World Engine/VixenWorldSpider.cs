@@ -3997,16 +3997,11 @@ namespace VixenTools.Editor
             if (VixenMagickKit.IsProtectedAsset(assetPath)) return false;
             try
             {
-                using (var img = new MagickImage(File.ReadAllBytes(fullPath)))
+                using (var img = new MagickImage(File.ReadAllBytes(fullPath), VixenMagickKit.DownscaleReadSettings((uint)maxWidth)))
                 {
-                    img.FilterType = FilterType.Lanczos;
-                    img.Resize(new MagickGeometry((uint)maxWidth, (uint)maxHeight)
-                    {
-                        IgnoreAspectRatio = false,
-                        Greater = true
-                    });
-
-                    img.Strip();
+                    bool linear = VixenMagickKit.IsLinearOrNormalData(assetPath);
+                    VixenMagickKit.HighQualityResize(img, (uint)maxWidth, (uint)maxHeight, linear, FilterType.Lanczos, true, 0.5);
+                    VixenMagickKit.ApplyOptimalEncoding(img);
                     img.Write(fullPath);
                 }
                 VixenMagickKit.TryLosslessOptimize(fullPath);
@@ -4028,11 +4023,7 @@ namespace VixenTools.Editor
             {
                 using (var img = new MagickImage(File.ReadAllBytes(fullPath)))
                 {
-                    img.Strip();
-
-                    if (img.Format == MagickFormat.Png) img.Quality = 90;
-                    else img.Quality = 85;
-
+                    VixenMagickKit.ApplyOptimalEncoding(img);
                     img.Write(fullPath);
                 }
                 VixenMagickKit.TryLosslessOptimize(fullPath);
