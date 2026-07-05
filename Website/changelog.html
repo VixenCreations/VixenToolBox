@@ -146,6 +146,7 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
+                        <fluent-option value="v2.10.1">v2.10.1</fluent-option>
                         <fluent-option value="v2.10.0">v2.10.0</fluent-option>
                         <fluent-option value="v2.8.1">v2.8.1</fluent-option>
                         <fluent-option value="v2.8.0">v2.8.0</fluent-option>
@@ -188,7 +189,23 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
-                <div class="changelog-entry" data-version="v2.10.0">
+                <div class="changelog-entry" data-version="v2.10.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.10.1 - 2026-07-05</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A same-cycle hotfix that finishes the per-mesh bounds work from 2.10.0. The auto-fit could still mis-place the culling box on meshes carrying a Blender import scale (they would vanish up close), and its PhysBone swing inflation over-bloated body meshes genuinely weighted to a far-swinging bone. Both are resolved by fitting to Unity's own posed bounds and dropping the swing-reach heuristic entirely. Built-in Render Pipeline / VRChat only.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-3" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Automated Animated Material Swap Re-Mapping (VixForge Quest Engine):</strong> The Quest conversion pipeline now natively supports animated material swaps. It scans both standard Animators and <code>VRCAvatarDescriptor</code> custom layers (Base and Special) for animation clips that swap materials at runtime. When detected, it clones the source <code>AnimatorController</code> (saving it as <code>_Quest.controller</code>) and deep-copies the affected <code>.anim</code> clips. It then rewires the object reference curves within the cloned clips to point to the new Quest-optimized materials, and recursively rebuilds the state machines and blend trees to reference the remapped clips. This completely eliminates the need for manual controller duplication and clip editing when porting avatars with material-based toggles or effects.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Auto-Fit Bounds No Longer Mis-Places the Culling Box (Avatar Optimization Suite):</strong> The 2.10.0 fit snapshotted each mesh through <code>BakeMesh</code> and re-projected it with a hand-built matrix. On FBX meshes carrying a Blender import scale (e.g. 0.0254 or 2.54), that applied the scale a second time - collapsing the box and shoving its centre far off (a body read a centre near Y = -38 in root-bone space), so the mesh frustum-culled and disappeared the moment the camera drew close. It now reads Unity's own posed <code>localBounds</code> directly (via a momentary Update-When-Offscreen toggle), which is already in the root bone's space, so the fitted box always matches what Unity actually culls against.</li>
+                        <li class="mb-2"><strong>PhysBone Swing Inflation Removed (Avatar Optimization Suite):</strong> The swing-reach inflation added in 2.10.0 still over-bloated compact meshes: a body legitimately weighted to a bone that a chain can swing about a metre received a guaranteed-worst-case box roughly double its true size, and its centre collapsed toward the hips. Guaranteed swing coverage is too conservative for static culling bounds, and swinging appendages (tail, hair, ears) are separate meshes with their own bounds anyway, so the swing-reach pass is removed. Each renderer now fits to its posed geometry plus a small (about 10%) margin for animation range, matching Unity's default tight bounds.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="v2.10.0" hidden>
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.10.0 - 2026-07-04</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A combined release. VixForge Interactive and Enigma Industries join forces; the Latex Ultra shaders gain an in-scene four-layer decal system and two realistic-lighting refinements, re-sync to the current upstream VRC Light Volumes revision, and fix two Thry-locking regressions that dropped AudioLink and the procedural effect passes; and the Avatar Optimization Suite gets a ground-up overhaul with a real QEM mesh decimator, correct per-mesh bounds fitting, precise Locate navigation, selective texture targeting, and a per-avatar state flag. Built-in Render Pipeline / VRChat only, as always.</em></p>
 

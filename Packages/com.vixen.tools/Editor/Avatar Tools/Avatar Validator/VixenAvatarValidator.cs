@@ -227,7 +227,7 @@ namespace VixenTools.Editor
             {
                 ID = "OPTIMIZE_BOUNDS",
                 Label = $"<color=#00e5ff>Auto-Fit Per-Mesh Avatar Bounds</color>",
-                Description = "Vixen Core Fix: Fits each renderer's culling bounds to its real skinned geometry, sampled across every bound bone and bind pose so meshes driven by many bones or a scaled armature measure their true size (not the authored mesh AABB). Adds a small skinning margin and, for VRCPhysBone-driven meshes, the real swing reach of the affecting chains (no blunt multipliers). Uses a scale-aware world-space floor so meshes authored at odd scales aren't over-inflated, and sets Update When Offscreen off since VRChat culls on the static bounds.",
+                Description = "Vixen Core Fix: Fits each renderer's culling bounds to its real skinned geometry in root-bone space (Unity's own posed AABB, so meshes driven by many bones or a scaled armature measure their true size, not the authored mesh AABB). Adds a small skinning margin for animation range. Uses a scale-aware world-space floor so meshes authored at odd scales aren't over-inflated, and sets Update When Offscreen off since VRChat culls on the static bounds.",
                 ComputeSignature = () => {
                     var sb = new System.Text.StringBuilder("bounds:");
                     foreach (var s in skinnedRenderers)
@@ -244,20 +244,7 @@ namespace VixenTools.Editor
                     int meshesProcessed = 0;
 
                     const float staticMargin = 1.1f;
-                    const float physBoneReachSafety = 1.15f;
                     const float minWorldFloor = 0.01f;
-
-                    var physBones = new List<PhysBoneReach>();
-                    foreach (var pb in avatarRoot.GetComponentsInChildren<VRCPhysBoneBase>(true))
-                    {
-                        Transform pbRoot = pb.GetRootTransform();
-                        if (pbRoot == null) continue;
-
-                        var boneDist = new Dictionary<Transform, float>();
-                        foreach (var t in pbRoot.GetComponentsInChildren<Transform>(true))
-                            boneDist[t] = Vector3.Distance(pbRoot.position, t.position);
-                        physBones.Add(new PhysBoneReach { RootWorld = pbRoot.position, BoneDist = boneDist });
-                    }
 
                     foreach (var smr in skinnedRenderers)
                     {
@@ -281,46 +268,26 @@ namespace VixenTools.Editor
                         }
 
                         if (!TryComputeSkinnedLocalBounds(smr, rootBone, out Bounds fitted))
-                            fitted = TransformBoundsCorners(smr.sharedMesh.bounds, p => rootBone.InverseTransformPoint(smr.transform.TransformPoint(p)));
-                        fitted.Expand(fitted.size * (staticMargin - 1f));
-
-                        if (smr.bones != null && smr.bones.Length > 0 && physBones.Count > 0)
                         {
-                            HashSet<Transform> weightedBones = new HashSet<Transform>();
-                            BoneWeight[] meshWeights = smr.sharedMesh.boneWeights;
-                            if (meshWeights != null && meshWeights.Length > 0)
+                            bool hasBones = false;
+                            foreach (var b in smr.bones)
                             {
-                                HashSet<int> wIdx = new HashSet<int>();
-                                foreach (var w in meshWeights)
-                                {
-                                    if (w.weight0 > 0f) wIdx.Add(w.boneIndex0);
-                                    if (w.weight1 > 0f) wIdx.Add(w.boneIndex1);
-                                    if (w.weight2 > 0f) wIdx.Add(w.boneIndex2);
-                                    if (w.weight3 > 0f) wIdx.Add(w.boneIndex3);
-                                }
-                                for (int bi = 0; bi < smr.bones.Length; bi++)
-                                    if (wIdx.Contains(bi) && smr.bones[bi] != null) weightedBones.Add(smr.bones[bi]);
+                                if (b == null) continue;
+                                Vector3 localPos = rootBone.InverseTransformPoint(b.position);
+                                if (!hasBones) { fitted = new Bounds(localPos, Vector3.zero); hasBones = true; }
+                                else fitted.Encapsulate(localPos);
                             }
-                            else
+            
+                            if (hasBones) 
                             {
-                                foreach (var b in smr.bones) if (b != null) weightedBones.Add(b);
-                            }
-
-                            foreach (var pb in physBones)
+                                fitted.Expand(smr.sharedMesh.bounds.extents.magnitude);
+                            } 
+                            else 
                             {
-                                float relevantReach = 0f;
-                                foreach (var b in weightedBones)
-                                {
-                                    if (pb.BoneDist.TryGetValue(b, out float d) && d > relevantReach)
-                                        relevantReach = d;
-                                }
-                                if (relevantReach > 0f)
-                                {
-                                    Bounds pbWorld = new Bounds(pb.RootWorld, Vector3.one * (relevantReach * physBoneReachSafety * 2f));
-                                    fitted.Encapsulate(TransformBoundsCorners(pbWorld, rootBone.InverseTransformPoint));
-                                }
+                                fitted = TransformBoundsCorners(smr.sharedMesh.bounds, p => rootBone.InverseTransformPoint(smr.transform.TransformPoint(p)));
                             }
                         }
+                        fitted.Expand(fitted.size * (staticMargin - 1f));
 
                         Vector3 size = fitted.size;
                         size.x = Mathf.Max(size.x, localFloor.x);
@@ -331,7 +298,7 @@ namespace VixenTools.Editor
                         smr.localBounds = fitted;
                         meshesProcessed++;
                     }
-                    Debug.Log($"[VixForge] Geometry Culling System updated: {meshesProcessed} renderers fitted (true skinned AABB across all bound bones + real PhysBone swing reach).");
+                    Debug.Log($"[VixForge] Geometry Culling System updated: {meshesProcessed} renderers fitted (true skinned AABB in root-bone space with a small static margin).");
                 }
             });
 
@@ -711,12 +678,6 @@ namespace VixenTools.Editor
             return false;
         }
 
-        private struct PhysBoneReach
-        {
-            public Vector3 RootWorld;
-            public Dictionary<Transform, float> BoneDist;
-        }
-
         private static Bounds TransformBoundsCorners(Bounds source, System.Func<Vector3, Vector3> map)
         {
             Vector3 c = source.center;
@@ -767,43 +728,12 @@ namespace VixenTools.Editor
             bounds = default;
             if (smr == null || smr.sharedMesh == null || rootBone == null) return false;
 
-            Mesh baked = new Mesh();
-            try
-            {
-                smr.BakeMesh(baked, false);
-                Vector3[] verts = baked.vertices;
-                if (verts == null || verts.Length == 0) return false;
+            bool prevUpdateOffscreen = smr.updateWhenOffscreen;
+            smr.updateWhenOffscreen = true;
+            bounds = smr.localBounds;
+            smr.updateWhenOffscreen = prevUpdateOffscreen;
 
-                Matrix4x4 m = rootBone.worldToLocalMatrix * smr.transform.localToWorldMatrix;
-                return AccumulateBounds(verts, i => m.MultiplyPoint3x4(verts[i]), out bounds);
-            }
-            catch
-            {
-                return false;
-            }
-            finally
-            {
-                UnityEngine.Object.DestroyImmediate(baked);
-            }
-        }
-
-        private static bool AccumulateBounds(Vector3[] verts, System.Func<int, Vector3> map, out Bounds bounds)
-        {
-            bounds = default;
-            Vector3 min = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
-            Vector3 max = new Vector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
-
-            for (int i = 0; i < verts.Length; i++)
-            {
-                Vector3 p = map(i);
-                if (float.IsNaN(p.x) || float.IsInfinity(p.x)) continue;
-                min = Vector3.Min(min, p);
-                max = Vector3.Max(max, p);
-            }
-
-            if (min.x > max.x) return false;
-            bounds = new Bounds((min + max) * 0.5f, max - min);
-            return true;
+            return bounds.size.sqrMagnitude > 0f;
         }
 
         private static int CountTriangles(Mesh mesh)

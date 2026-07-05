@@ -109,23 +109,13 @@
 - **L125** - --- 2. DESTRUCTIVE TOPOLOGY ERASURE SYSTEM ---  <br/><sub>↳ before `var allTransforms = avatarRoot.GetComponentsInChildren<Transform>(true);`</sub>
 - **L164** - Task: Purge Orphaned Transforms  <br/><sub>↳ before `List<Transform> orphanedTransforms = new List<Transform>();`</sub>
 - **L187** - Task: Strip Disabled Components  <br/><sub>↳ before `List<Behaviour> disabledComponents = new List<Behaviour>();`</sub>
-- **L209** - Task: Per-Mesh Auto-Fit Bounds (PhysBone aware)  <br/><sub>↳ before `report.OptimizationSuite.Add(new OptimizationTask`</sub>
-- **L218** - 1.5x = +25% per side: covers normal animation drift on static meshes.  <br/><sub>↳ before `const float staticMargin = 1.5f;`</sub>
-- **L219** - 3.0x = +100% per side: covers PhysBone swing on hair/tail/cape/breast bones,  <br/><sub>↳ before `const float staticMargin = 1.5f;`</sub>
-- **L220** - which Unity's import-time bounds CANNOT account for (PhysBones move bones  <br/><sub>↳ before `const float staticMargin = 1.5f;`</sub>
-- **L221** - at runtime; the SMR docs explicitly list this as a case where the imported  <br/><sub>↳ before `const float staticMargin = 1.5f;`</sub>
-- **L222** - bounds may be exceeded).  <br/><sub>↳ before `const float staticMargin = 1.5f;`</sub>
-- **L223** - minBoundsSize floors near-zero bounds on degenerate meshes so they don't  <br/><sub>↳ before `const float staticMargin = 1.5f;`</sub>
-- **L224** - instantly cull.  <br/><sub>↳ before `const float staticMargin = 1.5f;`</sub>
-- **L229** - Walk every PhysBone's root subtree once and record affected bones.  <br/><sub>↳ before `var physBoneAffected = new HashSet<Transform>();`</sub>
-- **L230** - Any SMR whose bone list touches this set gets the larger margin.  <br/><sub>↳ before `var physBoneAffected = new HashSet<Transform>();`</sub>
-- **L246** - We strictly keep this false. updateWhenOffscreen=true recalculates bounds  <br/><sub>↳ before `smr.updateWhenOffscreen = false;`</sub>
-- **L247** - every frame which Unity's docs admit is fine but a perf killer in VRChat.  <br/><sub>↳ before `smr.updateWhenOffscreen = false;`</sub>
-- **L250** - Pick margin per-mesh based on whether this SMR is skinned to any PhysBone subtree.  <br/><sub>↳ before `bool hasPhysBone = false;`</sub>
-- **L264** - sharedMesh.bounds is the bind-pose AABB in MESH local space (the SMR's  <br/><sub>↳ before `Bounds bind = smr.sharedMesh.bounds;`</sub>
-- **L265** - transform space). smr.localBounds is in ROOT BONE local space - Unity  <br/><sub>↳ before `Bounds bind = smr.sharedMesh.bounds;`</sub>
-- **L266** - docs: "the bounds move along with [the root bone] transform". So we  <br/><sub>↳ before `Bounds bind = smr.sharedMesh.bounds;`</sub>
-- **L267** - convert by transforming the 8 corners through both spaces.  <br/><sub>↳ before `Bounds bind = smr.sharedMesh.bounds;`</sub>
+- **L226** - Task: Per-Mesh Auto-Fit Bounds (root-bone space). As of 2.10.1 the fit is the posed AABB + a small static margin only; the PhysBone swing-reach inflation (and its `PhysBoneReach` struct / weighted-bone scan) was removed for over-inflating body meshes genuinely weighted to a far-swinging bone.  <br/><sub>↳ before `AddTask(new OptimizationTask`</sub>
+- **L246** - staticMargin ~x1.1: small per-mesh margin for animation drift. This is the ONLY expansion applied to the base AABB now (no swing multiplier).  <br/><sub>↳ before `const float staticMargin = 1.1f;`</sub>
+- **L247** - minWorldFloor 0.01: floors near-zero bounds on degenerate meshes so they don't instantly cull.  <br/><sub>↳ before `const float minWorldFloor = 0.01f;`</sub>
+- **L254** - updateWhenOffscreen kept false at the end: true recomputes bounds every frame (fine per Unity docs, but a perf hit; VRChat culls on the static bounds).  <br/><sub>↳ before `smr.updateWhenOffscreen = false;`</sub>
+- **L257** - localFloor: `minWorldFloor / |rootBone.lossyScale|` per axis - NEVER a raw local number, since a local floor is multiplied by the root bone's lossy scale at render time (a tiny-scale mesh under a large root would balloon).  <br/><sub>↳ before `Vector3 localFloor = new Vector3(`</sub>
+- **L270** - Base AABB via `TryComputeSkinnedLocalBounds`: momentarily set `updateWhenOffscreen = true`, read Unity's own posed `smr.localBounds` (already in `actualRootBone` space, the exact space `localBounds` is stored/culled in), then restore the flag. No BakeMesh, no manual matrix - 2.10.0's `BakeMesh(baked,false)` + `rootBone.worldToLocalMatrix * smr.transform.localToWorldMatrix` double-applied a Blender import scale and mis-placed the centre (e.g. Y ~= -38), culling the mesh up close. Space verified against UnityCsReference SkinnedMeshRendererEditor, which draws `localBounds` inside `actualRootBone.localToWorldMatrix`.  <br/><sub>↳ before `if (!TryComputeSkinnedLocalBounds(smr, rootBone, out Bounds fitted))`</sub>
+- **L272** - Fallback when the posed read is degenerate: encapsulate the posed bone positions, else transform `sharedMesh.bounds` corners into root-bone-local via `rootBone.InverseTransformPoint(smr.transform.TransformPoint(p))` (bind-pose only, misses armature scale).  <br/><sub>↳ before `bool hasBones = false;`</sub>
 - **L290** - Task: Topology Erasure (Leaf Bone Weight Transfer)  <br/><sub>↳ before `List<Transform> deepLeafBones = new List<Transform>();`</sub>
 - **L322** - Task: Destructive Vertex Welding  <br/><sub>↳ before `List<SkinnedMeshRenderer> heavyMeshes = skinnedRenderers.Where(s => s.sharedMesh != null && CountTriangles(s.sharedMesh) > 15000).ToList();`</sub>
 - **L340** - 1. Map protected material slots  <br/><sub>↳ before `HashSet<int> protectedSlots = new HashSet<int>();`</sub>

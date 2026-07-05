@@ -5,6 +5,20 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.10.1] - 2026-07-05
+
+*A same-cycle hotfix that finishes the per-mesh bounds work introduced in 2.10.0. The 2.10.0 auto-fit could still mis-place the culling box on meshes that carry a Blender import scale (they would vanish as you got close), and its PhysBone swing inflation over-bloated body meshes that are genuinely weighted to a far-swinging bone. Both are resolved by fitting to Unity's own posed bounds and dropping the swing-reach heuristic entirely. Built-in Render Pipeline / VRChat only.*
+
+### Added
+
+* **Automated Animated Material Swap Re-Mapping (VixForge Quest Engine):** The Quest conversion pipeline now natively supports animated material swaps. It scans both standard Animators and `VRCAvatarDescriptor` custom layers (Base and Special) for animation clips that swap materials at runtime. When detected, it clones the source `AnimatorController` (saving it as `[Name]_Quest.controller`) and deep-copies the affected `.anim` clips. It then rewires the object reference curves within the cloned clips to point to the new Quest-optimized materials, and recursively rebuilds the state machines and blend trees to reference the remapped clips. This completely eliminates the need for manual controller duplication and clip editing when porting avatars with material-based toggles or effects.
+
+### Fixed
+
+* **Auto-Fit Bounds No Longer Mis-Places the Culling Box (Avatar Optimization Suite):** The 2.10.0 fit snapshotted each mesh through `BakeMesh` and re-projected it with a hand-built matrix. On FBX meshes carrying a Blender import scale (e.g. 0.0254 or 2.54), that applied the scale a second time - collapsing the box and shoving its centre far off (a body read a centre near Y = -38 in root-bone space), so the mesh frustum-culled and disappeared the moment the camera drew close. It now reads Unity's own posed `localBounds` directly (via a momentary Update-When-Offscreen toggle), which is already in the root bone's space, so the fitted box always matches what Unity actually culls against. Verified against the Unity editor source, which draws `localBounds` inside the root bone's transform.
+* **PhysBone Swing Inflation Removed (Avatar Optimization Suite):** The swing-reach inflation added in 2.10.0 still over-bloated compact meshes: a body legitimately weighted to a bone that a chain can swing about a metre received a guaranteed-worst-case box roughly double its true size, and its centre collapsed toward the hips. Guaranteed swing coverage is too conservative for static culling bounds, and swinging appendages (tail, hair, ears) are separate meshes with their own bounds anyway, so the swing-reach pass is removed. Each renderer now fits to its posed geometry plus a small (about 10%) margin for animation range, matching Unity's default tight bounds.
+
+***
 ## [2.10.0] - 2026-07-04
 
 *A combined release folding in this cycle's shader micro-updates alongside a ground-up overhaul of the Avatar Optimization Suite, and the Enigma Industries x VixForge Interactive partnership. On the shaders: an in-scene four-layer decal system, two realistic-lighting refinements, a re-sync to the current upstream VRC Light Volumes revision, and fixes for two Thry-locking regressions that dropped AudioLink and the procedural effect passes. On the tooling: a genuine QEM mesh decimator replaces the old duplicate-vertex welder, per-mesh bounds now fit in the correct space, the VRChat performance "Locate" buttons jump to the real offender instead of the avatar root, textures are downscaled selectively instead of in bulk, and a per-avatar state flag stops applied fixes from re-listing. Built-in Render Pipeline / VRChat only, as always.*

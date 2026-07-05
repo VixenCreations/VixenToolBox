@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Animations;
@@ -483,6 +484,13 @@ namespace VixenTools.Editor
                 }
             }
 
+            var scanDescriptor = _sourceAvatar.GetComponent<VRCAvatarDescriptor>();
+            if (scanDescriptor != null)
+            {
+                CollectLayerMaterials(scanDescriptor.baseAnimationLayers);
+                CollectLayerMaterials(scanDescriptor.specialAnimationLayers);
+            }
+
             foreach (var mono in _sourceAvatar.GetComponentsInChildren<MonoBehaviour>(true))
             {
                 if (mono != null && mono.GetType().Name.Contains("VRCFury"))
@@ -807,6 +815,9 @@ namespace VixenTools.Editor
                     }
                 }
 
+                EditorUtility.DisplayProgressBar("VixForge Quest Engine", "Re-Mapping Animated Material Swaps...", 0.75f);
+                RemapAnimatedMaterials(questClone, materialCache, avatarDir);
+
                 EditorUtility.DisplayProgressBar("VixForge Quest Engine", "Applying System Topology Overrides...", 0.8f);
 
                 ProcessDestruction(_scannedAnimators, questClone);
@@ -855,6 +866,190 @@ namespace VixenTools.Editor
                     }
                 }
             }
+        }
+
+        private void CollectLayerMaterials(VRCAvatarDescriptor.CustomAnimLayer[] layers)
+        {
+            if (layers == null) return;
+            foreach (var layer in layers)
+            {
+                if (layer.isDefault || layer.animatorController == null) continue;
+                var deps = EditorUtility.CollectDependencies(new UnityEngine.Object[] { layer.animatorController });
+                foreach (var dep in deps)
+                    if (dep is Material mat) _scannedMaterials.Add(mat);
+            }
+        }
+
+        private void RemapAnimatedMaterials(GameObject questClone, Dictionary<Material, Material> materialCache, string avatarDir)
+        {
+            if (questClone == null || materialCache == null || materialCache.Count == 0) return;
+
+            string animDir = $"{avatarDir}/Animations";
+            EnsureDirectoryExists(animDir);
+
+            var clipCache = new Dictionary<AnimationClip, AnimationClip>();
+            var controllerCache = new Dictionary<RuntimeAnimatorController, RuntimeAnimatorController>();
+
+            foreach (var animator in questClone.GetComponentsInChildren<Animator>(true))
+            {
+                if (animator.runtimeAnimatorController == null) continue;
+                var remapped = RemapControllerMaterials(animator.runtimeAnimatorController, materialCache, clipCache, controllerCache, animDir);
+                if (remapped != null && remapped != animator.runtimeAnimatorController)
+                {
+                    animator.runtimeAnimatorController = remapped;
+                    EditorUtility.SetDirty(animator);
+                }
+            }
+
+            var descriptor = questClone.GetComponent<VRCAvatarDescriptor>();
+            if (descriptor != null)
+            {
+                bool descDirty = false;
+                descDirty |= RemapDescriptorLayers(descriptor.baseAnimationLayers, materialCache, clipCache, controllerCache, animDir);
+                descDirty |= RemapDescriptorLayers(descriptor.specialAnimationLayers, materialCache, clipCache, controllerCache, animDir);
+                if (descDirty) EditorUtility.SetDirty(descriptor);
+            }
+        }
+
+        private bool RemapDescriptorLayers(VRCAvatarDescriptor.CustomAnimLayer[] layers, Dictionary<Material, Material> materialCache, Dictionary<AnimationClip, AnimationClip> clipCache, Dictionary<RuntimeAnimatorController, RuntimeAnimatorController> controllerCache, string animDir)
+        {
+            if (layers == null) return false;
+            bool changed = false;
+            for (int i = 0; i < layers.Length; i++)
+            {
+                if (layers[i].isDefault) continue;
+                var ctrl = layers[i].animatorController;
+                if (ctrl == null) continue;
+                var remapped = RemapControllerMaterials(ctrl, materialCache, clipCache, controllerCache, animDir);
+                if (remapped != null && remapped != ctrl)
+                {
+                    layers[i].animatorController = remapped;
+                    changed = true;
+                }
+            }
+            return changed;
+        }
+
+        private RuntimeAnimatorController RemapControllerMaterials(RuntimeAnimatorController controller, Dictionary<Material, Material> materialCache, Dictionary<AnimationClip, AnimationClip> clipCache, Dictionary<RuntimeAnimatorController, RuntimeAnimatorController> controllerCache, string animDir)
+        {
+            if (controller == null) return null;
+            if (controllerCache.TryGetValue(controller, out var cached)) return cached;
+
+            var toRemap = new List<AnimationClip>();
+            foreach (var clip in controller.animationClips)
+                if (clip != null && !toRemap.Contains(clip) && ClipReferencesSwappedMaterial(clip, materialCache))
+                    toRemap.Add(clip);
+
+            if (toRemap.Count == 0)
+            {
+                controllerCache[controller] = controller;
+                return controller;
+            }
+
+            foreach (var clip in toRemap)
+                if (!clipCache.ContainsKey(clip))
+                    clipCache[clip] = CloneClipWithRemappedMaterials(clip, materialCache, animDir);
+
+            string srcPath = AssetDatabase.GetAssetPath(controller);
+            AnimatorController cloned = null;
+            if (!string.IsNullOrEmpty(srcPath) && srcPath.EndsWith(".controller"))
+            {
+                string newPath = AssetDatabase.GenerateUniqueAssetPath($"{animDir}/{controller.name}_Quest.controller");
+                if (AssetDatabase.CopyAsset(srcPath, newPath))
+                    cloned = AssetDatabase.LoadAssetAtPath<AnimatorController>(newPath);
+            }
+
+            if (cloned == null)
+            {
+                Debug.LogWarning($"[VixForge] Could not clone animator controller '{controller.name}' for Quest material remap (not a standalone .controller asset); its animated material swaps still reference PC materials.");
+                controllerCache[controller] = controller;
+                return controller;
+            }
+
+            RewireControllerClips(cloned, clipCache);
+            EditorUtility.SetDirty(cloned);
+            controllerCache[controller] = cloned;
+            return cloned;
+        }
+
+        private bool ClipReferencesSwappedMaterial(AnimationClip clip, Dictionary<Material, Material> materialCache)
+        {
+            foreach (var binding in AnimationUtility.GetObjectReferenceCurveBindings(clip))
+            {
+                var keys = AnimationUtility.GetObjectReferenceCurve(clip, binding);
+                if (keys == null) continue;
+                foreach (var key in keys)
+                    if (key.value is Material m && m != null && materialCache.ContainsKey(m))
+                        return true;
+            }
+            return false;
+        }
+
+        private AnimationClip CloneClipWithRemappedMaterials(AnimationClip clip, Dictionary<Material, Material> materialCache, string animDir)
+        {
+            AnimationClip questClip = UnityEngine.Object.Instantiate(clip);
+            questClip.name = $"{clip.name}_Quest";
+            string newPath = AssetDatabase.GenerateUniqueAssetPath($"{animDir}/{questClip.name}.anim");
+            AssetDatabase.CreateAsset(questClip, newPath);
+
+            foreach (var binding in AnimationUtility.GetObjectReferenceCurveBindings(questClip))
+            {
+                var keys = AnimationUtility.GetObjectReferenceCurve(questClip, binding);
+                if (keys == null) continue;
+                bool changed = false;
+                for (int i = 0; i < keys.Length; i++)
+                {
+                    if (keys[i].value is Material m && m != null && materialCache.TryGetValue(m, out var qMat))
+                    {
+                        keys[i].value = qMat;
+                        changed = true;
+                    }
+                }
+                if (changed)
+                    AnimationUtility.SetObjectReferenceCurve(questClip, binding, keys);
+            }
+            EditorUtility.SetDirty(questClip);
+            return questClip;
+        }
+
+        private void RewireControllerClips(AnimatorController controller, Dictionary<AnimationClip, AnimationClip> clipCache)
+        {
+            foreach (var layer in controller.layers)
+                RewireStateMachine(layer.stateMachine, clipCache);
+        }
+
+        private void RewireStateMachine(AnimatorStateMachine sm, Dictionary<AnimationClip, AnimationClip> clipCache)
+        {
+            if (sm == null) return;
+            foreach (var cs in sm.states)
+            {
+                if (cs.state == null) continue;
+                cs.state.motion = RewireMotion(cs.state.motion, clipCache);
+            }
+            foreach (var child in sm.stateMachines)
+                RewireStateMachine(child.stateMachine, clipCache);
+        }
+
+        private Motion RewireMotion(Motion motion, Dictionary<AnimationClip, AnimationClip> clipCache)
+        {
+            if (motion is AnimationClip clip)
+            {
+                if (clip != null && clipCache.TryGetValue(clip, out var q)) return q;
+                return motion;
+            }
+            if (motion is BlendTree tree)
+            {
+                var children = tree.children;
+                bool changed = false;
+                for (int i = 0; i < children.Length; i++)
+                {
+                    var newMotion = RewireMotion(children[i].motion, clipCache);
+                    if (newMotion != children[i].motion) { children[i].motion = newMotion; changed = true; }
+                }
+                if (changed) tree.children = children;
+                return tree;
+            }
+            return motion;
         }
 
         private void ProcessGameObjectPurge(List<TopologyNode> nodes, GameObject clone)
