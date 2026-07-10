@@ -5,6 +5,18 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.11.1] - 2026-07-10
+
+*A maintenance patch focused on restoring project compilation stability within Udon-managed world environments and refreshing our public web content.*
+
+### Changed
+
+* **Web Infrastructure and News Tab Updates:** Updated the official website and the existing news tab to roll out coverage for the 1,500 download milestone and keep documentation aligned with recent studio updates.
+
+### Removed
+
+* **AreaLitBroadcaster Component (World Diagnostics / Udon Infrastructure):** Temporarily removed the AreaLitBroadcaster component from the core distribution package. A critical dependency conflict between its automated editor scripting hooks and the UdonSharp assembly compilation pipeline was triggering a total compilation failure across the host project when imported into worlds. The component has been completely isolated and extracted from the main assembly loop to unblock world creators immediately. A rewritten, strictly decoupled version will be re-added in a future release once the Udon compilation lifecycle hooks are fully stabilized.
+
 ## [2.10.1] - 2026-07-05
 
 *A same-cycle hotfix that finishes the per-mesh bounds work introduced in 2.10.0. The 2.10.0 auto-fit could still mis-place the culling box on meshes that carry a Blender import scale (they would vanish as you got close), and its PhysBone swing inflation over-bloated body meshes that are genuinely weighted to a far-swinging bone. Both are resolved by fitting to Unity's own posed bounds and dropping the swing-reach heuristic entirely. Built-in Render Pipeline / VRChat only.*
