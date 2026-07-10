@@ -224,6 +224,7 @@
                     <a href="#base">BASE</a>
                     <a href="#normals">NORMAL MAPS</a>
                     <a href="#surface">SURFACE</a>
+                    <a href="#lightdetail">LIGHTING DETAIL</a>
                     <a href="#decals">DECALS</a>
                     <a href="#lighting">LIGHTING</a>
                     <a href="#polish">POLISH</a>
@@ -231,10 +232,7 @@
                     <a href="#goo">GOO EFFECTS</a>
                     <a href="#outlines">OUTLINES</a>
                     <a href="#emissions">EMISSIONS</a>
-                    <a href="#matcap-global">GLOBAL MATCAP</a>
-                    <a href="#matcap1">MATCAP 1</a>
-                    <a href="#matcap2">MATCAP 2</a>
-                    <a href="#matcap3">MATCAP 3</a>
+                    <a href="#matcaps">MATCAPS</a>
                     <a href="#lightvolumes">LIGHT VOLUMES</a>
                     <a href="#ltcgi">LTCGI</a>
                     <a href="#techsane">TECHNICALLYSANE</a>
@@ -250,7 +248,7 @@
             <div id="base" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">BASE</h2>
-                    <div class="badge">Section 1 of 19</div>
+                    <div class="badge">Section 1 of 17</div>
                 </div>
                 <p class="tab-desc">Render mode, albedo, brightness floor, and UV animation.</p>
 
@@ -288,7 +286,7 @@
             <div id="normals" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">NORMAL MAPS</h2>
-                    <div class="badge">Section 2 of 19</div>
+                    <div class="badge">Section 2 of 17</div>
                 </div>
                 <p class="tab-desc">Macro normal map and the secondary micro-detail normal.</p>
 
@@ -312,7 +310,7 @@
             <div id="surface" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">SURFACE</h2>
-                    <div class="badge">Section 3 of 19</div>
+                    <div class="badge">Section 3 of 17</div>
                 </div>
                 <p class="tab-desc">The packed PBR map, its channel routing, reflection / specular masks, and surface shaping.</p>
 
@@ -374,12 +372,38 @@
             </div>
 
             <!-- ========================= -->
+            <!-- LIGHTING DETAIL -->
+            <!-- ========================= -->
+            <div id="lightdetail" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">LIGHTING DETAIL</h2>
+                    <div class="badge">Section 4 of 17</div>
+                </div>
+                <p class="tab-desc">Dedicated occlusion and baked-shadow maps for extra realism. Both read through the Albedo sampler, so they cost nothing against the texture budget, and each stays off until you enable it.</p>
+
+                <h3 class="text-glow-pink opt-group">Occlusion Map</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable Occlusion Map</strong> - Turns on the dedicated ambient-occlusion map.</li>
+                    <li class="mb-2"><strong>Occlusion Map</strong> + <strong>Occlusion Channel</strong> - A grayscale map, and which channel to read, that darkens ambient and indirect light in creases and cavities on top of any occlusion already packed into the surface map. White = no change.</li>
+                    <li class="mb-2"><strong>Occlusion Strength</strong> - How strongly the map darkens the ambient / indirect lighting.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Baked Shadow Map</h3>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>Enable Baked Shadow Map</strong> - Turns on the baked contact-shadow map.</li>
+                    <li class="mb-2"><strong>Baked Shadow Map</strong> + <strong>Shadow Channel</strong> - A grayscale map, and which channel to read, painting regions that always read as shadowed - baked contact shadows under straps, seams and deep folds. Black = no shadow.</li>
+                    <li class="mb-2"><strong>Shadow Strength</strong> - How dark the baked-shadow regions get in direct light.</li>
+                    <li class="mb-2"><strong>Shadow Affects Ambient</strong> - How much the baked shadow also dims ambient / indirect light in those regions (0 = direct light only).</li>
+                </ul>
+            </div>
+
+            <!-- ========================= -->
             <!-- DECALS -->
             <!-- ========================= -->
             <div id="decals" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">DECALS</h2>
-                    <div class="badge">Section 4 of 19</div>
+                    <div class="badge">Section 5 of 17</div>
                 </div>
                 <p class="tab-desc">Place up to four logos, stickers, brand graphics or tattoos on the latex. Each layer is positioned right in the Scene view: select the material on your mesh and drag the on-screen gizmo handles to move, scale and rotate the decal. All four layers share one texture sampler, so they cost nothing against the texture budget, and the whole section stays off until you enable it.</p>
 
@@ -412,7 +436,7 @@
             <div id="lighting" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">LIGHTING</h2>
-                    <div class="badge">Section 5 of 19</div>
+                    <div class="badge">Section 6 of 17</div>
                 </div>
                 <p class="tab-desc">AO, contact shadow, rim, subsurface, anisotropy, transmission, and energy conservation. Most of these belong to the polish layer and are gated by <a href="#polish" style="color: var(--neon-cyan);">Enable Polish Layer</a>.</p>
 
@@ -460,7 +484,7 @@
             <div id="polish" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">POLISH</h2>
-                    <div class="badge">Section 6 of 19</div>
+                    <div class="badge">Section 7 of 17</div>
                 </div>
                 <p class="tab-desc">The polish master gate, clearcoat, and thin film.</p>
 
@@ -503,7 +527,7 @@
             <div id="wet" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">WET EFFECTS</h2>
-                    <div class="badge">Section 7 of 19</div>
+                    <div class="badge">Section 8 of 17</div>
                 </div>
                 <p class="tab-desc">The soaked look, animated run-off rivulets, and clear 3D drips.</p>
 
@@ -582,7 +606,7 @@
             <div id="goo" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">GOO EFFECTS</h2>
-                    <div class="badge">Section 8 of 19</div>
+                    <div class="badge">Section 9 of 17</div>
                 </div>
                 <p class="tab-desc">Gravity-aligned vertex melt that mimics runny / melting latex, with sway and floor collision.</p>
 
@@ -634,7 +658,7 @@
             <div id="outlines" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">OUTLINES</h2>
-                    <div class="badge">Section 9 of 19</div>
+                    <div class="badge">Section 10 of 17</div>
                 </div>
                 <p class="tab-desc">A keyword-gated backface-extrusion outline with an AudioLink emission boost.</p>
 
@@ -669,32 +693,22 @@
             <div id="emissions" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">EMISSIONS</h2>
-                    <div class="badge">Section 10 of 19</div>
+                    <div class="badge">Section 11 of 17</div>
                 </div>
-                <p class="tab-desc">Primary emission, a Poiyomi-style secondary layer, and the multi-region color mask.</p>
+                <p class="tab-desc">Five stacked emission layers and a multi-region colour mask. Every layer's AudioLink controls sit inline with that layer and appear only when AudioLink is enabled.</p>
 
-
-                <h3 class="text-glow-pink opt-group">Emission</h3>
+                <h3 class="text-glow-pink opt-group">Emission Exposure &amp; Layer 1</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Emission Color</strong> - HDR tint and intensity of the primary
-                        emission.</li>
-                    <li class="mb-2"><strong>Emission Map (RGB tint, A mask)</strong> - Texture defining where the
-                        surface emits.</li>
-                    <li class="mb-2"><strong>Emission Exposure</strong> - Extra exposure multiplier on top of the HDR
-                        color for fine bloom control.</li>
+                    <li class="mb-2"><strong>Emission Exposure (All Layers)</strong> - Extra exposure multiplier over every layer for fine bloom control.</li>
+                    <li class="mb-2"><strong>Emission Color</strong> + <strong>Emission Map (RGB tint, A mask)</strong> - HDR tint / intensity and the texture defining where layer 1 emits.</li>
+                    <li class="mb-2"><strong>Layer 1 AudioLink Band</strong> / <strong>Amplitude</strong> / <strong>Color Blend</strong> - Which AudioLink band drives layer 1, how strongly it pulses, and how much AudioLink's colour replaces the emission colour. Shown only when AudioLink is enabled.</li>
                 </ul>
 
-                <h3 class="text-glow-pink opt-group">Secondary Emission Layer</h3>
+                <h3 class="text-glow-pink opt-group">Emission Layers 2-5</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable Secondary Emission Layer</strong> - Adds a fully independent second
-                        emission layer.</li>
-                    <li class="mb-2"><strong>Emission Color 2</strong> + <strong>Emission Map 2</strong> +
-                        <strong>Emission 2 Mask Channel</strong> - HDR tint, texture, and mask channel for the second
-                        layer.</li>
-                    <li class="mb-2"><strong>Emission 2 AL Band</strong> - Which AudioLink band reacts on this layer, so
-                        you can route bass to one circuit and treble to another.</li>
-                    <li class="mb-2"><strong>Emission 2 AL Amplitude</strong> - How strongly that band modulates the
-                        second layer's brightness.</li>
+                    <li class="mb-2"><strong>Enable Secondary Emission Layer</strong> (and layers 3, 4, 5) - Each adds a fully independent extra emission layer, off by default.</li>
+                    <li class="mb-2"><strong>Emission Color 2</strong> + <strong>Emission Map 2</strong> + <strong>Emission 2 Mask Channel</strong> - HDR tint, texture, and mask channel for each layer (layers 3-5 mirror these controls).</li>
+                    <li class="mb-2"><strong>Layer AudioLink Band</strong> / <strong>Amplitude</strong> - Which AudioLink band reacts on each layer and how strongly it modulates that layer's brightness, so you can route bass to one and treble to another. Shown only when AudioLink is enabled.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Multi-Region Color Mask (RGB Zones)</h3>
@@ -718,114 +732,39 @@
             </div>
 
             <!-- ========================= -->
-            <!-- GLOBAL MATCAP SETTINGS -->
+            <!-- MATCAPS -->
             <!-- ========================= -->
-            <div id="matcap-global" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+            <div id="matcaps" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">GLOBAL MATCAP SETTINGS</h2>
-                    <div class="badge">Section 11 of 19</div>
+                    <h2 class="text-glow-cyan m-0">MATCAPS</h2>
+                    <div class="badge">Section 12 of 17</div>
                 </div>
-                <p class="tab-desc">The projection bias shared by all three matcap layers.</p>
+                <p class="tab-desc">Up to five stacked material-capture layers with a shared projection setting. Each layer has its own Tiling &amp; Movement and Offsets sub-sections, and can be frozen to read as part of the material rather than a sliding reflection.</p>
 
-                <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>MatCap Projection Bias (0=View, 1=Mesh)</strong> - Blends the matcap
-                        sampling between camera-aligned and mesh-aligned. <code>0</code> = pure camera-aligned
-                        (sliding / reflective, mirror-correct), <code>1</code> = pure mesh-UV-aligned (glued to the
-                        geometry). Higher values pin the matcap to the surface and reduce the "sliding" feeling when the
-                        camera moves. Applies to all three MatCap layers below.</li>
+                <h3 class="text-glow-pink opt-group">Global Settings</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>MatCap Projection Bias (0=View, 1=Mesh)</strong> - Blends matcap sampling between camera-aligned and mesh-aligned. 0 = pure camera-aligned (sliding / reflective), 1 = pure mesh-UV-aligned (glued to the geometry). Higher values pin the matcap to the surface and reduce the sliding feeling as the camera moves. Applies to every layer; for a per-layer lock, use that layer's Freeze instead.</li>
                 </ul>
-            </div>
 
-            <!-- ========================= -->
-            <!-- MATCAP 1 -->
-            <!-- ========================= -->
-            <div id="matcap1" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
-                <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">MATCAP 1</h2>
-                    <div class="badge">Section 12 of 19</div>
-                </div>
-                <p class="tab-desc">The first material-capture layer.</p>
-
-
-                <ul class="custom-list m-0 ps-4">
+                <h3 class="text-glow-pink opt-group">Matcap 1</h3>
+                <ul class="custom-list m-0 ps-4 mb-3">
                     <li class="mb-2"><strong>Enable MatCap 1 Layer</strong> - Turns layer 1 on.</li>
-                    <li class="mb-2"><strong>MatCap 1 Texture</strong> - The material-capture sphere texture for layer
-                        1.</li>
-                    <li class="mb-2"><strong>MatCap 1 Mask</strong> + <strong>MatCap 1 Mask Channel</strong> - Mask (and
-                        channel) restricting layer 1 to painted regions.</li>
-                    <li class="mb-2"><strong>MatCap 1 Tint</strong> - Color tint applied to the matcap.</li>
-                    <li class="mb-2"><strong>MatCap Rotation</strong> - Rotates the matcap sample around the view.</li>
-                    <li class="mb-2"><strong>MatCap 1 Intensity</strong> - Brightness / contribution of layer 1.</li>
-                    <li class="mb-2"><strong>MatCap 1 Tiling (XY)</strong> - Repeats the matcap around its centre (set the
-                        texture's Wrap Mode to Repeat to see tiling above 1).</li>
-                    <li class="mb-2"><strong>MatCap 1 Scroll (X pan, Y pan, Z spin)</strong> - Smooth continuous motion:
-                        X / Y pan and Z spins it in degrees per second. (0,0,0) is static.</li>
-                    <li class="mb-2"><strong>MatCap 1 Blend Mode</strong> - How layer 1 combines with the result:
-                        <code>Add</code>, <code>Replace</code>, or <code>Multiply</code>.</li>
-                    <li class="mb-2"><strong>MatCap 1 Lighting Mix</strong> - How much scene lighting modulates this layer
-                        versus reading it as a pure unlit overlay.</li>
+                    <li class="mb-2"><strong>MatCap 1 Texture</strong> - The material-capture sphere texture.</li>
+                    <li class="mb-2"><strong>MatCap 1 Mask</strong> + <strong>MatCap 1 Mask Channel</strong> - Mask, and which channel, restricting the layer to painted regions.</li>
+                    <li class="mb-2"><strong>MatCap 1 Tint</strong> - Colour tint applied to the matcap.</li>
+                    <li class="mb-2"><strong>MatCap 1 Rotation</strong> - Rotates the matcap sample.</li>
+                    <li class="mb-2"><strong>MatCap 1 Intensity</strong> - Brightness of the layer, now up to 6 for a strong, over-driven glow.</li>
+                    <li class="mb-2"><strong>MatCap 1 Blend Mode</strong> - How the layer combines: <code>Add</code>, <code>Replace</code>, or <code>Multiply</code>.</li>
+                    <li class="mb-2"><strong>MatCap 1 Lighting Mix</strong> - How much scene lighting modulates the layer versus reading it as a pure unlit overlay.</li>
                 </ul>
-            </div>
+                <p class="opt-note"><strong>Tiling &amp; Movement</strong> (sub-section) - <strong>Freeze (Lock to Material)</strong> stops the matcap sliding as the camera moves, so it reads as baked-in detail that turns naturally with the avatar (0 = classic reflective matcap). <strong>Tiling</strong> repeats the matcap around its centre. <strong>Scroll / Animate</strong> gives continuous motion: Pan X / Y move it over time (Pan Y = up / down), Spin rotates it, Speed scales the animation.</p>
+                <p class="opt-note mb-4"><strong>Offsets</strong> (sub-section) - <strong>Position Offset</strong> nudges the matcap statically: Offset X moves it side to side, Offset Y up and down.</p>
 
-            <!-- ========================= -->
-            <!-- MATCAP 2 -->
-            <!-- ========================= -->
-            <div id="matcap2" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
-                <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">MATCAP 2</h2>
-                    <div class="badge">Section 13 of 19</div>
-                </div>
-                <p class="tab-desc">A second matcap layer (multi-zone stack).</p>
+                <h3 class="text-glow-pink opt-group">Matcap 2</h3>
+                <p class="opt-note mb-4">A second matcap layer with the same controls (including its own Tiling &amp; Movement and Offsets sub-sections). Tip: drop a red/blue/black region mask into both Layer 1's and Layer 2's Mask, set Layer 1's channel to R and Layer 2's to B, and each colour zone shows a different matcap.</p>
 
-                <p class="opt-note">
-                    Drop a red/blue/black region mask into both Layer 1 Mask and Layer 2 Mask, then set Layer 1's channel
-                    to R and Layer 2's to B - each color zone now shows a different matcap.
-                </p>
-                <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Enable MatCap 2 Layer</strong> - Adds a second matcap layer.</li>
-                    <li class="mb-2"><strong>MatCap 2 Texture</strong> - The matcap sphere texture for layer 2.</li>
-                    <li class="mb-2"><strong>MatCap 2 Mask</strong> + <strong>MatCap 2 Mask Channel</strong> - Mask (and
-                        channel) restricting layer 2 to painted regions.</li>
-                    <li class="mb-2"><strong>MatCap 2 Tint</strong> - Color tint applied to layer 2.</li>
-                    <li class="mb-2"><strong>MatCap 2 Rotation</strong> - Rotates the layer 2 sample around the view.</li>
-                    <li class="mb-2"><strong>MatCap 2 Intensity</strong> - Brightness / contribution of layer 2.</li>
-                    <li class="mb-2"><strong>MatCap 2 Tiling (XY)</strong> - Repeats the layer 2 matcap around its
-                        centre.</li>
-                    <li class="mb-2"><strong>MatCap 2 Scroll (X pan, Y pan, Z spin)</strong> - X / Y pan and Z spins the
-                        layer 2 matcap over time; (0,0,0) is static.</li>
-                    <li class="mb-2"><strong>MatCap 2 Blend Mode</strong> - <code>Add</code>, <code>Replace</code>, or
-                        <code>Multiply</code>.</li>
-                    <li class="mb-2"><strong>MatCap 2 Lighting Mix</strong> - Scene-lighting modulation for layer 2.</li>
-                </ul>
-            </div>
-
-            <!-- ========================= -->
-            <!-- MATCAP 3 -->
-            <!-- ========================= -->
-            <div id="matcap3" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
-                <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">MATCAP 3</h2>
-                    <div class="badge">Section 14 of 19</div>
-                </div>
-                <p class="tab-desc">A third matcap layer, identical controls to layers 1 and 2 for a third stacked zone.</p>
-
-                <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Enable MatCap 3 Layer</strong> - Adds a third matcap layer.</li>
-                    <li class="mb-2"><strong>MatCap 3 Texture</strong> - The matcap sphere texture for layer 3.</li>
-                    <li class="mb-2"><strong>MatCap 3 Mask</strong> + <strong>MatCap 3 Mask Channel</strong> - Mask (and
-                        channel) restricting layer 3 to painted regions (defaults to the A channel so it stacks cleanly
-                        with layers 1 and 2).</li>
-                    <li class="mb-2"><strong>MatCap 3 Tint</strong> - Color tint applied to layer 3.</li>
-                    <li class="mb-2"><strong>MatCap 3 Rotation</strong> - Rotates the layer 3 sample around the view.</li>
-                    <li class="mb-2"><strong>MatCap 3 Intensity</strong> - Brightness / contribution of layer 3.</li>
-                    <li class="mb-2"><strong>MatCap 3 Tiling (XY)</strong> - Repeats the layer 3 matcap around its
-                        centre.</li>
-                    <li class="mb-2"><strong>MatCap 3 Scroll (X pan, Y pan, Z spin)</strong> - X / Y pan and Z spins the
-                        layer 3 matcap over time; (0,0,0) is static.</li>
-                    <li class="mb-2"><strong>MatCap 3 Blend Mode</strong> - <code>Add</code>, <code>Replace</code>, or
-                        <code>Multiply</code>.</li>
-                    <li class="mb-2"><strong>MatCap 3 Lighting Mix</strong> - Scene-lighting modulation for layer 3.</li>
-                </ul>
+                <h3 class="text-glow-pink opt-group">Matcap 3, 4 &amp; 5</h3>
+                <p class="opt-note">Three more matcap layers, each with the identical control set - texture, mask and channel, tint, rotation, intensity (up to 6), blend mode, lighting mix, plus its own Tiling &amp; Movement (with Freeze) and Offsets sub-sections - for additional stacked zones. All off by default.</p>
             </div>
 
             <!-- ========================= -->
@@ -834,7 +773,7 @@
             <div id="lightvolumes" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">LIGHT VOLUMES V3</h2>
-                    <div class="badge">Section 15 of 19</div>
+                    <div class="badge">Section 13 of 17</div>
                 </div>
                 <p class="tab-desc">The full VRC Light Volumes V3 stack.</p>
 
@@ -861,6 +800,12 @@
                         (0 = soft / wide, 1 = tightest).</li>
                     <li class="mb-2"><strong>Specular (Dominant Mode)</strong> - Uses the dominant light direction instead
                         of the full L1 reconstruction for cheaper specular.</li>
+                    <li class="mb-2"><strong>Point Light Volume Specular (Per-Light)</strong> - Opt-in: gives each point,
+                        spot and area light its own size-aware specular highlight for sharper, more accurate glints on
+                        glossy latex, instead of deriving point-light specular from the blended light direction. Off by
+                        default.</li>
+                    <li class="mb-2"><strong>Point Light Volume Shading</strong> - How softly point / spot / area lights
+                        wrap across the surface normal (higher = softer falloff).</li>
                     <li class="mb-2"><strong>Shadow / Volumetric Normal Stability</strong> - How geometric the normal is
                         that drives V3's point / spot / area-light shading and their baked (EVSM) shadows. At 1 (default)
                         a stable geometric normal is used, so parallax, detail normals, wetness, and drips no longer
@@ -883,7 +828,7 @@
             <div id="ltcgi" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">LTCGI V2</h2>
-                    <div class="badge">Section 16 of 19</div>
+                    <div class="badge">Section 14 of 17</div>
                 </div>
                 <p class="tab-desc">LTCGI area lighting, with per-lobe mode and color tints.</p>
 
@@ -913,7 +858,7 @@
             <div id="techsane" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">TECHNICALLYSANE V3</h2>
-                    <div class="badge">Section 17 of 19</div>
+                    <div class="badge">Section 15 of 17</div>
                 </div>
                 <p class="tab-desc">Tints the material to a TechnicallySane lighting rig's live show colour, on avatars, with no scene reference.</p>
 
@@ -941,7 +886,7 @@
             <div id="audiolink" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">AUDIOLINK</h2>
-                    <div class="badge">Section 18 of 19</div>
+                    <div class="badge">Section 16 of 17</div>
                 </div>
                 <p class="tab-desc">The master AudioLink toggle and every reactive sub-group beneath it.</p>
 
@@ -1135,7 +1080,7 @@
             <div id="stage" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">STAGE LIGHTING &amp; VRSL</h2>
-                    <div class="badge">Section 19 of 19</div>
+                    <div class="badge">Section 17 of 17</div>
                 </div>
                 <p class="tab-desc">VRSL DMX routing, geo-warping, color hijack, and the additive GI stage wash.</p>
 
