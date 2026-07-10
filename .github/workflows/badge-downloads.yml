@@ -1,0 +1,64 @@
+name: Downloads Badge
+
+on:
+    schedule:
+        - cron: '17 */12 * * *'
+    workflow_dispatch:
+
+concurrency:
+    group: badge-downloads
+    cancel-in-progress: true
+
+permissions:
+    contents: write
+
+jobs:
+    update:
+        name: Update package download count
+        runs-on: ubuntu-latest
+        steps:
+            - name: Compute package download count
+              id: count
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  count="$(gh api --paginate "repos/${{ github.repository }}/releases" \
+                      --jq '[.[].assets[] | select(.name | test("\\.(zip|unitypackage)$"; "i")) | .download_count] | add // 0')"
+                  echo "count=$count" >> "$GITHUB_OUTPUT"
+
+            - name: Compute latest release version
+              id: version
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  version="$(gh api "repos/${{ github.repository }}/releases/latest" \
+                      --jq '.tag_name | ltrimstr("v")' 2>/dev/null || echo "")"
+                  echo "version=$version" >> "$GITHUB_OUTPUT"
+
+            - name: Publish badge endpoints to badge-data branch
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  COUNT: ${{ steps.count.outputs.count }}
+                  VERSION: ${{ steps.version.outputs.version }}
+              run: |
+                  set -euo pipefail
+                  work="$(mktemp -d)"
+                  cd "$work"
+                  git init -q
+                  git config user.name "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  repo_url="https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+                  if git fetch -q "$repo_url" badge-data 2>/dev/null; then
+                      git checkout -q -b badge-data FETCH_HEAD
+                  else
+                      git checkout -q --orphan badge-data
+                      git rm -rf . --quiet 2>/dev/null || true
+                  fi
+                  printf '{"schemaVersion":1,"label":"downloads","message":"%s","color":"ff0055"}\n' "$COUNT" > downloads.json
+                  if [[ -n "$VERSION" ]]; then
+                      printf '{"schemaVersion":1,"label":"version","message":"v%s","color":"00e5ff"}\n' "$VERSION" > version.json
+                  fi
+                  git add downloads.json version.json 2>/dev/null || git add downloads.json
+                  git diff --cached --quiet && exit 0
+                  git commit -q -m "chore(badge): downloads = ${COUNT}, version = ${VERSION}"
+                  git push -q -f "$repo_url" badge-data
