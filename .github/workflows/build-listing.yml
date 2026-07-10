@@ -55,19 +55,7 @@ jobs:
             ${{ env.pathToCi }}/.nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
-
-      # Install the .NET 8 SDK the listing builder targets (net6.0 / net8.0).
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
-      # ubuntu-latest now ships the .NET 10 SDK, and with no global.json the host
-      # picks it, breaking the vendored multi-target build (MSB3491 AssemblyInfo
-      # cache collision). Pin the ci build to the installed 8.0 SDK.
-      - name: Pin SDK for the listing builder
-        run: printf '{ "sdk": { "version": "8.0.100", "rollForward": "latestFeature" } }\n' > "${{ env.pathToCi }}/global.json"
-
+      
       # Build Package Version Listing with Nuke
       - name: Build Package Version Listing
         run: ${{ env.pathToCi }}/build.cmd BuildRepoListing --root ${{ env.pathToCi }} --list-publish-directory $GITHUB_WORKSPACE/${{ env.listPublishDirectory }} --current-package-name ${{ vars.PACKAGE_NAME }}
