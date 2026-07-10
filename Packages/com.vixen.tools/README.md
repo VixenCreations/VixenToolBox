@@ -4,7 +4,7 @@ I built the Vixens Toolbox because the VRChat pipeline is full of repetitive, mi
 
 This is a comprehensive suite of custom Unity Editor utilities, automation scripts, and a flagship avatar shader focused specifically on **High-Fidelity Avatar Pipeline & Topology Architecture**. Engineered entirely on Unity's modern UI Toolkit, the goal is simple: eliminate human error, enforce strict project consistency, and push the Unity engine to its absolute limits. Whether you're violently crushing a PC avatar's polycount or auditing a complex world for Udon network starvations, this toolset is designed to save you hundreds of hours of grinding so you can actually focus on creating.
 
-* **Package:** `com.vixencreations.vixens-toolbox` (v2.4.0)
+* **Package:** `com.vixencreations.vixens-toolbox` (v2.10.1)
 * **Target:** Unity 2022.3.22f1 / VRChat SDK 3.10.3
 * **Docs & Storefront:** [vixencreations.github.io/VixenToolBox](https://vixencreations.github.io/VixenToolBox/)
 

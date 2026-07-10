@@ -68,6 +68,7 @@
 
     <nav class="sidebar">
         <div class="sidebar-brand">
+            <a href="index.html" class="brand-logo-link"><img src="banner.png" class="sidebar-brand-logo" width="1536" height="665" alt="VixForge Interactive - Shaders, Worlds, Haptics" /></a>
             <h2 class="text-glow-cyan">VIXENS TOOLBOX</h2>
             <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">by VixForge Interactive</div>
         </div>
@@ -164,14 +165,51 @@
                 </div>
             </div>
 
-            <div class="repoBadges row align-items-center justify-content-center mb-3" style="gap: 8px;">
-                <a href="https://github.com/VixenCreations/VixenToolBox/releases/latest" target="_blank" rel="noopener" aria-label="Latest release version">
-                    <img alt="Latest version" height="20" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FVixenCreations%2FVixenToolBox%2Fbadge-data%2Fversion.json&style=flat-square">
+            <div class="stat-cards">
+                <a class="stat-card" href="https://github.com/VixenCreations/VixenToolBox/releases" target="_blank" rel="noopener" aria-label="Total downloads and users">
+                    <div class="stat-value text-glow-pink" id="statDownloads">1,500+</div>
+                    <div class="stat-label">Downloads &amp; Users</div>
+                    <div class="stat-sub">and growing every day</div>
                 </a>
-                <a href="https://github.com/VixenCreations/VixenToolBox/releases" target="_blank" rel="noopener" aria-label="Total package downloads">
-                    <img alt="Total downloads" height="20" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FVixenCreations%2FVixenToolBox%2Fbadge-data%2Fdownloads.json&style=flat-square">
+                <a class="stat-card" href="https://github.com/VixenCreations/VixenToolBox/releases/latest" target="_blank" rel="noopener" aria-label="Latest release version">
+                    <div class="stat-value text-glow-cyan" id="statVersion">v2.10.1</div>
+                    <div class="stat-label">Latest Release</div>
+                    <div class="stat-sub">live on the VPM registry</div>
                 </a>
             </div>
+
+            <script>
+                (function () {
+                    var RAW = 'https://raw.githubusercontent.com/VixenCreations/VixenToolBox/badge-data/';
+                    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    function fmt(n) { return n.toLocaleString('en-US'); }
+                    function countUp(el, target) {
+                        if (reduceMotion) { el.textContent = fmt(target); return; }
+                        var start = performance.now(), dur = 1200;
+                        function step(now) {
+                            var p = Math.min((now - start) / dur, 1);
+                            var eased = 1 - Math.pow(1 - p, 3);
+                            el.textContent = fmt(Math.floor(eased * target));
+                            if (p < 1) { requestAnimationFrame(step); } else { el.textContent = fmt(target); }
+                        }
+                        requestAnimationFrame(step);
+                    }
+                    fetch(RAW + 'downloads.json', { cache: 'no-cache' })
+                        .then(function (r) { return r.ok ? r.json() : null; })
+                        .then(function (d) {
+                            if (!d) return;
+                            var n = parseInt(String(d.message).replace(/[^0-9]/g, ''), 10);
+                            var el = document.getElementById('statDownloads');
+                            if (el && !isNaN(n)) countUp(el, n);
+                        }).catch(function () {});
+                    fetch(RAW + 'version.json', { cache: 'no-cache' })
+                        .then(function (r) { return r.ok ? r.json() : null; })
+                        .then(function (d) {
+                            var el = document.getElementById('statVersion');
+                            if (el && d && d.message) el.textContent = d.message;
+                        }).catch(function () {});
+                })();
+            </script>
 
             <div class="addToVccBlock mt-2 row align-items-center w-100 justify-content-center">
                 <fluent-text-field aria-readonly="true" id="vccUrlField" class="vccUrlField" readonly value="{{ listingInfo.Url }}">

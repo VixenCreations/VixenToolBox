@@ -112,6 +112,7 @@
 
     <nav class="sidebar">
         <div class="sidebar-brand">
+            <a href="index.html" class="brand-logo-link"><img src="banner.png" class="sidebar-brand-logo" width="1536" height="665" alt="VixForge Interactive - Shaders, Worlds, Haptics" /></a>
             <h2 class="text-glow-cyan">VIXENS TOOLBOX</h2>
             <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">by VixForge Interactive</div>
         </div>
@@ -214,10 +215,7 @@
                     </div>
                     <div class="comp-section comp-vixen">
                         <p class="comp-text">
-                            We orchestrate a multi‑model workflow for maximum development velocity and architectural clarity.
-                            <b>GitHub Copilot</b> accelerates inline C# authoring, pattern scaffolding, and rapid iteration inside Unity.
-                            <b>Microsoft Copilot</b> handles deep‑context reasoning, pipeline documentation, system design validation, and multi‑step logic synthesis across the entire project stack.
-                            We integrate <b>Gemini Pro</b> and <b>Gemini Thinking</b> models for high‑granularity analysis of UdonSharp behaviour flow, bytecode‑level constraints, and resolving complex architectural entanglements before compilation.
+                            Our core development engine is <b>Anthropic's Claude</b>, driven agentically through <b>Claude Code</b> (Claude Opus 4.8). It is never used as a blind code generator. It runs inside a <b>retrieval-grounded workflow</b> that indexes the real Unity engine source, the VRChat SDK, and our own shader code, so architecture is checked against ground truth instead of guessed. Domain <b>skills</b> enforce hard platform limits up front (for example UdonSharp's compile constraints), a <b>documentation index</b> of our own codebase keeps every edit surgical, and a persistent <b>memory</b> layer carries project conventions across sessions. Every line it proposes still passes through human review before it ships.
                         </p>
                     </div>
                 </div>
@@ -233,6 +231,66 @@
                         </p>
                     </div>
                 </div>
+            </div>
+
+            <div class="research-header-divider"></div>
+            <div class="col w-100 text-center mb-2">
+                <h2 class="text-glow-cyan">How We Actually Use AI</h2>
+                <p class="text-glow-cyan" style="font-size: 1.05rem; max-width: 900px; margin: 0 auto; line-height: 1.6;">
+                    Four concrete roles AI plays in the VixForge pipeline. None of them replace engineering judgment, they remove the drudgery around it so the hard problems get the attention.
+                </p>
+            </div>
+
+            <div class="competitive-grid" style="margin-top: 2rem;">
+
+                <div class="comp-card">
+                    <div class="comp-header">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                        <h3 class="text-glow-pink">Accelerate Development</h3>
+                    </div>
+                    <div class="comp-section comp-vixen">
+                        <p class="comp-text">
+                            AI writes the parts that are purely mechanical: UI Toolkit schemas, editor-window plumbing, serialization boilerplate, and repetitive inspector wiring. Work that used to eat an afternoon of typing lands in minutes, so engineering hours go to architecture and edge cases instead of busywork.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="comp-card">
+                    <div class="comp-header">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"></path><line x1="8" y1="2" x2="16" y2="2"></line><line x1="7" y1="16" x2="17" y2="16"></line></svg>
+                        <h3 class="text-glow-pink">Rapidly Prototype</h3>
+                    </div>
+                    <div class="comp-section comp-vixen">
+                        <p class="comp-text">
+                            Before we commit to a feature, we spin up throwaway implementations to test whether an approach is even viable, a decimation strategy, an inspector layout, a shader control, and iterate on them fast. Cheap experiments up front mean the version that ships is the one that actually earned its place.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="comp-card">
+                    <div class="comp-header">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <h3 class="text-glow-pink">Reverse-Engineer &amp; Ground</h3>
+                    </div>
+                    <div class="comp-section comp-vixen">
+                        <p class="comp-text">
+                            The workflow indexes the real Unity C# reference, the VRChat SDK, and even Blender's mesh internals, then reads the actual implementation. Behaviour around culling bounds, PhysBones, and mesh data is derived from source, not hallucinated from a model's memory. When the AI is unsure, it looks it up rather than inventing an answer.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="comp-card">
+                    <div class="comp-header">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+                        <h3 class="text-glow-pink">Hand-Review &amp; Verify</h3>
+                    </div>
+                    <div class="comp-section comp-vixen">
+                        <p class="comp-text">
+                            Every proposed line is read, stress-tested inside a live Unity project, and verified end to end before it ships. AI proposes; the engineer decides. This is the non-negotiable step that keeps the toolbox stable across radically different VRChat projects.
+                        </p>
+                    </div>
+                </div>
+
             </div>
 
             <div class="research-header-divider"></div>

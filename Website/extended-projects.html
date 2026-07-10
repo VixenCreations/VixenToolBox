@@ -105,6 +105,36 @@
             padding: 1rem;
             border-radius: 0 8px 8px 0;
         }
+
+        .repo-btn {
+            display: inline-flex;
+            align-items: center;
+            align-self: flex-start;
+            gap: 8px;
+            padding: 9px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            color: #fff;
+            background: linear-gradient(135deg, rgba(255, 69, 0, 0.18), rgba(255, 0, 85, 0.18));
+            border: 1px solid rgba(255, 69, 0, 0.45);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+
+            .repo-btn:hover {
+                background: linear-gradient(135deg, var(--forge-fire), var(--neon-pink));
+                border-color: transparent;
+                box-shadow: 0 8px 24px rgba(255, 69, 0, 0.4);
+                transform: translateY(-2px);
+            }
+
+            .repo-btn svg {
+                width: 16px;
+                height: 16px;
+                flex-shrink: 0;
+            }
     </style>
 </head>
 
@@ -113,6 +143,7 @@
 
     <nav class="sidebar">
         <div class="sidebar-brand">
+            <a href="index.html" class="brand-logo-link"><img src="banner.png" class="sidebar-brand-logo" width="1536" height="665" alt="VixForge Interactive - Shaders, Worlds, Haptics" /></a>
             <h2 class="text-glow-cyan">VIXENS TOOLBOX</h2>
             <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">by VixForge Interactive</div>
         </div>
@@ -198,48 +229,68 @@
             <div class="row w-100 mb-5" style="gap: 20px; flex-wrap: wrap;">
 
                 <div class="glass-panel" style="flex: 1 1 48%; padding: 2rem; display: flex; flex-direction: column;">
-                    <div class="row justify-content-between align-items-center mb-3">
-                        <h2 class="text-glow-pink m-0">VixenLens</h2>
-                        <a href="https://github.com/VixenCreations/VixenLens" target="_blank" class="badge" style="text-decoration: none; cursor: pointer;">Repository</a>
-                    </div>
+                    <h2 class="text-glow-pink m-0 mb-3">VixenLens</h2>
                     <p class="caption1 mb-4" style="color: #bfa8d2; line-height: 1.6; flex-grow: 1;">
                         A standalone, high-performance metadata indexing and retrieval engine. Built utilizing a <strong>Rust backend</strong> and a <strong>Tauri frontend</strong>, VixenLens is engineered to autonomously traverse and index thousands of VRChat snapshots, providing 4D-chess-level organization for massive historical archives.
                     </p>
-                    <div class="row" style="gap: 10px;">
+                    <div class="row mb-4" style="gap: 10px;">
                         <span class="tool-badge">Rust</span>
                         <span class="tool-badge">Tauri</span>
                         <span class="tool-badge">Metadata Parsing</span>
                     </div>
+                    <a href="https://github.com/VixenCreations/VixenLens" target="_blank" rel="noopener" class="repo-btn">
+                        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+                        View Repository
+                    </a>
                 </div>
 
                 <div class="glass-panel" style="flex: 1 1 48%; padding: 2rem; display: flex; flex-direction: column;">
-                    <div class="row justify-content-between align-items-center mb-3">
-                        <h2 class="text-glow-pink m-0">Fish Validator</h2>
-                        <a href="https://github.com/VixenCreations/Fish-Appraiser-Engine" target="_blank" class="badge" style="text-decoration: none; cursor: pointer;">Repository</a>
-                    </div>
+                    <h2 class="text-glow-pink m-0 mb-3">Fish Validator</h2>
                     <p class="caption1 mb-4" style="color: #bfa8d2; line-height: 1.6; flex-grow: 1;">
                         A robust, community-focused validation engine designed to seamlessly appraise and validate structured data within specialized environments. Backed by a fully flushed-out ecosystem wiki for transparent documentation.
                     </p>
-                    <div class="row" style="gap: 10px;">
+                    <div class="row mb-4" style="gap: 10px;">
                         <span class="tool-badge">Data Validation</span>
                         <span class="tool-badge">Community Tool</span>
                         <span class="tool-badge">Wiki Documented</span>
                     </div>
+                    <a href="https://github.com/VixenCreations/Fish-Appraiser-Engine" target="_blank" rel="noopener" class="repo-btn">
+                        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+                        View Repository
+                    </a>
                 </div>
 
                 <div class="glass-panel" style="flex: 1 1 48%; padding: 2rem; display: flex; flex-direction: column;">
-                    <div class="row justify-content-between align-items-center mb-3">
-                        <h2 class="text-glow-pink m-0">Stream Connector</h2>
-                        <a href="https://github.com/VixenCreations/Stream-Connector" target="_blank" class="badge" style="text-decoration: none; cursor: pointer;">Repository</a>
-                    </div>
+                    <h2 class="text-glow-pink m-0 mb-3">Stream Connector</h2>
                     <p class="caption1 mb-4" style="color: #bfa8d2; line-height: 1.6; flex-grow: 1;">
                         An ultra-low-latency, multi-threaded orchestration engine that bridges live broadcast events straight into physical hardware states. Local-first and fail-closed, with a tri-state concurrency core and a haptic abstraction layer spanning PiShock, Intiface, OWO and OSC.
                     </p>
-                    <div class="row" style="gap: 10px;">
+                    <div class="row mb-4" style="gap: 10px;">
                         <span class="tool-badge">Python / asyncio</span>
                         <span class="tool-badge">Local-First</span>
                         <span class="tool-badge">Haptics &amp; OSC</span>
                     </div>
+                    <a href="https://vixencreations.github.io/Stream-Connector-Public/" target="_blank" rel="noopener" class="repo-btn">
+                        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+                        View Project
+                    </a>
+                </div>
+
+                <div class="glass-panel" style="flex: 1 1 48%; padding: 2rem; display: flex; flex-direction: column;">
+                    <h2 class="text-glow-pink m-0 mb-3">Haptics Nexus</h2>
+                    <p class="caption1 mb-4" style="color: #bfa8d2; line-height: 1.6; flex-grow: 1;">
+                        The dedicated haptic hardware layer of the Stream Connector ecosystem. Haptics Nexus unifies control across multiple device protocols, <strong>PiShock</strong>, <strong>Intiface</strong>, <strong>OWO</strong> and <strong>OSC</strong>, under a single abstraction, so live events and creators can drive real-world haptics without wrestling a different SDK for every piece of hardware.
+                    </p>
+                    <div class="row mb-4" style="gap: 10px;">
+                        <span class="tool-badge">Haptics</span>
+                        <span class="tool-badge">Hardware Layer</span>
+                        <span class="tool-badge">PiShock / OWO</span>
+                        <span class="tool-badge">OSC</span>
+                    </div>
+                    <a href="https://vixencreations.github.io/Stream-Connector-Public/" target="_blank" rel="noopener" class="repo-btn">
+                        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+                        View Project
+                    </a>
                 </div>
 
             </div>
@@ -329,18 +380,5 @@
     </main>
 
     <script type="module" src="app.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                if (item.getAttribute('href') === 'projects.html') {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
-            });
-        });
-    </script>
 </body>
 </html>

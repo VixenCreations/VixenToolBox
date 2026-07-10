@@ -1,9 +1,17 @@
+# Downloads / version badge pipeline.
+# With deep thanks to Map1en and the VRCX-0 project (https://github.com/Map1en/VRCX-0),
+# whose badge-downloads workflow this is adapted from. We would not have known we had
+# crossed 1,500+ downloads without reading their source. Thank you.
 name: Downloads Badge
 
 on:
     schedule:
-        - cron: '17 */12 * * *'
+        - cron: '17 6 * * *'
     workflow_dispatch:
+    workflow_run:
+        workflows: ["Build Repo Listing"]
+        types:
+            - completed
 
 concurrency:
     group: badge-downloads

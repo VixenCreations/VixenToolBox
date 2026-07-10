@@ -66,6 +66,7 @@
 
     <nav class="sidebar">
         <div class="sidebar-brand">
+            <a href="index.html" class="brand-logo-link"><img src="banner.png" class="sidebar-brand-logo" width="1536" height="665" alt="VixForge Interactive - Shaders, Worlds, Haptics" /></a>
             <h2 class="text-glow-cyan">VIXENS TOOLBOX</h2>
             <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">by VixForge Interactive</div>
         </div>
@@ -150,15 +151,30 @@
                 <div class="comp-card">
                     <div class="comp-header">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                        <h3>Vertice Mesh Welder</h3>
+                        <h3>QEM Mesh Decimation</h3>
                     </div>
                     <div class="comp-section comp-vixen">
                         <h4>Vixens Toolbox</h4>
-                        <p class="comp-text">Native Vertice Mesh Welder (XYZ+UV). Violently crushes polycounts while preserving texture seams and automatically recovering Blendshape memory arrays directly inside Unity.</p>
+                        <p class="comp-text">Real Quadric Error Metric edge-collapse decimation (Garland-Heckbert), the same class of algorithm as Blender's Decimate modifier. Drives each heavy mesh to a triangle target while preventing face flips and preserving UV/normal seams, submesh boundaries, blendshapes, and bone weights, non-destructively inside Unity.</p>
                     </div>
                     <div class="comp-section comp-standard">
                         <h4>Industry Standard</h4>
-                        <p class="comp-text">Requires manual decimation in external software (Blender) or expensive paid Unity plugins. High risk of permanently breaking visemes and facial animations during export.</p>
+                        <p class="comp-text">Requires manual decimation in external software (Blender) or expensive paid Unity plugins. High risk of permanently breaking visemes and facial animations during round-trip export.</p>
+                    </div>
+                </div>
+
+                <div class="comp-card">
+                    <div class="comp-header">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M7 9.5a5.5 5.5 0 0 1 5-3"></path><circle cx="9.5" cy="9.5" r="1.2" fill="currentColor" stroke="none"></circle></svg>
+                        <h3>Native Avatar Shader</h3>
+                    </div>
+                    <div class="comp-section comp-vixen">
+                        <h4>VixenWear Latex Ultra</h4>
+                        <p class="comp-text">A native, dual-lobe GGX PBR surface shader engineered in-house for synthetic materials: clearcoat, thin-film, anisotropic latex-stretch specular, wet / drip and melting-goo, four Scene-placed decals, and live reactions to AudioLink, LTCGI, VRC Light Volumes and VRSL. Ships with a tessellation-free SPS twin for VRCFury.</p>
+                    </div>
+                    <div class="comp-section comp-standard">
+                        <h4>Poiyomi / lilToon</h4>
+                        <p class="comp-text">General-purpose toon / PBR shaders not specialised for latex or synthetic surfaces. Matching the wet, dual-lobe, world-reactive look means stacking third-party modules and hand-tuning, with no built-in SPS-matched variant.</p>
                     </div>
                 </div>
 
@@ -345,6 +361,36 @@
                     <div class="comp-section comp-standard">
                         <h4>Basic Replacements</h4>
                         <p class="comp-text">Basic material replacement and standard overrides. Safety relies heavily on on-upload duplication or varies by destructive workflows depending on the tool.</p>
+                    </div>
+                </div>
+
+                <div class="comp-card">
+                    <div class="comp-header">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect><circle cx="9" cy="10" r="2"></circle><line x1="13" y1="9" x2="17" y2="9"></line><line x1="13" y1="13" x2="17" y2="13"></line><line x1="7" y1="16" x2="12" y2="16"></line></svg>
+                        <h3>Convention Badge Studio</h3>
+                    </div>
+                    <div class="comp-section comp-vixen">
+                        <h4>Vixen Badge Studio</h4>
+                        <p class="comp-text">Procedural convention badge generation. Auto-detects Furality SDKs, targets Poiyomi / lilToon / VRChat Mobile / legacy badge shaders, generates directory structures, materials and emissive maps, and snaps text and neon accents to each year's badge mesh via a live Scene-view UV mapper.</p>
+                    </div>
+                    <div class="comp-section comp-standard">
+                        <h4>Manual Per-Event Setup</h4>
+                        <p class="comp-text">No dedicated tool. Attendees hand-place text in an image editor, guess at UV coordinates on curved badge meshes, and rebuild materials and emission maps for every convention, every year.</p>
+                    </div>
+                </div>
+
+                <div class="comp-card">
+                    <div class="comp-header">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"></path><path d="M18 22V8a2 2 0 0 0-2-2H2"></path></svg>
+                        <h3>Auto-Fit Culling Bounds</h3>
+                    </div>
+                    <div class="comp-section comp-vixen">
+                        <h4>Posed-Bounds Auto-Fit</h4>
+                        <p class="comp-text">Fits each renderer's culling box to Unity's own posed bounds in the correct root-bone space, so meshes stay tight without frustum-culling and vanishing as the camera closes in. Correctly handles Blender import scales that trip up hand-built matrices.</p>
+                    </div>
+                    <div class="comp-section comp-standard">
+                        <h4>Pumkin's / Manual</h4>
+                        <p class="comp-text">Manual bounding-box tools apply one blunt box or an arbitrary multiplier. Over-sized boxes waste culling budget; under-sized boxes make meshes disappear the moment a viewer gets close.</p>
                     </div>
                 </div>
 

@@ -1,0 +1,20 @@
+{
+    "name": "Vixens Toolbox",
+    "id": "com.vixencreations.vixens-toolbox.listing",
+    "url": "https://VixenCreations.github.io/VixenToolBox/index.json",
+    "author": {
+        "name": "Vixenlicous",
+        "email": "Vixenlicious@outlook.com",
+        "url": "https://x.com/VixenVRC"
+    },
+    "description": "The professional-grade VRChat creator suite by VixForge Interactive. Shaders, avatar optimization, Quest conversion, and world tooling in one VPM package.",
+    "infoLink": {
+        "url": "https://vixencreations.github.io/VixenToolBox/",
+        "text": "Storefront & Docs"
+    },
+    "bannerUrl": "banner.png",
+    "githubRepos": [
+        "VixenCreations/VixenToolBox"
+    ],
+    "packages": []
+}

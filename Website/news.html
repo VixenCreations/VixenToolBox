@@ -124,6 +124,32 @@
             position: absolute;
             left: 0;
         }
+
+        .news-milestone-hero {
+            padding: 2.75rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 0, 170, 0.3);
+            background:
+                radial-gradient(120% 140% at 50% 0%, rgba(255, 0, 85, 0.16), transparent 60%),
+                radial-gradient(120% 140% at 50% 100%, rgba(0, 229, 255, 0.10), transparent 60%);
+        }
+
+        .milestone-number {
+            font-size: clamp(3.5rem, 12vw, 6rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: 2px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .milestone-label {
+            margin-top: 0.6rem;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--neutral-foreground-rest);
+        }
     </style>
 </head>
 
@@ -132,6 +158,7 @@
 
     <nav class="sidebar">
         <div class="sidebar-brand">
+            <a href="index.html" class="brand-logo-link"><img src="banner.png" class="sidebar-brand-logo" width="1536" height="665" alt="VixForge Interactive - Shaders, Worlds, Haptics" /></a>
             <h2 class="text-glow-cyan">VIXENS TOOLBOX</h2>
             <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">by VixForge Interactive</div>
         </div>
@@ -213,6 +240,49 @@
                     Studio updates, partnerships, and releases from VixForge Interactive. The latest news lands here first.
                 </p>
             </div>
+
+            <article class="glass-panel news-article w-100 mb-5">
+                <div class="news-milestone-hero">
+                    <div class="milestone-number text-glow-pink">1,500+</div>
+                    <div class="milestone-label">Downloads &amp; Users</div>
+                </div>
+
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Milestone</span>
+                        <span class="news-tag">Thank You</span>
+                        <span class="news-date">July 10, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Thank You for 1,500+ Downloads</h2>
+                    <p>
+                        It's official: the <strong>Vixens Toolbox</strong> has crossed <strong>1,500 downloads</strong>. Every single one of those is a creator who trusted our tools with their avatars and their worlds, and we could not be more grateful.
+                    </p>
+                    <p>
+                        When VixForge Interactive started, the goal was simple: kill the repetitive, mind-numbing parts of the VRChat pipeline so creators could spend their time actually creating. Fifteen hundred downloads later, that mission is resonating far beyond what we ever imagined.
+                    </p>
+
+                    <h3 class="text-glow-cyan">What 1,500+ Means to Us</h3>
+                    <ul class="pledge-list">
+                        <li>Every download is a creator we get to build for, and a reason to keep raising the bar.</li>
+                        <li>Real QEM mesh decimation, non-destructive Quest conversion, multi-ecosystem world auditing, and the VixenWear Latex Ultra shader, all shipping in one free VPM package.</li>
+                        <li>A growing community that files issues, shares screenshots, and pushes these tools to their limits.</li>
+                    </ul>
+
+                    <p>
+                        To every creator who installed the toolbox, reported a bug, requested a feature, or simply told a friend: <strong>thank you</strong>. You are the reason this project keeps growing, and we are only just getting started.
+                    </p>
+                    <p style="color: #e0d5eb; font-weight: bold;">
+                        Here's to the next 1,500. Onward.
+                    </p>
+
+                    <div class="row mt-4" style="gap: 10px; flex-wrap: wrap;">
+                        <fluent-anchor href="index.html" appearance="accent" class="custom-accent-btn">Add to VCC</fluent-anchor>
+                        <fluent-anchor href="changelog.html" class="custom-stealth-btn">View the Changelog</fluent-anchor>
+                        <fluent-anchor href="https://discord.gg/3vbJCKcPtJ" target="_blank" class="custom-stealth-btn">Join the VixForge Discord</fluent-anchor>
+                    </div>
+                </div>
+            </article>
 
             <article class="glass-panel news-article w-100 mb-5">
                 <div class="news-hero-art">
