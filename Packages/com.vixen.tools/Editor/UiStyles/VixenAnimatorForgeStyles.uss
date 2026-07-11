@@ -1,0 +1,257 @@
+/* Vixen Animator Forge USS — Doctor + Forge */
+
+:root {
+    --bg-dark: #141414;
+    --bg-panel: #1e1e1e;
+
+    --color-cyan: #00e5ff;
+    --color-pink: #ff00aa;
+    --color-amber: #ffaa00;
+    --color-danger: #ff0033;
+
+    --text-main: #e5e5e5;
+    --text-muted: #aaaaaa;
+}
+
+.unity-base-field,
+.unity-object-field,
+.unity-button,
+.unity-label,
+.unity-toggle,
+.unity-enum-field,
+.unity-popup-field,
+.unity-float-field,
+.unity-text-field {
+    font-size: 13px;
+    color: var(--text-main);
+}
+
+.unity-base-field__label {
+    min-width: 130px;
+    -unity-text-align: middle-left;
+}
+
+.unity-base-field__input,
+.unity-text-field__input {
+    background-color: var(--bg-panel);
+    border-color: #2f2f2f;
+    border-width: 1px;
+    border-radius: 4px;
+    padding-left: 4px;
+    transition-duration: 0.15s;
+}
+
+.unity-base-field__input:hover,
+.unity-text-field__input:hover {
+    background-color: #2a2a2a;
+    border-color: rgba(0, 229, 255, 0.4);
+}
+
+.unity-base-popup-field__input,
+.unity-enum-field__input {
+    background-color: var(--bg-panel);
+    border-color: rgba(0, 229, 255, 0.4);
+    border-width: 1px;
+    border-radius: 4px;
+    padding: 3px 5px;
+    transition-duration: 0.15s;
+}
+
+.unity-base-popup-field__input:hover,
+.unity-enum-field__input:hover {
+    background-color: #2a2a2a;
+    border-color: var(--color-cyan);
+}
+
+.unity-base-popup-field__text,
+.unity-enum-field__text {
+    color: var(--text-main);
+    -unity-font-style: bold;
+}
+
+.unity-base-popup-field__arrow,
+.unity-enum-field__arrow {
+    -unity-background-image-tint-color: var(--color-cyan);
+}
+
+.unity-toggle__checkmark {
+    background-color: var(--bg-dark);
+    border-color: #2f2f2f;
+    border-width: 1px;
+    border-radius: 3px;
+    transition-duration: 0.15s;
+}
+
+.unity-toggle > .unity-toggle__input:checked > .unity-toggle__checkmark {
+    -unity-background-image-tint-color: var(--color-cyan);
+    background-color: rgba(0, 229, 255, 0.15);
+    border-color: var(--color-cyan);
+}
+
+.unity-toggle:hover .unity-toggle__checkmark {
+    border-color: rgba(0, 229, 255, 0.5);
+}
+
+/* Root & Header */
+#hub-root {
+    background-color: var(--bg-dark);
+    flex-grow: 1;
+}
+
+#hub-header {
+    background-color: #0c0612;
+    border-bottom-width: 2px;
+    border-bottom-color: rgba(0, 229, 255, 0.8);
+}
+
+.hub-header-title {
+    font-size: 26px;
+    -unity-font-style: bold;
+}
+
+/* Tabs */
+.forge-tab {
+    height: 32px;
+    font-size: 14px;
+    -unity-font-style: bold;
+    background-color: #171717;
+    color: var(--text-muted);
+    border-width: 1px;
+    border-color: #2f2f2f;
+    border-radius: 4px;
+    margin-left: 2px;
+    margin-right: 2px;
+    transition-duration: 0.15s;
+}
+
+.forge-tab:hover {
+    color: var(--text-main);
+    border-color: rgba(0, 229, 255, 0.5);
+}
+
+.forge-tab-active {
+    color: var(--color-cyan);
+    background-color: #0b3d4f;
+    border-color: var(--color-cyan);
+}
+
+/* Panels */
+.cyber-panel {
+    background-color: rgba(200, 200, 200, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.panel-header {
+    font-size: 16px;
+    -unity-font-style: bold;
+    margin-bottom: 15px;
+    color: var(--text-main);
+}
+
+.md-separator {
+    height: 1px;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.md-p {
+    font-size: 13px;
+    color: var(--text-main);
+    white-space: normal;
+    flex-shrink: 1;
+    flex-grow: 1;
+    margin-top: 1px;
+}
+
+/* Action buttons */
+.cyber-action-btn {
+    font-size: 16px;
+    -unity-font-style: bold;
+    height: 42px;
+    border-radius: 4px;
+    margin-top: 15px;
+    transition-duration: 0.15s;
+}
+
+.cyan-btn {
+    background-color: #0b3d4f;
+    color: var(--color-cyan);
+    border-color: var(--color-cyan);
+    border-width: 1px;
+}
+
+.cyan-btn:hover {
+    background-color: #125b75;
+    border-color: #00ffff;
+}
+
+.pink-btn {
+    background-color: #4a0d2f;
+    color: var(--color-pink);
+    border-color: var(--color-pink);
+    border-width: 1px;
+}
+
+.pink-btn:hover {
+    background-color: #6e1346;
+    border-color: #ff33bb;
+}
+
+/* Data tags */
+.data-tag-btn {
+    background-color: #1e1e1e;
+    border-width: 1px;
+    border-radius: 3px;
+    height: 20px;
+    margin-left: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 10px;
+    -unity-font-style: bold;
+    transition-duration: 0.15s;
+}
+
+.data-tag-locate {
+    color: var(--color-cyan);
+    border-color: var(--color-cyan);
+}
+
+.data-tag-locate:hover {
+    background-color: rgba(0, 229, 255, 0.15);
+}
+
+.data-tag-optimize {
+    color: var(--color-pink);
+    border-color: var(--color-pink);
+    background-color: rgba(255, 0, 170, 0.1);
+}
+
+.data-tag-optimize:hover {
+    background-color: rgba(255, 0, 170, 0.3);
+}
+
+.data-tag-warning {
+    color: var(--color-amber);
+    border-color: var(--color-amber);
+    background-color: rgba(255, 170, 0, 0.1);
+}
+
+.data-tag-warning:hover {
+    background-color: rgba(255, 170, 0, 0.3);
+}
+
+.data-tag-destructive {
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+    background-color: rgba(255, 0, 51, 0.1);
+}
+
+.data-tag-destructive:hover {
+    background-color: rgba(255, 0, 51, 0.3);
+    color: #ffffff;
+}

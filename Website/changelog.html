@@ -147,6 +147,7 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
+                        <fluent-option value="v2.12.0">v2.12.0</fluent-option>
                         <fluent-option value="v2.11.0">v2.11.0</fluent-option>
                         <fluent-option value="v2.10.1">v2.10.1</fluent-option>
                         <fluent-option value="v2.10.0">v2.10.0</fluent-option>
@@ -190,6 +191,19 @@
             </div>
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
+
+                <div class="changelog-entry" data-version="v2.12.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.12.0 - 2026-07-11</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Adds the Animator Forge, a new avatar tool that both diagnoses broken animators and builds fully-rigged toggles for you. New avatar bases often ship with FX controllers that reference VRChat driver parameters like Seated without declaring them, which floods the SDK panel with "uses parameter which does not exist" errors. Animator Forge finds those and a whole family of related problems, and its Forge side generates a complete toggle - parameter, menu control, FX layer and states, and animation clips - in a single click, matched to your avatar's own Write Defaults convention. Editor tooling only; Built-in Render Pipeline / VRChat, as always.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Animator Forge - Doctor:</strong> A new diagnostics engine that scans an avatar's playable-layer controllers plus its Expression Parameters and Menu, then lists ranked findings with one-click fixes. It catches transitions and blend trees that reference undeclared parameters (recognizing the full set of VRChat driver parameters such as Seated, AFK, VRMode and the Gesture values, and adding them back with the correct type), a broken mix of Write Defaults, menu controls bound to missing parameters, synced-parameter cost overflow, duplicate or mismatched parameters, dead zero-weight layers, and invalid transitions. Every finding has a Locate button and, where safe, a Fix, plus a "Fix all safe issues" batch for the unambiguous ones.</li>
+                        <li class="mb-2"><strong>Animator Forge - Write Defaults Normalizer:</strong> The Write Defaults detection and fix follow the widely-used VRCFury model - grouping states as normal, Direct blend tree, or additive, taking the target from the FX layer's majority, and always forcing Direct blend trees and additive layers on. It reports the exact offending states and only changes anything when you ask it to.</li>
+                        <li class="mb-2"><strong>Animator Forge - Empty Write-Defaults-Off Clip Check:</strong> Detects the SDK's "Write Defaults disabled where the animation clip is either missing or empty" warning (using VRChat's own scan logic), and one-click fixes it by assigning a shared inert clip with a single harmless property - which is what actually clears the warning, since a truly empty clip still reads as empty to the SDK.</li>
+                        <li class="mb-2"><strong>Animator Forge - Rig Builder:</strong> The Forge tab builds complete, ready-to-use rigs with no manual Animator wiring. Five types are supported: GameObject toggle, blendshape toggle, blendshape slider (a radial dial), material swap, and exclusive group (a radio set where enabling one option disables the rest). Each build generates the Expression parameter, the menu control or submenu, the FX layer with states and transitions, and the animation clips, with new states matched to the avatar's Write Defaults convention. It is non-destructive - it reuses or creates the FX controller and expression assets, clones read-only sample controllers before touching them, and never deletes existing layers or parameters.</li>
+                    </ul>
+                </div>
 
                 <div class="changelog-entry" data-version="v2.11.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.11.0 - 2026-07-09</h5>

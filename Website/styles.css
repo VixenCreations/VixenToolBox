@@ -473,6 +473,16 @@ h3, h5 {
     color: #9ca3af;
 }
 
+.stat-card-pink .stat-label,
+.stat-card-pink .stat-sub {
+    color: var(--neon-pink);
+}
+
+.stat-card-cyan .stat-label,
+.stat-card-cyan .stat-sub {
+    color: var(--neon-cyan);
+}
+
 @media (max-width: 560px) {
     .stat-card {
         min-width: 0;

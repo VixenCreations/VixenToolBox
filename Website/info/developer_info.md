@@ -44,6 +44,103 @@
 
 ---
 
+## `Editor/Avatar Tools/Animator Forge/AnimatorDoctor.cs`
+
+*Static analysis engine behind the Animator Forge "Doctor" tab. Scans an avatar's playable-layer controllers + expression assets, returns a ranked `AnimatorFinding` list, and carries the auto-fix actions. Added 2026-07-11.*
+
+
+### `public class AnimatorFinding`
+<sub>L17</sub>
+
+- **L17** - Finding model: `Severity` (Error/Warning/Info), `Category`, `Title`, `Detail`, `Context` (pinged via EditorGUIUtility.PingObject), `Fix` (Action, null = report-only), `FixLabel`, and `IsSafe`. `IsSafe && Fix != null` is the exact set the window's "Fix all safe issues" batch runs.  <br/><sub>↳ before `public Severity Severity`</sub>
+
+### `public static readonly Dictionary<string, AnimatorControllerParameterType> BuiltInParameters`
+<sub>L29</sub>
+
+- **L29** - Canonical table of VRChat driver-provided animator parameters (Seated, AFK, VRMode, GestureLeft/Right(+Weight), TrackingType, MuteSelf, InStation, Earmuffs, Grounded, Upright, AngularY, Velocity*, VelocityMagnitude, Voice, Viseme, IsLocal, IsOnFriendsList, AvatarVersion, Scale*, EyeHeightAs*) mapped to their correct type. Drives the motivating fix: a controller whose Sit/Action layer references `Seated` but never declared it is "missing a built-in" - the fix adds it as the table's type so Unity's animator validator stops erroring. Names NOT in this table are treated as custom (likely a typo/rename), inferred-typed, and marked not-safe.  <br/><sub>↳ before dictionary initializer</sub>
+
+### `public static List<AnimatorFinding> RunDiagnostics(GameObject avatarRoot)`
+<sub>L91</sub>
+
+- **L91** - Entry point. Collects controllers from the descriptor's base + special playable layers (deduped), runs the six check groups, and returns findings ordered Error->Warning->Info. Checks: missing parameters, Write Defaults, expression-parameter sync, menu, layer/state, transition sanity.  <br/><sub>↳ before `var descriptor = avatarRoot.GetComponent<VRCAvatarDescriptor>();`</sub>
+
+### `private static void CheckMissingParameters(List<ControllerRef> controllers, List<AnimatorFinding> findings)`
+<sub>L130</sub>
+
+- **L130** - Walks every transition condition, blend-tree parameter (incl. Direct-tree children's directBlendParameter and 2D blendParameterY), and the state motion-time/speed/mirror/cycle-offset params, comparing referenced names to the controller's declared parameters. `InferParameterType` derives a custom param's type from its condition modes: If/IfNot=>Bool, Equals/NotEqual=>Int, Greater/Less or blend-usage=>Float. Built-ins are safe one-click adds; customs are review-required.  <br/><sub>↳ before `foreach (var cref in controllers)`</sub>
+
+### `public static WriteDefaultsResult DetectWriteDefaults(List<ControllerRef> controllers)`
+<sub>L260</sub>
+
+- **L260** - Port of VRCFury's `FixWriteDefaultsService.DetectExistingWriteDefaults`. Buckets every state as normal / Direct-blendtree / Additive (Additive = layer blendingMode Additive OR the Additive playable layer). Target `ShouldBeOn` = FX controller's normal-state majority when it has >10 normal states, else the global majority. `WeirdStates` (broken) = normal states disagreeing with the target PLUS all Direct-off PLUS all Additive-off, because Direct blend trees and additive states must always be WD ON.  <br/><sub>↳ before `var buckets = new List<WdBucket>();`</sub>
+
+### `public static void NormalizeWriteDefaults(List<ControllerRef> controllers, bool shouldBeOn)`
+<sub>L322</sub>
+
+- **L322** - The WD fix (VRCFury's `AdjustWriteDefaults`): per layer, target = shouldBeOn, force-ON if the layer contains a Direct blend tree or is Additive; sets every state's writeDefaultValues to that. WD-off is a flag flip only (does not synthesize default clips) - the finding text warns about that. This fix is deliberately its own button, not part of Fix-All-Safe, since it changes behavior.  <br/><sub>↳ before `foreach (var cref in controllers)`</sub>
+
+### `public static IEnumerable<AnimatorState> AllStates / AllTransitions / AllTrees`
+<sub>L706</sub>
+
+- **L706** - Shared recursive iterators reused by RigForge: AllStates recurses sub-state-machines; AllTransitions yields anyState+entry+per-state+sub-machine transitions; AllTrees yields a blend tree and all nested children. Kept public because RigForge's WD-target computation reuses them.  <br/><sub>↳ before `if (sm == null) yield break;`</sub>
+
+### `private static void CheckEmptyWriteDefaultsOffClips(...)` / `GetOrCreateEmptyClip` / `MotionHasEmptyIssue`
+<sub>L376</sub>
+
+- **L376** - Mirrors the VRChat SDK's `ScanStateMachineForWriteDefaultsOffEmptyClips` / `CheckMotion` (VRCSdkControlPanelAvatarBuilder.cs): flags every Write-Defaults-OFF state whose motion is null, is an AnimationClip with `.empty` true (zero curves/events), or is a BlendTree with any null/empty child. This is the "animator states with Write Defaults disabled where the animation clip is either missing or empty" SDK warning.  <br/><sub>↳ before `foreach (var cref in controllers)`</sub>
+- **L376** - Fix (IsSafe) assigns a shared inert clip `Assets/VixenForge/_Empty.anim`, get-or-created with exactly ONE harmless property (`m_IsActive = 1` on the avatar root, relative path ""), because a truly empty zero-curve clip still has `.empty == true` and would NOT clear the SDK warning - the SDK requires "at least one property". RepairStateMotion swaps the state motion, or repairs null/empty leaves inside a blend tree recursively. Reference sample structure lives in the untracked `Data Structures/EmptyAnim.yaml`.  <br/><sub>↳ before `GetOrCreateEmptyClip`</sub>
+
+---
+
+## `Editor/Avatar Tools/Animator Forge/RigForge.cs`
+
+*Static generation engine behind the Animator Forge "Forge" tab. Builds fully-wired rigs (expression parameter + menu control + FX layer/states + clips) that are non-destructive and Write-Defaults-consistent with the avatar. Added 2026-07-11.*
+
+
+### `public static RigResult Build(VRCAvatarDescriptor descriptor, RigRequest req)`
+<sub>L48</sub>
+
+- **L48** - Orchestrator: resolves/creates the FX controller and expression assets, computes the WD target from the whole avatar (defaulting ON only when there are zero existing states to match), dispatches to the per-type builder, then SetDirty + SaveAssets. `RigType` covers GameObjectToggle, BlendshapeToggle, BlendshapeSlider, MaterialSwap, ExclusiveGroup.  <br/><sub>↳ before `var controller = EnsureFxController(descriptor, result);`</sub>
+
+### `private static void BuildExclusiveGroup(...)`
+<sub>L229</sub>
+
+- **L229** - Radio group: one Int param (0=off, i+1=option i), a generated submenu of Toggle controls each pinned to its int value, and AnyState->stateN transitions on Int Equals. Each option clip sets its own object active AND every other option object inactive so it reads correctly regardless of the WD target (does not rely on WD to reset siblings).  <br/><sub>↳ before `var options = req.Options.Where(o => o != null).ToList();`</sub>
+
+### `private static void BuildToggleLayer(...)`
+<sub>L301</sub>
+
+- **L301** - Standard two-state toggle layer: Off/On states (writeDefaultValues = the detected target), instant 0s transitions driven by If/IfNot on the bool param, default state chosen by StartOn. `ConfigureInstant` sets hasExitTime false, fixed 0 duration, no self-transition.  <br/><sub>↳ before `var sm = NewLayer(controller, layerName);`</sub>
+
+### `private static AnimatorController EnsureFxController(VRCAvatarDescriptor descriptor, RigResult result)`
+<sub>L429</sub>
+
+- **L429** - Get-or-create the FX playable-layer controller. Uses the existing custom controller if present; if it is a read-only sample (path under Packages/ or VRCSDK/Sample) it is cloned into Assets/VixenForge/<avatar>/ before editing so shipped samples are never modified; if the FX slot is default/empty a fresh controller is created and assigned (customizeAnimationLayers = true, isDefault = false). Errors if the descriptor has no FX slot at all.  <br/><sub>↳ before `var layers = descriptor.baseAnimationLayers;`</sub>
+
+### `private static void EnsureExpressionAssets(...)`
+<sub>L478</sub>
+
+- **L478** - Get-or-create VRCExpressionParameters + VRCExpressionsMenu, assigning them to the descriptor (customExpressions = true). A freshly created parameter asset is seeded with the SDK defaults (VRCEmote/VRCFaceBlendH/VRCFaceBlendV). Assets land in Assets/VixenForge/<sanitized avatar name>/.  <br/><sub>↳ before `descriptor.customExpressions = true;`</sub>
+
+---
+
+## `Editor/Avatar Tools/Animator Forge/VixenAnimatorForge.cs`
+
+*EditorWindow host for the Animator Forge tool (menu `VixenTools/Avatars/Animator Forge`, surfaced in the Hub Core Modules grid). Doctor tab renders findings from AnimatorDoctor with per-finding + Fix-All-Safe buttons; Forge tab is the rig authoring form driving RigForge.Build. UIElements + VixenAnimatorForgeStyles.uss, matching the shared cyber panel/button classes. Added 2026-07-11.*
+
+
+### `private void RenderDoctor()`
+<sub>L130</sub>
+
+- **L130** - Doctor UI: RUN DIAGNOSTICS runs AnimatorDoctor.RunDiagnostics; the summary counts errors/warnings/info; "FIX ALL SAFE ISSUES" invokes every IsSafe finding's Fix then SaveAssets and re-scans. Each finding card has a LOCATE (ping) and its own FIX button; the whole list re-runs after any fix so results stay live.  <br/><sub>↳ before `var panel = Panel("Animator Diagnostics", "#00e5ff");`</sub>
+
+### `private VisualElement BuildMaterialPanel()`
+<sub>L390</sub>
+
+- **L390** - Material-swap form uses a string DropdownField for the slot rather than PopupField<int> to avoid the index/value overload trap (see memory reference_uitoolkit_popupfield_int_overload); blendshape popups use PopupField<string> with IndexOf. ExecuteForge confirms via a dialog before building (creating/assigning controller + expression assets is outward-affecting) and never deletes existing layers/params.  <br/><sub>↳ before `var rendererField = new ObjectField(...)`</sub>
+
+---
+
 ## `Editor/Avatar Tools/Armature Cloner/AccessoryArmatureCloner.cs`
 
 *13 comment(s).*

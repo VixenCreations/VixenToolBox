@@ -558,6 +558,69 @@
             </div>
 
             <!-- ========================= -->
+            <!-- ANIMATOR FORGE -->
+            <!-- ========================= -->
+            <div class="tool-card">
+                <div class="tool-image-container">
+                    <img src="previews/Animator_Forge_Preview.png"
+                         alt="Animator Forge"
+                         class="preview-trigger">
+                </div>
+
+                <div class="tool-content">
+                    <h3 class="text-glow-cyan">Animator Forge</h3>
+
+                    <p class="mb-3">
+                        A two-in-one avatar animator tool: diagnose broken controllers and forge fully-rigged toggles in a single click.
+                    </p>
+
+                    <ul class="custom-list m-0 ps-4">
+
+                        <li class="mb-2">
+                            <strong>Animator Doctor:</strong>
+                            Scans every playable-layer controller plus the Expression Parameters and Menu, then lists ranked findings with one-click fixes:
+                            <ul class="custom-list ps-4 mt-2">
+                                <li>Missing parameters, including VRChat built-ins like <code>Seated</code>, <code>AFK</code>, and the Gesture values, re-added with the correct type</li>
+                                <li>Broken mixes of Write Defaults across states</li>
+                                <li>Menu controls and toggles bound to parameters missing from the Expression Parameters</li>
+                                <li>Synced-parameter cost overflow, duplicate or mismatched parameters</li>
+                                <li>Dead zero-weight layers and invalid transitions</li>
+                            </ul>
+                            Each finding has a Locate button and, where safe, a Fix, plus a <em>Fix all safe issues</em> batch.
+                        </li>
+
+                        <li class="mb-2">
+                            <strong>Write Defaults Normalizer:</strong>
+                            Detection and repair follow the widely-used VRCFury model, grouping states as normal, Direct blend tree, or additive, taking the target from the FX layer's majority, and always forcing Direct blend trees and additive layers on. It reports the exact offending states and only changes anything on request.
+                        </li>
+
+                        <li class="mb-2">
+                            <strong>Empty-Clip Repair:</strong>
+                            Catches the SDK's "Write Defaults disabled where the animation clip is either missing or empty" warning using VRChat's own scan logic, then fixes it by assigning a shared inert clip that carries a single harmless property.
+                        </li>
+
+                        <li class="mb-2">
+                            <strong>Rig Builder:</strong>
+                            Builds complete, ready-to-use rigs with no manual wiring, generating the Expression parameter, the menu control or submenu, the FX layer with its states and transitions, and the animation clips:
+                            <ul class="custom-list ps-4 mt-2">
+                                <li>GameObject toggle (one or many objects at once)</li>
+                                <li>Blendshape toggle and blendshape slider (radial dial)</li>
+                                <li>Material swap</li>
+                                <li>Exclusive group (a radio set where enabling one option disables the rest)</li>
+                            </ul>
+                            New states are matched to the avatar's own Write Defaults convention.
+                        </li>
+
+                        <li class="mb-2">
+                            <strong>Non-Destructive by Design:</strong>
+                            Reuses or creates the FX controller and expression assets, clones read-only sample controllers before touching them, and never deletes existing layers or parameters.
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ========================= -->
             <!-- VIXENWEAR LATEX ULTRA -->
             <!-- ========================= -->
             <div class="tool-card">

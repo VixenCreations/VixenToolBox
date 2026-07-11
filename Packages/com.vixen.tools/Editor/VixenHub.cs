@@ -314,7 +314,7 @@ namespace VixenTools.Editor
 
     public class VixenHub : EditorWindow
     {
-        private enum TabMode { News, Dashboard, CoreModules, SupportedModules, ShaderDocs, MetricsDocs, Network, Support, Changelog }
+        private enum TabMode { News, Partners, Dashboard, CoreModules, SupportedModules, ShaderDocs, MetricsDocs, Network, Support, Changelog }
         private TabMode _currentMode = TabMode.News;
 
         private const string PackageRoot = "Packages/com.vixencreations.vixens-toolbox/";
@@ -335,6 +335,7 @@ namespace VixenTools.Editor
         private int _selectedChangelogIndex = 0;
 
         private Button _btnNews;
+        private Button _btnPartners;
         private Button _btnDashboard;
         private Button _btnCoreModules;
         private Button _btnSupportedModules;
@@ -453,6 +454,7 @@ namespace VixenTools.Editor
             tabContainer.style.flexDirection = FlexDirection.Row;
 
             _btnNews = new Button(() => SwitchMode(TabMode.News)) { text = "News" };
+            _btnPartners = new Button(() => SwitchMode(TabMode.Partners)) { text = "Partners" };
             _btnDashboard = new Button(() => SwitchMode(TabMode.Dashboard)) { text = "Architecture" };
             _btnCoreModules = new Button(() => SwitchMode(TabMode.CoreModules)) { text = "Core Modules" };
             _btnSupportedModules = new Button(() => SwitchMode(TabMode.SupportedModules)) { text = "Supported Modules" };
@@ -465,6 +467,7 @@ namespace VixenTools.Editor
             _btnChangelog = new Button(() => SwitchMode(TabMode.Changelog)) { text = "Changelogs" };
 
             _btnNews.AddToClassList("tab-btn");
+            _btnPartners.AddToClassList("tab-btn");
             _btnDashboard.AddToClassList("tab-btn");
             _btnCoreModules.AddToClassList("tab-btn");
             _btnSupportedModules.AddToClassList("tab-btn");
@@ -477,6 +480,7 @@ namespace VixenTools.Editor
             _btnChangelog.AddToClassList("tab-btn");
 
             tabContainer.Add(_btnNews);
+            tabContainer.Add(_btnPartners);
             tabContainer.Add(_btnDashboard);
             tabContainer.Add(_btnCoreModules);
             tabContainer.Add(_btnSupportedModules);
@@ -516,6 +520,7 @@ namespace VixenTools.Editor
             _currentMode = mode;
 
             _btnNews.RemoveFromClassList("tab-btn-active"); _btnNews.AddToClassList("tab-btn-inactive");
+            _btnPartners.RemoveFromClassList("tab-btn-active"); _btnPartners.AddToClassList("tab-btn-inactive");
             _btnDashboard.RemoveFromClassList("tab-btn-active"); _btnDashboard.AddToClassList("tab-btn-inactive");
             _btnCoreModules.RemoveFromClassList("tab-btn-active"); _btnCoreModules.AddToClassList("tab-btn-inactive");
             _btnSupportedModules.RemoveFromClassList("tab-btn-active"); _btnSupportedModules.AddToClassList("tab-btn-inactive");
@@ -535,6 +540,11 @@ namespace VixenTools.Editor
                     _btnNews.RemoveFromClassList("tab-btn-inactive"); _btnNews.AddToClassList("tab-btn-active");
                     _tabDescription.text = "Latest ecosystem news, partnerships, and announcements from <b>VixForge Interactive</b>.";
                     RenderNews();
+                    break;
+                case TabMode.Partners:
+                    _btnPartners.RemoveFromClassList("tab-btn-inactive"); _btnPartners.AddToClassList("tab-btn-active");
+                    _tabDescription.text = "Official partners of the <b>VixForge Interactive</b> ecosystem.";
+                    RenderPartners();
                     break;
                 case TabMode.Dashboard:
                     _btnDashboard.RemoveFromClassList("tab-btn-inactive"); _btnDashboard.AddToClassList("tab-btn-active");
@@ -671,6 +681,7 @@ namespace VixenTools.Editor
                 (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Badge Studio"), "Badge Studio", "High-fidelity procedural generation engine for VRChat convention badges."),
                 (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Quest Conversion Engine"), "Quest Conversion Engine", "Non-destructive, high-fidelity pipeline mapping 100% of Android performance limits."),
                 (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/PhysBone Topology Mapper"), "PhysBone Topology Mapper", "Automates PhysBone extraction and injection bypassing native prefab constraints."),
+                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Animator Forge"), "Animator Forge", "Diagnoses broken animators (missing params, mixed Write Defaults, menu desync) and forges fully-rigged toggles, sliders, swaps, and exclusive groups."),
                 (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Accessory Engine"), "Accessory Mounting Engine", "Generates sterile armature clones and surgically mounts accessories via destructive auto-rigging or kinematic parent constraints."),
                 (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Optimization Suite"), "Optimization Suite", "Advanced dual-pipeline validation and automated optimization engine with ImageMagick VRAM resolution.")
             };
@@ -770,7 +781,10 @@ The **VixForge Architecture** is engineered to interoperate flawlessly with indu
         private void RenderNews()
         {
             ParseMarkdownAndInject(LoadMarkdownFile("NEWS.md"), _contentContainer);
+        }
 
+        private void RenderPartners()
+        {
             var list = new List<(System.Action action, string title, string desc)>
             {
                 (() => Application.OpenURL("https://vixencreations.github.io/VixenToolBox/news.html"), "Read The Full Announcement", "The complete Enigma Industries x VixForge Interactive partnership write-up."),
