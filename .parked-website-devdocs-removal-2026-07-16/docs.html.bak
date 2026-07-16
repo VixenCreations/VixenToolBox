@@ -117,9 +117,9 @@
                 Changelog
             </fluent-anchor>
 
-            <fluent-anchor href="shader-changelogs.html" class="nav-item">
-                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                Shader Changelogs
+            <fluent-anchor href="developer-docs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                Developer Docs
             </fluent-anchor>
 
             <fluent-anchor href="support.html" class="nav-item">
@@ -150,6 +150,12 @@
                     procedural pipelines, and real-world implementation driving the editor utilities.
                 </p>
             </div>
+
+            <!-- DEVELOPER DOCS CROSS-LINK -->
+            <a href="developer-docs.html" class="glass-panel w-100 mb-4" style="display:flex; align-items:center; gap:1rem; padding:1.4rem 1.8rem; text-decoration:none;">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                <span style="color:#e0d5eb;"><strong class="text-glow-cyan">Working in the source?</strong> The tools ship comment-free - every in-code comment lives in <code>developer_info.md</code>. See <strong style="color:#ff5fae;">Developer Docs</strong> for how to read it. &rarr;</span>
+            </a>
 
             <!-- VIXEN HUB & DOM BRIDGING -->
             <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">

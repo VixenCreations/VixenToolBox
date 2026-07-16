@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vixens Toolbox | Developer Docs &amp; In-Code Comment Reference</title>
+    <meta name="title" content="Vixens Toolbox | Developer Docs & In-Code Comment Reference">
+    <meta name="description" content="How to read the Vixens Toolbox developer_info.md - the canonical in-code comment reference. A legend, a worked example, and the conventions behind the package's comment-free source files.">
+    <meta name="keywords" content="Vixens Toolbox developer docs, developer_info.md, in-code comment reference, VixForge Interactive, VRChat tools source reference, Unity editor tooling internals, comment-free source, C# documentation reference">
+    <meta name="author" content="Vixenlicous | VixForge Interactive">
+    <meta name="theme-color" content="#ff00aa">
+
+    <link rel="canonical" href="https://vixencreations.github.io/VixenToolBox/developer-docs.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/developer-docs.html">
+    <meta property="og:title" content="Vixens Toolbox | Developer Docs & In-Code Comment Reference">
+    <meta property="og:description" content="Learn to read developer_info.md - the canonical record of every comment lifted out of the Vixens Toolbox source. Legend, worked example, and conventions.">
+    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <meta property="og:site_name" content="VixForge Interactive | Vixens Toolbox">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/developer-docs.html">
+    <meta property="twitter:title" content="Vixens Toolbox | Developer Docs & In-Code Comment Reference">
+    <meta property="twitter:description" content="How to read developer_info.md, the canonical in-code comment reference for the Vixens Toolbox.">
+    <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <meta property="twitter:site" content="@VixenVRC">
+
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "TechArticle",
+          "headline": "Vixens Toolbox Developer Docs - In-Code Comment Reference",
+          "description": "A guide to reading developer_info.md, the canonical reference that holds every in-code comment lifted out of the Vixens Toolbox source files.",
+          "author": {
+            "@type": "Organization",
+            "name": "VixForge Interactive"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "VixForge Interactive"
+          },
+          "url": "https://vixencreations.github.io/VixenToolBox/developer-docs.html",
+          "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
+          "keywords": "Vixens Toolbox developer docs, developer_info.md, in-code comment reference, comment-free source, C# documentation reference"
+        }
+    </script>
+
+    <link rel="icon" href="./favicon.ico">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+
+    <script type="module" src="web-components.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        .code-block {
+            display: block;
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid rgba(0, 229, 255, 0.18);
+            border-left: 3px solid var(--neon-cyan);
+            border-radius: 8px;
+            padding: 1.1rem 1.3rem;
+            margin: 0;
+            overflow-x: auto;
+            font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+            font-size: 0.86rem;
+            line-height: 1.7;
+            color: #cfeffb;
+            white-space: pre;
+            tab-size: 2;
+        }
+
+        .legend-row {
+            display: grid;
+            grid-template-columns: minmax(170px, 220px) 1fr;
+            gap: 0.4rem 1.4rem;
+            align-items: start;
+            padding: 0.7rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+            .legend-row:last-child {
+                border-bottom: none;
+            }
+
+        .legend-token {
+            font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+            font-size: 0.82rem;
+            color: var(--neon-pink);
+            background: rgba(255, 0, 85, 0.08);
+            border: 1px solid rgba(255, 0, 85, 0.22);
+            border-radius: 6px;
+            padding: 0.35rem 0.55rem;
+            word-break: break-word;
+        }
+
+        .legend-desc {
+            color: #e0d5eb;
+            line-height: 1.6;
+        }
+
+        .entry-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 1.4rem 1.6rem;
+            margin-top: 1rem;
+        }
+
+        .entry-file {
+            font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+            color: var(--neon-cyan);
+            font-size: 0.95rem;
+            word-break: break-all;
+        }
+
+        .entry-member {
+            font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+            color: #ffd6ef;
+            font-size: 0.86rem;
+            display: block;
+            margin: 1.1rem 0 0.15rem;
+            word-break: break-word;
+        }
+
+        .entry-range {
+            color: #8a7ba0;
+            font-size: 0.74rem;
+        }
+
+        .entry-bullet {
+            padding: 0.45rem 0 0.45rem 1.1rem;
+            border-left: 2px solid rgba(255, 0, 85, 0.25);
+            margin: 0.5rem 0 0.5rem 0.2rem;
+        }
+
+            .entry-bullet .ln {
+                color: var(--neon-pink);
+                font-weight: 700;
+                font-family: monospace;
+            }
+
+            .entry-bullet .why {
+                color: #e6dcf0;
+            }
+
+            .entry-bullet .anchor {
+                display: block;
+                margin-top: 0.2rem;
+                color: #9a8ab0;
+                font-size: 0.8rem;
+            }
+
+                .entry-bullet .anchor code {
+                    color: #bfe9f7;
+                }
+
+        .pin {
+            color: var(--neon-cyan);
+        }
+
+        .scope-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .scope-cell {
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 10px;
+            padding: 1.1rem 1.3rem;
+        }
+
+            .scope-cell h4 {
+                margin: 0 0 0.5rem;
+            }
+
+            .scope-cell ul {
+                margin: 0;
+                padding-left: 1.1rem;
+                color: #c9bcd9;
+                line-height: 1.7;
+                font-size: 0.9rem;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="background-art"></div>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <a href="index.html" class="brand-logo-link"><img src="banner.png" class="sidebar-brand-logo" width="1536" height="665" alt="VixForge Interactive - Shaders, Worlds, Haptics" /></a>
+            <h2 class="text-glow-cyan">VIXENS TOOLBOX</h2>
+            <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">by VixForge Interactive</div>
+        </div>
+
+        <div class="nav-links">
+            <fluent-anchor href="index.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2.5L2 8.5H4V16.5H8V11.5H12V16.5H16V8.5H18L10 2.5Z" /></svg>
+                VPM Registry
+            </fluent-anchor>
+
+            <fluent-anchor href="about.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                About Us
+            </fluent-anchor>
+
+            <fluent-anchor href="news.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v13H4a2 2 0 0 0-2 2 2 2 0 0 0 2 2z"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8z"></path></svg>
+                News
+            </fluent-anchor>
+
+            <fluent-anchor href="ai-transparency.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                AI Transparency
+            </fluent-anchor>
+
+            <fluent-anchor href="why-choose-us.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                Why Choose Us?
+            </fluent-anchor>
+
+            <fluent-anchor href="tools.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2ZM11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14V10C9 9.44772 9.44772 9 10 9C10.5523 9 11 9.44772 11 10V14ZM10 8C9.44772 8 9 7.55228 9 7C9 6.44772 9.44772 6 10 6C10.5523 6 11 6.44772 11 7C11 7.55228 10.5523 8 10 8Z" /></svg>
+                List of Tools
+            </fluent-anchor>
+
+            <fluent-anchor href="docs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Deep-Dive Docs
+            </fluent-anchor>
+
+            <fluent-anchor href="shaderdocs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M7 9.5a5.5 5.5 0 0 1 5-3"></path><circle cx="9.5" cy="9.5" r="1.2" fill="currentColor" stroke="none"></circle></svg>
+                Shader Docs
+            </fluent-anchor>
+
+            <fluent-anchor href="changelog.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Changelog
+            </fluent-anchor>
+
+            <fluent-anchor href="developer-docs.html" class="nav-item active">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                Developer Docs
+            </fluent-anchor>
+
+            <fluent-anchor href="support.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                Support the Projects
+            </fluent-anchor>
+
+            <fluent-anchor href="social.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                Get Help Here
+            </fluent-anchor>
+
+            <fluent-anchor href="extended-projects.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                Extended Projects
+            </fluent-anchor>
+        </div>
+    </nav>
+
+    <main class="main-wrapper">
+        <div class="col align-items-center content" style="max-width: 1200px;">
+
+            <div class="col w-100 text-center mb-4">
+                <h1 class="text-glow-pink">Developer Docs</h1>
+                <p class="caption1 mt-2" style="font-size: 1.1rem; max-width: 820px; margin: 0 auto;">
+                    The source files in this package ship comment-free, on purpose. Every "why" that used to live as an
+                    inline comment now lives in one canonical file: <code>developer_info.md</code>. This page teaches you
+                    how to read it.
+                </p>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">What is developer_info.md?</h2>
+                    <div class="badge">Packages/com.vixen.tools/developer_info.md</div>
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    To keep imports and compiles fast (Unity re-parses every comment on every reload), we strip explanatory
+                    comments out of the C# and shader sources and move them into a single reference document. The code stays
+                    lean; the reasoning stays recorded. <code>developer_info.md</code> is that record - a comment-for-comment
+                    archive, organized so you can jump straight from a line of code to the thinking behind it.
+                </p>
+                <ul class="custom-list m-0 ps-4" style="line-height: 1.7; color: #c9bcd9;">
+                    <li><strong>One entry per comment.</strong> Currently <strong>1,481 entries</strong> across 27 source files.</li>
+                    <li><strong>First-party only.</strong> Our own tools, the VixenWear shaders, and the editor scripts. Vendored third-party includes (LTCGI, AudioLink, AreaLit, Light Volumes) keep their original headers untouched and are never archived here.</li>
+                    <li><strong>It is the place new comments go.</strong> When you add reasoning to this codebase, you file it here under its structure - not inline in the source.</li>
+                </ul>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">How to read an entry</h2>
+                    <div class="badge">Legend</div>
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    The file is grouped <strong>by source file</strong>, then <strong>
+                        by the nearest enclosing code
+                        structure
+                    </strong> (the method / property / field a comment lived in), then listed as individual
+                    comments. Here is the raw shape of one group:
+                </p>
+                <pre class="code-block mb-4">## `Editor/Scene Tools/Placement Tools/FixSceneData.cs`
+
+*7 comment(s).*
+
+### `public static void FixLightingDataAssignment()`
+&lt;sub&gt;L27&ndash;L42&lt;/sub&gt;
+
+- **L27** - Reference the existing lighting data asset for the active scene  &lt;br/&gt;&lt;sub&gt;&#8627; before `var lightingData = Lightmapping.lightingDataAsset;`&lt;/sub&gt;</pre>
+
+                <div style="margin-top: 0.5rem;">
+                    <div class="legend-row">
+                        <div class="legend-token">## `path`</div>
+                        <div class="legend-desc"><strong>File header.</strong> The source file this group of comments came from, written as a package-relative path.</div>
+                    </div>
+                    <div class="legend-row">
+                        <div class="legend-token">*N comment(s).*</div>
+                        <div class="legend-desc"><strong>Count.</strong> How many comment entries this file contributes.</div>
+                    </div>
+                    <div class="legend-row">
+                        <div class="legend-token">### `signature`</div>
+                        <div class="legend-desc"><strong>The durable anchor.</strong> The enclosing method, property, field, or type the comment belonged to. Code shifts and line numbers drift, but this signature is the stable landmark - search the source for it to find the spot.</div>
+                    </div>
+                    <div class="legend-row">
+                        <div class="legend-token">&lt;sub&gt;L27&ndash;L42&lt;/sub&gt;</div>
+                        <div class="legend-desc"><strong>Line range.</strong> The span of original line numbers the comments in this group occupied, as the file stood just before the strip.</div>
+                    </div>
+                    <div class="legend-row">
+                        <div class="legend-token">- **L27** - text</div>
+                        <div class="legend-desc"><strong>The comment.</strong> <code>L27</code> is its original line; the text is the comment, verbatim.</div>
+                    </div>
+                    <div class="legend-row">
+                        <div class="legend-token"><span class="pin">&#8627;</span> before `code`</div>
+                        <div class="legend-desc"><strong>The location pin.</strong> The line of code the comment sat <em>before</em>. You will also see <code><span class="pin">&#8627;</span> on `code`</code> - that means it was a trailing comment <em>on the same line</em> as that code.</div>
+                    </div>
+                </div>
+
+                <p class="caption1 mt-4 mb-0" style="color: #bfa8d2; line-height: 1.7;">
+                    <strong>Reading it in practice:</strong> find the <code>### signature</code> for the method you are in,
+                    then match the comment to its <span class="pin">&#8627;</span> pin to see exactly which statement it
+                    described. Treat line numbers as hints (they drift as code changes) and the signature + pin as the
+                    real coordinates.
+                </p>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">A real entry, rendered</h2>
+                    <div class="badge">Worked example</div>
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    This is the full <code>FixSceneData.cs</code> group exactly as it appears in the reference - seven
+                    comments, three structures. Reading top to bottom tells you why each line of that tool exists.
+                </p>
+
+                <div class="entry-card">
+                    <div class="entry-file">Editor/Scene Tools/Placement Tools/FixSceneData.cs</div>
+                    <div class="caption1" style="color:#8a7ba0; margin-top:0.2rem;">7 comments</div>
+
+                    <span class="entry-member">(file scope)</span>
+                    <span class="entry-range">L10&ndash;L11</span>
+                    <div class="entry-bullet">
+                        <span class="why"><span class="ln">L10</span> &middot; VixForge Utility: Forces serialization of lighting data to resolve</span>
+                        <span class="anchor"><span class="pin">&#8627;</span> before <code>public class FixSceneData</code></span>
+                    </div>
+                    <div class="entry-bullet">
+                        <span class="why"><span class="ln">L11</span> &middot; missing or unlinked lightmap references in the active scene.</span>
+                        <span class="anchor"><span class="pin">&#8627;</span> before <code>public class FixSceneData</code></span>
+                    </div>
+
+                    <span class="entry-member">public class FixSceneData</span>
+                    <span class="entry-range">L15</span>
+                    <div class="entry-bullet">
+                        <span class="why"><span class="ln">L15</span> &middot; Placed at the root of the VixenTools menu for immediate access</span>
+                        <span class="anchor"><span class="pin">&#8627;</span> before <code>[MenuItem("VixenTools/Scene/Fix Scene Data")]</code></span>
+                    </div>
+
+                    <span class="entry-member">public static void FixLightingDataAssignment()</span>
+                    <span class="entry-range">L27&ndash;L42</span>
+                    <div class="entry-bullet">
+                        <span class="why"><span class="ln">L27</span> &middot; Reference the existing lighting data asset for the active scene</span>
+                        <span class="anchor"><span class="pin">&#8627;</span> before <code>var lightingData = Lightmapping.lightingDataAsset;</code></span>
+                    </div>
+                    <div class="entry-bullet">
+                        <span class="why"><span class="ln">L36</span> &middot; Re-assigning the asset forces Unity to refresh the serialized reference in the scene file</span>
+                        <span class="anchor"><span class="pin">&#8627;</span> before <code>Lightmapping.lightingDataAsset = lightingData;</code></span>
+                    </div>
+                    <div class="entry-bullet">
+                        <span class="why"><span class="ln">L39</span> &middot; Mark the scene as 'dirty' so the Editor knows it has unsaved changes</span>
+                        <span class="anchor"><span class="pin">&#8627;</span> before <code>EditorSceneManager.MarkSceneDirty(currentScene);</code></span>
+                    </div>
+                    <div class="entry-bullet">
+                        <span class="why"><span class="ln">L42</span> &middot; Save the scene and flush all asset changes to disk (Serialization)</span>
+                        <span class="anchor"><span class="pin">&#8627;</span> before <code>bool saveSuccess = EditorSceneManager.SaveScene(currentScene);</code></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">What's documented</h2>
+                    <div class="badge">27 files</div>
+                </div>
+                <p class="mb-4" style="line-height: 1.6; color: #e0d5eb;">
+                    Every first-party source file in the package, grouped by the tool area it powers.
+                </p>
+                <div class="scope-grid">
+                    <div class="scope-cell">
+                        <h4 class="text-glow-pink">VixenWear Shaders</h4>
+                        <ul>
+                            <li>VixenWear Latex.shader</li>
+                            <li>VixenWear Latex SPS.shader</li>
+                            <li>VixenWearEditor.cs</li>
+                        </ul>
+                    </div>
+                    <div class="scope-cell">
+                        <h4 class="text-glow-pink">Avatar Tools</h4>
+                        <ul>
+                            <li>AccessoryArmatureCloner.cs</li>
+                            <li>VixenAvatarValidator.cs</li>
+                            <li>VixenMeshPatcher.cs</li>
+                            <li>VixenBadgeMaker.cs</li>
+                            <li>PhysBoneBlueprint.cs</li>
+                            <li>PhysBoneTopologyMapper.cs</li>
+                            <li>QuestConversionEngine.cs</li>
+                        </ul>
+                    </div>
+                    <div class="scope-cell">
+                        <h4 class="text-glow-pink">Engine Tools</h4>
+                        <ul>
+                            <li>AnimationWorkbenchWindow.cs</li>
+                            <li>CurveGraphView.cs</li>
+                            <li>CurveOperations.cs</li>
+                            <li>EasingDropdown.cs</li>
+                            <li>MaterialPropertySearchPopup.cs</li>
+                            <li>PreviewEngine.cs / TimelineRibbon.cs</li>
+                            <li>BulkPresetGenerator.cs</li>
+                        </ul>
+                    </div>
+                    <div class="scope-cell">
+                        <h4 class="text-glow-pink">Scene Tools</h4>
+                        <ul>
+                            <li>FixSceneData.cs</li>
+                            <li>SnapToSurface.cs</li>
+                            <li>ShaderDictionaryAsset.cs (+ editor)</li>
+                            <li>VixenEngineStressTest.cs</li>
+                            <li>VixenHeuristicsDashboard.cs</li>
+                            <li>VixenWorldSpider.cs</li>
+                        </ul>
+                    </div>
+                    <div class="scope-cell">
+                        <h4 class="text-glow-pink">Runtime</h4>
+                        <ul>
+                            <li>AreaLitGlobalBroadcaster.cs</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;" id="interactive-reference">
+                <div class="row justify-content-between align-items-center mb-4" style="flex-wrap: wrap; gap: 1rem;">
+                    <h2 class="text-glow-cyan m-0">Live Reference Database</h2>
+                    <div class="searchBlock" style="max-width: 400px; width: 100%;">
+                        <fluent-text-field id="devSearchInput" placeholder="Search functions, files, or comments...">
+                            <svg slot="start" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        </fluent-text-field>
+                    </div>
+                </div>
+                <div id="devInfoContainer">
+                    <p style="color: #bfa8d2; text-align: center; margin-top: 2rem;">Loading /info/developer_info.md...</p>
+                </div>
+            </div>
+
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Conventions &amp; the full reference</h2>
+                    <div class="badge">Read the source of truth</div>
+                </div>
+                <ul class="custom-list m-0 ps-4 mb-4" style="line-height: 1.7; color: #c9bcd9;">
+                    <li><strong>Line numbers drift, signatures don't.</strong> A line number is where a comment was at strip time; the <code>### signature</code> is the anchor you search for.</li>
+                    <li><strong>before vs on.</strong> <code><span class="pin">&#8627;</span> before</code> = a comment that preceded the code line; <code><span class="pin">&#8627;</span> on</code> = a trailing comment that shared the line.</li>
+                    <li><strong>Vendored code is left alone.</strong> Third-party shader includes keep their own license and attribution headers - they are never moved into this reference.</li>
+                    <li><strong>Plain text.</strong> The reference uses plain punctuation throughout for clean diffs and grep-friendly searching.</li>
+                </ul>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    The page above is the map. The territory is the file itself - all 1,481 entries, rendered by GitHub:
+                </p>
+            </div>
+
+        </div>
+
+        <button id="jumpToTopBtn" class="jump-to-top" title="Back to top">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+            </svg>
+        </button>
+
+    </main>
+
+    <script type="module" src="app.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                if (item.getAttribute('href') === 'developer-docs.html') {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+            // Interactive Developer Info Viewer Logic
+            const devSearchInput = document.getElementById('devSearchInput');
+            const devInfoContainer = document.getElementById('devInfoContainer');
+
+            if (devSearchInput && devInfoContainer) {
+                let parsedDevData = [];
+
+                const loadDevInfo = async () => {
+                    try {
+                        const response = await fetch('/info/developer_info.md');
+                        if (!response.ok) throw new Error('File not found');
+                        const mdText = await response.text();
+
+                        parsedDevData = parseDevMarkdown(mdText);
+
+                        // Guard: Do not render full database. 
+                        // Show a prompt instead so the user knows the tool is ready.
+                        devInfoContainer.innerHTML = '<p style="color: #bfa8d2; text-align: center; margin-top: 2rem;">Database loaded. Start typing in the search box to find specific documentation.</p>';
+                    } catch (err) {
+                        console.error('Error loading developer_info.md:', err);
+                        devInfoContainer.innerHTML = '<p style="color: var(--neon-pink); text-align: center; margin-top: 2rem; font-weight: bold;">Failed to load developer_info.md. Ensure it is deployed at /info/developer_info.md.</p>';
+                    }
+                };
+
+                const parseDevMarkdown = (md) => {
+                    const files = [];
+                    let currentFile = null;
+                    let currentMember = null;
+
+                    const lines = md.split('\n');
+                    for (let line of lines) {
+                        line = line.trim();
+                        if (line.startsWith('## `')) {
+                            const fileName = line.replace('## `', '').replace('`', '').trim();
+                            currentFile = { file: fileName, members: [] };
+                            files.push(currentFile);
+                        } else if (line.startsWith('### `')) {
+                            const sig = line.replace('### `', '').replace('`', '').trim();
+                            currentMember = { signature: sig, range: '', comments: [] };
+                            if (currentFile) currentFile.members.push(currentMember);
+                        } else if (line.startsWith('<sub>L')) {
+                            if (currentMember) currentMember.range = line.replace('<sub>', '').replace('</sub>', '').trim();
+                        } else if (line.startsWith('- **L') || line.startsWith('- **')) {
+                            if (currentMember) {
+                                const match = line.match(/- \*\*(L\d+|.*?)\*\* [-—] (.*?)\s*<br\/><sub>↳ (.*?)<\/sub>/);
+                                if (match) {
+                                    currentMember.comments.push({ line: match[1], text: match[2], pin: match[3] });
+                                } else {
+                                    currentMember.comments.push({ text: line });
+                                }
+                            }
+                        }
+                    }
+                    return files;
+                };
+
+                const renderDevInfo = (files, searchTerm) => {
+                    devInfoContainer.innerHTML = '';
+                    const term = searchTerm.toLowerCase();
+                    let hasResults = false;
+
+                    files.forEach(fileObj => {
+                        const filteredMembers = fileObj.members.filter(m => {
+                            if (!term) return true;
+                            if (m.signature.toLowerCase().includes(term)) return true;
+                            if (fileObj.file.toLowerCase().includes(term)) return true;
+                            return m.comments.some(c =>
+                                (c.text && c.text.toLowerCase().includes(term)) ||
+                                (c.pin && c.pin.toLowerCase().includes(term))
+                            );
+                        });
+
+                        if (filteredMembers.length === 0) return;
+                        hasResults = true;
+
+                        const card = document.createElement('div');
+                        card.className = 'entry-card';
+
+                        const fileTitle = document.createElement('div');
+                        fileTitle.className = 'entry-file';
+                        fileTitle.textContent = fileObj.file;
+                        card.appendChild(fileTitle);
+
+                        const countText = document.createElement('div');
+                        countText.className = 'caption1';
+                        countText.style.color = '#8a7ba0';
+                        countText.style.marginTop = '0.2rem';
+                        const commentCount = filteredMembers.reduce((sum, m) => sum + m.comments.length, 0);
+                        countText.textContent = `${commentCount} comment${commentCount !== 1 ? 's' : ''}`;
+                        card.appendChild(countText);
+
+                        filteredMembers.forEach(m => {
+                            const memTitle = document.createElement('span');
+                            memTitle.className = 'entry-member';
+                            memTitle.textContent = m.signature;
+                            card.appendChild(memTitle);
+
+                            if (m.range) {
+                                const memRange = document.createElement('span');
+                                memRange.className = 'entry-range';
+                                memRange.innerHTML = m.range;
+                                card.appendChild(memRange);
+                            }
+
+                            m.comments.forEach(c => {
+                                const bullet = document.createElement('div');
+                                bullet.className = 'entry-bullet';
+
+                                if (c.line && c.text && c.pin) {
+                                    const why = document.createElement('span');
+                                    why.className = 'why';
+                                    why.innerHTML = `<span class="ln">${c.line}</span> &middot; ${c.text}`;
+                                    bullet.appendChild(why);
+
+                                    const anchor = document.createElement('span');
+                                    anchor.className = 'anchor';
+                                    const pinHtml = c.pin.replace(/`(.*?)`/g, '<code>$1</code>');
+                                    anchor.innerHTML = `<span class="pin">&#8627;</span> ${pinHtml}`;
+                                    bullet.appendChild(anchor);
+                                } else {
+                                    bullet.textContent = c.text;
+                                }
+                                card.appendChild(bullet);
+                            });
+                        });
+
+                        devInfoContainer.appendChild(card);
+                    });
+
+                    if (!hasResults) {
+                        devInfoContainer.innerHTML = '<p style="color: #8a7ba0; text-align: center; margin-top: 2rem;">No functions or comments found matching your search.</p>';
+                    }
+                };
+
+                devSearchInput.addEventListener('input', (e) => {
+                    const query = e.target.value;
+                    if (!query || query.trim() === '') {
+                        devInfoContainer.innerHTML = '<p style="color: #bfa8d2; text-align: center; margin-top: 2rem;">Start typing to search...</p>';
+                    } else {
+                        renderDevInfo(parsedDevData, query);
+                    }
+                });
+
+                loadDevInfo();
+            }
+        });
+    </script>
+</body>
+</html>

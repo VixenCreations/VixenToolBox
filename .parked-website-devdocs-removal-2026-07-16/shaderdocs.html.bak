@@ -7,7 +7,7 @@
     <!-- Primary SEO -->
     <title>Vixens Toolbox | VixenWear Latex Ultra Shader Inspector Reference</title>
     <meta name="title" content="Vixens Toolbox | VixenWear Latex Ultra Shader Inspector Reference">
-    <meta name="description" content="A complete, control-by-control reference for the VixenWear Latex Ultra shader inspector - every option across every section of the VixForge Editor.">
+    <meta name="description" content="A complete, control-by-control reference for the VixenWear Latex Ultra shader inspector - every option across all Thry inspector sections, documented with editor screenshots.">
     <meta name="keywords" content="VixenWear Latex Ultra, VixenWear shader docs, VRChat shader inspector, GGX BRDF shader, AudioLink shader, LTCGI shader, Light Volumes shader, VRSL DMX shader, Poiyomi Mochie packing, clearcoat latex shader, VRChat avatar shader, VixForge Interactive, Vixenlicous">
     <meta name="author" content="Vixenlicous | VixForge Interactive">
     <meta name="theme-color" content="#ff00aa">
@@ -19,7 +19,7 @@
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/shaderdocs.html">
     <meta property="og:title" content="Vixens Toolbox | VixenWear Latex Ultra Shader Inspector Reference">
-    <meta property="og:description" content="A complete control-by-control reference for the VixenWear Latex Ultra shader inspector, covering every section of the VixForge Editor.">
+    <meta property="og:description" content="A complete control-by-control reference for the VixenWear Latex Ultra shader inspector, with editor screenshots for every Thry inspector section.">
     <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="og:site_name" content="VixForge Interactive | Vixens Toolbox">
 
@@ -27,7 +27,7 @@
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/shaderdocs.html">
     <meta property="twitter:title" content="Vixens Toolbox | VixenWear Latex Ultra Shader Inspector Reference">
-    <meta property="twitter:description" content="A complete control-by-control reference for the VixenWear Latex Ultra shader inspector across every section of the VixForge Editor.">
+    <meta property="twitter:description" content="A complete control-by-control reference for the VixenWear Latex Ultra shader inspector across all Thry inspector sections, with editor screenshots.">
     <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="twitter:site" content="@VixenVRC">
 
@@ -37,7 +37,7 @@
           "@context": "https://schema.org",
           "@type": "TechArticle",
           "headline": "VixenWear Latex Ultra Shader Inspector Reference",
-          "description": "A complete control-by-control reference for the VixenWear Latex Ultra shader inspector across every section of the VixForge Editor.",
+          "description": "A complete control-by-control reference for the VixenWear Latex Ultra shader inspector across all Thry inspector sections, with editor screenshots.",
           "author": {
             "@type": "Organization",
             "name": "VixForge Interactive"
@@ -181,9 +181,9 @@
                 Changelog
             </fluent-anchor>
 
-            <fluent-anchor href="shader-changelogs.html" class="nav-item">
-                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                Shader Changelogs
+            <fluent-anchor href="developer-docs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                Developer Docs
             </fluent-anchor>
 
             <fluent-anchor href="support.html" class="nav-item">
@@ -211,7 +211,7 @@
                 <h1 class="text-glow-pink">VixenWear Latex Ultra Inspector</h1>
                 <p class="caption1 mt-2" style="font-size: 1.1rem; max-width: 850px; margin: 0 auto;">
                     A complete control-by-control reference for the VixenWear Latex Ultra inspector. The material
-                    inspector is driven by the <strong>VixForge Editor</strong>, and this page is laid out the same
+                    inspector is driven by the <strong>Thry shader editor</strong>, and this page is laid out the same
                     way: <strong>one section per inspector section</strong>, in the order the inspector lists them.
                 </p>
                 <p class="caption1" style="font-size: 0.95rem; max-width: 850px; margin: 0.8rem auto 0; color: #bfa8d2;">
@@ -264,7 +264,7 @@
                     <li class="mb-2"><strong>CutOff</strong> - The alpha clip threshold, shown only in Cutout mode.
                         Fade / Transparent read alpha from the Albedo (A) channel.</li>
                     <li class="mb-2"><strong>Color</strong> - The main color tint multiplied into the albedo.</li>
-                    <li class="mb-2"><strong>Albedo</strong> - The main texture slot. RGB is the albedo;
+                    <li class="mb-2"><strong>Albedo (RGB) Cutout (A)</strong> - The main texture slot. RGB is the albedo;
                         the Alpha channel carries the Cutout threshold in Cutout mode and the opacity in Fade /
                         Transparent.</li>
                     <li class="mb-2"><strong>Minimum Brightness</strong> - A floor on the final lit result so the surface
@@ -324,7 +324,7 @@
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Packed PBR Mask</strong> - The texture slot for the packed map.</li>
-                    <li class="mb-2"><strong>Reflection + Specular Masks</strong> - Reads two more channels off the
+                    <li class="mb-2"><strong>Enable Reflection / Specular Masks</strong> - Reads two more channels off the
                         packed map: a Reflection Mask that dims environment / probe specular (clearcoat env, Light
                         Volume, LTCGI), and a Specular Mask that dims direct-light highlights. Matcaps keep their own
                         masks and are unaffected.</li>
@@ -339,7 +339,7 @@
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Metallic Channel</strong> / <strong>Invert Metallic</strong> - Which channel
                         supplies metalness, and a flip for sources stored inverted.</li>
-                    <li class="mb-2"><strong>Smoothness Channel</strong> / <strong>Channel is Roughness</strong>
+                    <li class="mb-2"><strong>Smoothness Channel</strong> / <strong>Channel Stores Roughness (Invert)</strong>
                         - Which channel supplies smoothness; enable the invert when the channel holds roughness.</li>
                     <li class="mb-2"><strong>AO Channel</strong> - Which channel supplies ambient occlusion, or
                         <code>None</code> to disable AO sampling.</li>
@@ -410,7 +410,7 @@
 
                 <h3 class="text-glow-pink opt-group">Setup</h3>
                 <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Enable</strong> - Master switch for the whole decal section. Off by default, so existing materials are untouched.</li>
+                    <li class="mb-2"><strong>Enable Decals</strong> - Master switch for the whole decal section. Off by default, so existing materials are untouched.</li>
                     <li class="mb-2"><strong>Decal Masks (RGBA)</strong> - One optional packed texture whose Red, Green, Blue and Alpha channels can each limit where Decal 0, 1, 2 and 3 appear. Leave it white to let decals show wherever their placement allows.</li>
                 </ul>
 
@@ -418,13 +418,13 @@
                 <ul class="custom-list m-0 ps-4">
                     <li class="mb-2"><strong>Enable</strong> - Turns this individual layer on.</li>
                     <li class="mb-2"><strong>Decal</strong> - The image to place (logo, sticker, tattoo, and so on).</li>
-                    <li class="mb-2"><strong>Tint</strong> - Colour multiplied over the decal; the colour's alpha sets the layer's overall opacity.</li>
+                    <li class="mb-2"><strong>Tint (A = Strength)</strong> - Colour multiplied over the decal; the colour's alpha sets the layer's overall opacity.</li>
                     <li class="mb-2"><strong>Position / Scale / Rotation</strong> - Where the decal sits, how big it is, and its angle. Easiest to set by dragging the gizmo in the Scene view. Rotation Speed slowly spins the decal over time.</li>
                     <li class="mb-2"><strong>Side Offset</strong> - Nudges the left, right, bottom and top edges independently to stretch or crop the decal box.</li>
                     <li class="mb-2"><strong>UV Source</strong> - Which UV layout to place the decal on (the main set, or a secondary set if your mesh has one).</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the Decal Masks texture limits this layer.</li>
                     <li class="mb-2"><strong>Color Blend</strong> - How the decal combines with the latex underneath: Normal, Darken, Multiply, Lighten, Screen, Add, Subtract or Overlay.</li>
-                    <li class="mb-2"><strong>Strength</strong> - Makes the decal glow, for neon logos or lit signage.</li>
+                    <li class="mb-2"><strong>Emission Strength</strong> - Makes the decal glow, for neon logos or lit signage.</li>
                     <li class="mb-2"><strong>Smoothness Offset</strong> - Makes the decal read glossier (positive) or more matte (negative) than the surrounding latex, so a printed sticker can stand apart from the shine around it.</li>
                     <li class="mb-2"><strong>Mirror UV / Symmetry</strong> - Flip the decal, restrict it to one side, or mirror it across the body's centre for symmetric placement.</li>
                     <li class="mb-2"><strong>Tiled</strong> - Off keeps a single decal clamped to its box; on repeats it across the surface.</li>
@@ -439,7 +439,7 @@
                     <h2 class="text-glow-cyan m-0">LIGHTING</h2>
                     <div class="badge">Section 6 of 17</div>
                 </div>
-                <p class="tab-desc">AO, contact shadow, rim, subsurface, anisotropy, transmission, and energy conservation. Most of these belong to the polish layer and are gated by <a href="#polish" style="color: var(--neon-cyan);">POLISH &gt; Enable</a>.</p>
+                <p class="tab-desc">AO, contact shadow, rim, subsurface, anisotropy, transmission, and energy conservation. Most of these belong to the polish layer and are gated by <a href="#polish" style="color: var(--neon-cyan);">Enable Polish Layer</a>.</p>
 
                 <ul class="custom-list m-0 ps-4">
                     <li class="mb-2"><strong>AO Strength</strong> - Strength of the multi-bounce ambient-occlusion term
@@ -466,7 +466,7 @@
                         distances tint and darken the transmitted light faster.</li>
                     <li class="mb-2"><strong>Transmission Falloff</strong> - Angular tightness of the back-light term as
                         the light moves behind the surface.</li>
-                    <li class="mb-2"><strong>Multi-Scatter Compensation</strong> - Filament / Frostbite
+                    <li class="mb-2"><strong>Multi-Scatter Energy Compensation</strong> - Filament / Frostbite
                         multi-scatter compensation that adds back energy lost at high roughness, keeping bright metals
                         from going dull.</li>
                     <li class="mb-2"><strong>Horizon Specular Occlusion</strong> - Fades reflections that surface
@@ -491,16 +491,16 @@
 
 
                 <p class="opt-note">
-                    <strong>Enable</strong> is the master gate for the whole polish lighting layer
+                    <strong>Enable Polish Layer</strong> is the master gate for the whole polish lighting layer
                     (clearcoat, thin film, plus the SSS / transmission / anisotropy / rim / multi-scatter terms over in
                     <a href="#lighting" style="color: var(--neon-cyan);">LIGHTING</a>). Off collapses the material to a
                     flat GGX base.
                 </p>
                 <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Enable</strong> - Turns the whole polish stack on or off.</li>
-                    <li class="mb-2"><strong>Mask</strong> - Optional grayscale mask scoping the polish
+                    <li class="mb-2"><strong>Enable Polish Layer</strong> - Turns the whole polish stack on or off.</li>
+                    <li class="mb-2"><strong>Polish Mask (B&amp;W)</strong> - Optional grayscale mask scoping the polish
                         layer to painted regions.</li>
-                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask to read.</li>
+                    <li class="mb-2"><strong>Polish Mask Channel</strong> - Which channel of the mask to read.</li>
                     <li class="mb-2"><strong>Clearcoat Strength</strong> - Intensity of the dielectric clear coat lobe
                         layered over the base.</li>
                     <li class="mb-2"><strong>Clearcoat Smoothness</strong> - Smoothness of the coat (1 = mirror-sharp
@@ -512,7 +512,7 @@
                         geometric normal so the glossy film reads smooth over rough underlying texture.</li>
                     <li class="mb-2"><strong>Clearcoat Tint</strong> - Color cast of the coat reflection. White is
                         neutral; colored tints attenuate the under-layer per channel for oil-on-water looks.</li>
-                    <li class="mb-2"><strong>Clearcoat Reflectivity</strong> - Base Fresnel reflectance of the coat.
+                    <li class="mb-2"><strong>Clearcoat F0</strong> - Base Fresnel reflectance of the coat.
                         <code>0.04</code> reproduces a standard dielectric exactly; higher values brighten the
                         grazing-angle reflection.</li>
                     <li class="mb-2"><strong>Thin Film Strength</strong> - Strength of the interference rainbow across
@@ -541,18 +541,18 @@
                     wet highlight.
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable Drip</strong> - Master toggle for the wet / run-off
+                    <li class="mb-2"><strong>Enable Drip (Water Run-Off)</strong> - Master toggle for the wet / run-off
                         layer.</li>
-                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> -
+                    <li class="mb-2"><strong>Drip Mask (B&amp;W)</strong> + <strong>Drip Mask Channel</strong> -
                         Grayscale mask (and channel) choosing where the surface is wet and where drips form.</li>
-                    <li class="mb-2"><strong>Wetness</strong> - Overall amount of the wet effect.</li>
-                    <li class="mb-2"><strong>Darkening</strong> - How much the soaked area darkens, simulating water
+                    <li class="mb-2"><strong>Wetness (Soaked)</strong> - Overall amount of the wet effect.</li>
+                    <li class="mb-2"><strong>Wet Darkening</strong> - How much the soaked area darkens, simulating water
                         absorption.</li>
-                    <li class="mb-2"><strong>Smoothness</strong> - Smoothness of the water film (toward a near-mirror
+                    <li class="mb-2"><strong>Wet Smoothness</strong> - Smoothness of the water film (toward a near-mirror
                         reflection).</li>
-                    <li class="mb-2"><strong>Film Sheen</strong> - Strength of the dielectric Fresnel sheen riding on
+                    <li class="mb-2"><strong>Wet Film Sheen</strong> - Strength of the dielectric Fresnel sheen riding on
                         the clearcoat.</li>
-                    <li class="mb-2"><strong>Normal Flatten</strong> - Flattens micro-detail under the film so the
+                    <li class="mb-2"><strong>Wet Normal Flatten</strong> - Flattens micro-detail under the film so the
                         wet area reads slick.</li>
                 </ul>
 
@@ -560,16 +560,16 @@
                 <p class="opt-note">Animated vertical streaks of water running off, layered on top of the soak. Set
                     Streak Strength to 0 for a still, evenly-soaked look.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Streak Density</strong> - Number of rivulet columns across the
+                    <li class="mb-2"><strong>Drip Density (Columns)</strong> - Number of rivulet columns across the
                         surface.</li>
-                    <li class="mb-2"><strong>Streak Thinness</strong> - Width of each streak; higher values produce
+                    <li class="mb-2"><strong>Rivulet Thinness</strong> - Width of each streak; higher values produce
                         narrower streaks.</li>
-                    <li class="mb-2"><strong>Streak Coverage</strong> - How much of the masked area the rivulets occupy
+                    <li class="mb-2"><strong>Drip Coverage</strong> - How much of the masked area the rivulets occupy
                         (shared with the 3D drips).</li>
-                    <li class="mb-2"><strong>Flow Speed</strong> - Vertical scroll speed of the run-off (shared with
+                    <li class="mb-2"><strong>Drip Flow Speed</strong> - Vertical scroll speed of the run-off (shared with
                         the 3D drips).</li>
-                    <li class="mb-2"><strong>Streak Strength</strong> - Visual intensity of the streaks.</li>
-                    <li class="mb-2"><strong>Streak Bump</strong> - How much each streak perturbs the normal for a
+                    <li class="mb-2"><strong>Drip Run-Off Streak Strength</strong> - Visual intensity of the streaks.</li>
+                    <li class="mb-2"><strong>Drip Normal Bump</strong> - How much each streak perturbs the normal for a
                         raised, refractive bead.</li>
                 </ul>
 
@@ -578,12 +578,12 @@
                     areas, form a neck, pinch off, and fall away as free geometry, tinted to the Clearcoat Tint. PC only
                     - it uses a geometry stage, so it is not present on the SPS shader or Quest.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Droplet Amount</strong> - How many droplets spawn across the wet
+                    <li class="mb-2"><strong>Clear Drip Amount</strong> - How many droplets spawn across the wet
                         area.</li>
-                    <li class="mb-2"><strong>Droplet Scale</strong> - Approximate droplet diameter.</li>
-                    <li class="mb-2"><strong>Droplet Glassiness</strong> - How clear / refractive the droplet looks
+                    <li class="mb-2"><strong>Clear Drip Droplet Scale</strong> - Approximate droplet diameter.</li>
+                    <li class="mb-2"><strong>Clear Drip Glassiness</strong> - How clear / refractive the droplet looks
                         versus a milky bead.</li>
-                    <li class="mb-2"><strong>Droplet Fall Length</strong> - How far a drop falls before it fades
+                    <li class="mb-2"><strong>Clear Drip Fall Length</strong> - How far a drop falls before it fades
                         out.</li>
                 </ul>
 
@@ -592,9 +592,9 @@
                     drop run down along the body before it detaches. Floor Splat pins drops to the shared world floor
                     (the Goo "Ground / Floor Height") and spreads them into a fading puddle.</p>
                 <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Sway / Wobble</strong> - Surface-tension wobble and breeze on
+                    <li class="mb-2"><strong>Droplet Sway / Wobble</strong> - Surface-tension wobble and breeze on
                         falling drops.</li>
-                    <li class="mb-2"><strong>Surface Slide</strong> - How far an attached drop runs along the
+                    <li class="mb-2"><strong>Droplet Surface Slide</strong> - How far an attached drop runs along the
                         body before detaching.</li>
                     <li class="mb-2"><strong>Droplet Floor Splat</strong> - Pins landed drops to the shared world floor
                         and spreads them into a fading puddle.</li>
@@ -618,22 +618,22 @@
                     off-screen unless the mesh bounds (or an Anchor Override) are expanded.
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - Master toggle for the melting-sag
+                    <li class="mb-2"><strong>Enable Goo (Melting Sag)</strong> - Master toggle for the melting-sag
                         system.</li>
-                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Grayscale
+                    <li class="mb-2"><strong>Goo Mask (B&amp;W)</strong> + <strong>Goo Mask Channel</strong> - Grayscale
                         mask (and channel) scoping where the latex melts.</li>
-                    <li class="mb-2"><strong>Sag Distance</strong> - Master intensity of the melt.</li>
-                    <li class="mb-2"><strong>Stretch Distance</strong> - How far the goo sags, in world units;
+                    <li class="mb-2"><strong>Goo Sag Distance</strong> - Master intensity of the melt.</li>
+                    <li class="mb-2"><strong>Goo Stretch Distance</strong> - How far the goo sags, in world units;
                         dramatically extends strand length.</li>
-                    <li class="mb-2"><strong>Strand Variation</strong> - Procedural FBM noise so tendrils range from
+                    <li class="mb-2"><strong>Goo Strand Variation</strong> - Procedural FBM noise so tendrils range from
                         uniform (0) to wildly uneven (1).</li>
-                    <li class="mb-2"><strong>Tendril Scale</strong> - Spatial scale of the tendril pattern.</li>
-                    <li class="mb-2"><strong>Flow Speed</strong> - How fast the melt animates / flows over time.</li>
-                    <li class="mb-2"><strong>Underside Bias</strong> - Biases melting toward downward-facing surfaces
+                    <li class="mb-2"><strong>Goo Tendril Scale</strong> - Spatial scale of the tendril pattern.</li>
+                    <li class="mb-2"><strong>Goo Flow Speed</strong> - How fast the melt animates / flows over time.</li>
+                    <li class="mb-2"><strong>Goo Underside Bias</strong> - Biases melting toward downward-facing surfaces
                         where latex would actually drip.</li>
-                    <li class="mb-2"><strong>Melt To Ground</strong> - Pulls the goo down toward the world ground
+                    <li class="mb-2"><strong>Goo Melt To Ground</strong> - Pulls the goo down toward the world ground
                         plane so strands can reach the floor regardless of avatar height.</li>
-                    <li class="mb-2"><strong>Ground Height</strong> - The world-space Y of your floor
+                    <li class="mb-2"><strong>Goo Ground Height (World Y)</strong> - The world-space Y of your floor
                         (usually 0), shared by both the goo and the drip floor splat.</li>
                 </ul>
 
@@ -642,13 +642,13 @@
                     body instead of sinking through it. Floor Collision clamps the melt to the Ground / Floor Height, and
                     Floor Pooling spreads landed strands sideways into a puddle.</p>
                 <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Sway Amount</strong> - Pendulum swing magnitude of the tendrils.</li>
-                    <li class="mb-2"><strong>Sway Speed</strong> - Rate of the sway.</li>
-                    <li class="mb-2"><strong>Surface Follow</strong> - How much goo flows along the body
+                    <li class="mb-2"><strong>Goo Sway Amount</strong> - Pendulum swing magnitude of the tendrils.</li>
+                    <li class="mb-2"><strong>Goo Sway Speed</strong> - Rate of the sway.</li>
+                    <li class="mb-2"><strong>Goo Surface Follow (Body)</strong> - How much goo flows along the body
                         instead of through it.</li>
-                    <li class="mb-2"><strong>Floor Collision</strong> - Clamps the melt to the floor height instead
+                    <li class="mb-2"><strong>Goo Floor Collision</strong> - Clamps the melt to the floor height instead
                         of passing through it.</li>
-                    <li class="mb-2"><strong>Floor Pooling</strong> - Spreads landed strands sideways into a
+                    <li class="mb-2"><strong>Goo Floor Pooling</strong> - Spreads landed strands sideways into a
                         puddle.</li>
                 </ul>
             </div>
@@ -669,21 +669,21 @@
                     compiles at zero added cost.
                 </p>
                 <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Enable</strong> - Turns the backface outline pass on.</li>
-                    <li class="mb-2"><strong>Color</strong> - Solid color of the outline shell.</li>
-                    <li class="mb-2"><strong>Emission</strong> - HDR glow color added to the outline
+                    <li class="mb-2"><strong>Enable Outline</strong> - Turns the backface outline pass on.</li>
+                    <li class="mb-2"><strong>Outline Color</strong> - Solid color of the outline shell.</li>
+                    <li class="mb-2"><strong>Outline Emission (HDR Glow)</strong> - HDR glow color added to the outline
                         for a neon edge.</li>
-                    <li class="mb-2"><strong>Width</strong> - Extrusion thickness along the normal.
+                    <li class="mb-2"><strong>Outline Width</strong> - Extrusion thickness along the normal.
                         Auto-scales with eye depth so it stays a constant visual thickness.</li>
-                    <li class="mb-2"><strong>Max Width</strong> - Caps the apparent width at
+                    <li class="mb-2"><strong>Max Outline Width (Distance Clamp)</strong> - Caps the apparent width at
                         distance so the outline doesn't balloon far from camera.</li>
-                    <li class="mb-2"><strong>View Push</strong> - A small view-space offset
+                    <li class="mb-2"><strong>Outline View Fudge (Push Toward Camera)</strong> - A small view-space offset
                         to reduce z-fighting between the shell and the surface.</li>
-                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Optional
+                    <li class="mb-2"><strong>Outline Mask</strong> + <strong>Outline Mask Channel</strong> - Optional
                         mask (and channel) restricting the outline to painted regions; set the channel to
                         <code>None</code> for a uniform outline.</li>
-                    <li class="mb-2"><strong>AudioLink Band</strong> - Which AudioLink band drives the outline.</li>
-                    <li class="mb-2"><strong>AudioLink Emission Boost</strong> - How strongly that band pumps the
+                    <li class="mb-2"><strong>Outline AL Band</strong> - Which AudioLink band drives the outline.</li>
+                    <li class="mb-2"><strong>Outline AL Emission Boost</strong> - How strongly that band pumps the
                         outline emission.</li>
                 </ul>
             </div>
@@ -700,15 +700,15 @@
 
                 <h3 class="text-glow-pink opt-group">Emission Exposure &amp; Layer 1</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Exposure (All Layers)</strong> - Extra exposure multiplier over every layer for fine bloom control.</li>
-                    <li class="mb-2"><strong>Color</strong> + <strong>Map</strong> - HDR tint / intensity and the texture defining where layer 1 emits.</li>
+                    <li class="mb-2"><strong>Emission Exposure (All Layers)</strong> - Extra exposure multiplier over every layer for fine bloom control.</li>
+                    <li class="mb-2"><strong>Emission Color</strong> + <strong>Emission Map (RGB tint, A mask)</strong> - HDR tint / intensity and the texture defining where layer 1 emits.</li>
                     <li class="mb-2"><strong>Layer 1 AudioLink Band</strong> / <strong>Amplitude</strong> / <strong>Color Blend</strong> - Which AudioLink band drives layer 1, how strongly it pulses, and how much AudioLink's colour replaces the emission colour. Shown only when AudioLink is enabled.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Emission Layers 2-5</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable Layer 2</strong> (and layers 3, 4, 5) - Each adds a fully independent extra emission layer, off by default.</li>
-                    <li class="mb-2"><strong>Color</strong> + <strong>Emission Map 2</strong> + <strong>Mask Channel</strong> - HDR tint, texture, and mask channel for each layer (layers 3-5 mirror these controls).</li>
+                    <li class="mb-2"><strong>Enable Secondary Emission Layer</strong> (and layers 3, 4, 5) - Each adds a fully independent extra emission layer, off by default.</li>
+                    <li class="mb-2"><strong>Emission Color 2</strong> + <strong>Emission Map 2</strong> + <strong>Emission 2 Mask Channel</strong> - HDR tint, texture, and mask channel for each layer (layers 3-5 mirror these controls).</li>
                     <li class="mb-2"><strong>Layer AudioLink Band</strong> / <strong>Amplitude</strong> - Which AudioLink band reacts on each layer and how strongly it modulates that layer's brightness, so you can route bass to one and treble to another. Shown only when AudioLink is enabled.</li>
                 </ul>
 
@@ -719,9 +719,9 @@
                     zones without a second material.
                 </p>
                 <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Multi-Region Color Mask</strong> - Turns on the three-zone color
+                    <li class="mb-2"><strong>Enable Multi-Region Color Mask</strong> - Turns on the three-zone color
                         mask.</li>
-                    <li class="mb-2"><strong>Region Mask</strong> - The mask texture whose R, G, and B
+                    <li class="mb-2"><strong>Region Mask (R/G/B Zones)</strong> - The mask texture whose R, G, and B
                         channels define three independent zones.</li>
                     <li class="mb-2"><strong>Red Zone Tint</strong> / <strong>Red Zone Emission Boost</strong> - Albedo
                         tint and added glow for the red zone.</li>
@@ -744,21 +744,21 @@
 
                 <h3 class="text-glow-pink opt-group">Global Settings</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Projection</strong> - Blends matcap sampling between camera-aligned and mesh-aligned. 0 = pure camera-aligned (sliding / reflective), 1 = pure mesh-UV-aligned (glued to the geometry). Higher values pin the matcap to the surface and reduce the sliding feeling as the camera moves. Applies to every layer; for a per-layer lock, use that layer's Freeze instead.</li>
+                    <li class="mb-2"><strong>MatCap Projection Bias (0=View, 1=Mesh)</strong> - Blends matcap sampling between camera-aligned and mesh-aligned. 0 = pure camera-aligned (sliding / reflective), 1 = pure mesh-UV-aligned (glued to the geometry). Higher values pin the matcap to the surface and reduce the sliding feeling as the camera moves. Applies to every layer; for a per-layer lock, use that layer's Freeze instead.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Matcap 1</h3>
                 <ul class="custom-list m-0 ps-4 mb-3">
-                    <li class="mb-2"><strong>Enable</strong> - Turns layer 1 on.</li>
-                    <li class="mb-2"><strong>Texture</strong> - The material-capture sphere texture.</li>
-                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Mask, and which channel, restricting the layer to painted regions.</li>
-                    <li class="mb-2"><strong>Tint</strong> - Colour tint applied to the matcap.</li>
-                    <li class="mb-2"><strong>Rotation</strong> - Rotates the matcap sample.</li>
-                    <li class="mb-2"><strong>Intensity</strong> - Brightness of the layer, now up to 6 for a strong, over-driven glow.</li>
-                    <li class="mb-2"><strong>Blend Mode</strong> - How the layer combines: <code>Add</code>, <code>Replace</code>, or <code>Multiply</code>.</li>
-                    <li class="mb-2"><strong>Lighting Mix</strong> - How much scene lighting modulates the layer versus reading it as a pure unlit overlay.</li>
+                    <li class="mb-2"><strong>Enable MatCap 1 Layer</strong> - Turns layer 1 on.</li>
+                    <li class="mb-2"><strong>MatCap 1 Texture</strong> - The material-capture sphere texture.</li>
+                    <li class="mb-2"><strong>MatCap 1 Mask</strong> + <strong>MatCap 1 Mask Channel</strong> - Mask, and which channel, restricting the layer to painted regions.</li>
+                    <li class="mb-2"><strong>MatCap 1 Tint</strong> - Colour tint applied to the matcap.</li>
+                    <li class="mb-2"><strong>MatCap 1 Rotation</strong> - Rotates the matcap sample.</li>
+                    <li class="mb-2"><strong>MatCap 1 Intensity</strong> - Brightness of the layer, now up to 6 for a strong, over-driven glow.</li>
+                    <li class="mb-2"><strong>MatCap 1 Blend Mode</strong> - How the layer combines: <code>Add</code>, <code>Replace</code>, or <code>Multiply</code>.</li>
+                    <li class="mb-2"><strong>MatCap 1 Lighting Mix</strong> - How much scene lighting modulates the layer versus reading it as a pure unlit overlay.</li>
                 </ul>
-                <p class="opt-note"><strong>Tiling &amp; Movement</strong> (sub-section) - <strong>Freeze</strong> stops the matcap sliding as the camera moves, so it reads as baked-in detail that turns naturally with the avatar (0 = classic reflective matcap). <strong>Tiling</strong> repeats the matcap around its centre. <strong>Scroll / Animate</strong> gives continuous motion: Pan X / Y move it over time (Pan Y = up / down), Spin rotates it, Speed scales the animation.</p>
+                <p class="opt-note"><strong>Tiling &amp; Movement</strong> (sub-section) - <strong>Freeze (Lock to Material)</strong> stops the matcap sliding as the camera moves, so it reads as baked-in detail that turns naturally with the avatar (0 = classic reflective matcap). <strong>Tiling</strong> repeats the matcap around its centre. <strong>Scroll / Animate</strong> gives continuous motion: Pan X / Y move it over time (Pan Y = up / down), Spin rotates it, Speed scales the animation.</p>
                 <p class="opt-note mb-4"><strong>Offsets</strong> (sub-section) - <strong>Position Offset</strong> nudges the matcap statically: Offset X moves it side to side, Offset Y up and down.</p>
 
                 <h3 class="text-glow-pink opt-group">Matcap 2</h3>
@@ -897,11 +897,11 @@
                     build-time variant explosion. HUD passes are PC-only; the SPS variant declares the props inert for
                     inspector parity. Most band selectors offer Bass / Low Mid / High Mid / Treble, and every HUD widget
                     exposes a <strong>Transform (X, Y, Scl, Rot)</strong> set to place it on the body. Each sub-group
-                    below is a nested foldout and only shows while <strong>Enable</strong> is on.
+                    below is a nested Thry foldout and only shows while <strong>Enable AudioLink</strong> is on.
                 </p>
 
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - Master runtime gate for the entire AudioLink
+                    <li class="mb-2"><strong>Enable AudioLink</strong> - Master runtime gate for the entire AudioLink
                         system.</li>
                 </ul>
 
@@ -917,30 +917,30 @@
 
                 <h3 class="text-glow-pink opt-group">Chronotensity FX</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - Opt-in toggle for time-based
+                    <li class="mb-2"><strong>Enable Chronotensity FX</strong> - Opt-in toggle for time-based
                         chronotensity reads (avoids extra texture samples for amplitude-only setups).</li>
-                    <li class="mb-2"><strong>Index</strong> - Which of the eight chronotensity rows drives
+                    <li class="mb-2"><strong>Chronotensity Index</strong> - Which of the eight chronotensity rows drives
                         the time-based breath / drift.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Cybernetic Overlays (HUD)</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - Master toggle for the cybernetics
+                    <li class="mb-2"><strong>Enable Cybernetic Overlays</strong> - Master toggle for the cybernetics
                         HUD.</li>
-                    <li class="mb-2"><strong>Mask</strong> - Mask defining where the HUD overlays
+                    <li class="mb-2"><strong>Cyber Mask (B&amp;W Window)</strong> - Mask defining where the HUD overlays
                         draw.</li>
-                    <li class="mb-2"><strong>Hover Height</strong> - Parallax-out height that lifts
+                    <li class="mb-2"><strong>HUD Hover Height (Float Off Body)</strong> - Parallax-out height that lifts
                         the HUD off the surface.</li>
-                    <li class="mb-2"><strong>Hover Bob</strong> - Subtle sine-driven drift so the HUD
+                    <li class="mb-2"><strong>HUD Hover Bob (Subtle Drift)</strong> - Subtle sine-driven drift so the HUD
                         reads as a floating holographic plane.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Cybernetic VU Meter</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - Toggles the VU meter widget.</li>
-                    <li class="mb-2"><strong>Style</strong> (Console / Bar) - <code>Bar</code> meters, or
+                    <li class="mb-2"><strong>Enable VU Meter</strong> - Toggles the VU meter widget.</li>
+                    <li class="mb-2"><strong>VU Meter Style (Console / Bar)</strong> - <code>Bar</code> meters, or
                         <code>Console</code> which renders a full self-playing AudioLink control panel.</li>
-                    <li class="mb-2"><strong>Intensity</strong> - Brightness of the VU widget.</li>
+                    <li class="mb-2"><strong>VU Meter Intensity</strong> - Brightness of the VU widget.</li>
                     <li class="mb-2"><strong>VU Transform</strong> - Position, scale, and rotation of the VU widget.</li>
                 </ul>
 
@@ -955,91 +955,85 @@
 
                 <h3 class="text-glow-pink opt-group">Cybernetic Waveform</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - Toggles the oscilloscope waveform widget.</li>
-                    <li class="mb-2"><strong>Band</strong> - Which band drives the waveform.</li>
-                    <li class="mb-2"><strong>Intensity</strong> - Brightness of the waveform.</li>
-                    <li class="mb-2"><strong>Transform</strong> - Position, scale, and rotation.</li>
+                    <li class="mb-2"><strong>Enable Waveform</strong> - Toggles the oscilloscope waveform widget.</li>
+                    <li class="mb-2"><strong>Waveform Band</strong> - Which band drives the waveform.</li>
+                    <li class="mb-2"><strong>Waveform Intensity</strong> - Brightness of the waveform.</li>
+                    <li class="mb-2"><strong>Waveform Transform</strong> - Position, scale, and rotation.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Cybernetic DMX Grid</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - Toggles the DMX grid readout widget.</li>
-                    <li class="mb-2"><strong>Band</strong> - Which band drives the DMX grid.</li>
-                    <li class="mb-2"><strong>Intensity</strong> - Brightness of the DMX grid.</li>
-                    <li class="mb-2"><strong>Transform</strong> - Position, scale, and rotation.</li>
+                    <li class="mb-2"><strong>Enable DMX Grid Readout</strong> - Toggles the DMX grid readout widget.</li>
+                    <li class="mb-2"><strong>DMX Grid Band</strong> - Which band drives the DMX grid.</li>
+                    <li class="mb-2"><strong>DMX Grid Intensity</strong> - Brightness of the DMX grid.</li>
+                    <li class="mb-2"><strong>DMX Grid Transform</strong> - Position, scale, and rotation.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Cybernetic Autocorrelator</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - Toggles the autocorrelator ring with
+                    <li class="mb-2"><strong>Enable Autocorrelator Ring</strong> - Toggles the autocorrelator ring with
                         animated angular spokes and a gaussian falloff envelope.</li>
-                    <li class="mb-2"><strong>Band</strong> - Which band drives the ring.</li>
-                    <li class="mb-2"><strong>Intensity</strong> - Brightness of the ring.</li>
-                    <li class="mb-2"><strong>Transform</strong> - Position, scale, and rotation.</li>
+                    <li class="mb-2"><strong>Autocorrelator Band</strong> - Which band drives the ring.</li>
+                    <li class="mb-2"><strong>Autocorrelator Intensity</strong> - Brightness of the ring.</li>
+                    <li class="mb-2"><strong>Autocorrelator Transform</strong> - Position, scale, and rotation.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Autocorrelator Effects</h3>
                 <p class="opt-note">Four extra effects layered onto the autocorrelator ring, each with an independent
                     reaction band.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>AC Shimmer Effect</strong> + <strong>AC Shimmer Band</strong> - A shimmering
-                        sparkle on the ring, and which band drives it.</li>
-                    <li class="mb-2"><strong>AC Pop Effect</strong> + <strong>AC Pop Band</strong> - A punchy scale pop,
-                        and which band drives it.</li>
-                    <li class="mb-2"><strong>AC Sizzle Effect</strong> + <strong>AC Sizzle Band</strong> - A
-                        high-frequency sizzle, and which band drives it.</li>
-                    <li class="mb-2"><strong>AC Electrify Effect</strong> + <strong>AC Electrify Band</strong> - An
-                        electric arc effect, and which band drives it.</li>
+                    <li class="mb-2"><strong>AC Shimmer Effect</strong> + <strong>Band</strong> - A shimmering sparkle on
+                        the ring.</li>
+                    <li class="mb-2"><strong>AC Pop Effect</strong> + <strong>Band</strong> - A punchy scale pop.</li>
+                    <li class="mb-2"><strong>AC Sizzle Effect</strong> + <strong>Band</strong> - A high-frequency
+                        sizzle.</li>
+                    <li class="mb-2"><strong>AC Electrify Effect</strong> + <strong>Band</strong> - An electric arc
+                        effect.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Vertex Displacement &amp; Kinetics (SM5, PC only)</h3>
                 <p class="opt-note">Vertex displacement plus a full flying-shard system driven by geometry passes (the
                     SPS shader dissolves via the main-pass clip with no flying shards).</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - Master toggle for the kinetic vertex
-                        engine. The three modules below sit under <strong>Kinetic Modules</strong>.</li>
-                    <li class="mb-2"><strong>Vertex Pump</strong> - <strong>Band</strong> picks the band driving the
-                        normal-inflate bass pump, and <strong>Distance</strong> sets how far the mesh inflates.</li>
-                    <li class="mb-2"><strong>Vertex Fracture</strong> - <strong>Band</strong> picks the band driving the
-                        geometry fracture dissolve, and <strong>Amount (Hold/Animate)</strong> is a manual hold /
-                        animate value.
-                        <ul class="custom-list ps-4 mt-2 mb-0">
-                            <li class="mb-2"><strong>Hover Distance</strong>, <strong>Tumble</strong>,
-                                <strong>Scatter</strong>, <strong>Spiral</strong>, <strong>Lift (Up/Down,
-                                    Animate)</strong>, <strong>Float Drift</strong>, <strong>Trail Length</strong> -
-                                Motion of the freed shards as they travel.</li>
-                            <li class="mb-2"><strong>Shard Hue Shift</strong> + <strong>Shard Hue Cycle Speed</strong> -
-                                Static hue offset and animated hue cycle of the shards.</li>
-                            <li class="mb-2"><strong>Shard ColorChord</strong> + <strong>Blend</strong> - Tints shards
-                                from the ColorChord palette, and how strongly it blends in.</li>
-                        </ul>
-                    </li>
-                    <li class="mb-2"><strong>Vertex Autocorrelator</strong> - <strong>Ripple</strong> adds a per-vertex
-                        volumetric ripple from the spherical-mapped autocorrelator.</li>
+                    <li class="mb-2"><strong>Enable Vertex Displacement</strong> - Master toggle for the kinetic vertex
+                        engine.</li>
+                    <li class="mb-2"><strong>Vertex Pump Band</strong> + <strong>Vertex Pump Distance</strong> - Which
+                        band drives the normal-inflate bass pump, and how far the mesh inflates.</li>
+                    <li class="mb-2"><strong>Vertex Fracture Band</strong> + <strong>Amount (Hold/Animate)</strong> -
+                        Which band drives the geometry fracture dissolve, plus a manual hold / animate value.</li>
+                    <li class="mb-2"><strong>Hover Distance</strong>, <strong>Tumble</strong>, <strong>Scatter</strong>,
+                        <strong>Spiral</strong>, <strong>Lift (Up/Down, Animate)</strong>, <strong>Float Drift</strong>,
+                        <strong>Trail Length</strong> - Motion of the freed shards as they travel.</li>
+                    <li class="mb-2"><strong>Shard Hue Shift</strong> + <strong>Shard Hue Cycle Speed</strong> - Static
+                        hue offset and animated hue cycle of the shards.</li>
+                    <li class="mb-2"><strong>Shard AudioLink ColorChord</strong> + <strong>Shard ColorChord Blend</strong>
+                        - Tints shards from the ColorChord palette and how strongly it blends in.</li>
+                    <li class="mb-2"><strong>Vertex Autocorrelator Ripple</strong> - Per-vertex volumetric ripple from the
+                        spherical-mapped autocorrelator.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">UV Vortex Twist</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - Toggles the swirling UV vortex.</li>
-                    <li class="mb-2"><strong>Band</strong> + <strong>Strength</strong> - Which band
+                    <li class="mb-2"><strong>Enable Vortex Twist</strong> - Toggles the swirling UV vortex.</li>
+                    <li class="mb-2"><strong>Vortex Band</strong> + <strong>Vortex Twist Strength</strong> - Which band
                         drives the vortex and how much it swirls.</li>
-                    <li class="mb-2"><strong>Transform</strong> - Placement of the vortex center.</li>
+                    <li class="mb-2"><strong>Vortex Transform</strong> - Placement of the vortex center.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">UV Audio Bump</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Enable UV Bass Pump</strong> - Toggles the bass-driven UV scale pump.</li>
-                    <li class="mb-2"><strong>Band</strong> + <strong>Bounce</strong> - Which band drives
+                    <li class="mb-2"><strong>UV Pump Band</strong> + <strong>UV Pump Bounce</strong> - Which band drives
                         the pump and how much the UVs bounce / scale on the beat.</li>
-                    <li class="mb-2"><strong>Transform</strong> - Placement of the pump center.</li>
+                    <li class="mb-2"><strong>Pump Transform</strong> - Placement of the pump center.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">UV Fracture</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - Toggles spatial-hashed UV fracture shards.</li>
-                    <li class="mb-2"><strong>Band</strong> + <strong>Strength</strong> - Which band
+                    <li class="mb-2"><strong>Enable UV Fracture</strong> - Toggles spatial-hashed UV fracture shards.</li>
+                    <li class="mb-2"><strong>Fracture Band</strong> + <strong>Fracture Strength</strong> - Which band
                         drives the UV fracture and the shard displacement intensity.</li>
-                    <li class="mb-2"><strong>Transform</strong> - Placement of the fracture field.</li>
+                    <li class="mb-2"><strong>Fracture Transform</strong> - Placement of the fracture field.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Global Material Modulations</h3>
@@ -1048,7 +1042,7 @@
                         modulates the primary emission, and how strongly.</li>
                     <li class="mb-2"><strong>Color Blend Strength</strong> - How much the global audio color tints the
                         material.</li>
-                    <li class="mb-2"><strong>Surface Waveform Ripple</strong> / <strong>Autocorrelator Ripple (Surface)</strong>
+                    <li class="mb-2"><strong>Surface Waveform Ripple</strong> / <strong>Surface Autocorrelator Ripple</strong>
                         - Waveform- and autocorrelator-driven ripples across the surface.</li>
                     <li class="mb-2"><strong>DFT Note Mod (0-11)</strong> + <strong>DFT Note Emission Amount</strong> -
                         Locks emission to a specific musical note across all octaves, and how strongly it drives
@@ -1062,7 +1056,7 @@
                         overlay.</li>
                     <li class="mb-2"><strong>Scanline Density</strong> - Number of scanlines across the surface.</li>
                     <li class="mb-2"><strong>Base Scan Speed</strong> - Base scroll speed of the scanlines.</li>
-                    <li class="mb-2"><strong>Scanline Reaction</strong> - How much chronotensity modulates
+                    <li class="mb-2"><strong>Scanline Chronotensity Reaction</strong> - How much chronotensity modulates
                         the scan speed.</li>
                 </ul>
 
@@ -1070,14 +1064,14 @@
                 <p class="opt-note">Routes specific bands into the physical lighting lobes for beat-synced material
                     behavior.</p>
                 <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Thin Film</strong> - <strong>Band</strong> picks the band, and
-                        <strong>Expansion</strong> sets how much it shifts the thin-film thickness / hue.</li>
-                    <li class="mb-2"><strong>Parallax</strong> - <strong>Band</strong> picks the band, and
-                        <strong>Thump</strong> sets how much it pumps parallax depth.</li>
-                    <li class="mb-2"><strong>Clearcoat Shatter</strong> - <strong>Band</strong> picks the band, and
-                        <strong>Amount</strong> sets how much it fractures the clearcoat highlight.</li>
-                    <li class="mb-2"><strong>Digital Glitch</strong> - <strong>Band</strong> picks the band, and
-                        <strong>Tear</strong> sets the glitch / tear intensity.</li>
+                    <li class="mb-2"><strong>Thin Film Band</strong> + <strong>Thin Film Expansion</strong> - How much
+                        the band shifts the thin-film thickness / hue.</li>
+                    <li class="mb-2"><strong>Parallax Band</strong> + <strong>Parallax Thump</strong> - How much the band
+                        pumps parallax depth.</li>
+                    <li class="mb-2"><strong>Clearcoat Shatter Band</strong> + <strong>Clearcoat Shatter</strong> - How
+                        much the band fractures the clearcoat highlight.</li>
+                    <li class="mb-2"><strong>Glitch Band</strong> + <strong>Digital Glitch Tear</strong> - Intensity of
+                        the digital glitch / tear.</li>
                 </ul>
             </div>
 
@@ -1101,13 +1095,13 @@
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Enable VRSL DMX Link</strong> - Master toggle that connects the material to
                         the world's VRSL DMX buffers.</li>
-                    <li class="mb-2"><strong>DMX Base Channel</strong> - Which fixture sector / base
+                    <li class="mb-2"><strong>DMX Base Channel (Sector start)</strong> - Which fixture sector / base
                         channel this material reads from the DMX universe.</li>
-                    <li class="mb-2"><strong>Override Strength</strong> - How strongly the stage data takes over the
+                    <li class="mb-2"><strong>VRSL Override Strength</strong> - How strongly the stage data takes over the
                         surface (0 = no override, up = full hijack).</li>
                     <li class="mb-2"><strong>Pan/Tilt Geo-Warping</strong> - How far the tessellated mesh physically warps
                         to follow the fixture's DMX Pan/Tilt values.</li>
-                    <li class="mb-2"><strong>Color Hijack</strong> - Lerps the AudioLink color toward live DMX RGB so
+                    <li class="mb-2"><strong>VRSL Color Hijack</strong> - Lerps the AudioLink color toward live DMX RGB so
                         the stage can wash the palette without disabling FFT-driven color movement.</li>
                 </ul>
 
@@ -1118,11 +1112,11 @@
                     channels as the Color Hijack.
                 </p>
                 <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Intensity</strong> - Master strength of the additive stage
+                    <li class="mb-2"><strong>VRSL GI Wash Intensity</strong> - Master strength of the additive stage
                         wash. Above 0 enables it.</li>
-                    <li class="mb-2"><strong>Specular Mix</strong> - Fresnel-weighted specular highlight from the
+                    <li class="mb-2"><strong>VRSL GI Specular Mix</strong> - Fresnel-weighted specular highlight from the
                         wash.</li>
-                    <li class="mb-2"><strong>Color Saturation</strong> - Desaturates the wash toward luma so it
+                    <li class="mb-2"><strong>VRSL GI Color Saturation</strong> - Desaturates the wash toward luma so it
                         tints the surface rather than repainting your design.</li>
                 </ul>
             </div>
@@ -1132,19 +1126,19 @@
             <!-- ========================= -->
             <div id="footer" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">Shared Footer &amp; Editor Controls</h2>
+                    <h2 class="text-glow-cyan m-0">Shared Footer &amp; Thry Controls</h2>
                     <div class="badge">All Sections</div>
                 </div>
-                <p class="tab-desc">The chrome and render-state row shared across every section.</p>
+                <p class="tab-desc">The Thry-driven chrome and render-state row shared across every section.</p>
 
                 <ul class="custom-list m-0 ps-4">
                     <li class="mb-2">
                         <strong>Title &amp; Footer Row</strong> - The inspector is topped by the
-                        <code>VixenWear - Latex Ultra</code> label, and the editor draws a footer row of links (Website,
+                        <code>VixenWear - Latex Ultra</code> label, and Thry draws a footer row of links (Website,
                         Discord, X, GitHub, Ko-fi) at the bottom.
                     </li>
                     <li class="mb-2">
-                        <strong>Lock In Optimized Shader</strong> - The optimizer button near the top of the
+                        <strong>Lock In Optimized Shader</strong> - Thry's optimizer button near the top of the
                         inspector. It bakes the material's live keyword state into a single optimized variant.
                         <em>Materials must be locked before uploading</em> - unlocked optimizer materials are stripped
                         from the build and render pink. Locking happens automatically on upload; lock manually if you
@@ -1164,7 +1158,7 @@
                         contribute to baked GI.
                     </li>
                     <li class="mb-2">
-                        <strong>Right-Click a Section Header</strong> - Every section header supports the editor's native <em>Reset</em>, <em>Copy</em>, and
+                        <strong>Right-Click a Section Header</strong> - Every section header supports Thry's native <em>Reset</em>, <em>Copy</em>, and
                         <em>Paste</em> from its right-click menu, so you can move a whole section's values between
                         materials.
                     </li>
@@ -1177,6 +1171,14 @@
                 </ul>
             </div>
 
+        </div>
+
+        <!-- LIGHTBOX -->
+        <div id="lightboxOverlay" class="lightbox-overlay">
+            <div class="lightbox-content">
+                <span id="lightboxClose" class="lightbox-close">&times;</span>
+                <img id="lightboxImg" class="lightbox-img" src="" alt="Expanded Preview">
+            </div>
         </div>
 
         <button id="jumpToTopBtn" class="jump-to-top" title="Back to top">

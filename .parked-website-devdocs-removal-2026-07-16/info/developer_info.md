@@ -1953,6 +1953,124 @@ Backups of the pre-migration shaders + editor live in `.parked/pre_thry/`.
 
 ---
 
+## VixForge Editor — in-house ThryEditor fork (2026-07-14)
+
+**Supersedes "ThryEditor is an external dependency, NOT bundled" (2026-06-19) above.** VixenWear now **ships its own fork** of ThryEditor at `VixForge Editor/`. Trigger: Poiyomi moved ThryEditor into their own packaged style (2.72.1) and deleted `Assets/_PoiyomiShaders/Scripts/ThryEditor`, which broke our inspector — we subclassed `Thry.ShaderEditor` and used `[Thry*]` drawers, so Poiyomi's packaging decisions could break VixenWear at any time. Depending on "the project's single Thry" is no longer viable.
+
+The 2026-06-19 entry abandoned bundling because a renamed copy alongside Poiyomi produced ~1048 "already has a property drawer" warnings and ~40 duplicate `[MenuItem("Thry/...")]`. **That is exactly what this fork fixes, and the reason is worth stating plainly: Unity resolves material property drawers by SIMPLE CLASS NAME across every loaded assembly, ignoring namespace.** A namespace rename alone is therefore *not enough* — that earlier attempt renamed the namespace but left the drawer class names, so both copies still answered to `ThryWideEnumDrawer`. This fork renames **all 40** drawer/decorator classes with a `VixForge` prefix and renames the shader `[Attr]` names in lockstep (`attr + suffix = class` is preserved, so Unity's suffix-based resolution still works). Menus are rehomed to `VixenTools/VixForge Editor/`, and all `.meta` GUIDs were regenerated so the fork is GUID-disjoint from any other copy. Result: zero duplicate-drawer and zero duplicate-menu warnings, and Poiyomi can do whatever it likes.
+
+### Namespace: `VixForgeEditor` (single root) — NOT `VixForge.Editor`
+
+Both upstream namespaces (`Thry.ThryEditor` and bare `Thry`) merge into the single root `VixForgeEditor` (+ `.Drawers`, `.Helpers`, `.Decorators`, `.ShaderTranslations`, `.UploadCallbacks`, `.TexturePacker`). `ShaderEditor` is `VixForgeEditor.ShaderEditor`. **Do not "tidy" this to `VixForge.Editor`:** a namespace segment literally named `Editor` shadows `UnityEditor.Editor`, so every `class X : Editor` in the tree fails with CS0118. The merge is collision-free — bare `Thry` only held `ShaderEditor`, `ColorMask`, `ColorMaskFlags`, `BlendOp`, none declared elsewhere. asmdefs are `VixForgeEditor` / `VixForgeEditor.External` (autoReferenced, so `Assembly-CSharp-Editor` sees them).
+
+### Filenames matter too, not just contents
+
+All 22 Thry-named files are VixForge-named. This is not cosmetic: `ThryEditor.cs` located its own directory via `AssetDatabase.FindAssets("ThryEditor")` + `p.EndsWith("/ThryEditor.cs")`, which **with Poiyomi installed could resolve to Poiyomi's ThryEditor folder**. Renaming the file and those two lookups fixes it properly. Safe because the `.compute` and Resources `.png`s load by GUID (`RESOURCE_GUID` / `GUIDToAssetPath`) and a file renamed together with its `.meta` keeps its GUID; C# does not require filename == class name. `ShaderOptimizer`'s stack-trace parsing and the asset lookups were updated to the new filename.
+
+### What we removed / kept
+
+- **Telemetry cut.** `Helper.RegisterEditorUse`'s `count_user`/`count_project` phone-home to `thryeditor.thryrallo.de` and `Settings`' remote `settingsWindow.json` fetch are no-ops; the now-dead `URL` class is deleted. `keepImports`-style remote resource pulls are gone with it.
+- **Trimmed:** `Examples/`, `Editor/Tests`, `docs.html`. **`Editor/Debug` is KEPT** — `VixForgeEditor.cs` references `InspectorCapture` and `MaterialToDebugString` from it.
+- **Attribution preserved deliberately:** Thry's LICENSE / CREDITS / `Copyright (C) 2019 Thryrallo` headers, "@UI Made by Thryrallo", Thry's icon (`vixforgeEditor_iconThry.png`, `RESOURCE_GUID.ICON_THRY`, `Icons.thryIcon`), and the **"Thry's Twitter"** menu item + `MenuThryTwitter` handler. The `VRChat-Assets-Installer` install button still points at Thry's repo — a live, user-clicked feature, not a hidden dependency. **Careful with any blanket `Thry`→`VixForge` rename: `\bThry\b` matches inside `Thry's` (the apostrophe is a non-word char) and once silently renamed that menu to "VixForge's Twitter" while it still opened Thry's account.**
+
+### Our own additions to the fork (things upstream/Poiyomi's branch cannot do)
+
+- **`[VixForgeKeywordMap(...)]`** (`ShaderHelper.GetKeywordsFromShaderProperty`): an explicit value→keyword list for enum floats whose keywords are not Unity's derived `_PROP_VALUE` form. Needed for `_Mode`, which drives the stock `_ALPHATEST_ON` / `_ALPHABLEND_ON` / `_ALPHAPREMULTIPLY_ON` that the surface shader's own alpha handling depends on — `[KeywordEnum]` cannot express those names. Position = property value; `_` = "no keyword", kept in the list to hold index alignment. `FixKeywords`' `default:` branch already applied keywords by value-index, so this drops straight in; it only needed a guard to skip empty slots (never `EnableKeyword("")`).
+- **`ShaderEditor.SyncDeclaredKeywords(Material)`**, called from `ValidateMaterial`: applies the declared keywords and clears the `EmissiveIsBlack` GI flag. Emission here is runtime-driven (AudioLink / gates), so Unity's static "emission is black" optimisation must never latch on. **Do not** use the fork's `GIProperty.FixupEmissiveFlag` for this — it does the opposite (sets the flag from emission colour).
+- **`public` for cross-assembly use:** `ShaderEditor.SyncDeclaredKeywords` and `ShaderHelper.GetPropertyKeywordsForShader`. VixenWear's editor lives in `Assembly-CSharp-Editor`, a *different* assembly to `VixForgeEditor.dll`, so `internal` is invisible there.
+- **Legacy-lock migration shim** (`ShaderOptimizer.IsShaderUsingVixForgeOptimizer`, see "Migration" below).
+
+### Nested material scanning: renderers + animation clips + component data
+
+Two separate gaps, one ported from Poiyomi and one **Poiyomi's editor never handled at all**. Both caused materials to **ship unlocked (pink in-game)**.
+
+**We forked UPSTREAM ThryEditor; Poiyomi's bundled copy is *their* fork with additions we do not inherit.** One of those additions was material collection for lock/unlock, and missing it meant materials **shipped unlocked (pink in-game)**.
+
+The gap: a material can exist **only inside a material-swap animation** and never sit on a Renderer in the scene. A renderer-only sweep silently skips it. Upstream (and therefore our fork) had the `VRCAvatarDescriptor.baseAnimationLayers` clip scan in `LockMaterialsOnUpload.OnPreprocessAvatar` **only**, so:
+
+- `SetLockForAllChildrenInternal` (the `GameObject/VixForge Editor/Materials/Lock All` + `Unlock All` right-click path) was **renderers-only** and un-null-guarded.
+- Neither path saw animators **outside the descriptor's layer list** — props, toggles, accessories, and controllers added by VRCFury.
+
+Both paths now collect: Renderers → descriptor `baseAnimationLayers` clips → **every `Animator` under the selection/root** (including inactive), then de-duplicate. Two helpers on `ShaderOptimizer` back this:
+
+- **`GetClipsFromRuntimeController(RuntimeAnimatorController)`** — walks an **`AnimatorOverrideController`** explicitly, recursing into the wrapped controller and returning **both** the original (`Key`) and the override (`Value`) clip of each pair. Necessary because an AOC's `animationClips` reports only the *effective* clips, so the originals would be missed; AOCs are common on VRChat avatars (gesture overrides).
+- **`GetMaterialsReferencedByClips(IEnumerable<AnimationClip>)`** — the same binding filter upstream already used inline (`isPPtrCurve` + `type.IsSubclassOf(typeof(Renderer))` + `propertyName.StartsWith("m_Materials")`), factored out so both paths share it.
+
+Also added `Where(m => m != null)` throughout: an **empty material slot** on a Renderer yields a null entry, which upstream's collector passed straight down. Note our right-click path is deliberately *broader* than Poiyomi's, which only scans when the selection has a `VRCAvatarDescriptor` — locking a single outfit or prop is normal, so we scan animators regardless of whether the selection is the avatar root.
+
+#### Gap 2: material references held in COMPONENT data — **Poiyomi's editor never did this**
+
+Renderers + clips is *still* not the whole story, and this is the one that actually bit us. A **VRCFury Toggle with Material Swap entries** holds its materials in its own component data and only bakes them into AnimationClips at **build** time. At edit time the material sits on no Renderer and in no clip, so `Unlock All` walked straight past it and the material stayed locked. Grepping Poiyomi's ThryEditor confirms it has **no** VRCFury awareness and no component scan — this is not ported behaviour, it is new.
+
+`GetMaterialsReferencedByComponents(GameObject root)` walks every Component under the root (inactive included) with a plain `SerializedObject` and collects any `objectReferenceValue is Material`. Why that works and why it is done this way:
+
+- VRCFury's model is `MaterialAction { Renderer renderer; int materialIndex; GuidMaterial mat; }`, and `GuidMaterial : GuidWrapper<Material>` where `GuidWrapper` declares **`[SerializeField] public Object objRef`** — a genuine serialized object reference, so a SerializedProperty walk reaches it.
+- **Deliberately generic, no VRCFury reference.** VRCFury's types (`MaterialAction`, `GuidMaterial`, `GuidWrapper`) are all `internal` to its assembly, so we could not reference them even if we wanted to; `SerializedObject` does not care about accessibility. It also means Modular Avatar and any other component holding a material are covered for free, with no dependency on VRCFury being installed.
+- Skips `Transform` (never holds a material) and `Renderer` (`sharedMaterials` already collected), and null-guards missing scripts.
+- **Known gap:** `GuidWrapper` also stores a fallback `id` string (`"guid:fileID"`) used when `objRef` has broken. We do not resolve `id` when `objRef` is null — but such a reference is already broken for VRCFury itself.
+
+Wired into **both** collectors (`SetLockForAllChildrenInternal` and `LockMaterialsOnUpload.OnPreprocessAvatar`), outside the VRC SDK guard in the right-click path since it is plain Unity serialization. The upload path needs it too: that callback can run **before** VRCFury bakes its swaps into clips, so the clip scans do not necessarily see them.
+
+### Migration: materials locked before 2026-07-14
+
+Locking bakes a **copy of the shader source**, so any VixenWear material locked before the rename has a locked shader that still contains `[ThryWideEnum]` and `[ThryShaderOptimizerLockButton]` while carrying `CustomEditor "VixenWearLatexEditor"`. Opening one throws `NullReferenceException` in **Poiyomi's** `ThryWideEnumDrawer.LoadNames` — our editor draws it, Unity resolves the baked-in `[ThryWideEnum]` to Poiyomi's drawer by simple name. They were also stranded, because `IsShaderUsingVixForgeOptimizer` only matched `"VixForgeShaderOptimizerLockButton"`, so the unlock tooling could not see them either. A **scoped shim** there now also accepts `"ThryShaderOptimizerLockButton"` when `shader.name` contains "VixenWear" (scoped so we never claim Poiyomi's Thry-locked materials). **Fix per material: unlock → it returns to the live shader → re-lock.** This affects customers too, not just us. The shim can be deleted once every legacy-locked material has been re-locked.
+
+## Shader compile time + declarative keyword sync (2026-07-14)
+
+### `#pragma skip_optimizations d3d11`, ifex-gated (both twins, 10 program blocks: 6 base + 4 SPS)
+
+After every `#pragma target 5.0`:
+
+```
+//ifex 0==0
+#pragma skip_optimizations d3d11
+//endex
+```
+
+`skip_optimizations` makes FXC skip its optimiser — the dominant cost when importing a large shader. `//ifex <cond>` is the optimizer's *excise* directive (`ShaderOptimizer.cs`: if `condition.Test()` is **true** the block is **removed** from the locked output), so `0==0` = always strip on lock. Net: **unlocked / dev = fast import** (slightly slower GPU code); **locked / shipped = pragma gone, fully optimised**. Removes no features. Copied from Poiyomi, and verified against their own artifacts rather than assumed: `Poiyomi Pro.shader` (unlocked, 83,366 lines) carries `skip_optimizations` ×5 wrapped in `//ifex 0==0`; their locked output (8,972 lines) has skip_optimizations **0** and shader_feature **0**.
+
+Untapped lever, noted for later: Poiyomi also uses `#pragma dynamic_branch _ FOG_LINEAR/FOG_EXP/FOG_EXP2` (runtime branch instead of variant multiplication).
+
+### `skip_variants` on the shard pass (base)
+
+The `shard` geometry pass carried `multi_compile_fwdbase` with **no** `skip_variants` while every other program block had the list — an unguarded full fwdbase variant set. It now carries the same list as the rest.
+
+### Root cause of slow import (unfixed, structural)
+
+**Poiyomi's tessellated shader is 76,949 lines — 18× ours — and imports faster, because it uses zero `#pragma surface`.** Surface shaders are Unity-codegen'd and auto-expand into ForwardBase + ForwardAdd + (with `addshadow`) a *custom tessellated* ShadowCaster, each × hull/domain stages. Ours grows on lock (3,149 → 10,002 for the patched SPS twin) where Poiyomi's shrinks (83,366 → 8,972). De-surfacing to hand-written vert/frag is the real fix and a large rewrite. **Do not "fix" this by deleting features** — dropping tessellation / `fullforwardshadows` was explicitly rejected; `fullforwardshadows` stays.
+
+Rejected as wrong for this codebase (evaluated, do not retry): `#pragma use_dxc` (VRChat is D3D11; EnvConfig forces it), restricting Graphics APIs (inert — Unity compiles the intersection, D3D11 already pinned), removing `multi_compile_instancing` (VRChat renders Single Pass Instanced stereo — instancing is load-bearing), switching to `shader_feature`/`_local` (already done everywhere).
+
+### Why the SPS twin is the slow one despite being leaner
+
+The SPS source is leaner than base on every metric (no `tessellate`, no `fullforwardshadows`, 2 geometry passes vs 4, no `multi_compile_fwdbase`, 3 loops vs 7) and its `surf` ShadowCaster early-out is correctly placed (right after `clip()` / `o.Alpha`, which is as early as possible since ShadowCaster needs alpha for cutout). The cost is **VRCFury's `SpsPatcher`**: it rewrites `vertex:disp` → `vertex:spsVert` on both surface shaders (so with `addshadow` the SPS deform lands in ForwardBase + ForwardAdd + ShadowCaster), **inlines** `sps_deform_main.cginc` into every program rather than `#include`-ing it, and calls `AssetDatabase.ImportAsset(..., ForceSynchronousImport)` — a blocking full compile that also overrides Async Shader Compilation. It caches by MD5 of shader contents, but locking bakes property values into the shader, so **any material tweak → re-lock → new hash → another blocking 10k-line compile**.
+
+### Keyword state is DECLARED in the shader — never hand-map it in C# again
+
+The property→keyword mapping used to exist in **three** places that could silently drift (`VixenWearMaterials.SyncKeywords`, `SetupMaterialWithBlendMode`, `VixenWearVariantStripper.s_managedKeywords`). It now exists once, in the shader Properties block of both twins:
+
+- `[Toggle(VRSL_ENABLE)] _UseVRSL`, `[Toggle(_DETAIL_NORMAL)] _UseDetailNormal` (already bound)
+- `[Toggle(LIGHTVOLUMES_ENABLE)] _UseLightVolumes`, `[Toggle(LTCGI_ENABLE)] _UseLTCGI` (were bare `[Toggle]` — the keyword only existed in C#)
+- `[VixForgeKeywordMap(_, _ALPHATEST_ON, _ALPHABLEND_ON, _ALPHAPREMULTIPLY_ON)][VixForgeWideEnum(...)] _Mode`
+
+Applied automatically by `VixForgeEditor.ShaderEditor.SyncDeclaredKeywords` on `ValidateMaterial`, so there is no manual pass to forget. Consequently in `Editor/VixenWearEditor.cs`:
+
+- **`VixenWearMaterials.SyncKeywords`** is now a thin delegate to `SyncDeclaredKeywords`, kept only so the existing call sites (`OnGUI`, `VixenWearPlayModeSync`, `VixenWearBuildPreprocessor`) keep working. The hand-written mapping, the `SetKeyword` helper, and the legacy `AL_ENABLE` / `CYBER_ENABLE` disables (neither keyword exists in either shader) are gone.
+- **`SetupMaterialWithBlendMode`** now owns **render state only** (`RenderType`/`VRCFallback` tags, `_SrcBlend`, `_DstBlend`, `_ZWrite`, `renderQueue`). Its alpha-keyword calls were removed.
+- **`VixenWearVariantStripper`** derives its managed set via `GetManagedKeywords(shader)` → `ShaderHelper.GetPropertyKeywordsForShader` (cached per shader) instead of a hardcoded `s_managedKeywords`. This one mattered most: a stale list there silently strips the wrong build variants.
+- **`VixenWearLatexEditor : VixForgeEditor.ShaderEditor`** (was `Thry.ShaderEditor`).
+- The **"Clean Latex Material Keywords"** menu item is removed — keywords self-apply, and `VixenTools/VixForge Editor/Fix Keywords for All Materials (Slow)` covers bulk repair.
+- `shader_is_using_thry_editor` → **`shader_is_using_vixforge_editor`** in both shaders + the fork, in lockstep. That property is the marker declaring "this shader belongs to ThryEditor"; while it existed our materials still advertised themselves to Poiyomi's Thry editor. Stale serialized values on old materials are inert.
+
+## `Editor/VixenWearSpsTempPurge.cs`
+
+New. Purges the SPS-patched shaders VRCFury leaves behind, on `IVRCSdkAvatarBuilderApi.OnSdkUploadSuccess`, plus a manual `VixenTools/VixenWear/Purge Orphaned VRCFury SPS Shaders` fallback.
+
+- **Why it's needed:** VRCFury's `TmpFilePackage.Cleanup()` only purges its `builds/` subfolder, so `Packages/com.vrcfury.temp/SPS/{hash}.shader` is never collected; the hash is an MD5 of shader contents, so every edit / re-lock mints another. After a successful upload they are orphans — VRCFury patches a *clone* of the avatar at build time, so the scene's own materials still reference the unpatched shaders.
+- **Deliberate trade-off:** VRCFury reuses a patched shader when the hash still matches, so purging drops that cache and the next build re-patches. Accepted because any shader or material change invalidates the hash anyway, so the cache rarely hits here. If the shader ever stabilises, prefer the menu item over the auto-hook.
+- **Guard `#if VRC_SDK_VRCSDK3`:** that symbol is pushed into the project's **global** Scripting Define Symbols by the SDK's `EnvConfig` (`PlayerSettings.SetScriptingDefineSymbols`), which is why it is visible in `Assembly-CSharp-Editor` — an asmdef `versionDefine` would **not** be. This is VixenWear's only VRChat SDK dependency in editor code, hence the guard. Caveat: it signals SDK3 (`com.vrchat.base`), not Avatars, so a worlds-only project would define it while `VRC.SDK3A.Editor` does not exist. There is no SDK-provided "avatars present" symbol (VRCFury rolls its own `VRCF_AVATARS` versionDefine, private to its assembly).
+- **Types:** `VRCSdkControlPanel` is in the **global** namespace; `IVRCSdkAvatarBuilderApi` is in **`VRC.SDK3A.Editor`** (`com.vrchat.avatars`), *not* `VRC.SDKBase.Editor` — it merely extends `IVRCSdkBuilderApi`, which is where `OnSdkUploadSuccess` is declared. The builder does not exist during a domain reload, so it polls `EditorApplication.update` until `TryGetBuilder` succeeds, then unsubscribes.
+
 ## `Shaders/VixenWear Latex.shader`
 
 *362 comment(s).*

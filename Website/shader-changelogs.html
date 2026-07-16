@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary SEO -->
+    <title>Vixens Toolbox | Shader Changelogs &amp; Version History</title>
+    <meta name="title" content="Vixens Toolbox | Shader Changelogs &amp; Version History">
+    <meta name="description" content="Release notes for the VixForge VRChat avatar shaders - VixenWear Latex Ultra and Clothing Pro. Every version, what changed, and what you need to do after updating.">
+    <meta name="keywords" content="VixenWear changelog, Latex Ultra changelog, Clothing Pro changelog, VRChat shader release notes, VixForge Interactive, VRChat avatar shader updates, Unity 2022.3 shader version history">
+    <meta name="author" content="Vixenlicous | VixForge Interactive">
+    <meta name="theme-color" content="#ff00aa">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://vixencreations.github.io/VixenToolBox/shader-changelogs.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/shader-changelogs.html">
+    <meta property="og:title" content="Vixens Toolbox | Shader Changelogs &amp; Version History">
+    <meta property="og:description" content="Release notes for the VixForge VRChat avatar shaders - VixenWear Latex Ultra and Clothing Pro.">
+    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <meta property="og:site_name" content="VixForge Interactive | Vixens Toolbox">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/shader-changelogs.html">
+    <meta property="twitter:title" content="Vixens Toolbox | Shader Changelogs &amp; Version History">
+    <meta property="twitter:description" content="Release notes for the VixForge VRChat avatar shaders - VixenWear Latex Ultra and Clothing Pro.">
+    <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <meta property="twitter:site" content="@VixenVRC">
+
+    <!-- Structured Data for Google Rich Results -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "TechArticle",
+          "headline": "VixForge Shader Changelogs & Version History",
+          "description": "Release notes for the VixForge VRChat avatar shaders - VixenWear Latex Ultra and Clothing Pro - including new features, fixes and upgrade steps.",
+          "author": {
+            "@type": "Organization",
+            "name": "VixForge Interactive"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "VixForge Interactive"
+          },
+          "url": "https://vixencreations.github.io/VixenToolBox/shader-changelogs.html",
+          "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
+          "keywords": "VixenWear changelog, Latex Ultra release notes, Clothing Pro release notes, VRChat shader version history"
+        }
+    </script>
+
+    <!-- Icons -->
+    <link rel="icon" href="./favicon.ico">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+
+    <!-- UI Framework -->
+    <script type="module" src="web-components.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="background-art"></div>
+
+<nav class="sidebar">
+        <div class="sidebar-brand">
+            <a href="index.html" class="brand-logo-link"><img src="banner.png" class="sidebar-brand-logo" width="1536" height="665" alt="VixForge Interactive - Shaders, Worlds, Haptics" /></a>
+            <h2 class="text-glow-cyan">VIXENS TOOLBOX</h2>
+            <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">by VixForge Interactive</div>
+        </div>
+
+        <div class="nav-links">
+            <fluent-anchor href="index.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2.5L2 8.5H4V16.5H8V11.5H12V16.5H16V8.5H18L10 2.5Z" /></svg>
+                VPM Registry
+            </fluent-anchor>
+
+            <fluent-anchor href="about.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                About Us
+            </fluent-anchor>
+
+            <fluent-anchor href="news.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v13H4a2 2 0 0 0-2 2 2 2 0 0 0 2 2z"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8z"></path></svg>
+                News
+            </fluent-anchor>
+
+            <fluent-anchor href="ai-transparency.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                AI Transparency
+            </fluent-anchor>
+
+            <fluent-anchor href="why-choose-us.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                Why Choose Us?
+            </fluent-anchor>
+
+            <fluent-anchor href="tools.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2ZM11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14V10C9 9.44772 9.44772 9 10 9C10.5523 9 11 9.44772 11 10V14ZM10 8C9.44772 8 9 7.55228 9 7C9 6.44772 9.44772 6 10 6C10.5523 6 11 6.44772 11 7C11 7.55228 10.5523 8 10 8Z" /></svg>
+                List of Tools
+            </fluent-anchor>
+
+            <fluent-anchor href="docs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Deep-Dive Docs
+            </fluent-anchor>
+
+            <fluent-anchor href="shaderdocs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M7 9.5a5.5 5.5 0 0 1 5-3"></path><circle cx="9.5" cy="9.5" r="1.2" fill="currentColor" stroke="none"></circle></svg>
+                Shader Docs
+            </fluent-anchor>
+
+            <fluent-anchor href="changelog.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Changelog
+            </fluent-anchor>
+
+            <fluent-anchor href="shader-changelogs.html" class="nav-item active">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                Shader Changelogs
+            </fluent-anchor>
+
+            <fluent-anchor href="support.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                Support the Projects
+            </fluent-anchor>
+
+            <fluent-anchor href="social.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                Get Help Here
+            </fluent-anchor>
+
+            <fluent-anchor href="extended-projects.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                Extended Projects
+            </fluent-anchor>
+        </div>
+    </nav>
+    <main class="main-wrapper">
+        <div class="col align-items-center content">
+
+            <div class="row align-items-center w-100 justify-content-between mb-4">
+                <h2 class="m-0 text-glow-pink">Shader Changelogs</h2>
+                <div class="row align-items-center">
+                    <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
+                    <fluent-select id="versionSelect" title="Select Version" style="min-width: 190px;">
+                        <fluent-option value="latex-4.0.0">Latex Ultra 4.0.0</fluent-option>
+                        <fluent-option value="latex-3.0.0">Latex Ultra 3.0.0</fluent-option>
+                        <fluent-option value="latex-2.9.2">Latex Ultra 2.9.2</fluent-option>
+                        <fluent-option value="latex-2.9.1">Latex Ultra 2.9.1</fluent-option>
+                        <fluent-option value="latex-2.9.0">Latex Ultra 2.9.0</fluent-option>
+                        <fluent-option value="latex-2.8.1">Latex Ultra 2.8.1</fluent-option>
+                        <fluent-option value="latex-2.8.0">Latex Ultra 2.8.0</fluent-option>
+                        <fluent-option value="latex-2.7.2">Latex Ultra 2.7.2</fluent-option>
+                        <fluent-option value="latex-2.7.0">Latex Ultra 2.7.0</fluent-option>
+                        <fluent-option value="latex-2.6.0">Latex Ultra 2.6.0</fluent-option>
+                        <fluent-option value="latex-2.5.0">Latex Ultra 2.5.0</fluent-option>
+                        <fluent-option value="latex-2.4.0">Latex Ultra 2.4.0</fluent-option>
+                        <fluent-option value="latex-2.3.3">Latex Ultra 2.3.3</fluent-option>
+                        <fluent-option value="latex-2.3.1">Latex Ultra 2.3.1</fluent-option>
+                        <fluent-option value="latex-2.3.0">Latex Ultra 2.3.0</fluent-option>
+                        <fluent-option value="latex-2.1.5">Latex Ultra 2.1.5</fluent-option>
+                        <fluent-option value="latex-2.1.0">Latex Ultra 2.1.0</fluent-option>
+                        <fluent-option value="latex-2.0.4">Latex Ultra 2.0.4</fluent-option>
+                        <fluent-option value="latex-2.0.2">Latex Ultra 2.0.2</fluent-option>
+                        <fluent-option value="clothingpro-1.0.1">Clothing Pro 1.0.1</fluent-option>
+                        <fluent-option value="clothingpro-1.0.0">Clothing Pro 1.0.0</fluent-option>
+                    </fluent-select>
+                </div>
+            </div>
+
+            <p class="caption1 m-0 mb-4" style="color: #9ca3af; max-width: 70ch;">Release notes for the VixForge avatar shaders. Each entry is titled with the shader it belongs to. Tool and editor releases live on the <a href="changelog.html">Changelog</a> page.</p>
+
+            <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
+
+                <div class="changelog-entry" data-version="latex-4.0.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 4.0.0 - 2026-07-16</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Two big things this release, plus a lot more speed. VixenWear now has its own material inspector, the VixForge Editor. Poiyomi repackaged their copy of Thry's editor and deleted the old files, which broke ours, so we built our own. It is a custom build of Thry's editor and the credit stays his. And there is one shader now instead of two. <strong>VixenWear / Latex Ultra</strong> does everything, including VRCFury SPS and penetrator meshes. Importing and locking used to take minutes; now it is seconds, and your materials look exactly the same. <strong>Two one-time jobs, and skipping either will bite you:</strong> move any material still on the old <code>VixenWear / Latex Ultra SPS</code> across (there is a one-click tool for it), and unlock then re-lock anything you locked before this version. Both are covered below.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Our own material inspector, the VixForge Editor.</strong> No more depending on Poiyomi or a separate ThryEditor install. Everything lives under <strong>VixenTools &gt; VixForge Editor</strong>: Texture Packer, Cross Shader Editor, Material Lock Manager, Settings, and a couple of repair tools. It sits happily beside Poiyomi in the same project, with no duplicate warnings and no interference. It is a custom build of Thry's editor, and his licence, credits and links ship with it untouched.</li>
+                        <li class="mb-2"><strong>Faster editing.</strong> Unlocked materials skip the slow optimiser while you work, then compile fully optimised the moment you lock. Locked materials are exactly as optimised as before.</li>
+                        <li class="mb-2"><strong>VRCFury leftovers clean themselves up.</strong> After a successful upload, VixenWear clears the patched shader copies VRCFury leaves behind in its temp folder. There is a manual <strong>VixenTools &gt; VixenWear &gt; Purge Orphaned VRCFury SPS Shaders</strong> too, if you would rather run it yourself.</li>
+                        <li class="mb-2"><strong>Migrate SPS Materials to Base Shader.</strong> One click, under <strong>VixenTools &gt; VixenWear</strong> or in the Hub. It moves your materials off the old SPS shader, unlocks them cleanly on the way, and clears out the leftover folders, telling you how much space it got back. Poiyomi and other Thry materials are never touched.</li>
+                        <li class="mb-2"><strong>Lock All / Unlock All in the Hub.</strong> Works on whatever you have selected in the Hierarchy, or the whole scene if you have nothing selected. <strong>The Hub tells you which</strong>, right next to the buttons, and it updates as you click around, so you can see what you are about to hit before you hit it. It also catches materials that only live inside toggles, material swaps and VRCFury, not just the ones sitting on a renderer. Poiyomi materials are left alone: lock those with their own inspector.</li>
+                        <li class="mb-2"><strong>Every document gets its own Hub tab.</strong> The licence and usage agreement are now readable in-editor, alongside How To Use, Shader Pipeline and the Changelog.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Keywords look after themselves.</strong> Your material's settings drive its keywords directly. Nothing to remember, nothing to get out of sync.</li>
+                        <li class="mb-2"><strong>No telemetry.</strong> The usage tracking and remote message fetching that came with the upstream editor are gone. Our build does not phone home.</li>
+                        <li class="mb-2"><strong>Imports take seconds, not minutes.</strong> Unity was quietly turning our 4,000-line shader into 1.4 million lines of generated code. It is now under 15,000. The material renders exactly the same: it is just enormously faster to edit.</li>
+                        <li class="mb-2"><strong>Locking is around four times faster.</strong> Every render pass is hand-written now instead of generated by Unity, so there is far less to compile each time you lock.</li>
+                        <li class="mb-2"><strong>Shorter control names.</strong> Section headers already tell you the feature, so the controls inside them no longer repeat it: <em>Goo Sag Distance</em> is now just <strong>Sag Distance</strong>, and <em>MatCap 1 Tint</em> is just <strong>Tint</strong>. Most labels got shorter this way. <strong>Your animations, scripts and saved settings are unaffected</strong> - only the display names changed, never the property names underneath.</li>
+                        <li class="mb-2"><strong>More sections explain themselves.</strong> A few more panels open with a short note on what the controls do and when to reach for them, Light Volumes and LTCGI included.</li>
+                        <li class="mb-2"><strong>The Hub tidied up.</strong> Lock, Unlock and the SPS migration are gathered into one action bar across the top, and the tabs are built from whatever documents are in the package rather than a fixed list.</li>
+                        <li class="mb-2"><strong>The documents are styled to match.</strong> Headings, lists, tables and notes render in the VixenWear look, and text wraps to the window.</li>
+                        <li class="mb-2"><strong>Light Volumes and LTCGI start switched off.</strong> They are the two most expensive features in the shader, so new materials no longer pay for them by default. <strong>Your existing materials are untouched</strong> and keep their settings. If your world uses them, switch them on in their sections.</li>
+                        <li class="mb-2"><strong>One shader to pick, not two.</strong> Anything that said "use the SPS variant for SPS meshes" no longer applies. How To Use and Shader Pipeline are updated to match.</li>
+                        <li class="mb-2"><strong>Package layout.</strong> The documentation moved to <code>Editor/bin/</code>, and the shader gained a shared include. If you install anywhere other than <code>Assets/VixenWear/</code>, check the install section of How To Use.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Materials locked before 4.0.0 need one unlock and re-lock.</strong> Locking bakes a copy of the shader into your project, so an older locked material still carries the old inspector's internals. Opening one can throw an error, or leave the inspector blank if you also have Poiyomi in the project. <strong>Unlock it (VixenTools &gt; VixForge Editor &gt; Material Lock Manager, or right-click the material &gt; VixForge Editor &gt; Materials &gt; Unlock All), then re-lock.</strong> Once per material and you are done. This release includes a compatibility path so older locked materials can still be found and unlocked.</li>
+                        <li class="mb-2"><strong>Materials hidden in toggles and animations get locked now.</strong> If a material only lived inside a material swap and never sat on a mesh, Lock All and the on-upload lock used to walk straight past it, and it would upload unlocked (pink in game). Both now read your avatar's animations too, including toggles, props, accessories, anything VRCFury adds, <strong>and VRCFury Toggle Material Swaps</strong>, which keep their materials in the component itself and so were invisible to any earlier scan. Modular Avatar and anything else that stores materials the same way is covered. Empty material slots no longer trip it up either.</li>
+                        <li class="mb-2"><strong>Emission no longer drops out of baked lighting on a rebuild.</strong> AudioLink-driven and gated emission keeps contributing.</li>
+                        <li class="mb-2"><strong>Changing a material's shader no longer throws.</strong> Picking a different shader from the dropdown could fail and leave the material half-assigned. This hit the SPS migration in particular.</li>
+                        <li class="mb-2"><strong>Shader translation matching.</strong> A translation could be offered for the wrong target shader. Both sides are checked now.</li>
+                        <li class="mb-2"><strong>Micro Detail and Rendering Mode.</strong> Tidied up how Cutout, Fade, Transparent and Micro Detail are applied internally. No visual change.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Removed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong><code>VixenWear / Latex Ultra SPS</code> is gone.</strong> It only ever existed because injecting SPS into the main shader used to crash the shader compiler, so we shipped a slimmed clone as a workaround. That crash is fixed, and VRCFury patches the main shader directly now, so the clone has no reason to exist.
+                            <ul class="custom-list ps-4 mt-2 mb-0">
+                                <li class="mb-2"><strong>What to do:</strong> run <strong>VixenTools &gt; VixenWear &gt; Migrate SPS Materials to Base Shader</strong> (or the button in the Hub). It finds every material still on the old SPS shader, moves it to <strong>VixenWear / Latex Ultra</strong>, and clears out the leftovers. You can also just pick the new shader by hand: your settings carry over, since both use the same property names.</li>
+                                <li class="mb-2"><strong>Locked materials come out unlocked. Lock them again before you upload.</strong></li>
+                                <li class="mb-2"><strong>What you gain:</strong> SPS meshes get the full feature set the clone had to drop, including the world lighting integrations (VRSL, LTCGI, VRC Light Volumes), detail normals, and the AudioLink vertex kinetics.</li>
+                                <li class="mb-2">On an older VRCFury and the material misbehaves when patched? Update VRCFury first.</li>
+                        </ul>
+</li>
+                        <li class="mb-2"><strong>Clean Latex Material Keywords</strong> is gone: keywords apply themselves now. <strong>VixenTools &gt; VixForge Editor &gt; Fix Keywords for All Materials (Slow)</strong> covers a project-wide repair if you ever want one.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Notes</strong></p>
+                    <p class="caption1 m-0 mb-2 mt-2">Your existing materials look identical and keep every setting, including Light Volumes and LTCGI if you had them on. Only <strong>new</strong> materials start with those two off. Re-lock and spot-check your materials after updating.</p>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-3.0.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 3.0.0 - 2026-07-09</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A major overhaul. Hyper-realism gains a dedicated occlusion + baked-shadow map pair; high-gloss sparkle is gone by default; MatCaps grow to five layers with an avatar-lock Freeze, super-bright intensity, and a fully reorganized panel; Emissions grow to five layers with consistent AudioLink; VRSL becomes its own tab; Light Volumes gain optional per-light speculars; and locked materials compile faster. Both shaders. Every new feature is off or neutral by default so existing materials keep their look, but this is a big release - re-lock and spot-check your materials.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Occlusion &amp; Baked Shadow maps - new LIGHTING DETAIL section (Both Shaders):</strong> A dedicated Occlusion Map darkens ambient / indirect light in crevices, and a Baked Shadow Map paints permanent contact shadows that also cut direct light - both for added realism on the latex. Each has a channel picker and strength, and both share the Albedo sampler, so they add <strong>no</strong> sampler-budget cost. Off by default; existing materials are unchanged.</li>
+                        <li class="mb-2"><strong>Two more MatCap layers, five total (Both Shaders):</strong> MatCap 4 and MatCap 5 join 1-3, each a full matcap layer (texture, mask + channel, tint, rotation, intensity, blend mode, lighting mix, tiling, position, scroll). Off by default; <strong>no</strong> added sampler-budget cost.</li>
+                        <li class="mb-2"><strong>MatCap Freeze - lock a matcap to the material (Both Shaders):</strong> A per-matcap Freeze slider stops a matcap sliding as the camera moves, so it reads as baked-in detail that turns naturally with the avatar instead of a mirror-like reflection. Default off (classic reflective matcap).</li>
+                        <li class="mb-2"><strong>Three more Emission layers, five total (Both Shaders):</strong> Emission layers 3, 4 and 5 join 1 and 2, each with its own colour, map, mask channel and AudioLink band + amplitude. Off by default; <strong>no</strong> added sampler-budget cost.</li>
+                        <li class="mb-2"><strong>Optional per-light Light Volume specular (Both Shaders):</strong> A new toggle routes Point Light Volumes through the light-source-size-aware per-light specular path for sharper, more accurate point-light glints on glossy latex, alongside a new Point Light Volume Shading strength control. Off by default (keeps the prior look).</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Specular anti-aliasing is on by default - no more sparkle (Both Shaders):</strong> High-gloss latex no longer shimmers or fizzes under motion. The specular anti-aliasing that already existed now defaults on, and an always-on roughness floor protects even previously-saved materials and distant surfaces. If you preferred the razor-sharp highlights, turn the anti-aliasing back down.</li>
+                        <li class="mb-2"><strong>MatCaps reorganized into one panel (Both Shaders):</strong> The separate matcap tabs are consolidated into a single MATCAPS section with Global Settings and Matcap 1-5 as sub-sections. Each matcap now has a Tiling &amp; Movement sub-section (holding the Freeze control) and a dedicated Offsets sub-section, with clearly labelled position controls - Offset X moves side to side, Offset Y up and down (previously these were present but hidden inside an unlabelled field).</li>
+                        <li class="mb-2"><strong>Brighter MatCaps (Both Shaders):</strong> MatCap Intensity now ranges up to 6 (was 2), so a matcap can push a strong, over-driven glow.</li>
+                        <li class="mb-2"><strong>Emissions reorganized, AudioLink made consistent (Both Shaders):</strong> Each emission layer is now its own sub-section, and every layer's AudioLink band + amplitude sit inline with that layer and hide unless AudioLink is enabled. Previously only the second layer showed its AudioLink controls in this panel while the first layer's lived over in the AudioLink tab.</li>
+                        <li class="mb-2"><strong>VRSL promoted to its own tab (Both Shaders):</strong> "Stage Lighting &amp; VRSL" is now a top-level tab instead of being buried inside the AudioLink panel.</li>
+                        <li class="mb-2"><strong>Faster locked-material compiles (Both Shaders):</strong> When a procedural effect is turned off (water drips, melting goo, the AudioLink HUD ring, fracture shards / trails), locked materials now drop that effect's geometry pass entirely at lock time, so locking and in-headset shader compilation are quicker. Animated toggles are respected - a pass is kept whenever its toggle is marked animated - so runtime toggling still works. Unlocked materials are unchanged.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Light Volumes point-light bugfix + re-sync (Both Shaders):</strong> Re-synced the vendored <code>Editor/cginc/LightVolumes.cginc</code> to the current upstream <code>red.sim.lightvolumes</code> revision, which fixes an off-by-one in the point-light attenuation lookup. <code>VRCLV_VERSION</code> stays 3 and every entry point the shaders use is signature-identical, so the fix comes in transparently; no new samplers, keywords or variants, and existing worlds render unchanged.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-2.9.2">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 2.9.2 - 2026-07-04</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Fixes a locking regression that broke AudioLink on both materials, and tracks the early-July upstream VRC Light Volumes revision. Both shaders. Behaviour-preserving; no new controls.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>AudioLink no longer fails to compile on locked materials (Both Shaders):</strong> Locking a material with the Poiyomi / Thry optimizer (required before an avatar upload) could drop AudioLink from every shader pass except the first, so affected <code>Latex Ultra</code> and <code>Latex Ultra SPS</code> materials failed to compile with "undeclared identifier <code>ALPASS_AUDIOLINK</code>" (and, in the later passes, <code>AudioLinkIsAvailable</code>). The optimizer inlines each shared include only once per shader, and the material had previously pulled the AudioLink helper in separately inside each pass, so only the first pass kept it. The AudioLink include is now hoisted into a single shared block that the engine applies to every pass, so all passes get it after locking. Affects both shaders; re-lock any affected material to pick it up. No new controls, no cost, and unlocked materials are unchanged.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>VRC Light Volumes re-sync (Both Shaders):</strong> Re-synced the vendored <code>Editor/cginc/LightVolumes.cginc</code> to the current upstream <code>red.sim.lightvolumes</code> revision (early-July pass: faster compile, upstream compile-error fixes, and a cheaper <code>exp2</code>-based fast-exp path). <code>VRCLV_VERSION</code> stays 3 and every Light Volumes entry point the shaders use is signature-identical, so the improvements come in transparently: no call-site edits, no new properties, samplers, textures, keywords, or variants, and existing materials and worlds render unchanged.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-2.9.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 2.9.1 - 2026-06-30</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Tracks the latest upstream VRC Light Volumes restructure: a significant performance pass plus more physically-correct, light-source-size-aware speculars. Behaviour-preserving re-sync, no new controls.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>VRC Light Volumes restructure re-sync (Both Shaders):</strong> Re-synced the vendored <code>Editor/cginc/LightVolumes.cginc</code> to the latest upstream <code>red.sim.lightvolumes</code> revision, which restructured the file for significantly improved performance and reworked its speculars to be more physically correct and aware of light-source size (larger point / spot / area sources fall off more softly). The only API the shader consumes that changed was the point-light sampler <code>LV_PointLightVolumeSH</code>, whose parameter order was rearranged so the surface normal and shading strength now come before the spherical-harmonic outputs; both shaders' single call was reordered to match, preserving the previous look exactly. Every other Light Volumes entry point the shader uses is unchanged, so the improved specular math is picked up transparently. <code>VRCLV_VERSION</code> stays 3; no new properties, samplers, textures, keywords, or shader variants, and existing materials and worlds render unchanged.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-2.9.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 2.9.0 - 2026-06-29</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Decals arrive: a 4-layer, in-scene-placed decal system for logos, stickers, brand art and tattoos on the latex, a small pair of realistic-lighting refinements, plus a locking fix that keeps the procedural effects intact through Thry's optimizer. Both shaders.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>4-Layer Decals (Both Shaders):</strong> A new DECALS section places up to four independent decals on the material, each positioned right in the Scene view by dragging the gizmo handles. Per layer: tint, position / scale / rotation (with optional spin), side offsets, UV0/UV1 source, a packed RGBA mask channel, eight colour blend modes (Normal / Darken / Multiply / Lighten / Screen / Add / Subtract / Overlay), an emission glow, a smoothness offset (so a sticker can read glossier or more matte than the latex), mirror / symmetry, and a clamp-or-tile toggle. All four decals share one texture sampler, so they add <strong>no</strong> sampler-budget cost; only assigned textures use any memory. Off by default - existing materials are unchanged.</li>
+                        <li class="mb-2"><strong>Horizon Specular Occlusion (Both Shaders):</strong> New control that fades reflections a normal map would otherwise leak through the surface at grazing angles. Applies to every reflective term (reflection probes, Light Volumes, LTCGI, VRSL). Default full; set to 0 to disable.</li>
+                        <li class="mb-2"><strong>Specular Highlight Clamp (Both Shaders):</strong> New control that caps direct point-light highlight intensity to tame sparkle on very glossy latex. Default is effectively off (no change); lower it to clamp harder.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Realistic lighting, refined (Both Shaders):</strong> The two controls above are surgical, opt-in additions to the existing realistic PBR model; their defaults reproduce the prior look exactly, so nothing changes until you reach for them.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Locking no longer breaks the procedural effect passes (Both Shaders):</strong> Locking a material with Thry's optimizer (required before an avatar upload, so unlocked shaders are not stripped from the build) was silently disabling the geometry stage of the procedural effect passes - the water drips, the melting goo, the AudioLink HUD ring, and the fracture shards / trails - leaving those passes to render incorrectly or fail to compile. The shader now tells the optimizer to keep its geometry passes when locking, so every effect survives the lock intact. No new controls, no cost, and unlocked materials are unchanged; re-lock any affected material to pick up the fix.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-2.8.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 2.8.1 - 2026-06-28</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Tracks the latest upstream VRC Light Volumes 3.x revision: the point-light sampler gained an explicit, light-source-size-aware shading-strength argument. Behaviour-preserving refresh, no new controls.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>VRC Light Volumes 3.x point-light refresh (Both Shaders):</strong> Re-synced the vendored <code>Editor/cginc/LightVolumes.cginc</code> to the latest upstream <code>red.sim.lightvolumes</code> 3.x release. Upstream renamed the point-light sampler <code>LV_LightVolumePointSH</code> → <code>LV_PointLightVolumeSH</code> and moved point-light shading strength out of the world-normal's <em>length</em> into an explicit <code>pointLightShading</code> argument; the new shading term is also light-source-size aware, so larger point / spot / area sources fall off more softly across the normal horizon. Both <code>surf</code> twins now call <code>LV_PointLightVolumeSH(worldPos, …, nWorldStable, 1.0)</code>, where <code>1.0</code> reproduces the previous default shading. The new upstream per-light specular API (<code>LightVolumeSHSpecular</code> / <code>LightVolumeAdditiveSHSpecular</code>) is bundled but unused - VixenWear keeps its existing <code>LightVolumeSpecular</code> / <code>LightVolumeSpecularDominant</code> path. No new properties, samplers, keywords, or variants; existing materials and worlds render unchanged.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-2.8.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 2.8.0 - 2026-06-25</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>World-lighting modernization plus a round of fixes to the wet / parallax / matcap stack. VRC Light Volumes moves to the 3.x API, LTCGI gains runtime toggling, diffuse/specular render modes, colour tints and automatic de-duplication against the new "LTCGI baked into Light Volumes" path, AreaLit is retired, TechnicallySane lighting goes public (TSLCE-first with GlobalRGB fallback), and the SPS shader finally gets the 3D water droplets plus a brand-new tessellation-free melting-goo effect.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>TechnicallySane TSLCE Support, now the primary method (Both Shaders):</strong> Under the new TSLCE Render Texture Access License (<code>Licenses/LICENSE-TechnicallySane.md</code>), the shader reads TechnicallySane's global control texture <code>_Udon_TS_LCE</code> and tints itself to the live show colour - an intensity-weighted average of the first lit fixtures (fixture colour × dimmer). When a world is still on the older engine the shader automatically falls back to the legacy <code>_Udon_TS_GlobalRGB</code> whole-frame broadcast. One toggle (<code>Enable TechnicallySane Lighting</code>) plus the existing <code>Tint Strength</code> / <code>Color Saturation</code> / <code>Albedo Mix</code> knobs drive both paths. Reads only <code>_Udon_TS_LCE</code>, runtime-gated for VRCFury, liveness-probed, and completely free/inert in worlds with no TechnicallySane engine. (This supersedes the 2026-06-11 "TechnicallySane GlobalRGB - Held Back" note below: the integration is now cleared for public release.)</li>
+                        <li class="mb-2"><strong>TechnicallySane on the SPS shader:</strong> the SPS twin gains the full TechnicallySane integration (it previously had none), at parity with the base shader.</li>
+                        <li class="mb-2"><strong>Attribution help boxes (Both Shaders):</strong> each consumed system's INTEGRATION/AUDIOLINK/STAGE section now opens with a clickable attribution help box linking to the upstream project - VRC Light Volumes (RED_SIM), LTCGI (_pi_/pimaker), AudioLink (llealloo et al.), VRSL (AcChosen), and TechnicallySane. A conditional reminder under the TechnicallySane toggle notes it only does something in a TechnicallySane world.</li>
+                        <li class="mb-2"><strong>LTCGI Render Modes + Colour Tints (Both Shaders):</strong> New <code>LTCGI Mode</code> selector (<strong>Both / Diffuse Only / Specular Only</strong>) plus separate <code>LTCGI Diffuse Color</code> and <code>LTCGI Specular Color</code> tints on the INTEGRATION tab, mirroring LTCGI's own v2 surface shader and Poiyomi/Thry. <code>LTCGI_Contribution</code> already returns the diffuse and specular terms separately, so the mode just masks them and the tints multiply each - no extra samples and no cost when LTCGI is off.</li>
+                        <li class="mb-2"><strong>LTCGI ↔ Light Volumes auto-dedupe (Both Shaders):</strong> LTCGI v1.7 + VRC Light Volumes 3.x can now bake LTCGI emitters straight into a world's Light Volume atlas (a world-side blit via the LTCGI LV adapter). When that path is active the shader already receives the LTCGI light through its normal Light Volume sampling, so the shader's <strong>direct</strong> LTCGI sampling is automatically suppressed (<code>asint(_UdonLightVolumesWithLTCGI) != 0</code>) to prevent double-bright. Worlds without the adapter are unaffected.</li>
+                        <li class="mb-2"><strong>Runtime LTCGI / Light Volumes toggles (Both Shaders):</strong> <code>_UseLTCGI</code> and <code>_UseLightVolumes</code> are now real <code>[Toggle]</code>s that gate the effect at runtime (so VRCFury material-toggle animations work) <strong>and</strong> drive the <code>LTCGI_ENABLE</code> / <code>LIGHTVOLUMES_ENABLE</code> keywords from the editor. Default <strong>on</strong>, so existing materials render unchanged.</li>
+                        <li class="mb-2"><strong>3D Water Droplets on the SPS shader:</strong> The geometry-shader droplet pass (real water beads that swell on downward-facing wet areas, pinch off, fall and dry) is now present on the <strong>SPS</strong> shader too, not just the PC base shader. It is a geometry stage and entirely independent of tessellation, so it runs fine on SPS. Driven by the existing <code>Clear Drip</code> controls; off by default.</li>
+                        <li class="mb-2"><strong>Tessellation-free Melting Goo on the SPS shader:</strong> Because the SPS shader cannot use <code>tessellate:tessEdge</code>, a new geometry-shader goo pass (<code>gooGeom</code>) extrudes downward-hanging, billboarded melt tendrils where the Goo mask is active - driven by the existing Goo Sag Distance / Stretch / Underside Bias / Sway / Melt-To-Ground / Floor controls. The base shader keeps its tessellated surface melt; the SPS shader gets these geometry tendrils instead so the effect is finally visible there. Off by default.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>VRC Light Volumes 3.x API (Both Shaders):</strong> Updated the vendored <code>Editor/cginc/LightVolumes.cginc</code> to the upstream 3.x release and adapted the <code>surf</code> call sites. The new <code>LV_LightVolumeRegularSH</code> <strong>excludes</strong> additive volumes (they are sampled separately now), so the non-additive-only path calls Regular <strong>then</strong> Additive; <code>LV_PointLightVolumeSH</code>/<code>LV_LightVolumeSH</code> were renamed to <code>LV_LightVolumePointSH</code>/<code>LV_LightVolumeRegularSH</code>. All <code>_LV_*</code> controls, the specular path, and the stable-normal wiring are unchanged.</li>
+                        <li class="mb-2"><strong>Matcap blend modes now composite against the lit surface (Both Shaders):</strong> The three matcap layers were reworked from a single additive accumulator to a surface-relative model carried by <code>MatcapMul</code> / <code>MatcapAdd</code> (<code>finalColor = finalColor <em> MatcapMul + MatcapAdd </em> lighting</code>). <strong>Add</strong> still adds a lit sheen exactly as before (existing materials unchanged), but <strong>Multiply</strong> now tints/darkens the surface and <strong>Replace</strong> overwrites it inside the layer's mask - the way the blend-mode names imply. Layers composite in order, so layer 2/3 blend over layer 1.</li>
+                        <li class="mb-2"><strong>sampler2D → Texture2D sampler-budget pass (Both Shaders):</strong> The five fragment-only maps (<code>_BumpMap</code>, <code>_DetailNormalMap</code>, <code>_EmissionMap</code>, <code>_EmissionMap2</code>, <code>_RegionMask</code>) now use <code>UNITY_DECLARE_TEX2D_NOSAMPLER</code> and borrow <code>_MainTex</code>'s sampler, freeing up to five sampler registers against the 16-sampler DX11 cap. <code>_MetallicGlossMap</code> and <code>_GooMask</code> deliberately keep their own samplers because they are read in the vertex/displacement stage, where a borrowed <code>_MainTex</code> sampler does not resolve.</li>
+                        <li class="mb-2"><strong>Rendering Mode dropdown restored in the inspector (Both Shaders):</strong> <code>_Mode</code> now uses Thry's <code>[ThryWideEnum]</code> drawer instead of Unity's built-in <code>[Enum]</code>, so the <strong>Opaque / Cutout / Fade / Transparent</strong> dropdown actually renders in the ThryEditor inspector again. The C# blend / render-queue / tag setup callback is unchanged.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Parallax self-shadows no longer black out the material (Both Shaders):</strong> With Parallax Depth enabled the raymarched self-shadow could drive the whole surface to near-black. Two causes: the shadow ray started from a <strong>displacement-scaled</strong> height instead of the raw heightmap value (so a low Displacement Strength sent the ray straight under the surface and returned fully shadowed), and the soft-shadow loop accumulated the <em>lit margin</em> instead of the <em>occlusion</em>, crushing even flat lit areas. The surface height now uses the raw <code>[0,1]</code> map value and the loop accumulates true occlusion, so flat areas stay fully lit and only real height edges cast contact shadows. <code>Shadow Hardness</code> maps to shadow contrast.</li>
+                        <li class="mb-2"><strong>3D water droplets render again (Both Shaders):</strong> The droplet silhouette was combined with a smooth-<strong>minimum</strong> (intersection), which the neck term zeroed across the entire bead body - so every droplet hit the <code>discard</code> and nothing drew. Switched to a smooth-<strong>maximum</strong> (union) so the beads render.</li>
+                        <li class="mb-2"><strong>Matcap Multiply / Replace blend modes work again (Both Shaders):</strong> Under the old additive accumulator, <strong>Multiply</strong> on the first matcap layer multiplied against a zero accumulator (= black / nothing) and <strong>Replace</strong> was indistinguishable from Add. The surface-relative rework (see Changed) makes both behave as named.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Removed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>AreaLit integration removed entirely (Both Shaders):</strong> PiMaker AreaLit support has been pulled - the <code>AREALIT_ENABLE</code> keyword and shader_feature, the <code>_AreaLit_*</code> properties, the vendored <code>Editor/cginc/AreaLit/AreaLit_Latex.cginc</code> include, the <code>AreaLitGlobalBroadcaster</code> world-side helper, and the editor keyword/UI. It produced artifacts in worlds that have an AreaLit broadcaster present but no active light data. LTCGI (now with the Light-Volumes baking path) and VRC Light Volumes 3.x cover area / screen lighting.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-2.7.2">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 2.7.2 - 2026-06-20</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A structural refactor of the ThryEditor layout tree to eliminate the final traces of Unity IMGUI buckling. This update prioritizes long-term maintainability and inspector performance by flattening deep UI hierarchies, enforcing strict prefixing, and falling back to native rendering for complex layout math.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Architectural Flattening (Anti-Nesting):</strong> Deeply nested AudioLink modules have been promoted to independent, top-level drawers. The sprawling Cybernetic Overlays and UV Spatial Distortions sections are now separated into distinct master foldouts (e.g., <code>m_start_al_cyber_vu</code>, <code>m_start_al_uv_bump</code>). By drastically reducing the depth of the UI hierarchy, Unity's layout stack is protected from overflow exceptions and sluggish rendering times.</li>
+                        <li class="mb-2"><strong>Strict Sub-Drawer Nomenclature (<code>s_start</code>):</strong> All remaining secondary groups and foldouts have been migrated from the generic <code>g_start_</code> prefix to a strict <code>s_start_</code> (sub-start) prefix. This provides a clear, highly structured semantic separation between master module drawers (<code>m_start</code>) and their internal sub-sections (<code>s_start</code>), preventing regex collisions in the Thry parser.</li>
+                        <li class="mb-2"><strong>Custom Vector UI Retirement:</strong> The <code>[VixenVectorLabel]</code> property decorators have been completely stripped from transform parameters (e.g., <code>_Cyber_VU_Transform</code>, <code>_AL_Pump_UV</code>). Retiring the custom property drawer in favor of Unity's native <code>Vector4</code> layout guarantees mathematically perfect <code>Rect</code> heights, permanently resolving the "UI bleed" and overlapping fields without requiring custom C# <code>GetPropertyHeight</code> overrides.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-2.7.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 2.7.0 - 2026-06-19</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>The material inspector now runs on Thry's ShaderEditor instead of the hand-written tabbed editor, mirroring the VixenWorld Surface shader: foldout menu sections, material lock/optimizer, and the VixForge footer. No shader, lighting, or performance change: this is an inspector + Properties-block migration only.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Inspector migrated to Thry's ShaderEditor (Both Shaders):</strong> The custom 6-tab <code>ShaderGUI</code> was retired. The same six sections (BASE / SURFACE / POLISH / INTEGRATION / AUDIOLINK / STAGE) and every toggle-gated sub-section are now declared inline in each shader's <code>Properties</code> block using Thry's menu/drawer DSL, with <code>CustomEditor "VixenWearLatexEditor"</code> (a thin subclass of <code>Thry.ShaderEditor</code>, like VixenWorld's editor). You gain Thry's niceties for free (per-section right-click reset, copy/paste, material linking, search). Rendering Mode keeps its exact previous behavior (blend state, render queue, <code>RenderType</code> + <code>VRCFallback</code> tags, alpha keywords) via the editor's sync, guarded so locked materials are left untouched.</li>
+                        <li class="mb-2"><strong>Twin-aware Properties:</strong> The base and SPS shaders keep their existing (divergent) property sets; the SPS twin's inspector simply omits the PC-only vertex/geometry features it never had.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Material Lock / Optimizer (Both Shaders):</strong> The inspector now has Thry's lock/unlock button and the VixForge footer (website / Discord / X / GitHub / Ko-fi), matching VixenWorld. As with VixenWorld and Poiyomi, <strong>lock your materials before building</strong> - unlocked Thry materials are stripped from builds (they render pink otherwise). Use Thry's right-click "Lock All" on your avatar to lock everything at once.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Requirements</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>ThryEditor is required and is NOT bundled.</strong> The inspector is built on Thry's shader editor (<code>Thry.ShaderEditor</code>); install ThryEditor (<code>de.thryrallo.thryeditor</code>) - if you use Poiyomi you already have it. It is intentionally not bundled so it never conflicts with other Thry-based shaders in your project. Existing materials keep their values and keywords; no data migration is needed.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-2.6.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 2.6.0 - 2026-06-15</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Real-time world lights now actually light the material again, and VRC Light Volumes is upgraded to V3 with its full point/spot/area-light feature set (including the proper "TV GI" path).</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>VRC Light Volumes V3 (Both Shaders, <code>LIGHTVOLUMES_ENABLE</code>):</strong> Upgraded the vendored <code>Editor/cginc/LightVolumes.cginc</code> from V2 to upstream <strong>V3</strong> (<code>red.sim.lightvolumes</code> lv-3, <code>VRCLV_VERSION 3</code>). The material now receives <strong>Point Light Volumes</strong> in addition to baked volumes: point lights, spot lights (parametric / attenuation-LUT / projected cookie), cubemap-tinted point lights, and <strong>quad area lights</strong> - all projected into the same L1-SH path the volumes already used, so they flow through the existing diffuse + <code>LightVolumeSpecular</code> machinery and respond to the existing <code>_LV_*</code> controls. The two <code>surf</code> sample calls now pass the per-pixel shaded world normal (<code>worldNormal</code>) so V3's normal-mask term applies to these lights. No new material properties.</li>
+                        <li class="mb-2"><strong>TV GI via LV V3 Area Lights (Both Shaders):</strong> The "TV lights the room" effect is back, now done correctly through V3 <strong>area lights</strong> instead of the old raw-texture tint that was pulled in 2.5.0. A world author points a PointLightVolume (AreaLight type) at a video screen's RenderTexture/Material; the LV V3 runtime feeds its colour into the quad-light SH and the shader picks it up automatically - no per-material setup, every avatar lit. Appears only in worlds running the LV V3 runtime; older/no-LV worlds fall back to deringed light probes via the version gate.</li>
+                        <li class="mb-2"><strong>Point Light Volume Shadows (Both Shaders):</strong> V3's per-light <strong>EVSM shadows</strong> (cubemap and single-slice) are enabled. To stay inside the 16-sampler ps_5_0 budget, the shadow <code>Texture2DArray</code> reuses <code>sampler_UdonLightVolume</code> instead of declaring its own sampler, so V3 adds <strong>zero net sampler registers</strong> over V2 (EVSM only needs linear-clamp filtering). This is the one local divergence from the upstream cginc.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Point / Spot lights no longer leave the material dark (Both Shaders):</strong> The main lighting pass carried <code>noforwardadd</code>, which deletes Unity's generated <strong>ForwardAdd</strong> pass. In the Built-in pipeline, point and spot lights are shaded per-pixel <strong>only</strong> in ForwardAdd, so with it removed the material only picked them up as a weak per-vertex/SH approximation and read as unlit under them. Removed <code>noforwardadd</code> from the main <code>surf</code> pass (the outline pass keeps it - it is emission-only). The custom GI function and <code>BRDF_*_GGX</code> were split so the additive pass accumulates <strong>only</strong> direct-light terms; all indirect/world-system terms (ambient, reflection probe, Light Volumes, LTCGI, AreaLit, VRSL-GI, matcap, emission) and the <code>_MinBrightness</code> floor stay base-pass-only via <code>#if !defined(UNITY_PASS_FORWARDADD)</code>. Those base-pass-only texture samples (matcap, emission, reflection cube, Light Volumes, VRSL DMX) are also gated out of the additive variant so it stays well under the 16-sampler cap - which is why <code>noforwardadd</code> had been used as a shortcut originally. Base shader keeps <code>fullforwardshadows</code> (additive shadows); the SPS twin stays lean (no additive shadows) for the SPS compiler. Point lights illuminate without cookies/cube-shadows (those keywords remain skipped to bound the variant count).</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-2.5.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 2.5.0 - 2026-06-13</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Full world-lighting integration pass: the latex now reacts to every supported stage/area-light system, and the legacy TV-GI tint is gone. Every integration is fail-safe - it strips or no-ops cleanly in worlds that don't have the system, so the material never blacks out or picks up stray colour. Built-in Render Pipeline only (VRChat); HDRP is out of scope by design (a <code>#pragma surface</code> shader can't compile under HDRP/URP).</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>AreaLit Area-Light Support (Both Shaders, <code>AREALIT_ENABLE</code>):</strong> The latex now receives PiMaker <strong>AreaLit</strong> area lights, same role as LTCGI. AreaLit is analytic Linearly-Transformed-Cosines (no LUT texture), vendored and trimmed into <code>Editor/cginc/AreaLit/AreaLit_Latex.cginc</code> (<code>AL_</code>-prefixed, no namespace, single light texture, 16-quad cap, no MSBuffer/checker). AreaLit itself ships no scene broadcast, so the shader <strong>intercepts it at the GI level like LTCGI</strong> via a small world-side helper: <code>Runtime/AreaLitGlobalBroadcaster.cs</code> (UdonSharp) publishes the LightCam's data as scene globals <code>_Udon_AreaLit_LightMesh</code> / <code>_Udon_AreaLit_Tex0</code> / <code>_Udon_AreaLit_Enable</code>, and the shader reads those automatically (no per-material assignment, every avatar in the world lit). A per-material pair (<code>_AreaLit_LightMesh</code> / <code>_AreaLit_LightTex0</code>) remains as a manual fallback when no broadcaster is present; both sources funnel through one <code>AL_ShadeCore(...)</code> selected by a runtime branch on <code>_Udon_AreaLit_Enable</code>. LightMesh is read with <code>.Load</code> (no sampler) and the light texture is <code>UNITY_DECLARE_TEX2D_NOSAMPLER</code> sampled through <code>_MainTex</code>'s sampler - <strong>zero new sampler registers</strong>. The whole include is <code>#ifndef SHADER_TARGET_SURFACE_ANALYSIS_MOJOSHADER</code>-guarded (with a no-op stub) like the LTCGI uniforms, since the surface-analysis MojoShader pass can't parse object textures. Keyword-gated by the editor on <code>_AreaLit_Int &gt; 0</code>; the broadcaster ships in its own asmdef gated on the UdonSharp package so it's excluded from avatar projects. On the INTEGRATION tab.</li>
+                        <li class="mb-2"><strong>VRSL GI Wash (Both Shaders):</strong> A new additive coloured <strong>stage wash</strong> on top of the existing VRSL stage-hijack. Instead of overriding emission, it spills the DMX fixtures' colour onto the material as real light (the stage lighting you up), decoded from the same DMX grid + channel offsets (base+3/4/5) the Color Hijack reads. Controls <code>_VRSL_GI_Int</code> / <code>_VRSL_GI_Spec</code> / <code>_VRSL_GI_Sat</code> on the STAGE tab. Rides the existing <code>VRSL_ENABLE</code> keyword + <code>_UseVRSL</code> runtime gate; a TexelSize liveness probe skips it in worlds with no DMX node.</li>
+                        <li class="mb-2"><strong>Fail-Safe Fallback Model (All World-Lighting Integrations):</strong> Formalised the "no system in this world = no cost, no artifact" guarantee. Heavy paths (VRSL, LTCGI, AreaLit, Light Volumes) are keyword-stripped when off; cheap global reads (VRSL GI) are runtime float-gated and probe their data source for liveness (DMX TexelSize, <code>LightMesh.Load == 0</code>). All integration includes are vendored under <code>Editor/cginc/</code>, so the shaders compile with every package absent.</li>
+                        <li class="mb-2"><strong>MatCap Tiling &amp; 3-Axis Scrolling (Both Shaders + Inspector):</strong> Both matcap layers gained a <code>Tiling (XY)</code> vector (<code>_MatCap_Tiling</code> / <code>_MatCap2_Tiling</code>) and a <code>Scroll (X pan, Y pan, Z spin)</code> vector (<code>_MatCap_Scroll</code> / <code>_MatCap2_Scroll</code>). Tiling scales the rotated UV around the matcap centre so the sphere highlight stays put as the pattern repeats. Scroll drives smooth continuous motion off <code>_Time.y</code>: <code>X</code>/<code>Y</code> pan the UV and <code>Z</code> spins the matcap in degrees/sec (a matcap is a 2D sphere projection, so rotation is the only third axis that reads as a true scroll). The spin angle is wrapped with <code>fmod(..., 360)</code> so sin/cos stay precise and jitter-free over long sessions. Defaults (Tiling <code>(1,1)</code>, Scroll <code>(0,0,0)</code>) are identity, so existing materials render unchanged, and there are no new sampler registers (reuses the matcap textures). Visible repeat at tile &gt; 1 requires the matcap texture's Wrap Mode = Repeat. New rows on the MATCAP tab under each layer's Intensity.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Removed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Screen Glow / "Any TV GI" Feature:</strong> Removed <code>_UseScreenGlow</code> and the whole <code>_ScreenGlow_*</code> stack (plus the <code>_Udon_VideoTex</code> and standalone <code>_Udon_LTCGI_Texture_LOD0</code> declarations and the <code>BRDF_Latex_GGX</code> glow block) from both shaders and the inspector. The refined lighting model is unchanged; the dedicated area-light integrations (LTCGI + AreaLit) cover screen lighting properly with real screen geometry, so the Tier-B raw-texture tint is no longer needed.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Faster shader imports (both shaders, <code>only_renderers d3d11</code> + <code>SHADOWS_SOFT</code> skip):</strong> Every program now carries <code>#pragma only_renderers d3d11</code>, so Unity compiles a single graphics API instead of the whole desktop set (gles3 / metal / vulkan / glcore). VixenWear is PC / Built-in-RP only and PC VRChat runs DX11, so this cuts both the source reimport and the VRCFury SPS patch+import (which force-synchronously compiles every pass twice and is the slowest part of an SPS build) by a large factor. <code>SHADOWS_SOFT</code> was also added to the skip_variants list to roughly halve the ForwardBase shadow-receiving variant set, at the cost of slightly harder shadow edges. <strong>Heads up:</strong> because the shaders now compile DX11 only, a player who force-launches VRChat in Vulkan or DX12 (experimental, uncommon) would see the material break; standard PC clients are unaffected. <code>VERTEXLIGHT_ON</code> is deliberately left in, because VRCFury SPS socket detection reads the per-vertex light arrays that only populate under it.</li>
+                        <li class="mb-2"><strong>Built-in-Only Banner:</strong> Both shaders now carry a header note that they target the Built-in Render Pipeline / VRChat and that HDRP/URP are unsupported by design (surface shaders can't compile there). No functional change.</li>
+                        <li class="mb-2"><strong>TechnicallySane GlobalRGB Support - Held Back:</strong> Pulled from the shipping shaders and inspector on 2026-06-11 at the request of the TechnicallySane integration's creator (holding off for now). The reader (<code>_Udon_TS_GlobalRGB</code> -&gt; <code>_UseTS</code> / <code>_TS_Str</code> / <code>_TS_Sat</code> / <code>_TS_Albedo</code>) is removed from both Latex shaders and the INTEGRATION tab; the exact code is preserved internally for a clean re-add once cleared. No other integration is affected.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Tessellation control inverted &amp; uncapped (base shader):</strong> The old <code>Tessellation Edge Length</code> slider (<code>_Tess_Edge</code>, Range 1–50) was backwards and unbounded - its value is the <em>target edge length</em> fed to <code>UnityEdgeLengthBasedTess</code>, which sits in the <strong>denominator</strong> of the tessellation factor, so a <strong>lower</strong> number meant denser subdivision and the GPU's 64× per-edge cap was hit on dense displaced meshes → severe lag. Replaced with <code>Tessellation Detail</code> (<code>_Tess_Detail</code>, Range 0–1) where <strong>higher = more detail/cost, lower = cheaper</strong>, mapped via <code>edgeLen = lerp(40, 2, detail)</code>. The distance/screen-adaptive LOD is preserved (far/small-on-screen surfaces stay cheap) and the per-edge factor is now clamped to <code>VW_TESS_MAX</code> (32) so the close-up worst case can't melt the GPU. The SPS variant has no tessellation, so it's unaffected. <strong>Migration:</strong> the property was renamed, so existing materials reset to the new <code>0.5</code> default and the tessellation amount should be re-set once (the previous default of edge-length 10 ≈ detail 0.79).</li>
+                        <li class="mb-2"><strong>Shader compiler warning (POM, both shaders):</strong> Eliminated the "gradient instruction used in a loop with varying iteration, attempting to unroll the loop" warning on the ForwardBase pass. The parallax-occlusion height march now samples <code>_MetallicGlossMap</code> with <code>tex2Dlod</code> (explicit LOD 0) instead of <code>tex2Dgrad</code>, so the dynamic <code>[loop]</code> no longer carries a gradient instruction - the runtime early-out <code>break</code> (and its performance) is preserved. The heightfield is now marched at mip 0 (standard for POM).</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-2.4.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 2.4.0 - 2026-06-08</h5>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Wet &amp; Run-Off Layer (<code>_UseDrip</code>, Both Shaders):</strong> New POLISH-tab effect that soaks the latex like it just came out of the pool. The "Soaked Look" stack (<code>_Wet_Amount</code>, <code>_Wet_Darken</code>, <code>_Wet_Smoothness</code>, <code>_Wet_Sheen</code>, <code>_Wet_Flatten</code>) darkens the masked area for water absorption, drives reflections toward a near-mirror water film, layers a dielectric Fresnel sheen on the clearcoat, and flattens micro-detail. Layered on top, animated "Run-Off Rivulets" (<code>_Drip_Density</code>, <code>_Drip_Width</code>, <code>_Drip_Coverage</code>, <code>_Drip_Speed</code>, <code>_Drip_Strength</code>, <code>_Drip_Normal</code>) stream vertical water trails down the UV. A B&amp;W <code>_DripMask</code> + <code>_DripMaskCh</code> channel picker scopes the whole effect. The soak and rivulets run on both the base and SPS shaders.</li>
+                        <li class="mb-2"><strong>Clear 3D Drips (Geometry, PC Only):</strong> On the base <code>VixenWear/Latex Ultra</code> shader, <code>_Drip3D_Strength</code> adds real water droplets emitted by a dedicated geometry stage (<code>dripGeom</code>): they swell on downward-facing wet areas, form a neck, pinch off, then fall away as free geometry and dry out. Tuned by <code>_Drip3D_Scale</code> (droplet size, roughly millimetres), <code>_Drip3D_Sheen</code> (glassiness), and <code>_Drip3D_Fall</code> (fall distance), tinted to the Clearcoat Tint. Physics: <code>_Drip_Sway</code> adds surface-tension wobble and a breeze that grows with fall distance, <code>_Drip_BodyFollow</code> makes attached drops run down along the body before detaching (faked body collision), and <code>_Drip_FloorCollide</code> pins drops to the shared world floor and spreads them into a fading puddle. Not present on the SPS shader or Quest (the geometry stage is stripped there).</li>
+                        <li class="mb-2"><strong>Goo Melting Sag (<code>_UseGoo</code>, Both Shaders):</strong> Gravity-aligned vertex melt that mimics runny/melting latex, running in the displacement stage so it benefits from tessellation on the base shader (more verts = smoother strands). <code>_Goo_Strength</code> is the master intensity, <code>_Goo_Reach</code> extends how far it sags in world units, <code>_Goo_Variation</code> drives procedural FBM noise from uniform to wildly uneven strands, with <code>_Goo_Noise</code>, <code>_Goo_Speed</code>, and <code>_Goo_Droop</code> shaping the tendrils. <code>_Goo_ToGround</code> + <code>_Goo_GroundY</code> pull the melt toward the world floor regardless of avatar height. Physics: <code>_Goo_Sway</code> / <code>_Goo_SwaySpeed</code> give a per-strand pendulum swing, <code>_Goo_BodyFollow</code> flows goo along the body instead of through it, <code>_Goo_FloorCollide</code> clamps to the floor height, and <code>_Goo_Pool</code> spreads landed strands sideways into a puddle. Scoped by <code>_GooMask</code> + <code>_GooMaskCh</code>.</li>
+                        <li class="mb-2"><strong>Reflection / Specular Masks (Poiyomi / Mochie Compatibility):</strong> New <code>_UsePackedMasks</code> gate on the SURFACE tab with <code>_ReflMask_Ch/_Inv/_Str</code> and <code>_SpecMask_Ch/_Inv/_Str</code>. The Reflection Mask dims environment / reflection-probe specular (including clearcoat env, Light Volume, and LTCGI reflections); the Specular Mask dims direct-light highlights. Channel defaults match Mochie packing (B = reflection, A = specular); matcaps keep their own masks and are untouched. Both default to 1.0 (no effect) until enabled.</li>
+                        <li class="mb-2"><strong>One-Click Poiyomi / Mochie Metallic Map Setup:</strong> New "Set Up for Poiyomi / Mochie Metallic Map" button on the SURFACE tab translates a Mochie/Poiyomi "Metallic Maps" texture (R:Metallic G:Smoothness B:Reflection Mask A:Specular Mask) onto the packed PBR in one shot - sets the four channel selectors, disables AO, and enables the reflection + specular masks. Backed by a null-safe <code>SetF()</code> editor helper so it no-ops cleanly on the SPS variant where a property is missing.</li>
+                        <li class="mb-2"><strong>Polish Layer Master Gate (<code>_UsePolish</code>):</strong> New top-of-POLISH toggle (default ON) that wraps the entire polish lighting layer - clearcoat, thin film, SSS, transmission, anisotropy, rim, and multi-scatter compensation - behind a single switch. Off collapses the material to a flat GGX base for a clean matte look or a cheaper variant. A per-pixel <code>_PolishMask</code> + <code>_PolishMaskCh</code> scopes the layer to painted regions.</li>
+                        <li class="mb-2"><strong>Flying-Shard Fracture Engine (PC Only):</strong> The 2.3.0 single-value <code>_Vtx_Fracture_Str</code> scatter is replaced by a full shard system driven by new geometry passes (<code>shardGeom</code> + <code>trailGeom</code>). <code>_Vtx_Fracture_Amount</code> is a manual hold/animate dissolve, <code>_Vtx_Fracture_Dist</code> sets shard hover distance, <code>_Vtx_Fracture_Spin</code> tumbles them, <code>_Vtx_Fracture_Str</code> is now an AudioLink jitter, and <code>_Vtx_Fracture_Spiral</code>, <code>_Vtx_Fracture_Lift</code>, <code>_Vtx_Fracture_Float</code>, and <code>_Vtx_Fracture_Trail</code> shape the dispersal and motion trails. Shard coloring adds <code>_Shard_ColorMod</code> (hue shift) + <code>_Shard_ColorMod_Speed</code>, and <code>_UseShardCC</code> + <code>_Shard_CC_Str</code> blend the shards toward the live AudioLink ColorChord. The body opens up as the fracture progresses; the SPS shader has no geometry pass, so it dissolves via the main-pass clip only (no flying shards).</li>
+                        <li class="mb-2"><strong>Autocorrelator Ring Effects (PC HUD):</strong> The cyber HUD autocorrelator ring gains four independent, per-band effects - <code>_Cyber_Auto_Shimmer</code>, <code>_Cyber_Auto_Pop</code>, <code>_Cyber_Auto_Sizzle</code>, and <code>_Cyber_Auto_Electrify</code> - each with its own band selector (<code>_..._Band</code>) so a different AudioLink band can drive each effect, mirroring the VU-meter per-band pattern. When AudioLink isn't running, each effect falls back to a <code>_Time</code>-driven idle level so it stays visible while authoring. The SPS shader declares the props inert for inspector/copy-paste parity.</li>
+                        <li class="mb-2"><strong>Self-Playing AudioLink Console (VU "Console" Style):</strong> New <code>_Cyber_VU_Style</code> selector (Console / Bar) replaces the old <code>_Cyber_VU_Band</code>. The Console style renders a full self-playing AudioLink control panel (gain/threshold/hit-fade/falloff sliders, 4-band readout, theme/ColorChord swatches, and an autocorrelator scope) ported from the upstream <code>AudioLinkUI-Functions.cginc</code>, now vendored into the package's <code>cginc/</code> folder. The sliders are display-only readouts of the live AudioLink state.</li>
+                        <li class="mb-2"><strong>Per-Widget HUD Reaction Bands:</strong> The Waveform, DMX Grid, and Autocorrelator HUD segments each gain their own band selector (<code>_Cyber_Wave_Band</code>, <code>_Cyber_DMX_Band</code>, <code>_Cyber_Auto_Band</code>) so every widget can react to a different AudioLink band instead of sharing one global selection.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>LTCGI Avatar Mode On By Default:</strong> <code>cginc/LTCGI_config.cginc</code> now enables <code>LTCGI_AVATAR_MODE</code> and <code>LTCGI_BLENDED_DIFFUSE_SAMPLING</code> out of the box, tuning the vendored LTCGI path for avatar use and smoothing diffuse area-light contribution with a slight extra screen-color sample. The LTCGI AudioLink no-op fallback <code>#include</code> was also re-pointed to the package-local copy, so the LTCGI AudioLink branch resolves even when the LTCGI package isn't installed.</li>
+                        <li class="mb-2"><strong>POLISH Tab Reorganization:</strong> The POLISH tab now opens with the Polish Layer gate (clearcoat / thin film / SSS / transmission / anisotropy / rim / multi-scatter collapse under it), followed by the new "Wet &amp; Run-Off" and "Goo (Melting Sag)" sections, then the existing Outline section. Each new effect carries inline help boxes explaining the soak-vs-rivulet split, the PC-only geometry drips, and the shader limits on true inertial physics (drive a PhysBone for real swing).</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-2.3.3">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 2.3.3 - 2026-06-04</h5>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>SPS-Compatible Shader Variant (<code>VixenWear/Latex Ultra SPS</code>):</strong> Shipped a dedicated, tessellation-free clone of the Latex Ultra shader so VRCFury's SPS (penetrator) patcher can rewrite the surface pragma's vertex function without a compile error. VRCFury rewrites <code>vertex:disp</code> to consume <code>SpsInputs</code> but leaves the <code>tessellate:tessEdge</code> entry untouched, which fails with a struct type mismatch on the base shader; the SPS variant drops the hull/domain tessellation stage entirely while preserving displacement at vertex resolution (<code>disp()</code>) and per-pixel via parallax raymarching. Identical property layout and inspector to the base shader.</li>
+                        <li class="mb-2"><strong>Backface-Extrusion Outline Pass (Both Shaders):</strong> New keyword-gated (<code>_OUTLINE_ON</code>) Cull Front outline rendered as PASS 0 ahead of the main forward pass. The toggle's <em>off</em> state is the no-keyword default, so a material without outlines compiles and runs with zero added cost. Exposes <code>_OutlineColor</code>, an HDR <code>_OutlineEmis</code> glow, <code>_OutlineWidth</code>, <code>_MaxOutlineWidth</code> (distance clamp), <code>_OutlineViewFudge</code> (pushes the shell toward the camera to mitigate z-fighting), an <code>_OutlineMask</code> with a None/R/G/B/A channel selector, and AudioLink reactivity via <code>_AL_Band_Outline</code> + <code>_AL_Outline_Mod</code>. Width auto-scales with eye depth so the outline reads as a constant visual thickness at distance instead of vanishing. Surfaced under a new "Outline (Backface Extrusion)" section on the POLISH tab.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Realistic Ambient Occlusion (Both Shaders):</strong> Removed the <code>GTAOMultiBounce</code> approximation from the BRDF. Indirect diffuse and LTCGI diffuse now use raw scalar occlusion (Poiyomi-style), dropping the colored multi-bounce tint that pushed AO away from a neutral darkening.</li>
+                        <li class="mb-2"><strong>GPU Instancing on the Main Latex Pass:</strong> Added <code>#pragma multi_compile_instancing</code> to the forward pass so the shader participates in VRChat single-pass-stereo GPU instancing / avatar batching in VR.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Emission Stripped From Cloned Materials (<code>EmissiveIsBlack</code>):</strong> Freshly cloned materials (e.g. VRCFury swap targets) carried Unity's default <code>EmissiveIsBlack</code> GI flag, letting the build pipeline strip <code>_EmissionColor</code>, <code>_EmissionMap</code>, and <code>_EmissionColor2</code> even though the shader emits. <code>VixenWearEditor</code> now clears the flag on keyword sync and on first shader assignment, and the build preprocessor persists that flag change to disk even when the material's keyword set was already in sync.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-2.3.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 2.3.1 - 2026-05-28</h5>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Latex BRDF Optimization (Performance):</strong> Gutted and re-engineered the core specular lighting loop in the Latex Shader. Shifted from a computationally heavy, multi-pass GGX evaluation to a highly optimized split-sum approximation. This drastically reduces the overall GPU instruction count while maintaining the hyper-glossy, anisotropic surface tension.</li>
+                        <li class="mb-2"><strong>AudioLink Data Fetching (Performance):</strong> Streamlined the AudioLink sampling architecture within the latex material. Stripped out unconditional dynamic branching in favor of static compile-time toggles for FFT queries, significantly smoothing out frame delivery in highly populated, light-heavy VRChat instances.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Latex Interpolator Overflow:</strong> Resolved a critical SM5 register bottleneck that was causing localized frame-drops during intense directional lighting calculations. Packed the roughness, ambient occlusion, and subsurface scattering masks into a singular, tightly bound <code>float4</code> interpolator, freeing up crucial <code>TEXCOORD</code> slots for real-time vertex operations.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-2.3.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 2.3.0 - 2026-05-23</h5>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>GGX BRDF Rewrite (VixenWear Latex Ultra):</strong> Tore out the legacy BRDF3 lobe and replaced it with an industry-standard GGX pipeline: <code>D_GGX</code> (Trowbridge-Reitz), <code>V_SmithJointGGX</code>, <code>F_Schlick</code>, <code>Burley_Diffuse</code>, and a Karis split-sum (<code>EnvBRDFApprox_AB</code>) for indirect specular. Optional Filament/Frostbite multi-scatter energy compensation (<code>EnergyCompensation</code>) preserves bright metal highlights at high roughness without breaking energy conservation.</li>
+                        <li class="mb-2"><strong>Anisotropic Specular Engine:</strong> Added <code>_Aniso</code> and <code>_AnisoRot</code> for stretched highlights along a per-material tangent. Uses Burley's anisotropic alpha split with full <code>D_GGX_Aniso</code> + <code>V_SmithJointGGX_Aniso</code> evaluation; rotates the world tangent around N at the requested degree before splitting alpha into <code>ax</code>/<code>ay</code>, producing true latex-stretch highlights instead of a fake brushed-metal hack.</li>
+                        <li class="mb-2"><strong>Thin-Part Transmission:</strong> New <code>_Trans_Str</code>, <code>_Trans_Dist</code>, and <code>_Trans_Power</code> drive a Burley/Filament back-light term with Beer-Lambert absorption (<code>exp(-(1-diffColor)/_Trans_Dist)</code>), giving ears, fingers, and latex membranes physically correct light bleed without polluting the SSS lobe.</li>
+                        <li class="mb-2"><strong>Tinted Dielectric Clearcoat:</strong> Added <code>_CC_Tint</code> and <code>_CC_F0</code> so the clearcoat reflects with a colored cast and a custom Fresnel base reflectance. White tint at <code>F0=0.04</code> reproduces the standard dielectric exactly; coloured tints give the under-layer a complementary cast via per-channel <code>baseEnergy</code> attenuation.</li>
+                        <li class="mb-2"><strong>Geometric Specular Anti-Aliasing:</strong> Added <code>GeometricSpecAA</code> - a Toksvig-style filter that roughens both base and clearcoat normals based on screen-space normal derivative variance. Eliminates the spec aliasing/sparkle that hammered high-gloss surfaces at mid-distance.</li>
+                        <li class="mb-2"><strong>Poiyomi-Pack PBR Compatibility Layer:</strong> Added <code>_PBR_Met_Ch</code>, <code>_PBR_Smooth_Ch</code>, <code>_PBR_AO_Ch</code>, <code>_PBR_Height_Ch</code> channel selectors plus <code>_PBR_Met_Inv</code> and <code>_PBR_Smooth_Inv</code> (Channel Stores Roughness). Drops Poiyomi/Substance/Marmoset-packed masks straight in without re-authoring; the <code>ChannelPick</code> helper is wired through every consumer (parallax raymarch, BRDF shadow trace, surface metallic/smoothness, AO, height) so the channel choice is honored everywhere.</li>
+                        <li class="mb-2"><strong>Multi-Region Color Mask (Poiyomi-Style):</strong> New <code>_UseRegionMask</code> + <code>_RegionMask</code> with independent R/G/B zone tints (<code>_Region_R/G/B_Tint</code>) and per-zone emission boosts (<code>_Region_R/G/B_Emis</code>). Channels stack independently, letting authors paint hard-edged feature zones (panels, claws, decals) without a second material.</li>
+                        <li class="mb-2"><strong>Secondary Emission Layer:</strong> New <code>_UseEmission2</code> with its own <code>_EmissionMap2</code>, <code>_EmissionColor2</code>, mask channel picker (<code>_Emis2_MaskCh</code>), and dedicated AudioLink band reactor (<code>_AL_Band_Emis2</code>, <code>_AL_Emis2_Mod</code>). Authors can route bass to one circuitry layer and treble to another without juggling animator parameters.</li>
+                        <li class="mb-2"><strong>Multi-Layer MatCap Engine:</strong> Added a full second matcap layer (<code>_UseMatCap2</code>, <code>_MatCap2</code>, <code>_MatCap2_Mask</code>, <code>_MatCap2_MaskCh</code>, <code>_MatCap2_Tint</code>, <code>_MatCap2_Int</code>, <code>_MatCap2_Rot</code>) with three blend modes (<code>Add</code>, <code>Replace</code>, <code>Multiply</code>). Layer 1 also gains mask channel selection (<code>_MatCap_MaskCh</code>) and per-layer tint so a single RGB region mask can drive different matcaps in different zones.</li>
+                        <li class="mb-2"><strong>VRChat Mirror Camera Rendering Fix:</strong> Added <code>vw_CameraPos()</code> and <code>vw_WorldViewDir()</code> helpers that read the actual rendering camera from <code>UNITY_MATRIX_I_V._m03_m13_m23</code> (per-eye correct under single-pass instanced) instead of <code>_WorldSpaceCameraPos</code> (which stays glued to the player's head in mirrors). Routed through surface viewDir, GI viewDir, parallax raymarch, and clearcoat reflection so specular/parallax/cubemap math is finally correct in mirrors.</li>
+                        <li class="mb-2"><strong>Light Volumes Deep Integration:</strong> Replaced the single intensity slider with a full LV stack: <code>_LV_Spec_Mix</code>, <code>_LV_Spec_Dominant</code> (dominant-light vs full L1 specular), <code>_LV_CC_Spec_Mix</code> for clearcoat-specific specular, <code>_LV_Bias</code> for normal-bias offset (fixes light bleed at sharp edges), <code>_LV_PosOffset</code> for manual world-space offset on thin/sleeve geometry, <code>_LV_AdditiveOnly</code> for additive-only mode that preserves Unity's probe baseline, and <code>_LV_ProbeDering</code> - an opt-in Bakery L1 deringed-probe fallback for non-LV worlds.</li>
+                        <li class="mb-2"><strong>LTCGI Surgical Mix Controls:</strong> Split LTCGI into independent <code>_LTCGI_Diff_Mix</code> and <code>_LTCGI_Spec_Mix</code> (alongside the master <code>_LTCGI_Int</code>), letting creators dial area-light diffuse and specular contributions separately without disabling LTCGI on the whole material.</li>
+                        <li class="mb-2"><strong>VRSL Color Hijack:</strong> Added <code>_VRSL_Color_Hijack</code> (independent from <code>_VRSL_Intensity</code>) that lerps the AudioLink color toward live DMX RGB (sector channels +3/+4/+5). Lets stage colour washes override neon emission palettes without disabling AL color reactivity entirely.</li>
+                        <li class="mb-2"><strong>Chronotensity Index Selector:</strong> New <code>_AL_Chrono_Idx</code> (0-7) lets authors pick which chronotensity row they're tapping, and <code>_UseChronoFX</code> makes the entire chrono read opt-in - avoiding 4 extra texture samples per pixel for amplitude-only setups.</li>
+                        <li class="mb-2"><strong>DFT Note Emission Reactor:</strong> Added <code>_AL_DFT_Note</code> (0-11) and <code>_AL_DFT_Mod</code> driving <code>AudioLinkGetAmplitudesAtNote</code> - the emission layer can now pull on a specific musical note across all octaves instead of using band averages.</li>
+                        <li class="mb-2"><strong>ColorChord Strip Position:</strong> New <code>ColorChord Strip</code> source for <code>_AL_ColorMode</code> lets the artist pick any position along the 128-pixel <code>ALPASS_CCSTRIP</code> via <code>_AL_Strip_Pos</code>, exposing the full continuous ColorChord gradient.</li>
+                        <li class="mb-2"><strong>Spherical Autocorrelator Vertex Engine:</strong> New <code>_Vtx_AutoCorr_Str</code> reads <code>AudioLinkGetSphericalMappedAutoCorrelatorValue(normalize(v.vertex.xyz))</code> per-vertex - drives a smooth volumetric ripple that doesn't require a band selection because every vertex samples its own object-space direction.</li>
+                        <li class="mb-2"><strong>Autocorrelator HUD Ring:</strong> New <code>_UseCyberAuto</code> with full <code>Transform</code> placement and <code>_Cyber_AutoCorr_Str</code> intensity. Renders a radial ring driven by <code>ALPASS_AUTOCORRELATOR</code> with animated angular spokes and a gaussian falloff envelope for the readout band.</li>
+                        <li class="mb-2"><strong>HUD Hover-Off-Body Engine:</strong> Added <code>_Cyber_Hover</code> (parallax-out height) and <code>_Cyber_Hover_Bob</code> (subtle vertical drift). The HUD UV is shifted along the tangent-space view direction so the panel reads as a holographic plane floating <em>above</em> the avatar surface.</li>
+                        <li class="mb-2"><strong>Standard-Style Render Mode Selector:</strong> New <code>_Mode</code> property (Opaque/Cutout/Fade/Transparent) drives blend state, ZWrite, render queue, RenderType tag, VRCFallback tag, and alpha keywords via <code>SetupMaterialWithBlendMode</code>. <code>Fade</code> uses straight alpha; <code>Transparent</code> uses premultiplied alpha so specular survives at low opacity (glass/latex). Cutout retains the historical <code>clip(c.a - _CutOff)</code> behavior.</li>
+                        <li class="mb-2"><strong>Build-Time Variant Stripper (<code>VixenWearVariantStripper</code>):</strong> New <code>IPreprocessShaders</code> that hammers shader variants in three layers: (1) managed feature keywords still enabled on any live material, (2) Deferred/Meta/MotionVectors passes entirely dropped, and (3) dead built-in keywords leaking past the surface pragma. Accompanied by <code>VixenWearVariantStripReporter</code> that logs <code>kept/stripped/total</code> post-build.</li>
+                        <li class="mb-2"><strong>Build &amp; Play-Mode Keyword Sync:</strong> <code>VixenWearBuildPreprocessor</code> auto-runs <code>CleanAllMaterials</code> on every build, and <code>VixenWearPlayModeSync</code> syncs every VixenWear material's keywords on <code>ExitingEditMode</code> so stale toggles never no-op on the first play frame.</li>
+                        <li class="mb-2"><strong><code>Edit Materials From Selection</code> Menu (<code>Ctrl+Shift+M</code>):</strong> Promotes Hierarchy GameObject selection to the underlying VixenWear <code>.mat</code> assets by walking <code>GetComponentsInChildren&lt;Renderer&gt;(includeInactive: true)</code>, deduplicating via <code>HashSet&lt;Material&gt;</code>, and swapping <code>Selection.objects</code>. Picks up wardrobe layers that are toggled off.</li>
+                        <li class="mb-2"><strong>Per-Tab Reset to Shader Defaults:</strong> Right-click any inspector tab and pick "Reset {TAB} to Defaults" - spawns a hidden defaults material from the same shader and writes its values back through <code>MaterialProperty</code>.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>AudioLink Now Always-Compiled (No <code>AL_ENABLE</code> Variant):</strong> Ripped out the <code>AL_ENABLE</code> shader feature keyword entirely. AudioLink.cginc is now always included and gated at runtime via <code>_UseAudioLink</code>, so VRCFury material-toggle animations can flip AudioLink on/off without a build-time variant explosion.</li>
+                        <li class="mb-2"><strong>Surface Pragma Hardened:</strong> Added <code>keepalpha exclude_path:deferred exclude_path:prepass nolightmap nodynlightmap nodirlightmap noshadowmask nometa nolppv</code> plus a defensive <code>#pragma skip_variants</code>. Massive baseline variant reduction even before the build-time stripper runs.</li>
+                        <li class="mb-2"><strong>Vertex Fracture Engine Rewritten:</strong> Replaced the old per-primitive geometry-shader scatter with a <code>disp()</code>-stage shatter that snaps verts to a 3D grid, hashes each cell for a per-shard random axis (Rodrigues rotation), pivot offset along the normal, scatter direction, and subtle scale - all gated by <code>_UseVtxKinetic</code> and strictly driven by AudioLink band amplitude so silent worlds never shatter the avatar.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Mirror Camera Specular/Parallax Math:</strong> Resolved a long-standing issue where view-dependent math rendered wrong in VRChat mirrors. Unity's surface-shader plumbing computed viewDir from <code>_WorldSpaceCameraPos</code> (the player's head, not the mirror camera) - now reprojected through <code>vw_WorldViewDir()</code> from the actual rendering camera matrix.</li>
+                        <li class="mb-2"><strong>Light Volumes Black-Out on Default Worlds:</strong> Probe SH (especially Bakery's dering path) can produce negative diffuse values when L1 magnitude exceeds L0, causing the avatar to render pitch-black on probes-only worlds. Now clamps <code>LightVolumeEvaluate</code> output to <code>max(..., 0)</code>.</li>
+                        <li class="mb-2"><strong>MatCap UV Collapse on Flat Geometry:</strong> Previous tangent-space matcap math collapsed to <code>(0,0,1)</code> on flat polygons. Switched to view-space normal via <code>mul((float3x3)UNITY_MATRIX_V, nWorld)</code> which is mirror-correct and never collapses.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Removed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong><code>Pass 2 GEOMETRY_FRACTURE</code> (SM5 Geometry Shader):</strong> Removed entirely. Hardware tessellation desyncs were unfixable without sacrificing tessellation, and the per-pixel clip+parallax pop in Pass 1 produces an equivalent (and more stable) visual.</li>
+                        <li class="mb-2"><strong><code>AL_ENABLE</code> Shader Feature:</strong> Now runtime-gated. AudioLink.cginc is always included; <code>_UseAudioLink</code> flips it without a keyword variant.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-2.1.5">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 2.1.5 - 2026-05-16</h5>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Dual-Pass Geometry Shatter Engine:</strong> Implemented a raw Shader Model 5.0 Geometry Shader (<code>#pragma geometry</code>) pass that intercepts clipped polygons, calculates their true centers using <code>SV_PrimitiveID</code>, un-welds the topology, and physically blasts mesh polygons into 3D space to the beat of AudioLink.</li>
+                        <li class="mb-2"><strong>God Tier Cybernetics HUD:</strong> Engineered a realtime diagnostic UI system utilizing a B&amp;W window mask. Renders active AudioLink VU meters, 64-pixel spectrum arrays, oscilloscopes, and VRSL DMX grids directly onto the material with independent UV transform and scaling controls.</li>
+                        <li class="mb-2"><strong>Granular Clipboard Architecture:</strong> Upgraded the native IMGUI inspector with a right-click Context Menu system. Features cross-material Copy/Paste mechanics with distinct execution paths for "Values Only" or "With Textures" across all defined UI tabs.</li>
+                        <li class="mb-2"><strong>VRSL Stage Hijack Protocol:</strong> Integrated a direct DMX world-buffer intercept. The material natively mimics a 13-Channel Moving Head fixture, overriding local emission with stage RGB/Strobe data and geo-warping the mesh using live DMX Pan and Tilt arrays.</li>
+                        <li class="mb-2"><strong>Kinetic UV Engine:</strong> Deployed hardware-level UV manipulations including Vortex Twists, Bass Pumping, and spatial-hashed UV Fracture Shards, all mathematically tied to specific AudioLink FFT bands.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Documentation Overhaul:</strong> Stripped out ambiguous or overly stylistic terminology to ensure clear, universally understood technical instructions for the VixenWear deployment guide.</li>
+                        <li class="mb-2"><strong>Inspector &amp; ShaderLab Synchronization:</strong> Purged all redundant <code>[Header]</code> attributes from the raw <code>.shader</code> properties block, eliminating the "double-labeling" UI conflict between Unity's native layout passes and the custom C# Editor script.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Vertex "Move Tool" Sliding Bug:</strong> Corrected a math flaw in the kinetic vertex engine where global linear translation caused the entire avatar mesh to slide across the screen. The pump matrix now correctly displaces strictly along <code>v.normal</code> for true volumetric inflation.</li>
+                        <li class="mb-2"><strong>SM5 Compiler &amp; Keyword Conflicts:</strong> Resolved severe d3d11 compile errors in the Domain/Vertex stages by ripping out legacy <code>tex2Dlod</code> macros in favor of native <code>AudioLinkData</code> fetches.</li>
+                        <li class="mb-2"><strong>Missing Variable Initialization:</strong> Registered the <code>_Cyber_AutoCorr_Str</code> and <code>_UseCyber</code> floats into the shader's internal memory allocation, fixing a variable pass failure that previously crashed the HUD Transform Engine.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-2.1.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 2.1.0 - 2026-05-15</h5>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>VectorLabelDrawer System:</strong> Engineered a custom MaterialPropertyDrawer natively hooked into ShaderLab's Vector arrays. This handles packed vector data inside the inspector seamlessly, preventing standard 4-float structural UI clutter while preserving exact field alignments.</li>
+                        <li class="mb-2"><strong>UITK &amp; IMGUI Hybrid Editor:</strong> Deployed a completely overhauled inspector architecture. Features a sleek, tab-driven workflow dividing material configuration into Base, Surface &amp; PBR, Polish &amp; Translucency, Integration, and AudioLink.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Massive Shader Property Packing:</strong> Consolidated loose floats and variables into highly optimized <code>Vector</code> attributes (such as <code>_PBRParams</code>, <code>_GeoEmisParams</code>, and <code>_ClearcoatParams</code>). This drastically reduces uniform overhead and streamlines memory bandwidth across the material pipeline.</li>
+                        <li class="mb-2"><strong>Aggressive Baseline Optimization:</strong> Expensive calculations have been zeroed out by default to guarantee maximum out-of-the-box performance. Parallax and Displacement are now disabled at the baseline, and Iridescence and Rim lighting have also been zeroed out.</li>
+                        <li class="mb-2"><strong>AudioLink Modulation Standardization:</strong> All AudioLink reactive modulations (<code>_ALParamsA</code>, <code>_ALParamsB</code>) are entirely zeroed out by default to prevent unintended emission or vertex manipulation unless explicitly configured by the user.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Inspector State Loss (Domain Reloads):</strong> Solved an aggressive UX friction point where the material inspector would reset its tab focus during Unity script compilation. The editor now securely caches active tabs and foldout states to <code>EditorPrefs</code>, surviving domain reloads without breaking the workflow.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-2.0.4">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 2.0.4 - 2026-05-15</h5>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Natural MatCap Reflection Model:</strong> Introduced a physically-inspired matcap blending system using Fresnel weighting, roughness-driven clarity falloff, and energy-normalized contribution curves. Matcaps now behave like a stylized reflection lobe rather than an additive light source, producing smoother, more realistic latex highlights.</li>
+                        <li class="mb-2"><strong>MatCap-Reflection Harmony Layer (Patch 4):</strong> Added a new cross-fade stage that blends matcaps into the clearcoat reflection based on surface smoothness. High-polish surfaces now transition seamlessly into probe reflections, eliminating the "double highlight" artifact common in older matcap pipelines.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>MatCap Sampling Pipeline:</strong> Moved matcap intensity and lighting mix out of the BRDF and into the surface stage, reducing redundant per-pixel math and preventing variant duplication. The BRDF now receives a clean, pre-normalized matcap signal for consistent lighting behavior.</li>
+                        <li class="mb-2"><strong>Clearcoat-Aware MatCap Integration:</strong> Updated the BRDF to evaluate matcaps against the clearcoat normal rather than the base normal, ensuring matcaps follow the same polish layer as reflections and thin-film interference.</li>
+                        <li class="mb-2"><strong>Energy-Conserving Highlight Behavior:</strong> Replaced the legacy additive matcap term with a physically-bounded contribution that respects clearcoat Fresnel, occlusion, and energy conservation.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Harsh MatCap Brightness Spikes:</strong> Resolved the long-standing issue where matcaps appeared unnaturally bright at grazing angles or under high-intensity lighting. The new Fresnel-weighted model eliminates edge blowout and restores smooth highlight rolloff.</li>
+                        <li class="mb-2"><strong>MatCap vs Reflection Fighting:</strong> Fixed the visual conflict where matcaps and reflection probes produced competing highlight shapes. The new cross-fade system ensures both layers reinforce each other instead of stacking destructively.</li>
+                        <li class="mb-2"><strong>Double-Smoothness Multiplication:</strong> Removed an accidental double-application of smoothness to matcap intensity, which previously caused inconsistent gloss levels across different materials and lighting conditions.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-2.0.2">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 2.0.2 - 2026-05-13</h5>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Vixenwear GI Integration (Baked Lighting):</strong> Resolved a critical precision collapse in the baked lighting evaluation across Vixenwear assets. Re-engineered the indirect illumination and spherical harmonic sampling pathways to correctly decode lightmap data. This eliminates localized light bleeding, stabilizes micro-shadow gradients, and guarantees physically accurate spatial integration when Vixenwear is deployed in heavily baked environments.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="clothingpro-1.0.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Clothing Pro 1.0.1 - 2026-06-10</h5>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Separated Into a Standalone Package:</strong> Clothing Pro now ships in its own folder (<code>Assets/VixenWear ClothingPro/</code>) with its own cloned copy of the shared shader includes (<code>Editor/cginc/</code> - AudioLink, LTCGI, Light Volumes, AreaLit). Both shaders' <code>#include</code> paths were repointed from <code>Assets/VixenWear/Editor/cginc/</code> to <code>Assets/VixenWear ClothingPro/Editor/cginc/</code>, so Clothing Pro is fully self-contained and no longer depends on the Latex Ultra package being installed. The cybernetic HUD and the full feature set are retained unchanged.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="clothingpro-1.0.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Clothing Pro 1.0.0 - 2026-06-09</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em><code>VixenWear/Clothing Pro</code> is a fabric-first product built as a strict superset of Latex Ultra. It ships its own shaders and self-contained inspector; see <code>CLOTHINGPRO.md</code> for the usage guide.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Clothing Pro Shaders (<code>VixenWear/Clothing Pro</code> + <code> SPS</code>):</strong> Faithful ports of <code>VixenWear/Latex Ultra</code> and its SPS variant, keeping the entire lighting stack and feature set (full GGX BRDF, clearcoat, thin film, SSS, anisotropy, transmission, multi-scatter, AudioLink, VRSL DMX, LTCGI, Light Volumes, emission layers, region masks, dual matcaps, wet/goo, cybernetic HUD, kinetic vertex/UV engines). The internal lighting model was renamed <code>StandardLatex</code> -&gt; <code>StandardCloth</code> (<code>BRDF_Cloth_GGX</code>) with no behavioral change. A new Clothing Pro material with <strong>Material Type = Latex</strong> (sheen + fur off) is visually identical to a Latex Ultra material with the same inputs.</li>
+                        <li class="mb-2"><strong>Cloth Sheen Lobe (<code>_UseSheen</code>, Both Shaders):</strong> A Charlie distribution (Estevez &amp; Kulla 2017) + Ashikhmin/Neubelt visibility retroreflective sheen lobe for velvet/satin/microfiber, with <code>_Sheen_Str</code>, <code>_Sheen_Tint</code>, <code>_Sheen_Rough</code>, and AO-driven <code>_Sheen_AODark</code> root darkening. Direct sheen obeys the specular mask, indirect sheen the reflection mask. Runtime-gated (VRCFury-friendly) and <strong>independent of the Polish layer</strong> so matte fabrics keep their sheen.</li>
+                        <li class="mb-2"><strong>Fur Strands (<code>_FUR_ON</code>, Both Shaders):</strong> Kajiya-Kay anisotropic strand specular reusing the world tangent (rotated by <code>_AnisoRot</code>), with <code>_Fur_Shift</code>, <code>_Fur_Spec</code>, <code>_Fur_Exp</code>, a <code>_Fur_Scatter</code> forward/back translucency term, and <code>_Fur_RootDark</code>. Keyword-gated for cost (off = zero added instructions/variant). Shading-only, so it runs on the SPS shader too.</li>
+                        <li class="mb-2"><strong>Material Type Presets:</strong> A <code>_MaterialType</code> selector (Latex / Cotton / Silk / Satin / Velvet / Denim / Wool-Knit / Leather / Fur) with an <strong>Apply Preset</strong> button on the new <strong>FABRIC</strong> inspector tab that writes sensible sheen / anisotropy / clearcoat / fur starting values via the null-safe <code>SetF</code>/<code>SetColor</code> helpers.</li>
+                        <li class="mb-2"><strong>Fabric Mask (<code>_FabricMask</code>):</strong> Optional B&amp;W scope mask for sheen + fur with a channel selector. Declared <code>UNITY_DECLARE_TEX2D_NOSAMPLER</code> and sampled through <code>_MainTex</code>'s sampler, so the entire cloth/fur core adds <strong>zero net texture samplers</strong> (respecting the existing 16-register ps_5_0 budget).</li>
+                        <li class="mb-2"><strong>Self-Contained Clothing Pro Editor (<code>VixenWearClothingEditor.cs</code>):</strong> A standalone inspector + build pipeline with every shared type uniquely renamed (<code>ClothVectorLabelDrawer</code>, <code>ClothALBandDrawer</code>, <code>VixenWearClothing{Editor,BuildPreprocessor,PlayModeSync,VariantStripper,VariantStripReporter}</code>), its own <code>VixenTools &gt; VixenWear &gt; Clothing Pro</code> menu, its own <code>VixenWearClothingPro_ActiveTab</code> EditorPrefs key, and a new <strong>FABRIC</strong> tab. The shaders bind it via <code>CustomEditor "VixenWearClothingEditor"</code> and use a package-local <code>[ClothVectorLabel]</code> drawer attribute. Result: Clothing Pro compiles and runs standalone <strong>and</strong> alongside Latex Ultra with no duplicate-class / duplicate-menu errors. <code>SyncKeywords</code> and the variant stripper drive the new <code>_FUR_ON</code> keyword.</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="row w-100 justify-content-between mt-4">
+                <fluent-button id="prevVersionBtn" appearance="stealth" class="custom-stealth-btn" disabled>
+                    <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Newer Updates
+                </fluent-button>
+
+                <fluent-button id="nextVersionBtn" appearance="stealth" class="custom-stealth-btn">
+                    Older Updates
+                    <svg slot="end" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </fluent-button>
+            </div>
+
+        </div>
+
+        <button id="jumpToTopBtn" class="jump-to-top" title="Back to top">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+            </svg>
+        </button>
+
+    </main>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
