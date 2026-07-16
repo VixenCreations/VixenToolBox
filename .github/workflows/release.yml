@@ -69,16 +69,20 @@ jobs:
           package-path: ${{ env.unityPackage }}
           include-files: metaList
       
-      # Make a release tag of the version from the package.json file 
+      # Make a release tag of the version from the package.json file.
+      # tag_exists_error: false so that re-running after a failed release step continues
+      # instead of dying on "tag already exists" and burning a version number.
       - name: Create Tag
         id: tag_version
         uses: rickstaa/action-create-tag@88dbf7ff6fe2405f8e8f6c6fdfd78829bc631f83
         with:
           tag: "${{ env.version }}"
-      
-      # Publish the Release to GitHub
+          tag_exists_error: false
+
+      # Publish the Release to GitHub.
+      # v3+ runs on Node 24. The old pin declared Node 20, which GitHub now force-upgrades.
       - name: Make Release
-        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844
+        uses: softprops/action-gh-release@v3.0.2
         with:
           files: |
             ${{ env.zipFile }}
