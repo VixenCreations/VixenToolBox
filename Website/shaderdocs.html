@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Primary SEO -->
-    <title>Vixens Toolbox | VixenWear Latex Ultra Shader Inspector Reference</title>
-    <meta name="title" content="Vixens Toolbox | VixenWear Latex Ultra Shader Inspector Reference">
-    <meta name="description" content="A complete, control-by-control reference for the VixenWear Latex Ultra shader inspector - every option across every section of the VixForge Editor.">
-    <meta name="keywords" content="VixenWear Latex Ultra, VixenWear shader docs, VRChat shader inspector, GGX BRDF shader, AudioLink shader, LTCGI shader, Light Volumes shader, VRSL DMX shader, Poiyomi Mochie packing, clearcoat latex shader, VRChat avatar shader, VixForge Interactive, Vixenlicous">
+    <title>Vixens Toolbox | VixenWear Latex Ultra & VixForge Toon Shader Inspector Reference</title>
+    <meta name="title" content="Vixens Toolbox | VixenWear Latex Ultra & VixForge Toon Shader Inspector Reference">
+    <meta name="description" content="A complete, control-by-control reference for the VixenWear Latex Ultra shader inspector - every option across every section of the VixForge Editor - plus the VixForge Toon companion shader and its shading styles.">
+    <meta name="keywords" content="VixenWear Latex Ultra, VixForge Toon, toon shader, cel shading, anime shader, VixenWear shader docs, VRChat shader inspector, GGX BRDF shader, AudioLink shader, LTCGI shader, Light Volumes shader, VRSL DMX shader, Poiyomi Mochie packing, clearcoat latex shader, VRChat avatar shader, VixForge Interactive, Vixenlicous">
     <meta name="author" content="Vixenlicous | VixForge Interactive">
     <meta name="theme-color" content="#ff00aa">
 
@@ -18,16 +18,16 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/shaderdocs.html">
-    <meta property="og:title" content="Vixens Toolbox | VixenWear Latex Ultra Shader Inspector Reference">
-    <meta property="og:description" content="A complete control-by-control reference for the VixenWear Latex Ultra shader inspector, covering every section of the VixForge Editor.">
+    <meta property="og:title" content="Vixens Toolbox | VixenWear Latex Ultra & VixForge Toon Shader Inspector Reference">
+    <meta property="og:description" content="A complete control-by-control reference for the VixenWear Latex Ultra shader inspector, covering every section of the VixForge Editor, plus the VixForge Toon companion shader.">
     <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="og:site_name" content="VixForge Interactive | Vixens Toolbox">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/shaderdocs.html">
-    <meta property="twitter:title" content="Vixens Toolbox | VixenWear Latex Ultra Shader Inspector Reference">
-    <meta property="twitter:description" content="A complete control-by-control reference for the VixenWear Latex Ultra shader inspector across every section of the VixForge Editor.">
+    <meta property="twitter:title" content="Vixens Toolbox | VixenWear Latex Ultra & VixForge Toon Shader Inspector Reference">
+    <meta property="twitter:description" content="A complete control-by-control reference for the VixenWear Latex Ultra shader inspector across every section of the VixForge Editor, plus the VixForge Toon companion shader.">
     <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="twitter:site" content="@VixenVRC">
 
@@ -36,8 +36,8 @@
         {
           "@context": "https://schema.org",
           "@type": "TechArticle",
-          "headline": "VixenWear Latex Ultra Shader Inspector Reference",
-          "description": "A complete control-by-control reference for the VixenWear Latex Ultra shader inspector across every section of the VixForge Editor.",
+          "headline": "VixenWear Latex Ultra & VixForge Toon Shader Inspector Reference",
+          "description": "A complete control-by-control reference for the VixenWear Latex Ultra shader inspector across every section of the VixForge Editor, plus the VixForge Toon companion shader.",
           "author": {
             "@type": "Organization",
             "name": "VixForge Interactive"
@@ -48,7 +48,7 @@
           },
           "url": "https://vixencreations.github.io/VixenToolBox/shaderdocs.html",
           "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
-          "keywords": "VixenWear Latex Ultra, VRChat shader inspector, GGX BRDF shader, AudioLink shader, LTCGI shader, Light Volumes shader, VRSL DMX shader"
+          "keywords": "VixenWear Latex Ultra, VixForge Toon, cel shading, anime shader, VRChat shader inspector, GGX BRDF shader, AudioLink shader, LTCGI shader, Light Volumes shader, VRSL DMX shader"
         }
     </script>
 
@@ -215,7 +215,7 @@
                     way: <strong>one section per inspector section</strong>, in the order the inspector lists them.
                 </p>
                 <p class="caption1" style="font-size: 0.95rem; max-width: 850px; margin: 0.8rem auto 0; color: #bfa8d2;">
-                    Built-in Render Pipeline / VRChat only - as a surface shader it does not compile under HDRP or URP.
+                    Built-in Render Pipeline / VRChat only - it does not compile under HDRP or URP.
                     Every world-lighting integration (Light Volumes, LTCGI, VRSL) is fail-safe: it strips or no-ops
                     cleanly in worlds that lack the system.
                 </p>
@@ -225,20 +225,16 @@
                     <a href="#base">BASE</a>
                     <a href="#normals">NORMAL MAPS</a>
                     <a href="#surface">SURFACE</a>
-                    <a href="#lightdetail">LIGHTING DETAIL</a>
+                    <a href="#shading">SHADING</a>
                     <a href="#decals">DECALS</a>
-                    <a href="#lighting">LIGHTING</a>
                     <a href="#polish">POLISH</a>
-                    <a href="#wet">WET EFFECTS</a>
-                    <a href="#goo">GOO EFFECTS</a>
+                    <a href="#specialfx">SPECIAL EFFECTS</a>
                     <a href="#outlines">OUTLINES</a>
                     <a href="#emissions">EMISSIONS</a>
                     <a href="#matcaps">MATCAPS</a>
-                    <a href="#lightvolumes">LIGHT VOLUMES</a>
-                    <a href="#ltcgi">LTCGI</a>
-                    <a href="#techsane">TECHNICALLYSANE</a>
                     <a href="#audiolink">AUDIOLINK</a>
-                    <a href="#stage">STAGE &amp; VRSL</a>
+                    <a href="#rendering">RENDERING</a>
+                    <a href="#toon">VixForge Toon</a>
                     <a href="#footer">Shared Footer</a>
                 </div>
             </div>
@@ -246,10 +242,10 @@
             <!-- ========================= -->
             <!-- BASE -->
             <!-- ========================= -->
-            <div id="base" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+<div id="base" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">BASE</h2>
-                    <div class="badge">Section 1 of 17</div>
+                    <div class="badge">Section 1 of 12</div>
                 </div>
                 <p class="tab-desc">Render mode, albedo, brightness floor, and UV animation.</p>
 
@@ -280,14 +276,13 @@
                         Speed X for diagonal flow.</li>
                 </ul>
             </div>
-
             <!-- ========================= -->
             <!-- NORMAL MAPS -->
             <!-- ========================= -->
-            <div id="normals" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+<div id="normals" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">NORMAL MAPS</h2>
-                    <div class="badge">Section 2 of 17</div>
+                    <div class="badge">Section 2 of 12</div>
                 </div>
                 <p class="tab-desc">Macro normal map and the secondary micro-detail normal.</p>
 
@@ -304,14 +299,13 @@
                         micro-texture can repeat at a different scale than the main UVs.</li>
                 </ul>
             </div>
-
             <!-- ========================= -->
             <!-- SURFACE -->
             <!-- ========================= -->
-            <div id="surface" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+<div id="surface" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">SURFACE</h2>
-                    <div class="badge">Section 3 of 17</div>
+                    <div class="badge">Section 3 of 12</div>
                 </div>
                 <p class="tab-desc">The packed PBR map, its channel routing, reflection / specular masks, and surface shaping.</p>
 
@@ -371,75 +365,18 @@
                         Displacement. Base shader only; the SPS variant has no tessellation stage.</li>
                 </ul>
             </div>
-
             <!-- ========================= -->
-            <!-- LIGHTING DETAIL -->
+            <!-- SHADING -->
             <!-- ========================= -->
-            <div id="lightdetail" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+            <div id="shading" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">LIGHTING DETAIL</h2>
-                    <div class="badge">Section 4 of 17</div>
+                    <h2 class="text-glow-cyan m-0">SHADING</h2>
+                    <div class="badge">Section 4 of 12</div>
                 </div>
-                <p class="tab-desc">Dedicated occlusion and baked-shadow maps for extra realism. Both read through the Albedo sampler, so they cost nothing against the texture budget, and each stays off until you enable it.</p>
+                <p class="tab-desc">The lighting model and every world-lighting integration, grouped together. Light Volumes, LTCGI, TechnicallySane and Stage / VRSL are each fail-safe: they strip or no-op cleanly in worlds that lack the system.</p>
 
-                <h3 class="text-glow-pink opt-group">Occlusion Map</h3>
-                <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable Occlusion Map</strong> - Turns on the dedicated ambient-occlusion map.</li>
-                    <li class="mb-2"><strong>Occlusion Map</strong> + <strong>Occlusion Channel</strong> - A grayscale map, and which channel to read, that darkens ambient and indirect light in creases and cavities on top of any occlusion already packed into the surface map. White = no change.</li>
-                    <li class="mb-2"><strong>Occlusion Strength</strong> - How strongly the map darkens the ambient / indirect lighting.</li>
-                </ul>
-
-                <h3 class="text-glow-pink opt-group">Baked Shadow Map</h3>
-                <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Enable Baked Shadow Map</strong> - Turns on the baked contact-shadow map.</li>
-                    <li class="mb-2"><strong>Baked Shadow Map</strong> + <strong>Shadow Channel</strong> - A grayscale map, and which channel to read, painting regions that always read as shadowed - baked contact shadows under straps, seams and deep folds. Black = no shadow.</li>
-                    <li class="mb-2"><strong>Shadow Strength</strong> - How dark the baked-shadow regions get in direct light.</li>
-                    <li class="mb-2"><strong>Shadow Affects Ambient</strong> - How much the baked shadow also dims ambient / indirect light in those regions (0 = direct light only).</li>
-                </ul>
-            </div>
-
-            <!-- ========================= -->
-            <!-- DECALS -->
-            <!-- ========================= -->
-            <div id="decals" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
-                <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">DECALS</h2>
-                    <div class="badge">Section 5 of 17</div>
-                </div>
-                <p class="tab-desc">Place up to four logos, stickers, brand graphics or tattoos on the latex. Each layer is positioned right in the Scene view: select the material on your mesh and drag the on-screen gizmo handles to move, scale and rotate the decal. All four layers share one texture sampler, so they cost nothing against the texture budget, and the whole section stays off until you enable it.</p>
-
-                <h3 class="text-glow-pink opt-group">Setup</h3>
-                <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Enable</strong> - Master switch for the whole decal section. Off by default, so existing materials are untouched.</li>
-                    <li class="mb-2"><strong>Decal Masks (RGBA)</strong> - One optional packed texture whose Red, Green, Blue and Alpha channels can each limit where Decal 0, 1, 2 and 3 appear. Leave it white to let decals show wherever their placement allows.</li>
-                </ul>
-
-                <h3 class="text-glow-pink opt-group">Per Decal (0 - 3)</h3>
-                <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Enable</strong> - Turns this individual layer on.</li>
-                    <li class="mb-2"><strong>Decal</strong> - The image to place (logo, sticker, tattoo, and so on).</li>
-                    <li class="mb-2"><strong>Tint</strong> - Colour multiplied over the decal; the colour's alpha sets the layer's overall opacity.</li>
-                    <li class="mb-2"><strong>Position / Scale / Rotation</strong> - Where the decal sits, how big it is, and its angle. Easiest to set by dragging the gizmo in the Scene view. Rotation Speed slowly spins the decal over time.</li>
-                    <li class="mb-2"><strong>Side Offset</strong> - Nudges the left, right, bottom and top edges independently to stretch or crop the decal box.</li>
-                    <li class="mb-2"><strong>UV Source</strong> - Which UV layout to place the decal on (the main set, or a secondary set if your mesh has one).</li>
-                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the Decal Masks texture limits this layer.</li>
-                    <li class="mb-2"><strong>Color Blend</strong> - How the decal combines with the latex underneath: Normal, Darken, Multiply, Lighten, Screen, Add, Subtract or Overlay.</li>
-                    <li class="mb-2"><strong>Strength</strong> - Makes the decal glow, for neon logos or lit signage.</li>
-                    <li class="mb-2"><strong>Smoothness Offset</strong> - Makes the decal read glossier (positive) or more matte (negative) than the surrounding latex, so a printed sticker can stand apart from the shine around it.</li>
-                    <li class="mb-2"><strong>Mirror UV / Symmetry</strong> - Flip the decal, restrict it to one side, or mirror it across the body's centre for symmetric placement.</li>
-                    <li class="mb-2"><strong>Tiled</strong> - Off keeps a single decal clamped to its box; on repeats it across the surface.</li>
-                </ul>
-            </div>
-
-            <!-- ========================= -->
-            <!-- LIGHTING -->
-            <!-- ========================= -->
-            <div id="lighting" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
-                <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">LIGHTING</h2>
-                    <div class="badge">Section 6 of 17</div>
-                </div>
-                <p class="tab-desc">AO, contact shadow, rim, subsurface, anisotropy, transmission, and energy conservation. Most of these belong to the polish layer and are gated by <a href="#polish" style="color: var(--neon-cyan);">POLISH &gt; Enable</a>.</p>
+                <h3 class="text-glow-pink opt-group">Lighting</h3>
+<p class="opt-note">AO, contact shadow, rim, subsurface, anisotropy, transmission, and energy conservation. Most of these belong to the polish layer and are gated by <a href="#polish" style="color: var(--neon-cyan);">POLISH &gt; Enable</a>.</p>
 
                 <ul class="custom-list m-0 ps-4">
                     <li class="mb-2"><strong>AO Strength</strong> - Strength of the multi-bounce ambient-occlusion term
@@ -477,15 +414,189 @@
                         highlight can get, taming the harsh sparkle very glossy latex can throw under bright lights.
                         Effectively off at its default; lower it to clamp harder.</li>
                 </ul>
+
+                <h3 class="text-glow-pink opt-group">Shadow Detail</h3>
+<p class="opt-note">Dedicated occlusion and baked-shadow maps for extra realism. Both read through the Albedo sampler, so they cost nothing against the texture budget, and each stays off until you enable it.</p>
+
+                <p class="opt-note mt-3 mb-2"><strong>Occlusion Map</strong></p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable Occlusion Map</strong> - Turns on the dedicated ambient-occlusion map.</li>
+                    <li class="mb-2"><strong>Occlusion Map</strong> + <strong>Occlusion Channel</strong> - A grayscale map, and which channel to read, that darkens ambient and indirect light in creases and cavities on top of any occlusion already packed into the surface map. White = no change.</li>
+                    <li class="mb-2"><strong>Occlusion Strength</strong> - How strongly the map darkens the ambient / indirect lighting.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Baked Shadow Map</strong></p>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>Enable Baked Shadow Map</strong> - Turns on the baked contact-shadow map.</li>
+                    <li class="mb-2"><strong>Baked Shadow Map</strong> + <strong>Shadow Channel</strong> - A grayscale map, and which channel to read, painting regions that always read as shadowed - baked contact shadows under straps, seams and deep folds. Black = no shadow.</li>
+                    <li class="mb-2"><strong>Shadow Strength</strong> - How dark the baked-shadow regions get in direct light.</li>
+                    <li class="mb-2"><strong>Shadow Affects Ambient</strong> - How much the baked shadow also dims ambient / indirect light in those regions (0 = direct light only).</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Light Volumes V3</h3>
+<p class="opt-note">The full VRC Light Volumes V3 stack.</p>
+
+
+                <p class="opt-note">
+                    Alongside baked volumes the material also receives <strong>Point Light Volumes</strong> - point lights,
+                    spot lights (parametric / attenuation-LUT / projected cookie), cubemap-tinted point lights, and
+                    <strong>quad area lights</strong> (the "TV GI" path: an area light driven by a video RenderTexture),
+                    plus per-light EVSM shadows. All of it projects into the same L1 spherical-harmonics path and rides
+                    the controls below. These lights only appear in worlds running the LV V3 runtime; older or no-LV
+                    worlds fall back to deringed light probes.
+                </p>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>Enable Light Volumes</strong> - Runtime gate for the whole Light Volumes path, so VRCFury can toggle it without a recompile. Off by default.</li>
+                    <li class="mb-2"><strong>Light Volumes Intensity</strong> - Overall contribution of Light Volumes
+                        lighting.</li>
+                    <li class="mb-2"><strong>Light Volumes Specular Mix</strong> - How much Light Volume data feeds the
+                        base specular lobe.</li>
+                    <li class="mb-2"><strong>Light Volumes Clearcoat Specular</strong> - How much Light Volume data feeds
+                        the clearcoat-specific specular.</li>
+                    <li class="mb-2"><strong>Clearcoat Specular Tightness</strong> - Shrinks the clearcoat's Light Volume
+                        specular lobe so a bright point or area light reads as a tight glint instead of a broad wash
+                        (0 = soft / wide, 1 = tightest).</li>
+                    <li class="mb-2"><strong>Specular (Dominant Mode)</strong> - Uses the dominant light direction instead
+                        of the full L1 reconstruction for cheaper specular.</li>
+                    <li class="mb-2"><strong>Point Light Volume Specular (Per-Light)</strong> - Opt-in: gives each point,
+                        spot and area light its own size-aware specular highlight for sharper, more accurate glints on
+                        glossy latex, instead of deriving point-light specular from the blended light direction. Off by
+                        default.</li>
+                    <li class="mb-2"><strong>Point Light Volume Shading</strong> - How softly point / spot / area lights
+                        wrap across the surface normal (higher = softer falloff).</li>
+                    <li class="mb-2"><strong>Shadow / Volumetric Normal Stability</strong> - How geometric the normal is
+                        that drives V3's point / spot / area-light shading and their baked (EVSM) shadows. At 1 (default)
+                        a stable geometric normal is used, so parallax, detail normals, wetness, and drips no longer
+                        smear the new shadowcasting and volumetrics; lower it to let surface bump feed back into the
+                        point-light shadow mask.</li>
+                    <li class="mb-2"><strong>Normal Bias</strong> - Offsets the sample point along the normal to fix
+                        light bleed at sharp edges.</li>
+                    <li class="mb-2"><strong>Position Offset</strong> - Manual world-space sample offset for thin or
+                        sleeve geometry that samples the wrong cell.</li>
+                    <li class="mb-2"><strong>Additive-Only Mode</strong> - Adds Light Volume light on top of Unity's
+                        probe baseline instead of replacing it.</li>
+                    <li class="mb-2"><strong>Use Deringed Probes (Bakery L1, opt-in)</strong> - Opt-in Bakery L1
+                        deringed-probe fallback for worlds without Light Volumes.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">LTCGI V2</h3>
+<p class="opt-note">LTCGI area lighting, with per-lobe mode and color tints.</p>
+
+                <p class="opt-note">
+                    When a world bakes its LTCGI into the Light Volumes atlas, the material's direct LTCGI sampling is
+                    skipped automatically so the surface is not lit twice. In every other world the controls below apply
+                    directly.
+                </p>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>Enable LTCGI</strong> - Runtime gate for the LTCGI path, off by default;
+                        VRCFury can flip it without a recompile.</li>
+                    <li class="mb-2"><strong>LTCGI Intensity</strong> - Master contribution of LTCGI area lighting.</li>
+                    <li class="mb-2"><strong>LTCGI Specular Mix</strong> - Area-light specular contribution, dialed
+                        independently.</li>
+                    <li class="mb-2"><strong>LTCGI Diffuse Mix</strong> - Area-light diffuse contribution, dialed
+                        independently.</li>
+                    <li class="mb-2"><strong>LTCGI Mode</strong> - Which lobes the area lights feed: <code>Both</code>,
+                        <code>Diffuse Only</code>, or <code>Specular Only</code>.</li>
+                    <li class="mb-2"><strong>LTCGI Diffuse Color</strong> - Tints the LTCGI diffuse contribution.</li>
+                    <li class="mb-2"><strong>LTCGI Specular Color</strong> - Tints the LTCGI specular contribution.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">TechnicallySane V3</h3>
+<p class="opt-note">Tints the material to a TechnicallySane lighting rig's live show colour, on avatars, with no scene reference.</p>
+
+                <p class="opt-note">
+                    Prefers the modern <strong>TSLCE</strong> control texture and falls back to the
+                    older <strong>GlobalRGB</strong> broadcast automatically - you do not pick,
+                    the shader detects which is present. It reads only the TSLCE texture under TechnicallySane's TSLCE Render Texture Access License, is runtime-gated for VRCFury, and is completely inert and free in worlds with no TechnicallySane engine.
+                </p>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>Enable TechnicallySane Lighting</strong> - Runtime gate for the whole path, off by default; VRCFury can flip it.</li>
+                    <li class="mb-2"><strong>TS Tint Strength</strong> - How strongly the live show colour washes over the
+                        material.</li>
+                    <li class="mb-2"><strong>TS Color Saturation</strong> - Desaturates the show colour toward luma, so it
+                        adds warmth without repainting your design.</li>
+                    <li class="mb-2"><strong>TS Albedo Mix</strong> - 0 = flat emissive glow, 1 = albedo-tinted light
+                        bounce.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Stage Lighting &amp; VRSL</h3>
+<p class="opt-note">VRSL DMX routing, geo-warping, color hijack, and the additive GI stage wash.</p>
+
+
+                <p class="opt-note">
+                    VRSL Stage Hijack links this material directly to world-space DMX buffers. When stage light is
+                    detected it overrides the native AudioLink color arrays and physically warps tessellated vertex
+                    positions to match stage configurations in real time, mimicking a Moving Head fixture. It
+                    contributes nothing in worlds with no DMX node.
+                </p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable VRSL DMX Link</strong> - Master toggle that connects the material to
+                        the world's VRSL DMX buffers.</li>
+                    <li class="mb-2"><strong>DMX Base Channel</strong> - Which fixture sector / base
+                        channel this material reads from the DMX universe.</li>
+                    <li class="mb-2"><strong>Override Strength</strong> - How strongly the stage data takes over the
+                        surface (0 = no override, up = full hijack).</li>
+                    <li class="mb-2"><strong>Pan/Tilt Geo-Warping</strong> - How far the tessellated mesh physically warps
+                        to follow the fixture's DMX Pan/Tilt values.</li>
+                    <li class="mb-2"><strong>Color Hijack</strong> - Lerps the AudioLink color toward live DMX RGB so
+                        the stage can wash the palette without disabling FFT-driven color movement.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>GI Wash Overrides</strong></p>
+                <p class="opt-note">
+                    Separate from the hijack above: instead of overriding emission, the GI wash spills the DMX fixtures'
+                    colour onto the material as real additive light (the stage lighting you up). It reads the same DMX
+                    channels as the Color Hijack.
+                </p>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>Intensity</strong> - Master strength of the additive stage
+                        wash. Above 0 enables it.</li>
+                    <li class="mb-2"><strong>Specular Mix</strong> - Fresnel-weighted specular highlight from the
+                        wash.</li>
+                    <li class="mb-2"><strong>Color Saturation</strong> - Desaturates the wash toward luma so it
+                        tints the surface rather than repainting your design.</li>
+                </ul>
             </div>
 
             <!-- ========================= -->
+            <!-- DECALS -->
+            <!-- ========================= -->
+<div id="decals" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">DECALS</h2>
+                    <div class="badge">Section 5 of 12</div>
+                </div>
+                <p class="tab-desc">Place up to four logos, stickers, brand graphics or tattoos on the latex. Each layer is positioned right in the Scene view: select the material on your mesh and drag the on-screen gizmo handles to move, scale and rotate the decal. All four layers share one texture sampler, so they cost nothing against the texture budget, and the whole section stays off until you enable it.</p>
+
+                <h3 class="text-glow-pink opt-group">Setup</h3>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>Enable</strong> - Master switch for the whole decal section. Off by default, so existing materials are untouched.</li>
+                    <li class="mb-2"><strong>Decal Masks (RGBA)</strong> - One optional packed texture whose Red, Green, Blue and Alpha channels can each limit where Decal 0, 1, 2 and 3 appear. Leave it white to let decals show wherever their placement allows.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Per Decal (0 - 3)</h3>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns this individual layer on.</li>
+                    <li class="mb-2"><strong>Decal</strong> - The image to place (logo, sticker, tattoo, and so on).</li>
+                    <li class="mb-2"><strong>Tint</strong> - Colour multiplied over the decal; the colour's alpha sets the layer's overall opacity.</li>
+                    <li class="mb-2"><strong>Position / Scale / Rotation</strong> - Where the decal sits, how big it is, and its angle. Easiest to set by dragging the gizmo in the Scene view. Rotation Speed slowly spins the decal over time.</li>
+                    <li class="mb-2"><strong>Side Offset</strong> - Nudges the left, right, bottom and top edges independently to stretch or crop the decal box.</li>
+                    <li class="mb-2"><strong>UV Source</strong> - Which UV layout to place the decal on (the main set, or a secondary set if your mesh has one).</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the Decal Masks texture limits this layer.</li>
+                    <li class="mb-2"><strong>Color Blend</strong> - How the decal combines with the latex underneath: Normal, Darken, Multiply, Lighten, Screen, Add, Subtract or Overlay.</li>
+                    <li class="mb-2"><strong>Strength</strong> - Makes the decal glow, for neon logos or lit signage.</li>
+                    <li class="mb-2"><strong>Smoothness Offset</strong> - Makes the decal read glossier (positive) or more matte (negative) than the surrounding latex, so a printed sticker can stand apart from the shine around it.</li>
+                    <li class="mb-2"><strong>Mirror UV / Symmetry</strong> - Flip the decal, restrict it to one side, or mirror it across the body's centre for symmetric placement.</li>
+                    <li class="mb-2"><strong>Tiled</strong> - Off keeps a single decal clamped to its box; on repeats it across the surface.</li>
+                </ul>
+            </div>
+            <!-- ========================= -->
             <!-- POLISH -->
             <!-- ========================= -->
-            <div id="polish" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+<div id="polish" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">POLISH</h2>
-                    <div class="badge">Section 7 of 17</div>
+                    <div class="badge">Section 6 of 12</div>
                 </div>
                 <p class="tab-desc">The polish master gate, clearcoat, and thin film.</p>
 
@@ -493,7 +604,7 @@
                 <p class="opt-note">
                     <strong>Enable</strong> is the master gate for the whole polish lighting layer
                     (clearcoat, thin film, plus the SSS / transmission / anisotropy / rim / multi-scatter terms over in
-                    <a href="#lighting" style="color: var(--neon-cyan);">LIGHTING</a>). Off collapses the material to a
+                    <a href="#shading" style="color: var(--neon-cyan);">SHADING &gt; Lighting</a>). Off collapses the material to a
                     flat GGX base.
                 </p>
                 <ul class="custom-list m-0 ps-4">
@@ -521,19 +632,21 @@
                         sets which wavelengths shift and therefore the iridescent hue.</li>
                 </ul>
             </div>
-
             <!-- ========================= -->
-            <!-- WET EFFECTS -->
+            <!-- SPECIAL EFFECTS -->
             <!-- ========================= -->
-            <div id="wet" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+            <div id="specialfx" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">WET EFFECTS</h2>
-                    <div class="badge">Section 8 of 17</div>
+                    <h2 class="text-glow-cyan m-0">SPECIAL EFFECTS</h2>
+                    <div class="badge">Section 7 of 12</div>
                 </div>
-                <p class="tab-desc">The soaked look, animated run-off rivulets, and clear 3D drips.</p>
+                <p class="tab-desc">The liquid-latex effects: the soaked / wet look with animated run-off and 3D drips, and the melting goo. These are the sections the VixForge Toon shader leaves out.</p>
+
+                <h3 class="text-glow-pink opt-group">Wet Effects</h3>
+<p class="opt-note">The soaked look, animated run-off rivulets, and clear 3D drips.</p>
 
 
-                <h3 class="text-glow-pink opt-group">Master &amp; Soaked Look</h3>
+                <p class="opt-note mt-3 mb-2"><strong>Master &amp; Soaked Look</strong></p>
                 <p class="opt-note">
                     <strong>Soaked Look (Just Out of the Pool)</strong> - Soaks the masked area: darkens the latex,
                     drives reflections to a near-mirror water film, adds a dielectric Fresnel sheen, and flattens
@@ -556,7 +669,7 @@
                         wet area reads slick.</li>
                 </ul>
 
-                <h3 class="text-glow-pink opt-group">Run-Off Rivulets</h3>
+                <p class="opt-note mt-3 mb-2"><strong>Run-Off Rivulets</strong></p>
                 <p class="opt-note">Animated vertical streaks of water running off, layered on top of the soak. Set
                     Streak Strength to 0 for a still, evenly-soaked look.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -573,10 +686,10 @@
                         raised, refractive bead.</li>
                 </ul>
 
-                <h3 class="text-glow-pink opt-group">Clear 3D Drips (Geometry, PC only)</h3>
+                <p class="opt-note mt-3 mb-2"><strong>Clear 3D Drips (Geometry, PC only)</strong></p>
                 <p class="opt-note">Real water droplets emitted by a geometry shader: they swell on downward-facing wet
                     areas, form a neck, pinch off, and fall away as free geometry, tinted to the Clearcoat Tint. PC only
-                    - it uses a geometry stage, so it is not present on the SPS shader or Quest.</p>
+                    - it uses a geometry stage, so it is not present on Quest.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Droplet Amount</strong> - How many droplets spawn across the wet
                         area.</li>
@@ -587,7 +700,7 @@
                         out.</li>
                 </ul>
 
-                <h3 class="text-glow-pink opt-group">Physics &amp; Collision</h3>
+                <p class="opt-note mt-3 mb-2"><strong>Physics &amp; Collision</strong></p>
                 <p class="opt-note">Sway adds surface-tension wobble to falling drops. Surface Slide makes an attached
                     drop run down along the body before it detaches. Floor Splat pins drops to the shared world floor
                     (the Goo "Ground / Floor Height") and spreads them into a fading puddle.</p>
@@ -599,22 +712,13 @@
                     <li class="mb-2"><strong>Droplet Floor Splat</strong> - Pins landed drops to the shared world floor
                         and spreads them into a fading puddle.</li>
                 </ul>
-            </div>
 
-            <!-- ========================= -->
-            <!-- GOO EFFECTS -->
-            <!-- ========================= -->
-            <div id="goo" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
-                <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">GOO EFFECTS</h2>
-                    <div class="badge">Section 9 of 17</div>
-                </div>
-                <p class="tab-desc">Gravity-aligned vertex melt that mimics runny / melting latex, with sway and floor collision.</p>
+                <h3 class="text-glow-pink opt-group">Goo Effects</h3>
+<p class="opt-note">Gravity-aligned vertex melt that mimics runny / melting latex, with sway and floor collision.</p>
 
 
                 <p class="opt-note">
-                    Runs in the displacement stage and benefits from tessellation on the base shader (more verts =
-                    smoother strands); it runs on both shaders. Extreme stretch can be frustum-culled when the body is
+                    Runs in the displacement stage and benefits from tessellation on the base shader (more verts = smoother strands). Extreme stretch can be frustum-culled when the body is
                     off-screen unless the mesh bounds (or an Anchor Override) are expanded.
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -637,7 +741,7 @@
                         (usually 0), shared by both the goo and the drip floor splat.</li>
                 </ul>
 
-                <h3 class="text-glow-pink opt-group">Physics &amp; Collision</h3>
+                <p class="opt-note mt-3 mb-2"><strong>Physics &amp; Collision</strong></p>
                 <p class="opt-note">Sway gives the tendrils a gentle pendulum swing. Surface Follow flows goo along the
                     body instead of sinking through it. Floor Collision clamps the melt to the Ground / Floor Height, and
                     Floor Pooling spreads landed strands sideways into a puddle.</p>
@@ -656,10 +760,10 @@
             <!-- ========================= -->
             <!-- OUTLINES -->
             <!-- ========================= -->
-            <div id="outlines" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+<div id="outlines" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">OUTLINES</h2>
-                    <div class="badge">Section 10 of 17</div>
+                    <div class="badge">Section 8 of 12</div>
                 </div>
                 <p class="tab-desc">A keyword-gated backface-extrusion outline with an AudioLink emission boost.</p>
 
@@ -687,14 +791,13 @@
                         outline emission.</li>
                 </ul>
             </div>
-
             <!-- ========================= -->
             <!-- EMISSIONS -->
             <!-- ========================= -->
-            <div id="emissions" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+<div id="emissions" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">EMISSIONS</h2>
-                    <div class="badge">Section 11 of 17</div>
+                    <div class="badge">Section 9 of 12</div>
                 </div>
                 <p class="tab-desc">Five stacked emission layers and a multi-region colour mask. Every layer's AudioLink controls sit inline with that layer and appear only when AudioLink is enabled.</p>
 
@@ -731,14 +834,13 @@
                         tint and added glow for the blue zone.</li>
                 </ul>
             </div>
-
             <!-- ========================= -->
             <!-- MATCAPS -->
             <!-- ========================= -->
-            <div id="matcaps" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+<div id="matcaps" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">MATCAPS</h2>
-                    <div class="badge">Section 12 of 17</div>
+                    <div class="badge">Section 10 of 12</div>
                 </div>
                 <p class="tab-desc">Up to five stacked material-capture layers with a shared projection setting. Each layer has its own Tiling &amp; Movement and Offsets sub-sections, and can be frozen to read as part of the material rather than a sliding reflection.</p>
 
@@ -767,127 +869,13 @@
                 <h3 class="text-glow-pink opt-group">Matcap 3, 4 &amp; 5</h3>
                 <p class="opt-note">Three more matcap layers, each with the identical control set - texture, mask and channel, tint, rotation, intensity (up to 6), blend mode, lighting mix, plus its own Tiling &amp; Movement (with Freeze) and Offsets sub-sections - for additional stacked zones. All off by default.</p>
             </div>
-
-            <!-- ========================= -->
-            <!-- LIGHT VOLUMES V3 -->
-            <!-- ========================= -->
-            <div id="lightvolumes" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
-                <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">LIGHT VOLUMES V3</h2>
-                    <div class="badge">Section 13 of 17</div>
-                </div>
-                <p class="tab-desc">The full VRC Light Volumes V3 stack.</p>
-
-
-                <p class="opt-note">
-                    Alongside baked volumes the material also receives <strong>Point Light Volumes</strong> - point lights,
-                    spot lights (parametric / attenuation-LUT / projected cookie), cubemap-tinted point lights, and
-                    <strong>quad area lights</strong> (the "TV GI" path: an area light driven by a video RenderTexture),
-                    plus per-light EVSM shadows. All of it projects into the same L1 spherical-harmonics path and rides
-                    the controls below. These lights only appear in worlds running the LV V3 runtime; older or no-LV
-                    worlds fall back to deringed light probes.
-                </p>
-                <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Enable Light Volumes</strong> - Runtime gate for the whole Light Volumes
-                        path, so VRCFury can toggle it without a recompile. On by default.</li>
-                    <li class="mb-2"><strong>Light Volumes Intensity</strong> - Overall contribution of Light Volumes
-                        lighting.</li>
-                    <li class="mb-2"><strong>Light Volumes Specular Mix</strong> - How much Light Volume data feeds the
-                        base specular lobe.</li>
-                    <li class="mb-2"><strong>Light Volumes Clearcoat Specular</strong> - How much Light Volume data feeds
-                        the clearcoat-specific specular.</li>
-                    <li class="mb-2"><strong>Clearcoat Specular Tightness</strong> - Shrinks the clearcoat's Light Volume
-                        specular lobe so a bright point or area light reads as a tight glint instead of a broad wash
-                        (0 = soft / wide, 1 = tightest).</li>
-                    <li class="mb-2"><strong>Specular (Dominant Mode)</strong> - Uses the dominant light direction instead
-                        of the full L1 reconstruction for cheaper specular.</li>
-                    <li class="mb-2"><strong>Point Light Volume Specular (Per-Light)</strong> - Opt-in: gives each point,
-                        spot and area light its own size-aware specular highlight for sharper, more accurate glints on
-                        glossy latex, instead of deriving point-light specular from the blended light direction. Off by
-                        default.</li>
-                    <li class="mb-2"><strong>Point Light Volume Shading</strong> - How softly point / spot / area lights
-                        wrap across the surface normal (higher = softer falloff).</li>
-                    <li class="mb-2"><strong>Shadow / Volumetric Normal Stability</strong> - How geometric the normal is
-                        that drives V3's point / spot / area-light shading and their baked (EVSM) shadows. At 1 (default)
-                        a stable geometric normal is used, so parallax, detail normals, wetness, and drips no longer
-                        smear the new shadowcasting and volumetrics; lower it to let surface bump feed back into the
-                        point-light shadow mask.</li>
-                    <li class="mb-2"><strong>Normal Bias</strong> - Offsets the sample point along the normal to fix
-                        light bleed at sharp edges.</li>
-                    <li class="mb-2"><strong>Position Offset</strong> - Manual world-space sample offset for thin or
-                        sleeve geometry that samples the wrong cell.</li>
-                    <li class="mb-2"><strong>Additive-Only Mode</strong> - Adds Light Volume light on top of Unity's
-                        probe baseline instead of replacing it.</li>
-                    <li class="mb-2"><strong>Use Deringed Probes (Bakery L1, opt-in)</strong> - Opt-in Bakery L1
-                        deringed-probe fallback for worlds without Light Volumes.</li>
-                </ul>
-            </div>
-
-            <!-- ========================= -->
-            <!-- LTCGI V2 -->
-            <!-- ========================= -->
-            <div id="ltcgi" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
-                <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">LTCGI V2</h2>
-                    <div class="badge">Section 14 of 17</div>
-                </div>
-                <p class="tab-desc">LTCGI area lighting, with per-lobe mode and color tints.</p>
-
-                <p class="opt-note">
-                    When a world bakes its LTCGI into the Light Volumes atlas, the material's direct LTCGI sampling is
-                    skipped automatically so the surface is not lit twice. In every other world the controls below apply
-                    directly.
-                </p>
-                <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Enable LTCGI</strong> - Runtime gate for the LTCGI path, on by default;
-                        VRCFury can flip it without a recompile.</li>
-                    <li class="mb-2"><strong>LTCGI Intensity</strong> - Master contribution of LTCGI area lighting.</li>
-                    <li class="mb-2"><strong>LTCGI Specular Mix</strong> - Area-light specular contribution, dialed
-                        independently.</li>
-                    <li class="mb-2"><strong>LTCGI Diffuse Mix</strong> - Area-light diffuse contribution, dialed
-                        independently.</li>
-                    <li class="mb-2"><strong>LTCGI Mode</strong> - Which lobes the area lights feed: <code>Both</code>,
-                        <code>Diffuse Only</code>, or <code>Specular Only</code>.</li>
-                    <li class="mb-2"><strong>LTCGI Diffuse Color</strong> - Tints the LTCGI diffuse contribution.</li>
-                    <li class="mb-2"><strong>LTCGI Specular Color</strong> - Tints the LTCGI specular contribution.</li>
-                </ul>
-            </div>
-
-            <!-- ========================= -->
-            <!-- TECHNICALLYSANE V3 -->
-            <!-- ========================= -->
-            <div id="techsane" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
-                <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">TECHNICALLYSANE V3</h2>
-                    <div class="badge">Section 15 of 17</div>
-                </div>
-                <p class="tab-desc">Tints the material to a TechnicallySane lighting rig's live show colour, on avatars, with no scene reference.</p>
-
-                <p class="opt-note">
-                    Prefers the modern <strong>TSLCE</strong> control texture and falls back to the
-                    older <strong>GlobalRGB</strong> broadcast automatically - you do not pick,
-                    the shader detects which is present. It reads only the TSLCE texture under TechnicallySane's TSLCE Render
-                    Texture Access License, is runtime-gated for VRCFury, and is completely inert and free in worlds with no
-                    TechnicallySane engine. Present on both the base and SPS shaders.
-                </p>
-                <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Enable TechnicallySane Lighting</strong> - Runtime gate for the whole path, off by default; VRCFury can flip it.</li>
-                    <li class="mb-2"><strong>TS Tint Strength</strong> - How strongly the live show colour washes over the
-                        material.</li>
-                    <li class="mb-2"><strong>TS Color Saturation</strong> - Desaturates the show colour toward luma, so it
-                        adds warmth without repainting your design.</li>
-                    <li class="mb-2"><strong>TS Albedo Mix</strong> - 0 = flat emissive glow, 1 = albedo-tinted light
-                        bounce.</li>
-                </ul>
-            </div>
-
             <!-- ========================= -->
             <!-- AUDIOLINK -->
             <!-- ========================= -->
-            <div id="audiolink" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+<div id="audiolink" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">AUDIOLINK</h2>
-                    <div class="badge">Section 16 of 17</div>
+                    <div class="badge">Section 11 of 12</div>
                 </div>
                 <p class="tab-desc">The master AudioLink toggle and every reactive sub-group beneath it.</p>
 
@@ -1080,57 +1068,102 @@
                         <strong>Tear</strong> sets the glitch / tear intensity.</li>
                 </ul>
             </div>
-
             <!-- ========================= -->
-            <!-- STAGE LIGHTING & VRSL -->
+            <!-- RENDERING -->
             <!-- ========================= -->
-            <div id="stage" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+            <div id="rendering" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">STAGE LIGHTING &amp; VRSL</h2>
-                    <div class="badge">Section 17 of 17</div>
+                    <h2 class="text-glow-cyan m-0">RENDERING</h2>
+                    <div class="badge">Section 12 of 12</div>
                 </div>
-                <p class="tab-desc">VRSL DMX routing, geo-warping, color hijack, and the additive GI stage wash.</p>
+                <p class="tab-desc">Culling, blend and stencil overrides. The Rendering Mode up in BASE already sets sensible values, so leave these alone unless you need a specific result.</p>
 
-
-                <p class="opt-note">
-                    VRSL Stage Hijack links this material directly to world-space DMX buffers. When stage light is
-                    detected it overrides the native AudioLink color arrays and physically warps tessellated vertex
-                    positions to match stage configurations in real time, mimicking a Moving Head fixture. It
-                    contributes nothing in worlds with no DMX node.
-                </p>
+                <p class="opt-note"><strong>Models must be triangles.</strong> If yours looks torn into triangles or shredded, select the model file, open its Model Import Settings, turn off <em>Keep Quads</em> and hit Apply.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable VRSL DMX Link</strong> - Master toggle that connects the material to
-                        the world's VRSL DMX buffers.</li>
-                    <li class="mb-2"><strong>DMX Base Channel</strong> - Which fixture sector / base
-                        channel this material reads from the DMX universe.</li>
-                    <li class="mb-2"><strong>Override Strength</strong> - How strongly the stage data takes over the
-                        surface (0 = no override, up = full hijack).</li>
-                    <li class="mb-2"><strong>Pan/Tilt Geo-Warping</strong> - How far the tessellated mesh physically warps
-                        to follow the fixture's DMX Pan/Tilt values.</li>
-                    <li class="mb-2"><strong>Color Hijack</strong> - Lerps the AudioLink color toward live DMX RGB so
-                        the stage can wash the palette without disabling FFT-driven color movement.</li>
+                    <li class="mb-2"><strong>Cull</strong> - Which side of each face is drawn. Back suits most models; switch to Off for flat single-sided pieces like hair cards, skirts or wings that need to show from both sides.</li>
+                    <li class="mb-2"><strong>Depth Test</strong> - How the surface tests against the depth buffer. Leave at the default unless you are layering effects.</li>
+                    <li class="mb-2"><strong>Color Mask</strong> - Which colour channels the material is allowed to write.</li>
+                    <li class="mb-2"><strong>Offset Factor</strong> + <strong>Offset Units</strong> - Depth-bias the surface to fix z-fighting against a coincident mesh.</li>
+                    <li class="mb-2"><strong>Z Clip</strong> - Clips geometry at the near / far planes. On by default.</li>
+                    <li class="mb-2"><strong>Alpha To Coverage</strong> - Smooths hard cutout edges using MSAA coverage.</li>
+                    <li class="mb-2"><strong>Flip Backface Normals</strong> - Flips the lighting normal on back faces, so single-sided pieces light correctly when Cull is Off.</li>
+                    <li class="mb-2"><strong>Ignore Fog</strong> - Excludes the material from the world fog.</li>
                 </ul>
 
-                <h3 class="text-glow-pink opt-group">GI Wash Overrides</h3>
-                <p class="opt-note">
-                    Separate from the hijack above: instead of overriding emission, the GI wash spills the DMX fixtures'
-                    colour onto the material as real additive light (the stage lighting you up). It reads the same DMX
-                    channels as the Color Hijack.
-                </p>
+                <p class="opt-note mt-3 mb-2"><strong>Blending</strong> - How the material combines with what is already on screen. Rendering Mode sets these, so change them only for a specific blend.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Force Opaque Alpha</strong> - Writes alpha as 1 so an opaque material never leaks transparency.</li>
+                    <li class="mb-2"><strong>RGB Blend Op</strong> + <strong>RGB Source</strong> + <strong>RGB Destination</strong> - The colour blend equation and its two factors.</li>
+                    <li class="mb-2"><strong>Alpha Blend Op</strong> + <strong>Alpha Source</strong> + <strong>Alpha Destination</strong> - The same, for the alpha channel.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Stencil</strong> - Stencil-buffer routing for masks, portals and effects that read or write the stencil.</p>
                 <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Intensity</strong> - Master strength of the additive stage
-                        wash. Above 0 enables it.</li>
-                    <li class="mb-2"><strong>Specular Mix</strong> - Fresnel-weighted specular highlight from the
-                        wash.</li>
-                    <li class="mb-2"><strong>Color Saturation</strong> - Desaturates the wash toward luma so it
-                        tints the surface rather than repainting your design.</li>
+                    <li class="mb-2"><strong>Reference</strong> - The stencil value this material compares and writes.</li>
+                    <li class="mb-2"><strong>Comparison</strong> - The test against the buffer that decides whether the pixel draws.</li>
+                    <li class="mb-2"><strong>Pass</strong> + <strong>Fail</strong> + <strong>Z Fail</strong> - What happens to the stored stencil value on each outcome.</li>
+                    <li class="mb-2"><strong>Read Mask</strong> + <strong>Write Mask</strong> - Which bits of the stencil the test reads and the write touches.</li>
                 </ul>
             </div>
 
             <!-- ========================= -->
+            <!-- VIXFORGE TOON -->
+            <!-- ========================= -->
+<div id="toon" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">VixForge Toon</h2>
+                    <div class="badge">Companion Shader</div>
+                </div>
+                <p class="tab-desc">A cel and anime sibling to Latex Ultra. It shares every section on this page, and adds control over how light falls off the surface.</p>
+
+                <p class="caption1 mb-4" style="color: #bfa8d2;">
+                    VixForge Toon carries the same toolkit as Latex Ultra - PBR base, matcaps, emissions, decals, outlines,
+                    AudioLink, Light Volumes, LTCGI, VRSL and TechnicallySane - so every section above applies to it
+                    unchanged. Two things differ: it adds the <strong>Shading Options</strong> block below, and it drops
+                    <strong>Wet Effects</strong> and <strong>Goo Effects</strong>, which are liquid-latex tricks that do not
+                    fit a toon surface. Reach for Toon when you want a stylised look, and for Latex Ultra when you want a
+                    physically based latex finish. Toon can also do a fully realistic pass, so you can stylise the body and
+                    keep realistic boots on the same avatar.
+                </p>
+
+                <h3 class="text-glow-pink opt-group">Shading Options</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns the stylised falloff on. Off, or with Style set to
+                        Realistic, the surface lights like a standard PBR material.</li>
+                    <li class="mb-2"><strong>Style</strong> - Picks how light falls off:
+                        <ul class="custom-list mt-2">
+                            <li class="mb-2"><strong>Ramp Texture</strong> - Reads a gradient you supply, unlit on the left
+                                to lit on the right. Leave it white for a clean two-tone.</li>
+                            <li class="mb-2"><strong>Cel Steps</strong> - Posterises the light into flat bands.</li>
+                            <li class="mb-2"><strong>Soft</strong> - A smooth, rounded falloff.</li>
+                            <li class="mb-2"><strong>Hard</strong> - One crisp terminator line.</li>
+                            <li class="mb-2"><strong>Realistic</strong> - No stylising, the full physical response, for
+                                realistic parts on a Toon material.</li>
+                        </ul>
+                    </li>
+                    <li class="mb-2"><strong>Gradient</strong> - The ramp texture, read left (unlit) to right (lit). Shown
+                        for the Ramp Texture style.</li>
+                    <li class="mb-2"><strong>Offset</strong> - Shifts where the ramp is read. Shown for the Ramp Texture
+                        style.</li>
+                    <li class="mb-2"><strong>Count</strong> - The number of flat bands, 2 to 8. Shown for the Cel Steps
+                        style.</li>
+                    <li class="mb-2"><strong>Light Wrap</strong> - The Realistic style's own softening of the terminator,
+                        the way skin, fabric and fur do, without losing energy.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Shared Falloff Controls</h3>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>Edge Softness</strong> - How sharp the band edges are, for the Ramp Texture
+                        and Cel Steps styles. Low is crisp, high blurs the step.</li>
+                    <li class="mb-2"><strong>Light Wrap</strong> - Pulls light further around the surface so more of it
+                        reads as lit and the terminator softens. Available on every style but Realistic. 0 keeps the plain
+                        terminator.</li>
+                </ul>
+            </div>
+            <!-- ========================= -->
             <!-- SHARED FOOTER -->
             <!-- ========================= -->
-            <div id="footer" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+<div id="footer" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">Shared Footer &amp; Editor Controls</h2>
                     <div class="badge">All Sections</div>
@@ -1176,6 +1209,7 @@
                     </li>
                 </ul>
             </div>
+
 
         </div>
 

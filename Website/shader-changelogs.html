@@ -7,8 +7,8 @@
     <!-- Primary SEO -->
     <title>Vixens Toolbox | Shader Changelogs &amp; Version History</title>
     <meta name="title" content="Vixens Toolbox | Shader Changelogs &amp; Version History">
-    <meta name="description" content="Release notes for the VixForge VRChat avatar shaders - VixenWear Latex Ultra and Clothing Pro. Every version, what changed, and what you need to do after updating.">
-    <meta name="keywords" content="VixenWear changelog, Latex Ultra changelog, Clothing Pro changelog, VRChat shader release notes, VixForge Interactive, VRChat avatar shader updates, Unity 2022.3 shader version history">
+    <meta name="description" content="Release notes for the VixForge VRChat avatar shaders - VixenWear Latex Ultra, VixForge Toon and Clothing Pro. Every version, what changed, and what you need to do after updating.">
+    <meta name="keywords" content="VixenWear changelog, Latex Ultra changelog, Toon shader changelog, Clothing Pro changelog, VRChat shader release notes, VixForge Interactive, VRChat avatar shader updates, Unity 2022.3 shader version history">
     <meta name="author" content="Vixenlicous | VixForge Interactive">
     <meta name="theme-color" content="#ff00aa">
 
@@ -19,7 +19,7 @@
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/shader-changelogs.html">
     <meta property="og:title" content="Vixens Toolbox | Shader Changelogs &amp; Version History">
-    <meta property="og:description" content="Release notes for the VixForge VRChat avatar shaders - VixenWear Latex Ultra and Clothing Pro.">
+    <meta property="og:description" content="Release notes for the VixForge VRChat avatar shaders - VixenWear Latex Ultra, VixForge Toon and Clothing Pro.">
     <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="og:site_name" content="VixForge Interactive | Vixens Toolbox">
 
@@ -27,7 +27,7 @@
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/shader-changelogs.html">
     <meta property="twitter:title" content="Vixens Toolbox | Shader Changelogs &amp; Version History">
-    <meta property="twitter:description" content="Release notes for the VixForge VRChat avatar shaders - VixenWear Latex Ultra and Clothing Pro.">
+    <meta property="twitter:description" content="Release notes for the VixForge VRChat avatar shaders - VixenWear Latex Ultra, VixForge Toon and Clothing Pro.">
     <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="twitter:site" content="@VixenVRC">
 
@@ -37,7 +37,7 @@
           "@context": "https://schema.org",
           "@type": "TechArticle",
           "headline": "VixForge Shader Changelogs & Version History",
-          "description": "Release notes for the VixForge VRChat avatar shaders - VixenWear Latex Ultra and Clothing Pro - including new features, fixes and upgrade steps.",
+          "description": "Release notes for the VixForge VRChat avatar shaders - VixenWear Latex Ultra, VixForge Toon and Clothing Pro - including new features, fixes and upgrade steps.",
           "author": {
             "@type": "Organization",
             "name": "VixForge Interactive"
@@ -48,7 +48,7 @@
           },
           "url": "https://vixencreations.github.io/VixenToolBox/shader-changelogs.html",
           "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
-          "keywords": "VixenWear changelog, Latex Ultra release notes, Clothing Pro release notes, VRChat shader version history"
+          "keywords": "VixenWear changelog, Latex Ultra release notes, Toon shader release notes, Clothing Pro release notes, VRChat shader version history"
         }
     </script>
 
@@ -146,6 +146,8 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 190px;">
+                        <fluent-option value="toon-1.0.0">Toon 1.0.0</fluent-option>
+                        <fluent-option value="latex-4.1.0">Latex Ultra 4.1.0</fluent-option>
                         <fluent-option value="latex-4.0.0">Latex Ultra 4.0.0</fluent-option>
                         <fluent-option value="latex-3.0.0">Latex Ultra 3.0.0</fluent-option>
                         <fluent-option value="latex-2.9.2">Latex Ultra 2.9.2</fluent-option>
@@ -175,6 +177,63 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
+                <div class="changelog-entry" data-version="toon-1.0.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Toon 1.0.0 - 2026-07-22</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A cel and anime companion to Latex Ultra. It carries the whole VixenWear toolkit and adds one thing Latex Ultra does not: control over how light falls off the surface.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The Toon shader.</strong> Assign <strong>VixForge / Toon</strong> to a material, set up BASE, NORMAL MAPS and SURFACE just as you would on Latex Ultra, then pick a shading style. The <strong>Toon Shader</strong> tab in the Hub covers what is new; everything else follows How To Use and Shader Pipeline as written.</li>
+                        <li class="mb-2"><strong>Start from your existing material.</strong> Coming from <strong>lilToon</strong>, <strong>Poiyomi</strong> or <strong>VRChat's Toon Standard</strong>? Assign VixForge Toon and the inspector offers a one-click button to bring the old shader's settings across. To convert a whole avatar at once, right-click it and choose <strong>VixForge Editor &gt; Materials &gt; Translate Avatar</strong>; it backs the avatar up first and is fully undoable.</li>
+                        <li class="mb-2"><strong>Five shading styles</strong>, in a new <strong>Shading Options</strong> block at the top of the SHADING section:
+                            <ul class="custom-list ps-4 mt-2 mb-0">
+                                <li class="mb-2"><strong>Ramp Texture</strong> reads a gradient you supply, unlit on the left to lit on the right. Leave it white for a clean two-tone. Comes with an <strong>Offset</strong> that shifts where the ramp reads.</li>
+                                <li class="mb-2"><strong>Cel Steps</strong> posterises the light into flat bands. Set the <strong>Count</strong> from 2 to 8.</li>
+                                <li class="mb-2"><strong>Soft</strong> gives a smooth, rounded falloff.</li>
+                                <li class="mb-2"><strong>Hard</strong> draws one crisp terminator line, lit or unlit.</li>
+                                <li class="mb-2"><strong>Realistic</strong> switches the stylising off and lights like standard PBR, so you can keep realistic parts on the same material. It has its own <strong>Light Wrap</strong>.</li>
+                        </ul>
+</li>
+                        <li class="mb-2"><strong>Edge Softness and Light Wrap.</strong> Edge Softness sets how sharp the Cel and Ramp band edges are, from crisp to blurred. Light Wrap pulls light further around the surface and softens the terminator, the way skin and fabric do.</li>
+                        <li class="mb-2"><strong>Two-layer outlines.</strong> An inner and an outer outline, each with its own scrolling texture for animated edges. Width reads as real thickness, so the line shrinks on screen as you move away, like a solid object.</li>
+                        <li class="mb-2"><strong>The full toolkit, shared with Latex Ultra.</strong> Polish, Outlines, Emissions, Matcaps, Decals, AudioLink, Light Volumes, LTCGI, VRSL and TechnicallySane all behave exactly as they do on Latex Ultra. Turn shading off, or set the style to Realistic, and Toon lights like a normal PBR material.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Removed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>No Wet or Goo effects.</strong> Those are liquid-latex tricks that do not suit a toon surface, so Toon leaves them out. Everything else is here.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Notes</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Lock your materials before uploading</strong>, the same three ways as Latex Ultra. The SDK Build button does it for you.</li>
+                        <li class="mb-2"><strong>Toon needs triangle meshes.</strong> If a model looks torn or shredded, turn off <strong>Keep Quads</strong> in its import settings, or run <strong>VixenTools &gt; VixForge Mesh Fixes &gt; Scan for Quad Meshes</strong>.</li>
+                        <li class="mb-2"><strong>Light Volumes and LTCGI start off</strong>, because they make Unity builds much slower. Turn them on only if your world uses them.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-4.1.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 4.1.0 - 2026-07-22</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>The package gains a companion shader this release: <strong>VixForge Toon</strong>, a cel and anime shader that carries the full toolkit (it keeps its own changelog). Outlines got a rebuild, there is now a one-click way to move materials over from other shaders, a new tool to catch quad meshes before they tear, and two inspector fixes.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Bring materials over from lilToon, Poiyomi and VRChat's Toon Standard.</strong> Assign <strong>VixenWear / Latex Ultra</strong> to a material and the inspector offers a one-click button to translate the old shader's settings across. To convert a whole avatar at once, right-click it and choose <strong>VixForge Editor &gt; Materials &gt; Translate Avatar</strong>; it backs the avatar up first and is fully undoable.</li>
+                        <li class="mb-2"><strong>Catch quad meshes before they tear.</strong> A new <strong>VixenTools &gt; VixForge Mesh Fixes &gt; Scan for Quad Meshes</strong> finds models that are still made of quads while using a VixForge material, and offers to reimport them as triangles. Our shaders tessellate, so a quad model can render torn until it is triangulated. It scans one avatar or the whole scene, shows you which meshes and where, catches locked materials too, and never changes a model's import settings without asking.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Outlines rebuilt: two layers, real thickness, and a scrolling texture.</strong> There is now an inner and an outer outline instead of one. <strong>Width</strong> grows the line like real thickness, and the line shrinks on screen as you move away, the way a solid object does; the old outline only stretched away from you. Each outline can carry its own scrolling texture for animated edges. The old distance-based Max Width and camera-push controls are gone, and the new Width replaces them.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Copying settings between Latex Ultra and Toon works now.</strong> Copy a section on one shader's material and paste it onto the other, and the values land on the right controls. It used to pair controls by position, so a cross-shader paste could write onto the wrong settings, or nothing; it now matches by name and skips anything the other shader does not have. Same-shader copy and paste is unchanged.</li>
+                        <li class="mb-2"><strong>No more repeated inspector error when a material's shader changes underneath it.</strong> If a material was selected while its shader gained or lost controls (updating the package, or editing the shader in place), the inspector could throw a type error every frame until you reselected the material. The affected control now waits for the inspector to catch up instead of throwing.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Notes</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Re-set the Width on any material that already used an outline.</strong> The Width control changed scale with the rebuild, so an outline saved before this version will extrude far too much until you set it again by hand. Outlines are off by default, so most materials are unaffected, and there is no automatic migration.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="latex-4.0.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 4.0.0 - 2026-07-16</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Two big things this release, plus a lot more speed. VixenWear now has its own material inspector, the VixForge Editor. Poiyomi repackaged their copy of Thry's editor and deleted the old files, which broke ours, so we built our own. It is a custom build of Thry's editor and the credit stays his. And there is one shader now instead of two. <strong>VixenWear / Latex Ultra</strong> does everything, including VRCFury SPS and penetrator meshes. Importing and locking used to take minutes; now it is seconds, and your materials look exactly the same. <strong>Two one-time jobs, and skipping either will bite you:</strong> move any material still on the old <code>VixenWear / Latex Ultra SPS</code> across (there is a one-click tool for it), and unlock then re-lock anything you locked before this version. Both are covered below.</em></p>
@@ -200,7 +259,7 @@
                         <li class="mb-2"><strong>The documents are styled to match.</strong> Headings, lists, tables and notes render in the VixenWear look, and text wraps to the window.</li>
                         <li class="mb-2"><strong>Light Volumes and LTCGI start switched off.</strong> They are the two most expensive features in the shader, so new materials no longer pay for them by default. <strong>Your existing materials are untouched</strong> and keep their settings. If your world uses them, switch them on in their sections.</li>
                         <li class="mb-2"><strong>One shader to pick, not two.</strong> Anything that said "use the SPS variant for SPS meshes" no longer applies. How To Use and Shader Pipeline are updated to match.</li>
-                        <li class="mb-2"><strong>Package layout.</strong> The documentation moved to <code>Editor/bin/</code>, and the shader gained a shared include. If you install anywhere other than <code>Assets/VixenWear/</code>, check the install section of How To Use.</li>
+                        <li class="mb-2"><strong>Package layout.</strong> The documentation moved to <code>Editor/bin/</code>, and the shader gained a shared include. If you install anywhere other than <code>Assets/VixForge/</code>, check the install section of How To Use.</li>
                     </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
@@ -213,14 +272,11 @@
                     </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Removed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
-                        <li class="mb-2"><strong><code>VixenWear / Latex Ultra SPS</code> is gone.</strong> It only ever existed because injecting SPS into the main shader used to crash the shader compiler, so we shipped a slimmed clone as a workaround. That crash is fixed, and VRCFury patches the main shader directly now, so the clone has no reason to exist.
-                            <ul class="custom-list ps-4 mt-2 mb-0">
-                                <li class="mb-2"><strong>What to do:</strong> run <strong>VixenTools &gt; VixenWear &gt; Migrate SPS Materials to Base Shader</strong> (or the button in the Hub). It finds every material still on the old SPS shader, moves it to <strong>VixenWear / Latex Ultra</strong>, and clears out the leftovers. You can also just pick the new shader by hand: your settings carry over, since both use the same property names.</li>
-                                <li class="mb-2"><strong>Locked materials come out unlocked. Lock them again before you upload.</strong></li>
-                                <li class="mb-2"><strong>What you gain:</strong> SPS meshes get the full feature set the clone had to drop, including the world lighting integrations (VRSL, LTCGI, VRC Light Volumes), detail normals, and the AudioLink vertex kinetics.</li>
-                                <li class="mb-2">On an older VRCFury and the material misbehaves when patched? Update VRCFury first.</li>
-                        </ul>
-</li>
+                        <li class="mb-2"><strong><code>VixenWear / Latex Ultra SPS</code> is gone.</strong> It only ever existed because injecting SPS into the main shader used to crash the shader compiler, so we shipped a slimmed clone as a workaround. That crash is fixed, and VRCFury patches the main shader directly now, so the clone has no reason to exist.</li>
+                        <li class="mb-2"><strong>What to do:</strong> run <strong>VixenTools &gt; VixenWear &gt; Migrate SPS Materials to Base Shader</strong> (or the button in the Hub). It finds every material still on the old SPS shader, moves it to <strong>VixenWear / Latex Ultra</strong>, and clears out the leftovers. You can also just pick the new shader by hand: your settings carry over, since both use the same property names.</li>
+                        <li class="mb-2"><strong>Locked materials come out unlocked. Lock them again before you upload.</strong></li>
+                        <li class="mb-2"><strong>What you gain:</strong> SPS meshes get the full feature set the clone had to drop, including the world lighting integrations (VRSL, LTCGI, VRC Light Volumes), detail normals, and the AudioLink vertex kinetics.</li>
+                        <li class="mb-2">On an older VRCFury and the material misbehaves when patched? Update VRCFury first.</li>
                         <li class="mb-2"><strong>Clean Latex Material Keywords</strong> is gone: keywords apply themselves now. <strong>VixenTools &gt; VixForge Editor &gt; Fix Keywords for All Materials (Slow)</strong> covers a project-wide repair if you ever want one.</li>
                     </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Notes</strong></p>
