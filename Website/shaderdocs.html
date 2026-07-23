@@ -257,12 +257,12 @@
                         blend state, ZWrite, render queue, and the fallback tags. <em>Fade</em> uses straight alpha; <em>Transparent</em> uses premultiplied alpha so
                         specular survives at low opacity (the correct mode for glass and wet-look latex);
                         <em>Cutout</em> uses a hard alpha-clip threshold.</li>
-                    <li class="mb-2"><strong>CutOff</strong> - The alpha clip threshold, shown only in Cutout mode.
-                        Fade / Transparent read alpha from the Albedo (A) channel.</li>
-                    <li class="mb-2"><strong>Color</strong> - The main color tint multiplied into the albedo.</li>
+                    <li class="mb-2"><strong>CutOff</strong> - The alpha clip threshold, shown only in Cutout mode.</li>
+                    <li class="mb-2"><strong>Color</strong> - The main colour tint multiplied into the albedo. In Fade and
+                        Transparent its alpha sets the opacity, so a material can go see-through with no texture at all.</li>
                     <li class="mb-2"><strong>Albedo</strong> - The main texture slot. RGB is the albedo;
-                        the Alpha channel carries the Cutout threshold in Cutout mode and the opacity in Fade /
-                        Transparent.</li>
+                        its Alpha channel is the Cutout threshold in Cutout mode and multiplies the Color's opacity in
+                        Fade / Transparent. Leave it empty to set opacity from the Color alone.</li>
                     <li class="mb-2"><strong>Minimum Brightness</strong> - A floor on the final lit result so the surface
                         never crushes to pure black in unlit or very dark worlds.</li>
                 </ul>
@@ -351,6 +351,12 @@
                         Mochie map into <em>Packed PBR Mask</em> first.</li>
                 </ul>
 
+                <h3 class="text-glow-pink opt-group">Reflection From Mask</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Reflection From Mask</strong> - Turns the black-and-white Reflection Mask into real metallic reflections: white areas go shiny. The roughness is worked out from your base texture and normal map, so no separate smoothness map is needed. Off by default.</li>
+                    <li class="mb-2"><strong>Reflection Roughness</strong> - How sharp those reflections read; lower for a mirror finish.</li>
+                </ul>
+
                 <h3 class="text-glow-pink opt-group">Surface Shaping</h3>
                 <ul class="custom-list m-0 ps-4">
                     <li class="mb-2"><strong>Specular Occlusion</strong> - How much AO also occludes specular /
@@ -376,13 +382,9 @@
                 <p class="tab-desc">The lighting model and every world-lighting integration, grouped together. Light Volumes, LTCGI, TechnicallySane and Stage / VRSL are each fail-safe: they strip or no-op cleanly in worlds that lack the system.</p>
 
                 <h3 class="text-glow-pink opt-group">Lighting</h3>
-<p class="opt-note">AO, contact shadow, rim, subsurface, anisotropy, transmission, and energy conservation. Most of these belong to the polish layer and are gated by <a href="#polish" style="color: var(--neon-cyan);">POLISH &gt; Enable</a>.</p>
+<p class="opt-note">Rim, subsurface, anisotropy, transmission, and energy conservation. Most of these belong to the polish layer and are gated by <a href="#polish" style="color: var(--neon-cyan);">POLISH &gt; Enable</a>. AO Strength and Shadow Hardness now live in <strong>Shadow Detail</strong>.</p>
 
                 <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>AO Strength</strong> - Strength of the multi-bounce ambient-occlusion term
-                        applied from the AO channel.</li>
-                    <li class="mb-2"><strong>Shadow Hardness</strong> - Sharpness of the self-shadowing cast inside
-                        recessed seams by the parallax raymarch.</li>
                     <li class="mb-2"><strong>Rim Light Strength</strong> - Intensity of the Fresnel rim glow around the
                         silhouette.</li>
                     <li class="mb-2"><strong>Rim Light Power</strong> - Tightness of the rim falloff. Higher values pull
@@ -416,7 +418,12 @@
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Shadow Detail</h3>
-<p class="opt-note">Dedicated occlusion and baked-shadow maps for extra realism. Both read through the Albedo sampler, so they cost nothing against the texture budget, and each stays off until you enable it.</p>
+<p class="opt-note">Occlusion and shadow, gathered in one place. AO Strength and Shadow Hardness always apply; the dedicated maps below stay off until you enable them and read through the Albedo sampler, so they cost nothing against the texture budget.</p>
+
+                <ul class="custom-list m-0 ps-4 mb-3">
+                    <li class="mb-2"><strong>AO Strength</strong> - How strongly the surface map's packed AO channel darkens ambient and indirect light. 0 = off, 1 = full, higher deepens the shading in creases.</li>
+                    <li class="mb-2"><strong>Shadow Hardness</strong> - Sharpness of the self-shadowing cast inside recessed seams by the parallax raymarch.</li>
+                </ul>
 
                 <p class="opt-note mt-3 mb-2"><strong>Occlusion Map</strong></p>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -858,6 +865,7 @@
                     <li class="mb-2"><strong>Rotation</strong> - Rotates the matcap sample.</li>
                     <li class="mb-2"><strong>Intensity</strong> - Brightness of the layer, now up to 6 for a strong, over-driven glow.</li>
                     <li class="mb-2"><strong>Blend Mode</strong> - How the layer combines: <code>Add</code>, <code>Replace</code>, or <code>Multiply</code>.</li>
+                    <li class="mb-2"><strong>Opacity</strong> - Fades the whole layer in and out over the base. Pair it with <code>Multiply</code> or <code>Replace</code> to cover the base and read as latex; <code>Add</code> only lays highlights on top. Full by default.</li>
                     <li class="mb-2"><strong>Lighting Mix</strong> - How much scene lighting modulates the layer versus reading it as a pure unlit overlay.</li>
                 </ul>
                 <p class="opt-note"><strong>Tiling &amp; Movement</strong> (sub-section) - <strong>Freeze</strong> stops the matcap sliding as the camera moves, so it reads as baked-in detail that turns naturally with the avatar (0 = classic reflective matcap). <strong>Tiling</strong> repeats the matcap around its centre. <strong>Scroll / Animate</strong> gives continuous motion: Pan X / Y move it over time (Pan Y = up / down), Spin rotates it, Speed scales the animation.</p>
@@ -867,7 +875,7 @@
                 <p class="opt-note mb-4">A second matcap layer with the same controls (including its own Tiling &amp; Movement and Offsets sub-sections). Tip: drop a red/blue/black region mask into both Layer 1's and Layer 2's Mask, set Layer 1's channel to R and Layer 2's to B, and each colour zone shows a different matcap.</p>
 
                 <h3 class="text-glow-pink opt-group">Matcap 3, 4 &amp; 5</h3>
-                <p class="opt-note">Three more matcap layers, each with the identical control set - texture, mask and channel, tint, rotation, intensity (up to 6), blend mode, lighting mix, plus its own Tiling &amp; Movement (with Freeze) and Offsets sub-sections - for additional stacked zones. All off by default.</p>
+                <p class="opt-note">Three more matcap layers, each with the identical control set - texture, mask and channel, tint, rotation, intensity (up to 6), blend mode, opacity, lighting mix, plus its own Tiling &amp; Movement (with Freeze) and Offsets sub-sections - for additional stacked zones. All off by default.</p>
             </div>
             <!-- ========================= -->
             <!-- AUDIOLINK -->
@@ -1092,7 +1100,6 @@
 
                 <p class="opt-note mt-3 mb-2"><strong>Blending</strong> - How the material combines with what is already on screen. Rendering Mode sets these, so change them only for a specific blend.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Force Opaque Alpha</strong> - Writes alpha as 1 so an opaque material never leaks transparency.</li>
                     <li class="mb-2"><strong>RGB Blend Op</strong> + <strong>RGB Source</strong> + <strong>RGB Destination</strong> - The colour blend equation and its two factors.</li>
                     <li class="mb-2"><strong>Alpha Blend Op</strong> + <strong>Alpha Source</strong> + <strong>Alpha Destination</strong> - The same, for the alpha channel.</li>
                 </ul>

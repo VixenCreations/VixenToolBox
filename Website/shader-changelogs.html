@@ -146,6 +146,8 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 190px;">
+                        <fluent-option value="latex-4.1.1">Latex Ultra 4.1.1</fluent-option>
+                        <fluent-option value="toon-1.0.1">Toon 1.0.1</fluent-option>
                         <fluent-option value="toon-1.0.0">Toon 1.0.0</fluent-option>
                         <fluent-option value="latex-4.1.0">Latex Ultra 4.1.0</fluent-option>
                         <fluent-option value="latex-4.0.0">Latex Ultra 4.0.0</fluent-option>
@@ -176,6 +178,51 @@
             <p class="caption1 m-0 mb-4" style="color: #9ca3af; max-width: 70ch;">Release notes for the VixForge avatar shaders. Each entry is titled with the shader it belongs to. Tool and editor releases live on the <a href="changelog.html">Changelog</a> page.</p>
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
+
+                <div class="changelog-entry" data-version="latex-4.1.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 4.1.1 - 2026-07-22</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A same-day round of fixes and additions. Transparency now works on materials with no albedo texture, matcaps can cover the base to read as latex, the lighting controls behave the way their sliders read, and there is a new one-map way to add metallic reflections.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Reflection From Mask.</strong> Turn a black-and-white mask into metallic reflections: white areas go shiny, read from the Reflection Mask channel you already set. It works the roughness out from your base texture and normal map, so you do not need a separate smoothness map, and Reflection Roughness takes you from a soft sheen to a sharp mirror. On the Surface section, off by default.</li>
+                        <li class="mb-2"><strong>Per-matcap Opacity.</strong> Every matcap layer gains an Opacity slider that fades it in and out over the base. Turn it up with Blend Mode set to Multiply or Replace to cover the skin underneath and read as latex, or keep it low to let the base show through. Defaults to full, so existing matcaps look the same.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Occlusion and shadow controls live together now.</strong> AO Strength and Shadow Hardness moved out of the Lighting section into Shadow Detail, next to the Occlusion Map and Baked Shadow Map. This is only where the sliders sit; your saved materials are unaffected.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Transparency works on materials with no albedo texture.</strong> In Fade and Transparent, a material built from just matcaps, masks and normals stayed fully solid, so you could not make it see-through. Opacity now comes straight from the Color's alpha (times the Albedo texture's alpha if you have one), so lowering the Color's alpha makes it transparent with no texture needed. Picking the Rendering Mode sets this up for you.</li>
+                        <li class="mb-2"><strong>Rim Light shows up now.</strong> Rim Light Strength and Rim Light Power did nothing on dark materials, because the rim was tinted by the base colour and disappeared on black latex. It now reads from the scene light, so it shows on any colour. Rim stays off by default, so nothing changes until you turn it up.</li>
+                        <li class="mb-2"><strong>MatCap Lighting Mix works across its whole range.</strong> At 0 a matcap used to vanish instead of showing unlit. Now 0 is a fully unlit matcap that is always visible, 1 (the default) follows the scene lighting, and anything between blends the two. Each matcap keeps its own Lighting Mix.</li>
+                        <li class="mb-2"><strong>AO Strength darkens instead of dimming everything.</strong> Lower values used to crush all the ambient light on the material, so raising the slider looked like it was brightening. It now does what it says: 0 is no occlusion, 1 (the default) is full occlusion, and higher deepens the shading in the creases. A material you had set below 1 will look a little brighter, which is the corrected behaviour.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Notes</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>A locked material keeps the old behaviour until you re-lock it.</strong> These are shader-side fixes, so anything you locked before this version needs an unlock and re-lock to pick them up. Uploading re-locks for you.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="toon-1.0.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Toon 1.0.1 - 2026-07-22</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Picks up the shared fixes and additions from Latex Ultra 4.1.1: transparency on texture-less materials, per-matcap Opacity, and the new Reflection From Mask.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Reflection From Mask.</strong> Turn a black-and-white mask into metallic reflections: white areas go shiny, read from the Reflection Mask channel you already set. It works the roughness out from your base texture and normal map, so you do not need a separate smoothness map, and Reflection Roughness takes you from a soft sheen to a sharp mirror. On the Surface section, off by default.</li>
+                        <li class="mb-2"><strong>Per-matcap Opacity.</strong> Every matcap layer gains an Opacity slider that fades it in and out over the base. Turn it up with Blend Mode set to Multiply or Replace to cover the base and read as latex, or keep it low to let the base show through. Defaults to full, so existing matcaps look the same.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Occlusion and shadow controls live together now.</strong> AO Strength and Shadow Hardness moved into the Shadow Detail section, next to the Occlusion Map and Baked Shadow Map.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The shared fixes, same as Latex Ultra 4.1.1.</strong> Transparency works on materials with no albedo texture (opacity comes from the Color's alpha), Rim Light shows on any colour now, MatCap Lighting Mix works across its whole range, and AO Strength darkens instead of dimming the whole material. See the Latex Ultra changelog for the details.</li>
+                    </ul>
+                </div>
 
                 <div class="changelog-entry" data-version="toon-1.0.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Toon 1.0.0 - 2026-07-22</h5>
