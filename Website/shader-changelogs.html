@@ -146,6 +146,8 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 190px;">
+                        <fluent-option value="latex-4.2.0">Latex Ultra 4.2.0</fluent-option>
+                        <fluent-option value="toon-1.1.0">Toon 1.1.0</fluent-option>
                         <fluent-option value="latex-4.1.1">Latex Ultra 4.1.1</fluent-option>
                         <fluent-option value="toon-1.0.1">Toon 1.0.1</fluent-option>
                         <fluent-option value="toon-1.0.0">Toon 1.0.0</fluent-option>
@@ -178,6 +180,36 @@
             <p class="caption1 m-0 mb-4" style="color: #9ca3af; max-width: 70ch;">Release notes for the VixForge avatar shaders. Each entry is titled with the shader it belongs to. Tool and editor releases live on the <a href="changelog.html">Changelog</a> page.</p>
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
+
+                <div class="changelog-entry" data-version="latex-4.2.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 4.2.0 - Unreleased</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Emission gets the two things people kept asking for: per-layer sliders you can actually put on a radial, and light that runs along a path. Plus procedural glitter, and a material that knows who is looking at it.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Strength and Hue Shift on every emission layer.</strong> Each of the five layers gains Strength, Hue Shift and Hue Cycle Speed. They are single sliders, so one radial puppet drives brightness or colour without animating an HDR colour across four curves. Hue Cycle Speed cycles the colour on its own with no animator. Exposure (All Layers) still scales the whole stack, and existing materials look the same.</li>
+                        <li class="mb-2"><strong>Pathing.</strong> Runs light along a path you paint as a black-to-white ramp: chase lights, loading bars, energy running down a limb. All four channels of the Path Gradient are read, so one texture carries four separate paths, each with its own Type (Fill, Path, Loop, Dashed), speed, width, softness and colour. No texture needed if you just want a sweep, set Source to UV X or UV Y. In the Emissions section, off by default.</li>
+                        <li class="mb-2"><strong>AudioLink on paths.</strong> Brightness pulses with a band, Beat Travel moves the path to the beat instead of the clock, ColorChord colours it with the notes being played, and Waveform and Autocorrelator paint the live audio along the path so it reads like a scope trace.</li>
+                        <li class="mb-2"><strong>Coverage From, on every decal layer.</strong> Decides what makes a decal show. Texture Alpha is the old behaviour and stays the default. Luminance Inverted uses how dark the texture is, which is what painted shading and muscle definition on a white background need, so those drop straight in from other shaders without editing an alpha channel first. Ignore Alpha covers the whole decal, for textures whose alpha is unusable.</li>
+                        <li class="mb-2"><strong>Glitter</strong>, under Special Effects. Scatters tiny flakes across the material, each tilted its own way, so they catch the light one at a time and twinkle as you or the light moves. It is generated in the shader, so there is no texture to make and no resolution to run out of. Anchor the flakes to your UVs or to world space so they stay the same real size everywhere. Iridescent gives every flake its own hue for a holographic finish, ColorChord takes the colours from the music, and AudioLink makes them flare and multiply on the beat. Once flakes get too small on screen to draw individually they settle into a smooth sheen, so glitter never turns into crawling noise at a distance and never vanishes on you either. It sits on top of the matcap layers, so it stays visible over a matcap in any blend mode.</li>
+                        <li class="mb-2"><strong>Glitter lighting controls.</strong> Lit By picks what the flakes react to: the world's ordinary lights, or Light Volumes, LTCGI, VRSL or TechnicallySane on their own, so the glitter lights up in worlds running that system and stays dark in worlds that do not. Everything takes light from all of them, and Always Lit ignores lighting completely so the sparkle shows in a pitch black room. Minimum Light keeps a little sparkle alive in unlit corners, and Take Light Colour decides whether flakes take the colour of the light or keep your Tint under coloured stage lighting.</li>
+                        <li class="mb-2"><strong>Over Clearcoat, on glitter.</strong> Sets where the flakes sit relative to the clearcoat shine. At 1 they sit on top and cut through it, so glitter stays crisp on a glossy material instead of being buried under the coat. At 0 they sit underneath like flakes in real car paint, dimmed by the coat and fading out at glancing angles. Materials without a clearcoat are unaffected either way.</li>
+                        <li class="mb-2"><strong>Viewer Context</strong>, under Special Effects. The material works out where it is being drawn and who is looking, then reacts on its own. Show a mark only in mirrors, or only in someone's photos, or never in photos. Split by VR and Desktop. In VR, send an effect to one eye only. Fade it in as someone leans closer, or only when they are looking at you face on, with a Reaction Glow that rides along. It points at your emission, your decals or both. No animator, no menu, no parameters, and everyone sees their own version at the same time.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="toon-1.1.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Toon 1.1.0 - Unreleased</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Picks up everything from Latex Ultra 4.2.0: per-layer emission Strength and Hue Shift, Pathing, decal Coverage From, Glitter and Viewer Context.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Strength and Hue Shift on every emission layer.</strong> Each of the five layers gains Strength, Hue Shift and Hue Cycle Speed, each a single slider a radial puppet can drive. Existing materials look the same.</li>
+                        <li class="mb-2"><strong>Pathing, with AudioLink.</strong> Runs light along a black-to-white path you paint, with four independent paths per texture and Fill, Path, Loop and Dashed types. Beat Travel moves it to the beat, and Waveform and Autocorrelator paint live audio along the path.</li>
+                        <li class="mb-2"><strong>Coverage From, on every decal layer.</strong> Decides what makes a decal show, so painted shading on a white background drops straight in from another shader.</li>
+                        <li class="mb-2"><strong>Glitter and Viewer Context, under a new Special Effects section.</strong> Toon did not have a Special Effects section before, since it leaves out the wet and goo effects. It now carries both new layers, with the same controls as Latex Ultra. See the Latex Ultra notes above for the details.</li>
+                    </ul>
+                </div>
 
                 <div class="changelog-entry" data-version="latex-4.1.1">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 4.1.1 - 2026-07-22</h5>

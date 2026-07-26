@@ -254,7 +254,7 @@
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Rendering Mode</strong> - Selects the blend preset: <code>Opaque</code>,
                         <code>Cutout</code>, <code>Fade</code>, or <code>Transparent</code>. This single dropdown drives
-                        blend state, ZWrite, render queue, and the fallback tags. <em>Fade</em> uses straight alpha; <em>Transparent</em> uses premultiplied alpha so
+                        blend state, depth writing, render queue, and the fallback tags. <em>Fade</em> uses straight alpha; <em>Transparent</em> uses premultiplied alpha so
                         specular survives at low opacity (the correct mode for glass and wet-look latex);
                         <em>Cutout</em> uses a hard alpha-clip threshold.</li>
                     <li class="mb-2"><strong>CutOff</strong> - The alpha clip threshold, shown only in Cutout mode.</li>
@@ -590,6 +590,7 @@
                     <li class="mb-2"><strong>Side Offset</strong> - Nudges the left, right, bottom and top edges independently to stretch or crop the decal box.</li>
                     <li class="mb-2"><strong>UV Source</strong> - Which UV layout to place the decal on (the main set, or a secondary set if your mesh has one).</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the Decal Masks texture limits this layer.</li>
+                    <li class="mb-2"><strong>Coverage From</strong> - What decides where the decal shows. Texture Alpha uses the image's own transparency and is the normal choice. Luminance uses how light the image is, Luminance Inverted uses how dark it is, which is what painted shading or muscle definition on a white background needs so those drop straight in from another shader. Ignore Alpha covers the whole decal box, for images whose transparency is unusable.</li>
                     <li class="mb-2"><strong>Color Blend</strong> - How the decal combines with the latex underneath: Normal, Darken, Multiply, Lighten, Screen, Add, Subtract or Overlay.</li>
                     <li class="mb-2"><strong>Strength</strong> - Makes the decal glow, for neon logos or lit signage.</li>
                     <li class="mb-2"><strong>Smoothness Offset</strong> - Makes the decal read glossier (positive) or more matte (negative) than the surrounding latex, so a printed sticker can stand apart from the shine around it.</li>
@@ -647,7 +648,7 @@
                     <h2 class="text-glow-cyan m-0">SPECIAL EFFECTS</h2>
                     <div class="badge">Section 7 of 12</div>
                 </div>
-                <p class="tab-desc">The liquid-latex effects: the soaked / wet look with animated run-off and 3D drips, and the melting goo. These are the sections the VixForge Toon shader leaves out.</p>
+                <p class="tab-desc">The extra effect layers: the soaked / wet look with animated run-off and 3D drips, the melting goo, procedural glitter, and effects that react to where the material is being viewed from. The VixForge Toon shader carries Glitter and Viewer Context, but leaves out the wet and goo effects.</p>
 
                 <h3 class="text-glow-pink opt-group">Wet Effects</h3>
 <p class="opt-note">The soaked look, animated run-off rivulets, and clear 3D drips.</p>
@@ -762,6 +763,46 @@
                     <li class="mb-2"><strong>Floor Pooling</strong> - Spreads landed strands sideways into a
                         puddle.</li>
                 </ul>
+
+                <h3 class="text-glow-pink opt-group">Glitter</h3>
+<p class="opt-note">Tiny flakes scattered across the material, each tilted its own way, so they catch the light one at a time and twinkle as you or the light moves. They are generated in the shader, so there is no texture to make and no resolution to run out of. Once flakes get too small on screen to draw individually they settle into a smooth sheen, so glitter never turns into crawling noise at a distance.</p>
+
+                <p class="opt-note mt-3 mb-2"><strong>The Flakes</strong></p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Master switch for the glitter layer, off by default.</li>
+                    <li class="mb-2"><strong>Anchor</strong> - UV follows your unwrap, so flakes stretch where the UVs stretch. World Space keeps every flake the same real size across the whole avatar, which is usually what you want for an all-over finish.</li>
+                    <li class="mb-2"><strong>Density</strong> / <strong>Flake Size</strong> - How many flakes, and how big each one is.</li>
+                    <li class="mb-2"><strong>Coverage</strong> - What share of the surface gets a flake at all. The number is honest: 0.35 puts one on about 35% of the possible spots.</li>
+                    <li class="mb-2"><strong>Scatter</strong> - How randomly the flakes tilt. Low keeps them lying flat with the surface so they flash together, high sends them everywhere for a rougher, busier sparkle.</li>
+                    <li class="mb-2"><strong>Sharpness</strong> - How briefly each flake flashes, from a broad shimmer to hard, quick pinpricks. It changes the character of the sparkle, not how much of it you get, so both ends of the slider are safe to use.</li>
+                    <li class="mb-2"><strong>Colour</strong> + <strong>Tint</strong> - Tint gives every flake one colour. Iridescent gives each flake its own hue for a holographic finish, with Rainbow Amount setting how far the colours spread. ColorChord takes the colours from the music.</li>
+                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Limits the flakes to part of the material.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> / <strong>AudioLink Amount</strong> - Makes the flakes flare and multiply on the beat. Shown only when AudioLink is enabled.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Glitter Lighting</strong></p>
+                <p class="opt-note">The flakes are lit like a real surface rather than painted on, so they answer to whatever is lighting the room. Lit By chooses which lighting that is.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Lit By</strong> - Natural uses the world's ordinary lights and reflection probes. Light Volumes, LTCGI, VRSL and TechnicallySane each tie the glitter to that one system, so it lights up in worlds running that system and stays dark in worlds that do not. Everything takes light from all of them at once. Always Lit ignores lighting completely, so the sparkle shows even in a pitch black room.</li>
+                    <li class="mb-2"><strong>Brightness</strong> / <strong>Ambient Sparkle</strong> - The flash from direct lights, and the flash from the surrounding room. Turn Ambient Sparkle up if the world has no strong light and the glitter looks dead.</li>
+                    <li class="mb-2"><strong>Minimum Light</strong> - Stops the flakes going completely dark in an unlit corner. Leave it at 0 for glitter that behaves like a real surface.</li>
+                    <li class="mb-2"><strong>Take Light Colour</strong> - Whether the flakes take on the colour of the light hitting them, or keep their own Tint and use only the light's brightness. Turn it down to keep your colour under coloured stage lighting.</li>
+                    <li class="mb-2"><strong>Over Clearcoat</strong> - Where the flakes sit relative to the shine from Polish. At 1 they sit on top and cut through it, so glitter stays crisp on a glossy material. At 0 they sit underneath like flakes in real car paint, dimmed by the coat and fading out at glancing angles. Only appears when Polish is on, and it makes no difference to materials without a clearcoat.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Viewer Context</h3>
+<p class="opt-note">The material can tell where it is being drawn and who is looking at it, and react to that on its own. Nothing here needs an animator, a menu or a parameter, and everyone sees their own version at the same moment.</p>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>Enable</strong> - Master switch, off by default.</li>
+                    <li class="mb-2"><strong>Show</strong> - Only in Mirrors hides the effect from everyone else while you still see it in a mirror, and Never in Mirrors does the reverse. Only in Photos and Never in Photos catch the in-game camera and screenshots, so you can add a detail that appears only in someone's photo, or keep an effect out of every picture taken of you. Only in VR and Only on Desktop split by headset and flatscreen.</li>
+                    <li class="mb-2"><strong>Seen By</strong> - In VR you can send the effect to one eye only. There is no other way to get that look.</li>
+                    <li class="mb-2"><strong>Distance</strong> + <strong>Near Distance</strong> / <strong>Far Distance</strong> - Fades the effect in as someone comes closer, or as they back away, set in metres.</li>
+                    <li class="mb-2"><strong>Face-On Only</strong> - The effect only shows when the surface is turned toward the viewer, so it hides at glancing angles.</li>
+                    <li class="mb-2"><strong>Hidden Level</strong> - What the effect drops to when the conditions are not met. 0 hides it completely, higher values just dim it.</li>
+                    <li class="mb-2"><strong>Affects</strong> - Point it at your emission, your decals, or both.</li>
+                    <li class="mb-2"><strong>Reaction Glow</strong> - An extra colour that rides along with everything above. Pair it with Distance for a material that lights up when somebody leans in.</li>
+                </ul>
+                <p class="opt-note mt-3">Distances and angles are measured from the real viewer, and mirrors are handled properly, so a reflection reacts to where the mirror is looking from rather than lighting up wrongly.</p>
             </div>
 
             <!-- ========================= -->
@@ -806,12 +847,13 @@
                     <h2 class="text-glow-cyan m-0">EMISSIONS</h2>
                     <div class="badge">Section 9 of 12</div>
                 </div>
-                <p class="tab-desc">Five stacked emission layers and a multi-region colour mask. Every layer's AudioLink controls sit inline with that layer and appear only when AudioLink is enabled.</p>
+                <p class="tab-desc">Five stacked emission layers, the Pathing effect, and a multi-region colour mask. Every layer's AudioLink controls sit inline with that layer and appear only when AudioLink is enabled.</p>
 
                 <h3 class="text-glow-pink opt-group">Emission Exposure &amp; Layer 1</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Exposure (All Layers)</strong> - Extra exposure multiplier over every layer for fine bloom control.</li>
                     <li class="mb-2"><strong>Color</strong> + <strong>Map</strong> - HDR tint / intensity and the texture defining where layer 1 emits.</li>
+                    <li class="mb-2"><strong>Strength</strong> / <strong>Hue Shift</strong> / <strong>Hue Cycle Speed</strong> - Brightness and colour for this layer on their own sliders, so a single radial puppet can drive either one straight from your menu without animating an HDR colour across four curves. Hue Cycle Speed rotates the colour on its own with no animator at all.</li>
                     <li class="mb-2"><strong>Layer 1 AudioLink Band</strong> / <strong>Amplitude</strong> / <strong>Color Blend</strong> - Which AudioLink band drives layer 1, how strongly it pulses, and how much AudioLink's colour replaces the emission colour. Shown only when AudioLink is enabled.</li>
                 </ul>
 
@@ -819,7 +861,26 @@
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Enable Layer 2</strong> (and layers 3, 4, 5) - Each adds a fully independent extra emission layer, off by default.</li>
                     <li class="mb-2"><strong>Color</strong> + <strong>Emission Map 2</strong> + <strong>Mask Channel</strong> - HDR tint, texture, and mask channel for each layer (layers 3-5 mirror these controls).</li>
+                    <li class="mb-2"><strong>Strength</strong> / <strong>Hue Shift</strong> / <strong>Hue Cycle Speed</strong> - Every layer gets its own set, so you can put a brightness dial on one layer and a colour wheel on another.</li>
                     <li class="mb-2"><strong>Layer AudioLink Band</strong> / <strong>Amplitude</strong> - Which AudioLink band reacts on each layer and how strongly it modulates that layer's brightness, so you can route bass to one and treble to another. Shown only when AudioLink is enabled.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Pathing</h3>
+                <p class="opt-note">Runs light along a path: chase lights, loading bars, energy running down a limb. Paint the path into a texture as a black-to-white ramp and the glow travels from the black end to the white end. All four channels are read, so one texture carries four separate paths.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Pathing</strong> - Master switch for the effect, off by default.</li>
+                    <li class="mb-2"><strong>Path Gradient</strong> + <strong>Panning</strong> - The black-to-white ramp texture, and how it drifts over time.</li>
+                    <li class="mb-2"><strong>Source</strong> - Read the path from the gradient texture, or pick UV X or UV Y for a straight sweep with no texture at all.</li>
+                    <li class="mb-2"><strong>Blend</strong> - Add glows on top of your other layers, Replace takes over where the path is lit, and Multiply tints them.</li>
+                </ul>
+                <p class="opt-note mt-3 mb-2"><strong>Per Path (Red, Green, Blue, Alpha)</strong></p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Type</strong> - Fill wipes along the path, Path sends one pulse through it, Loop repeats seamlessly, and Dashed marches a dotted line.</li>
+                    <li class="mb-2"><strong>Color</strong> - HDR colour for this path.</li>
+                    <li class="mb-2"><strong>Speed</strong> / <strong>Start Offset</strong> / <strong>Width</strong> / <strong>Softness</strong> - How fast it moves, where it starts, how long the lit part is, and how soft its edges are.</li>
+                    <li class="mb-2"><strong>Gap</strong> - Spacing between dashes, for the Dashed type.</li>
+                    <li class="mb-2"><strong>Steps</strong> - Snaps the movement into that many jumps for a chunky, mechanical feel. Leave at 0 for smooth.</li>
+                    <li class="mb-2"><strong>AudioLink</strong> - Brightness pulses with a band. Beat Travel moves the path to the beat instead of the clock. Waveform and Autocorrelator paint the live audio along the path, so it reads like a scope trace. ColorChord colours it with the notes actually being played. Shown only when AudioLink is enabled.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Multi-Region Color Mask (RGB Zones)</h3>
