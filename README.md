@@ -3,6 +3,7 @@
 [![VRChat SDK](https://img.shields.io/badge/VRChat%20SDK-3.10.3-ff0055?style=for-the-badge&logo=vrchat)](https://vrchat.com/)
 [![Version](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FVixenCreations%2FVixenToolBox%2Fbadge-data%2Fversion.json&style=for-the-badge)](https://github.com/VixenCreations/VixenToolBox/releases/latest)
 [![Downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FVixenCreations%2FVixenToolBox%2Fbadge-data%2Fdownloads.json&style=for-the-badge)](https://github.com/VixenCreations/VixenToolBox/releases)
+[![CodeQL](https://github.com/VixenCreations/VixenToolBox/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/VixenCreations/VixenToolBox/actions/workflows/github-code-scanning/codeql)
 
 ---
 
