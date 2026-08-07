@@ -16,6 +16,34 @@
         .catch(revealPage);
     setTimeout(revealPage, 2000);
 
+    // --- Mobile navigation dropdown (site-wide) ---
+    // Desktop keeps the fixed sidebar. On mobile the sidebar collapses (styles.css)
+    // and this injects a "Menu" toggle that drops the tab list down. Adding the
+    // .js-nav class is what enables the collapse, so if this script never runs the
+    // nav stays visible as a plain list rather than vanishing.
+    const navSidebar = document.querySelector('.sidebar');
+    const navList = navSidebar ? navSidebar.querySelector('.nav-links') : null;
+    if (navSidebar && navList) {
+        const navToggle = document.createElement('button');
+        navToggle.type = 'button';
+        navToggle.className = 'nav-toggle';
+        navToggle.setAttribute('aria-label', 'Toggle navigation menu');
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg><span>Menu</span>';
+        navList.insertAdjacentElement('beforebegin', navToggle);
+        navSidebar.classList.add('js-nav');
+        navToggle.addEventListener('click', () => {
+            const open = navSidebar.classList.toggle('nav-open');
+            navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        navList.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                navSidebar.classList.remove('nav-open');
+                navToggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+    }
+
     // --- Utility: Copy to Clipboard ---
     const handleCopyToClipboard = async (textToCopy, buttonElement) => {
         if (!textToCopy) return;

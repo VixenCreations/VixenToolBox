@@ -351,65 +351,6 @@
                 </ul>
             </div>
 
-            <!-- VixenWear Latex Ultra -->
-            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
-                <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">VixenWear Latex Ultra Shader</h2>
-                    <div class="badge">VixenWear Latex.shader | VixenWearEditor.cs | v2.4.0</div>
-                </div>
-
-                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
-                    A high-fidelity, dual-lobe PBR surface shader engineered for complex synthetic materials. It ships a
-                    full industry-standard GGX stack - <code>D_GGX</code> (Trowbridge-Reitz),
-                    <code>V_SmithJointGGX</code>, <code>F_Schlick</code>, <code>Burley_Diffuse</code>, and a Karis
-                    split-sum (<code>EnvBRDFApprox_AB</code>) for indirect specular - with optional Filament/Frostbite
-                    multi-scatter energy compensation, anisotropy, thin-part transmission, tinted clearcoat, and the
-                    deepest Light Volumes + LTCGI integration of any creator-facing shader on the platform. It ships in
-                    two variants (the base shader plus a tessellation-free <code>VixenWear/Latex Ultra SPS</code> clone
-                    for VRCFury SPS patching), and 2.4.0 adds a full liquid surface system: a master Polish gate,
-                    Poiyomi/Mochie reflection &amp; specular masks, a wet / run-off layer with geometry water droplets,
-                    and gravity-aligned melting goo.
-                </p>
-
-                <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2">
-                        <strong>Physical Lighting Model:</strong>
-                        A full GGX BRDF stack with anisotropic latex-stretch specular, thin-part transmission, tinted
-                        dielectric clearcoat, geometric specular anti-aliasing, and a VRChat mirror-camera fix that reads
-                        the real rendering camera for per-eye-correct specular and parallax in mirrors.
-                    </li>
-                    <li class="mb-2">
-                        <strong>Texture Packing &amp; Compatibility:</strong>
-                        A single packed RGBA PBR map with Poiyomi / Substance / Marmoset channel selectors, Mochie
-                        reflection &amp; specular masks with a one-click setup button, and a Standard-style render-mode
-                        selector (Opaque / Cutout / Fade / Transparent).
-                    </li>
-                    <li class="mb-2">
-                        <strong>Surface &amp; World Integration:</strong>
-                        A multi-region color mask, a secondary emission layer, dual multi-layer matcaps, parallax backed
-                        by DX11 tessellation, deep Light Volumes and LTCGI mix controls, and the VRSL stage-hijack
-                        protocol with DMX geo-warping.
-                    </li>
-                    <li class="mb-2">
-                        <strong>Liquid System &amp; Outline:</strong>
-                        A master Polish gate, a wet / run-off layer with PC-only geometry water droplets, gravity-aligned
-                        melting goo, and a keyword-gated backface outline that compiles at zero cost when off.
-                    </li>
-                    <li class="mb-2">
-                        <strong>AudioLink, HUD &amp; Kinetics:</strong>
-                        Runtime-gated AudioLink, the God Tier Cybernetics HUD, a flying-shard kinetic vertex engine, a
-                        kinetic UV engine, and a build-time variant stripper with per-tab copy/paste/reset inspector
-                        tools.
-                    </li>
-                </ul>
-
-                <p class="m-0" style="line-height: 1.6; color: #bfa8d2;">
-                    Every option across all six inspector tabs (BASE, SURFACE, POLISH, INTEGRATION, AUDIOLINK, STAGE) is
-                    documented control-by-control, with full editor screenshots, on the dedicated
-                    <a href="shaderdocs.html" style="color: var(--neon-cyan); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--forge-fire);">Shader Docs &rarr; VixenWear Latex Ultra Inspector Reference</a>.
-                </p>
-            </div>
-
             <!-- PHYSBONE TOPOLOGY MAPPER -->
             <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">

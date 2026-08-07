@@ -258,6 +258,10 @@
                         specular survives at low opacity (the correct mode for glass and wet-look latex);
                         <em>Cutout</em> uses a hard alpha-clip threshold.</li>
                     <li class="mb-2"><strong>CutOff</strong> - The alpha clip threshold, shown only in Cutout mode.</li>
+                    <li class="mb-2"><strong>Use Mask Texture</strong> + <strong>Cutout Mask</strong> +
+                        <strong>Mask Channel</strong> - Cutout mode normally reads the Albedo's alpha. If your texture has
+                        no alpha, turn this on and give it a black-and-white mask instead: white keeps the pixel, black
+                        cuts it away. Shown only in Cutout mode.</li>
                     <li class="mb-2"><strong>Color</strong> - The main colour tint multiplied into the albedo. In Fade and
                         Transparent its alpha sets the opacity, so a material can go see-through with no texture at all.</li>
                     <li class="mb-2"><strong>Albedo</strong> - The main texture slot. RGB is the albedo;
@@ -265,6 +269,13 @@
                         Fade / Transparent. Leave it empty to set opacity from the Color alone.</li>
                     <li class="mb-2"><strong>Minimum Brightness</strong> - A floor on the final lit result so the surface
                         never crushes to pure black in unlit or very dark worlds.</li>
+                    <li class="mb-2"><strong>Use Alpha Map</strong> + <strong>Alpha Map</strong> +
+                        <strong>Map Channel</strong> - Drives opacity from a separate texture instead of the Albedo's alpha,
+                        handy when your Albedo has no alpha channel. White stays solid, black turns invisible. Pick the
+                        channel that holds the opacity, or leave it on Auto. Shown in Fade and Transparent modes.</li>
+                    <li class="mb-2"><strong>Transparency</strong> - Fades the whole material out on one slider (0 solid,
+                        1 invisible), so a single menu control can dissolve it. Works in Fade and Transparent; Opaque and
+                        Cutout ignore it.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">UV Animation</h3>
@@ -297,6 +308,23 @@
                     <li class="mb-2"><strong>Detail Strength</strong> - Intensity of the micro-detail normal.</li>
                     <li class="mb-2"><strong>Detail UV Tiling</strong> - Independent tiling for the detail map so
                         micro-texture can repeat at a different scale than the main UVs.</li>
+                    <li class="mb-2"><strong>Card Normal Smoothing</strong> + <strong>Smoothing Pivot</strong> - For hair
+                        cards, fur planes and other flat pieces: bends the lighting normals outward from the pivot so the
+                        whole shape lights as one volume instead of a stack of separate cards. Set the pivot to the centre
+                        of the shape, in object space.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Bent Normals</h3>
+                <p class="opt-note">Bake a bent normal map next to your AO in Substance, Marmoset or Blender and drop it
+                    here. Ambient light then follows the shape of the surface instead of washing over it, so crevices stay
+                    dark and forms read solid. Off by default.</p>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns the bent-normal path on.</li>
+                    <li class="mb-2"><strong>Map</strong> - The bent normal map.</li>
+                    <li class="mb-2"><strong>Ambient Shaping</strong> - How strongly the bent normal shapes the ambient
+                        light falling on the surface.</li>
+                    <li class="mb-2"><strong>Reflection Shaping</strong> - How strongly it shapes what the surface
+                        reflects from its surroundings.</li>
                 </ul>
             </div>
             <!-- ========================= -->
@@ -318,10 +346,6 @@
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Packed PBR Mask</strong> - The texture slot for the packed map.</li>
-                    <li class="mb-2"><strong>Reflection + Specular Masks</strong> - Reads two more channels off the
-                        packed map: a Reflection Mask that dims environment / probe specular (clearcoat env, Light
-                        Volume, LTCGI), and a Specular Mask that dims direct-light highlights. Matcaps keep their own
-                        masks and are unaffected.</li>
                     <li class="mb-2"><strong>Global Metallic</strong> - Multiplies the packed map's metallic channel
                         (0 = fully non-metallic regardless of the map, 1 = use the map as authored). Defaults to 0
                         because latex is a dielectric.</li>
@@ -329,7 +353,9 @@
                         (default 0.5), a quick way to dial the whole surface glossier or more matte.</li>
                 </ul>
 
-                <h3 class="text-glow-pink opt-group">Packed PBR Channels</h3>
+                <h3 class="text-glow-pink opt-group">Channel Mapping</h3>
+                <p class="opt-note">Tell each PBR property which channel of the Packed PBR Mask to read. Leave it alone
+                    for a VixenWear-native map, or hit Mochie Setup to match a Mochie / Poiyomi map in one click.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Metallic Channel</strong> / <strong>Invert Metallic</strong> - Which channel
                         supplies metalness, and a flip for sources stored inverted.</li>
@@ -337,38 +363,55 @@
                         - Which channel supplies smoothness; enable the invert when the channel holds roughness.</li>
                     <li class="mb-2"><strong>AO Channel</strong> - Which channel supplies ambient occlusion, or
                         <code>None</code> to disable AO sampling.</li>
-                    <li class="mb-2"><strong>Height Channel</strong> - Which channel supplies the displacement / height
-                        value used by parallax and tessellation.</li>
-                    <li class="mb-2"><strong>Reflection Mask Channel</strong> / <strong>Invert Reflection Mask</strong> /
-                        <strong>Reflection Mask Strength</strong> - Channel, invert, and strength for the
-                        environment / reflection mask.</li>
-                    <li class="mb-2"><strong>Specular Mask Channel</strong> / <strong>Invert Specular Mask</strong> /
-                        <strong>Specular Mask Strength</strong> - Channel, invert, and strength for the direct-highlight
-                        mask. Channel defaults match Mochie packing (B reflection, A specular).</li>
                     <li class="mb-2"><strong>Mochie Metallic Map Setup</strong> - One-click translation: maps a
                         Mochie / Poiyomi "Metallic Maps" texture (R Metallic, G Smoothness, B Reflection Mask, A Specular
                         Mask) onto the packed slot, sets the channels, disables AO, and enables the masks. Drop the
                         Mochie map into <em>Packed PBR Mask</em> first.</li>
                 </ul>
 
-                <h3 class="text-glow-pink opt-group">Reflection From Mask</h3>
+                <h3 class="text-glow-pink opt-group">Reflection &amp; Specular Masks</h3>
+                <p class="opt-note">Reads two more channels off the packed map: a Reflection Mask that dims what the
+                    surface reflects from the world (probe / environment specular, clearcoat env, Light Volume, LTCGI),
+                    and a Specular Mask that dims direct-light highlights. Matcaps keep their own masks and are
+                    unaffected. Channel defaults match Mochie packing (B reflection, A specular).</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Reflection From Mask</strong> - Turns the black-and-white Reflection Mask into real metallic reflections: white areas go shiny. The roughness is worked out from your base texture and normal map, so no separate smoothness map is needed. Off by default.</li>
-                    <li class="mb-2"><strong>Reflection Roughness</strong> - How sharp those reflections read; lower for a mirror finish.</li>
+                    <li class="mb-2"><strong>Enable Masks</strong> - Turns the reflection and specular masks on.</li>
+                    <li class="mb-2"><strong>Reflection Mask</strong> - <strong>Channel</strong>, <strong>Invert</strong>
+                        and <strong>Strength</strong> for the environment / reflection mask.</li>
+                    <li class="mb-2"><strong>Specular Mask</strong> - <strong>Channel</strong>, <strong>Invert</strong>
+                        and <strong>Strength</strong> for the direct-highlight mask.</li>
+                    <li class="mb-2"><strong>Reflection From Mask</strong> - Turns the black-and-white Reflection Mask
+                        into real metallic reflections: white areas go shiny. The roughness is worked out from your base
+                        texture and normal map, so no separate smoothness map is needed. Off by default.</li>
+                    <li class="mb-2"><strong>Reflection Roughness</strong> - How sharp those reflections read; lower for a
+                        mirror finish.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Surface Shaping</h3>
+                <p class="opt-note"><strong>Height</strong> (sub-section) - Where the height data comes from. By default
+                    it reads a channel of the Packed PBR Mask (<strong>Packed Mask Channel</strong>). Turn on
+                    <strong>Use Separate Map</strong> to load a standalone <strong>Height Map</strong> instead, with its
+                    own <strong>Map Channel</strong>, the way Substance and Marmoset export it. Height drives Parallax,
+                    Displacement and Cavity.</p>
                 <ul class="custom-list m-0 ps-4">
                     <li class="mb-2"><strong>Specular Occlusion</strong> - How much AO also occludes specular /
                         reflections, preventing glow in cavities that should be shadowed.</li>
-                    <li class="mb-2"><strong>Parallax Depth</strong> - Depth of the 50-step adaptive gradient raymarch
-                        that fakes height inside the surface. 0 disables parallax.</li>
+                    <li class="mb-2"><strong>Cavity</strong> + <strong>Cavity Radius</strong> + <strong>Cavity Gloss</strong>
+                        - Sharpens the fine detail in your height source: pores, seams and stitching sink into shadow
+                        while ridges catch the light. Radius picks how fine that detail is (small for grain and skin,
+                        larger for folds), and Cavity Gloss lets those creases read glossier or more matte. Needs a height
+                        source above.</li>
+                    <li class="mb-2"><strong>Cavity Reflection Blur</strong> / <strong>Cavity Reflection Occlusion</strong>
+                        - Use the same cavity detail on the reflection: Blur roughens it in the creases so it is not a
+                        clean mirror, Occlusion dims it there. Both leave the raised areas sharp.</li>
+                    <li class="mb-2"><strong>Parallax Depth</strong> - Depth of the adaptive raymarch that fakes height
+                        inside the surface. 0 disables parallax.</li>
                     <li class="mb-2"><strong>Displacement Strength</strong> - Real geometric height pushed along the
-                        normal from the height channel (requires tessellation to have vertices to move).</li>
+                        normal from the height source (needs tessellation to have vertices to move).</li>
                     <li class="mb-2"><strong>Tessellation Detail</strong> - How densely DX11 hardware tessellation
                         subdivides the mesh for displacement, from 0 (coarse / cheap) to 1 (dense / smoother). Distance
                         and screen-size adaptive, and capped so it can't run away. Leave at 0 if you aren't using
-                        Displacement. Base shader only; the SPS variant has no tessellation stage.</li>
+                        Displacement.</li>
                 </ul>
             </div>
             <!-- ========================= -->
@@ -417,12 +460,47 @@
                         Effectively off at its default; lower it to clamp harder.</li>
                 </ul>
 
+                <p class="opt-note mt-3 mb-2"><strong>Micro Lighting</strong></p>
+                <p class="opt-note">Brightens the raised detail so peaks catch a little more light. It is the light-side
+                    companion to Micro Shading over in Shadow Detail, which darkens the creases.</p>
+                <ul class="custom-list m-0 ps-4 mb-3">
+                    <li class="mb-2"><strong>Peak Light</strong> - Master strength of the peak highlight.</li>
+                    <li class="mb-2"><strong>Scene Lights</strong> / <strong>Ambient</strong> / <strong>Light Volumes</strong> /
+                        <strong>LTCGI</strong> / <strong>VRSL</strong> - Trim the effect per lighting system, so you can
+                        lean on it in one and ease off in another.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Cavity Lighting</strong></p>
+                <p class="opt-note">Makes the Cavity detail react to the light direction: raised areas catch the light and
+                    creases fall into shadow as the light rakes across, on top of the flat Cavity shading. Needs Cavity
+                    turned on in SURFACE.</p>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>Strength</strong> - Master strength of the directional cavity response.</li>
+                    <li class="mb-2"><strong>Scene Lights</strong> / <strong>Ambient</strong> - Trim it separately for the
+                        scene lights and the ambient.</li>
+                </ul>
+
                 <h3 class="text-glow-pink opt-group">Shadow Detail</h3>
 <p class="opt-note">Occlusion and shadow, gathered in one place. AO Strength and Shadow Hardness always apply; the dedicated maps below stay off until you enable them and read through the Albedo sampler, so they cost nothing against the texture budget.</p>
 
                 <ul class="custom-list m-0 ps-4 mb-3">
                     <li class="mb-2"><strong>AO Strength</strong> - How strongly the surface map's packed AO channel darkens ambient and indirect light. 0 = off, 1 = full, higher deepens the shading in creases.</li>
                     <li class="mb-2"><strong>Shadow Hardness</strong> - Sharpness of the self-shadowing cast inside recessed seams by the parallax raymarch.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Micro Shading</strong></p>
+                <p class="opt-note">Makes occlusion react to where the light is coming from, so creases go dark when the
+                    light rakes in from the side and open up when it hits head on. Without it, occlusion dims everything
+                    evenly and reads as dirt painted on.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Strength</strong> - Master strength of the directional occlusion.</li>
+                    <li class="mb-2"><strong>Scene Lights</strong> / <strong>Ambient</strong> / <strong>Light Volumes</strong> /
+                        <strong>LTCGI</strong> / <strong>VRSL</strong> - Trim it per lighting system, so you can lean on it
+                        in the ambient and ease off under a stage rig.</li>
+                    <li class="mb-2"><strong>Assumed Direction</strong> - Scene lights, ambient and Light Volumes tell the
+                        material which way their light arrives; LTCGI and VRSL do not, so pick what to assume for those
+                        two. <em>Above</em> suits ceiling panels and overhead rigs, <em>Camera</em> keys it to where you
+                        are looking from, and <em>Surface</em> keeps it flat and just deepens the creases.</li>
                 </ul>
 
                 <p class="opt-note mt-3 mb-2"><strong>Occlusion Map</strong></p>
@@ -620,6 +698,9 @@
                         the coat.</li>
                     <li class="mb-2"><strong>Thin Film Thickness</strong> - Optical thickness of the thin film, which
                         sets which wavelengths shift and therefore the iridescent hue.</li>
+                    <li class="mb-2"><strong>Cavity Gloss Blur</strong> / <strong>Cavity Gloss Occlusion</strong> - Use
+                        the Cavity surface detail to break up the clearcoat reflection: Blur roughens the mirror in the
+                        creases, Occlusion dims it there. Needs Cavity turned on in SURFACE.</li>
                 </ul>
             </div>
             <!-- ========================= -->
@@ -630,7 +711,7 @@
                     <h2 class="text-glow-cyan m-0">SPECIAL EFFECTS</h2>
                     <div class="badge">Section 7 of 12</div>
                 </div>
-                <p class="tab-desc">The extra effect layers: the soaked / wet look with animated run-off and 3D drips, the melting goo, procedural glitter, and effects that react to where the material is being viewed from. The VixForge Toon shader carries Glitter and Viewer Context, but leaves out the wet and goo effects.</p>
+                <p class="tab-desc">The extra effect layers: the soaked / wet look with animated run-off and 3D drips, the melting goo, procedural glitter, an animated flipbook overlay, a true infinity mirror, a living inner-cosmos volume, and effects that react to where the material is being viewed from. The VixForge Toon shader carries everything here except the wet and goo effects, which are liquid-latex tricks that do not fit a toon surface.</p>
 
                 <h3 class="text-glow-pink opt-group">Wet Effects</h3>
 <p class="opt-note">The soaked look, animated run-off rivulets, and clear 3D drips.</p>
@@ -785,6 +866,92 @@
                     <li class="mb-2"><strong>Reaction Glow</strong> - An extra colour that rides along with everything above. Pair it with Distance for a material that lights up when somebody leans in.</li>
                 </ul>
                 <p class="opt-note mt-3">Distances and angles are measured from the real viewer, and mirrors are handled properly, so a reflection reacts to where the mirror is looking from rather than lighting up wrongly.</p>
+
+                <h3 class="text-glow-pink opt-group">Flipbook</h3>
+                <p class="opt-note">An animated overlay that plays across the surface, then blends over the material like
+                    a decal. Drop a GIF or a set of images onto Frames and it bakes into one flipbook; or point it at a
+                    sprite-sheet laid out in a grid. Off by default, so existing materials are untouched.</p>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>Enable</strong> - Master switch for the flipbook layer.</li>
+                    <li class="mb-2"><strong>Is Spritesheet</strong> - Off reads an imported flipbook (a GIF or image
+                        sequence baked into one array, dropped onto <strong>Frames</strong>). On reads a single
+                        <strong>Sheet</strong> texture laid out in a grid, where you set <strong>Columns</strong>,
+                        <strong>Rows</strong> and <strong>Frame Count</strong>.</li>
+                    <li class="mb-2"><strong>Speed (FPS)</strong> - Playback rate in frames per second.</li>
+                    <li class="mb-2"><strong>Tint</strong> - Colour multiplied over the flipbook.</li>
+                    <li class="mb-2"><strong>Position / Scale / Rotation / Side Offset</strong> - Where the flipbook sits,
+                        how big it is, its angle, and independent edge nudges. Easiest to set by dragging the gizmo in the
+                        Scene view. Rotation Speed slowly spins it over time.</li>
+                    <li class="mb-2"><strong>UV Source</strong> - Which UV layout to place it on.</li>
+                    <li class="mb-2"><strong>Coverage From</strong> - What decides where the flipbook shows: the image's
+                        Texture Alpha (the normal choice), its Luminance, Luminance Inverted (for painted art on a white
+                        background), or Ignore Alpha to cover the whole box.</li>
+                    <li class="mb-2"><strong>Blend</strong> - How it combines with the latex underneath: Normal, Darken,
+                        Multiply, Lighten, Screen, Add, Subtract or Overlay.</li>
+                    <li class="mb-2"><strong>Opacity</strong> - Fades the whole overlay in and out.</li>
+                    <li class="mb-2"><strong>Mirror UV / Symmetry / Tiled</strong> - Flip it, restrict it to one side,
+                        mirror it across the body centre, or repeat it across the surface.</li>
+                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Limits the flipbook to part
+                        of the material.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Infinity Mirror</h3>
+                <p class="opt-note">A true infinity mirror. The surface reads as glass over a light that reflects away
+                    into the distance, a receding tunnel of copies that shifts as you move around it. Off by default.
+                    Idea and special thanks to Ghostpaw.</p>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>Enable</strong> - Master switch for the effect.</li>
+                    <li class="mb-2"><strong>Pattern</strong> + <strong>Pattern Texture</strong> - What sits at the bottom
+                        of the tunnel: a Ring of Lights, a Dot Grid, or your own Texture.</li>
+                    <li class="mb-2"><strong>Glow Colour</strong> - HDR colour of the lights.</li>
+                    <li class="mb-2"><strong>Reflections</strong> - How many copies deep the tunnel goes.</li>
+                    <li class="mb-2"><strong>Depth</strong> / <strong>Fade Per Layer</strong> / <strong>Recession</strong>
+                        - How far back the tunnel reaches, how quickly each copy dims, and how fast the copies shrink into
+                        the distance.</li>
+                    <li class="mb-2"><strong>Vanishing Point</strong> - Where the tunnel recedes toward on the surface.</li>
+                    <li class="mb-2"><strong>Rainbow Depth</strong> - Shifts the hue deeper into the tunnel for a spectral
+                        falloff.</li>
+                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Limits the effect to part of
+                        the material.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> / <strong>AudioLink Amount</strong> - Pulses the glow
+                        with a band. Shown only when AudioLink is enabled.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Inner Cosmos</h3>
+                <p class="opt-note">The surface becomes a thin window onto a living volume of energy with real depth: look
+                    into it from any angle and it parallaxes and swirls like you are peering into a contained galaxy, and
+                    it never repeats. Off by default. Original effect designed by Claude (Opus 4.8) for VixForge.</p>
+                <ul class="custom-list m-0 ps-4 mb-3">
+                    <li class="mb-2"><strong>Enable</strong> - Master switch for the effect.</li>
+                    <li class="mb-2"><strong>Deep Colour</strong> + <strong>Bright Colour</strong> - The two colours that
+                        set the mood, from the far depths to the bright core.</li>
+                    <li class="mb-2"><strong>Brightness</strong> / <strong>Density</strong> / <strong>Contrast</strong> -
+                        Overall glow, how cloudy the volume is, and how hard the light and dark separate.</li>
+                    <li class="mb-2"><strong>Swirl</strong> / <strong>Rotation</strong> / <strong>Spin</strong> - The
+                        spiral, a static angle, and a continuous rotation over time.</li>
+                    <li class="mb-2"><strong>Scale</strong> / <strong>Warp</strong> / <strong>Depth</strong> /
+                        <strong>Flow Speed</strong> - Size of the pattern, how much it twists, how far into the surface it
+                        reaches, and how fast it drifts.</li>
+                    <li class="mb-2"><strong>Stars</strong> - Turn up for a night-sky sprinkle of stars.</li>
+                    <li class="mb-2"><strong>Quality</strong> - Raise only if you see banding.</li>
+                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Limits the effect to part of
+                        the material.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> / <strong>AudioLink Amount</strong> - Pulses the
+                        brightness with a band. Shown only when AudioLink is enabled.</li>
+                </ul>
+                <p class="opt-note mt-3 mb-2"><strong>Living Energy (AudioLink)</strong></p>
+                <p class="opt-note">A separate layer that only wakes up with AudioLink and turns the whole volume into
+                    cosmic energy that moves to the music. Shown only when AudioLink is enabled.</p>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>Living Energy</strong> + <strong>Reaction Band</strong> - Turns the layer on
+                        and picks the band it listens to.</li>
+                    <li class="mb-2"><strong>Comet Tails</strong> - Streams tails off the stars along the way the galaxy
+                        spins.</li>
+                    <li class="mb-2"><strong>Arm Whip</strong> - Whips the spiral arms out on the beat.</li>
+                    <li class="mb-2"><strong>Cosmic Breath</strong> - Breathes the whole field in and out.</li>
+                    <li class="mb-2"><strong>Depth Spectrum</strong> - Lights the depths bass to treble, near to far.</li>
+                    <li class="mb-2"><strong>Flare Colour</strong> - HDR colour for the beat flares.</li>
+                </ul>
             </div>
 
             <!-- ========================= -->
@@ -795,30 +962,41 @@
                     <h2 class="text-glow-cyan m-0">OUTLINES</h2>
                     <div class="badge">Section 8 of 12</div>
                 </div>
-                <p class="tab-desc">A keyword-gated backface-extrusion outline with an AudioLink emission boost.</p>
+                <p class="tab-desc">Two stacked outlines around the silhouette, an inner and an outer, each with its own colour, glow, width, scrolling texture and AudioLink boost.</p>
 
                 <p class="opt-note">
-                    The outline renders as a backface extrusion along the world normal, ahead of
-                    the main forward pass. The off state is the no-keyword default, so a material without outlines
-                    compiles at zero added cost.
+                    Each outline draws as a shell ahead of the main pass. Width is a real thickness that grows the line as
+                    you raise it and shrinks naturally as the camera moves away, like a real object. Both are off by
+                    default, so a material without outlines costs nothing.
                 </p>
+
+                <h3 class="text-glow-pink opt-group">Outline 1</h3>
+                <p class="opt-note">The inner line around the silhouette.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns the inner outline on.</li>
+                    <li class="mb-2"><strong>Color</strong> - Solid colour of the line.</li>
+                    <li class="mb-2"><strong>Emission</strong> - HDR glow colour added on top for a neon edge.</li>
+                    <li class="mb-2"><strong>Width</strong> - Real thickness of the line; grows as you raise it and shrinks
+                        with distance.</li>
+                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Optional mask (and channel)
+                        restricting the outline to painted regions; set the channel to <code>None</code> for an even line
+                        all the way round.</li>
+                    <li class="mb-2"><strong>Texture</strong> + <strong>Texture Scroll</strong> - Flow a pattern through
+                        the line, and scroll it in X / Y over time.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> + <strong>AudioLink Emission Boost</strong> - Which
+                        band drives the line, and how strongly it pumps the glow.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Outline 2 (Outer)</h3>
+                <p class="opt-note">A second line sitting just outside Outline 1, for a two-tone edge, say a coloured inner
+                    line with a black outer one. It has the same controls as Outline 1 and always sits outside it, so its
+                    Width adds on top.</p>
                 <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Enable</strong> - Turns the backface outline pass on.</li>
-                    <li class="mb-2"><strong>Color</strong> - Solid color of the outline shell.</li>
-                    <li class="mb-2"><strong>Emission</strong> - HDR glow color added to the outline
-                        for a neon edge.</li>
-                    <li class="mb-2"><strong>Width</strong> - Extrusion thickness along the normal.
-                        Auto-scales with eye depth so it stays a constant visual thickness.</li>
-                    <li class="mb-2"><strong>Max Width</strong> - Caps the apparent width at
-                        distance so the outline doesn't balloon far from camera.</li>
-                    <li class="mb-2"><strong>View Push</strong> - A small view-space offset
-                        to reduce z-fighting between the shell and the surface.</li>
-                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Optional
-                        mask (and channel) restricting the outline to painted regions; set the channel to
-                        <code>None</code> for a uniform outline.</li>
-                    <li class="mb-2"><strong>AudioLink Band</strong> - Which AudioLink band drives the outline.</li>
-                    <li class="mb-2"><strong>AudioLink Emission Boost</strong> - How strongly that band pumps the
-                        outline emission.</li>
+                    <li class="mb-2"><strong>Enable</strong> - Turns the outer outline on.</li>
+                    <li class="mb-2"><strong>Color</strong>, <strong>Emission</strong>, <strong>Width</strong>,
+                        <strong>Mask</strong> + <strong>Mask Channel</strong>, <strong>Texture</strong> +
+                        <strong>Texture Scroll</strong>, <strong>AudioLink Band</strong> + <strong>AudioLink Emission
+                        Boost</strong> - The same controls as Outline 1, for the outer line.</li>
                 </ul>
             </div>
             <!-- ========================= -->
@@ -892,11 +1070,32 @@
                     <h2 class="text-glow-cyan m-0">MATCAPS</h2>
                     <div class="badge">Section 10 of 12</div>
                 </div>
-                <p class="tab-desc">Up to five stacked material-capture layers with a shared projection setting. Each layer has its own Tiling &amp; Movement and Offsets sub-sections, and can be frozen to read as part of the material rather than a sliding reflection.</p>
+                <p class="tab-desc">Up to five stacked material-capture layers with a shared projection setting, plus a Car Paint look. Each layer has its own Tiling &amp; Movement and Offsets sub-sections, and can be frozen to read as part of the material rather than a sliding reflection.</p>
 
                 <h3 class="text-glow-pink opt-group">Global Settings</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Projection</strong> - Blends matcap sampling between camera-aligned and mesh-aligned. 0 = pure camera-aligned (sliding / reflective), 1 = pure mesh-UV-aligned (glued to the geometry). Higher values pin the matcap to the surface and reduce the sliding feeling as the camera moves. Applies to every layer; for a per-layer lock, use that layer's Freeze instead.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Car Paint</h3>
+                <p class="opt-note">A layered paint look. The Base and Flip colours travel with your view for a
+                    pearlescent flip-flop, metallic flake sparkles at grazing angles, and Gloss sets the wet clearcoat
+                    shine. A matcap layer with its <strong>Blend Mode</strong> set to <code>CarPaint</code> feeds into it.
+                    Off by default.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> + <strong>Amount</strong> - Turns the look on and sets how
+                        strongly it takes over.</li>
+                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Paints the look onto part of
+                        the material only.</li>
+                    <li class="mb-2"><strong>Base Colour</strong> + <strong>Flip Colour</strong> - The two colours of the
+                        flip-flop, seen face-on and at a grazing angle.</li>
+                    <li class="mb-2"><strong>Flip Amount</strong> + <strong>Flip Falloff</strong> - How much the colour
+                        shifts toward the Flip Colour, and how tightly that shift hugs the grazing edge.</li>
+                    <li class="mb-2"><strong>Flake Colour</strong> + <strong>Flake Sparkle</strong> + <strong>Flake
+                        Density</strong> + <strong>Flake Sharpness</strong> - Colour, strength, count and crispness of the
+                        metallic flake.</li>
+                    <li class="mb-2"><strong>Gloss Smoothness</strong> + <strong>Gloss Metallic</strong> - The wet
+                        clearcoat shine over the paint.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Matcap 1</h3>
@@ -907,7 +1106,7 @@
                     <li class="mb-2"><strong>Tint</strong> - Colour tint applied to the matcap.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Rotates the matcap sample.</li>
                     <li class="mb-2"><strong>Intensity</strong> - Brightness of the layer, now up to 6 for a strong, over-driven glow.</li>
-                    <li class="mb-2"><strong>Blend Mode</strong> - How the layer combines: <code>Add</code>, <code>Replace</code>, or <code>Multiply</code>.</li>
+                    <li class="mb-2"><strong>Blend Mode</strong> - How the layer combines: <code>Add</code>, <code>Replace</code>, <code>Multiply</code>, or <code>CarPaint</code>, which drives the layer through the Car Paint group above.</li>
                     <li class="mb-2"><strong>Opacity</strong> - Fades the whole layer in and out over the base. Pair it with <code>Multiply</code> or <code>Replace</code> to cover the base and read as latex; <code>Add</code> only lays highlights on top. Full by default.</li>
                     <li class="mb-2"><strong>Lighting Mix</strong> - How much scene lighting modulates the layer versus reading it as a pure unlit overlay.</li>
                 </ul>

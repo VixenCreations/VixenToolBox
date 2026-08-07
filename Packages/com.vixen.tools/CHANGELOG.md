@@ -5,6 +5,14 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.13.1] - 2026-08-07
+*Hub Maint Removed Partners links and code*
+
+### Removed
+* **Hub:** Removed the Partnership tab, due to conflicting values and morals we are no longer partnered with Engima Industries and will no longer be supporting their needs.
+* **Hub:** Removed the ShaderDoc Tab, This is now packaged seperately with the Gumroad products.
+* **VixForge Ecosystem:** Removed TechnicallySane's Integrations completely due to licensing compliance.
+
 ## [2.12.0] - 2026-07-11
 
 *Adds the Animator Forge, a new avatar tool that both diagnoses broken animators and builds fully-rigged toggles for you. New avatar bases routinely ship with FX controllers whose Sit/Action layers reference VRChat driver parameters (like `Seated`) that were never declared, spamming the SDK panel with "uses parameter which does not exist" errors. Animator Forge finds those and a whole family of related problems, and its Forge side generates a complete toggle (parameter, menu control, FX layer and states, animation clips) in one click, matched to your avatar's own Write Defaults convention. Editor tooling only; Built-in Render Pipeline / VRChat, as always.*

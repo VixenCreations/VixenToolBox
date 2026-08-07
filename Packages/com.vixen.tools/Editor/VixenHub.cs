@@ -314,7 +314,7 @@ namespace VixenTools.Editor
 
     public class VixenHub : EditorWindow
     {
-        private enum TabMode { News, Partners, Dashboard, CoreModules, SupportedModules, ShaderDocs, MetricsDocs, Network, Support, Changelog }
+        private enum TabMode { News, Dashboard, CoreModules, SupportedModules, MetricsDocs, Network, Support, Changelog }
         private TabMode _currentMode = TabMode.News;
 
         private const string PackageRoot = "Packages/com.vixencreations.vixens-toolbox/";
@@ -335,11 +335,9 @@ namespace VixenTools.Editor
         private int _selectedChangelogIndex = 0;
 
         private Button _btnNews;
-        private Button _btnPartners;
         private Button _btnDashboard;
         private Button _btnCoreModules;
         private Button _btnSupportedModules;
-        private Button _btnShaderDocs;
 #if UDON
         private Button _btnMetricsDocs;
 #endif
@@ -454,11 +452,9 @@ namespace VixenTools.Editor
             tabContainer.style.flexDirection = FlexDirection.Row;
 
             _btnNews = new Button(() => SwitchMode(TabMode.News)) { text = "News" };
-            _btnPartners = new Button(() => SwitchMode(TabMode.Partners)) { text = "Partners" };
             _btnDashboard = new Button(() => SwitchMode(TabMode.Dashboard)) { text = "Architecture" };
             _btnCoreModules = new Button(() => SwitchMode(TabMode.CoreModules)) { text = "Core Modules" };
             _btnSupportedModules = new Button(() => SwitchMode(TabMode.SupportedModules)) { text = "Supported Modules" };
-            _btnShaderDocs = new Button(() => SwitchMode(TabMode.ShaderDocs)) { text = "Shader Pipeline" };
 #if UDON
             _btnMetricsDocs = new Button(() => SwitchMode(TabMode.MetricsDocs)) { text = "Metrics Engine" };
 #endif
@@ -467,11 +463,9 @@ namespace VixenTools.Editor
             _btnChangelog = new Button(() => SwitchMode(TabMode.Changelog)) { text = "Changelogs" };
 
             _btnNews.AddToClassList("tab-btn");
-            _btnPartners.AddToClassList("tab-btn");
             _btnDashboard.AddToClassList("tab-btn");
             _btnCoreModules.AddToClassList("tab-btn");
             _btnSupportedModules.AddToClassList("tab-btn");
-            _btnShaderDocs.AddToClassList("tab-btn");
 #if UDON
             _btnMetricsDocs.AddToClassList("tab-btn");
 #endif
@@ -480,11 +474,9 @@ namespace VixenTools.Editor
             _btnChangelog.AddToClassList("tab-btn");
 
             tabContainer.Add(_btnNews);
-            tabContainer.Add(_btnPartners);
             tabContainer.Add(_btnDashboard);
             tabContainer.Add(_btnCoreModules);
             tabContainer.Add(_btnSupportedModules);
-            tabContainer.Add(_btnShaderDocs);
 #if UDON
             tabContainer.Add(_btnMetricsDocs);
 #endif
@@ -520,11 +512,9 @@ namespace VixenTools.Editor
             _currentMode = mode;
 
             _btnNews.RemoveFromClassList("tab-btn-active"); _btnNews.AddToClassList("tab-btn-inactive");
-            _btnPartners.RemoveFromClassList("tab-btn-active"); _btnPartners.AddToClassList("tab-btn-inactive");
             _btnDashboard.RemoveFromClassList("tab-btn-active"); _btnDashboard.AddToClassList("tab-btn-inactive");
             _btnCoreModules.RemoveFromClassList("tab-btn-active"); _btnCoreModules.AddToClassList("tab-btn-inactive");
             _btnSupportedModules.RemoveFromClassList("tab-btn-active"); _btnSupportedModules.AddToClassList("tab-btn-inactive");
-            _btnShaderDocs.RemoveFromClassList("tab-btn-active"); _btnShaderDocs.AddToClassList("tab-btn-inactive");
 #if UDON
             _btnMetricsDocs.RemoveFromClassList("tab-btn-active"); _btnMetricsDocs.AddToClassList("tab-btn-inactive");
 #endif
@@ -541,11 +531,6 @@ namespace VixenTools.Editor
                     _tabDescription.text = "Latest ecosystem news, partnerships, and announcements from <b>VixForge Interactive</b>.";
                     RenderNews();
                     break;
-                case TabMode.Partners:
-                    _btnPartners.RemoveFromClassList("tab-btn-inactive"); _btnPartners.AddToClassList("tab-btn-active");
-                    _tabDescription.text = "Official partners of the <b>VixForge Interactive</b> ecosystem.";
-                    RenderPartners();
-                    break;
                 case TabMode.Dashboard:
                     _btnDashboard.RemoveFromClassList("tab-btn-inactive"); _btnDashboard.AddToClassList("tab-btn-active");
                     _tabDescription.text = "A comprehensive suite of custom Unity Editor utilities and automation scripts focused specifically on <b>High-Fidelity Avatar Pipeline & Topology Architecture</b>.";
@@ -560,11 +545,6 @@ namespace VixenTools.Editor
                     _btnSupportedModules.RemoveFromClassList("tab-btn-inactive"); _btnSupportedModules.AddToClassList("tab-btn-active");
                     _tabDescription.text = "Explore third-party integrations and assets natively supported and audited by the VixForge ecosystem.";
                     RenderSupportedModules();
-                    break;
-                case TabMode.ShaderDocs:
-                    _btnShaderDocs.RemoveFromClassList("tab-btn-inactive"); _btnShaderDocs.AddToClassList("tab-btn-active");
-                    _tabDescription.text = "Comprehensive architecture breakdown of the VixenWear Latex Ultra shader pipeline, texture packing, and ecosystem integrations.";
-                    RenderShaderDocs();
                     break;
 #if UDON
                 case TabMode.MetricsDocs:
@@ -659,12 +639,6 @@ namespace VixenTools.Editor
             ParseMarkdownAndInject(markdown, _contentContainer);
         }
 #endif
-
-        private void RenderShaderDocs()
-        {
-            string markdown = LoadMarkdownFile("SHADERSETUP.md");
-            ParseMarkdownAndInject(markdown, _contentContainer);
-        }
 
         private void RenderCoreModules()
         {
@@ -781,18 +755,6 @@ The **VixForge Architecture** is engineered to interoperate flawlessly with indu
         private void RenderNews()
         {
             ParseMarkdownAndInject(LoadMarkdownFile("NEWS.md"), _contentContainer);
-        }
-
-        private void RenderPartners()
-        {
-            var list = new List<(System.Action action, string title, string desc)>
-            {
-                (() => Application.OpenURL("https://vixencreations.github.io/VixenToolBox/news.html"), "Read The Full Announcement", "The complete Enigma Industries x VixForge Interactive partnership write-up."),
-                (() => Application.OpenURL("https://discord.gg/clubenigmavr"), "Join Enigma's Discord", "Club Enigma / Enigma Industries community hub."),
-                (() => Application.OpenURL("https://vrc.group/ENIGMA.8607"), "Join Enigma's VRC Group", "Follow Enigma Industries in VRChat.")
-            };
-
-            RenderActionGrid("Partnership Links", "#ff00aa", list);
         }
 
         private void RenderNetwork()

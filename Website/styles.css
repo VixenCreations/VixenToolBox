@@ -1240,3 +1240,190 @@ fluent-option {
         flex: 1 1 100%;
     }
 }
+
+/* Mobile nav toggle is injected by app.js; hidden on desktop. */
+.nav-toggle {
+    display: none;
+}
+
+/* === MOBILE / TABLET: collapse the fixed sidebar into a dropdown menu === */
+@media (max-width: 900px) {
+    /* body is a flex row on desktop with a fixed sidebar; stack it on mobile
+       so the now-static sidebar sits on top instead of beside the content. */
+    body {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 69, 0, 0.25);
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.9);
+    }
+
+    .sidebar-brand {
+        margin-bottom: 0;
+        padding: 0.75rem 1rem 0.85rem;
+    }
+
+    .sidebar-brand-logo {
+        max-width: 260px;
+        margin: 0 auto;
+    }
+
+    .nav-toggle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 0.95rem 1.5rem;
+        background: rgba(0, 0, 0, 0.45);
+        border: none;
+        border-top: 1px solid rgba(255, 69, 0, 0.15);
+        color: var(--forge-core);
+        font-family: inherit;
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    .nav-toggle:hover {
+        background: rgba(255, 69, 0, 0.12);
+    }
+
+    /* Once app.js wires the toggle (.js-nav), the tab list becomes a dropdown.
+       Without JS the list stays visible, so navigation never disappears. */
+    .sidebar.js-nav .nav-links {
+        display: none;
+        border-top: 1px solid rgba(255, 69, 0, 0.15);
+    }
+
+    .sidebar.js-nav.nav-open .nav-links {
+        display: flex;
+    }
+
+    .main-wrapper {
+        margin-left: 0;
+        width: 100%;
+        padding: 1.75rem 1.1rem;
+    }
+
+    .content {
+        padding: 1.5rem 1.25rem;
+    }
+}
+
+@media (max-width: 560px) {
+    .sidebar-brand h2 {
+        font-size: 1rem;
+    }
+
+    .main-wrapper {
+        padding: 1.25rem 0.75rem;
+    }
+
+    .content {
+        padding: 1.2rem 0.9rem;
+    }
+}
+
+/* Index page: the VCC add flow is desktop-only, so on mobile keep just the
+   Downloads and Latest Release stat cards plus a notice. */
+.mobile-vcc-notice {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .index-desktop-only {
+        display: none !important;
+    }
+
+    .mobile-vcc-notice {
+        display: block;
+        width: 100%;
+        max-width: 460px;
+        margin: 1.5rem auto 0;
+        padding: 1.1rem 1.25rem;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.45);
+        border: 1px solid rgba(0, 229, 255, 0.3);
+        border-radius: 6px;
+        box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.06);
+    }
+
+    .mobile-vcc-notice-title {
+        color: var(--neon-cyan);
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.4rem;
+    }
+
+    .mobile-vcc-notice p {
+        color: #bfa8d2;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0 0 0.6rem;
+    }
+
+    .mobile-vcc-notice code {
+        display: block;
+        word-break: break-all;
+        font-size: 0.8rem;
+        color: #d1d5db;
+        background: rgba(4, 3, 5, 0.8);
+        border: 1px solid rgba(255, 69, 0, 0.25);
+        border-radius: 3px;
+        padding: 0.5rem 0.6rem;
+    }
+
+    /* Shrink content to fit small screens across every tab. */
+    img,
+    video,
+    canvas {
+        max-width: 100%;
+        height: auto;
+    }
+
+    pre {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    .content,
+    .news-body,
+    .glass-panel,
+    .caption1,
+    .opt-note,
+    .md-p {
+        overflow-wrap: break-word;
+    }
+
+    h1 {
+        font-size: 1.7rem;
+    }
+
+    h2 {
+        font-size: 1.35rem;
+    }
+
+    h3 {
+        font-size: 1.15rem;
+    }
+}
+
+/* Narrow phones: keep the stat card numbers on one line. */
+@media (max-width: 430px) {
+    .stat-value {
+        font-size: 1.5rem;
+        letter-spacing: 0;
+    }
+
+    .stat-card {
+        padding: 1rem 0.6rem;
+    }
+}

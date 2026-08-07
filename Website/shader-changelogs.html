@@ -148,6 +148,7 @@
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 190px;">
                         <fluent-option value="latex-4.3.0">Latex Ultra 4.3.0</fluent-option>
                         <fluent-option value="toon-1.2.0">Toon 1.2.0</fluent-option>
+                        <fluent-option value="editor-1.2.0">Editor 1.2.0</fluent-option>
                         <fluent-option value="latex-4.2.0">Latex Ultra 4.2.0</fluent-option>
                         <fluent-option value="toon-1.1.0">Toon 1.1.0</fluent-option>
                         <fluent-option value="latex-4.1.1">Latex Ultra 4.1.1</fluent-option>
@@ -224,11 +225,6 @@
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>TechnicallySane lighting integration.</strong> The TechnicallySane / TSLCE tint path and its controls (Enable TechnicallySane Lighting, TS Tint Strength, TS Color Saturation, TS Albedo Mix) have been removed. Every other world-lighting integration - AudioLink, Light Volumes, LTCGI and VRSL - is unchanged. Materials that used it keep rendering; only that one tint path is gone.</li>
                     </ul>
-                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
-                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
-                        <li class="mb-2"><strong>Re-tick Emission Layer 1 on existing materials.</strong> Layer 1 never had an Enable toggle before, so it now starts off. If a material used it, open Emissions and switch Layer 1 back on. Layers 2 to 5 are unaffected.</li>
-                        <li class="mb-2"><strong>Emission Exposure also scales Pathing, Viewer Context Glow, decal emission and region emission.</strong> It ships at 0, so if you turn one of those on and see nothing, raise Exposure (All Layers) in the Emissions section.</li>
-                    </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Micro Shading no longer crushes shadowed areas to black.</strong> Surfaces facing away from the main light, under a chin or a jaw for instance, could go fully black once occlusion dropped below about 0.7. The occlusion is now floored, so those areas deepen instead of blowing out. Only affects materials with Micro Shading turned up.</li>
@@ -236,6 +232,11 @@
                         <li class="mb-2"><strong>Anisotropy no longer creases at UV seams.</strong> With Anisotropy Rotation turned up and the Polish layer on, seams could show a hard line, worst where the UVs are mirrored. That is gone now, and mirrored halves catch the highlight symmetrically.</li>
                         <li class="mb-2"><strong>AudioLink emission effects stay inside your masks now.</strong> With AudioLink on, the emission waveform ripple and the beat flicker used to light the whole material, ignoring where you painted the emission masks black. Worst when Layer 1 had no map assigned. They now show only where an emission layer's mask is white.</li>
                         <li class="mb-2"><strong>Pathing follows your emission masks now.</strong> With an emission layer turned on, Pathing used to draw across the whole material regardless of where the emission was masked. It now shows only where an emission layer's mask is white. Pathing on its own, with no emission layers, is unchanged.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Re-tick Emission Layer 1 on existing materials.</strong> Layer 1 never had an Enable toggle before, so it now starts off. If a material used it, open Emissions and switch Layer 1 back on. Layers 2 to 5 are unaffected.</li>
+                        <li class="mb-2"><strong>Emission Exposure also scales Pathing, Viewer Context Glow, decal emission and region emission.</strong> It ships at 0, so if you turn one of those on and see nothing, raise Exposure (All Layers) in the Emissions section.</li>
                     </ul>
                 </div>
 
@@ -281,11 +282,6 @@
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>TechnicallySane lighting integration.</strong> The TechnicallySane / TSLCE tint path and its controls (Enable TechnicallySane Lighting, TS Tint Strength, TS Color Saturation, TS Albedo Mix) have been removed. Every other world-lighting integration - AudioLink, Light Volumes, LTCGI and VRSL - is unchanged. Materials that used it keep rendering; only that one tint path is gone.</li>
                     </ul>
-                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
-                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
-                        <li class="mb-2"><strong>Re-tick Emission Layer 1 on existing materials.</strong> Layer 1 never had an Enable toggle before, so it now starts off. If a material used it, open Emissions and switch Layer 1 back on. Layers 2 to 5 are unaffected.</li>
-                        <li class="mb-2"><strong>Emission Exposure also scales Pathing, Viewer Context Glow, decal emission and region emission.</strong> It ships at 0, so if you turn one of those on and see nothing, raise Exposure (All Layers) in the Emissions section.</li>
-                    </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Micro Shading no longer crushes shadowed areas to black.</strong> Surfaces facing away from the main light, under a chin or a jaw for instance, could go fully black once occlusion dropped below about 0.7. The occlusion is now floored, so those areas deepen instead of blowing out. Only affects materials with Micro Shading turned up.</li>
@@ -293,6 +289,51 @@
                         <li class="mb-2"><strong>Anisotropy no longer creases at UV seams.</strong> With Anisotropy Rotation turned up and the Polish layer on, seams could show a hard line, worst where the UVs are mirrored. That is gone now, and mirrored halves catch the highlight symmetrically.</li>
                         <li class="mb-2"><strong>AudioLink emission effects stay inside your masks now.</strong> With AudioLink on, the emission waveform ripple and the beat flicker used to light the whole material, ignoring where you painted the emission masks black. Worst when Layer 1 had no map assigned. They now show only where an emission layer's mask is white.</li>
                         <li class="mb-2"><strong>Pathing follows your emission masks now.</strong> With an emission layer turned on, Pathing used to draw across the whole material regardless of where the emission was masked. It now shows only where an emission layer's mask is white. Pathing on its own, with no emission layers, is unchanged.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Re-tick Emission Layer 1 on existing materials.</strong> Layer 1 never had an Enable toggle before, so it now starts off. If a material used it, open Emissions and switch Layer 1 back on. Layers 2 to 5 are unaffected.</li>
+                        <li class="mb-2"><strong>Emission Exposure also scales Pathing, Viewer Context Glow, decal emission and region emission.</strong> It ships at 0, so if you turn one of those on and see nothing, raise Exposure (All Layers) in the Emissions section.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="editor-1.2.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Editor 1.2.0 - 2026-08-07</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>The Thry's editor inspector overhaul, and a tidy-up of the Hub. Every section explains itself, maps switch their feature on when you drop them in, the converters finally hand you a finished material instead of a half-set-up one, and each shader keeps its own changelog.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Maps switch their own feature on.</strong> Drop a texture into a slot and its Enable ticks itself. That covers 17 slots on Latex Ultra and 15 on Toon: the five Emission layers, the five Matcaps, Micro Detail, Pathing, Multi-Region Color Mask, Cybernetic Overlays, the Polish mask, and Drip and Goo on Latex Ultra. A texture sitting in a slot with the feature switched off is the single easiest way to lose half an hour, and it stops here.</li>
+                        <li class="mb-2"><strong>It never fights you.</strong> The toggle only moves when an empty slot gets filled. Switch a feature off and it stays off with the texture still in place, so you can keep a map loaded while you compare with it turned down.</li>
+                        <li class="mb-2"><strong>A help button on every section header.</strong> The <strong>?</strong> opens that section of the online docs in your browser. Twelve sections, twelve pages, so the long explanation is one click away instead of taking up room in the inspector forever.</li>
+                        <li class="mb-2"><strong>Hover help on the controls themselves.</strong> Everything that used to sit in a help box is now a tooltip on the control it describes. Point at a slider, read what it does.</li>
+                        <li class="mb-2"><strong>Colour space warnings on every texture slot.</strong> Unity's sRGB import setting is the usual reason a mask reads too bright or a height map does nothing, and until now nothing told you. Assign a texture whose setting does not match what the slot needs and the inspector says so, with a one-click fix. Normal maps are left alone because Unity already prompts for those. You can switch the warnings off in the editor settings.</li>
+                        <li class="mb-2"><strong>Texture Colour Space Check</strong>, a new tool under VixenTools > VixForge Editor. Scans your whole avatar in one go instead of one material at a time: pick the avatar, hit Scan, and it lists every texture whose import settings do not match what its slot needs, with Fix All. It also catches normal maps that were never imported as normal maps, and that check works on any shader, not just ours. Where one texture is used by two slots that need opposite colour spaces it says so rather than offering a fix, because no single setting can satisfy both; duplicate the texture in that case.</li>
+                        <li class="mb-2"><strong>A changelog per shader, plus this one.</strong> The Hub used to fold everything into a single Changelog tab. There are now three: <strong>Latex Changelog</strong>, <strong>Toon Changelog</strong>, and <strong>Editor Changelog</strong> for the inspector and its tools. You only get the tabs for what you installed, so a Toon-only install does not carry the Latex history.</li>
+                        <li class="mb-2"><strong>A release picker on every changelog tab.</strong> Pick a version from the dropdown and read just that release. Only one tab used to have this; now they all do, and each one remembers the release you were reading when you switch tabs.</li>
+                        <li class="mb-2"><strong>A Patreon tab in the Hub.</strong> A supporters wall listing each tier and the people backing it, every tier in its own colour and style. It sits with the docs on any install.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The Thry inspector is a lot shorter.</strong> 43 help boxes came out of the Latex Ultra panels and 40 out of Toon's, all onto hover. No text was lost. Sections that were carrying three or four boxes between their controls now fit on screen without scrolling past paragraphs you have already read.</li>
+                        <li class="mb-2"><strong>Licence credits stay on the page.</strong> The Light Volumes, LTCGI, VRSL and AudioLink attributions keep their boxes. A credit behind a mouse pointer is not a credit.</li>
+                        <li class="mb-2"><strong>The Hub is now the Shader Hub, and it moved to the top of the menu.</strong> Open it from <strong>VixenTools > Shader Hub</strong>. It used to sit two levels down under VixenTools > VixenWear, called just "Open Hub", which said nothing about what it was.</li>
+                        <li class="mb-2"><strong>The Hub header says what you have installed.</strong> It reads <strong>Toon</strong> on a Toon install, <strong>Latex Ultra</strong> on a Latex one, and <strong>Latex Ultra + Toon</strong> when you own both, with the version taken from that shader's changelog.</li>
+                        <li class="mb-2"><strong>Locking clears out the textures a material isn't using.</strong> When you lock a material, or upload the avatar, it now keeps only the maps for the features you have switched on and drops the rest, along with any texture left sitting in a slot whose feature is off. A heavily featured material could otherwise stack up enough maps to cross your graphics card's texture limit and fail to build; now it stays under it, and the VRAM those unused maps were holding comes back. Unlocking puts everything back.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Converting from another shader now gives you a finished material.</strong> The converters brought your maps across and then left the matching Enable switched off, so the map sat in the slot doing nothing and the material looked wrong for a reason nothing on screen explained. Poiyomi now brings occlusion, emission, height and bent normal across switched on. VRChat's Toon Standard brings occlusion, emission, micro detail and the first matcap. lilToon brings emission, and its parallax map lands in the Height Map slot.</li>
+                        <li class="mb-2"><strong>Converters only switch on what you actually have.</strong> Some of them turned <strong>Enable Occlusion Map</strong> on for every material regardless, so materials with no AO map got occlusion they never asked for. Every toggle now follows the source material, map by map.</li>
+                        <li class="mb-2"><strong>The Hub shows a version on a Toon-only install.</strong> The header read the Latex changelog to find its version number, so with Toon on its own it came up blank. It now reads the changelog for the shader you actually have.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Animating a feature off and on? Mark its toggle Animated.</strong> Locking drops the maps for anything switched off, so a toggle an animation flips on later would find nothing there. Right-click the toggle, pick <strong>Animated (when locked)</strong>, and its maps stay put whether the toggle is off or on. It is the same flag you already use to stop an animated value from being baked in, and the stripping now respects it.</li>
+                        <li class="mb-2"><strong>Materials you converted before this version still have their toggles off.</strong> Run the converter over them again, or tick the Enable next to each map by hand. Converting again is safe and undoable, and it backs the avatar up first.</li>
                     </ul>
                 </div>
 
