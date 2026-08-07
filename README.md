@@ -59,20 +59,7 @@ A connected set of utilities for building, optimizing, and porting high-fidelity
 * **Animation Workbench Pro:** A custom curve-graph animation environment. A Material Property Discovery engine scans renderers and exposes categorized, Poiyomi-aware shader properties (with color/vector channel splitting) as animatable bindings; an easing library and `CurveGraphView` drive staged, non-destructive curve editing; and a real-time `PreviewEngine` plays staged clips directly on a scene object via `AnimationMode.SampleAnimationClip`.
 * **Pipeline Preset Manager:** A dual-mode import-automation engine. Authoring Mode creates a phantom asset to rip importer rules into reusable Presets; Extraction Mode rips Presets from existing component hierarchies. Generated presets can be registered globally via `Preset.SetDefaultPresetsForType()` with glob filters, enforcing project-wide texture, audio, renderer, and PhysBone consistency.
 
-### 4. VixenWear Latex Ultra - Native Shader Architecture
-
-A proprietary, high-fidelity dual-lobe PBR surface shader engineered for synthetic materials, shipping alongside a tessellation-free **Latex Ultra SPS** variant for VRCFury SPS patching. Its inspector is organized into six tabs (BASE, SURFACE, POLISH, INTEGRATION, AUDIOLINK, STAGE).
-
-* **Physical Lighting Model:** A full industry-standard GGX BRDF stack (`D_GGX`, `V_SmithJointGGX`, `F_Schlick`, `Burley` diffuse, Karis split-sum) with optional multi-scatter energy compensation, anisotropic latex-stretch specular, thin-part transmission, tinted dielectric clearcoat, geometric specular AA, and a VRChat mirror-camera fix for per-eye-correct specular.
-* **Texture Packing & Compatibility:** A single packed RGBA PBR map with Poiyomi / Substance / Marmoset channel selectors, Mochie reflection & specular masks with a one-click setup button, and a Standard-style render-mode selector (Opaque / Cutout / Fade / Transparent).
-* **Liquid Surface System (2.4.0):** A master Polish gate, a wet / run-off layer (soaked look, animated rivulets, PC-only geometry water droplets), and gravity-aligned melting goo bring physical liquid behaviour to the latex.
-* **Four-Layer Decals & Realistic-Lighting Refinements (2.10):** Up to four independent decals placed right in the Scene view, each with tint, transform (with optional spin), a packed RGBA mask channel, eight colour blend modes, an emission glow, and a per-decal smoothness offset - all sharing one sampler for zero added sampler-budget cost. Alongside them, opt-in Horizon Specular Occlusion and Specular Highlight Clamp controls, and a re-sync of the vendored VRC Light Volumes include to the current upstream revision (softer, size-aware speculars) that renders existing materials unchanged.
-* **World Integration & Kinetics:** Deep Light Volumes and LTCGI mix controls, the VRSL stage-hijack protocol with DMX geo-warping, runtime-gated AudioLink, the God Tier Cybernetics HUD, and a flying-shard kinetic vertex engine.
-* **Hybrid Inspector:** A custom `VectorLabelDrawer` (`MaterialPropertyDrawer`) hooked into ShaderLab vector arrays, wrapped in a UITK + IMGUI hybrid inspector with per-tab copy/paste/reset, and a build-time variant stripper that drops dead keyword variants and unused passes.
-
-> Every option in every tab is documented control-by-control, with full editor screenshots, in the [Shader Docs](https://vixencreations.github.io/VixenToolBox/shaderdocs.html).
-
-### 5. Scene, Convention & QA Tools
+### 4. Scene, Convention & QA Tools
 
 * **Vixen Badge Studio:** Procedural badge generation for VRChat conventions. Auto-detects Furality SDK assets, targets Poiyomi / lilToon / VRChat Mobile / legacy badge shaders, generates directory structures, materials, and emissive maps, and snaps text bounds and neon accents to each year's badge mesh.
 * **Live Scene UV Mapper:** Hijacks the Scene View camera to raycast badge coordinates directly onto curved 3D meshes, inverting barycentric UVs into ImageMagick pixel space with one-click clipboard copy. Non-destructive (temporary MeshCollider) and ideal for curved or 3D-printed badge surfaces where 2D layout tools fail.
