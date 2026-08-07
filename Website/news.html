@@ -8,7 +8,7 @@
     <title>VixForge Interactive | News &amp; Announcements</title>
     <meta name="title" content="VixForge Interactive | News &amp; Announcements">
     <meta name="description" content="News and announcements from VixForge Interactive, including studio updates, partnerships, and releases for the Vixens Toolbox VRChat creator suite.">
-    <meta name="keywords" content="VixForge Interactive, Vixens Toolbox, news, announcements, Enigma Industries partnership, VRChat, updates">
+    <meta name="keywords" content="VixForge Interactive, Vixens Toolbox, news, announcements, VRChat, updates">
     <meta name="author" content="Vixenlicous | VixForge Interactive">
     <meta name="theme-color" content="#ff00aa">
 
@@ -242,6 +242,63 @@
             </div>
 
             <article class="glass-panel news-article w-100 mb-5">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Shader Update</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">VixForge Toon</span>
+                        <span class="news-date">August 7, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">The Detail Update - Latex Ultra 4.3.0 and Toon 1.2.0</h2>
+                    <p>
+                        This one is all about fine detail. The texture you painted comes back out of the surface, there are two brand-new Special Effects, and there is a pile of quality-of-life work underneath. Everything new is off by default, so your existing materials look exactly as they did until you reach for it.
+                    </p>
+
+                    <h3 class="text-glow-cyan">Detail That Actually Reads</h3>
+                    <p>
+                        Your maps do more with the light now, and most of it needs no new textures to bake.
+                    </p>
+                    <ul class="pledge-list">
+                        <li><strong>Cavity</strong> sharpens the fine detail already in your height channel. Pores, seams and stitching sink into shadow, ridges catch the light. It reads the Packed PBR Mask you already have.</li>
+                        <li><strong>Micro Shading and Micro Lighting</strong> make your occlusion react to where the light comes from - creases go dark under a side light, raised detail brightens - instead of just dimming everything evenly. Each has a trim per lighting system.</li>
+                        <li><strong>Bent Normals</strong> let ambient light follow the shape of the surface, so crevices stay dark and forms read solid. Drop in a bent normal map baked next to your AO.</li>
+                    </ul>
+
+                    <h3 class="text-glow-cyan">Your Maps, Made Easier</h3>
+                    <ul class="pledge-list">
+                        <li><strong>A Height Map slot of its own</strong>, so Substance and Marmoset height exports go straight in instead of being repacked by hand. It drives Parallax, Displacement and Cavity.</li>
+                        <li><strong>Auto on every mask channel.</strong> Masks read black-and-white and alpha-carried images without you working out which is which. Set a channel to Auto if a mask ever comes out blank.</li>
+                        <li><strong>Detail Strength works without a Micro Detail Map now</strong>, sharpening the fine detail already sitting in your normal map. Pores and skin grain, with no second texture.</li>
+                    </ul>
+
+                    <h3 class="text-glow-cyan">Two New Special Effects</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Infinity Mirror.</strong> The surface reads as glass over a light that reflects away into the distance, a receding tunnel that shifts as you move around it. Pick a ring of lights, a dot grid, or your own pattern.</li>
+                        <li><strong>Inner Cosmos.</strong> A window onto a living galaxy with real depth: look in from any angle and it parallaxes and swirls, and it never repeats. Fully procedural, no texture needed. Turn on Living Energy with AudioLink in the world and the whole volume moves to the music.</li>
+                    </ul>
+
+                    <h3 class="text-glow-cyan">And More to Play With</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Flipbooks</strong> - an animated overlay from a GIF, an image sequence or a sprite sheet, placed on the mesh like a decal.</li>
+                        <li><strong>Car Paint</strong> - a pearlescent flip-flop that travels with your view, with metallic flake and a wet clearcoat gloss.</li>
+                        <li><strong>Transparency slider</strong> - fades the whole material out in the Fade and Transparent modes.</li>
+                        <li><strong>Toon gets a gradient editor</strong> - build the shading ramp right in the inspector, no external texture needed.</li>
+                    </ul>
+
+                    <p>
+                        Full notes, including the fixes and a couple of "heads up" items for existing materials, are on the shader changelogs.
+                    </p>
+
+                    <div class="row mt-4" style="gap: 10px; flex-wrap: wrap;">
+                        <fluent-anchor href="shader-changelogs.html" appearance="accent" class="custom-accent-btn">Read the Full Changelog</fluent-anchor>
+                        <fluent-anchor href="index.html" class="custom-stealth-btn">Add to VCC</fluent-anchor>
+                        <fluent-anchor href="https://discord.gg/3vbJCKcPtJ" target="_blank" class="custom-stealth-btn">Join the VixForge Discord</fluent-anchor>
+                    </div>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5">
                 <div class="news-hero-art">
                     <img src="PromoBanner.png" width="1920" height="1080" alt="VixForge Interactive Vixens Toolbox milestone celebration banner marking 1,500 downloads by the VRChat creator community." />
                 </div>
@@ -280,70 +337,6 @@
                         <fluent-anchor href="index.html" appearance="accent" class="custom-accent-btn">Add to VCC</fluent-anchor>
                         <fluent-anchor href="changelog.html" class="custom-stealth-btn">View the Changelog</fluent-anchor>
                         <fluent-anchor href="https://discord.gg/3vbJCKcPtJ" target="_blank" class="custom-stealth-btn">Join the VixForge Discord</fluent-anchor>
-                    </div>
-                </div>
-            </article>
-
-            <article class="glass-panel news-article w-100 mb-5">
-                <div class="news-hero-art">
-                    <img src="partnership-enigma.png" width="1536" height="1024" alt="VixForge Interactive x Enigma Industries strategic partnership announcement. Forging Realities. Building Experiences. Together, we're redefining immersive creation." />
-                </div>
-                <h2 class="sr-only">VixForge Interactive x Enigma Industries: Forging Realities. Building Experiences.</h2>
-
-                <div class="news-body">
-                    <div class="news-meta">
-                        <span class="news-tag">Partnership</span>
-                        <span class="news-tag">Studio News</span>
-                        <span class="news-date">July 4, 2026</span>
-                    </div>
-
-                    <p>
-                        VixForge Interactive and Enigma Industries are joining forces. Two studios, two strengths, one shared goal: giving VRChat creators better tools, stronger communities, and bigger opportunities to bring their ideas to life. This is the first step in a much larger vision, and it starts now.
-                    </p>
-
-                    <h3 class="text-glow-cyan">Two Studios, One Vision</h3>
-                    <p>
-                        For years you knew them as <strong>Club Enigma</strong>, a community built around events and bringing people together. That vision grew into something far larger: building worlds, experimenting with new technology, exploring game development, and backing projects that reach well beyond the dance floor. Today that next step has a new name: <strong>Enigma Industries</strong>, a studio committed to innovation, creativity, and shaping the future of social VR.
-                    </p>
-                    <p>
-                        <strong>VixForge Interactive</strong> is recognized across the VRChat creator community for its Unity development and the <strong>Vixens Toolbox</strong>, our comprehensive Unity VRChat creator suite. It is built to simplify development, streamline workflows, assist with optimization, and automate the repetitive work, so creators spend more time building and less time managing technical overhead.
-                    </p>
-
-                    <h3 class="text-glow-cyan">What Enigma Industries Brings</h3>
-                    <p>
-                        Enigma Industries brings years of building community and unforgettable moments in VRChat. What began with events and bringing people together has grown into a studio focused on the experiences themselves:
-                    </p>
-                    <ul class="pledge-list">
-                        <li><strong>Immersive Worlds</strong> - ambitious, hand-crafted VRChat spaces designed to be lived in, not just visited.</li>
-                        <li><strong>Live Events and Community</strong> - the heartbeat of Club Enigma, now scaled up: shows, gatherings, and a community that shows up.</li>
-                        <li><strong>Innovative Experiences</strong> - new technology, game development, and projects that push what social VR can be.</li>
-                        <li><strong>A Bigger Vision</strong> - not just a rebrand, but the first step in a much larger transformation for social VR.</li>
-                    </ul>
-
-                    <h3 class="text-glow-cyan">What the Partnership Delivers</h3>
-                    <p>
-                        While VixForge Interactive continues empowering creators through advanced Unity tooling, Enigma Industries will keep focusing on immersive worlds, innovative experiences, and ambitious projects that push the boundaries of what is possible in VRChat. This partnership is about more than what we are building today:
-                    </p>
-                    <ul class="pledge-list">
-                        <li>It's about sharing knowledge.</li>
-                        <li>It's about inspiring innovation.</li>
-                        <li>It's about supporting creators.</li>
-                        <li>It's about helping shape the next generation of social VR.</li>
-                    </ul>
-
-                    <h3 class="text-glow-cyan">This Is Just the Beginning</h3>
-                    <p>
-                        Together, we're laying the foundation for a future where creators have better tools, stronger communities, and even greater opportunities to bring their ideas to life. This is the first step in a much larger transformation, and it's where the next chapter begins.
-                    </p>
-                    <p style="color: #e0d5eb; font-weight: bold;">
-                        The future starts now. Enigma Industries x VixForge Interactive.
-                    </p>
-
-                    <div class="row mt-4" style="gap: 10px; flex-wrap: wrap;">
-                        <fluent-anchor href="about.html" appearance="accent" class="custom-accent-btn">About VixForge Interactive</fluent-anchor>
-                        <fluent-anchor href="https://discord.gg/clubenigmavr" target="_blank" appearance="accent" class="custom-accent-btn">Join Enigma's Discord</fluent-anchor>
-                        <fluent-anchor href="https://x.com/VixenVRC" target="_blank" class="custom-stealth-btn">Follow on X</fluent-anchor>
-                        <fluent-anchor href="https://discord.gg/3vbJCKcPtJ" target="_blank" class="custom-stealth-btn">VixForge Discord</fluent-anchor>
                     </div>
                 </div>
             </article>

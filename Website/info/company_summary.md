@@ -32,7 +32,7 @@ Beyond the shipping toolbox, VixForge Interactive invests in R&D for next-genera
 
 ### In Active Development
 
-- **Latex Ultra (VixenWear)** - _Shipping and evolving._ Our flagship GGX latex avatar shader: clearcoat, thin-film, wet / drip and melting-goo effects, triple matcaps, and live reactions to every major world-lighting system (AudioLink, LTCGI, VRC Light Volumes, VRSL, and TechnicallySane). Built-In Render Pipeline, with both a base and an SPS twin.
+- **Latex Ultra (VixenWear)** - _Shipping and evolving._ Our flagship GGX latex avatar shader: clearcoat, thin-film, wet / drip and melting-goo effects, triple matcaps, and live reactions to every major world-lighting system (AudioLink, LTCGI, VRC Light Volumes, and VRSL). Built-In Render Pipeline, with both a base and an SPS twin.
 - **Surface Ultra (VixenWorld)** - _In development._ The world-side counterpart to Latex Ultra, sharing the same BRDF and world-lighting stack so VRChat worlds and props can react to the same systems your avatar does.
 - **ClothingPro (VixenWear)** - _In development._ A modular clothing and wardrobe-layer system built on top of the VixenWear pipeline, designed to drop layered outfits in cleanly without manual rig surgery.
 - **VixForge Director** - _In development._ An over-the-top automatic Virtual Jockey system that puts on full lighting shows when a DJ does not have a VJ on hand to run the visuals. Stack: pipeline, worlds, UdonSharp.

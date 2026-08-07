@@ -379,7 +379,7 @@
                     <h2 class="text-glow-cyan m-0">SHADING</h2>
                     <div class="badge">Section 4 of 12</div>
                 </div>
-                <p class="tab-desc">The lighting model and every world-lighting integration, grouped together. Light Volumes, LTCGI, TechnicallySane and Stage / VRSL are each fail-safe: they strip or no-op cleanly in worlds that lack the system.</p>
+                <p class="tab-desc">The lighting model and every world-lighting integration, grouped together. Light Volumes, LTCGI and Stage / VRSL are each fail-safe: they strip or no-op cleanly in worlds that lack the system.</p>
 
                 <h3 class="text-glow-pink opt-group">Lighting</h3>
 <p class="opt-note">Rim, subsurface, anisotropy, transmission, and energy conservation. Most of these belong to the polish layer and are gated by <a href="#polish" style="color: var(--neon-cyan);">POLISH &gt; Enable</a>. AO Strength and Shadow Hardness now live in <strong>Shadow Detail</strong>.</p>
@@ -506,24 +506,6 @@
                         <code>Diffuse Only</code>, or <code>Specular Only</code>.</li>
                     <li class="mb-2"><strong>LTCGI Diffuse Color</strong> - Tints the LTCGI diffuse contribution.</li>
                     <li class="mb-2"><strong>LTCGI Specular Color</strong> - Tints the LTCGI specular contribution.</li>
-                </ul>
-
-                <h3 class="text-glow-pink opt-group">TechnicallySane V3</h3>
-<p class="opt-note">Tints the material to a TechnicallySane lighting rig's live show colour, on avatars, with no scene reference.</p>
-
-                <p class="opt-note">
-                    Prefers the modern <strong>TSLCE</strong> control texture and falls back to the
-                    older <strong>GlobalRGB</strong> broadcast automatically - you do not pick,
-                    the shader detects which is present. It reads only the TSLCE texture under TechnicallySane's TSLCE Render Texture Access License, is runtime-gated for VRCFury, and is completely inert and free in worlds with no TechnicallySane engine.
-                </p>
-                <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Enable TechnicallySane Lighting</strong> - Runtime gate for the whole path, off by default; VRCFury can flip it.</li>
-                    <li class="mb-2"><strong>TS Tint Strength</strong> - How strongly the live show colour washes over the
-                        material.</li>
-                    <li class="mb-2"><strong>TS Color Saturation</strong> - Desaturates the show colour toward luma, so it
-                        adds warmth without repainting your design.</li>
-                    <li class="mb-2"><strong>TS Albedo Mix</strong> - 0 = flat emissive glow, 1 = albedo-tinted light
-                        bounce.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Stage Lighting &amp; VRSL</h3>
@@ -783,7 +765,7 @@
                 <p class="opt-note mt-3 mb-2"><strong>Glitter Lighting</strong></p>
                 <p class="opt-note">The flakes are lit like a real surface rather than painted on, so they answer to whatever is lighting the room. Lit By chooses which lighting that is.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Lit By</strong> - Natural uses the world's ordinary lights and reflection probes. Light Volumes, LTCGI, VRSL and TechnicallySane each tie the glitter to that one system, so it lights up in worlds running that system and stays dark in worlds that do not. Everything takes light from all of them at once. Always Lit ignores lighting completely, so the sparkle shows even in a pitch black room.</li>
+                    <li class="mb-2"><strong>Lit By</strong> - Natural uses the world's ordinary lights and reflection probes. Light Volumes, LTCGI and VRSL each tie the glitter to that one system, so it lights up in worlds running that system and stays dark in worlds that do not. Everything takes light from all of them at once. Always Lit ignores lighting completely, so the sparkle shows even in a pitch black room.</li>
                     <li class="mb-2"><strong>Brightness</strong> / <strong>Ambient Sparkle</strong> - The flash from direct lights, and the flash from the surrounding room. Turn Ambient Sparkle up if the world has no strong light and the glitter looks dead.</li>
                     <li class="mb-2"><strong>Minimum Light</strong> - Stops the flakes going completely dark in an unlit corner. Leave it at 0 for glitter that behaves like a real surface.</li>
                     <li class="mb-2"><strong>Take Light Colour</strong> - Whether the flakes take on the colour of the light hitting them, or keep their own Tint and use only the light's brightness. Turn it down to keep your colour under coloured stage lighting.</li>
@@ -1186,7 +1168,7 @@
 
                 <p class="caption1 mb-4" style="color: #bfa8d2;">
                     VixForge Toon carries the same toolkit as Latex Ultra - PBR base, matcaps, emissions, decals, outlines,
-                    AudioLink, Light Volumes, LTCGI, VRSL and TechnicallySane - so every section above applies to it
+                    AudioLink, Light Volumes, LTCGI and VRSL - so every section above applies to it
                     unchanged. Two things differ: it adds the <strong>Shading Options</strong> block below, and it drops
                     <strong>Wet Effects</strong> and <strong>Goo Effects</strong>, which are liquid-latex tricks that do not
                     fit a toon surface. Reach for Toon when you want a stylised look, and for Latex Ultra when you want a
