@@ -5,6 +5,17 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.14.0] - 2026-08-10
+*Animation Workbench learns to see the rest of your clip.*
+
+### Added
+* **Animation Workbench - animate components:** A **Component Property** picker now sits beside the material one. Anything Unity can key on your avatar is reachable from it: a component's enabled toggle, Transform values, fields on a script. Set your Preview Target, hit Choose, pick the property, then Add Binding.
+
+### Fixed
+* **Animation Workbench - material swaps were invisible.** A clip that swapped materials looked empty. Swap tracks are a different kind of track from the rest and were never being read, so a clip that opened on one showed nothing at all. They now list alongside everything else, marked as swaps, with each key shown as its time and the material it swaps to. Single-key swaps pinned at the start show up too, which is how most of them are written. They are there to be read rather than edited: there is nothing to ease between two materials.
+* **Animation Workbench - the window opened unstyled.** It was looking for its stylesheet somewhere it was never kept, so it fell back to bare layout and logged a warning every time you opened it.
+
+***
 ## [2.13.1] - 2026-08-07
 *Hub Maint Removed Partners links and code*
 

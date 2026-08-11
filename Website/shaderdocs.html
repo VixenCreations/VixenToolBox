@@ -178,7 +178,7 @@
 
             <fluent-anchor href="changelog.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                Changelog
+                Toolbox Changes
             </fluent-anchor>
 
             <fluent-anchor href="shader-changelogs.html" class="nav-item">
@@ -1132,8 +1132,8 @@
 
                 <p class="opt-note">
                     AudioLink is always compiled and runtime-gated, so VRCFury material toggles can flip it without a
-                    build-time variant explosion. HUD passes are PC-only; the SPS variant declares the props inert for
-                    inspector parity. Most band selectors offer Bass / Low Mid / High Mid / Treble, and every HUD widget
+                    build-time variant explosion. HUD passes are PC-only. Most band selectors offer Bass / Low Mid /
+                    High Mid / Treble, and every HUD widget
                     exposes a <strong>Transform (X, Y, Scl, Rot)</strong> set to place it on the body. Each sub-group
                     below is a nested foldout and only shows while <strong>Enable</strong> is on.
                 </p>
@@ -1231,8 +1231,7 @@
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Vertex Displacement &amp; Kinetics (SM5, PC only)</h3>
-                <p class="opt-note">Vertex displacement plus a full flying-shard system driven by geometry passes (the
-                    SPS shader dissolves via the main-pass clip with no flying shards).</p>
+                <p class="opt-note">Vertex displacement plus a full flying-shard system driven by geometry passes.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Enable</strong> - Master toggle for the kinetic vertex
                         engine. The three modules below sit under <strong>Kinetic Modules</strong>.</li>

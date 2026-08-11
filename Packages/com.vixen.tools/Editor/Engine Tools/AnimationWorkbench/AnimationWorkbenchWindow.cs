@@ -15,6 +15,7 @@ namespace Vixenlicious.AnimationWorkbench
         private VisualElement root;
         private Font _cyberFont;
         private const string PackageFontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
+        private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/AnimationWorkbenchStyles.uss";
 
         private AnimationClip currentClip;
         private GameObject previewTarget;
@@ -47,6 +48,16 @@ namespace Vixenlicious.AnimationWorkbench
         private readonly List<MaterialPropertySearchPopup.Entry> materialEntries =
             new List<MaterialPropertySearchPopup.Entry>();
         private MaterialPropertySearchPopup.Entry currentMaterialEntry;
+
+        // Component tracks. The material picker only ever offered "material.<prop>" bindings, so nothing
+        // on a component itself could be reached: not an enabled flag, not a Transform value, not a field
+        // on a script. These reuse the same search popup with their own list.
+        private readonly List<MaterialPropertySearchPopup.Entry> componentEntries =
+            new List<MaterialPropertySearchPopup.Entry>();
+        private MaterialPropertySearchPopup.Entry currentComponentEntry;
+        private Label componentSelectedLabel;
+        private Button componentPickerButton;
+        private Button addComponentBindingBtn;
 
         private float startTime = 0f;
         private float endTime = 1f;
@@ -83,16 +94,14 @@ namespace Vixenlicious.AnimationWorkbench
 
         private void LoadStyles()
         {
-            var sheet = Resources.Load<StyleSheet>("AnimationWorkbenchStyles");
+            var sheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath);
             if (sheet != null)
             {
                 root.styleSheets.Add(sheet);
             }
             else
             {
-                Debug.LogWarning(
-                    "[VixForge] Stylesheet not found. Expected at: " +
-                    "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/AnimationWorkbenchStyles.uss");
+                Debug.LogWarning("[VixForge] Stylesheet not found. Expected at: " + UssPath);
             }
         }
 
@@ -160,7 +169,10 @@ namespace Vixenlicious.AnimationWorkbench
                 previewEngine?.SetTarget(previewTarget);
 
                 if (previewTarget != null)
+                {
                     BuildMaterialPropertyList();
+                    BuildComponentPropertyList();
+                }
             });
 
             topToolbar.Add(clipField);
@@ -274,7 +286,8 @@ namespace Vixenlicious.AnimationWorkbench
 
             var selectAllBtn = new Button(() =>
             {
-                foreach (var p in bindingProfiles) p.selected = true;
+                // Swap tracks stay unselected: nothing downstream can generate keys for them.
+                foreach (var p in bindingProfiles) p.selected = !p.isPPtr;
                 RebuildBindingsUI();
             })
             { text = "Select All" };
@@ -334,6 +347,45 @@ namespace Vixenlicious.AnimationWorkbench
             materialRow.Add(materialPickerButton);
             materialRow.Add(addMaterialBindingBtn);
             bindingBox.Add(materialRow);
+
+            var componentRow = new VisualElement();
+            componentRow.style.flexDirection = FlexDirection.Row;
+            componentRow.style.marginTop = 4;
+            componentRow.style.alignItems = Align.Center;
+
+            var componentLabel = new Label("Component Property");
+            componentLabel.style.minWidth = 100;
+
+            componentSelectedLabel = new Label("<None Selected>");
+            componentSelectedLabel.style.flexGrow = 1;
+
+            componentPickerButton = new Button(() =>
+            {
+                if (componentEntries.Count == 0)
+                {
+                    statusLabel.text = "[VixForge] No component properties found. Set a Preview Target first.";
+                    return;
+                }
+
+                MaterialPropertySearchPopup.Show(componentEntries, currentComponentEntry, this, entry =>
+                {
+                    currentComponentEntry = entry;
+                    componentSelectedLabel.text = entry.displayName;
+                    addComponentBindingBtn.SetEnabled(true);
+                });
+            })
+            { text = "Choose…" };
+
+            addComponentBindingBtn = new Button(AddBindingFromComponentProperty) { text = "Add Binding" };
+            addComponentBindingBtn.style.backgroundColor = new Color(0.8f, 0.5f, 0.2f);
+            addComponentBindingBtn.style.color = Color.black;
+            addComponentBindingBtn.SetEnabled(false);
+
+            componentRow.Add(componentLabel);
+            componentRow.Add(componentSelectedLabel);
+            componentRow.Add(componentPickerButton);
+            componentRow.Add(addComponentBindingBtn);
+            bindingBox.Add(componentRow);
 
             bindingsListContainer = new ScrollView();
             bindingsListContainer.AddToClassList("scroll-section");
@@ -590,6 +642,102 @@ namespace Vixenlicious.AnimationWorkbench
             materialEntries.AddRange(sorted);
         }
 
+        // Everything animatable on the components under the preview target.
+        //
+        // AnimationUtility.GetAnimatableBindings is Unity's own answer to "what can be keyed on this
+        // object", so it already covers enabled flags, Transform values, and serialized fields on scripts,
+        // and it reports each one with the exact type and property name the clip needs. Reflecting over
+        // the components by hand would mean re-deriving all of that and getting the naming wrong.
+        //
+        // material.* bindings are dropped here because the material picker already covers them, and
+        // listing them twice would just make both lists worse.
+        private void BuildComponentPropertyList()
+        {
+            componentEntries.Clear();
+            currentComponentEntry = null;
+            if (componentSelectedLabel != null) componentSelectedLabel.text = "<None Selected>";
+            addComponentBindingBtn?.SetEnabled(false);
+
+            if (previewTarget == null) return;
+
+            var seen = new HashSet<string>();
+
+            foreach (var t in previewTarget.GetComponentsInChildren<Transform>(true))
+            {
+                if (t == null) continue;
+
+                EditorCurveBinding[] bindings;
+                try { bindings = AnimationUtility.GetAnimatableBindings(t.gameObject, previewTarget); }
+                catch { continue; }
+
+                if (bindings == null) continue;
+
+                string path = AnimationUtility.CalculateTransformPath(t, previewTarget.transform);
+                string objectLabel = string.IsNullOrEmpty(path) ? previewTarget.name : t.name;
+
+                foreach (var b in bindings)
+                {
+                    if (b.propertyName != null && b.propertyName.StartsWith("material.")) continue;
+
+                    string typeName = b.type != null ? b.type.Name : "Component";
+                    string key = b.path + "|" + typeName + "|" + b.propertyName;
+                    if (!seen.Add(key)) continue;
+
+                    componentEntries.Add(new MaterialPropertySearchPopup.Entry
+                    {
+                        displayName = $"{objectLabel}  ▸  {typeName}  ▸  {b.propertyName}",
+                        materialName = objectLabel,
+                        category = typeName,
+                        shaderProperty = b.propertyName,
+                        path = b.path,
+                        type = b.type
+                    });
+                }
+            }
+
+            var sortedComponents = componentEntries
+                .OrderBy(e => e.materialName).ThenBy(e => e.category).ThenBy(e => e.shaderProperty).ToList();
+            componentEntries.Clear();
+            componentEntries.AddRange(sortedComponents);
+        }
+
+        private void AddBindingFromComponentProperty()
+        {
+            if (currentClip == null)
+            {
+                statusLabel.text = "[VixForge] Cannot append binding: clip asset missing.";
+                return;
+            }
+
+            if (currentComponentEntry == null) return;
+
+            var opt = currentComponentEntry;
+            var binding = new EditorCurveBinding
+            {
+                path = opt.path,
+                type = opt.type,
+                // Verbatim. The material path prefixes "material." here; a component property is already
+                // the full name and prefixing it would produce a binding that matches nothing.
+                propertyName = opt.shaderProperty
+            };
+
+            if (AnimationUtility.GetEditorCurve(currentClip, binding) != null)
+            {
+                statusLabel.text = "[VixForge] Binding logic halted: Track already exists on clip.";
+                return;
+            }
+
+            Undo.RecordObject(currentClip, "Add Component Property Binding");
+
+            var curve = CreateDefaultTwoKeyCurve(binding);
+            AnimationUtility.SetEditorCurve(currentClip, binding, curve);
+            EditorUtility.SetDirty(currentClip);
+            AssetDatabase.SaveAssets();
+
+            statusLabel.text = $"[VixForge] Added {opt.category} ▸ {opt.shaderProperty} on {opt.path}.";
+            RefreshBindings();
+        }
+
         private void AddMaterialEntry(string mName, string category, string shaderProp, string displayLabel, string path)
         {
             string display = $"{mName}  ▸  {category}  ▸  {displayLabel}";
@@ -736,6 +884,32 @@ namespace Vixenlicious.AnimationWorkbench
                 stagedCurves[b] = originalCurve != null ? new AnimationCurve(originalCurve.keys) : new AnimationCurve();
             }
 
+            // OBJECT-REFERENCE TRACKS, WHICH IS WHERE MATERIAL SWAPS LIVE.
+            //
+            // GetCurveBindings above returns float tracks ONLY. A material swap is not a float track: it
+            // is an object-reference track on m_Materials.Array.data[n], and it is returned by an entirely
+            // separate call. Without this the tool showed nothing for a swap clip, which is why a clip
+            // that opens on a material swap looked empty even though it plainly had keys in it.
+            //
+            // These are also routinely single-key, one value pinned at time 0, so anything that assumes
+            // a start and an end key would skip them even after they are found.
+            foreach (var ob in AnimationUtility.GetObjectReferenceCurveBindings(currentClip))
+            {
+                var keys = AnimationUtility.GetObjectReferenceCurve(currentClip, ob);
+
+                bindingProfiles.Add(new BindingProfile
+                {
+                    binding = ob,
+                    selected = false,
+                    easing = defaultEase,
+                    intermediateKeys = 0,
+                    originalCurve = null,
+                    currentCurve = null,
+                    isPPtr = true,
+                    objectKeys = keys ?? new ObjectReferenceKeyframe[0]
+                });
+            }
+
             RebuildBindingsUI();
             timelineRibbon.SetClip(currentClip);
             statusLabel.text = $"[VixForge] Indexed {bindingProfiles.Count} binding nodes.";
@@ -753,6 +927,23 @@ namespace Vixenlicious.AnimationWorkbench
             graphView.SetZoomFactor(Mathf.Max(0.01f, zoomPercent) / 100f);
 
             TryAutoFitGraph();
+        }
+
+        // Reads out every key on a swap track. A single key pinned at time 0 is the normal shape for a
+        // material swap, so this always prints the keys it has rather than looking for a start and an end.
+        private static string DescribeObjectKeys(ObjectReferenceKeyframe[] keys)
+        {
+            if (keys == null || keys.Length == 0) return "no keys";
+
+            var parts = new List<string>();
+            for (int i = 0; i < keys.Length && i < 4; i++)
+            {
+                string name = keys[i].value != null ? keys[i].value.name : "None";
+                parts.Add($"{keys[i].time:0.###}s = {name}");
+            }
+            if (keys.Length > 4) parts.Add($"+{keys.Length - 4} more");
+
+            return string.Join("   ", parts);
         }
 
         private void RebuildBindingsUI()
@@ -775,6 +966,29 @@ namespace Vixenlicious.AnimationWorkbench
                 label.style.unityTextAlign = TextAnchor.MiddleLeft;
                 label.style.flexGrow = 1;
                 label.tooltip = $"{p.binding.type?.Name ?? "Unknown"}";
+
+                // A swap track gets its own row. Intermediate keys, easing and Sample all assume numbers
+                // that can be interpolated, and none of that means anything for a track whose values are
+                // asset references. Showing those controls greyed would only invite people to try.
+                if (p.isPPtr)
+                {
+                    toggle.SetEnabled(false);
+                    toggle.tooltip = "Swap tracks are shown so the clip reads whole. They are not edited here.";
+
+                    label.text = $"{p.binding.path} → {p.binding.propertyName}   [swap]";
+
+                    var keysLabel = new Label(DescribeObjectKeys(p.objectKeys));
+                    keysLabel.style.unityTextAlign = TextAnchor.MiddleLeft;
+                    keysLabel.style.minWidth = 260;
+                    keysLabel.style.opacity = 0.85f;
+                    keysLabel.tooltip = "Every key on this swap track, as time = asset.";
+
+                    row.Add(toggle);
+                    row.Add(label);
+                    row.Add(keysLabel);
+                    bindingsListContainer.Add(row);
+                    continue;
+                }
 
                 var inter = new IntegerField { value = p.intermediateKeys };
                 inter.style.width = 80;
@@ -845,6 +1059,7 @@ namespace Vixenlicious.AnimationWorkbench
             foreach (var p in bindingProfiles)
             {
                 if (!p.selected) continue;
+                if (p.isPPtr) continue;
 
                 var orig = EnsureCurveExistsForBinding(currentClip, p.binding);
                 AnimationCurve baseCurve = new AnimationCurve(orig.keys);
@@ -878,7 +1093,10 @@ namespace Vixenlicious.AnimationWorkbench
             statusLabel.text = $"[VixForge] Push successful. Applied {stagedCurves.Count} curve datasets to active clip.";
 
             foreach (var p in bindingProfiles)
+            {
+                if (p.isPPtr) continue;
                 p.currentCurve = AnimationUtility.GetEditorCurve(currentClip, p.binding);
+            }
 
             graphView.SetCurveSet(stagedCurves);
         }
@@ -891,6 +1109,9 @@ namespace Vixenlicious.AnimationWorkbench
 
             foreach (var p in bindingProfiles)
             {
+                // A swap track has no originalCurve to restore, and reverting must not touch it.
+                if (p.isPPtr || p.originalCurve == null) continue;
+
                 stagedCurves[p.binding] = new AnimationCurve(p.originalCurve.keys);
                 AnimationUtility.SetEditorCurve(currentClip, p.binding, new AnimationCurve(p.originalCurve.keys));
             }
@@ -1026,6 +1247,13 @@ namespace Vixenlicious.AnimationWorkbench
             public int intermediateKeys;
             public AnimationCurve originalCurve;
             public AnimationCurve currentCurve;
+
+            // Object-reference tracks, which is what a material swap is. These are a different kind of
+            // track from everything above: their values are asset references, not numbers, so there is
+            // nothing to ease between and no AnimationCurve that can hold them. They are carried here so
+            // the clip can be seen whole, and they deliberately stay out of stagedCurves and the graph.
+            public bool isPPtr;
+            public ObjectReferenceKeyframe[] objectKeys;
         }
     }
 }

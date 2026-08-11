@@ -1,6 +1,6 @@
 {
   "name": "com.vixencreations.vixens-toolbox",
-  "version": "2.13.1",
+  "version": "2.14.0",
   "displayName": "Vixen Tool Box",
   "description": "A VPM-native, cyber-noir suite of Unity Editor tools for VRChat creators, hand-built by VixForge Interactive. Includes a full Avatar Optimization Suite with real QEM mesh decimation, a non-destructive Quest Conversion Engine, a multi-ecosystem World Engine auditor (ProTV, AudioLink, LTCGI, VRSL, Light Volumes and more), PhysBone topology mapping, convention Badge Studio, and the flagship VixForge Avatar Optimizer. Engineered to eliminate human error, enforce project consistency, and push Unity 2022.3 to its limits. Trusted by 1,500+ creators.",
   "unity": "2022.3",
