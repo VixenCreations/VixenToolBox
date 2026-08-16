@@ -2,9 +2,9 @@
 
 I built the Vixens Toolbox because the VRChat pipeline is full of repetitive, mind-numbing bottlenecks.
 
-This is a comprehensive suite of custom Unity Editor utilities, automation scripts, and a flagship avatar shader focused specifically on **High-Fidelity Avatar Pipeline & Topology Architecture**. Engineered entirely on Unity's modern UI Toolkit, the goal is simple: eliminate human error, enforce strict project consistency, and push the Unity engine to its absolute limits. Whether you're violently crushing a PC avatar's polycount or auditing a complex world for Udon network starvations, this toolset is designed to save you hundreds of hours of grinding so you can actually focus on creating.
+This is a comprehensive suite of custom Unity Editor utilities and automation scripts focused specifically on **High-Fidelity Avatar Pipeline & Topology Architecture**. The four flagship tools are the **Quest Conversion Engine**, the **Avatar Optimization Suite**, the **Vixen World Engine**, and **Animation Workbench Pro**. Engineered entirely on Unity's modern UI Toolkit, the goal is simple: eliminate human error, enforce strict project consistency, and push the Unity engine to its absolute limits. Whether you're violently crushing a PC avatar's polycount or auditing a complex world for Udon network starvations, this toolset is designed to save you hundreds of hours of grinding so you can actually focus on creating.
 
-* **Package:** `com.vixencreations.vixens-toolbox` (v2.10.1)
+* **Package:** `com.vixencreations.vixens-toolbox` (v2.15.0)
 * **Target:** Unity 2022.3.22f1 / VRChat SDK 3.10.3
 * **Docs & Storefront:** [vixencreations.github.io/VixenToolBox](https://vixencreations.github.io/VixenToolBox/)
 
@@ -18,7 +18,7 @@ This is a comprehensive suite of custom Unity Editor utilities, automation scrip
 
 ### 2. The Vixen World Engine
 
-A lethal, enterprise-level heuristic auditing system designed to hunt down 25+ specific architectural anti-patterns across the VRChat ecosystem.
+A lethal, enterprise-level heuristic auditing system running around 137 distinct checks across nine supported ecosystems, most of them carrying a one-click fix.
 
 * **Omni-Ecosystem Audits:** Explicitly mapped to **ProTV**, **TXL**, **VizVid**, **IwaSync3**, **AudioLink**, **LTCGI**, **Rinvo**, and **Light Volumes**.
 * **ProTV:** Detects GSV texture conflicts, Realtime GI emission blowouts on video screens, oversized 4K `RenderTexture` VRAM nukes, and misconfigured RTGI sinks.
@@ -32,12 +32,12 @@ A lethal, enterprise-level heuristic auditing system designed to hunt down 25+ s
 * **Native Video Pipeline Catchers:** Dedicated heuristics for `VRCAVProVideoPlayer` and `VRCUnityVideoPlayer` that detect and offer auto-fixes for "Unlimited (0)" resolution bandwidth nukes and low-latency configurations that destabilize mobile instances.
 * **World Profiler Dashboard:** Aggregates texture, mesh, audio, and UI memory via `Profiler.GetRuntimeMemorySizeLong()` and computes a threat score that heavily penalizes realtime shadow casters, physics, and dense Light Volume setups, surfacing an at-a-glance `OPTIMAL / MODERATE / SEVERE` compute threat level.
 
-### 3. Avatar Optimization & Vertice Mesh Welder
+### 3. Avatar Optimization & QEM Decimation
 
-A multi-threaded execution system designed to violently crush PC avatar polycounts while mathematically protecting high-fidelity facial topology.
+An execution system designed to violently crush PC avatar polycounts while mathematically protecting high-fidelity facial topology, with the texture pass spread across every core your machine has.
 
-* **Vertice Mesh Welder:** Annihilates heavy meshes using a proprietary 5D coordinate key (XYZ position plus UV coordinates). Vertices sharing atomic space but divergent UVs are never fused, preventing seam tearing and texture warping.
-* **Dual-Shielding Exclusion System:** Scans submesh material slots for high-detail keywords (eyes, visor, face) and queries the Humanoid armature for head/neck bone weights to lock delicate facial topology out of the decimation grid.
+* **Precision QEM Decimation:** Quadric Error Metric edge collapse (Garland-Heckbert), the same class of algorithm as Blender's Decimate. Drives each heavy mesh toward your triangle target while preventing face flips and preserving UV/normal seams, material boundaries and open borders. UVs, colours and bone weights are interpolated across every collapse, blendshapes are remapped, and the run halts early rather than shredding protected geometry.
+* **Dual-Shielding Exclusion System:** Material slots whose names read as delicate (eye, visor, lens, blush, face, mouth, teeth, pupil, iris) are locked out of the decimation grid, and on a Humanoid rig the vertices weighted to the left and right Hand bones are locked too.
 * **Deep Material Inspector Spider:** Pierces through obfuscated components, including Animator controllers and **VRCFury** toggles, to hunt down hidden materials and textures, ensuring the downsampling pipeline captures 100% of the avatar's VRAM footprint.
 * **Hardware-Level VRAM Profiling:** Captures the base texture class directly from GPU registers via `Profiler.GetRuntimeMemorySizeLong()`, unmasking procedural, unmanaged, and 64MB 4K `RenderTexture` assets that hide from standard project scanners.
 
@@ -46,7 +46,7 @@ A multi-threaded execution system designed to violently crush PC avatar polycoun
 A fully non-destructive pipeline for converting PC avatars to Android. It generates an isolated prefab sandbox so your base PC avatar is never irreversibly altered.
 
 * **Biometric Purge ("Hunter-Killer"):** Eradicates compilation blockages by aggressively stripping out PC-VR face tracking parameters. Specifically targets `adjerry91` templates and internal VRCFury branches like `VF_UE_VRCFT` and `VRCFury - Face Tracking Prefabs`, locking them out of the Android build pipeline.
-* **High-Fidelity Linear Downsampling:** Intercepts Unity's importer to route textures through a Magick.NET Lanczos pipeline in linear color space, followed by an `UnsharpMask` pass to recover micro-contrast (fur, fabric) before ASTC compression.
+* **High-Fidelity Linear Downsampling:** Intercepts Unity's importer to route textures through a Magick.NET Lanczos pipeline in linear color space, followed by an `AdaptiveSharpen` pass to recover micro-contrast (fur, fabric) before ASTC compression.
 * **ASTC Pipeline Sync:** Fixes sRGB/Linear mismatches by forcing correct format serialization before applying `ASTC_6x6` crunching, preventing corrupted normal maps and inverted color outputs.
 * **Interactive Topology System:** Presents PhysBones, colliders, contacts, constraints, raycasts, particles, trails, lines, joints, and incompatible components in a UI Toolkit system. VRChat mobile limits are applied per target rank, with auto-culled categories (e.g. face tracking, joints) locked for safety but still visible for forensic review.
 * **Texture Processing System:** Lists all detected textures with resolution metadata and per-texture toggles, allowing you to selectively opt out of Magick.NET processing for assets you want to preserve at full fidelity.
@@ -83,27 +83,23 @@ Procedural badge generation for VRChat conventions and identity work.
 
 The central command console and documentation layer for the entire architecture.
 
-* **Vixen Hub Dashboard:** A UI Toolkit-powered control center with tabs for Ecosystem Architecture, Core Modules, Network Routing, Support, and Release Changelogs. All major tools are launched from here with consistent styling and layout.
+* **Vixen Hub Dashboard:** A UI Toolkit-powered control center with tabs for News, Architecture, Core Modules, Supported Modules, Network, Support and Changelogs. World projects gain an eighth tab, Metrics Engine. All major tools are launched from here with consistent styling and layout.
 * **Dynamic Changelog Viewer:** Parses `CHANGELOG.md` into version-indexed entries with a dropdown selector. The Hub's update badge routes directly into this tab so you can see exactly what changed in each release.
-* **Core Modules Grid:** Curated launchers for flagship tools like the Quest Conversion Engine, Badge Studio, Animation Workbench Pro, PhysBone Topology Mapper, Accessory Mounting Engine, Pipeline Preset Manager, and the World Pipeline tools (Live Surface Snapping, Precision Click-to-Place, Vixen World Engine), with live state indicators for scene utilities.
-* **AI Transparency & Development Ethics:** Fully integrated documentation detailing our enterprise-scale AI deployment, our 100% hand-reviewed code standards, agentic research integration, and workflow accelerations, guaranteeing total transparency across the ecosystem.
-* **Network & Routing:** Centralized, distraction-free routing restricted strictly to our active channels: **GitHub** (source repositories, issue tracking, and version history) and **YouTube** (technical breakdowns and pipeline tutorials).
-* **In-Engine Documentation:** Bypassing external websites entirely, the Hub features a dynamic Markdown-to-UIElements parser. Deep-dive architecture guides (like the Heuristics Engine and Shader Setup) are rendered directly inside the Unity Editor, keeping your workflow unbroken.
+* **Core Modules Grid:** Launchers for the tools your project can actually run. Animation Workbench Pro and the Pipeline Preset Manager always appear; avatar projects add Badge Studio, the Quest Conversion Engine, the Optimization Suite, the PhysBone Topology Mapper, Animator Forge and the Accessory Mounting Engine; world projects add the Vixen World Engine plus Live Surface Snapping and Precision Click-to-Place, which show their on/off state right on the card.
+* **Network & Routing:** Centralized routing to our active channels: **GitHub** (source and issue tracking), **Discord**, **X/Twitter** and **YouTube**. Storefront and donation links live on the Support tab.
+* **In-Engine Documentation:** Bypassing external websites entirely, the Hub features a dynamic Markdown-to-UIElements parser. The News, Architecture and Changelog tabs render straight from the package's own markdown, and world projects get the full Heuristics Engine breakdown on the Metrics Engine tab.
 
-### 9. VixenWear Latex Ultra - Native Shader Architecture
+### 9. VixenWear Latex Ultra
 
-A proprietary, high-fidelity dual-lobe PBR surface shader engineered for synthetic materials, shipping alongside a tessellation-free `Latex Ultra SPS` variant for VRCFury SPS patching. The inspector is split into six tabs: BASE, SURFACE, POLISH, INTEGRATION, AUDIOLINK, and STAGE.
-
-* **Physical Lighting Model:** A full industry-standard GGX BRDF stack (`D_GGX`, `V_SmithJointGGX`, `F_Schlick`, `Burley` diffuse, Karis split-sum) with optional Filament/Frostbite multi-scatter energy compensation, anisotropic latex-stretch specular, thin-part transmission, tinted dielectric clearcoat, geometric specular anti-aliasing, and a VRChat mirror-camera fix that reads the true rendering camera for per-eye-correct specular and parallax.
-* **Texture Packing & Compatibility:** A single packed RGBA PBR map with Poiyomi / Substance / Marmoset channel selectors, Mochie reflection & specular masks with a one-click setup button, and a Standard-style render-mode selector (Opaque / Cutout / Fade / Transparent).
-* **Liquid Surface System (2.4.0):** A master Polish gate collapses the entire clearcoat/SSS/transmission stack to a flat base on demand; a wet/run-off layer adds a soaked look, animated rivulets, and PC-only geometry water droplets; and a gravity-aligned melting goo system sags the mesh in the displacement stage with floor pooling and per-strand sway.
-* **World Integration & Kinetics:** Deep Light Volumes, LTCGI, and PiMaker AreaLit area-light mix controls (AreaLit intercepted at the GI level through an included world-side Global Broadcaster, so every avatar in the world is lit automatically), the VRSL stage-hijack protocol with DMX geo-warping plus an additive GI stage wash, runtime-gated AudioLink, the God Tier Cybernetics HUD (VU meters, spectrum, waveform, DMX grid, autocorrelator ring), and a flying-shard kinetic vertex engine. Every world-lighting integration is fail-safe: it strips or no-ops cleanly in worlds that lack the system.
-* **VectorLabelDrawer & Hybrid UI Architecture:** A custom `MaterialPropertyDrawer` natively hooked into ShaderLab's Vector arrays eliminates 4-float UI clutter while preserving exact field alignments, wrapped in a UITK + IMGUI hybrid inspector with secure `EditorPrefs` caching that survives domain reloads. Per-tab copy/paste/reset and a build-time variant stripper keep materials clean.
-* **Aggressive Baseline Optimization & Packing:** Shader variables are consolidated into packed `Vector` attributes (`_PBRParams`, `_GeoEmisParams`, `_ClearcoatParams`, etc.) to slash uniform overhead, and expensive calculations (Parallax, Displacement, Iridescence, Rim, AudioLink) are zeroed out by default for maximum out-of-the-box performance.
+Our dual-lobe PBR shader for synthetic materials is a **standalone product** and does not ship inside this package. The Avatar Validator still recognises `VixenWear/Latex Ultra` materials, so avatars wearing it keep their packed-map checks.
 
 > Every option in every inspector tab is documented control-by-control, with full editor screenshots, in the [Shader Docs](https://vixencreations.github.io/VixenToolBox/shaderdocs.html).
 
-### 10. Special Thanks & Acknowledgements
+### 10. Third-Party Components
+
+* **Magick.NET `14.16.0`** (ImageMagick `7.1.2-29`), by Dirk Lemstra, under the Apache-2.0 licence. This is the imaging engine behind every texture resize, badge composite, and VRAM pass in the toolbox. It ships inside the package as an Editor-only Windows x64 plugin, so nothing about it reaches your avatar or world build.
+
+### 11. Special Thanks & Acknowledgements
 
 This architecture requires immense R&D and community synergy. Massive thanks to the following creators for their crucial insights and forensic pipeline debugging for keeping the engine running:
 

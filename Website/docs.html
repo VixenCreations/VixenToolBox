@@ -371,7 +371,7 @@
                     </li>
                     <li>
                         <strong>Two-Phase Architecture:</strong> Phase 1 ("Extract Master Copy") walks the source avatar,
-                        generates presets under <code>Assets/Vixens Toolbox/Blueprints/&lt;Name&gt;/Presets</code>, and writes a
+                        generates presets under <code>Assets/VixenTools/Blueprints/&lt;Name&gt;/Presets</code>, and writes a
                         master <code>.asset</code> blueprint. Phase 2 ("Inject Blueprint") traverses a target avatar by
                         relative path, auto-adding <code>VRCPhysBone</code> components where missing and applying the stored
                         presets.
@@ -388,7 +388,7 @@
                     <li>
                         <strong>Creating the Blueprint:</strong> A creator selects their master PC avatar root and runs
                         "Extract Master Copy". This recursively catalogs every physics script and saves it to a structured
-                        blueprint (e.g., <code>Assets/Vixens Toolbox/Blueprints/NovaBeast_1.2_MasterTopology</code>).
+                        blueprint (e.g., <code>Assets/VixenTools/Blueprints/Avatar_MasterTopology</code>).
                     </li>
                     <li>
                         <strong>Restoring Stripped Physics:</strong> If an avatar has had its components stripped (such as
@@ -396,6 +396,121 @@
                         and hits "Inject". The mapper autonomously traverses the skeletal structure and reapplies the data.
                         For instance, injecting the blueprint can perfectly restore dozens of distinct physics presets
                         accurately across the entire rig in a single click.
+                    </li>
+                </ul>
+            </div>
+
+            <!-- ANIMATOR FORGE -->
+            <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Animator Forge</h2>
+                    <div class="badge">
+                        VixenAnimatorForge.cs |
+                        AnimatorDoctor.cs |
+                        RigForge.cs
+                    </div>
+                </div>
+                <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
+                    A two-sided avatar animator tool. The <em>Doctor</em> scans every playable-layer controller plus the
+                    Expression Parameters and Menu and reports ranked findings with one-click fixes. The <em>Forge</em>
+                    builds complete, fully-wired rigs (parameter, menu control, FX layer, states, transitions and clips)
+                    from a single form. Both halves are non-destructive by construction.
+                </p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li>
+                        <strong>Ranked Finding Model:</strong> Every diagnostic is emitted as a finding carrying a
+                        <code>Severity</code> (<code>Error</code>, <code>Warning</code>, <code>Info</code>), a title, a
+                        detail string, a context object, an <code>IsSafe</code> flag, and an optional <code>Fix</code>
+                        delegate. The UI renders a <code>LOCATE</code> button per finding that drives
+                        <code>EditorGUIUtility.PingObject</code> onto the offending asset, plus a
+                        <code>FIX ALL SAFE ISSUES</code> batch that runs only the findings where
+                        <code>IsSafe &amp;&amp; Fix != null</code>, leaving every judgement call to the creator.
+                    </li>
+                    <li>
+                        <strong>Driver-Parameter Recognition:</strong> Controllers that reference parameters which were
+                        never declared are the single most common source of SDK panel spam on a purchased base. The Doctor
+                        separates the two cases: parameters VRChat itself provides at runtime (<code>Seated</code>,
+                        <code>AFK</code>, <code>VRMode</code>, <code>GestureLeft</code>/<code>GestureRight</code> and the
+                        rest of the driver set) are re-added to the controller with the correct type, while genuinely
+                        undefined parameters are reported rather than invented.
+                    </li>
+                    <li>
+                        <strong>Write Defaults Normalizer:</strong> Detection follows the widely-used VRCFury model.
+                        States are grouped as normal, Direct blend tree, or additive; the target value is taken from the
+                        FX layer's majority (falling back to the avatar-wide majority on smaller rigs); and normalization
+                        always forces Direct blend trees and additive layers on, because those break otherwise. The exact
+                        offending states are named in the report and nothing is written until asked.
+                    </li>
+                    <li>
+                        <strong>Empty-Clip Repair:</strong> Reproduces VRChat's own scan for the
+                        "Write Defaults disabled where the animation clip is either missing or empty" warning.
+                        <code>MotionHasEmptyIssue</code> walks blend trees recursively, so a Direct tree with one empty
+                        child is caught as readily as a bare null motion. The fix assigns a shared inert clip from
+                        <code>Assets/VixenTools/AnimatorForge/_Empty.anim</code> carrying a single constant
+                        <code>m_IsActive</code> curve, which is what actually clears the warning: a genuinely empty clip
+                        still reads as empty to the SDK.
+                    </li>
+                    <li>
+                        <strong>Expression Asset Auditing:</strong> Cross-checks the Expression Parameters and Menu against
+                        the controllers. It catches duplicate parameter names, type mismatches between a controller and the
+                        expression asset, synced cost overflow against
+                        <code>VRCExpressionParameters.MAX_PARAMETER_COST</code>, menus exceeding
+                        <code>VRCExpressionsMenu.MAX_CONTROLS</code>, SubMenu controls with a null target menu, controls
+                        with no parameter at all, and controls bound to parameters that were never declared.
+                    </li>
+                    <li>
+                        <strong>Layer &amp; Transition Hygiene:</strong> Flags duplicate layer names, layers with no states,
+                        layers with no default state, layers sitting at weight 0, transition conditions using a comparison
+                        mode invalid for the parameter's type (for example <code>Greater</code> on a Bool), and instant
+                        zero-duration transitions.
+                    </li>
+                    <li>
+                        <strong>Five Rig Types:</strong> <code>GameObjectToggle</code> (one or many objects at once),
+                        <code>BlendshapeToggle</code>, <code>BlendshapeSlider</code> (a radial-puppet dial),
+                        <code>MaterialSwap</code>, and <code>ExclusiveGroup</code>, a radio set where enabling one option
+                        drives the rest off. Each build generates the Expression parameter, the menu control or submenu,
+                        the FX layer with its states and transitions, and the animation clips.
+                    </li>
+                    <li>
+                        <strong>Convention Matching:</strong> New states are created to match the avatar's own Write
+                        Defaults convention rather than a hardcoded default, so a forged toggle does not become the one
+                        odd state that desyncs an otherwise consistent controller.
+                    </li>
+                    <li>
+                        <strong>Non-Destructive Asset Handling:</strong> Reuses an existing FX controller and expression
+                        assets or creates them when absent, clones read-only sample controllers before touching them, and
+                        never deletes existing layers or parameters. Generated assets land in
+                        <code>Assets/VixenTools/AnimatorForge/&lt;AvatarName&gt;</code> via a step-through
+                        <code>IsValidFolder &rarr; CreateFolder</code> chain.
+                    </li>
+                </ul>
+
+                <h3 class="text-glow-pink mb-2" style="font-size: 1.1rem;">In Practice: The Workflow</h3>
+                <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
+                    <li>
+                        <strong>Triage On A New Base:</strong> A freshly purchased avatar is dropped into the Doctor tab and
+                        scanned. The typical first result is a cluster of missing driver parameters on the Sit and Action
+                        layers plus a mixed Write Defaults report. <code>FIX ALL SAFE ISSUES</code> clears the unambiguous
+                        parameter findings in one pass; the Write Defaults normalization is reviewed and applied separately
+                        because it changes animation behavior.
+                    </li>
+                    <li>
+                        <strong>Clearing The SDK Panel:</strong> Where the SDK complains about Write-Defaults-off states
+                        with missing or empty clips, the empty-clip fix assigns the shared inert clip across every offending
+                        state, and the warning clears on the next build check.
+                    </li>
+                    <li>
+                        <strong>Forging A Toggle:</strong> On the Forge tab the creator names the rig, picks
+                        <em>GameObject toggle</em>, drags in one or several objects, and builds. The parameter, the menu
+                        entry, the FX layer, both states and both clips are generated together and matched to the avatar's
+                        existing Write Defaults convention, so the toggle works on the first upload without hand-wiring the
+                        Animator.
+                    </li>
+                    <li>
+                        <strong>Exclusive Outfit Sets:</strong> For a set of mutually exclusive outfit pieces the
+                        <em>Exclusive group</em> type generates an Int parameter with one state per option, so selecting one
+                        drives every sibling off. This is deliberately an Int plus toggles rather than a radial, because
+                        landing exactly on option three with a thumbstick is miserable.
                     </li>
                 </ul>
             </div>
@@ -458,10 +573,10 @@
                     </li>
                     <li>
                         <strong>Step-Through Asset Persistence:</strong> Baked meshes serialize to
-                        <code>Assets/Vixens Toolbox/Meshes/BakedAccessories/</code> with GUID-suffixed names to prevent
+                        <code>Assets/VixenTools/Meshes/BakedAccessories/</code> with GUID-suffixed names to prevent
                         collision across runs. The folder bootstrap uses a step-through
                         <code>IsValidFolder &rarr; CreateFolder</code> chain so the path resolves cleanly on fresh
-                        installs where neither <code>Assets/Vixens Toolbox</code> nor its children exist yet.
+                        installs where neither <code>Assets/VixenTools</code> nor its children exist yet.
                     </li>
                     <li>
                         <strong>Full Undo Integration:</strong> Every bone clone, component swap, constraint binding,
@@ -875,7 +990,7 @@
                                 <code>ShaderDictionaryAsset</code> + its custom editor expose three buttons -
                                 <em>Populate Targets</em>, <em>Populate Whitelist</em>, and
                                 <em>Factory Reset (Nuke &amp; Rebuild)</em>. Dictionaries auto-generate inside
-                                <code>Assets/Vixens Toolbox/Asset Database/World Engine/</code> (not inside
+                                <code>Assets/VixenTools/Asset Database/World Engine/</code> (not inside
                                 <code>Packages/</code>) so custom entries survive VPM upgrades. The
                                 <em>Soft Nuke</em> path bypasses <code>AssetDatabase.DeleteAsset</code> to avoid
                                 GUI null-reference collapses during a rebuild.

@@ -8,10 +8,10 @@
     <meta name="google-site-verification" content="_Uhz5PSpqYPrtXiD2nrLhkUvpr6Skp-YzsiUDo-71ew">
 
     <!-- Primary SEO -->
-    <title>Vixens Toolbox | VRChat Shader & Automation Architecture</title>
-    <meta name="title" content="Vixens Toolbox | VRChat Shader & Automation Architecture">
-    <meta name="description" content="The Vixens Toolbox is a professional-grade VRChat package suite. Featuring our flagship Latex Shader, advanced PhysBone automation pipelines, dynamic PBR material systems (fur/cloth/nylon), and custom Unity 2022.3 editor utilities.">
-    <meta name="keywords" content="VRChat shader, VRChat latex shader, PBR materials, Vixens Toolbox, VixForge Interactive, Unity 2022.3 tools, PhysBones automation, VRChat avatar architecture, procedural generation, VRChat package ecosystem, VPM distribution, Vixenlicous">
+    <title>Vixens Toolbox | VRChat Avatar &amp; World Tooling</title>
+    <meta name="title" content="Vixens Toolbox | VRChat Avatar &amp; World Tooling">
+    <meta name="description" content="The Vixens Toolbox is a professional-grade VRChat package suite. Featuring the Quest Conversion Engine, the Avatar Optimization Suite with real QEM mesh decimation, the Vixen World Engine auditor, and Animation Workbench Pro, for Unity 2022.3.">
+    <meta name="keywords" content="VRChat tools, Quest conversion, avatar optimization, mesh decimation, VRChat world audit, animation tools, Vixens Toolbox, VixForge Interactive, Unity 2022.3 tools, PhysBones automation, VRChat avatar architecture, VRChat package ecosystem, VPM distribution, Vixenlicous">
     <meta name="author" content="Vixenlicous | VixForge Interactive">
     <meta name="theme-color" content="#ff00aa">
 
@@ -21,16 +21,16 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/">
-    <meta property="og:title" content="Vixens Toolbox | VRChat Shader & Automation Architecture">
-    <meta property="og:description" content="Discover the Vixens Toolbox: an advanced VRChat shader and scripting suite. High-fidelity materials, PhysBone pipelines, and Unity editor automation.">
+    <meta property="og:title" content="Vixens Toolbox | VRChat Avatar &amp; World Tooling">
+    <meta property="og:description" content="Discover the Vixens Toolbox: an advanced VRChat avatar and world tooling suite. Quest conversion, QEM mesh decimation, world auditing, and animation authoring.">
     <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="og:site_name" content="VixForge Interactive | Vixens Toolbox">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/">
-    <meta property="twitter:title" content="Vixens Toolbox | VRChat Shader & Automation Architecture">
-    <meta property="twitter:description" content="The pro-grade VRChat shader and automation hub. Featuring the flagship Latex Shader, dynamic PBR materials, and elite Unity editor tools.">
+    <meta property="twitter:title" content="Vixens Toolbox | VRChat Avatar &amp; World Tooling">
+    <meta property="twitter:description" content="The pro-grade VRChat automation hub. Featuring the Quest Conversion Engine, the Avatar Optimization Suite, the World Engine auditor, and Animation Workbench Pro.">
     <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="twitter:site" content="@VixenVRC">
 
@@ -42,7 +42,7 @@
           "name": "Vixens Toolbox",
           "operatingSystem": "Windows, macOS",
           "applicationCategory": "GraphicsApplication",
-          "description": "The Vixens Toolbox is a professional-grade VRChat shader and automation ecosystem. Features include high-fidelity PBR material systems (latex, cloth, nylon, fur), PhysBone automation pipelines, and advanced Unity 2022.3 editor utilities.",
+          "description": "The Vixens Toolbox is a professional-grade VRChat avatar and world automation ecosystem. Features include a non-destructive Quest conversion pipeline, QEM mesh decimation, a multi-ecosystem world auditor, and advanced Unity 2022.3 editor utilities.",
           "author": {
             "@type": "Organization",
             "name": "VixForge Interactive"
@@ -145,7 +145,7 @@
     </nav>
 
     <main class="main-wrapper">
-        <div class="col align-items-center content">
+        <div class="col align-items-center content content-wide">
             <div id="listingInfo" class="col mb-4 w-100 align-items-center index-desktop-only">
                 <h1>
                     {{~ listingInfo.Name ~}}
@@ -175,7 +175,7 @@
                     <div class="stat-sub">and growing every day</div>
                 </a>
                 <a class="stat-card stat-card-cyan" href="https://github.com/VixenCreations/VixenToolBox/releases/latest" target="_blank" rel="noopener" aria-label="Latest release version">
-                    <div class="stat-value text-glow-cyan" id="statVersion">v2.10.1</div>
+                    <div class="stat-value text-glow-cyan" id="statVersion">...</div>
                     <div class="stat-label">Latest Release</div>
                     <div class="stat-sub">live on the VPM registry</div>
                 </a>
@@ -211,11 +211,32 @@
                             var el = document.getElementById('statDownloads');
                             if (el && !isNaN(n)) countUp(el, n);
                         }).catch(function () {});
+                    function seedVersionFromListing() {
+                        var el = document.getElementById('statVersion');
+                        if (!el || el.getAttribute('data-live') === '1') return;
+                        var pkgs = window.VPM_PACKAGES;
+                        if (!pkgs) return;
+                        var pkg = pkgs['com.vixencreations.vixens-toolbox'];
+                        if (!pkg) {
+                            var keys = Object.keys(pkgs);
+                            if (keys.length) pkg = pkgs[keys[0]];
+                        }
+                        if (pkg && pkg.version) el.textContent = 'v' + pkg.version;
+                    }
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', seedVersionFromListing);
+                    } else {
+                        seedVersionFromListing();
+                    }
+
                     fetch(RAW + 'version.json', { cache: 'no-cache' })
                         .then(function (r) { return r.ok ? r.json() : null; })
                         .then(function (d) {
                             var el = document.getElementById('statVersion');
-                            if (el && d && d.message) el.textContent = d.message;
+                            if (el && d && d.message) {
+                                el.textContent = d.message;
+                                el.setAttribute('data-live', '1');
+                            }
                         }).catch(function () {});
                 })();
             </script>
@@ -240,6 +261,8 @@
                 </fluent-button>
             </div>
 
+            <div class="registry-layout">
+            <div class="registry-main">
             <div class="searchBlock mt-4 index-desktop-only">
                 <fluent-text-field id="searchInput" placeholder="Search packages..." type="text" autoFocus></fluent-text-field>
             </div>
@@ -293,6 +316,49 @@
                 <a href="{{listingInfo.InfoLink.Url}}" target="_blank" class="neon-link">{{ if listingInfo.InfoLink.Text; listingInfo.InfoLink.Text; else; "Learn More"; end; }}</a>
             </div>
             {{~ end; ~}}
+
+            <div class="ecosystem-block">
+                <h2 class="text-glow-pink m-0 mb-1">More from VixForge</h2>
+                <p class="caption1 mb-3 ecosystem-intro">Our shaders are standalone products, sold separately from the free toolbox.</p>
+
+                <div class="ecosystem-cards">
+                    <a class="ecosystem-card" href="https://vixenlicous.gumroad.com/l/latex-ultra" target="_blank" rel="noopener">
+                        <span class="ecosystem-tag">Shader</span>
+                        <h3 class="ecosystem-name text-glow-cyan">VixenWear Latex Ultra</h3>
+                        <p class="ecosystem-desc">A dual-lobe GGX shader for synthetic materials: clearcoat, thin-film, wet and drip, melting goo, triple matcaps, and live reactions to AudioLink, LTCGI, VRC Light Volumes and VRSL. Ships with a tessellation-free SPS twin for VRCFury.</p>
+                        <span class="ecosystem-cta">View on Gumroad</span>
+                    </a>
+
+                    <a class="ecosystem-card" href="https://vixenlicous.gumroad.com/l/vixforge-toon" target="_blank" rel="noopener">
+                        <span class="ecosystem-tag">Shader</span>
+                        <h3 class="ecosystem-name text-glow-cyan">VixForge Toon</h3>
+                        <p class="ecosystem-desc">A cel and anime shader carrying the same toolkit, with rebuilt outlines. Coming from lilToon, Poiyomi or VRChat's Toon Standard, the inspector translates your existing materials across in one click, and can convert a whole avatar at once with a backup and full undo.</p>
+                        <span class="ecosystem-cta">View on Gumroad</span>
+                    </a>
+
+                    <a class="ecosystem-card" href="https://vrc.group/THEVIX.6475" target="_blank" rel="noopener">
+                        <span class="ecosystem-tag ecosystem-tag-cyan">Community</span>
+                        <h3 class="ecosystem-name text-glow-cyan">The Vix</h3>
+                        <p class="ecosystem-desc">Our VRChat group. Come find us in game.</p>
+                        <span class="ecosystem-cta">Join on VRChat</span>
+                    </a>
+                </div>
+            </div>
+            </div>
+
+            <aside class="registry-aside">
+                <h2 class="text-glow-pink m-0 mb-1">Join the Discord</h2>
+                <p class="caption1 mb-3 ecosystem-intro">Bug reports, feature requests, and help with your avatar or world.</p>
+
+                <div class="discord-embed">
+                    <iframe src="https://discord.com/widget?id=1496870965336870952&amp;theme=dark"
+                            title="VixForge Interactive Discord server widget"
+                            width="350" height="500" loading="lazy"
+                            allowtransparency="true" frameborder="0"
+                            sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+                </div>
+            </aside>
+            </div>
         </div>
 
         <fluent-dialog id="addListingToVccHelp" hidden modal>

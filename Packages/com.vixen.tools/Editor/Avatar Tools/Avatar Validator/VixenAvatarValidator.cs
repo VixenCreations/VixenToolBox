@@ -38,7 +38,7 @@ namespace VixenTools.Editor
             public string ID;
             public string Label;
             public string Description;
-            public bool IsSelected = true;
+            public bool IsSelected = false;
             public System.Action Execute;
             public System.Func<string> ComputeSignature;
         }
@@ -100,12 +100,13 @@ namespace VixenTools.Editor
 
             report.AvatarKey = OptimizationStateCache.GetAvatarKey(avatarRoot);
 
-            void AddTask(OptimizationTask task)
+            void AddTask(OptimizationTask task, bool prepend = false)
             {
                 if (task == null) return;
                 string sig = task.ComputeSignature != null ? task.ComputeSignature() : task.ID;
                 if (OptimizationStateCache.IsHandled(report.AvatarKey, task.ID, sig)) return;
-                report.OptimizationSuite.Add(task);
+                if (prepend) report.OptimizationSuite.Insert(0, task);
+                else report.OptimizationSuite.Add(task);
             }
 
             var animator = avatarRoot.GetComponent<Animator>();
@@ -178,6 +179,9 @@ namespace VixenTools.Editor
                 if (comp != null) protectedTransforms.Add(comp.transform);
             }
 
+            HashSet<Transform> referencedTransforms = CollectReferencedTransforms(avatarRoot, descriptor);
+            protectedTransforms.UnionWith(referencedTransforms);
+
             List<Transform> orphanedTransforms = new List<Transform>();
             foreach (var t in allTransforms)
             {
@@ -191,7 +195,7 @@ namespace VixenTools.Editor
                 {
                     ID = "FLATTEN_HIERARCHY",
                     Label = $"Purge {orphanedTransforms.Count} Orphaned Transforms",
-                    Description = "Vixen Core Heuristic: Flattens the hierarchy by destroying empty GameObjects carrying zero vertex weights.",
+                    Description = "Destroys GameObjects that hold nothing: no components beyond their Transform, no children, no vertex weights. Before anything is listed here it is checked against every animation clip on the avatar (both your playable layers and any clip VRCFury brings with it), every object reference held by a VRCFury component, PhysBone and collider roots, contact senders and receivers, and constraint sources. If a path is animated or referenced anywhere, it stays.",
                     ComputeSignature = () => "orphans:" + orphanedTransforms.Count(t => t != null),
                     Execute = () => {
                         int culled = 0;
@@ -307,7 +311,8 @@ namespace VixenTools.Editor
             {
                 foreach (var t in report.ArmatureRoot.GetComponentsInChildren<Transform>(true))
                 {
-                    if (t.childCount == 0 && !humanoidBones.Contains(t) && !HasPhysBoneProtection(t, avatarRoot))
+                    if (t.childCount == 0 && !humanoidBones.Contains(t) && !HasPhysBoneProtection(t, avatarRoot)
+                        && !referencedTransforms.Contains(t))
                     {
                         deepLeafBones.Add(t);
                     }
@@ -320,7 +325,7 @@ namespace VixenTools.Editor
                 {
                     ID = "COLLAPSE_LEAF_BONES",
                     Label = $"<color=#ff0033>Collapse {deepLeafBones.Count} Dead-End Leaf Bones</color>",
-                    Description = "Destructive Topology: Clones meshes, folds terminal vertex weights into parent bones. Ignores elements shielded by Physics.",
+                    Description = "<color=#ff0033>Destructive.</color> Clones each affected mesh, then folds the vertex weights of dead-end bones into their parents. Humanoid bones, anything a PhysBone touches, and any bone that is animated or referenced by a VRCFury component, a constraint or a contact are all left alone. Your meshes are replaced with patched copies, so keep an eye on the result before you save.",
                     ComputeSignature = () => "collapse:" + string.Join("|", deepLeafBones
                         .Where(b => b != null)
                         .Select(b => AnimationUtility.CalculateTransformPath(b, avatarRoot.transform))
@@ -456,6 +461,94 @@ namespace VixenTools.Editor
                 });
             }
             report.TextureNodes.Sort((a, b) => ((long)b.Width * b.Height).CompareTo((long)a.Width * a.Height));
+
+            List<string> lowQualityAlphaTexPaths = new List<string>();
+            foreach (var tex in report.UniqueTextures)
+            {
+                if (!IsProcessableTexture(tex, out string alphaPath)) continue;
+                var alphaImporter = AssetImporter.GetAtPath(alphaPath) as TextureImporter;
+                if (alphaImporter == null) continue;
+                if (alphaImporter.textureCompression != TextureImporterCompression.Compressed) continue;
+                if (alphaImporter.textureType == TextureImporterType.NormalMap) continue;
+                if (alphaImporter.alphaSource == TextureImporterAlphaSource.None) continue;
+
+                bool hasAlpha;
+                try { hasAlpha = alphaImporter.DoesSourceTextureHaveAlpha(); }
+                catch { continue; }
+
+                if (hasAlpha) lowQualityAlphaTexPaths.Add(alphaPath);
+            }
+
+            if (lowQualityAlphaTexPaths.Count > 0)
+            {
+                AddTask(new OptimizationTask
+                {
+                    ID = "UPGRADE_TEXTURE_QUALITY",
+                    Label = $"<color=#00e5ff>Upgrade {lowQualityAlphaTexPaths.Count} Transparent Texture(s) to Higher Quality</color>",
+                    Description = "Better looking, same memory. These already use compression, but the older DXT5 block format. High quality compression gives them BC7 instead, which is also 8 bits per pixel, so VRAM does not move while gradient banding and block artifacts largely go away. Worth it on skin, eyes, and anything with a smooth colour ramp. This only covers textures that actually carry alpha, because an opaque texture sits on 4-bit DXT1 today and moving it to BC7 would double its memory instead of costing nothing.",
+                    ComputeSignature = () => "texquality:" + string.Join("|", lowQualityAlphaTexPaths.OrderBy(p => p, System.StringComparer.Ordinal)),
+                    Execute = () => {
+                        int upgraded = 0;
+                        try
+                        {
+                            AssetDatabase.StartAssetEditing();
+                            foreach (string path in lowQualityAlphaTexPaths)
+                            {
+                                var imp = AssetImporter.GetAtPath(path) as TextureImporter;
+                                if (imp == null) continue;
+                                imp.textureCompression = TextureImporterCompression.CompressedHQ;
+                                imp.SaveAndReimport();
+                                upgraded++;
+                            }
+                        }
+                        finally
+                        {
+                            AssetDatabase.StopAssetEditing();
+                        }
+                        Debug.Log($"[VixForge] Texture Quality Pass: {upgraded} transparent texture(s) moved from DXT5 to BC7 at the same memory cost.");
+                    }
+                }, prepend: true);
+            }
+
+            List<string> uncompressedTexPaths = new List<string>();
+            foreach (var tex in report.UniqueTextures)
+            {
+                if (!IsProcessableTexture(tex, out string uncompressedPath)) continue;
+                var texImporter = AssetImporter.GetAtPath(uncompressedPath) as TextureImporter;
+                if (texImporter != null && texImporter.textureCompression == TextureImporterCompression.Uncompressed)
+                    uncompressedTexPaths.Add(uncompressedPath);
+            }
+
+            if (uncompressedTexPaths.Count > 0)
+            {
+                AddTask(new OptimizationTask
+                {
+                    ID = "COMPRESS_TEXTURES",
+                    Label = $"<color=#00ff66>Compress {uncompressedTexPaths.Count} Uncompressed Texture(s) to High Quality</color>",
+                    Description = "Do this before you shrink anything. An uncompressed RGBA texture costs 32 bits per pixel; high-quality block compression costs 8, so this drops those textures to a quarter of their VRAM. That is the same saving you get from halving the resolution, without the blur and the mushy edges. Unity picks the right block format per texture, so colour maps get BC7 and normal maps stay normal maps. Resolution is the blunt instrument: reach for it after the format is already right.",
+                    ComputeSignature = () => "compress:" + string.Join("|", uncompressedTexPaths.OrderBy(p => p, System.StringComparer.Ordinal)),
+                    Execute = () => {
+                        int converted = 0;
+                        try
+                        {
+                            AssetDatabase.StartAssetEditing();
+                            foreach (string path in uncompressedTexPaths)
+                            {
+                                var imp = AssetImporter.GetAtPath(path) as TextureImporter;
+                                if (imp == null) continue;
+                                imp.textureCompression = TextureImporterCompression.CompressedHQ;
+                                imp.SaveAndReimport();
+                                converted++;
+                            }
+                        }
+                        finally
+                        {
+                            AssetDatabase.StopAssetEditing();
+                        }
+                        Debug.Log($"[VixForge] Texture Format Pass: {converted} texture(s) moved to high-quality block compression. Re-scan to see the new VRAM figure.");
+                    }
+                }, prepend: true);
+            }
 
             foreach (var tex in report.UniqueTextures)
             {
@@ -643,6 +736,80 @@ namespace VixenTools.Editor
             }
 
             return report;
+        }
+
+        private static HashSet<Transform> CollectReferencedTransforms(GameObject avatarRoot, VRCAvatarDescriptor descriptor)
+        {
+            var referenced = new HashSet<Transform>();
+            var clips = new HashSet<AnimationClip>();
+
+            void CollectFrom(RuntimeAnimatorController controller)
+            {
+                if (controller == null) return;
+                foreach (var clip in controller.animationClips) if (clip != null) clips.Add(clip);
+            }
+
+            foreach (var anim in avatarRoot.GetComponentsInChildren<Animator>(true))
+                CollectFrom(anim.runtimeAnimatorController);
+
+            if (descriptor != null)
+            {
+                if (descriptor.baseAnimationLayers != null)
+                    foreach (var layer in descriptor.baseAnimationLayers) CollectFrom(layer.animatorController);
+                if (descriptor.specialAnimationLayers != null)
+                    foreach (var layer in descriptor.specialAnimationLayers) CollectFrom(layer.animatorController);
+            }
+
+            foreach (var mono in avatarRoot.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                if (mono == null || !mono.GetType().Name.Contains("VRCFury")) continue;
+
+                foreach (var dep in EditorUtility.CollectDependencies(new UnityEngine.Object[] { mono }))
+                {
+                    if (dep is AnimationClip depClip) clips.Add(depClip);
+                    else if (dep is RuntimeAnimatorController depController) CollectFrom(depController);
+                }
+
+                var serialized = new SerializedObject(mono);
+                var iterator = serialized.GetIterator();
+                while (iterator.NextVisible(true))
+                {
+                    if (iterator.propertyType != SerializedPropertyType.ObjectReference) continue;
+                    var obj = iterator.objectReferenceValue;
+                    if (obj is GameObject go) referenced.Add(go.transform);
+                    else if (obj is Component comp) referenced.Add(comp.transform);
+                }
+            }
+
+            foreach (var clip in clips)
+            {
+                foreach (var binding in AnimationUtility.GetCurveBindings(clip))
+                {
+                    if (string.IsNullOrEmpty(binding.path)) continue;
+                    Transform bound = avatarRoot.transform.Find(binding.path);
+                    if (bound != null) referenced.Add(bound);
+                }
+                foreach (var binding in AnimationUtility.GetObjectReferenceCurveBindings(clip))
+                {
+                    if (string.IsNullOrEmpty(binding.path)) continue;
+                    Transform bound = avatarRoot.transform.Find(binding.path);
+                    if (bound != null) referenced.Add(bound);
+                }
+            }
+
+            foreach (var sender in avatarRoot.GetComponentsInChildren<VRCContactSender>(true))
+                if (sender.rootTransform != null) referenced.Add(sender.rootTransform);
+
+            foreach (var constraint in avatarRoot.GetComponentsInChildren<UnityEngine.Animations.IConstraint>(true))
+            {
+                for (int i = 0; i < constraint.sourceCount; i++)
+                {
+                    var source = constraint.GetSource(i);
+                    if (source.sourceTransform != null) referenced.Add(source.sourceTransform);
+                }
+            }
+
+            return referenced;
         }
 
         private static int GetDepth(Transform t)
@@ -1318,7 +1485,7 @@ namespace VixenTools.Editor
 
             if (_lastReport.OptimizationSuite.Count > 0)
             {
-                var suitePanel = CreateCyberPanel("Destructive Topology Engine", "#ff00aa");
+                var suitePanel = CreateCyberPanel("Destructive Optimization Engine", "#ff00aa");
 
                 foreach (var task in _lastReport.OptimizationSuite)
                 {

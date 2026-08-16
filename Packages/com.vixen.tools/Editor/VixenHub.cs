@@ -389,10 +389,29 @@ namespace VixenTools.Editor
 
                 Match vMatch = Regex.Match(json, @"""version""\s*:\s*""([^""]+)""");
                 if (vMatch.Success) _packageVersion = vMatch.Groups[1].Value;
-
-                Match sdkMatch = Regex.Match(json, @"""com\.vrchat\.(?:base|avatars|worlds)""\s*:\s*""([^""]+)""");
-                if (sdkMatch.Success) _sdkVersion = sdkMatch.Groups[1].Value.Replace("^", "").Replace("~", "");
             }
+
+            _sdkVersion = ResolveInstalledSdkVersion();
+        }
+
+        private static string ResolveInstalledSdkVersion()
+        {
+            string[] sdkPackageIds = { "com.vrchat.avatars", "com.vrchat.worlds", "com.vrchat.base" };
+
+            foreach (string packageId in sdkPackageIds)
+            {
+                try
+                {
+                    string sdkPath = Path.GetFullPath($"Packages/{packageId}/package.json");
+                    if (!File.Exists(sdkPath)) continue;
+
+                    Match match = Regex.Match(File.ReadAllText(sdkPath), @"""version""\s*:\s*""([^""]+)""");
+                    if (match.Success) return match.Groups[1].Value;
+                }
+                catch { }
+            }
+
+            return "Unknown";
         }
 
         private void ParseChangelogData()

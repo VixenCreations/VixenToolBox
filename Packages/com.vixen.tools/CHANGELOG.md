@@ -5,6 +5,30 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.15.0] - 2026-08-15
+*Format before resolution, a safer purge, and a truthful version badge.*
+
+### Added
+* **Texture compression comes before texture shrinking.** The Optimization Suite now finds textures left on Uncompressed and offers to move them to high-quality block compression, and it puts that at the top of the task list, above the resize panel. An uncompressed RGBA texture costs 32 bits per pixel and a compressed one costs 8, so this is the same VRAM saving you would get by halving the resolution, without the blur. Unity picks the right block format per texture, so colour maps get BC7 and normal maps stay normal maps. Shrink the resolution afterwards if you still need to, rather than first.
+* **Free quality upgrade for transparent textures.** A second task spots textures already compressed on the older DXT5 format and offers BC7 instead. Both are 8 bits per pixel, so memory does not move, but banding and block artifacts largely go away. It deliberately skips opaque textures: those sit on 4-bit DXT1 today, and moving them to BC7 would double their memory rather than cost nothing.
+
+### Changed
+* **Magick.NET updated to 14.16.0** (ImageMagick 7.1.2-29, up from 14.14.0 and 7.1.2-25). Upstream bug fixes only. Nothing about how your textures are resized or composited has changed.
+* **The imaging library is Editor-only now.** It moved out of `Runtime` and ships with import settings that pin it to the Editor on Windows x64, so 25 MB of native imaging code can no longer be dragged into an Android or Quest build.
+* **Animator Forge writes to `Assets/VixenTools/AnimatorForge/`.** Everything the toolbox generates now lives under one folder instead of a second `Assets/VixenForge/` one. Clips you already have keep working exactly where they are.
+* **New PhysBone blueprints are named `Avatar_MasterTopology`** by default instead of carrying a test avatar's name.
+
+### Fixed
+* **Nothing in the Optimization Suite is ticked for you any more.** Every task in the Destructive Optimization Engine now starts unchecked, so the execute button does nothing until you have actually chosen something. They used to arrive pre-selected, which put a one-click purge of your hierarchy behind a button you might press while still reading the list.
+* **Purging orphans and collapsing leaf bones now check whether anything is using them first.** Both passes previously looked only at components and children, so an empty GameObject that a clip toggled, or a bone a VRCFury component pointed at, read as dead weight and got destroyed. Both now build a reference set from every animation clip on the avatar (your playable layers plus anything VRCFury carries), every object reference held by a VRCFury component, contact senders and receivers, and constraint sources, then skip anything that appears in it.
+* **The Hub showed the wrong VRChat SDK version.** It read the SDK version out of the toolbox's own manifest, so it always printed the minimum version we build against rather than the SDK you actually have. It now reads your installed SDK.
+* **PhysBone Topology Mapper in projects without the VRChat SDK.** It was meant to open with a friendly "SDK required" screen, but the whole tool was compiled out, so it never appeared at all. The fallback works as described now.
+* **Animation Workbench property categories.** Shader properties starting with `_AL` never landed in the AudioLink group. They do now, without sweeping up names like `_Alpha` by mistake.
+
+### Removed
+* Dead mesh-welding code left behind when QEM decimation replaced it, plus a duplicated property-category helper.
+
+***
 ## [2.14.0] - 2026-08-10
 *Animation Workbench learns to see the rest of your clip.*
 

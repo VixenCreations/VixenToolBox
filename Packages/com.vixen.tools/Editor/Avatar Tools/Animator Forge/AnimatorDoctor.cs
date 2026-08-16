@@ -371,14 +371,22 @@ namespace VixenTools.Editor
             });
         }
 
-        private const string EmptyClipPath = "Assets/VixenForge/_Empty.anim";
+        private const string EmptyClipFolder = "Assets/VixenTools/AnimatorForge";
+        private const string EmptyClipPath = EmptyClipFolder + "/_Empty.anim";
+        private const string LegacyEmptyClipPath = "Assets/VixenForge/_Empty.anim";
 
         public static AnimationClip GetOrCreateEmptyClip()
         {
             var existing = AssetDatabase.LoadAssetAtPath<AnimationClip>(EmptyClipPath);
             if (existing != null) return existing;
-            if (!AssetDatabase.IsValidFolder("Assets/VixenForge"))
-                AssetDatabase.CreateFolder("Assets", "VixenForge");
+
+            var legacy = AssetDatabase.LoadAssetAtPath<AnimationClip>(LegacyEmptyClipPath);
+            if (legacy != null) return legacy;
+
+            if (!AssetDatabase.IsValidFolder("Assets/VixenTools"))
+                AssetDatabase.CreateFolder("Assets", "VixenTools");
+            if (!AssetDatabase.IsValidFolder(EmptyClipFolder))
+                AssetDatabase.CreateFolder("Assets/VixenTools", "AnimatorForge");
             var clip = new AnimationClip { name = "_Empty" };
             clip.SetCurve("", typeof(GameObject), "m_IsActive", AnimationCurve.Constant(0f, 1f / 60f, 1f));
             AssetDatabase.CreateAsset(clip, EmptyClipPath);

@@ -519,14 +519,18 @@ namespace VixenTools.Editor
 
         private static string EnsureAssetFolder(VRCAvatarDescriptor descriptor)
         {
-            if (!AssetDatabase.IsValidFolder("Assets/VixenForge"))
-                AssetDatabase.CreateFolder("Assets", "VixenForge");
+            if (!AssetDatabase.IsValidFolder("Assets/VixenTools"))
+                AssetDatabase.CreateFolder("Assets", "VixenTools");
+            if (!AssetDatabase.IsValidFolder(AnimatorForgeRoot))
+                AssetDatabase.CreateFolder("Assets/VixenTools", "AnimatorForge");
             string sub = Sanitize(descriptor.name);
-            string full = "Assets/VixenForge/" + sub;
+            string full = AnimatorForgeRoot + "/" + sub;
             if (!AssetDatabase.IsValidFolder(full))
-                AssetDatabase.CreateFolder("Assets/VixenForge", sub);
+                AssetDatabase.CreateFolder(AnimatorForgeRoot, sub);
             return full;
         }
+
+        private const string AnimatorForgeRoot = "Assets/VixenTools/AnimatorForge";
 
         private static string Sanitize(string s)
         {

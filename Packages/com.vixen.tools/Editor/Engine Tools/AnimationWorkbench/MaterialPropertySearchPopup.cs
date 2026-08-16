@@ -111,25 +111,6 @@ namespace Vixenlicious.AnimationWorkbench
             ).ToList();
         }
 
-        private static string DetectCategory(string prop)
-        {
-            prop = prop.ToLowerInvariant();
-
-            if (prop.Contains("emis")) return "Emission";
-            if (prop.Contains("dissolv")) return "Dissolve";
-            if (prop.Contains("rim")) return "Rim";
-            if (prop.Contains("hue") || prop.Contains("sat") || prop.Contains("color"))
-                return "Color";
-            if (prop.Contains("outline")) return "Outline";
-            if (prop.StartsWith("al") || prop.Contains("audio")) return "AudioLink";
-            if (prop.Contains("sdf")) return "SDF";
-            if (prop.Contains("mask")) return "Masking";
-            if (prop.Contains("smooth") || prop.Contains("brdf") || prop.Contains("light"))
-                return "Shading";
-
-            return "General";
-        }
-
         private void RebuildList()
         {
             if (_scroll == null) return;

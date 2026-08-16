@@ -1427,3 +1427,143 @@ fluent-option {
         padding: 1rem 0.6rem;
     }
 }
+
+/* Ecosystem block: other VixForge products, the VRChat group, and the Discord widget. */
+/* The registry page carries a table and a sidebar, so it gets more room than the
+   text-led pages that share .content. */
+.content-wide {
+    max-width: 1600px;
+}
+
+.registry-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    width: 100%;
+}
+
+.registry-main {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.registry-aside {
+    flex: 0 0 350px;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+@media (max-width: 1200px) {
+    .registry-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .registry-aside {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: 350px;
+        margin-top: 3rem;
+    }
+}
+
+.ecosystem-block {
+    width: 100%;
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.ecosystem-intro {
+    color: #bfa8d2;
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+.ecosystem-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+    width: 100%;
+    margin: 1.5rem auto 0;
+}
+
+.ecosystem-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    text-align: left;
+    text-decoration: none;
+    color: inherit;
+    background: var(--glass-bg);
+    border: 1px solid rgba(255, 69, 0, 0.2);
+    border-top: 2px solid var(--forge-fire);
+    border-radius: 6px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(255, 69, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+    .ecosystem-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(255, 69, 0, 0.45);
+        box-shadow: 0 16px 55px rgba(0, 0, 0, 0.9), 0 0 28px rgba(255, 69, 0, 0.18);
+    }
+
+.ecosystem-tag {
+    align-self: flex-start;
+    font-family: 'Consolas', monospace;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 0.2rem 0.55rem;
+    border-radius: 3px;
+    color: var(--neon-pink);
+    border: 1px solid rgba(255, 0, 170, 0.35);
+}
+
+.ecosystem-tag-cyan {
+    color: var(--neon-cyan);
+    border-color: rgba(0, 229, 255, 0.35);
+}
+
+.ecosystem-name {
+    margin: 0.75rem 0 0.5rem;
+    font-size: 1.15rem;
+}
+
+.ecosystem-desc {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #bfa8d2;
+    flex-grow: 1;
+}
+
+.ecosystem-cta {
+    margin-top: 1rem;
+    font-family: 'Consolas', monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--neon-cyan);
+}
+
+    .ecosystem-card:hover .ecosystem-cta {
+        text-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+    }
+
+.discord-embed {
+    width: 100%;
+    max-width: 350px;
+    margin: 1.5rem auto 0;
+}
+
+    .discord-embed iframe {
+        display: block;
+        width: 100%;
+        height: 500px;
+        border: 0;
+        border-radius: 6px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    }

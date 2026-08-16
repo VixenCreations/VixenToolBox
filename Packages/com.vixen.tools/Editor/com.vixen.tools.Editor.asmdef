@@ -10,7 +10,6 @@
         "VRC.Udon.Editor",
         "UdonSharp.Runtime",
         "UdonSharp.Editor",
-        "com.vixen.tools",
         "Unity.TextMeshPro"
     ],
     "includePlatforms": [

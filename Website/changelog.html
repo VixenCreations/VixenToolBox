@@ -147,6 +147,7 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
+                        <fluent-option value="v2.15.0">v2.15.0</fluent-option>
                         <fluent-option value="v2.14.0">v2.14.0</fluent-option>
                         <fluent-option value="v2.13.1">v2.13.1</fluent-option>
                         <fluent-option value="v2.12.0">v2.12.0</fluent-option>
@@ -193,6 +194,39 @@
             </div>
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
+
+                <div class="changelog-entry" data-version="v2.15.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.15.0 - 2026-08-15</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Shrinking a texture is the blunt way to save VRAM, so the Optimization Suite now offers you the format first and only suggests resolution afterwards. The destructive tasks stop arriving pre-ticked, and they stop treating anything your animations or VRCFury reference as dead weight. The Hub also starts telling you the truth about which SDK you have.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-3" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Texture compression comes before texture shrinking.</strong> The Optimization Suite now finds textures left on Uncompressed and offers to move them to high-quality block compression, at the top of the task list, above the resize panel. An uncompressed RGBA texture costs 32 bits per pixel and a compressed one costs 8, so this is the same VRAM saving you would get by halving the resolution, without the blur. Unity picks the right block format per texture, so colour maps get BC7 and normal maps stay normal maps. Shrink the resolution afterwards if you still need to, rather than first.</li>
+                        <li class="mb-2"><strong>Free quality upgrade for transparent textures.</strong> A second task spots textures already compressed on the older DXT5 format and offers BC7 instead. Both are 8 bits per pixel, so memory does not move, but banding and block artifacts largely go away. It deliberately skips opaque textures: those sit on 4-bit DXT1 today, and moving them to BC7 would double their memory rather than cost nothing.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-3" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Magick.NET updated to 14.16.0</strong> (ImageMagick 7.1.2-29, up from 14.14.0 and 7.1.2-25). Upstream bug fixes only. Nothing about how your textures are resized or composited has changed.</li>
+                        <li class="mb-2"><strong>The imaging library is Editor-only now.</strong> It moved out of <code>Runtime</code> and ships with import settings that pin it to the Editor on Windows x64, so 25 MB of native imaging code can no longer be dragged into an Android or Quest build.</li>
+                        <li class="mb-2"><strong>Animator Forge writes to <code>Assets/VixenTools/AnimatorForge/</code>.</strong> Everything the toolbox generates now lives under one folder instead of a second <code>Assets/VixenForge/</code> one. Clips you already have keep working exactly where they are.</li>
+                        <li class="mb-2"><strong>New PhysBone blueprints are named <code>Avatar_MasterTopology</code></strong> by default instead of carrying a test avatar's name.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-3" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Nothing in the Optimization Suite is ticked for you any more.</strong> Every task in the Destructive Optimization Engine now starts unchecked, so the execute button does nothing until you have actually chosen something. They used to arrive pre-selected, which put a one-click purge of your hierarchy behind a button you might press while still reading the list.</li>
+                        <li class="mb-2"><strong>Purging orphans and collapsing leaf bones now check whether anything is using them first.</strong> Both passes previously looked only at components and children, so an empty GameObject that a clip toggled, or a bone a VRCFury component pointed at, read as dead weight and got destroyed. Both now build a reference set from every animation clip on the avatar (your playable layers plus anything VRCFury carries), every object reference held by a VRCFury component, contact senders and receivers, and constraint sources, then skip anything that appears in it.</li>
+                        <li class="mb-2"><strong>The Hub showed the wrong VRChat SDK version.</strong> It read the SDK version out of the toolbox's own manifest, so it always printed the minimum version we build against rather than the SDK you actually have. It now reads your installed SDK.</li>
+                        <li class="mb-2"><strong>PhysBone Topology Mapper in projects without the VRChat SDK.</strong> It was meant to open with a friendly "SDK required" screen, but the whole tool was compiled out, so it never appeared at all. The fallback works as described now.</li>
+                        <li class="mb-2"><strong>Animation Workbench property categories.</strong> Shader properties starting with <code>_AL</code> never landed in the AudioLink group. They do now, without sweeping up names like <code>_Alpha</code> by mistake.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Removed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2">Dead mesh-welding code left behind when QEM decimation replaced it, plus a duplicated property-category helper.</li>
+                    </ul>
+                </div>
 
                 <div class="changelog-entry" data-version="v2.14.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.14.0 - 2026-08-10</h5>

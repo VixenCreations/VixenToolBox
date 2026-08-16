@@ -1,4 +1,4 @@
-#if UNITY_EDITOR && VRC_SDK_VRCSDK3 && !UDON
+#if UNITY_EDITOR && !UDON
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Presets;
@@ -24,7 +24,7 @@ namespace VixenTools.Editor
         private GameObject _sourceAvatar;
         private GameObject _targetAvatar;
         private PhysBoneBlueprint _loadedBlueprint;
-        private string _blueprintName = "Novabeast_1.2_MasterTopology";
+        private string _blueprintName = "Avatar_MasterTopology";
 #endif
 
         [MenuItem("VixenTools/Avatars/PhysBone Topology Mapper")]

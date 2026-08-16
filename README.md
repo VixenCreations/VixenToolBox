@@ -11,7 +11,7 @@
 
 **The central distribution hub and automated CI/CD pipeline for the Vixens Toolbox ecosystem, by VixForge Interactive.**
 
-The Vixens Toolbox is a VPM-native, cyber-noir suite of Unity Editor utilities and a flagship avatar shader, engineered to eliminate human error, enforce strict project consistency, and push Unity to its technical limits.
+The Vixens Toolbox is a VPM-native, cyber-noir suite of Unity Editor utilities, engineered to eliminate human error, enforce strict project consistency, and push Unity to its technical limits. Its flagship tools are the **Quest Conversion Engine**, the **Avatar Optimization Suite**, the **Vixen World Engine**, and **Animation Workbench Pro**.
 
 This repository acts as the **first-class VPM package source**, powering the entire ecosystem with automated updates, documentation, and infrastructure.
 

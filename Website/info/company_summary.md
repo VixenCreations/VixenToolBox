@@ -8,15 +8,18 @@ Our work targets Unity 2022.3 on the Built-In Render Pipeline, the active standa
 
 ## Flagship Product: Vixens Toolbox
 
-The Vixens Toolbox is our professional-grade VRChat package suite, delivering high-fidelity materials, PhysBone automation pipelines, and Unity editor utilities in one integrated package.
+The Vixens Toolbox is our professional-grade VRChat package suite, delivering avatar optimization, mobile conversion, world auditing, and animation authoring in one integrated package.
 
-Highlights include:
+The four flagship tools:
 
-- **VixenWear Latex Ultra** - our flagship latex shader, with a dedicated Latex Ultra SPS variant, plus dynamic PBR material systems for fur, cloth, and nylon.
-- **Vixen Hub** - the unified editor hub that ties the suite's tools together.
-- **Avatar tooling** - avatar validation, mesh patching, Quest conversion, and PhysBone automation pipelines.
-- **Vixen World Engine** - scene and world building utilities.
-- **Vixen Badge Studio** and Magick.NET-based texture pipelines for optimized image and material workflows.
+- **Quest Conversion Engine** - a non-destructive PC to Android conversion pipeline that clones the avatar into an isolated workspace, maps every VRChat mobile limit per performance rank, and routes textures through Magick.NET before ASTC compression.
+- **Avatar Optimization Suite** - QEM (Garland-Heckbert) mesh decimation with face and hand shielding, leaf-bone collapsing, tight-fit skinned bounds, and ImageMagick-driven VRAM control.
+- **Vixen World Engine** - the omni-system diagnostic spider, running roughly 137 checks across nine third-party ecosystems (ProTV, TXL, VizVid, IwaSync3, AudioLink, LTCGI, Rinvo, VRC Light Volumes, VRSL), most carrying a one-click fix.
+- **Animation Workbench Pro** - a curve authoring environment with material and component property binding, an easing library, staged non-destructive edits, and real-time preview.
+
+Supporting tools: **Vixen Hub** (the unified editor hub that ties the suite together), **Animator Forge**, the **PhysBone Topology Mapper**, the **Accessory Mounting Engine**, **Vixen Badge Studio**, and the Pipeline Preset Manager.
+
+Note: **VixenWear Latex Ultra** is a separate standalone product and does not ship inside the Vixens Toolbox.
 
 ## Focus and Research
 
@@ -32,7 +35,7 @@ Beyond the shipping toolbox, VixForge Interactive invests in R&D for next-genera
 
 ### In Active Development
 
-- **Latex Ultra (VixenWear)** - _Shipping and evolving._ Our flagship GGX latex avatar shader: clearcoat, thin-film, wet / drip and melting-goo effects, triple matcaps, and live reactions to every major world-lighting system (AudioLink, LTCGI, VRC Light Volumes, and VRSL). Built-In Render Pipeline, with both a base and an SPS twin.
+- **Latex Ultra (VixenWear)** - _Shipping and evolving, sold separately from the Vixens Toolbox._ Our GGX latex avatar shader: clearcoat, thin-film, wet / drip and melting-goo effects, triple matcaps, and live reactions to every major world-lighting system (AudioLink, LTCGI, VRC Light Volumes, and VRSL). Built-In Render Pipeline, with both a base and an SPS twin.
 - **Surface Ultra (VixenWorld)** - _In development._ The world-side counterpart to Latex Ultra, sharing the same BRDF and world-lighting stack so VRChat worlds and props can react to the same systems your avatar does.
 - **ClothingPro (VixenWear)** - _In development._ A modular clothing and wardrobe-layer system built on top of the VixenWear pipeline, designed to drop layered outfits in cleanly without manual rig surgery.
 - **VixForge Director** - _In development._ An over-the-top automatic Virtual Jockey system that puts on full lighting shows when a DJ does not have a VJ on hand to run the visuals. Stack: pipeline, worlds, UdonSharp.
@@ -51,5 +54,6 @@ Beyond the shipping toolbox, VixForge Interactive invests in R&D for next-genera
 - Product suite: **Vixens Toolbox**.
 - Combined lockup: **VixForge Interactive | Vixens Toolbox**.
 - Individual tools keep their `Vixen X` names (Vixen Hub, Vixen World Engine, Vixen Badge Studio).
-- The flagship shader is **VixenWear Latex Ultra** (with the Latex Ultra SPS variant).
+- The flagship toolbox tools are the **Quest Conversion Engine**, the **Avatar Optimization Suite**, the **Vixen World Engine**, and **Animation Workbench Pro**.
+- **VixenWear Latex Ultra** (with the Latex Ultra SPS variant) is our shader line. It is a standalone product and is not part of the Vixens Toolbox package.
 - Repository, URL, and package identifiers remain under `VixenToolBox` / `vixencreations` (VPM package id `com.vixencreations.vixens-toolbox`).

@@ -760,7 +760,7 @@ namespace Vixenlicious.AnimationWorkbench
             if (p.Contains("rim")) return "Rim";
             if (p.Contains("hue") || p.Contains("sat") || p.Contains("color")) return "Color";
             if (p.Contains("outline")) return "Outline";
-            if (p.StartsWith("al") || p.Contains("audio")) return "AudioLink";
+            if (p.Contains("audio") || prop.StartsWith("_AL", StringComparison.Ordinal)) return "AudioLink";
             if (p.Contains("sdf")) return "SDF";
             if (p.Contains("mask")) return "Masking";
             if (p.Contains("smooth") || p.Contains("brdf") || p.Contains("light")) return "Shading";
