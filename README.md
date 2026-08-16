@@ -15,7 +15,7 @@ The Vixens Toolbox is a VPM-native, cyber-noir suite of Unity Editor utilities, 
 
 This repository acts as the **first-class VPM package source**, powering the entire ecosystem with automated updates, documentation, and infrastructure.
 
-* **Package:** `com.vixencreations.vixens-toolbox` (v2.10.1)
+* **Package:** `com.vixencreations.vixens-toolbox` (v2.15.0)
 * **Target:** Unity 2022.3.22f1 / VRChat SDK 3.10.3
 * **Storefront & Docs:** [vixencreations.github.io/VixenToolBox](https://vixencreations.github.io/VixenToolBox/)
 * **Community:** Trusted by 1,500+ creators and counting.
