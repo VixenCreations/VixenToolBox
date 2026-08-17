@@ -11,7 +11,7 @@
     <title>Vixens Toolbox | VRChat Avatar &amp; World Tooling</title>
     <meta name="title" content="Vixens Toolbox | VRChat Avatar &amp; World Tooling">
     <meta name="description" content="The Vixens Toolbox is a professional-grade VRChat package suite. Featuring the Quest Conversion Engine, the Avatar Optimization Suite with real QEM mesh decimation, the Vixen World Engine auditor, and Animation Workbench Pro, for Unity 2022.3.">
-    <meta name="keywords" content="VRChat tools, Quest conversion, avatar optimization, mesh decimation, VRChat world audit, animation tools, Vixens Toolbox, VixForge Interactive, Unity 2022.3 tools, PhysBones automation, VRChat avatar architecture, VRChat package ecosystem, VPM distribution, Vixenlicous">
+    <meta name="keywords" content="VRChat tools, Quest conversion, avatar optimization, mesh decimation, VRChat world audit, animation tools, Vixens Toolbox, VixForge Interactive, Unity 2022.3 tools, PhysBones automation, VRChat avatar setup, VRChat package ecosystem, VPM distribution, Vixenlicous">
     <meta name="author" content="Vixenlicous | VixForge Interactive">
     <meta name="theme-color" content="#ff00aa">
 
@@ -85,6 +85,11 @@
             <fluent-anchor href="about.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 About Us
+            </fluent-anchor>
+
+            <fluent-anchor href="products.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                Our Products
             </fluent-anchor>
 
             <fluent-anchor href="news.html" class="nav-item">
@@ -311,39 +316,6 @@
                 </fluent-data-grid>
             </fluent-card>
 
-            {{~ if listingInfo.InfoLink.Url ~}}
-            <div class="caption1 mt-4 text-center index-desktop-only" id="publishedByText">
-                <a href="{{listingInfo.InfoLink.Url}}" target="_blank" class="neon-link">{{ if listingInfo.InfoLink.Text; listingInfo.InfoLink.Text; else; "Learn More"; end; }}</a>
-            </div>
-            {{~ end; ~}}
-
-            <div class="ecosystem-block">
-                <h2 class="text-glow-pink m-0 mb-1">More from VixForge</h2>
-                <p class="caption1 mb-3 ecosystem-intro">Our shaders are standalone products, sold separately from the free toolbox.</p>
-
-                <div class="ecosystem-cards">
-                    <a class="ecosystem-card" href="https://vixenlicous.gumroad.com/l/latex-ultra" target="_blank" rel="noopener">
-                        <span class="ecosystem-tag">Shader</span>
-                        <h3 class="ecosystem-name text-glow-cyan">VixenWear Latex Ultra</h3>
-                        <p class="ecosystem-desc">A dual-lobe GGX shader for synthetic materials: clearcoat, thin-film, wet and drip, melting goo, triple matcaps, and live reactions to AudioLink, LTCGI, VRC Light Volumes and VRSL. Ships with a tessellation-free SPS twin for VRCFury.</p>
-                        <span class="ecosystem-cta">View on Gumroad</span>
-                    </a>
-
-                    <a class="ecosystem-card" href="https://vixenlicous.gumroad.com/l/vixforge-toon" target="_blank" rel="noopener">
-                        <span class="ecosystem-tag">Shader</span>
-                        <h3 class="ecosystem-name text-glow-cyan">VixForge Toon</h3>
-                        <p class="ecosystem-desc">A cel and anime shader carrying the same toolkit, with rebuilt outlines. Coming from lilToon, Poiyomi or VRChat's Toon Standard, the inspector translates your existing materials across in one click, and can convert a whole avatar at once with a backup and full undo.</p>
-                        <span class="ecosystem-cta">View on Gumroad</span>
-                    </a>
-
-                    <a class="ecosystem-card" href="https://vrc.group/THEVIX.6475" target="_blank" rel="noopener">
-                        <span class="ecosystem-tag ecosystem-tag-cyan">Community</span>
-                        <h3 class="ecosystem-name text-glow-cyan">The Vix</h3>
-                        <p class="ecosystem-desc">Our VRChat group. Come find us in game.</p>
-                        <span class="ecosystem-cta">Join on VRChat</span>
-                    </a>
-                </div>
-            </div>
             </div>
 
             <aside class="registry-aside">

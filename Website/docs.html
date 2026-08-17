@@ -82,6 +82,11 @@
                 About Us
             </fluent-anchor>
 
+            <fluent-anchor href="products.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                Our Products
+            </fluent-anchor>
+
             <fluent-anchor href="news.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v13H4a2 2 0 0 0-2 2 2 2 0 0 0 2 2z"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8z"></path></svg>
                 News
@@ -202,7 +207,7 @@
                 <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
                     A multi-threaded, highly destructive execution designed to violently crush PC avatar polycounts
                     and physics limits. It dynamically analyzes your hardware footprint and deploys a custom spatial hashing
-                    algorithm to decimate geometry while mathematically protecting high-fidelity facial topology.
+                    algorithm to decimate geometry while protecting the detail in the face.
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li>
@@ -221,7 +226,7 @@
                         <strong>BlendShape Memory Recovery:</strong> Executing a destructive mesh wipe inherently
                         annihilates Unity's blendshape delta arrays. The Welder caches all 175+ frames (visemes, facial
                         expressions) prior to execution and mathematically averages the delta offsets across the newly fused
-                        vertices, allowing animations to perfectly survive aggressive topology meltdowns.
+                        vertices, so animations survive even aggressive mesh reduction.
                     </li>
                     <li>
                         <strong>Kinematic Bounding Box Stabilization:</strong> Solves the bounding-box disappearance bug by
@@ -323,7 +328,7 @@
                 <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
                     <li>
                         <strong>Selective Macro Culling:</strong>
-                        After scanning, the interactive topology populates with all detected components. Global
+                        After scanning, the component list fills in with everything found. Global
                         <em>Keep All</em> and <em>Cull All</em> macros allow creators to rapidly triage large arrays, preserving
                         structural bones while discarding expensive fluff such as tail tips and hair strands.
                     </li>
@@ -351,16 +356,16 @@
                 </ul>
             </div>
 
-            <!-- PHYSBONE TOPOLOGY MAPPER -->
+            <!-- PHYSBONE BLUEPRINTS -->
             <div class="glass-panel w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">PhysBone Topology Mapper</h2>
+                    <h2 class="text-glow-cyan m-0">PhysBone Blueprints</h2>
                     <div class="badge">PhysBoneTopologyMapper.cs | PhysBoneBlueprint.cs</div>
                 </div>
                 <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
                     Designed to eliminate the human error of manually dragging, dropping, and configuring colliders across
                     avatar iterations. This engine entirely decouples the physics from the mesh hierarchy by
-                    snapshotting your PhysBone architecture into reusable blueprints.
+                    snapshotting your whole PhysBone setup into reusable blueprints.
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li>
@@ -370,9 +375,9 @@
                         ScriptableObject, mapping <code>bonePath</code> → <code>Preset</code> with surgical precision.
                     </li>
                     <li>
-                        <strong>Two-Phase Architecture:</strong> Phase 1 ("Extract Master Copy") walks the source avatar,
+                        <strong>Two-Phase Workflow:</strong> Phase 1 ("Save Blueprint") walks the source avatar,
                         generates presets under <code>Assets/VixenTools/Blueprints/&lt;Name&gt;/Presets</code>, and writes a
-                        master <code>.asset</code> blueprint. Phase 2 ("Inject Blueprint") traverses a target avatar by
+                        master <code>.asset</code> blueprint. Phase 2 ("Apply Blueprint") traverses a target avatar by
                         relative path, auto-adding <code>VRCPhysBone</code> components where missing and applying the stored
                         presets.
                     </li>
@@ -387,8 +392,8 @@
                 <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
                     <li>
                         <strong>Creating the Blueprint:</strong> A creator selects their master PC avatar root and runs
-                        "Extract Master Copy". This recursively catalogs every physics script and saves it to a structured
-                        blueprint (e.g., <code>Assets/VixenTools/Blueprints/Avatar_MasterTopology</code>).
+                        "Save Blueprint". This recursively catalogs every physics script and saves it to a structured
+                        blueprint (e.g., <code>Assets/VixenTools/Blueprints/Avatar_PhysBones</code>).
                     </li>
                     <li>
                         <strong>Restoring Stripped Physics:</strong> If an avatar has had its components stripped (such as
@@ -711,7 +716,7 @@
                 </div>
                 <p class="mb-3" style="line-height: 1.6; color: #e0d5eb;">
                     A high-fidelity, CSS-driven procedural generation utilizing a native JSON layout engine
-                    (<code>layout.json</code>) to architect multi-channel convention badges dynamically, specifically
+                    (<code>layout.json</code>) to build multi-channel convention badges automatically, specifically
                     heavily targeting Furality templates.
                 </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -769,7 +774,7 @@
 
                 <div class="matrix-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
                     <div class="matrix-column">
-                        <h4 class="text-glow-pink caption1 mb-3">SPATIAL TOPOLOGY TOOLS</h4>
+                        <h4 class="text-glow-pink caption1 mb-3">SCENE PLACEMENT TOOLS</h4>
                         <ul class="custom-list m-0 ps-4 mb-4">
                             <li class="mb-3">
                                 <strong>Live Surface Snapping (Dual-System Gravity):</strong> Utilizes low-overhead
@@ -798,8 +803,8 @@
                             <li class="mb-3">
                                 <strong>Pipeline Preset Manager (BulkPresetGenerator.cs):</strong> A unified pipeline tool
                                 that handles both bulk extraction of presets from existing assets and programmatic authoring
-                                of standardized importer presets using a Phantom Asset architecture. It exposes two modes:
-                                <em>Extraction Pipeline</em> and <em>Authoring Engine</em>, switchable via neon-styled tabs.
+                                of standardized importer presets using a phantom-asset approach. It exposes two modes:
+                                <em>Extract From Assets</em> and <em>Create New Preset</em>, switchable via neon-styled tabs.
                             </li>
                             <li class="mb-3">
                                 <strong>Bulk Preset Extraction:</strong> Rips component configurations from selected
@@ -859,7 +864,7 @@
 
                 <p class="mb-4" style="line-height: 1.6; color: #e0d5eb;">
                     The Vixen World Engine is a full-spectrum scene auditor built for VRChat creators who need
-                    <strong>real‑time diagnostics, topology forensics, and automated repair protocols</strong>.
+                    <strong>real‑time diagnostics, scene audits and one-click fixes</strong>.
                     Operating on a deep-reflection layer, the engine pierces Unity, Udon, and third‑party assemblies
                     to expose hidden performance traps long before they detonate in a live instance.
                 </p>
@@ -868,7 +873,7 @@
 
                     <!-- LEFT COLUMN -->
                     <div class="matrix-column">
-                        <h4 class="text-glow-pink caption1 mb-3">ECOSYSTEM &amp; TOPOLOGY AUDITORS</h4>
+                        <h4 class="text-glow-pink caption1 mb-3">ECOSYSTEM &amp; SCENE AUDITORS</h4>
                         <ul class="custom-list m-0 ps-4 mb-4">
 
                             <li class="mb-2">

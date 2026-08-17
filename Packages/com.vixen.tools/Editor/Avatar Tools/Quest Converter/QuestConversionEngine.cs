@@ -126,9 +126,9 @@ namespace VixenTools.Editor
 
         private void BuildPhase1UI(VisualElement container)
         {
-            var panel = CreateCyberPanel("Phase 1: Deep System Scanning", "#00e5ff");
+            var panel = CreateCyberPanel("Phase 1: Scan Your Avatar", "#00e5ff");
 
-            var infoLabel = new Label("Select the root of your PC Avatar. The engine maps 100% of VRChat Mobile Performance caps and non-destructively isolates a Quest clone.");
+            var infoLabel = new Label("Pick your PC avatar. Nothing about it changes: you get a separate Quest copy, checked against every VRChat mobile limit.");
             infoLabel.AddToClassList("info-box-styled");
             panel.Add(infoLabel);
 
@@ -161,7 +161,7 @@ namespace VixenTools.Editor
             });
             panel.Add(rankEnum);
 
-            var scanBtn = new Button(AnalyzeHierarchy) { text = "Scan System Architecture" };
+            var scanBtn = new Button(AnalyzeHierarchy) { text = "Scan Avatar" };
             scanBtn.AddToClassList("cyber-action-btn");
             scanBtn.AddToClassList("cyan-btn");
             panel.Add(scanBtn);
@@ -197,9 +197,9 @@ namespace VixenTools.Editor
 #endif
 
             resultsText += $"  • Particles/Trails: <b><color=#ff00aa>{_scannedParticles.Count + _scannedTrails.Count + _scannedLines.Count}</color></b>\n" +
-                           $"  • Physics Joints (Auto-Culled): <b><color=#ff0044>{_scannedJoints.Count}</color></b>\n" +
-                           $"  • Incompatible Mobile Objects: <b><color=#ff0044>{_scannedIncompatible.Count}</color></b>\n" +
-                           $"  • Face Tracking Nodes (Auto-Culled): <b><color=#ff0044>{_scannedFaceTracking.Count}</color></b>";
+                           $"  • Physics Joints (removed for you): <b><color=#ff0044>{_scannedJoints.Count}</color></b>\n" +
+                           $"  • Objects Quest Cannot Use: <b><color=#ff0044>{_scannedIncompatible.Count}</color></b>\n" +
+                           $"  • Face Tracking Nodes (removed for you): <b><color=#ff0044>{_scannedFaceTracking.Count}</color></b>";
 
             var resultsLabel = new Label(resultsText) { enableRichText = true };
             resultsBox.Add(resultsLabel);
@@ -207,8 +207,8 @@ namespace VixenTools.Editor
 
             BuildTopologyUI(_dynamicContainer);
 
-            var execPanel = CreateCyberPanel("Phase 2: Deep Conversion Pipeline", "#ff00aa");
-            var execBtn = new Button(ExecuteConversion) { text = "Execute Full Quest Conversion" };
+            var execPanel = CreateCyberPanel("Phase 2: Convert", "#ff00aa");
+            var execBtn = new Button(ExecuteConversion) { text = "Convert To Quest" };
             execBtn.AddToClassList("cyber-action-btn");
             execBtn.AddToClassList("pink-btn");
 
@@ -216,7 +216,7 @@ namespace VixenTools.Editor
             {
                 execBtn.SetEnabled(false);
                 execBtn.AddToClassList("disabled-btn");
-                execBtn.text = "Execution Locked (No Data)";
+                execBtn.text = "Scan an avatar first";
             }
 
             execPanel.Add(execBtn);
@@ -225,29 +225,29 @@ namespace VixenTools.Editor
 
         private void BuildTopologyUI(VisualElement container)
         {
-            var panel = CreateCyberPanel("Phase 1.5: Interactive Topology System", "#00e5ff");
+            var panel = CreateCyberPanel("Phase 1.5: What Gets Removed", "#00e5ff");
 
-            var infoLabel = new Label("VRChat limits are mathematically applied based on Target Rank. You may override kept nodes. ImageMagick conversions can be individually disabled to save time.");
+            var infoLabel = new Label("Limits come from your target rank. Tick anything you want to keep, and turn off individual texture conversions to save time.");
             infoLabel.AddToClassList("info-box-styled");
             panel.Add(infoLabel);
 
             BuildTextureSection(panel, "System: Texture Map Selection", true, out _textureScroll, out _textureLabel);
 
-            BuildTopologySection(panel, "System: Animators", false, out _animatorScroll, out _animatorLabel);
+            BuildTopologySection(panel, "Animators", false, out _animatorScroll, out _animatorLabel);
 
 #if VRC_SDK_VRCSDK3
-            BuildTopologySection(panel, "System: PhysBones", false, out _pbScroll, out _pbLabel);
-            BuildTopologySection(panel, "System: Colliders", false, out _colScroll, out _colLabel);
-            BuildTopologySection(panel, "System: Contacts", false, out _contactScroll, out _contactLabel);
-            BuildTopologySection(panel, "System: Constraints", false, out _constraintScroll, out _constraintLabel);
-            BuildTopologySection(panel, "System: Raycasts", false, out _raycastScroll, out _raycastLabel);
+            BuildTopologySection(panel, "PhysBones", false, out _pbScroll, out _pbLabel);
+            BuildTopologySection(panel, "Colliders", false, out _colScroll, out _colLabel);
+            BuildTopologySection(panel, "Contacts", false, out _contactScroll, out _contactLabel);
+            BuildTopologySection(panel, "Constraints", false, out _constraintScroll, out _constraintLabel);
+            BuildTopologySection(panel, "Raycasts", false, out _raycastScroll, out _raycastLabel);
 #endif
-            BuildTopologySection(panel, "System: Particle Systems", false, out _particleScroll, out _particleLabel);
-            BuildTopologySection(panel, "System: Trail Renderers", false, out _trailScroll, out _trailLabel);
-            BuildTopologySection(panel, "System: Line Renderers", false, out _lineScroll, out _lineLabel);
-            BuildTopologySection(panel, "System: Face Tracking & VRCFT (Auto-Culled)", false, out _ftScroll, out _ftLabel);
-            BuildTopologySection(panel, "System: Physics Joints (Auto-Culled)", false, out _jointScroll, out _jointLabel);
-            BuildTopologySection(panel, "Incompatible Mobile Components (Auto-Culled)", false, out _incompatibleScroll, out _incompatibleLabel);
+            BuildTopologySection(panel, "Particle Systems", false, out _particleScroll, out _particleLabel);
+            BuildTopologySection(panel, "Trail Renderers", false, out _trailScroll, out _trailLabel);
+            BuildTopologySection(panel, "Line Renderers", false, out _lineScroll, out _lineLabel);
+            BuildTopologySection(panel, "Face Tracking & VRCFT (removed for you)", false, out _ftScroll, out _ftLabel);
+            BuildTopologySection(panel, "Physics Joints (removed for you)", false, out _jointScroll, out _jointLabel);
+            BuildTopologySection(panel, "Components Quest Cannot Use (removed for you)", false, out _incompatibleScroll, out _incompatibleLabel);
 
             container.Add(panel);
             RefreshTopologyUI();
@@ -818,7 +818,7 @@ namespace VixenTools.Editor
                 EditorUtility.DisplayProgressBar("VixForge Quest Engine", "Re-Mapping Animated Material Swaps...", 0.75f);
                 RemapAnimatedMaterials(questClone, materialCache, avatarDir);
 
-                EditorUtility.DisplayProgressBar("VixForge Quest Engine", "Applying System Topology Overrides...", 0.8f);
+                EditorUtility.DisplayProgressBar("VixForge Quest Engine", "Applying your keep and remove choices...", 0.8f);
 
                 ProcessDestruction(_scannedAnimators, questClone);
 #if VRC_SDK_VRCSDK3

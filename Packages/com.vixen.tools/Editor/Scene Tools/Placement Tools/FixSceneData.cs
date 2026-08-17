@@ -8,7 +8,7 @@ namespace VixenTools.Editor
 {
     public class FixSceneData
     {
-        [MenuItem("VixenTools/Scene/Fix Scene Data")]
+        [MenuItem("VixenTools/Unity Engine/Fix Scene Data")]
         public static void FixLightingDataAssignment()
         {
             Scene currentScene = SceneManager.GetActiveScene();

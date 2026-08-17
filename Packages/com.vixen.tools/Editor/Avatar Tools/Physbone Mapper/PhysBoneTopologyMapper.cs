@@ -24,13 +24,13 @@ namespace VixenTools.Editor
         private GameObject _sourceAvatar;
         private GameObject _targetAvatar;
         private PhysBoneBlueprint _loadedBlueprint;
-        private string _blueprintName = "Avatar_MasterTopology";
+        private string _blueprintName = "Avatar_PhysBones";
 #endif
 
-        [MenuItem("VixenTools/Avatars/PhysBone Topology Mapper")]
+        [MenuItem("VixenTools/Avatars/PhysBone Blueprints")]
         public static void ShowWindow()
         {
-            var window = GetWindow<PhysBoneTopologyMapper>("Topology Mapper");
+            var window = GetWindow<PhysBoneTopologyMapper>("PhysBone Blueprints");
             window.minSize = new Vector2(450, 600);
             window.Show();
         }
@@ -50,7 +50,7 @@ namespace VixenTools.Editor
             else Debug.LogWarning($"[VixForge] Could not load Stylesheet at {UssPath}");
 
             var headerRect = new VisualElement { name = "tool-header" };
-            var titleLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> TOPOLOGY MAPPER") { enableRichText = true };
+            var titleLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> PHYSBONE BLUEPRINTS") { enableRichText = true };
             if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             headerRect.Add(titleLabel);
             root.Add(headerRect);
@@ -71,9 +71,9 @@ namespace VixenTools.Editor
 #if VRC_SDK_VRCSDK3
         private void BuildExtractionUI(VisualElement container)
         {
-            var panel = CreateCyberPanel("Phase 1: Architecture Extraction", "#00e5ff");
+            var panel = CreateCyberPanel("Phase 1: Save", "#00e5ff");
 
-            var infoLabel = new Label("Select the root of your tuned avatar. This generates a Master Blueprint and all associated Presets.");
+            var infoLabel = new Label("Select the root of your tuned avatar. This saves a Blueprint, plus one Preset per bone.");
             infoLabel.AddToClassList("info-box-styled");
             panel.Add(infoLabel);
 
@@ -85,7 +85,7 @@ namespace VixenTools.Editor
             nameField.RegisterValueChangedCallback(e => _blueprintName = e.newValue);
             panel.Add(nameField);
 
-            var execBtn = new Button(ExtractTopology) { text = "Extract Master Copy" };
+            var execBtn = new Button(ExtractTopology) { text = "Save Blueprint" };
             execBtn.AddToClassList("cyber-action-btn");
             execBtn.AddToClassList("cyan-btn");
             panel.Add(execBtn);
@@ -95,9 +95,9 @@ namespace VixenTools.Editor
 
         private void BuildInjectionUI(VisualElement container)
         {
-            var panel = CreateCyberPanel("Phase 2: Architecture Injection", "#ff00aa");
+            var panel = CreateCyberPanel("Phase 2: Apply", "#ff00aa");
 
-            var infoLabel = new Label("Select a blank avatar and a Blueprint. This will reconstruct your master physics system.");
+            var infoLabel = new Label("Select a blank avatar and a Blueprint. This rebuilds every PhysBone setup the Blueprint holds.");
             infoLabel.AddToClassList("info-box-styled");
             panel.Add(infoLabel);
 
@@ -109,7 +109,7 @@ namespace VixenTools.Editor
             blueprintField.RegisterValueChangedCallback(e => _loadedBlueprint = e.newValue as PhysBoneBlueprint);
             panel.Add(blueprintField);
 
-            var execBtn = new Button(InjectTopology) { text = "Inject Blueprint" };
+            var execBtn = new Button(InjectTopology) { text = "Apply Blueprint" };
             execBtn.AddToClassList("cyber-action-btn");
             execBtn.AddToClassList("pink-btn");
             panel.Add(execBtn);
@@ -203,9 +203,9 @@ namespace VixenTools.Editor
 #else
         private void BuildMissingSdkUI(VisualElement container)
         {
-            var panel = CreateCyberPanel("System Alert", "#ffaa00");
+            var panel = CreateCyberPanel("Heads Up", "#ffaa00");
 
-            var warningLabel = new Label("VRChat SDK3 is not detected in this project. The PhysBone Topology Mapper requires the VRChat Avatar SDK to function.");
+            var warningLabel = new Label("VRChat SDK3 is not detected in this project. PhysBone Blueprints requires the VRChat Avatar SDK to work.");
             warningLabel.AddToClassList("warning-box-styled");
             panel.Add(warningLabel);
 
@@ -215,7 +215,7 @@ namespace VixenTools.Editor
             extractBtn.SetEnabled(false);
             panel.Add(extractBtn);
 
-            var injectBtn = new Button() { text = "Inject Blueprint (SDK Required)" };
+            var injectBtn = new Button() { text = "Apply Blueprint (SDK Required)" };
             injectBtn.AddToClassList("cyber-action-btn");
             injectBtn.AddToClassList("disabled-btn");
             injectBtn.SetEnabled(false);

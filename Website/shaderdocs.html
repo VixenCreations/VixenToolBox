@@ -146,6 +146,11 @@
                 About Us
             </fluent-anchor>
 
+            <fluent-anchor href="products.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                Our Products
+            </fluent-anchor>
+
             <fluent-anchor href="news.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v13H4a2 2 0 0 0-2 2 2 2 0 0 0 2 2z"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8z"></path></svg>
                 News
@@ -270,9 +275,12 @@
                     <li class="mb-2"><strong>Minimum Brightness</strong> - A floor on the final lit result so the surface
                         never crushes to pure black in unlit or very dark worlds.</li>
                     <li class="mb-2"><strong>Use Alpha Map</strong> + <strong>Alpha Map</strong> +
-                        <strong>Map Channel</strong> - Drives opacity from a separate texture instead of the Albedo's alpha,
-                        handy when your Albedo has no alpha channel. White stays solid, black turns invisible. Pick the
-                        channel that holds the opacity, or leave it on Auto. Shown in Fade and Transparent modes.</li>
+                        <strong>Map Channel</strong> + <strong>Invert</strong> - Drives opacity from a separate texture
+                        instead of the Albedo's alpha, handy when your Albedo has no alpha channel. The map marks what to
+                        remove, the way a body-hiding mask is painted: black keeps the pixel, white takes it away. Leave the
+                        slot empty and nothing is removed. Pick the channel that holds it, or leave it on Auto, and use
+                        Invert if your map is painted the other way round. Outlines follow it too, so they cut away with the
+                        rest of the material.</li>
                     <li class="mb-2"><strong>Transparency</strong> - Fades the whole material out on one slider (0 solid,
                         1 invisible), so a single menu control can dissolve it. Works in Fade and Transparent; Opaque and
                         Cutout ignore it.</li>
@@ -711,120 +719,197 @@
                     <h2 class="text-glow-cyan m-0">SPECIAL EFFECTS</h2>
                     <div class="badge">Section 7 of 12</div>
                 </div>
-                <p class="tab-desc">The extra effect layers: the soaked / wet look with animated run-off and 3D drips, the melting goo, procedural glitter, an animated flipbook overlay, a true infinity mirror, a living inner-cosmos volume, and effects that react to where the material is being viewed from. The VixForge Toon shader carries everything here except the wet and goo effects, which are liquid-latex tricks that do not fit a toon surface.</p>
+                <p class="tab-desc">The extra effect layers: the soaked wet look with run-off and real droplets, the melting goo with slime shading, writhing, drips and touch, procedural glitter, an animated flipbook overlay, a true infinity mirror, a living inner-cosmos volume, and effects that react to where the material is being viewed from. The VixForge Toon shader carries everything here except the wet and goo effects, which are liquid-latex tricks that do not fit a toon surface.</p>
 
                 <h3 class="text-glow-pink opt-group">Wet Effects</h3>
-<p class="opt-note">The soaked look, animated run-off rivulets, and clear 3D drips.</p>
+<p class="opt-note">The soaked look, streaks running off, and real droplets that swell, fall and dry out. Turn it on, paint a Mask for where the water sits, then work down the three groups.</p>
 
-
-                <p class="opt-note mt-3 mb-2"><strong>Master &amp; Soaked Look</strong></p>
-                <p class="opt-note">
-                    <strong>Soaked Look (Just Out of the Pool)</strong> - Soaks the masked area: darkens the latex,
-                    drives reflections to a near-mirror water film, adds a dielectric Fresnel sheen, and flattens
-                    micro-detail. Film Sheen rides on the clearcoat, so keep the Polish layer enabled for the strongest
-                    wet highlight.
-                </p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable Drip</strong> - Master toggle for the wet / run-off
-                        layer.</li>
-                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> -
-                        Grayscale mask (and channel) choosing where the surface is wet and where drips form.</li>
-                    <li class="mb-2"><strong>Wetness</strong> - Overall amount of the wet effect.</li>
-                    <li class="mb-2"><strong>Darkening</strong> - How much the soaked area darkens, simulating water
-                        absorption.</li>
-                    <li class="mb-2"><strong>Smoothness</strong> - Smoothness of the water film (toward a near-mirror
-                        reflection).</li>
-                    <li class="mb-2"><strong>Film Sheen</strong> - Strength of the dielectric Fresnel sheen riding on
-                        the clearcoat.</li>
-                    <li class="mb-2"><strong>Normal Flatten</strong> - Flattens micro-detail under the film so the
-                        wet area reads slick.</li>
+                    <li class="mb-2"><strong>Enable</strong> - Master switch for the whole wet layer, off by default.</li>
+                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Where the material is wet. White is soaked, black is dry. Leave it empty and the whole material gets wet.</li>
                 </ul>
 
-                <p class="opt-note mt-3 mb-2"><strong>Run-Off Rivulets</strong></p>
-                <p class="opt-note">Animated vertical streaks of water running off, layered on top of the soak. Set
-                    Streak Strength to 0 for a still, evenly-soaked look.</p>
+                <p class="opt-note mt-3 mb-2"><strong>Soak</strong></p>
+                <p class="opt-note">The just-out-of-the-pool look: the surface darkens, goes glossy and its fine detail smooths over under the film.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Streak Density</strong> - Number of rivulet columns across the
-                        surface.</li>
-                    <li class="mb-2"><strong>Streak Thinness</strong> - Width of each streak; higher values produce
-                        narrower streaks.</li>
-                    <li class="mb-2"><strong>Streak Coverage</strong> - How much of the masked area the rivulets occupy
-                        (shared with the 3D drips).</li>
-                    <li class="mb-2"><strong>Flow Speed</strong> - Vertical scroll speed of the run-off (shared with
-                        the 3D drips).</li>
-                    <li class="mb-2"><strong>Streak Strength</strong> - Visual intensity of the streaks.</li>
-                    <li class="mb-2"><strong>Streak Bump</strong> - How much each streak perturbs the normal for a
-                        raised, refractive bead.</li>
+                    <li class="mb-2"><strong>Wetness</strong> - How wet it reads overall.</li>
+                    <li class="mb-2"><strong>Darkening</strong> - How much the soaked area darkens, the way a real surface does when it takes up water.</li>
+                    <li class="mb-2"><strong>Smoothness</strong> - How close the water film gets to a mirror.</li>
+                    <li class="mb-2"><strong>Film Sheen</strong> - The bright sheen on the film. It rides on the clearcoat, so keep Polish on for the strongest version.</li>
+                    <li class="mb-2"><strong>Normal Flatten</strong> - Smooths the fine detail under the film so the wet area reads slick.</li>
                 </ul>
 
-                <p class="opt-note mt-3 mb-2"><strong>Clear 3D Drips (Geometry, PC only)</strong></p>
-                <p class="opt-note">Real water droplets emitted by a geometry shader: they swell on downward-facing wet
-                    areas, form a neck, pinch off, and fall away as free geometry, tinted to the Clearcoat Tint. PC only
-                    - it uses a geometry stage, so it is not present on Quest.</p>
+                <p class="opt-note mt-3 mb-2"><strong>Streaks</strong></p>
+                <p class="opt-note">Water running off over the soak. Set Strength to 0 for a still, evenly soaked look.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Droplet Amount</strong> - How many droplets spawn across the wet
-                        area.</li>
-                    <li class="mb-2"><strong>Droplet Scale</strong> - Approximate droplet diameter.</li>
-                    <li class="mb-2"><strong>Droplet Glassiness</strong> - How clear / refractive the droplet looks
-                        versus a milky bead.</li>
-                    <li class="mb-2"><strong>Droplet Fall Length</strong> - How far a drop falls before it fades
-                        out.</li>
+                    <li class="mb-2"><strong>Density</strong> - How many streaks run across the surface.</li>
+                    <li class="mb-2"><strong>Thinness</strong> - Higher gives narrower streaks.</li>
+                    <li class="mb-2"><strong>Coverage</strong> - How much of the masked area they occupy.</li>
+                    <li class="mb-2"><strong>Flow Speed</strong> - How fast they run.</li>
+                    <li class="mb-2"><strong>Strength</strong> - How strongly they show.</li>
+                    <li class="mb-2"><strong>Bump</strong> - How raised each streak reads, for a rounded bead that catches the light.</li>
+                    <li class="mb-2"><strong>Gravity Flow</strong> - Streaks run down in the world instead of down the texture, so they fall correctly however the model is unwrapped and however you tilt. At 0 nothing changes.</li>
                 </ul>
 
-                <p class="opt-note mt-3 mb-2"><strong>Physics &amp; Collision</strong></p>
-                <p class="opt-note">Sway adds surface-tension wobble to falling drops. Surface Slide makes an attached
-                    drop run down along the body before it detaches. Floor Splat pins drops to the shared world floor
-                    (the Goo "Ground / Floor Height") and spreads them into a fading puddle.</p>
+                <p class="opt-note mt-3 mb-2"><strong>Droplets</strong></p>
+                <p class="opt-note">Real drops: they swell on downward-facing wet patches, neck, pinch off, fall, sway, slide along the body, splat on the floor and dry out.</p>
                 <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Sway / Wobble</strong> - Surface-tension wobble and breeze on
-                        falling drops.</li>
-                    <li class="mb-2"><strong>Surface Slide</strong> - How far an attached drop runs along the
-                        body before detaching.</li>
-                    <li class="mb-2"><strong>Droplet Floor Splat</strong> - Pins landed drops to the shared world floor
-                        and spreads them into a fading puddle.</li>
+                    <li class="mb-2"><strong>Amount</strong> - How many drops form across the wet area.</li>
+                    <li class="mb-2"><strong>Scale</strong> - Roughly how big each one is.</li>
+                    <li class="mb-2"><strong>Glassiness</strong> - Clear and refractive, or a milky bead.</li>
+                    <li class="mb-2"><strong>Fall Length</strong> - How far a drop falls before it fades out.</li>
+                    <li class="mb-2"><strong>Sway / Wobble</strong> - Surface-tension wobble and a breeze on falling drops.</li>
+                    <li class="mb-2"><strong>Surface Slide</strong> - How far an attached drop runs along the body before it lets go.</li>
+                    <li class="mb-2"><strong>Floor Splat</strong> - Lands drops on the floor set under Goo Effects &gt; Floor and spreads them into a fading puddle.</li>
+                    <li class="mb-2"><strong>Pooling</strong> - How much those splats build up. At 0 each spreads and fades on the spot; turn it up and they stay wider for longer and overlap, so the ground reads as liquid gathering under you. Needs Floor Splat.</li>
+                    <li class="mb-2"><strong>From Writhe</strong> - Drops fall from wherever the writhing has drawn the material out, so one comes off the tip of a tendril rather than appearing beside it. Needs Writhe under Goo Effects to be doing something. Ships at 0.</li>
+                    <li class="mb-2"><strong>Custom Particle</strong> + <strong>Particle</strong> - Use your own image instead of the built-in bead, so the same physics throws sweat, bubbles, sparks or petals. The alpha decides the shape, and it is drawn upright with the neck at the top, so paint it the way a drop hangs.</li>
+                    <li class="mb-2"><strong>Blend</strong> - Mixes between the built-in bead and your image. Part way keeps the bead's shine over your shape.</li>
+                    <li class="mb-2"><strong>Spin</strong> - Turns each one a random amount so they do not all face the same way. Leave at 0 for anything that should stay upright.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Goo Effects</h3>
-<p class="opt-note">Gravity-aligned vertex melt that mimics runny / melting latex, with sway and floor collision.</p>
+<p class="opt-note">Latex that melts, hangs, writhes and drips. Turn it on, paint a Mask for where it melts, then reach for the groups you want: Melt for the sag, Slime Shading for the wet look, Writhe to make it move on its own, and Floor to let it reach the ground.</p>
 
-
-                <p class="opt-note">
-                    Runs in the displacement stage and benefits from tessellation on the base shader (more verts = smoother strands). Extreme stretch can be frustum-culled when the body is
-                    off-screen unless the mesh bounds (or an Anchor Override) are expanded.
-                </p>
+                <p class="opt-note">It moves your mesh, so turn Tessellation up under Surface for smoother strands. If the goo disappears while your body is off-screen, widen the mesh bounds or set an Anchor Override.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - Master toggle for the melting-sag
-                        system.</li>
-                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Grayscale
-                        mask (and channel) scoping where the latex melts.</li>
-                    <li class="mb-2"><strong>Sag Distance</strong> - Master intensity of the melt.</li>
-                    <li class="mb-2"><strong>Stretch Distance</strong> - How far the goo sags, in world units;
-                        dramatically extends strand length.</li>
-                    <li class="mb-2"><strong>Strand Variation</strong> - Procedural FBM noise so tendrils range from
-                        uniform (0) to wildly uneven (1).</li>
-                    <li class="mb-2"><strong>Tendril Scale</strong> - Spatial scale of the tendril pattern.</li>
-                    <li class="mb-2"><strong>Flow Speed</strong> - How fast the melt animates / flows over time.</li>
-                    <li class="mb-2"><strong>Underside Bias</strong> - Biases melting toward downward-facing surfaces
-                        where latex would actually drip.</li>
-                    <li class="mb-2"><strong>Melt To Ground</strong> - Pulls the goo down toward the world ground
-                        plane so strands can reach the floor regardless of avatar height.</li>
-                    <li class="mb-2"><strong>Ground Height</strong> - The world-space Y of your floor
-                        (usually 0), shared by both the goo and the drip floor splat.</li>
+                    <li class="mb-2"><strong>Enable</strong> - Master switch for the whole goo layer, off by default.</li>
+                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Where the material melts. White melts, black stays put.</li>
                 </ul>
 
-                <p class="opt-note mt-3 mb-2"><strong>Physics &amp; Collision</strong></p>
-                <p class="opt-note">Sway gives the tendrils a gentle pendulum swing. Surface Follow flows goo along the
-                    body instead of sinking through it. Floor Collision clamps the melt to the Ground / Floor Height, and
-                    Floor Pooling spreads landed strands sideways into a puddle.</p>
+                <p class="opt-note mt-3 mb-2"><strong>Noise</strong></p>
+                <p class="opt-note">Swap the built-in randomness for your own texture. One image drives the whole effect at once: the tendrils, the writhing, the leading edge as it forms, the cling strands and the veins in the slime. Greyscale, tiling, no alpha needed.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Custom</strong> + <strong>Texture</strong> - Turns your own noise on and takes the image.</li>
+                    <li class="mb-2"><strong>Blend</strong> - Mixes it against the built-in noise.</li>
+                    <li class="mb-2"><strong>Depth</strong> - Whether it reads as printed on you or as something with volume.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Melt</strong></p>
+                <p class="opt-note">The sag itself. Sag Distance is the master, so nothing here shows until you raise it.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Sag Distance</strong> - How much the material melts.</li>
+                    <li class="mb-2"><strong>Stretch Distance</strong> - How far the strands stretch, in metres.</li>
+                    <li class="mb-2"><strong>Strand Variation</strong> - From even strands at 0 to wildly uneven at 1.</li>
+                    <li class="mb-2"><strong>Tendril Scale</strong> - How big the tendril pattern tiles.</li>
+                    <li class="mb-2"><strong>Flow Speed</strong> - How fast the melt flows over time.</li>
+                    <li class="mb-2"><strong>Underside Bias</strong> - Leans the melting toward downward-facing surfaces, where it would really drip.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Sway</strong></p>
+                <p class="opt-note">A gentle swing through the tendrils.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Amount</strong> - How far the tendrils swing.</li>
+                    <li class="mb-2"><strong>Speed</strong> - How fast they swing.</li>
+                    <li class="mb-2"><strong>Surface Follow</strong> - Runs the goo along your body instead of sinking through it.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Writhe</strong></p>
+                <p class="opt-note">The goo moves under its own power instead of just hanging: the surface swells, sinks and crawls over you like something alive underneath. It does not need Sag Distance, so a material can writhe while hanging perfectly still.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Amount</strong> - How far the surface pushes out.</li>
+                    <li class="mb-2"><strong>Scale</strong> - How big each swelling is. Turning it up gives finer writhing and shrinks the push to match, so if a fine setting looks tame, raise Amount rather than fighting it with Scale.</li>
+                    <li class="mb-2"><strong>Speed</strong> - How fast it all moves.</li>
+                    <li class="mb-2"><strong>Tendrils</strong> - Changes the character, from an even rolling boil at 0 to most of the surface going still while a few places reach a long way.</li>
+                    <li class="mb-2"><strong>Crawl</strong> - Lets the swellings travel across you rather than pulsing where they sit.</li>
+                    <li class="mb-2"><strong>Surge</strong> - Gathers the movement into a wave that climbs you.</li>
+                    <li class="mb-2"><strong>Fold</strong> - Reach for this if the movement ever looks like it is on a timer. At 0 everything drifts the same way at the same speed and the eye picks up the repeat; turned up the material folds over itself so swellings turn, stall, double back and pull apart, and it never comes round again.</li>
+                    <li class="mb-2"><strong>Wander</strong> - Lets them push sideways, up and underneath instead of only straight out from your body, changing course as they go.</li>
+                    <li class="mb-2"><strong>Stretch</strong> - Pulls them long instead of round, so the material reads as being drawn out rather than as lumps inflating.</li>
+                    <li class="mb-2"><strong>Run</strong> - Lets the writhing feed the melt, so wherever the material has been drawn out thin it also sags and runs. This is what turns a tendril that waves into one that hangs and drips off its own tip.</li>
+                    <li class="mb-2"><strong>Wetness</strong> - Makes the swellings go dark, deep and glossy with the veins brightening along anything drawn out. It takes its colour and gloss from Slime Shading, so setting those changes both together.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Floor</strong></p>
+                <p class="opt-note">Where the ground is, so the goo can actually reach it. It finds the floor from the avatar itself, so the goo lands properly in any world and keeps up when you walk up stairs. This floor is shared with the droplet Floor Splat.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Melt To Ground</strong> - Pulls the goo down toward the floor so strands can reach it whatever your height.</li>
+                    <li class="mb-2"><strong>Source</strong> - Avatar Feet finds the ground from your avatar. Switch to Manual Height for a prop that is not worn.</li>
+                    <li class="mb-2"><strong>Height</strong> - The floor height to use, for Manual Height.</li>
+                    <li class="mb-2"><strong>Contact</strong> - How many strands make it all the way. At 1 every strand reaches and pools; lower and only the longest get there while the rest hang as drips.</li>
+                    <li class="mb-2"><strong>Collision</strong> - Stops the melt at the floor instead of passing through it.</li>
+                    <li class="mb-2"><strong>Pooling</strong> - Spreads landed strands sideways into a puddle.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Formation</strong></p>
+                <p class="opt-note">Animate Amount from 0 to 1 and the piece builds itself out of the goo, starting at your feet and climbing up you. Put it on a toggle or a radial for goo that rises off the floor, reaches over you and becomes your gear. The edge is tendrils, not a line: they reach up, sag, curl over and swing while they climb, borrowing Flow Speed and the Sway settings above so the whole thing moves as one. It sits at 1 by default, which means fully formed and switched off.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Amount</strong> - The wavefront. 0 is nothing, 1 is fully formed. This is the one to animate.</li>
+                    <li class="mb-2"><strong>Reach</strong> - How far it has to climb.</li>
+                    <li class="mb-2"><strong>Edge</strong> - How deep the wet band is behind the leading edge.</li>
+                    <li class="mb-2"><strong>Break-up</strong> + <strong>Break-up Scale</strong> - How wild the strands at the edge get, and how many of them.</li>
+                    <li class="mb-2"><strong>Drip</strong> - How stringy those strands are.</li>
+                    <li class="mb-2"><strong>Grab</strong> - How far they reach past the edge.</li>
+                    <li class="mb-2"><strong>Lift</strong> - How far they pull away from your body and settle back as they climb, which is what makes them read as separate tendrils taking hold rather than a pattern sliding over you.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Slime Shading</strong></p>
+                <p class="opt-note">Turns the melt into wet slime: a deep glossy film with a mirror highlight, light coming through where it thins out, and neon veins threaded through it. Push Amount above 0 to switch it on; Colour and Thickness do most of the work from there. Off by default, so an existing melt looks exactly as it did.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Amount</strong> - How far the slime look takes over. This is the switch.</li>
+                    <li class="mb-2"><strong>Colour</strong> - The colour of the film.</li>
+                    <li class="mb-2"><strong>Gloss</strong> + <strong>Metallic</strong> - How wet and how metal the film reads.</li>
+                    <li class="mb-2"><strong>Coat Strength</strong> + <strong>Coat Gloss</strong> - The clear layer over the top and how sharp its reflection is.</li>
+                    <li class="mb-2"><strong>Thickness</strong> - Thicker swallows more light and pools on the undersides; thinner lets the veins and the body underneath show through.</li>
+                    <li class="mb-2"><strong>Absorption</strong> - How quickly the film eats the light passing through it.</li>
+                    <li class="mb-2"><strong>Translucency</strong> - How much light comes through from behind.</li>
+                    <li class="mb-2"><strong>Underside Pooling</strong> - Gathers the thickness on downward-facing surfaces.</li>
+                    <li class="mb-2"><strong>Refraction</strong> - How much the film bends what you see through it.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Veins</strong></p>
+                <p class="opt-note">Neon threads running through the slime. They brighten around the silhouette and wherever the film runs thin, so they read strongest as it stretches and drips. Appears once Slime Shading is above 0.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Colour</strong> + <strong>Glow</strong> - The colour of the threads and how brightly they burn.</li>
+                    <li class="mb-2"><strong>Scale</strong> + <strong>Thinness</strong> - How big the pattern tiles, and how narrow each thread is.</li>
+                    <li class="mb-2"><strong>Flow</strong> - How fast they travel through the film.</li>
+                    <li class="mb-2"><strong>Pulse Speed</strong> + <strong>Pulse Depth</strong> - A heartbeat through the threads, and how deep it goes.</li>
+                    <li class="mb-2"><strong>Edge Bleed</strong> + <strong>Edge Falloff</strong> - How much they gather at the silhouette, and how sharply that falls away.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Drips</strong></p>
+                <p class="opt-note">Thick drops that gather on the material, hang on a long string and let go, then land in a flat pool. These are their own thing, not the water droplets under Wet Effects: they fall slowly, draw out into a thread as they go, and spread wide when they land, so tuning one never disturbs the other. They take their colour and gloss from Slime Shading, and they land using the Collision and Pooling settings under Floor. Drops keep landing and spreading rather than stacking up, so a busy floor reads as goo gathering under you rather than a puddle that grows while you stand still.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns the drips on.</li>
+                    <li class="mb-2"><strong>Amount</strong> + <strong>Coverage</strong> - How strongly they show, and how much of the material sheds them.</li>
+                    <li class="mb-2"><strong>Scale</strong> - How big each drop is.</li>
+                    <li class="mb-2"><strong>Speed</strong> - How fast they gather and fall.</li>
+                    <li class="mb-2"><strong>Stringiness</strong> - The one that makes it. At 0 a drop pinches off cleanly the way water does; turned up it stays joined to you as it falls and only snaps near the end.</li>
+                    <li class="mb-2"><strong>Fall Length</strong> - How far a drop falls before it fades out.</li>
+                    <li class="mb-2"><strong>From Writhe</strong> - Sheds them off the tips of the tendrils instead of at an even rate all over.</li>
+                    <li class="mb-2"><strong>Pool Spread</strong> - How wide each one spreads when it lands.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Cling</strong></p>
+                <p class="opt-note">Strands of goo reach off your outline and take hold of whatever is behind you, dragging it into the slime as you move past. Stand near someone and it reads as the goo latching onto them. It needs a copy of the screen, so it costs framerate in a busy world and it is off by default. For it to pick up other people your material has to draw after them: if the strands come out empty, raise the Render Queue above 2500 or set Rendering Mode to Fade.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns the cling strands on.</li>
+                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Where they reach from, so you can be covered in goo but only reach from the hands and shoulders.</li>
+                    <li class="mb-2"><strong>Reach</strong> - How far the strands go.</li>
+                    <li class="mb-2"><strong>Spread</strong> - Aims them. At 0 they point straight out from your body; turned up they lean across the screen toward whatever is beside you, which is the setting that makes it look like it is going for someone.</li>
+                    <li class="mb-2"><strong>Strands</strong> + <strong>Break-up</strong> - How many there are and how choosy they are.</li>
+                    <li class="mb-2"><strong>From Writhe</strong> - Grows them out of the reaching places, so the webbing hangs between the parts that are actually moving and the calm areas stay clean.</li>
+                    <li class="mb-2"><strong>Speed</strong> - How fast they move.</li>
+                    <li class="mb-2"><strong>Pull</strong> - How hard they drag the background along.</li>
+                    <li class="mb-2"><strong>Distortion</strong> - Ripples the view through them.</li>
+                    <li class="mb-2"><strong>Edge Falloff</strong> + <strong>Opacity</strong> - How sharply they fade from the silhouette, and how solid they are.</li>
+                    <li class="mb-2"><strong>Colour Source</strong> - Match Slime makes the strands look like the material they came off. Custom opens the four below, for when the goo should read one way on you and another as it reaches out.</li>
+                    <li class="mb-2"><strong>Colour</strong>, <strong>Absorption</strong>, <strong>Gloss</strong>, <strong>Vein Colour</strong> + <strong>Vein Glow</strong> - The separate look for the strands, used when Colour Source is Custom.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Touch</strong></p>
+                <p class="opt-note">The material dents, bulges and goes wet where someone touches you. Paint up to four areas into the Zones texture, one per colour channel, then drive that zone's Press slider from a VRChat contact receiver through your animator. That is the whole setup. It works on its own, so plain gear with no melt still presses in. Give each Press slider a curve that overshoots and settles back rather than a straight ramp, and the material springs like real slime instead of sliding to a stop. Right-click every Press slider you animate and tick Animated (when locked), or locking freezes it at whatever it reads in the inspector and nothing moves in game.</p>
                 <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Sway Amount</strong> - Pendulum swing magnitude of the tendrils.</li>
-                    <li class="mb-2"><strong>Sway Speed</strong> - Rate of the sway.</li>
-                    <li class="mb-2"><strong>Surface Follow</strong> - How much goo flows along the body
-                        instead of through it.</li>
-                    <li class="mb-2"><strong>Floor Collision</strong> - Clamps the melt to the floor height instead
-                        of passing through it.</li>
-                    <li class="mb-2"><strong>Floor Pooling</strong> - Spreads landed strands sideways into a
-                        puddle.</li>
+                    <li class="mb-2"><strong>Enable</strong> + <strong>Zones</strong> - Turns Touch on and takes the texture holding your four painted areas, one per colour channel.</li>
+                    <li class="mb-2"><strong>Press Red</strong> / <strong>Press Green</strong> / <strong>Press Blue</strong> / <strong>Press Alpha</strong> - How hard each zone is being pressed. These are the ones you animate from a contact receiver.</li>
+                    <li class="mb-2"><strong>Depth</strong> - How far the press pushes in.</li>
+                    <li class="mb-2"><strong>Spread</strong> - How far the dent softens out past the painted area, so you can have anything from a fingertip press to a broad squash.</li>
+                    <li class="mb-2"><strong>Rim</strong> - Piles material up around the edge of the press, which is what makes it read as something soft being squeezed rather than a dent stamped into a solid.</li>
+                    <li class="mb-2"><strong>Shading</strong> - The one to leave up. Without it the surface moves but still catches light as though it were flat.</li>
+                    <li class="mb-2"><strong>Tendrils</strong> - Squeezes strands of goo out around that same edge.</li>
+                    <li class="mb-2"><strong>Wetness</strong> - Puts a gloss spike on the contact.</li>
+                    <li class="mb-2"><strong>Flow</strong> - Slides the slime pattern out of the way of the press.</li>
+                    <li class="mb-2"><strong>Veins</strong> - Brightens the threads where the material is squeezed.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Glitter</h3>
@@ -864,6 +949,7 @@
                     <li class="mb-2"><strong>Hidden Level</strong> - What the effect drops to when the conditions are not met. 0 hides it completely, higher values just dim it.</li>
                     <li class="mb-2"><strong>Affects</strong> - Point it at your emission, your decals, or both.</li>
                     <li class="mb-2"><strong>Reaction Glow</strong> - An extra colour that rides along with everything above. Pair it with Distance for a material that lights up when somebody leans in.</li>
+                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Keeps the whole effect to part of the material: white is where it applies, black is left completely alone, so one patch can vanish in mirrors while the rest stays normal. The Reaction Glow follows it too. Leave it empty and the effect covers everything.</li>
                 </ul>
                 <p class="opt-note mt-3">Distances and angles are measured from the real viewer, and mirrors are handled properly, so a reflection reacts to where the mirror is looking from rather than lighting up wrongly.</p>
 
@@ -969,6 +1055,21 @@
                     you raise it and shrinks naturally as the camera moves away, like a real object. Both are off by
                     default, so a material without outlines costs nothing.
                 </p>
+
+                <p class="opt-note">If your outline traces part of a shape and then stops, the model has several normals in
+                    that spot and no width setting will close it. These two settings fix it, and they apply to both
+                    outlines.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Outward Direction</strong> - Where the line gets its outward direction from.
+                        Leave it on Mesh Normal and nothing changes. Run <strong>VixenTools &gt; VixForge Mesh Fixes &gt;
+                        Bake Outline Normals</strong> on your avatar, then set this to Vertex Colour or UV4 to match what
+                        you baked. Baking writes copies into VixenTools/BakedMeshes, never touches your model files, and
+                        tells you up front which meshes actually need it. <strong>Spherical</strong> is there if you would
+                        rather not bake at all: it pushes everything away from one point, which is spot on for a rounded
+                        piece and rough for anything else.</li>
+                    <li class="mb-2"><strong>Spherical Centre</strong> - The point everything pushes away from, for
+                        Spherical.</li>
+                </ul>
 
                 <h3 class="text-glow-pink opt-group">Outline 1</h3>
                 <p class="opt-note">The inner line around the silhouette.</p>
@@ -1151,6 +1252,9 @@
                         strip to sample the global color from.</li>
                     <li class="mb-2"><strong>Power Down on Pause/Stop</strong> - Fades the AudioLink reactivity out when
                         audio is paused or stopped.</li>
+                    <li class="mb-2"><strong>Reaction Mask</strong> + <strong>Mask Channel</strong> - Keeps the audio
+                        reactions to part of the material. Audio Scanlines and the four Physical Lobe Thump effects only
+                        show where the mask is white. Leave it empty and they cover everything.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Chronotensity FX</h3>

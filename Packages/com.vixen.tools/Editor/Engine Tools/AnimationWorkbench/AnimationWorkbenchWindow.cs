@@ -272,16 +272,16 @@ namespace Vixenlicious.AnimationWorkbench
             bindingBox.style.flexGrow = 2;
             bindingBox.style.flexDirection = FlexDirection.Column;
 
-            var bindingsHeader = new Label("Bindings System") { style = { unityFontStyleAndWeight = FontStyle.Bold, fontSize = 14 } };
+            var bindingsHeader = new Label("Bindings") { style = { unityFontStyleAndWeight = FontStyle.Bold, fontSize = 14 } };
             bindingsHeader.enableRichText = true;
-            bindingsHeader.text = "<color=#ff00aa>Bindings System</color>";
+            bindingsHeader.text = "<color=#ff00aa>Bindings</color>";
             bindingBox.Add(bindingsHeader);
 
             var bindingToolbar = new VisualElement();
             bindingToolbar.style.flexDirection = FlexDirection.Row;
             bindingToolbar.style.marginTop = 10;
 
-            refreshBindingsBtn = new Button(RefreshBindings) { text = "Refresh System" };
+            refreshBindingsBtn = new Button(RefreshBindings) { text = "Refresh" };
             bindingToolbar.Add(refreshBindingsBtn);
 
             var selectAllBtn = new Button(() =>
@@ -436,7 +436,7 @@ namespace Vixenlicious.AnimationWorkbench
             revertBtn = new Button(RevertStaged) { text = "Revert Staged" };
             revertBtn.style.marginTop = 10;
 
-            var previewLabel = new Label("Engine Preview") { style = { unityFontStyleAndWeight = FontStyle.Bold, marginTop = 20, fontSize = 14 } };
+            var previewLabel = new Label("Preview") { style = { unityFontStyleAndWeight = FontStyle.Bold, marginTop = 20, fontSize = 14 } };
 
             var previewBtn = new Button(() =>
             {
@@ -519,7 +519,7 @@ namespace Vixenlicious.AnimationWorkbench
             bottomRow.style.paddingRight = 6;
             bottomRow.style.backgroundColor = new Color(0.08f, 0.08f, 0.10f);
 
-            statusLabel = new Label("[VixForge] Systems Online.");
+            statusLabel = new Label("[VixForge] Ready.");
             statusLabel.style.color = new Color(0.5f, 0.5f, 0.5f);
             bottomRow.Add(statusLabel);
 
@@ -570,7 +570,7 @@ namespace Vixenlicious.AnimationWorkbench
             EditorUtility.SetDirty(currentClip);
             AssetDatabase.SaveAssets();
 
-            statusLabel.text = $"[VixForge] Successfully purged {toRemove.Count} bindings from clip system.";
+            statusLabel.text = $"[VixForge] Removed {toRemove.Count} bindings from the clip.";
             RefreshBindings();
         }
 
@@ -1029,7 +1029,7 @@ namespace Vixenlicious.AnimationWorkbench
         {
             if (curves == null) return;
             foreach (var kv in curves) stagedCurves[kv.Key] = kv.Value;
-            statusLabel.text = "[VixForge] Staged system updated via graph node edit.";
+            statusLabel.text = "[VixForge] Curve updated.";
         }
 
         private AnimationCurve EnsureCurveExistsForBinding(AnimationClip clip, EditorCurveBinding binding)

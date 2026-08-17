@@ -1,4 +1,4 @@
-# VIXEN WORLD ENGINE : HEURISTICS ARCHITECTURE
+# VIXEN WORLD ENGINE : HOW THE SCORE WORKS
 
 The **Vixen Compute Score** is a proprietary, weighted heuristic model designed for the VRChat ecosystem. It evaluates the raw structural complexity of a scene rather than relying on Unity's frame-timing (ms) metrics. 
 
@@ -50,10 +50,10 @@ AudioLink is incredibly powerful, but running the core requires Unity to read au
 ***
 ## THREAT LEVEL SCALES
 
-- **OPTIMAL (`< 100 Score`):** Flawless architecture. Will run smoothly on Quest standalone and low-end VR hardware.
+- **OPTIMAL (`< 100 Score`):** Nothing to worry about. Will run smoothly on Quest standalone and low-end VR hardware.
 - **MODERATE (`100 - 249 Score`):** Standard PCVR baseline. Expected performance for medium-sized social instances.
 - **HIGH (`250 - 499 Score`):** Heavy compute load. Requires users to have modern hardware; Quest instances will likely suffer severe frame drops.
-- **SEVERE (`500+ Score`):** Critical architectural failure. Scene topology is bloated. Expect massive frame hitching, high crash rates, and unplayable conditions on anything but top-tier hardware.
+- **SEVERE (`500+ Score`):** Something is badly wrong. The scene is far too heavy. Expect massive frame hitching, high crash rates, and unplayable conditions on anything but top-tier hardware.
 
 ***
 ## VRAM ESTIMATION (MEMORY FOOTPRINT)

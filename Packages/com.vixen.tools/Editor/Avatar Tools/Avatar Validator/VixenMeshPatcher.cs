@@ -41,7 +41,7 @@ namespace VixenTools.Editor
             Undo.RecordObject(smr, "Apply Patched Mesh");
             smr.sharedMesh = clonedMesh;
 
-            Debug.Log($"[VixForge] Topology Patched: {clonedMesh.name} serialized to {assetPath}");
+            Debug.Log($"[VixForge] Mesh patched: {clonedMesh.name} saved to {assetPath}");
         }
 
         public static void DecimateToTarget(

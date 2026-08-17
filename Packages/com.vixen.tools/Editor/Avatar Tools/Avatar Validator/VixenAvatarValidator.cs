@@ -136,7 +136,7 @@ namespace VixenTools.Editor
             var descriptor = avatarRoot.GetComponent<VRCAvatarDescriptor>();
             if (descriptor == null)
             {
-                report.PCErrors.Add(new Anomaly { Description = "Missing VRCAvatarDescriptor. The SDK pipeline will block this.", ContextObject = avatarRoot });
+                report.PCErrors.Add(new Anomaly { Description = "Missing VRCAvatarDescriptor. The SDK will block your upload.", ContextObject = avatarRoot });
                 report.IsPCUploadReady = false;
                 report.IsQuestUploadReady = false;
             }
@@ -194,13 +194,13 @@ namespace VixenTools.Editor
                 AddTask(new OptimizationTask
                 {
                     ID = "FLATTEN_HIERARCHY",
-                    Label = $"Purge {orphanedTransforms.Count} Orphaned Transforms",
+                    Label = $"Delete {orphanedTransforms.Count} Unused Empty Objects",
                     Description = "Destroys GameObjects that hold nothing: no components beyond their Transform, no children, no vertex weights. Before anything is listed here it is checked against every animation clip on the avatar (both your playable layers and any clip VRCFury brings with it), every object reference held by a VRCFury component, PhysBone and collider roots, contact senders and receivers, and constraint sources. If a path is animated or referenced anywhere, it stays.",
                     ComputeSignature = () => "orphans:" + orphanedTransforms.Count(t => t != null),
                     Execute = () => {
                         int culled = 0;
                         foreach (var t in orphanedTransforms) { if (t != null) { Undo.DestroyObjectImmediate(t.gameObject); culled++; } }
-                        Debug.Log($"[VixForge] Topology Flattened: {culled} orphans purged.");
+                        Debug.Log($"[VixForge] Removed {culled} unused empty objects.");
                     }
                 });
             }
@@ -216,8 +216,8 @@ namespace VixenTools.Editor
                 AddTask(new OptimizationTask
                 {
                     ID = "STRIP_DISABLED_COMPS",
-                    Label = $"Strip {disabledComponents.Count} Disabled Components",
-                    Description = "Vixen Core Heuristic: Destroys hard-disabled Behaviours to permanently reduce serialization overhead.",
+                    Label = $"Remove {disabledComponents.Count} Disabled Components",
+                    Description = "Deletes components you have left disabled. Makes the avatar a little lighter to load.",
                     ComputeSignature = () => "disabled:" + disabledComponents.Count(b => b != null),
                     Execute = () => {
                         int culled = 0;
@@ -230,7 +230,7 @@ namespace VixenTools.Editor
             AddTask(new OptimizationTask
             {
                 ID = "OPTIMIZE_BOUNDS",
-                Label = $"<color=#00e5ff>Auto-Fit Per-Mesh Avatar Bounds</color>",
+                Label = $"<color=#00e5ff>Auto-Fit Mesh Bounds</color>",
                 Description = "Vixen Core Fix: Fits each renderer's culling bounds to its real skinned geometry in root-bone space (Unity's own posed AABB, so meshes driven by many bones or a scaled armature measure their true size, not the authored mesh AABB). Adds a small skinning margin for animation range. Uses a scale-aware world-space floor so meshes authored at odd scales aren't over-inflated, and sets Update When Offscreen off since VRChat culls on the static bounds.",
                 ComputeSignature = () => {
                     var sb = new System.Text.StringBuilder("bounds:");
@@ -324,7 +324,7 @@ namespace VixenTools.Editor
                 AddTask(new OptimizationTask
                 {
                     ID = "COLLAPSE_LEAF_BONES",
-                    Label = $"<color=#ff0033>Collapse {deepLeafBones.Count} Dead-End Leaf Bones</color>",
+                    Label = $"<color=#ff0033>Collapse {deepLeafBones.Count} Unused End Bones</color>",
                     Description = "<color=#ff0033>Destructive.</color> Clones each affected mesh, then folds the vertex weights of dead-end bones into their parents. Humanoid bones, anything a PhysBone touches, and any bone that is animated or referenced by a VRCFury component, a constraint or a contact are all left alone. Your meshes are replaced with patched copies, so keep an eye on the result before you save.",
                     ComputeSignature = () => "collapse:" + string.Join("|", deepLeafBones
                         .Where(b => b != null)
@@ -352,7 +352,7 @@ namespace VixenTools.Editor
                 AddTask(new OptimizationTask
                 {
                     ID = "WELD_VERTICES",
-                    Label = $"<color=#00e5ff>Precision QEM Decimation ({heavyMeshes.Count} Meshes)</color>",
+                    Label = $"<color=#00e5ff>Shrink {heavyMeshes.Count} Heavy Meshes (QEM Decimation)</color>",
                     Description = $"Quadric Error Metric edge-collapse decimation (Garland-Heckbert), the same class of algorithm as Blender's Decimate. Drives each heavy mesh toward the slider target of ~{decimateTargetTris:N0} triangles while preventing face flips. <color=#00ff66><b>Preserves UV/normal seams, material (submesh) boundaries, open borders, and locks eye/face/hand submeshes plus humanoid Hand bones.</b></color> Interpolates UVs, colors and bone weights across each collapse, and remaps blendshapes. Halts early rather than shredding protected geometry.",
                     ComputeSignature = () => "decimate:" + string.Join("|", heavyMeshes
                         .Where(s => s != null && s.sharedMesh != null)
@@ -617,7 +617,7 @@ namespace VixenTools.Editor
                     Description = $"Illegal Component [{comp.GetType().Name}] detected on <b>{comp.gameObject.name}</b>",
                     ContextObject = comp.gameObject,
                     AutoFix = () => Undo.DestroyObjectImmediate(comp),
-                    FixLabel = "CULL COMPONENT"
+                    FixLabel = "REMOVE"
                 });
             }
 
@@ -726,13 +726,13 @@ namespace VixenTools.Editor
             foreach (var joint in avatarRoot.GetComponentsInChildren<Joint>(true))
             {
                 report.IsQuestUploadReady = false;
-                report.QuestErrors.Add(new Anomaly { Description = $"Forbidden Physics Joint [{joint.GetType().Name}] on <b>{joint.gameObject.name}</b>.", ContextObject = joint.gameObject, AutoFix = () => Undo.DestroyObjectImmediate(joint), FixLabel = "STRIP JOINT" });
+                report.QuestErrors.Add(new Anomaly { Description = $"Forbidden Physics Joint [{joint.GetType().Name}] on <b>{joint.gameObject.name}</b>.", ContextObject = joint.gameObject, AutoFix = () => Undo.DestroyObjectImmediate(joint), FixLabel = "REMOVE JOINT" });
             }
 
             foreach (var cam in avatarRoot.GetComponentsInChildren<Camera>(true))
             {
                 report.IsQuestUploadReady = false;
-                report.QuestErrors.Add(new Anomaly { Description = $"Camera found on <b>{cam.gameObject.name}</b>. Prohibited on Quest.", ContextObject = cam.gameObject, AutoFix = () => Undo.DestroyObjectImmediate(cam.gameObject), FixLabel = "CULL CAMERA" });
+                report.QuestErrors.Add(new Anomaly { Description = $"Camera found on <b>{cam.gameObject.name}</b>. Prohibited on Quest.", ContextObject = cam.gameObject, AutoFix = () => Undo.DestroyObjectImmediate(cam.gameObject), FixLabel = "REMOVE CAMERA" });
             }
 
             return report;
@@ -1302,11 +1302,11 @@ namespace VixenTools.Editor
 
             var scroll = new ScrollView() { style = { flexGrow = 1, paddingLeft = 15, paddingRight = 15, paddingTop = 15 } };
 
-            var configPanel = CreateCyberPanel("Target Parameters", "#00e5ff");
+            var configPanel = CreateCyberPanel("Settings", "#00e5ff");
             _targetField = new ObjectField("Avatar Root") { objectType = typeof(GameObject), allowSceneObjects = true };
             configPanel.Add(_targetField);
 
-            _sizePopup = new PopupField<int>("Optimization Target (px)", SizePresets, Mathf.Max(0, SizePresets.IndexOf(1024)));
+            _sizePopup = new PopupField<int>("Max Texture Size (px)", SizePresets, Mathf.Max(0, SizePresets.IndexOf(1024)));
             configPanel.Add(_sizePopup);
 
             _modeEnum = new EnumField("Resize Mode", _resizeMode);
@@ -1317,7 +1317,7 @@ namespace VixenTools.Editor
             _rankEnum.RegisterValueChangedCallback(e => _targetRank = (AvatarSDKValidator.PCPerformanceRank)e.newValue);
             configPanel.Add(_rankEnum);
 
-            _decimateSlider = new SliderInt("Decimation Target (tris / mesh)", 2000, 70000) { value = _decimateTarget, showInputField = true };
+            _decimateSlider = new SliderInt("Triangle Target (per mesh)", 2000, 70000) { value = _decimateTarget, showInputField = true };
             _decimateSlider.RegisterValueChangedCallback(e => _decimateTarget = e.newValue);
             configPanel.Add(_decimateSlider);
 
@@ -1325,7 +1325,7 @@ namespace VixenTools.Editor
             decimateHint.AddToClassList("md-p");
             configPanel.Add(decimateHint);
 
-            var scanBtn = new Button(ExecuteDeepScan) { text = "EXECUTE DEEP SYSTEM SCAN" };
+            var scanBtn = new Button(ExecuteDeepScan) { text = "SCAN AVATAR" };
             scanBtn.AddToClassList("cyber-action-btn");
             scanBtn.AddToClassList("cyan-btn");
             configPanel.Add(scanBtn);
@@ -1343,7 +1343,7 @@ namespace VixenTools.Editor
 
             _lastReport = AvatarSDKValidator.RunFullSweep(target, _sizePopup.value, _targetRank, _resizeMode, _decimateTarget);
 
-            var archPanel = CreateCyberPanel("Hierarchy Topology", "#00e5ff");
+            var archPanel = CreateCyberPanel("What Is On This Avatar", "#00e5ff");
             if (_lastReport.ArmatureRoot != null)
             {
                 archPanel.Add(CreateRow($"<b>Armature Root:</b> {_lastReport.ArmatureRoot.name}", _lastReport.ArmatureRoot, "#00e5ff"));
@@ -1378,7 +1378,7 @@ namespace VixenTools.Editor
                 case AvatarSDKValidator.PCPerformanceRank.Poor: maxPb=32; maxContacts=32; maxAnimators=2; break;
             }
 
-            var statsPanel = CreateCyberPanel("Hardware Cap Analysis", "#00ff66");
+            var statsPanel = CreateCyberPanel("Memory & Limits", "#00ff66");
 
             string triColor = _lastReport.PolyCount > 70000 ? "#ff0033" : "#00ff66";
             string smrColor = _lastReport.SkinnedMeshCount > 16 ? "#ff0033" : "#00ff66";
@@ -1406,15 +1406,15 @@ namespace VixenTools.Editor
 
             if (_lastReport.PhysicsNodes.Count > 0)
             {
-                var physPanel = CreateCyberPanel("Interactive Physics System", "#ffaa00");
+                var physPanel = CreateCyberPanel("Physics Components", "#ffaa00");
 
-                var info = new Label("Select specific physics components to violently purge from the hierarchy to meet Target Rank constraints. Sorted by depth (Leaf nodes first).");
+                var info = new Label("Pick the physics components to remove so the avatar fits your target rank. Sorted by depth (Leaf nodes first).");
                 info.AddToClassList("md-p");
                 physPanel.Add(info);
 
                 var controlRow = new VisualElement { style = { flexDirection = FlexDirection.Row, marginTop = 10, marginBottom = 10 } };
 
-                var physCountLabel = new Label($"Queued for Eradication: <color=#ff0033><b>0</b></color> / {_lastReport.PhysicsNodes.Count}") { enableRichText = true, style = { flexGrow = 1, unityTextAlign = TextAnchor.MiddleLeft } };
+                var physCountLabel = new Label($"Queued for removal: <color=#ff0033><b>0</b></color> / {_lastReport.PhysicsNodes.Count}") { enableRichText = true, style = { flexGrow = 1, unityTextAlign = TextAnchor.MiddleLeft } };
                 controlRow.Add(physCountLabel);
 
                 List<Toggle> nodeToggles = new List<Toggle>();
@@ -1422,14 +1422,14 @@ namespace VixenTools.Editor
                 var btnSelectAll = new Button(() => {
                     _lastReport.PhysicsNodes.ForEach(n => n.Cull = true);
                     foreach (var t in nodeToggles) t.SetValueWithoutNotify(true);
-                    physCountLabel.text = $"Queued for Eradication: <color=#ff0033><b>{_lastReport.PhysicsNodes.Count}</b></color> / {_lastReport.PhysicsNodes.Count}";
+                    physCountLabel.text = $"Queued for removal: <color=#ff0033><b>{_lastReport.PhysicsNodes.Count}</b></color> / {_lastReport.PhysicsNodes.Count}";
                 }) { text = "Select All" };
                 btnSelectAll.AddToClassList("data-tag-btn"); btnSelectAll.AddToClassList("data-tag-destructive");
 
                 var btnDeselectAll = new Button(() => {
                     _lastReport.PhysicsNodes.ForEach(n => n.Cull = false);
                     foreach (var t in nodeToggles) t.SetValueWithoutNotify(false);
-                    physCountLabel.text = $"Queued for Eradication: <color=#ff0033><b>0</b></color> / {_lastReport.PhysicsNodes.Count}";
+                    physCountLabel.text = $"Queued for removal: <color=#ff0033><b>0</b></color> / {_lastReport.PhysicsNodes.Count}";
                 }) { text = "Deselect All" };
                 btnDeselectAll.AddToClassList("data-tag-btn"); btnDeselectAll.AddToClassList("data-tag-optimize");
 
@@ -1450,7 +1450,7 @@ namespace VixenTools.Editor
                     toggle.RegisterValueChangedCallback(e => {
                         node.Cull = e.newValue;
                         int culledCount = _lastReport.PhysicsNodes.Count(n => n.Cull);
-                        physCountLabel.text = $"Queued for Eradication: <color=#ff0033><b>{culledCount}</b></color> / {_lastReport.PhysicsNodes.Count}";
+                        physCountLabel.text = $"Queued for removal: <color=#ff0033><b>{culledCount}</b></color> / {_lastReport.PhysicsNodes.Count}";
                     });
                     row.Add(toggle);
 
@@ -1475,7 +1475,7 @@ namespace VixenTools.Editor
                     }
                     Debug.Log($"[VixForge] System Culler: Eradicated {culled} physics nodes.");
                     ExecuteDeepScan();
-                }) { text = "EXECUTE PHYSICS ERADICATION" };
+                }) { text = "REMOVE SELECTED" };
                 executePhysBtn.AddToClassList("cyber-action-btn");
                 executePhysBtn.AddToClassList("danger-btn");
                 physPanel.Add(executePhysBtn);
@@ -1485,7 +1485,7 @@ namespace VixenTools.Editor
 
             if (_lastReport.OptimizationSuite.Count > 0)
             {
-                var suitePanel = CreateCyberPanel("Destructive Optimization Engine", "#ff00aa");
+                var suitePanel = CreateCyberPanel("Destructive Fixes", "#ff00aa");
 
                 foreach (var task in _lastReport.OptimizationSuite)
                 {
@@ -1503,7 +1503,7 @@ namespace VixenTools.Editor
                     suitePanel.Add(taskRow);
                 }
 
-                var applyBtn = new Button(ApplySelected) { text = "EXECUTE DESTRUCTIVE TOPOLOGY FIXES" };
+                var applyBtn = new Button(ApplySelected) { text = "APPLY SELECTED FIXES" };
                 applyBtn.AddToClassList("cyber-action-btn");
                 applyBtn.AddToClassList("danger-btn");
                 suitePanel.Add(applyBtn);
@@ -1514,15 +1514,15 @@ namespace VixenTools.Editor
             if (_lastReport.TextureNodes.Count > 0)
             {
                 bool isUp = _resizeMode == AvatarSDKValidator.ResizeMode.Upscale;
-                var texPanel = CreateCyberPanel("Texture Optimization Targeting", "#00e5ff");
+                var texPanel = CreateCyberPanel("Textures", "#00e5ff");
 
-                var info = new Label($"Select which textures to {(isUp ? "upscale" : "downscale")} to {_sizePopup.value}px. Defaults pre-select only textures that need it, but you have full manual control. Sorted largest first; runs ImageMagick destructively on the checked set only.");
+                var info = new Label($"Select which textures to {(isUp ? "upscale" : "downscale")} to {_sizePopup.value}px. Defaults pre-select only textures that need it, but you have full manual control. Sorted largest first. Only the ticked textures are changed, and the change is permanent.");
                 info.AddToClassList("md-p");
                 texPanel.Add(info);
 
                 var controlRow = new VisualElement { style = { flexDirection = FlexDirection.Row, marginTop = 10, marginBottom = 10 } };
                 int initialSelected = _lastReport.TextureNodes.Count(n => n.Process);
-                var texCountLabel = new Label($"Queued for ImageMagick: <color=#00ff66><b>{initialSelected}</b></color> / {_lastReport.TextureNodes.Count}") { enableRichText = true, style = { flexGrow = 1, unityTextAlign = TextAnchor.MiddleLeft } };
+                var texCountLabel = new Label($"Queued for resizing: <color=#00ff66><b>{initialSelected}</b></color> / {_lastReport.TextureNodes.Count}") { enableRichText = true, style = { flexGrow = 1, unityTextAlign = TextAnchor.MiddleLeft } };
                 controlRow.Add(texCountLabel);
 
                 List<Toggle> texToggles = new List<Toggle>();
@@ -1530,7 +1530,7 @@ namespace VixenTools.Editor
                 void UpdateTexCount()
                 {
                     int c = _lastReport.TextureNodes.Count(n => n.Process);
-                    texCountLabel.text = $"Queued for ImageMagick: <color=#00ff66><b>{c}</b></color> / {_lastReport.TextureNodes.Count}";
+                    texCountLabel.text = $"Queued for resizing: <color=#00ff66><b>{c}</b></color> / {_lastReport.TextureNodes.Count}";
                 }
 
                 var btnSelectAll = new Button(() => {
@@ -1584,7 +1584,7 @@ namespace VixenTools.Editor
                     }
                     AvatarSDKValidator.ProcessTexturesWithMagick(selected, _sizePopup.value, _resizeMode);
                     ExecuteDeepScan();
-                }) { text = isUp ? "EXECUTE TARGETED UPSCALE" : "EXECUTE TARGETED DOWNSCALE" };
+                }) { text = isUp ? "Upscale Selected Textures" : "Downscale Selected Textures" };
                 executeTexBtn.AddToClassList("cyber-action-btn");
                 executeTexBtn.AddToClassList("cyan-btn");
                 texPanel.Add(executeTexBtn);
@@ -1592,8 +1592,8 @@ namespace VixenTools.Editor
                 _resultsContainer.Add(texPanel);
             }
 
-            BuildPlatformResult("PC Windows Pipeline", _lastReport.IsPCUploadReady, _lastReport.PCErrors, _lastReport.PCPerformanceWarnings);
-            BuildPlatformResult("Quest Android Pipeline", _lastReport.IsQuestUploadReady, _lastReport.QuestErrors, null);
+            BuildPlatformResult("PC Windows", _lastReport.IsPCUploadReady, _lastReport.PCErrors, _lastReport.PCPerformanceWarnings);
+            BuildPlatformResult("Quest Android", _lastReport.IsQuestUploadReady, _lastReport.QuestErrors, null);
         }
 
         private void ApplySelected()
@@ -1622,7 +1622,7 @@ namespace VixenTools.Editor
 
             if (hasErrors) foreach (var err in errors) p.Add(CreateRow(err.Description, err.ContextObject, "#ff0033", err.AutoFix, err.FixLabel));
             if (hasWarns) foreach (var warn in warnings) p.Add(CreateRow(warn.Description, warn.ContextObject, "#ffaa00", warn.AutoFix, warn.FixLabel));
-            if (!hasErrors && !hasWarns) p.Add(CreateRow("Zero anomalies detected. Platform constraints perfectly mapped.", null, "#00e5ff"));
+            if (!hasErrors && !hasWarns) p.Add(CreateRow("Nothing wrong found. This avatar fits every limit for the platform.", null, "#00e5ff"));
 
             _resultsContainer.Add(p);
         }
@@ -1653,7 +1653,7 @@ namespace VixenTools.Editor
                 var optimize = new Button(() => { fix.Invoke(); ExecuteDeepScan(); }) { text = fixLabel };
                 optimize.AddToClassList("data-tag-btn");
 
-                if (hexColor == "#ff0033" || hexColor == "#ff00aa" || fixLabel.Contains("CULL") || fixLabel.Contains("PURGE") || fixLabel.Contains("STRIP"))
+                if (hexColor == "#ff0033" || hexColor == "#ff00aa" || fixLabel.Contains("REMOVE") || fixLabel.Contains("DELETE"))
                 {
                     optimize.AddToClassList("data-tag-destructive");
                 }

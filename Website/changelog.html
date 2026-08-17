@@ -82,6 +82,11 @@
                 About Us
             </fluent-anchor>
 
+            <fluent-anchor href="products.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                Our Products
+            </fluent-anchor>
+
             <fluent-anchor href="news.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v13H4a2 2 0 0 0-2 2 2 2 0 0 0 2 2z"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8z"></path></svg>
                 News
@@ -147,6 +152,7 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
+                        <fluent-option value="v2.15.1">v2.15.1</fluent-option>
                         <fluent-option value="v2.15.0">v2.15.0</fluent-option>
                         <fluent-option value="v2.14.0">v2.14.0</fluent-option>
                         <fluent-option value="v2.13.1">v2.13.1</fluent-option>
@@ -194,6 +200,25 @@
             </div>
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
+
+                <div class="changelog-entry" data-version="v2.15.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.15.1 - 2026-08-17</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Every button, panel and dialog in plain English, two Hub fixes, and the PhysBone Topology Mapper is now PhysBone Blueprints.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-3" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Fix Scene Data moved to <code>VixenTools/Unity Engine/Fix Scene Data</code></strong>, to keep the menus a little shorter.</li>
+                        <li class="mb-2"><strong>Plainer names on everything you click.</strong> Buttons and panel headers across the toolbox lost the jargon. <strong>EXECUTE DEEP SYSTEM SCAN</strong> is now <strong>SCAN AVATAR</strong>, <strong>EXECUTE DESTRUCTIVE TOPOLOGY FIXES</strong> is <strong>APPLY SELECTED FIXES</strong>, <strong>EXECUTE TARGETED DOWNSCALE</strong> is <strong>Downscale Selected Textures</strong>, <strong>Optimization Target (px)</strong> is <strong>Max Texture Size (px)</strong>, and the Optimization Suite's panels read <strong>Settings</strong>, <strong>Physics Components</strong>, <strong>Textures</strong> and <strong>Memory &amp; Limits</strong>. The Quest engine converts with <strong>Convert To Quest</strong>, the Preset Manager's tabs are <strong>Extract From Assets</strong> and <strong>Create New Preset</strong>, and the Hub's <strong>Architecture</strong> tab is now <strong>Overview</strong>. Tool names, menu paths and every setting behave exactly as before: only the wording changed. The docs and this website match.</li>
+                        <li class="mb-2"><strong>The PhysBone Topology Mapper is now PhysBone Blueprints</strong>, under <code>VixenTools/Avatars/PhysBone Blueprints</code>. Its two buttons are <strong>Save Blueprint</strong> and <strong>Apply Blueprint</strong> instead of Extract Master Copy and Inject Blueprint, and new blueprints are named <code>Avatar_PhysBones</code> rather than <code>Avatar_MasterTopology</code>. Blueprints you already saved keep working: only the default name for new ones changed.</li>
+                        <li class="mb-2"><strong>The Quest converter's component list dropped its "System:" prefixes.</strong> The sections are just <strong>Animators</strong>, <strong>PhysBones</strong>, <strong>Colliders</strong> and so on, and the auto-culled ones say <strong>removed for you</strong>.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The update badge lands on the changelog.</strong> Clicking the update notice in the Scene View opened the Hub on News the first time, because it asked for the Changelogs tab before the Hub had finished building it. It now waits and takes you where it says it will.</li>
+                        <li class="mb-2"><strong>Old releases stopped halfway down.</strong> Reading release 1.4.3 in the Hub's Changelogs tab cut off partway, because the Hub used to stop reading a document the moment it saw the words "Network Links", and that release happens to mention them. Every release reads to the end now.</li>
+                    </ul>
+                </div>
 
                 <div class="changelog-entry" data-version="v2.15.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.15.0 - 2026-08-15</h5>

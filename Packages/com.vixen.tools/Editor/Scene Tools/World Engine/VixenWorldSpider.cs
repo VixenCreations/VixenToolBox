@@ -102,7 +102,7 @@ namespace VixenTools.Editor
             _mainScroll = new ScrollView(ScrollViewMode.Vertical) { name = "main-scroll" };
             root.Add(_mainScroll);
 
-            var infoBox = new Label("SYSTEM ACTIVE. ENGINE SCANNING HIERARCHY ACROSS ALL SDK VECTORS.") { name = "info-box" };
+            var infoBox = new Label("Scanning your scene across every supported system.") { name = "info-box" };
             infoBox.AddToClassList("info-box-styled");
             _mainScroll.Add(infoBox);
 
@@ -906,10 +906,10 @@ namespace VixenTools.Editor
 
                         if (isBaking && (keys == null || keys.Equals(null)))
                         {
-                            LogDiagnostic("LTCGI PIPELINE: FATAL DESYNC", "Bake Cache Deadlock (NRE)",
+                            LogDiagnostic("LTCGI: BAKE DESYNC", "Bake Cache Deadlock (NRE)",
                                 $"The LTCGI Controller '{comp.gameObject.name}' is stuck in a 'Bake In Progress' state, but its material cache is corrupted. Clicking 'Reset Settings' in the inspector will throw a MissingReferenceException. Click Fix to force-clear the deadlock.",
                                 "#ff00aa", comp, () => {
-                                    Undo.RecordObject(comp, "Nuke LTCGI Bake Cache");
+                                    Undo.RecordObject(comp, "Clear LTCGI Bake Cache");
 
                                     Type matListType = typeof(System.Collections.Generic.List<Material>);
                                     bakeKeyField.SetValue(ctrl, Activator.CreateInstance(matListType));
@@ -973,7 +973,7 @@ namespace VixenTools.Editor
 
                             if (detectedVideoTex != null)
                             {
-                                LogDiagnostic("LTCGI PIPELINE: INTEGRATION", "Missing Video Texture",
+                                LogDiagnostic("LTCGI: SETUP", "Missing Video Texture",
                                     $"'{comp.gameObject.name}' has dynamic screens but no VideoTexture assigned. Detected {detectedPlayer} ('{detectedVideoTex.name}'). Ready to auto-link.",
                                     "#00e5ff", comp, () => {
                                         Undo.RecordObject(comp, "Link Video Texture to LTCGI");
@@ -983,7 +983,7 @@ namespace VixenTools.Editor
                             }
                             else
                             {
-                                LogDiagnostic("LTCGI PIPELINE: INTEGRATION", "Missing Video Texture",
+                                LogDiagnostic("LTCGI: SETUP", "Missing Video Texture",
                                     $"'{comp.gameObject.name}' has dynamic screens but no VideoTexture assigned. You must manually assign your video player's output Render Texture for lighting to react.",
                                     "#ffaa00", comp);
                             }
@@ -1004,7 +1004,7 @@ namespace VixenTools.Editor
                             if (report.StaleScreenCount > 0) issueDesc += $"\n• {report.StaleScreenCount} Ghost/Desynced Screens";
                             if (report.OrphanedRenderers > 0) issueDesc += $"\n• {report.OrphanedRenderers} Destroyed/Orphaned Renderers";
 
-                            LogDiagnostic("LTCGI PIPELINE: FRAGMENTATION", "Stale Data Rebuild Required",
+                            LogDiagnostic("LTCGI: GHOST SCREENS", "Stale Data Rebuild Required",
                                 $"Adapter '{component.gameObject.name}' has accumulated fragmented memory arrays.{issueDesc}\nThis causes ghost lighting and wastes GPU cycles.",
                                 "#ff4444", component, () => {
 
@@ -1034,7 +1034,7 @@ namespace VixenTools.Editor
                                 Texture mainTex = blurCrt.material.GetTexture("_MainTex");
                                 if (mainTex == null)
                                 {
-                                    LogDiagnostic("LTCGI PIPELINE: TOPOLOGY", "Unbound Video Texture",
+                                    LogDiagnostic("LTCGI: SCREEN SETUP", "Unbound Video Texture",
                                         $"Adapter '{component.gameObject.name}' has no VideoTexture bound to its Blur Chain. Dynamic video lighting will fail.",
                                         "#00e5ff", component, null);
                                 }
@@ -1067,7 +1067,7 @@ namespace VixenTools.Editor
                         if (res == 0 || res > 1080)
                         {
                             string resStr = res == 0 ? "UNLIMITED (0)" : $"{res}p";
-                            LogDiagnostic("VIDEO PIPELINE: BANDWIDTH NUKE", "Extreme AVPro Resolution",
+                            LogDiagnostic("VIDEO: BANDWIDTH", "Extreme AVPro Resolution",
                                 $"'{component.gameObject.name}' has maximumResolution set to {resStr}. Forcing unconstrained or 4K streams will absolutely cripple instance bandwidth and crash Quest users. Throttle to 1080 or 720.",
                                 "#ff00aa", component, () => {
                                     Undo.RecordObject(component, "Throttle AVPro Resolution");
@@ -1080,7 +1080,7 @@ namespace VixenTools.Editor
                     var lowLatencyField = avProType.GetField("useLowLatency", flags);
                     if (lowLatencyField != null && Convert.ToBoolean(lowLatencyField.GetValue(player)))
                     {
-                        LogDiagnostic("VIDEO PIPELINE: STABILITY", "Low Latency Enabled",
+                        LogDiagnostic("VIDEO: STABILITY", "Low Latency Enabled",
                             $"'{component.gameObject.name}' has 'Use Low Latency' enabled. This strips the video buffer and will cause severe stuttering for any player without a perfect internet connection. Disable for general media.",
                             "#ffaa00", component, () => {
                                 Undo.RecordObject(component, "Disable Low Latency");
@@ -1101,7 +1101,7 @@ namespace VixenTools.Editor
                             bool linked = sources.Any(s => s != null && s == currentAlSource);
                             if (!linked)
                             {
-                                LogDiagnostic("AUDIOLINK: TOPOLOGY", "AVPro Not Linked to AudioLink",
+                                LogDiagnostic("AUDIOLINK: SETUP", "AVPro Not Linked to AudioLink",
                                     $"AVPro Player '{component.name}' outputs audio to '{sources[0].name}', but AudioLink is not listening to it. Reactive materials will not pulse.",
                                     "#00e5ff", component, () => {
                                         Undo.RecordObject(alCore, "Link AVPro to AudioLink");
@@ -1128,7 +1128,7 @@ namespace VixenTools.Editor
                         if (res == 0 || res > 1080)
                         {
                             string resStr = res == 0 ? "UNLIMITED (0)" : $"{res}p";
-                            LogDiagnostic("VIDEO PIPELINE: BANDWIDTH NUKE", "Extreme Unity Video Resolution",
+                            LogDiagnostic("VIDEO: BANDWIDTH", "Extreme Unity Video Resolution",
                                 $"'{component.gameObject.name}' has maximumResolution set to {resStr}. Forcing unconstrained or 4K streams will cripple instance bandwidth.",
                                 "#ff00aa", component, () => {
                                     Undo.RecordObject(component, "Throttle Unity Video Resolution");
@@ -1150,7 +1150,7 @@ namespace VixenTools.Editor
                             bool linked = sources.Any(s => s != null && s == currentAlSource);
                             if (!linked)
                             {
-                                LogDiagnostic("AUDIOLINK: TOPOLOGY", "Unity Video Not Linked to AudioLink",
+                                LogDiagnostic("AUDIOLINK: SETUP", "Unity Video Not Linked to AudioLink",
                                     $"Unity Video Player '{component.name}' outputs audio to '{sources[0].name}', but AudioLink is not listening to it.",
                                     "#00e5ff", component, () => {
                                         Undo.RecordObject(alCore, "Link Unity Video to AudioLink");
@@ -1230,7 +1230,7 @@ namespace VixenTools.Editor
                     {
                         if (!sources.Any(s => s != null && s == currentAlSource))
                         {
-                            LogDiagnostic("AUDIOLINK: TOPOLOGY", "TXL Player Not Linked to AudioLink",
+                            LogDiagnostic("AUDIOLINK: SETUP", "TXL Player Not Linked to AudioLink",
                                 $"TXL Video Player '{player.gameObject.name}' outputs audio to '{sources[0].name}', but AudioLink is not listening. Reactive materials will not pulse during video playback.",
                                 "#00e5ff", player.gameObject, () => {
                                     Undo.RecordObject(alCore, "Link TXL to AudioLink");
@@ -1378,7 +1378,7 @@ namespace VixenTools.Editor
 
                         if (!isLinked && firstAvailableSpeaker != null)
                         {
-                            LogDiagnostic("PROTV TOPOLOGY", "AudioLink Disconnected from TV",
+                            LogDiagnostic("PROTV SETUP", "AudioLink Disconnected from TV",
                                 $"AudioLink is not listening to any of '{mainTv.gameObject.name}'s speakers. Reactive materials will not pulse. (Note: Using the official ProTV AudioLinkAdapter prefab is recommended for multi-player switching).",
                                 "#00e5ff", alCore, () => {
                                     Undo.RecordObject(alCore, "Link TV to AudioLink");
@@ -1400,7 +1400,7 @@ namespace VixenTools.Editor
 
                             if (linkedTv == null)
                             {
-                                LogDiagnostic("PROTV TOPOLOGY", "Adapter Missing TV",
+                                LogDiagnostic("PROTV SETUP", "Adapter Missing TV",
                                     $"ProTV AudioLink Adapter '{comp.gameObject.name}' is not linked to a TVManager. It will not receive hot-swap events.",
                                     "#00e5ff", comp, () => {
                                         Undo.RecordObject(comp, "Link Adapter to TV");
@@ -1411,7 +1411,7 @@ namespace VixenTools.Editor
 
                             if (linkedAl == null)
                             {
-                                LogDiagnostic("PROTV TOPOLOGY", "Adapter Missing AudioLink",
+                                LogDiagnostic("PROTV SETUP", "Adapter Missing AudioLink",
                                     $"ProTV AudioLink Adapter '{comp.gameObject.name}' is not linked to the AudioLink Core.",
                                     "#00e5ff", comp, () => {
                                         Undo.RecordObject(comp, "Link Adapter to AudioLink");
@@ -1588,7 +1588,7 @@ namespace VixenTools.Editor
                     var runOnMobileField = rtgiType.GetField("runOnMobile", flags);
                     if (runOnMobileField != null && Convert.ToBoolean(runOnMobileField.GetValue(rtgi)))
                     {
-                        LogDiagnostic("PROTV COMPUTE: MOBILE RTGI SINK", "Mobile Compute Sink", $"'{component.gameObject.name}' is running RTGI updates on Mobile. Real-time GI updates in LateUpdate will absolutely nuke Quest frame rates.", "#ff00aa", component, () => {
+                        LogDiagnostic("PROTV COMPUTE: MOBILE RTGI SINK", "Mobile Compute Sink", $"'{component.gameObject.name}' is running RTGI updates on Mobile. Real-time GI updates in LateUpdate will wreck Quest frame rates.", "#ff00aa", component, () => {
                             Undo.RecordObject(component, "Disable Mobile RTGI");
                             runOnMobileField.SetValue(rtgi, false);
                             PrefabUtility.RecordPrefabInstancePropertyModifications(component);
@@ -1958,7 +1958,7 @@ namespace VixenTools.Editor
                         if (!spatialize)
                         {
                             LogDiagnostic("IWASYNC3 ECOSYSTEM", "Global 2D Speaker",
-                                $"'{component.gameObject.name}' has spatialization disabled. This forces 2D global audio, which can cause voice starvation if not strictly intended for BGM.",
+                                $"'{component.gameObject.name}' has spatialization disabled. This forces 2D global audio, which can drown out player voices unless you meant it for background music.",
                                 "#ffaa00", component, () => {
                                     Undo.RecordObject(component, "Enable Speaker Spatialization");
                                     spatializeField.SetValue(spk, true);
@@ -1983,7 +1983,7 @@ namespace VixenTools.Editor
 
                 if (alCore != null && speakers.Length > 0 && !isAudioLinkConnected && firstValidSpeakerSource != null)
                 {
-                    LogDiagnostic("AUDIOLINK: TOPOLOGY", "IwaSync3 Not Linked to AudioLink",
+                    LogDiagnostic("AUDIOLINK: SETUP", "IwaSync3 Not Linked to AudioLink",
                         $"AudioLink is not listening to any of IwaSync3's Speakers. Reactive materials will not pulse during video playback.",
                         "#00e5ff", alCore, () => {
                             var alSourceField = audioLinkType.GetField("audioSource", flags);
@@ -2112,7 +2112,7 @@ namespace VixenTools.Editor
                     if (globalSettings.Length > 1)
                     {
                         LogDiagnostic("VIZVID ECOSYSTEM", "Singleton Violation: Global Settings",
-                            $"System detected {globalSettings.Length} GlobalSettings instances. VVMW architecture strictly dictates a single global settings module. Multiple instances will trigger race conditions and initialization failures.",
+                            $"System detected {globalSettings.Length} GlobalSettings instances. VVMW expects a single global settings module. Multiple instances will trigger race conditions and initialization failures.",
                             "#ff00aa", (Component)globalSettings[1]);
                     }
                 }
@@ -2146,7 +2146,7 @@ namespace VixenTools.Editor
 
                                     if (isAvPro && fallback == null)
                                     {
-                                        LogDiagnostic("VIZVID TOPOLOGY: CROSS-PLATFORM", "Missing Quest Fallback (AVPro)",
+                                        LogDiagnostic("VIZVID: CROSS-PLATFORM", "Missing Quest Fallback (AVPro)",
                                             $"Video Handler '{handler.gameObject.name}' is an AVPro player but lacks a Unity Video Fallback Handler. Android/Quest clients cannot natively process AVPro and will be locked out of the stream.",
                                             "#00e5ff", handler);
                                     }
@@ -2183,7 +2183,7 @@ namespace VixenTools.Editor
                         var linkedAl = alRefField.GetValue(core);
                         if (linkedAl == null && alCore != null)
                         {
-                            LogDiagnostic("VIZVID: TOPOLOGY", "AudioLink Not Linked",
+                            LogDiagnostic("VIZVID: SETUP", "AudioLink Not Linked",
                                 $"VizVid Core '{component.gameObject.name}' is not linked to the AudioLink prefab. VizVid cannot automatically sync media states (Play/Pause) or pipe audio into the shaders.",
                                 "#00e5ff", component, () => {
                                     Undo.RecordObject(component, "Link VizVid to AudioLink");
@@ -2207,7 +2207,7 @@ namespace VixenTools.Editor
                                     {
                                         if (mat != null && !mat.shader.name.StartsWith("JLChnToZ/Video") && !_validShaderList.Contains(mat.shader.name))
                                         {
-                                            LogDiagnostic("VIZVID RENDER PIPELINE", "Non-Whitelisted Target Shader",
+                                            LogDiagnostic("VIZVID: RENDERING", "Non-Whitelisted Target Shader",
                                                 $"VVMW Screen '{rend.name}' uses '{mat.shader.name}'. Video color spaces (Gamma to Linear) or inverted UVs from AVPro may render incorrectly unless the shader actively supports '_IsAVProVideo'.",
                                                 "#ffaa00", rend);
                                         }
@@ -2224,7 +2224,7 @@ namespace VixenTools.Editor
                 var resolvers = GetCachedObjects(vvmwRateLimitType, true);
                 if (resolvers.Length == 0 && vvmwCoreType != null && GetCachedObjects(vvmwCoreType, true).Length > 0)
                 {
-                    LogDiagnostic("VIZVID NETWORK TOPOLOGY", "Missing Rate Limit Resolver",
+                    LogDiagnostic("VIZVID: NETWORK SETUP", "Missing Rate Limit Resolver",
                         $"The scene utilizes VizVid but lacks a RateLimitResolver. Rapid video switching requests from late-joiners may trigger VRChat API rate limits, causing instance desyncs.",
                         "#ff00aa", null);
                 }
@@ -2286,7 +2286,7 @@ namespace VixenTools.Editor
             {
                 if (alInstances.Length > 1)
                 {
-                    LogDiagnostic("AUDIOLINK: TOPOLOGY", "Multiple Cores Detected",
+                    LogDiagnostic("AUDIOLINK: SETUP", "Multiple Cores Detected",
                         "Found more than one AudioLink core. This causes global shader keyword collisions and doubles DFT compute cost.",
                         "#ff00aa", (Component)alInstances[1]);
                 }
@@ -2318,7 +2318,7 @@ namespace VixenTools.Editor
 
                 if (detectedMasterSource != null && currentAlSource != detectedMasterSource)
                 {
-                    LogDiagnostic("AUDIOLINK: PIPELINE", "Desynced Audio Input",
+                    LogDiagnostic("AUDIOLINK: LINKS", "Desynced Audio Input",
                         $"AudioLink is listening to '{(currentAlSource != null ? currentAlSource.name : "Nothing")}', but your {sourceSystem} master audio is '{detectedMasterSource.name}'. Click Fix to pipe the audio correctly.",
                         "#00e5ff", alCore, () => {
                             Undo.RecordObject(alCore, "Link Audio Source");
@@ -2337,7 +2337,7 @@ namespace VixenTools.Editor
             }
             else
             {
-                LogDiagnostic("AUDIOLINK: TOPOLOGY", "System Missing",
+                LogDiagnostic("AUDIOLINK: SETUP", "System Missing",
                     "No AudioLink Core found. All sound-reactive materials and stage lighting will remain static.",
                     "#ffaa00", null);
             }
@@ -2402,7 +2402,7 @@ namespace VixenTools.Editor
                     var alRefField = vvmwCoreType.GetField("audioLink", flags);
                     if (alRefField != null && alRefField.GetValue(vvmw) == null)
                     {
-                        LogDiagnostic("VIZVID: TOPOLOGY", "AudioLink Not Linked",
+                        LogDiagnostic("VIZVID: SETUP", "AudioLink Not Linked",
                             "VizVid Core is not linked to AudioLink. VizVid cannot automatically sync track time and media states (Play/Pause) to your shaders.",
                             "#00e5ff", (Component)vvmw, () => {
                                 Undo.RecordObject((Component)vvmw, "Link VVMW to AudioLink");
@@ -3030,8 +3030,8 @@ namespace VixenTools.Editor
 
                 if (probe.resolution > 512)
                 {
-                    LogDiagnostic("LIGHTING & SHADOWS", "VRAM Nuke: 4K/2K Probe",
-                        $"'{probe.name}' has a resolution of {probe.resolution}. Reflection probes are cubemaps (6 textures). A 1024+ probe will nuke VRAM. Drop this to 256 or 512.",
+                    LogDiagnostic("LIGHTING & SHADOWS", "Heavy VRAM: 4K/2K Probe",
+                        $"'{probe.name}' has a resolution of {probe.resolution}. Reflection probes are cubemaps (6 textures). A 1024+ probe eats a lot of VRAM. Drop this to 256 or 512.",
                         "#ff00aa", component, () => {
                             Undo.RecordObject(component, "Throttle Probe Resolution");
                             probe.resolution = 256;
@@ -3054,7 +3054,7 @@ namespace VixenTools.Editor
 
                 if (cam.targetTexture == null && !isEventCamera)
                 {
-                    LogDiagnostic("RENDER PIPELINE", "Rogue Active Camera",
+                    LogDiagnostic("RENDERING", "Rogue Active Camera",
                         $"'{cam.name}' is active, rendering the world (Culling Mask != Nothing), and outputs directly to the screen. This forces the engine to double-render the world geometry. Disable it, assign a RenderTexture, or set Culling Mask to 'Nothing' if it's an Event Camera.",
                         "#ff00aa", component, () => {
                             Undo.RecordObject(cam, "Disable Rogue Camera");
@@ -3065,7 +3065,7 @@ namespace VixenTools.Editor
 
                 if (cam.targetTexture != null && cam.targetTexture.width > 2048)
                 {
-                    LogDiagnostic("RENDER PIPELINE", "Massive Render Target",
+                    LogDiagnostic("RENDERING", "Massive Render Target",
                         $"'{cam.name}' renders to a {cam.targetTexture.width}x{cam.targetTexture.height} texture. This causes massive VRAM allocation and pixel fillrate lag.",
                         "#ffaa00", component);
                 }
@@ -3323,7 +3323,7 @@ namespace VixenTools.Editor
             {
                 string recoveredList = string.Join(", ", recoveryPlan.Values.Select(t => t.name));
 
-                LogDiagnostic("MATERIAL PIPELINE: AUTORECOVERY", "Orphaned Textures Found",
+                LogDiagnostic("MATERIALS: AUTO-RECOVERY", "Orphaned Textures Found",
                     $"'{mat.name}' is missing maps. Discovered {recoveryPlan.Count} matching textures in the project via schema: {recoveredList}. Ready to re-bind.",
                     "#00e5ff", mat, () => {
                         Undo.RecordObject(mat, "Auto-Recover Textures");
@@ -3769,7 +3769,7 @@ namespace VixenTools.Editor
 
                 if (isMissingOrInvalid)
                 {
-                    LogDiagnostic("SHADER PIPELINE & REPLACER", "Invalid/Missing Shader (Magenta)", $"'{mat.name}' is broken. Ready to swap to target.", "#ff00aa", mat, () => {
+                    LogDiagnostic("SHADERS & REPLACER", "Invalid/Missing Shader (Magenta)", $"'{mat.name}' is broken. Ready to swap to target.", "#ff00aa", mat, () => {
                         if (_targetReplacementShader != null)
                         {
                             Undo.RecordObject(mat, "Replace Invalid Shader");
@@ -3806,7 +3806,7 @@ namespace VixenTools.Editor
 
                             if (!isWhitelisted)
                             {
-                                LogDiagnostic("SHADER PIPELINE & REPLACER", "Non-Whitelisted Shader", $"'{mat.name}' uses '{shaderName}'. Ready to convert.", "#ffaa00", mat, () => {
+                                LogDiagnostic("SHADERS & REPLACER", "Non-Whitelisted Shader", $"'{mat.name}' uses '{shaderName}'. Ready to convert.", "#ffaa00", mat, () => {
                                     if (_targetReplacementShader != null)
                                     {
                                         Undo.RecordObject(mat, "Replace Shader");
@@ -3942,7 +3942,7 @@ namespace VixenTools.Editor
                     TextureImporter importerLocal = importer;
                     string fullPathForResize = System.IO.Path.GetFullPath(path);
 
-                    LogDiagnostic("TEXTURES & VRAM", $"{targetMax}+ Texture Nuke",
+                    LogDiagnostic("TEXTURES & VRAM", $"{targetMax}+ Oversized Texture",
                         $"'{tex.name}' is {srcWidth}x{srcHeight}. Image Magick Will Resize to {targetMax}.",
                         "#ff00aa", tex, () =>
                         {
@@ -4282,11 +4282,11 @@ namespace VixenTools.Editor
                 return;
             }
 
-            if (actionableDiagnostics.Any(d => d.Category == "SHADER PIPELINE & REPLACER") && _targetReplacementShader == null)
+            if (actionableDiagnostics.Any(d => d.Category == "SHADERS & REPLACER") && _targetReplacementShader == null)
             {
                  if (!EditorUtility.DisplayDialog("VIXEN SYSTEM WARNING", "You have selected shaders to replace, but have not set a REPLACEMENT SHADER TARGET. \n\nContinue anyway (skipping shader swaps)?", "CONTINUE", "ABORT")) return;
             }
-            else if (!EditorUtility.DisplayDialog("VIXEN ENFORCEMENT", $"Applying {actionableDiagnostics.Count} specific fixes. This may take a moment to reimport assets.\n\nExecute Protocol?", "EXECUTE", "ABORT")) return;
+            else if (!EditorUtility.DisplayDialog("Apply Fixes?", $"Applying {actionableDiagnostics.Count} specific fixes. This may take a moment to reimport assets.\n\nGo ahead?", "APPLY", "CANCEL")) return;
 
             try
             {
@@ -4322,7 +4322,7 @@ namespace VixenTools.Editor
 
                     InitiateFullSystemScan();
 
-                    EditorUtility.DisplayDialog("VIXEN SYSTEM", "Targeted purges complete. System updated.", "ACKNOWLEDGE");
+                    EditorUtility.DisplayDialog("Done", "Fixes applied.", "OK");
                 }
             }
         }

@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Primary SEO -->
-    <title>VixForge Interactive | Extended Projects, R&D & Architecture</title>
-    <meta name="title" content="VixForge Interactive | Extended Projects, R&D & Architecture">
-    <meta name="description" content="Explore the extended projects powering VixForge Interactive - experimental VRChat tooling, Unity 2022.3 editor R&D, UdonSharp/C# architecture, Rust spatial engines, automation pipelines, prototype systems, and next-generation creator workflows.">
-    <meta name="keywords" content="VixForge Interactive, Vixens Toolbox, VRChat tools, VRChat R&D, Unity 2022.3 editor R&D, VRChat automation, experimental VRChat tools, avatar architecture, VPM pipelines, prototype systems, Rust spatial engines, UdonSharp, Vixenlicous, VRChat creator tools, extended projects">
+    <title>VixForge Interactive | Extended Projects & Experiments</title>
+    <meta name="title" content="VixForge Interactive | Extended Projects & Experiments">
+    <meta name="description" content="Explore the extended projects powering VixForge Interactive - experimental VRChat tooling, Unity 2022.3 editor R&D, UdonSharp and C# work, Rust spatial engines, automation pipelines, prototype systems, and next-generation creator workflows.">
+    <meta name="keywords" content="VixForge Interactive, Vixens Toolbox, VRChat tools, VRChat R&D, Unity 2022.3 editor R&D, VRChat automation, experimental VRChat tools, avatar tools, VPM pipelines, prototype systems, Rust spatial engines, UdonSharp, Vixenlicous, VRChat creator tools, extended projects">
     <meta name="author" content="Vixenlicous | VixForge Interactive">
     <meta name="theme-color" content="#ff00aa">
 
@@ -18,16 +18,16 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/extended-projects.html">
-    <meta property="og:title" content="VixForge Interactive | Extended Projects, R&D & Architecture">
-    <meta property="og:description" content="Dive into the experimental architecture behind VixForge Interactive - prototype systems, Unity 2022.3 editor R&D, automation pipelines, and next-gen VRChat creator tools.">
+    <meta property="og:title" content="VixForge Interactive | Extended Projects & Experiments">
+    <meta property="og:description" content="Dive into the experiments behind VixForge Interactive - prototype systems, Unity 2022.3 editor R&D, automation pipelines, and next-gen VRChat creator tools.">
     <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="og:site_name" content="VixForge Interactive | Vixens Toolbox">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/extended-projects.html">
-    <meta property="twitter:title" content="VixForge Interactive | Extended Projects, R&D & Architecture">
-    <meta property="twitter:description" content="Explore the R&D powering VixForge Interactive - experimental VRChat tools, automation systems, UdonSharp frameworks, and Unity 2022.3 editor architecture.">
+    <meta property="twitter:title" content="VixForge Interactive | Extended Projects & Experiments">
+    <meta property="twitter:description" content="Explore the R&D powering VixForge Interactive - experimental VRChat tools, automation systems, UdonSharp frameworks, and Unity 2022.3 editor tools.">
     <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
     <meta property="twitter:site" content="@VixenVRC">
 
@@ -36,8 +36,8 @@
         {
           "@context": "https://schema.org",
           "@type": "TechArticle",
-          "headline": "VixForge Interactive Extended Projects & Architecture",
-          "description": "A deep dive into the experimental systems and R&D architecture behind VixForge Interactive - including prototype VRChat tools, Unity 2022.3 editor extensions, UdonSharp frameworks, Rust spatial engines, automation pipelines, and next-generation creator workflows.",
+          "headline": "VixForge Interactive Extended Projects & Experiments",
+          "description": "A deep dive into the experimental systems and R&D behind VixForge Interactive - including prototype VRChat tools, Unity 2022.3 editor extensions, UdonSharp frameworks, Rust spatial engines, automation pipelines, and next-generation creator workflows.",
           "author": {
             "@type": "Organization",
             "name": "VixForge Interactive"
@@ -48,7 +48,7 @@
           },
           "url": "https://vixencreations.github.io/VixenToolBox/extended-projects.html",
           "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
-          "keywords": "VixForge Interactive, VRChat R&D, Unity 2022.3 editor tools, automation architecture, prototype systems, extended projects"
+          "keywords": "VixForge Interactive, VRChat R&D, Unity 2022.3 editor tools, automation tools, prototype systems, extended projects"
         }
     </script>
 
@@ -93,6 +93,30 @@
             margin-right: 5px;
             display: inline-block;
             margin-bottom: 5px;
+        }
+
+        .glass-panel .row {
+            flex-wrap: wrap;
+        }
+
+        .glass-panel .row.justify-content-between {
+            gap: 8px;
+        }
+
+        .glass-panel .badge {
+            white-space: nowrap;
+        }
+
+        .badge-beta {
+            background: rgba(0, 229, 255, 0.1);
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+        }
+
+        .badge-parked {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(191, 168, 210, 0.5);
+            color: #bfa8d2;
         }
 
         .manifesto-quote {
@@ -159,6 +183,11 @@
                 About Us
             </fluent-anchor>
 
+            <fluent-anchor href="products.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                Our Products
+            </fluent-anchor>
+
             <fluent-anchor href="news.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v13H4a2 2 0 0 0-2 2 2 2 0 0 0 2 2z"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8z"></path></svg>
                 News
@@ -220,7 +249,7 @@
         <div class="col align-items-center content" style="max-width: 1200px;">
 
             <div class="col w-100 text-center mb-4">
-                <h1 class="text-glow-cyan">Extended Projects & Architecture</h1>
+                <h1 class="text-glow-cyan">Extended Projects & Experiments</h1>
                 <p class="caption1 mt-2" style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
                     Beyond the core Editor ecosystem. A central hub mapping out the scalable standalone applications, web bridges, and community utilities engineered under the VixenCreations banner.
                 </p>
@@ -261,9 +290,12 @@
                 </div>
 
                 <div class="glass-panel" style="flex: 1 1 48%; padding: 2rem; display: flex; flex-direction: column;">
-                    <h2 class="text-glow-pink m-0 mb-3">Stream Connector</h2>
+                    <div class="row justify-content-between align-items-center mb-3">
+                        <h2 class="text-glow-pink m-0">Stream Connector</h2>
+                        <div class="badge badge-parked">On The Back Burner</div>
+                    </div>
                     <p class="caption1 mb-4" style="color: #bfa8d2; line-height: 1.6; flex-grow: 1;">
-                        An ultra-low-latency, multi-threaded orchestration engine that bridges live broadcast events straight into physical hardware states. Local-first and fail-closed, with a tri-state concurrency core and a haptic abstraction layer spanning PiShock, Intiface, OWO and OSC.
+                        An ultra-low-latency, multi-threaded orchestration engine that bridges live broadcast events straight into physical hardware states. Local-first and fail-closed, with a tri-state concurrency core and a haptic abstraction layer spanning PiShock, Intiface, OWO and OSC. Parked for now while other projects take priority. The haptics layer carries on as Haptics Nexus.
                     </p>
                     <div class="row mb-4" style="gap: 10px;">
                         <span class="tool-badge">Python / asyncio</span>
@@ -297,9 +329,9 @@
 
             <div class="col w-100 text-center mb-4 mt-5">
                 <hr style="border-color: rgba(0, 229, 255, 0.2); margin-bottom: 2rem;">
-                <h2 class="text-glow-cyan">In Active Development</h2>
+                <h2 class="text-glow-cyan">In The Works</h2>
                 <p class="caption1 mt-2" style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
-                    A look at the shaders and projects currently being built and refined in-house. These ship and evolve as they are ready! follow the Getting Started &amp; Help page to track progress.
+                    What is not out yet, and what is on hold. Everything shipping today is on the <a href="products.html" class="neon-link">Our Products</a> page.
                 </p>
             </div>
 
@@ -307,47 +339,17 @@
 
                 <div class="glass-panel" style="flex: 1 1 48%; padding: 2rem; display: flex; flex-direction: column;">
                     <div class="row justify-content-between align-items-center mb-3">
-                        <h2 class="text-glow-pink m-0">Latex Ultra (VixenWear)</h2>
-                        <div class="badge">Shipping &amp; Evolving</div>
+                        <h2 class="text-glow-pink m-0">Camera Pro (VixForge)</h2>
+                        <div class="badge badge-beta">Closed Beta</div>
                     </div>
                     <p class="caption1 mb-4" style="color: #bfa8d2; line-height: 1.6; flex-grow: 1;">
-                        Our standalone GGX latex avatar shader, sold separately from the Vixens Toolbox: clearcoat, thin-film, wet / drip and melting-goo effects, triple matcaps, and live reactions to every major world-lighting system, AudioLink, LTCGI, VRC Light Volumes and VRSL. Built-in Render Pipeline, with both a base and an SPS twin, refined with nearly every release.
+                        A real camera for VRChat photos: depth of field with actual bokeh, film colour response, and a light meter that sets your exposure and focus for you. It takes over the VRChat camera, so what you see through the lens is what gets saved and your own view never changes. In closed testing with a small group of trusted testers right now, releasing soon.
                     </p>
                     <div class="row" style="gap: 10px;">
-                        <span class="tool-badge">Shader</span>
-                        <span class="tool-badge">GGX BRDF</span>
-                        <span class="tool-badge">Avatar Lighting</span>
-                    </div>
-                </div>
-
-                <div class="glass-panel" style="flex: 1 1 48%; padding: 2rem; display: flex; flex-direction: column;">
-                    <div class="row justify-content-between align-items-center mb-3">
-                        <h2 class="text-glow-pink m-0">Surface Ultra (VixenWorld)</h2>
-                        <div class="badge">In Development</div>
-                    </div>
-                    <p class="caption1 mb-4" style="color: #bfa8d2; line-height: 1.6; flex-grow: 1;">
-                        The world-side counterpart to Latex Ultra, sharing the same BRDF and world-lighting stack so VRChat worlds and props can react to the same systems your avatar does.
-                    </p>
-                    <div class="row" style="gap: 10px;">
-                        <span class="tool-badge">Shader</span>
-                        <span class="tool-badge">Worlds</span>
-                        <span class="tool-badge">GGX BRDF</span>
-                        <span class="tool-badge">World Lighting</span>
-                    </div>
-                </div>
-
-                <div class="glass-panel" style="flex: 1 1 48%; padding: 2rem; display: flex; flex-direction: column;">
-                    <div class="row justify-content-between align-items-center mb-3">
-                        <h2 class="text-glow-pink m-0">ClothingPro (VixenWear)</h2>
-                        <div class="badge">In Development</div>
-                    </div>
-                    <p class="caption1 mb-4" style="color: #bfa8d2; line-height: 1.6; flex-grow: 1;">
-                        A modular clothing and wardrobe-layer system built on top of the VixenWear pipeline, aimed at making layered outfits drop in cleanly without manual rig surgery.
-                    </p>
-                    <div class="row" style="gap: 10px;">
-                        <span class="tool-badge">Shader</span>
-                        <span class="tool-badge">GGX BRDF</span>
-                        <span class="tool-badge">Avatar Lighting</span>
+                        <span class="tool-badge">Avatar Tool</span>
+                        <span class="tool-badge">Photography</span>
+                        <span class="tool-badge">VRCFury Setup</span>
+                        <span class="tool-badge">PC Only</span>
                     </div>
                 </div>
 
@@ -357,12 +359,28 @@
                         <div class="badge">In Development</div>
                     </div>
                     <p class="caption1 mb-4" style="color: #bfa8d2; line-height: 1.6; flex-grow: 1;">
-                        A Crazy Over the top automatic Virtual Jockey System Used to put on shows when a DJ doesnt have a Virtual Jockey to run the lighting!
+                        A crazy, over-the-top automatic Virtual Jockey system, built to put on a show when a DJ doesn't have a VJ to run the lighting.
                     </p>
                     <div class="row" style="gap: 10px;">
                         <span class="tool-badge">Pipeline</span>
                         <span class="tool-badge">Worlds</span>
                         <span class="tool-badge">UdonSharp</span>
+                    </div>
+                </div>
+
+                <div class="glass-panel" style="flex: 1 1 48%; padding: 2rem; display: flex; flex-direction: column;">
+                    <div class="row justify-content-between align-items-center mb-3">
+                        <h2 class="text-glow-pink m-0">Surface Ultra (VixenWorld)</h2>
+                        <div class="badge badge-parked">On The Back Burner</div>
+                    </div>
+                    <p class="caption1 mb-4" style="color: #bfa8d2; line-height: 1.6; flex-grow: 1;">
+                        The world-side counterpart to Latex Ultra, sharing the same BRDF and world-lighting stack so VRChat worlds and props can react to the same systems your avatar does. Parked for now while the avatar shaders take priority.
+                    </p>
+                    <div class="row" style="gap: 10px;">
+                        <span class="tool-badge">Shader</span>
+                        <span class="tool-badge">Worlds</span>
+                        <span class="tool-badge">GGX BRDF</span>
+                        <span class="tool-badge">World Lighting</span>
                     </div>
                 </div>
 

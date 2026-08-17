@@ -17,7 +17,7 @@ The four flagship tools:
 - **Vixen World Engine** - the omni-system diagnostic spider, running roughly 137 checks across nine third-party ecosystems (ProTV, TXL, VizVid, IwaSync3, AudioLink, LTCGI, Rinvo, VRC Light Volumes, VRSL), most carrying a one-click fix.
 - **Animation Workbench Pro** - a curve authoring environment with material and component property binding, an easing library, staged non-destructive edits, and real-time preview.
 
-Supporting tools: **Vixen Hub** (the unified editor hub that ties the suite together), **Animator Forge**, the **PhysBone Topology Mapper**, the **Accessory Mounting Engine**, **Vixen Badge Studio**, and the Pipeline Preset Manager.
+Supporting tools: **Vixen Hub** (the unified editor hub that ties the suite together), **Animator Forge**, **PhysBone Blueprints**, the **Accessory Mounting Engine**, **Vixen Badge Studio**, and the Pipeline Preset Manager.
 
 Note: **VixenWear Latex Ultra** is a separate standalone product and does not ship inside the Vixens Toolbox.
 

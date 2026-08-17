@@ -2,16 +2,16 @@
 
 I built the Vixens Toolbox because the VRChat pipeline is full of repetitive, mind-numbing bottlenecks.
 
-This is a comprehensive suite of custom Unity Editor utilities and automation scripts focused specifically on **High-Fidelity Avatar Pipeline & Topology Architecture**. The four flagship tools are the **Quest Conversion Engine**, the **Avatar Optimization Suite**, the **Vixen World Engine**, and **Animation Workbench Pro**. Engineered entirely on Unity's modern UI Toolkit, the goal is simple: eliminate human error, enforce strict project consistency, and push the Unity engine to its absolute limits. Whether you're violently crushing a PC avatar's polycount or auditing a complex world for Udon network starvations, this toolset is designed to save you hundreds of hours of grinding so you can actually focus on creating.
+This is a comprehensive suite of custom Unity Editor utilities and automation scripts focused on getting avatars and worlds ready to ship. The four flagship tools are the **Quest Conversion Engine**, the **Avatar Optimization Suite**, the **Vixen World Engine**, and **Animation Workbench Pro**. Engineered entirely on Unity's modern UI Toolkit, the goal is simple: eliminate human error, enforce strict project consistency, and push the Unity engine to its absolute limits. Whether you're violently crushing a PC avatar's polycount or auditing a complex world for Udon network starvations, this toolset is designed to save you hundreds of hours of grinding so you can actually focus on creating.
 
-* **Package:** `com.vixencreations.vixens-toolbox` (v2.15.0)
+* **Package:** `com.vixencreations.vixens-toolbox` (v2.15.1)
 * **Target:** Unity 2022.3.22f1 / VRChat SDK 3.10.3
 * **Docs & Storefront:** [vixencreations.github.io/VixenToolBox](https://vixencreations.github.io/VixenToolBox/)
 
-### 1. Architectural Distribution & Infrastructure
+### 1. Distribution & Infrastructure
 
-* **VPM-Native Architecture:** Distributed via a custom VRChat Creator Companion (VCC) repository so your packages stay updated inside your existing workflow.
-* **Context-Aware Dual-SDK Ecosystem:** The core architecture natively bridges both the VRChat Avatar SDK (`VRC_SDK_VRCSDK3`) and the VRChat World SDK (`UDON`). The central Hub reads active compiler directives and hot-swaps the UI system to match your current development environment.
+* **VPM-Native Distribution:** Distributed via a custom VRChat Creator Companion (VCC) repository so your packages stay updated inside your existing workflow.
+* **Context-Aware Dual-SDK Ecosystem:** The toolbox natively bridges both the VRChat Avatar SDK (`VRC_SDK_VRCSDK3`) and the VRChat World SDK (`UDON`). The central Hub reads active compiler directives and hot-swaps the UI system to match your current development environment.
 * **Reactive Scene State Routing (Hub):** Bypasses manual UI refreshes. The Hub's `RenderActionGrid` uses synchronous layout flushing and rich-text injection to read `EditorPrefs` and instantly update button labels and badge states (e.g. `<color=#00e5ff>[ ACTIVE ]</color>`) as you toggle tools.
 * **Autonomous Scene View HUD Notifier:** No more modal popups. A native UI Toolkit badge is injected directly into `SceneView.rootVisualElement` whenever a new Vixens Toolbox version is detected, routing you straight into the Hub's changelog view.
 * **Modern UI Toolkit Core:** All major tools (Hub, World Engine, Quest Conversion Engine, etc.) are built on UI Toolkit with custom USS themes, cyberpunk typography, and responsive layouts tuned for 2022+ editor workflows.
@@ -34,7 +34,7 @@ A lethal, enterprise-level heuristic auditing system running around 137 distinct
 
 ### 3. Avatar Optimization & QEM Decimation
 
-An execution system designed to violently crush PC avatar polycounts while mathematically protecting high-fidelity facial topology, with the texture pass spread across every core your machine has.
+An execution system designed to violently crush PC avatar polycounts while protecting the detail in the face, with the texture pass spread across every core your machine has.
 
 * **Precision QEM Decimation:** Quadric Error Metric edge collapse (Garland-Heckbert), the same class of algorithm as Blender's Decimate. Drives each heavy mesh toward your triangle target while preventing face flips and preserving UV/normal seams, material boundaries and open borders. UVs, colours and bone weights are interpolated across every collapse, blendshapes are remapped, and the run halts early rather than shredding protected geometry.
 * **Dual-Shielding Exclusion System:** Material slots whose names read as delicate (eye, visor, lens, blush, face, mouth, teeth, pupil, iris) are locked out of the decimation grid, and on a Humanoid rig the vertices weighted to the left and right Hand bones are locked too.
@@ -48,14 +48,14 @@ A fully non-destructive pipeline for converting PC avatars to Android. It genera
 * **Biometric Purge ("Hunter-Killer"):** Eradicates compilation blockages by aggressively stripping out PC-VR face tracking parameters. Specifically targets `adjerry91` templates and internal VRCFury branches like `VF_UE_VRCFT` and `VRCFury - Face Tracking Prefabs`, locking them out of the Android build pipeline.
 * **High-Fidelity Linear Downsampling:** Intercepts Unity's importer to route textures through a Magick.NET Lanczos pipeline in linear color space, followed by an `AdaptiveSharpen` pass to recover micro-contrast (fur, fabric) before ASTC compression.
 * **ASTC Pipeline Sync:** Fixes sRGB/Linear mismatches by forcing correct format serialization before applying `ASTC_6x6` crunching, preventing corrupted normal maps and inverted color outputs.
-* **Interactive Topology System:** Presents PhysBones, colliders, contacts, constraints, raycasts, particles, trails, lines, joints, and incompatible components in a UI Toolkit system. VRChat mobile limits are applied per target rank, with auto-culled categories (e.g. face tracking, joints) locked for safety but still visible for forensic review.
+* **Interactive Component List:** Presents PhysBones, colliders, contacts, constraints, raycasts, particles, trails, lines, joints, and incompatible components in a UI Toolkit system. VRChat mobile limits are applied per target rank, with auto-culled categories (e.g. face tracking, joints) locked for safety but still visible for forensic review.
 * **Texture Processing System:** Lists all detected textures with resolution metadata and per-texture toggles, allowing you to selectively opt out of Magick.NET processing for assets you want to preserve at full fidelity.
 
 ### 5. Avatar Pipeline & Iteration Tools
 
 The connective tissue that makes re-rigging, mounting, and animating avatars repeatable instead of error-prone.
 
-* **PhysBone Topology Mapper:** Snapshots an entire PhysBone architecture into a reusable blueprint. "Extract Master Copy" walks the source avatar via `AnimationUtility.CalculateTransformPath`, serializes each `VRCPhysBone` into a `Preset`, and writes a master `ScriptableObject` mapping `bonePath` to `Preset`. "Inject Blueprint" traverses a target avatar by relative path, auto-adds any missing components, and re-applies the stored presets, restoring dozens of distinct physics setups in a single click after a destructive optimization or Quest conversion. Degrades gracefully (buttons disabled, clearly labeled) when the VRChat SDK is not present.
+* **PhysBone Blueprints:** Snapshots an entire PhysBone setup into a reusable blueprint. "Extract Master Copy" walks the source avatar via `AnimationUtility.CalculateTransformPath`, serializes each `VRCPhysBone` into a `Preset`, and writes a master `ScriptableObject` mapping `bonePath` to `Preset`. "Inject Blueprint" traverses a target avatar by relative path, auto-adds any missing components, and re-applies the stored presets, restoring dozens of distinct physics setups in a single click after a destructive optimization or Quest conversion. Degrades gracefully (buttons disabled, clearly labeled) when the VRChat SDK is not present.
 * **Accessory Mounting Engine:** Clones sterile armatures from a source rig and surgically mounts accessories onto the result. `FullGeneration` clones a fresh sterile armature with a recursive `CloneHierarchy` pass that preserves local TRS at every node; `AppendToExisting` reuses an already-generated rig by resolving relative bone paths. A destructive auto-rig bakes each `SkinnedMeshRenderer` with a per-child `localToBoneOffset` matrix and fully preserves blendshape deltas, while rigid props, particles, and audio sources use a locked `ParentConstraint`. PhysBone-safe root locking, culling-resistant 2.5m bounds, GUID-suffixed asset persistence, and a single collapsed undo group keep the whole pipeline clean and reversible.
 * **Animation Workbench Pro:** A precision animation authoring environment that outperforms Unity's native curve tools. A `MaterialPropertySearchPopup` scans every renderer on your preview target and exposes categorized, Poiyomi-aware shader properties (with R/G/B/A color and X/Y/Z/W vector channel splitting) as animatable bindings. A custom `CurveGraphView` (zoom, pan, double-click insert, right-click delete) plus an easing library drive staged, non-destructive curve edits via `CurveOperations.BuildStretchedCurve()`, and a real-time `PreviewEngine` plays staged clips directly on a scene object through `AnimationMode.SampleAnimationClip`. Every destructive action is gated behind explicit user intent.
 * **Pipeline Preset Manager:** A dual-mode import-automation engine that enforces project-wide consistency. Authoring Mode creates a temporary phantom PNG, injects your import rules, and rips the importer state into a permanent `Preset`; Extraction Mode rips Presets from existing component hierarchies (optionally including children, ignoring Transforms). Generated presets can be globally registered via `Preset.SetDefaultPresetsForType()` with glob filters, so every new texture, audio clip, renderer, or PhysBone entering the project inherits your standards automatically.
@@ -81,13 +81,13 @@ Procedural badge generation for VRChat conventions and identity work.
 
 ### 8. Vixen Hub & In-Engine Documentation
 
-The central command console and documentation layer for the entire architecture.
+The central command console and documentation layer for the whole toolbox.
 
-* **Vixen Hub Dashboard:** A UI Toolkit-powered control center with tabs for News, Architecture, Core Modules, Supported Modules, Network, Support and Changelogs. World projects gain an eighth tab, Metrics Engine. All major tools are launched from here with consistent styling and layout.
+* **Vixen Hub Dashboard:** A UI Toolkit-powered control center with tabs for News, Overview, Core Modules, Supported Modules, Network, Support and Changelogs. World projects gain an eighth tab, Metrics Engine. All major tools are launched from here with consistent styling and layout.
 * **Dynamic Changelog Viewer:** Parses `CHANGELOG.md` into version-indexed entries with a dropdown selector. The Hub's update badge routes directly into this tab so you can see exactly what changed in each release.
-* **Core Modules Grid:** Launchers for the tools your project can actually run. Animation Workbench Pro and the Pipeline Preset Manager always appear; avatar projects add Badge Studio, the Quest Conversion Engine, the Optimization Suite, the PhysBone Topology Mapper, Animator Forge and the Accessory Mounting Engine; world projects add the Vixen World Engine plus Live Surface Snapping and Precision Click-to-Place, which show their on/off state right on the card.
+* **Core Modules Grid:** Launchers for the tools your project can actually run. Animation Workbench Pro and the Pipeline Preset Manager always appear; avatar projects add Badge Studio, the Quest Conversion Engine, the Optimization Suite, PhysBone Blueprints, Animator Forge and the Accessory Mounting Engine; world projects add the Vixen World Engine plus Live Surface Snapping and Precision Click-to-Place, which show their on/off state right on the card.
 * **Network & Routing:** Centralized routing to our active channels: **GitHub** (source and issue tracking), **Discord**, **X/Twitter** and **YouTube**. Storefront and donation links live on the Support tab.
-* **In-Engine Documentation:** Bypassing external websites entirely, the Hub features a dynamic Markdown-to-UIElements parser. The News, Architecture and Changelog tabs render straight from the package's own markdown, and world projects get the full Heuristics Engine breakdown on the Metrics Engine tab.
+* **In-Engine Documentation:** Bypassing external websites entirely, the Hub features a dynamic Markdown-to-UIElements parser. The News, Overview and Changelog tabs render straight from the package's own markdown, and world projects get the full Heuristics Engine breakdown on the Metrics Engine tab.
 
 ### 9. VixenWear Latex Ultra
 
@@ -101,7 +101,7 @@ Our dual-lobe PBR shader for synthetic materials is a **standalone product** and
 
 ### 11. Special Thanks & Acknowledgements
 
-This architecture requires immense R&D and community synergy. Massive thanks to the following creators for their crucial insights and forensic pipeline debugging for keeping the engine running:
+This project requires immense R&D and community synergy. Massive thanks to the following creators for their crucial insights and forensic pipeline debugging for keeping the engine running:
 
 * **Lt_Shadow:** Suggested the UI Toolkit font replacer infrastructure.
 * **TheCastle:** Informed me about the underlying issues with LTCGI, driving our deadlock resolution.

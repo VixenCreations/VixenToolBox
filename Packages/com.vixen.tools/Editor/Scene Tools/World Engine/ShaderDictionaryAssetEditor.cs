@@ -45,7 +45,7 @@ namespace VixenTools.Editor
 
             if (GUILayout.Button("FACTORY RESET (Clear & Rebuild)", resetBtnStyle, GUILayout.Height(30)))
             {
-                if (EditorUtility.DisplayDialog("VIXEN SYSTEM WARNING", "This will completely wipe this dictionary and rebuild it from the default schema. Any custom shaders you added will be lost.\n\nExecute Protocol?", "NUKE & REBUILD", "ABORT"))
+                if (EditorUtility.DisplayDialog("Wipe This Dictionary?", "This will completely wipe this dictionary and rebuild it from the default schema. Any custom shaders you added will be lost.\n\nAre you sure?", "WIPE & REBUILD", "ABORT"))
                 {
                     Undo.RecordObject(dict, "Factory Reset Dictionary");
 
@@ -72,7 +72,7 @@ namespace VixenTools.Editor
             }
 
             GUILayout.Space(5);
-            EditorGUILayout.HelpBox("Use the Cyan button for your Target Dictionary (PBR Shaders).\nUse the Pink button for your Whitelist Dictionary (Video/AudioLink).\nUse the Red button to nuke and pave the current list.", MessageType.Info);
+            EditorGUILayout.HelpBox("Use the Cyan button for your Target Dictionary (PBR Shaders).\nUse the Pink button for your Whitelist Dictionary (Video/AudioLink).\nUse the Red button to wipe the current list and start over.", MessageType.Info);
         }
     }
 }

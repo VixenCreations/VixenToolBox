@@ -1,8 +1,8 @@
 {
   "name": "com.vixencreations.vixens-toolbox",
-  "version": "2.15.0",
+  "version": "2.15.1",
   "displayName": "Vixen Tool Box",
-  "description": "A VPM-native, cyber-noir suite of Unity Editor tools for VRChat creators, hand-built by VixForge Interactive. Four flagship tools lead it: a non-destructive Quest Conversion Engine, a full Avatar Optimization Suite with real QEM mesh decimation, a multi-ecosystem World Engine auditor (ProTV, AudioLink, LTCGI, VRSL, Light Volumes and more), and Animation Workbench Pro. Also includes Animator Forge, PhysBone topology mapping, an Accessory Mounting Engine and a convention Badge Studio. Engineered to eliminate human error, enforce project consistency, and push Unity 2022.3 to its limits. Trusted by 1,500+ creators.",
+  "description": "A VPM-native, cyber-noir suite of Unity Editor tools for VRChat creators, hand-built by VixForge Interactive. Four flagship tools lead it: a non-destructive Quest Conversion Engine, a full Avatar Optimization Suite with real QEM mesh decimation, a multi-ecosystem World Engine auditor (ProTV, AudioLink, LTCGI, VRSL, Light Volumes and more), and Animation Workbench Pro. Also includes Animator Forge, PhysBone blueprints, an Accessory Mounting Engine and a convention Badge Studio. Engineered to eliminate human error, enforce project consistency, and push Unity 2022.3 to its limits. Trusted by 1,500+ creators.",
   "unity": "2022.3",
   "unityRelease": "22f1",
   "vpmDependencies": {

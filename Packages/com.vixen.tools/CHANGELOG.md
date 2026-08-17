@@ -5,6 +5,19 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.15.1] - 2026-08-16
+*Every button, panel and dialog in plain English, two Hub fixes, and the PhysBone Topology Mapper is now PhysBone Blueprints.*
+
+### Changed
+* **Fix Scene Data Tool:** Moved the Fix Scene Data tool to `VixenTools/Unity Engine/Fix Scene Data` to condense the menu sizes a little more
+* **Plainer names on everything you click.** Buttons and panel headers across the toolbox lost the jargon. **EXECUTE DEEP SYSTEM SCAN** is now **SCAN AVATAR**, **EXECUTE DESTRUCTIVE TOPOLOGY FIXES** is **APPLY SELECTED FIXES**, **EXECUTE TARGETED DOWNSCALE** is **Downscale Selected Textures**, **Optimization Target (px)** is **Max Texture Size (px)**, and the Optimization Suite's panels read **Settings**, **Physics Components**, **Textures** and **Memory & Limits**. The Quest engine converts with **Convert To Quest**, the Preset Manager's tabs are **Extract From Assets** and **Create New Preset**, and the Hub's **Architecture** tab is now **Overview**. Tool names, menu paths and every setting behave exactly as before: only the wording changed. The docs and the website match.
+* **The PhysBone Topology Mapper is now PhysBone Blueprints**, under `VixenTools/Avatars/PhysBone Blueprints`. Its two buttons are **Save Blueprint** and **Apply Blueprint** instead of Extract Master Copy and Inject Blueprint, and new blueprints are named `Avatar_PhysBones` rather than `Avatar_MasterTopology`. Blueprints you already saved keep working: only the default name for new ones changed.
+* **The Quest converter's component list dropped its "System:" prefixes.** The sections are just **Animators**, **PhysBones**, **Colliders** and so on, and the auto-culled ones say **removed for you** instead of **(Auto-Culled)**.
+
+### Fixed
+* **The update badge lands on the changelog.** Clicking the update notice in the Scene View opened the Hub on News the first time, because it asked for the Changelogs tab before the Hub had finished building it. It now waits and takes you where it says it will.
+* **Old releases stopped halfway down.** Reading release 1.4.3 in the Hub's Changelogs tab cut off partway, because the Hub used to stop reading a document the moment it saw the words "Network Links", and that release happens to mention them. Every release reads to the end now.
+ 
 ## [2.15.0] - 2026-08-15
 *Format before resolution, a safer purge, and a truthful version badge.*
 

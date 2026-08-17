@@ -110,6 +110,29 @@
     color: #bbbbbb;
 }
 
+/* Grouped tab picker, used instead of the tab strip once the tab list outgrows it */
+.doc-dropdown {
+    height: 35px;
+    margin: 4px;
+    font-size: 13px;
+    -unity-font-style: bold;
+}
+
+.doc-dropdown > .unity-base-field__input {
+    background-color: #2c2c2c;
+    color: var(--color-cyan);
+    border-width: 1px;
+    border-color: rgba(0, 229, 255, 0.4);
+    border-radius: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.doc-dropdown > .unity-base-field__input:hover {
+    background-color: #333333;
+    border-color: rgba(0, 229, 255, 0.7);
+}
+
 /* Tab Description */
 #desc-container {
     padding: 10px;

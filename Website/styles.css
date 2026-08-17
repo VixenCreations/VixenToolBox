@@ -1433,6 +1433,8 @@ fluent-option {
    text-led pages that share .content. */
 .content-wide {
     max-width: 1600px;
+    /* Positioning context for the Discord widget pinned at the top right. */
+    position: relative;
 }
 
 .registry-layout {
@@ -1451,6 +1453,25 @@ fluent-option {
     flex: 0 0 350px;
     margin-top: 1rem;
     text-align: center;
+}
+
+/* Wide screens: pin the Discord widget to the top right of the page. The page content
+   reserves a gutter the same width, so nothing can ever run underneath the widget.
+   Padding on the container does not move the widget: an absolutely positioned child
+   anchored with right:0 sits against the padding box edge. */
+@media (min-width: 1201px) {
+    .content-wide {
+        padding-right: 374px;
+    }
+
+    .registry-aside {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 350px;
+        flex: none;
+        margin-top: 0;
+    }
 }
 
 @media (max-width: 1200px) {

@@ -65,7 +65,7 @@ namespace VixenTools.Editor
 
             var scroll = new ScrollView() { style = { flexGrow = 1, paddingLeft = 15, paddingRight = 15, paddingTop = 15 } };
 
-            var modePanel = CreateCyberPanel("1. Pipeline Control", "#ffaa00");
+            var modePanel = CreateCyberPanel("1. Mode", "#ffaa00");
             var pipelineField = new PropertyField(_serializedObject.FindProperty("activePipeline"), "Execution Mode");
             pipelineField.Bind(_serializedObject);
             modePanel.Add(pipelineField);
@@ -86,7 +86,7 @@ namespace VixenTools.Editor
             configPanel.Add(targetField);
             scroll.Add(configPanel);
 
-            var strategyPanel = CreateCyberPanel("3. Accessory Execution Strategy", "#ff00aa");
+            var strategyPanel = CreateCyberPanel("3. How To Mount", "#ff00aa");
             var strategyField = new PropertyField(_serializedObject.FindProperty("strategy"), "Mounting Strategy");
             strategyField.Bind(_serializedObject);
             strategyPanel.Add(strategyField);
@@ -103,7 +103,7 @@ namespace VixenTools.Editor
             scroll.Add(strategyPanel);
 
             var execPanel = new VisualElement { style = { marginTop = 20, marginBottom = 20 } };
-            var scanBtn = new Button(ExecuteEngine) { text = "INITIALIZE AND EXECUTE PIPELINE" };
+            var scanBtn = new Button(ExecuteEngine) { text = "MOUNT ACCESSORIES" };
             scanBtn.AddToClassList("cyber-action-btn");
             scanBtn.AddToClassList("cyan-btn");
             execPanel.Add(scanBtn);
@@ -114,14 +114,14 @@ namespace VixenTools.Editor
 
         private void UpdateModeDescription(Label label, PipelineMode mode)
         {
-            if (mode == PipelineMode.FullGeneration) label.text = "<b><color=#00e5ff>Full Generation:</color></b> Clones a fresh sterile armature from the Source and mounts the accessories.";
-            else label.text = "<b><color=#ffaa00>Append To Existing:</color></b> Skips cloning. Maps data directly to the existing sterile armature in the Target Root to seamlessly append new accessories.";
+            if (mode == PipelineMode.FullGeneration) label.text = "<b><color=#00e5ff>Full Generation:</color></b> Clones a fresh, empty armature from the source and mounts the accessories onto it.";
+            else label.text = "<b><color=#ffaa00>Append To Existing:</color></b> Skips the clone. Adds new accessories to the armature already on your target.";
         }
 
         private void UpdateStrategyDescription(Label label, MountStrategy strat)
         {
-            if (strat == MountStrategy.DestructiveAutoRig) label.text = "<b><color=#ff00aa>Destructive Auto-Rig:</color></b> Recursively bakes world offsets into all child meshes and natively rigs them. Best for soft/deforming meshes.";
-            else label.text = "<b><color=#00ff66>Kinematic Constraint:</color></b> Zeroes hierarchy and injects a parent constraint on the root. Best for rigid prefabs, particles, or audio sources.";
+            if (strat == MountStrategy.DestructiveAutoRig) label.text = "<b><color=#ff00aa>Destructive Auto-Rig:</color></b> Re-rigs the accessory onto the armature for real. Best for soft, deforming meshes.";
+            else label.text = "<b><color=#00ff66>Kinematic Constraint:</color></b> Attaches the accessory with a parent constraint instead of re-rigging it. Best for rigid props, particles or audio sources.";
         }
 
         private VisualElement CreateCyberPanel(string title, string hex)
@@ -150,7 +150,7 @@ namespace VixenTools.Editor
                 return;
             }
 
-            Undo.SetCurrentGroupName("Execute Accessory Engine");
+            Undo.SetCurrentGroupName("Mount Accessories");
             int undoGroup = Undo.GetCurrentGroup();
 
             Dictionary<Transform, Transform> boneMap = new Dictionary<Transform, Transform>();

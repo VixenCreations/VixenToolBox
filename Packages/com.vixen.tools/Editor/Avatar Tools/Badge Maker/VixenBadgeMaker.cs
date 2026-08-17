@@ -242,7 +242,7 @@ namespace VixenTools.Editor
 
         private void BuildGeneratorUI(VisualElement container)
         {
-            var routingPanel = CreateCyberPanel("Ecosystem Routing", "#00e5ff");
+            var routingPanel = CreateCyberPanel("Links", "#00e5ff");
             var ecoEnum = new EnumField("Source Network", _activeEcosystem);
             ecoEnum.RegisterValueChangedCallback(e =>
             {
@@ -304,7 +304,7 @@ namespace VixenTools.Editor
             _emiMaskColorField.RegisterValueChangedCallback(e => _emiMaskColor = e.newValue);
             idPanel.Add(_emiMaskColorField);
 
-            var processLabel = new Label("Pipeline Processing") { style = { unityFontStyleAndWeight = FontStyle.Bold, marginTop = 10, marginBottom = 5 } };
+            var processLabel = new Label("Processing") { style = { unityFontStyleAndWeight = FontStyle.Bold, marginTop = 10, marginBottom = 5 } };
             idPanel.Add(processLabel);
 
             var emitNameToggle = new Toggle("Apply Glow to Display Name") { value = _emitName };

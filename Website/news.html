@@ -174,6 +174,11 @@
                 About Us
             </fluent-anchor>
 
+            <fluent-anchor href="products.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                Our Products
+            </fluent-anchor>
+
             <fluent-anchor href="news.html" class="nav-item active">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v13H4a2 2 0 0 0-2 2 2 2 0 0 0 2 2z"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8z"></path></svg>
                 News
@@ -240,6 +245,81 @@
                     Studio updates, partnerships, and releases from VixForge Interactive. The latest news lands here first.
                 </p>
             </div>
+
+            <article class="glass-panel news-article w-100 mb-5">
+                <div class="news-hero-art">
+                    <img src="PromoBanner3.png" width="1536" height="657" alt="The Living Goo Update banner from VixForge Interactive: an avatar coated in glossy black goo with green energy trails, standing in a neon pink VRChat club." />
+                </div>
+                <h2 class="sr-only">Living goo, and two new shaders join the family</h2>
+
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Shader Update</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">Clothing Pro</span>
+                        <span class="news-tag">Fur Pro</span>
+                        <span class="news-date">August 17, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">The Living Goo Update - Latex Ultra 4.4.0, plus Clothing Pro and Fur Pro</h2>
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Available To Donators And Patreon Supporters (Early Access Benefits) Until Thursday August 20th</h2>
+                    <p>
+                        The goo stopped hanging still. It writhes, reaches off you onto whatever is behind, dents where
+                        someone touches you, and builds itself up your body on a slider. Two new shaders join the package
+                        at the same time. Everything new is off by default, so your existing materials look as they did
+                        until you reach for it.
+                    </p>
+
+                    <h3 class="text-glow-cyan">Goo That Moves On Its Own</h3>
+                    <p>
+                        All of this sits under Goo Effects, which is now sorted into groups so you can find things.
+                    </p>
+                    <ul class="pledge-list">
+                        <li><strong>Writhe.</strong> The surface swells, sinks and crawls over you like something alive underneath. Fold is the one to reach for if the movement ever looks like it is on a timer: turned up, swellings turn, stall, double back and never come round again. It does not need Sag Distance, so a material can writhe while hanging perfectly still.</li>
+                        <li><strong>Slime Shading.</strong> Turns the melt into wet slime: a deep glossy film with a mirror highlight, light coming through where it thins out, and neon veins threaded through it. Push it above 0, then Colour and Thickness do most of the work.</li>
+                        <li><strong>Drips.</strong> Thick drops that gather, hang on a long string and let go, then land in a flat pool. Stringiness is the one that makes it: at 0 a drop pinches off like water, turned up it stays joined to you as it falls.</li>
+                        <li><strong>Formation.</strong> Animate it from 0 to 1 and the piece builds itself out of the goo, starting at your feet and climbing up you. Put it on a toggle or a radial for goo that rises off the floor and becomes your gear.</li>
+                        <li><strong>The goo reaches the floor now.</strong> It used to stop short and hang in the air. It finds the ground from the avatar itself, so it lands properly in any world and keeps up when you walk up stairs.</li>
+                    </ul>
+
+                    <h3 class="text-glow-cyan">Goo That Reaches For Other People</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Cling.</strong> Strands reach off your outline and take hold of whatever is behind you, dragging it into the slime as you move past. Stand near someone and it reads as the goo latching onto them. It needs a copy of the screen, so it costs framerate and ships off.</li>
+                        <li><strong>Touch.</strong> The material dents, bulges and goes wet where someone touches you. Paint up to four areas into the Zones texture, one per colour channel, then drive that zone's Press slider from a contact receiver. That is the whole setup, and it works on plain gear with no melt.</li>
+                    </ul>
+
+                    <h3 class="text-glow-cyan">Two New Shaders</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Clothing Pro 1.0.0.</strong> Fabric-first, carrying the whole toolkit and adding what cloth needs: a soft sheen for silk, satin and velvet, real fur grown as geometry, and 72 one-click fabric presets.</li>
+                        <li><strong>Fur Pro 1.0.0.</strong> Clothing Pro with the cloth half taken out and the fur turned up. Every hair is one continuous strand from root to tip, so it holds up from short pile to a full coat, and the coat grows only the hairs that will actually land on pixels.</li>
+                        <li><strong>A fur brush in the scene view.</strong> Drag across the model and the fur follows your stroke, the way you would brush a real animal. Thirteen brushes, including four that shape the strands rather than only aiming them, and Length and Density paint into the same map.</li>
+                    </ul>
+
+                    <h3 class="text-glow-cyan">And More To Play With</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Custom Noise and Custom Particle.</strong> Drop in your own noise texture and it drives the whole goo effect at once. Drop in your own droplet image and the same physics throws sweat, bubbles, sparks or petals off you.</li>
+                        <li><strong>Gravity Flow.</strong> Wet streaks run down in the world rather than down the texture, so they fall correctly however the model is unwrapped and however you tilt.</li>
+                        <li><strong>Outlines stop breaking up at seams.</strong> Run Bake Outline Normals on your avatar, set Outward Direction to match, and an outline that traced part of a shape and then stopped closes up.</li>
+                        <li><strong>Masks for Viewer Context and the AudioLink reactions</strong>, so one patch can vanish in mirrors or pulse to the music while the rest of the material stays normal.</li>
+                    </ul>
+
+                    <h3 class="text-glow-cyan">Two Things To Do After Updating</h3>
+                    <ul class="pledge-list">
+                        <li><strong>If you use an Alpha Map, invert it.</strong> It now marks what to remove, the way a body-hiding mask is painted: black keeps the pixel, white takes it away. An empty slot shows everything.</li>
+                        <li><strong>Re-lock any material with an animated colour.</strong> Marking Color as Animated used to catch every property whose name ended the same way, so the slime, glitter and pathing colours came back at their defaults. Unlock and re-lock anything this caught.</li>
+                    </ul>
+
+                    <p>
+                        Full notes for all five releases are on the shader changelogs, and every control is written up on the shader docs.
+                    </p>
+
+                    <div class="row mt-4" style="gap: 10px; flex-wrap: wrap;">
+                        <fluent-anchor href="shader-changelogs.html" appearance="accent" class="custom-accent-btn">Read the Full Changelog</fluent-anchor>
+                        <fluent-anchor href="shaderdocs.html" class="custom-stealth-btn">Shader Docs</fluent-anchor>
+                        <fluent-anchor href="https://discord.gg/3vbJCKcPtJ" target="_blank" class="custom-stealth-btn">Join the VixForge Discord</fluent-anchor>
+                    </div>
+                </div>
+            </article>
 
             <article class="glass-panel news-article w-100 mb-5">
                 <div class="news-hero-art">

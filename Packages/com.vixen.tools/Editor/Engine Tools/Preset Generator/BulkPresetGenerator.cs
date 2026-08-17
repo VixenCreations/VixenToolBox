@@ -73,8 +73,8 @@ namespace VixenTools.Editor
 
             var tabContainer = new VisualElement { name = "tab-toolbar" };
 
-            _btnExtractionTab = new Button(() => SwitchMode(ToolMode.Extraction)) { text = "EXTRACTION PIPELINE" };
-            _btnAuthoringTab = new Button(() => SwitchMode(ToolMode.Authoring)) { text = "AUTHORING ENGINE" };
+            _btnExtractionTab = new Button(() => SwitchMode(ToolMode.Extraction)) { text = "EXTRACT FROM ASSETS" };
+            _btnAuthoringTab = new Button(() => SwitchMode(ToolMode.Authoring)) { text = "CREATE NEW PRESET" };
 
             tabContainer.Add(_btnExtractionTab);
             tabContainer.Add(_btnAuthoringTab);
@@ -138,7 +138,7 @@ namespace VixenTools.Editor
             filterField.RegisterValueChangedCallback(e => _extractionFilter = e.newValue);
             panel.Add(filterField);
 
-            var paramHeader = new Label("Pipeline Parameters") { style = { unityFontStyleAndWeight = FontStyle.Bold, marginTop = 10, marginBottom = 5 } };
+            var paramHeader = new Label("Settings") { style = { unityFontStyleAndWeight = FontStyle.Bold, marginTop = 10, marginBottom = 5 } };
             panel.Add(paramHeader);
 
             var ignoreToggle = new Toggle("Ignore Transforms") { value = _ignoreTransforms };
@@ -208,7 +208,7 @@ namespace VixenTools.Editor
 
             container.Add(panel);
 
-            var execBtn = new Button(ExecuteTextureAuthoring) { text = "Author Texture Standard Preset" };
+            var execBtn = new Button(ExecuteTextureAuthoring) { text = "Create Texture Preset" };
             execBtn.AddToClassList("cyber-action-btn");
             execBtn.AddToClassList("pink-btn");
             container.Add(execBtn);
