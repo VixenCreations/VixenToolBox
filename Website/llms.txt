@@ -1,0 +1,36 @@
+# VixForge Interactive
+
+> Avatar shaders and Unity editor tooling for VRChat, made by Vixenlicious.
+> Everything targets Unity 2022.3 on the Built-in Render Pipeline, for VRChat
+> on desktop PC. There is no Quest or Android build, and no URP or HDRP build.
+> The Vixens Toolbox editor suite and two of the four shaders are free.
+
+## Shaders
+
+- [VixenWear Latex Ultra](https://vixencreations.github.io/VixenToolBox/products.html#latex-ultra): dual-lobe GGX shader for latex, vinyl and other synthetic materials. Clearcoat, thin-film, wet and drip, melting goo, triple matcaps, and live reactions to AudioLink, LTCGI, VRC Light Volumes and VRSL. Free on Gumroad.
+- [VixForge Toon](https://vixencreations.github.io/VixenToolBox/products.html#vixforge-toon): cel and anime shader with rebuilt outlines, sharing the same lighting stack. Translates materials across from lilToon, Poiyomi or VRChat Toon Standard in one click. Free on Gumroad.
+- [VixenWear Clothing Pro](https://vixencreations.github.io/VixenToolBox/products.html#clothing-pro): fabric shader with a soft grazing-angle sheen, surface fur, geometry fur, and a 72-fabric Material Type picker. Patreon membership, 35 USD a month.
+- [VixForge Fur Pro](https://vixencreations.github.io/VixenToolBox/products.html#fur-pro): geometry fur where each hair is one continuous strand, with self shadowing, guard hairs, tufting, and a scene-view comb brush. Patreon membership, 15 USD a month.
+
+## Start here
+
+- [Products and pricing](https://vixencreations.github.io/VixenToolBox/products.html): all four shaders, what each one is for, where to get it, and the questions people ask before buying.
+- [Shader documentation](https://vixencreations.github.io/VixenToolBox/shaderdocs.html): what every inspector control does, section by section, in plain language.
+- [VPM registry and install](https://vixencreations.github.io/VixenToolBox/): adding the Vixens Toolbox to the VRChat Creator Companion.
+- [List of tools](https://vixencreations.github.io/VixenToolBox/tools.html): the editor tools in the Vixens Toolbox, including the Quest Conversion Engine and the Avatar Optimization Suite.
+
+## Reference
+
+- [Shader changelogs](https://vixencreations.github.io/VixenToolBox/shader-changelogs.html): release notes for each shader.
+- [Toolbox changelog](https://vixencreations.github.io/VixenToolBox/changelog.html): release notes for the editor suite.
+- [Deep-dive docs](https://vixencreations.github.io/VixenToolBox/docs.html): longer guides for the editor tools.
+- [Why choose us](https://vixencreations.github.io/VixenToolBox/why-choose-us.html): how these tools compare to the alternatives.
+- [About](https://vixencreations.github.io/VixenToolBox/about.html): who makes this.
+- [AI transparency](https://vixencreations.github.io/VixenToolBox/ai-transparency.html): where AI was and was not used in building these tools.
+- [Support](https://vixencreations.github.io/VixenToolBox/support.html): help, and how to support the work.
+- [Community and links](https://vixencreations.github.io/VixenToolBox/social.html): Discord, X, YouTube and the store fronts.
+
+## Licensing
+
+- VixenWear Latex Ultra and VixForge Toon are free and open. Personal and commercial use is allowed, including shipping them inside a paid avatar base, as long as the copyright headers stay in the files and the package is not resold on its own.
+- VixenWear Clothing Pro and VixForge Fur Pro are supporter-only and may not be redistributed.

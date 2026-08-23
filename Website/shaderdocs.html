@@ -24,12 +24,12 @@
     <meta property="og:site_name" content="VixForge Interactive | Vixens Toolbox">
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/shaderdocs.html">
-    <meta property="twitter:title" content="Vixens Toolbox | VixenWear Latex Ultra & VixForge Toon Shader Inspector Reference">
-    <meta property="twitter:description" content="A complete control-by-control reference for the VixenWear Latex Ultra shader inspector across every section of the VixForge Editor, plus the VixForge Toon companion shader.">
-    <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
-    <meta property="twitter:site" content="@VixenVRC">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://vixencreations.github.io/VixenToolBox/shaderdocs.html">
+    <meta name="twitter:title" content="Vixens Toolbox | VixenWear Latex Ultra & VixForge Toon Shader Inspector Reference">
+    <meta name="twitter:description" content="A complete control-by-control reference for the VixenWear Latex Ultra shader inspector across every section of the VixForge Editor, plus the VixForge Toon companion shader.">
+    <meta name="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <meta name="twitter:site" content="@VixenVRC">
 
     <!-- Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -49,6 +49,75 @@
           "url": "https://vixencreations.github.io/VixenToolBox/shaderdocs.html",
           "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
           "keywords": "VixenWear Latex Ultra, VixForge Toon, cel shading, anime shader, VRChat shader inspector, GGX BRDF shader, AudioLink shader, LTCGI shader, Light Volumes shader, VRSL DMX shader"
+        }
+    </script>
+
+    <!-- Mirrors the Common Questions section at the foot of this page -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [{
+            "@type": "Question",
+            "name": "Which VixForge shader should I use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "VixenWear Latex Ultra for latex, vinyl, rubber and anything else glossy and synthetic. VixForge Toon for cel and anime looks. VixenWear Clothing Pro for fabric, from silk and satin through to wool and fleece. VixForge Fur Pro when the whole thing is fur. They share the same lighting and the same toolkit, so whatever you learn on one carries over."
+            }
+          },{
+            "@type": "Question",
+            "name": "Can I convert materials from Poiyomi, lilToon or VRChat Toon Standard?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The inspector translates an existing material across in one click, and it can convert a whole avatar at once. It takes a backup first and the conversion is undoable."
+            }
+          },{
+            "@type": "Question",
+            "name": "Do I need AudioLink, LTCGI, VRC Light Volumes or VRSL installed?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. The shaders carry their own copies of what they need, so they work whether or not you have any of those packages installed. Each reaction stays off until you switch it on, and it then responds when a world provides the data."
+            }
+          },{
+            "@type": "Question",
+            "name": "Can I switch shader effects on and off from a VRChat expression menu?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Effects turn on and off live, so an animation or an expression menu toggle drives them in the world. If you animate a control, tick Animated (when locked) on it before you lock the material, so it keeps responding afterwards."
+            }
+          }]
+        }
+    </script>
+
+    <!-- Brand entity: ties every store front and channel to one identity -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://vixencreations.github.io/VixenToolBox/#organization",
+          "name": "VixForge Interactive",
+          "alternateName": ["Vixenlicous", "Vixenlicious", "Vixen Creations", "Vixens Toolbox"],
+          "url": "https://vixencreations.github.io/VixenToolBox/",
+          "logo": "https://vixencreations.github.io/VixenToolBox/banner.png",
+          "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
+          "description": "VixForge Interactive builds avatar shaders and Unity editor tooling for VRChat, for Unity 2022.3 on the Built-in Render Pipeline.",
+          "founder": {
+            "@type": "Person",
+            "name": "Vixenlicious",
+            "alternateName": "Vixenlicous",
+            "jobTitle": "Lead Developer"
+          },
+          "knowsAbout": ["VRChat avatar shaders", "Unity 2022.3", "Built-in Render Pipeline", "AudioLink", "VRC Light Volumes", "LTCGI", "VRSL", "VRCFury", "Modular Avatar"],
+          "sameAs": [
+            "https://x.com/VixenVRC",
+            "https://www.youtube.com/@vixenlicous",
+            "https://vixenlicous.gumroad.com",
+            "https://jinxxy.com/Vixenlicious",
+            "https://github.com/VixenCreations",
+            "https://www.patreon.com/cw/Vixenlicious",
+            "https://ko-fi.com/vixenlicous",
+            "https://discord.gg/3vbJCKcPtJ"
+          ]
         }
     </script>
 
@@ -241,6 +310,7 @@
                     <a href="#rendering">RENDERING</a>
                     <a href="#toon">VixForge Toon</a>
                     <a href="#footer">Shared Footer</a>
+                    <a href="#faq">COMMON QUESTIONS</a>
                 </div>
             </div>
 
@@ -721,6 +791,8 @@
                 </div>
                 <p class="tab-desc">The extra effect layers: the soaked wet look with run-off and real droplets, the melting goo with slime shading, writhing, drips and touch, procedural glitter, an animated flipbook overlay, a true infinity mirror, a living inner-cosmos volume, and effects that react to where the material is being viewed from. The VixForge Toon shader carries everything here except the wet and goo effects, which are liquid-latex tricks that do not fit a toon surface.</p>
 
+                <p class="opt-note"><strong>Mask Source</strong>, on most of the effects below - Borrows an Emission layer's Map so the effect only shows where that layer does. Pick the layer, then the channel your mask sits in, and <strong>Invert Mask</strong> if you painted it the other way round. Paint once and several effects can share it. The layer you point at has to be switched on. Leave it on <code>None</code> and the effect covers everything.</p>
+
                 <h3 class="text-glow-pink opt-group">Wet Effects</h3>
 <p class="opt-note">The soaked look, streaks running off, and real droplets that swell, fall and dry out. Turn it on, paint a Mask for where the water sits, then work down the three groups.</p>
 
@@ -749,6 +821,15 @@
                     <li class="mb-2"><strong>Strength</strong> - How strongly they show.</li>
                     <li class="mb-2"><strong>Bump</strong> - How raised each streak reads, for a rounded bead that catches the light.</li>
                     <li class="mb-2"><strong>Gravity Flow</strong> - Streaks run down in the world instead of down the texture, so they fall correctly however the model is unwrapped and however you tilt. At 0 nothing changes.</li>
+                    <li class="mb-2"><strong>Run Direction</strong> - Turns the runs away from straight down, in degrees.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Wet on the beat</strong></p>
+                <p class="opt-note">Wet Effects used to be completely deaf to the music. These three each sit on a band you pick, and are shown only when AudioLink is enabled.</p>
+                <ul class="custom-list m-0 ps-4 mb-3">
+                    <li class="mb-2"><strong>Beat Wetness</strong> - The beat wets the surface further, so the whole material glosses up on the hit.</li>
+                    <li class="mb-2"><strong>Beat Flow</strong> - The beat drives the streaks along faster.</li>
+                    <li class="mb-2"><strong>Beat Twist</strong> - The beat turns the run direction, so the streaks swing off vertical and back.</li>
                 </ul>
 
                 <p class="opt-note mt-3 mb-2"><strong>Droplets</strong></p>
@@ -794,6 +875,15 @@
                     <li class="mb-2"><strong>Tendril Scale</strong> - How big the tendril pattern tiles.</li>
                     <li class="mb-2"><strong>Flow Speed</strong> - How fast the melt flows over time.</li>
                     <li class="mb-2"><strong>Underside Bias</strong> - Leans the melting toward downward-facing surfaces, where it would really drip.</li>
+                    <li class="mb-2"><strong>Flow Direction</strong> - Which way the slime runs. Straight down is 0, -1, 0. Point it sideways and it crawls across you instead.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Goo on the beat</strong></p>
+                <p class="opt-note">Goo Effects used to be completely deaf to the music. These three each sit on a band you pick, and are shown only when AudioLink is enabled.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Beat Swell</strong> - The beat swells the goo, so it surges on the hit and settles back.</li>
+                    <li class="mb-2"><strong>Beat Flow</strong> - The beat drives the melt along faster.</li>
+                    <li class="mb-2"><strong>Beat Veins</strong> - The beat brightens the neon threads running through the slime.</li>
                 </ul>
 
                 <p class="opt-note mt-3 mb-2"><strong>Sway</strong></p>
@@ -948,6 +1038,7 @@
                     <li class="mb-2"><strong>Face-On Only</strong> - The effect only shows when the surface is turned toward the viewer, so it hides at glancing angles.</li>
                     <li class="mb-2"><strong>Hidden Level</strong> - What the effect drops to when the conditions are not met. 0 hides it completely, higher values just dim it.</li>
                     <li class="mb-2"><strong>Affects</strong> - Point it at your emission, your decals, or both.</li>
+                    <li class="mb-2"><strong>Also Hide Outlines</strong> - Hides the outline on the same terms as the glow it traces, instead of leaving the line sitting there on its own in a mirror.</li>
                     <li class="mb-2"><strong>Reaction Glow</strong> - An extra colour that rides along with everything above. Pair it with Distance for a material that lights up when somebody leans in.</li>
                     <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Keeps the whole effect to part of the material: white is where it applies, black is left completely alone, so one patch can vanish in mirrors while the rest stays normal. The Reaction Glow follows it too. Leave it empty and the effect covers everything.</li>
                 </ul>
@@ -995,12 +1086,68 @@
                         - How far back the tunnel reaches, how quickly each copy dims, and how fast the copies shrink into
                         the distance.</li>
                     <li class="mb-2"><strong>Vanishing Point</strong> - Where the tunnel recedes toward on the surface.</li>
+                    <li class="mb-2"><strong>Depth Reach</strong> - How far down the tunnel you can still see.</li>
+                    <li class="mb-2"><strong>Motion</strong> - Sets the whole stack drifting and spinning, with every layer
+                        deeper moving further than the one in front, so the tunnel genuinely falls away from you instead of
+                        sitting still.</li>
+                    <li class="mb-2"><strong>Opens Up Close</strong> + <strong>Full Depth Distance</strong> +
+                        <strong>Approach Curve</strong> - Keeps the tunnel flat from across the room and deep once someone
+                        walks up to it. The distance sets where it reaches full depth, and the curve tunes the walk-up.</li>
                     <li class="mb-2"><strong>Rainbow Depth</strong> - Shifts the hue deeper into the tunnel for a spectral
                         falloff.</li>
                     <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Limits the effect to part of
                         the material.</li>
                     <li class="mb-2"><strong>AudioLink Band</strong> / <strong>AudioLink Amount</strong> - Pulses the glow
                         with a band. Shown only when AudioLink is enabled.</li>
+                    <li class="mb-2"><strong>Beat Depth</strong> + <strong>Beat Twist</strong> - The beat pushing the tunnel
+                        in and out, and kicking the vortex round, rather than only brightening it.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Chromatic Bloom</h3>
+                <p class="opt-note">Needs AudioLink. AudioLink runs a real analysis of the track into 240 bins, and almost nothing uses it. This lays the twelve notes out across the material and lights each one in its own colour as it sounds, so a chord shows up as a chord instead of one lump of brightness. If nothing lights, raise <strong>Sensitivity</strong>: a single note is quiet next to a full mix. Off by default.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Master switch for the effect.</li>
+                    <li class="mb-2"><strong>Layout</strong> - <code>Wheel</code> puts the notes round a circle, <code>Rings</code> stacks them outwards, <code>Bars</code> lines them up.</li>
+                    <li class="mb-2"><strong>Strength</strong> / <strong>Sensitivity</strong> - How bright the notes read, and how quiet a note still has to be to light.</li>
+                    <li class="mb-2"><strong>Octave</strong> - Which octave the layout is keyed to.</li>
+                    <li class="mb-2"><strong>Note Spacing</strong> / <strong>Offset</strong> / <strong>Repeat</strong> - How far apart the notes sit, where the run starts, and how many times it repeats across the material.</li>
+                    <li class="mb-2"><strong>Placement</strong> - Where it sits, how big it is, and how far it is turned.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Note Swarm</h3>
+                <p class="opt-note">Needs AudioLink. ColorChord keeps a set of running lights, each one locked to a note it picked out of the music, and nothing had ever read them. This scatters them over the material as drifting blobs that appear and vanish as the harmony moves. Off by default.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Master switch for the effect.</li>
+                    <li class="mb-2"><strong>Strength</strong> / <strong>How Many</strong> - How bright the swarm reads, and how many blobs are in it.</li>
+                    <li class="mb-2"><strong>Note Spread</strong> - How far apart the notes scatter.</li>
+                    <li class="mb-2"><strong>Size</strong> / <strong>Softness</strong> - How big each blob is, and how soft its edge.</li>
+                    <li class="mb-2"><strong>Drift Speed</strong> / <strong>Wander</strong> - How fast they move, and how far they stray as they go.</li>
+                    <li class="mb-2"><strong>Placement</strong> - Where the swarm sits, how big it is, and how far it is turned.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Sonar</h3>
+                <p class="opt-note">Needs AudioLink. AudioLink publishes where the music physically is in the room, and nothing had ever used it. A wave leaves the actual speakers, crosses the room and washes over you, lighting the side turned towards the sound and leaving the far side dark. Walk around a club and it arrives from wherever the speakers are. Turn <strong>Chronotensity FX</strong> on and it lands on the beat instead of on a free clock. Off by default.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Master switch for the effect.</li>
+                    <li class="mb-2"><strong>Comes From</strong> - Where the wave starts. Leave it on the music for the real speaker position, or set it to You or Whoever Is Looking to have it radiate from somewhere else.</li>
+                    <li class="mb-2"><strong>Colour</strong> / <strong>Strength</strong> - HDR colour of the wave, and how bright it reads.</li>
+                    <li class="mb-2"><strong>Speed</strong> / <strong>Rings</strong> / <strong>Edge</strong> - How fast the wave crosses, how many rings it carries, and how sharp its leading edge is.</li>
+                    <li class="mb-2"><strong>Faces The Sound</strong> - How much brighter the side turned towards the sound reads than the far side.</li>
+                    <li class="mb-2"><strong>Range</strong> - How far away the sound can be and still reach you.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> + <strong>AudioLink Amount</strong> - Which band launches the wave, and how strongly.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Spectrum Ribbon</h3>
+                <p class="opt-note">Needs AudioLink. AudioLink remembers the last second and a half of the track and nothing read it. This draws that history onto the material as a moving readout, so you carry what the music just did and not only what it is doing now. Off by default.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Master switch for the effect.</li>
+                    <li class="mb-2"><strong>Style</strong> - <code>Bars</code>, <code>Line</code> or <code>Mirror</code>.</li>
+                    <li class="mb-2"><strong>Colour</strong> + <strong>Colour From The Music</strong> - Your own colour, and how much the notes actually playing take it over.</li>
+                    <li class="mb-2"><strong>Strength</strong> / <strong>Line Thickness</strong> - How bright the readout is, and how heavy the line is in Line and Mirror.</li>
+                    <li class="mb-2"><strong>Runs</strong> / <strong>Flip Direction</strong> - How many copies run across the material, and which way the history scrolls.</li>
+                    <li class="mb-2"><strong>Height</strong> / <strong>Trail Fade</strong> - How tall the readout stands, and how quickly the older part of the track dims out behind it.</li>
+                    <li class="mb-2"><strong>Placement</strong> - Where it sits, how big it is, and how far it is turned.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which band the readout traces.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Inner Cosmos</h3>
@@ -1071,6 +1218,14 @@
                         Spherical.</li>
                 </ul>
 
+                <p class="opt-note">The line can use its own depth settings instead of borrowing whatever the material uses. These apply to both outlines.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Depth Write</strong> - On lets the line block what is drawn behind it. Turn it off if the outline is punching holes through hair or other see-through pieces.</li>
+                    <li class="mb-2"><strong>Depth Test</strong> - How the line is compared against what is already drawn. Leave it alone unless the outline is being hidden by something it should sit in front of.</li>
+                    <li class="mb-2"><strong>Depth Push</strong> - Nudges the line towards or away from the camera. Reach for this if your two outlines fight each other, or if a line keeps sinking into the material.</li>
+                    <li class="mb-2"><strong>Slope Depth Push</strong> - The same nudge, scaled by how steeply the surface is turned away from you, for the places a flat push does not quite clear.</li>
+                </ul>
+
                 <h3 class="text-glow-pink opt-group">Outline 1</h3>
                 <p class="opt-note">The inner line around the silhouette.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -1079,13 +1234,24 @@
                     <li class="mb-2"><strong>Emission</strong> - HDR glow colour added on top for a neon edge.</li>
                     <li class="mb-2"><strong>Width</strong> - Real thickness of the line; grows as you raise it and shrinks
                         with distance.</li>
-                    <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Optional mask (and channel)
-                        restricting the outline to painted regions; set the channel to <code>None</code> for an even line
+                    <li class="mb-2"><strong>Mask</strong> + <strong>Width Channel</strong> - Optional mask, and which
+                        channel of it thins the line; set the channel to <code>None</code> for an even line
                         all the way round.</li>
+                    <li class="mb-2"><strong>Fade Channel</strong> - A second channel of that same Mask texture, this one
+                        fading the line rather than thinning it. Black takes the line away completely. One texture, two jobs.</li>
+                    <li class="mb-2"><strong>Tint From Texture</strong> - Pulls the line toward the colour of the material
+                        underneath it, so one outline can follow a multi-coloured texture.</li>
+                    <li class="mb-2"><strong>Lighting</strong> - At 0 the line stays flat and unlit. Turn it up and the
+                        line sits in the room lighting with the rest of the material.</li>
+                    <li class="mb-2"><strong>Opacity</strong> - Fades the whole line in and out.</li>
                     <li class="mb-2"><strong>Texture</strong> + <strong>Texture Scroll</strong> - Flow a pattern through
                         the line, and scroll it in X / Y over time.</li>
                     <li class="mb-2"><strong>AudioLink Band</strong> + <strong>AudioLink Emission Boost</strong> - Which
                         band drives the line, and how strongly it pumps the glow.</li>
+                    <li class="mb-2"><strong>AudioLink Width</strong> / <strong>AudioLink Hue</strong> /
+                        <strong>AudioLink Scroll</strong> - The beat pushes the outline wider, shifts its colour round the
+                        wheel, and drives its texture along faster. The outer line follows the inner one as it pulses, so
+                        the two never overlap.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Outline 2 (Outer)</h3>
@@ -1095,9 +1261,10 @@
                 <ul class="custom-list m-0 ps-4">
                     <li class="mb-2"><strong>Enable</strong> - Turns the outer outline on.</li>
                     <li class="mb-2"><strong>Color</strong>, <strong>Emission</strong>, <strong>Width</strong>,
-                        <strong>Mask</strong> + <strong>Mask Channel</strong>, <strong>Texture</strong> +
-                        <strong>Texture Scroll</strong>, <strong>AudioLink Band</strong> + <strong>AudioLink Emission
-                        Boost</strong> - The same controls as Outline 1, for the outer line.</li>
+                        <strong>Mask</strong> + <strong>Width Channel</strong> + <strong>Fade Channel</strong>,
+                        <strong>Tint From Texture</strong>, <strong>Lighting</strong>, <strong>Opacity</strong>,
+                        <strong>Texture</strong> + <strong>Texture Scroll</strong>, and the full <strong>AudioLink</strong>
+                        set - The same controls as Outline 1, for the outer line.</li>
                 </ul>
             </div>
             <!-- ========================= -->
@@ -1115,7 +1282,13 @@
                     <li class="mb-2"><strong>Exposure (All Layers)</strong> - Extra exposure multiplier over every layer for fine bloom control.</li>
                     <li class="mb-2"><strong>Color</strong> + <strong>Map</strong> - HDR tint / intensity and the texture defining where layer 1 emits.</li>
                     <li class="mb-2"><strong>Strength</strong> / <strong>Hue Shift</strong> / <strong>Hue Cycle Speed</strong> - Brightness and colour for this layer on their own sliders, so a single radial puppet can drive either one straight from your menu without animating an HDR colour across four curves. Hue Cycle Speed rotates the colour on its own with no animator at all.</li>
-                    <li class="mb-2"><strong>Layer 1 AudioLink Band</strong> / <strong>Amplitude</strong> / <strong>Color Blend</strong> - Which AudioLink band drives layer 1, how strongly it pulses, and how much AudioLink's colour replaces the emission colour. Shown only when AudioLink is enabled.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the Map marks the layer: R, G, B, A, or <code>Auto</code> if you are using a plain black-and-white mask.</li>
+                    <li class="mb-2"><strong>Color Cycle</strong> - <strong>Range</strong> keeps the colour inside a slice of the wheel instead of running the whole rainbow, and at 0 it runs the whole wheel. <strong>Beat Speed</strong> drives the cycle from the music, so the colour only moves while the track does. <strong>Beat Range</strong> lets the beat widen that slice. <strong>Rainbow</strong> spreads the colour along the Beat Travel direction.</li>
+                    <li class="mb-2"><strong>Placement</strong> - Where the map sits on the material, how big it is, and how far it is turned: <strong>Pos X</strong>, <strong>Pos Y</strong>, <strong>Scale</strong> and <strong>Rot</strong>, with rotation in degrees.</li>
+                    <li class="mb-2"><strong>Movement</strong> - <strong>Drift X</strong> and <strong>Drift Y</strong> slide the map across the material, and <strong>Spin</strong> turns it in degrees per second. Set the two drifts together to send it in any direction you like.</li>
+                    <li class="mb-2"><strong>On The Beat</strong> - The music moving the layer rather than only brightening it. <strong>Push X</strong> and <strong>Push Y</strong> shove it sideways, <strong>Twist</strong> spins it, and <strong>Hue</strong> shifts its colour. Shown only when AudioLink is enabled.</li>
+                    <li class="mb-2"><strong>Beat Travel</strong> - Sends one beat travelling across the layer. <strong>Direction</strong> and <strong>Angle</strong> aim it. Under <strong>Travel</strong>, <strong>Amount</strong> is how much of the layer the moving beat takes over, <strong>Length</strong> is how long one beat takes to cross it, <strong>Sharpness</strong> tightens the beat from a smear into a pulse, and <strong>Glow</strong> flares its crest. It follows this layer's band, and Volume or Peak Hold fall back to Bass.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> / <strong>AudioLink Amplitude</strong> / <strong>AudioLink Color Blend</strong> - Which band drives layer 1, how strongly it pulses, and how much AudioLink's colour replaces the emission colour. Shown only when AudioLink is enabled.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Emission Layers 2-5</h3>
@@ -1123,7 +1296,8 @@
                     <li class="mb-2"><strong>Enable Layer 2</strong> (and layers 3, 4, 5) - Each adds a fully independent extra emission layer, off by default.</li>
                     <li class="mb-2"><strong>Color</strong> + <strong>Emission Map 2</strong> + <strong>Mask Channel</strong> - HDR tint, texture, and mask channel for each layer (layers 3-5 mirror these controls).</li>
                     <li class="mb-2"><strong>Strength</strong> / <strong>Hue Shift</strong> / <strong>Hue Cycle Speed</strong> - Every layer gets its own set, so you can put a brightness dial on one layer and a colour wheel on another.</li>
-                    <li class="mb-2"><strong>Layer AudioLink Band</strong> / <strong>Amplitude</strong> - Which AudioLink band reacts on each layer and how strongly it modulates that layer's brightness, so you can route bass to one and treble to another. Shown only when AudioLink is enabled.</li>
+                    <li class="mb-2"><strong>Placement</strong> / <strong>Movement</strong> / <strong>On The Beat</strong> / <strong>Beat Travel</strong> - Every layer gets the full set described above, so each one can sit somewhere different, drift its own way, and answer the beat on its own terms.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> / <strong>AudioLink Amplitude</strong> - Which band reacts on each layer and how strongly it drives that layer's brightness, so you can route bass to one and treble to another. Shown only when AudioLink is enabled.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Pathing</h3>
@@ -1210,15 +1384,16 @@
                     <li class="mb-2"><strong>Blend Mode</strong> - How the layer combines: <code>Add</code>, <code>Replace</code>, <code>Multiply</code>, or <code>CarPaint</code>, which drives the layer through the Car Paint group above.</li>
                     <li class="mb-2"><strong>Opacity</strong> - Fades the whole layer in and out over the base. Pair it with <code>Multiply</code> or <code>Replace</code> to cover the base and read as latex; <code>Add</code> only lays highlights on top. Full by default.</li>
                     <li class="mb-2"><strong>Lighting Mix</strong> - How much scene lighting modulates the layer versus reading it as a pure unlit overlay.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> + <strong>AudioLink Amount</strong> - Brightens this matcap with the music, on a band you pick. Every matcap has its own pair, so one can answer the bass and another the treble. At 0 the matcap ignores the music entirely. Shown only when AudioLink is enabled.</li>
                 </ul>
                 <p class="opt-note"><strong>Tiling &amp; Movement</strong> (sub-section) - <strong>Freeze</strong> stops the matcap sliding as the camera moves, so it reads as baked-in detail that turns naturally with the avatar (0 = classic reflective matcap). <strong>Tiling</strong> repeats the matcap around its centre. <strong>Scroll / Animate</strong> gives continuous motion: Pan X / Y move it over time (Pan Y = up / down), Spin rotates it, Speed scales the animation.</p>
                 <p class="opt-note mb-4"><strong>Offsets</strong> (sub-section) - <strong>Position Offset</strong> nudges the matcap statically: Offset X moves it side to side, Offset Y up and down.</p>
 
                 <h3 class="text-glow-pink opt-group">Matcap 2</h3>
-                <p class="opt-note mb-4">A second matcap layer with the same controls (including its own Tiling &amp; Movement and Offsets sub-sections). Tip: drop a red/blue/black region mask into both Layer 1's and Layer 2's Mask, set Layer 1's channel to R and Layer 2's to B, and each colour zone shows a different matcap.</p>
+                <p class="opt-note mb-4">A second matcap layer with the same controls, including its own AudioLink Band and Amount, Tiling &amp; Movement, and Offsets sub-sections. Tip: drop a red/blue/black region mask into both Layer 1's and Layer 2's Mask, set Layer 1's channel to R and Layer 2's to B, and each colour zone shows a different matcap.</p>
 
                 <h3 class="text-glow-pink opt-group">Matcap 3, 4 &amp; 5</h3>
-                <p class="opt-note">Three more matcap layers, each with the identical control set - texture, mask and channel, tint, rotation, intensity (up to 6), blend mode, opacity, lighting mix, plus its own Tiling &amp; Movement (with Freeze) and Offsets sub-sections - for additional stacked zones. All off by default.</p>
+                <p class="opt-note">Three more matcap layers, each with the identical control set - texture, mask and channel, tint, rotation, intensity (up to 6), blend mode, opacity, lighting mix, its own AudioLink Band and Amount, plus its own Tiling &amp; Movement (with Freeze) and Offsets sub-sections - for additional stacked zones. All off by default.</p>
             </div>
             <!-- ========================= -->
             <!-- AUDIOLINK -->
@@ -1232,16 +1407,43 @@
 
 
                 <p class="opt-note">
-                    AudioLink is always compiled and runtime-gated, so VRCFury material toggles can flip it without a
-                    build-time variant explosion. HUD passes are PC-only. Most band selectors offer Bass / Low Mid /
-                    High Mid / Treble, and every HUD widget
-                    exposes a <strong>Transform (X, Y, Scl, Rot)</strong> set to place it on the body. Each sub-group
-                    below is a nested foldout and only shows while <strong>Enable</strong> is on.
+                    Every band selector offers <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>,
+                    <code>Treble</code>, <code>Volume</code> and <code>Peak Hold</code>. Volume follows the whole track
+                    rather than one slice of it. Peak Hold jumps to a hit and falls back slowly, so it stays lit through
+                    a bar instead of flickering. Every meter has a <strong>Transform (X, Y, Scl, Rot)</strong> set to
+                    place it on the body. Each group below only appears while <strong>Enable</strong> is on.
                 </p>
 
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - Master runtime gate for the entire AudioLink
-                        system.</li>
+                    <li class="mb-2"><strong>Enable</strong> - Turns the whole AudioLink section on.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Response</h3>
+                <p class="opt-note">If the music keeps blowing your effects out, this is the fix. Switch <strong>Mode</strong> to Calibrated and set the two cutoffs to match how loud the room actually is.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Mode</strong> - <code>Classic</code> reacts the way the material always has, so an existing look stays put. <code>Calibrated</code> hands you the four controls below.</li>
+                    <li class="mb-2"><strong>Quiet Cutoff</strong> - Anything quieter than this counts as silence. Raise it until the material stops glowing between beats.</li>
+                    <li class="mb-2"><strong>Loud Cutoff</strong> - The level that counts as full. Raise it if every beat pins the effect at maximum, lower it if the effect never gets there.</li>
+                    <li class="mb-2"><strong>Gain</strong> - Multiplies the level before the cutoffs apply. Handy for a quiet track.</li>
+                    <li class="mb-2"><strong>Shape</strong> - Left is a soft swell, middle is a straight response, right is punchy so only the peaks come through.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Room Sense</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Busier Room, Wilder</strong> - Turns the whole reaction up as the instance fills, going off how many people AudioLink reports are in the world. Needs <strong>Mode</strong> set to Calibrated.</li>
+                    <li class="mb-2"><strong>Quiet Room</strong> + <strong>Packed Room</strong> - How many people count as empty, and how many count as full.</li>
+                    <li class="mb-2"><strong>Colour By Time Of Day</strong> - Drifts every emission layer's hue with the real local clock, so the material is a different colour at midnight than at noon.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Smoothing</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Bands</strong> - Eases each band in and out instead of letting it snap. 0 is instant. Turn it up for a slow pulse, leave it down for a sharp one.</li>
+                    <li class="mb-2"><strong>Volume &amp; Peak</strong> - The same easing for the Volume and Peak Hold bands.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Manual Levels</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Manual Levels</strong> + <strong>Levels</strong> - Drives the four bands by hand instead of from the music. Animate them and you get audio-style motion in a world that has no AudioLink at all.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Environment &amp; Media</h3>
@@ -1334,7 +1536,7 @@
                         electric arc effect, and which band drives it.</li>
                 </ul>
 
-                <h3 class="text-glow-pink opt-group">Vertex Displacement &amp; Kinetics (SM5, PC only)</h3>
+                <h3 class="text-glow-pink opt-group">Vertex Displacement &amp; Kinetics</h3>
                 <p class="opt-note">Vertex displacement plus a full flying-shard system driven by geometry passes.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Enable</strong> - Master toggle for the kinetic vertex
@@ -1559,9 +1761,32 @@
                         underlying VixenWear material assets, picking up wardrobe layers that are toggled off so
                         the inspector does not collapse to a dash across renderers.
                     </li>
+                    <li class="mb-2">
+                        <strong>The inspector only shows you what you are using</strong> - Switch a feature off and its
+                        controls fold away instead of sitting there greyed out in your way. The <strong>Enable</strong>
+                        stays where it is, so nothing is ever stranded. That covers 119 sections across the four shaders.
+                    </li>
                 </ul>
             </div>
 
+<div id="faq" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Common Questions</h2>
+                    <div class="badge">FAQ</div>
+                </div>
+
+                <h3 class="text-glow-pink mb-2">Which shader should I use?</h3>
+                <p class="tab-desc mb-4">Latex Ultra for latex, vinyl, rubber and anything else glossy and synthetic. VixForge Toon for cel and anime looks. Clothing Pro for fabric, from silk and satin through to wool and fleece. Fur Pro when the whole thing is fur. They share the same lighting and the same toolkit, so whatever you learn on one carries over.</p>
+
+                <h3 class="text-glow-pink mb-2">Can I bring my materials over from Poiyomi, lilToon or VRChat Toon Standard?</h3>
+                <p class="tab-desc mb-4">Yes. The inspector translates an existing material across in one click, and it can convert a whole avatar at once. It takes a backup first and the whole thing is undoable, so you can try it and change your mind.</p>
+
+                <h3 class="text-glow-pink mb-2">Do I need AudioLink, LTCGI, VRC Light Volumes or VRSL installed?</h3>
+                <p class="tab-desc mb-4">No. The shaders carry their own copies of what they need, so they work whether or not you have any of those packages. Each reaction stays off until you switch it on, and it then responds when a world actually provides the data.</p>
+
+                <h3 class="text-glow-pink mb-2">Can I switch effects on and off from an expression menu?</h3>
+                <p class="tab-desc">Yes, that is what they were built for. Effects turn on and off live, so an animation or a menu toggle drives them in the world. One thing to remember: if you animate a control, tick <strong>Animated (when locked)</strong> on it before you lock the material, so it keeps responding afterwards.</p>
+            </div>
 
         </div>
 

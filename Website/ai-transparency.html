@@ -24,12 +24,12 @@
     <meta property="og:site_name" content="VixForge Interactive | Vixens Toolbox">
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://vixencreations.github.io/VixenToolBox/ai-transparency.html">
-    <meta property="twitter:title" content="AI Transparency & Development Ethics | VixForge Interactive">
-    <meta property="twitter:description" content="Every feature in the Vixens Toolbox is born from countless hours of reverse engineering, manual review, and grounded in current agentic AI research.">
-    <meta property="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
-    <meta property="twitter:site" content="@VixenVRC">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://vixencreations.github.io/VixenToolBox/ai-transparency.html">
+    <meta name="twitter:title" content="AI Transparency & Development Ethics | VixForge Interactive">
+    <meta name="twitter:description" content="Every feature in the Vixens Toolbox is born from countless hours of reverse engineering, manual review, and grounded in current agentic AI research.">
+    <meta name="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <meta name="twitter:site" content="@VixenVRC">
 
     <!-- Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -49,6 +49,38 @@
           "url": "https://vixencreations.github.io/VixenToolBox/ai-transparency.html",
           "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
           "keywords": "VixForge Interactive AI transparency, agentic AI, VRChat tool engineering, Unity 2022.3 tooling, hand-reviewed code"
+        }
+    </script>
+
+    <!-- Brand entity: ties every store front and channel to one identity -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://vixencreations.github.io/VixenToolBox/#organization",
+          "name": "VixForge Interactive",
+          "alternateName": ["Vixenlicous", "Vixenlicious", "Vixen Creations", "Vixens Toolbox"],
+          "url": "https://vixencreations.github.io/VixenToolBox/",
+          "logo": "https://vixencreations.github.io/VixenToolBox/banner.png",
+          "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
+          "description": "VixForge Interactive builds avatar shaders and Unity editor tooling for VRChat, for Unity 2022.3 on the Built-in Render Pipeline.",
+          "founder": {
+            "@type": "Person",
+            "name": "Vixenlicious",
+            "alternateName": "Vixenlicous",
+            "jobTitle": "Lead Developer"
+          },
+          "knowsAbout": ["VRChat avatar shaders", "Unity 2022.3", "Built-in Render Pipeline", "AudioLink", "VRC Light Volumes", "LTCGI", "VRSL", "VRCFury", "Modular Avatar"],
+          "sameAs": [
+            "https://x.com/VixenVRC",
+            "https://www.youtube.com/@vixenlicous",
+            "https://vixenlicous.gumroad.com",
+            "https://jinxxy.com/Vixenlicious",
+            "https://github.com/VixenCreations",
+            "https://www.patreon.com/cw/Vixenlicious",
+            "https://ko-fi.com/vixenlicous",
+            "https://discord.gg/3vbJCKcPtJ"
+          ]
         }
     </script>
 
@@ -292,6 +324,40 @@
                     <div class="comp-section comp-vixen">
                         <p class="comp-text">
                             Every proposed line is read, stress-tested inside a live Unity project, and verified end to end before it ships. AI proposes; the engineer decides. This is the non-negotiable step that keeps the toolbox stable across radically different VRChat projects.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="research-header-divider"></div>
+            <div class="col w-100 text-center mb-2">
+                <h2 class="text-glow-cyan">Effects Designed With AI</h2>
+                <p class="text-glow-cyan" style="font-size: 1.05rem; max-width: 900px; margin: 0 auto; line-height: 1.6;">
+                    A handful of the shader effects started as an AI design rather than a human one. They were specified, built and tuned by Claude working inside the VixForge codebase, then reviewed, tested and shipped by us. We would rather say so here than quietly take the credit.
+                </p>
+            </div>
+
+            <div class="competitive-grid" style="margin-top: 2rem;">
+
+                <div class="comp-card" style="grid-column: 1 / -1;">
+                    <div class="comp-header">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+                        <h3 class="text-glow-pink">Designed by Claude, shipped by us</h3>
+                    </div>
+                    <div class="comp-section comp-vixen">
+                        <p class="comp-text mb-2">
+                            These five live under SPECIAL EFFECTS in Latex Ultra, Toon, Clothing Pro and Fur Pro. Each one exists because AudioLink publishes data that no avatar shader had ever read, and the design work of turning that data into something worth looking at was AI's.
+                        </p>
+                        <ul class="comp-text" style="line-height: 1.8; padding-left: 1.2rem;">
+                            <li><strong>Inner Cosmos.</strong> A raymarched volume with real depth, so the surface reads as a window onto a contained galaxy.</li>
+                            <li><strong>Sonar.</strong> Works out where the music physically is in the room and sends a wave out from it across you.</li>
+                            <li><strong>Chromatic Bloom.</strong> Lays the twelve notes across the material so a chord reads as a chord, not one lump of brightness.</li>
+                            <li><strong>Note Swarm.</strong> Scatters ColorChord's per-note lights over you as drifting blobs that follow the harmony.</li>
+                            <li><strong>Spectrum Ribbon.</strong> Draws the last second and a half of the track onto you as a moving readout.</li>
+                        </ul>
+                        <p class="comp-text mt-2">
+                            Credit where it is owed elsewhere too: the Infinity Mirror was <strong>Ghostpaw's</strong> idea, and every one of these effects is built on <strong>AudioLink</strong> by llealloo, cnlohr, lox9973, pema99 and float3.
                         </p>
                     </div>
                 </div>
