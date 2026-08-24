@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/news.html">
     <meta property="og:title" content="VixForge Interactive | News &amp; Announcements">
     <meta property="og:description" content="Studio updates, partnerships, and releases from VixForge Interactive.">
-    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/PromoBanner.png">
+    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/promos/PromoBanner4.png">
     <meta property="og:site_name" content="VixForge Interactive | Vixens Toolbox">
 
     <!-- Twitter -->
@@ -28,7 +28,7 @@
     <meta name="twitter:url" content="https://vixencreations.github.io/VixenToolBox/news.html">
     <meta name="twitter:title" content="VixForge Interactive | News &amp; Announcements">
     <meta name="twitter:description" content="Studio updates, partnerships, and releases from VixForge Interactive.">
-    <meta name="twitter:image" content="https://vixencreations.github.io/VixenToolBox/PromoBanner.png">
+    <meta name="twitter:image" content="https://vixencreations.github.io/VixenToolBox/promos/PromoBanner4.png">
     <meta name="twitter:site" content="@VixenVRC">
 
     <!-- Brand entity: ties every store front and channel to one identity -->
@@ -280,7 +280,67 @@
 
             <article class="glass-panel news-article w-100 mb-5">
                 <div class="news-hero-art">
-                    <img src="PromoBanner3.png" width="1536" height="657" alt="The Living Goo Update banner from VixForge Interactive: an avatar coated in glossy black goo with green energy trails, standing in a neon pink VRChat club." />
+                    <img src="promos/PromoBanner4.png" width="1536" height="657" alt="The AudioLink and Optimization Overhaul." />
+                </div>
+                <h2 class="sr-only">The AudioLink and Optimization Overhaul</h2>
+
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Shader Update</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">VixForge Editor</span>
+                        <span class="news-tag">AudioLink</span>
+                        <span class="news-date">August 24, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">The AudioLink &amp; Optimization Overhaul - Editor 1.6.0 &amp; Shaders</h2>
+                    <p>
+                        You put a material in a club world, the bass hits, and everything pins to maximum and stays there. Then it glows anyway between tracks. That was not you setting it up wrong, and this massive update finally rebuilds how your materials hear the track. Alongside this AudioLink overhaul, we are handing back your texture memory: if you switch a feature off in these shaders, it is now completely stripped from your build.
+                    </p>
+
+                    <h3 class="text-glow-cyan">AudioLink You Can Actually Dial In</h3>
+                    <p>
+                        Every audio reaction used to run through one fixed curve. The new Calibrated mode gives you Quiet and Loud cutoffs to match how loud the room really is, allowing effects to follow the music across its whole range instead of clipping on every kick.
+                    </p>
+                    <ul class="pledge-list">
+                        <li><strong>Beat Travel &amp; Vortex:</strong> Pick a direction and hits will land at one edge and run across your emission layers instead of flashing the whole thing at once. In the Infinity Mirror, Travel sends each beat down the tunnel one ring at a time.</li>
+                        <li><strong>Motion on the Beat:</strong> Brightness is the least interesting thing a surface can do. Outlines now widen and scroll their textures faster to the music. Goo and Wet layers gain the ability to swell, flow, and twist to the rhythm. Emission layers can now be shoved sideways, spun, or color-shifted on the beat.</li>
+                        <li><strong>Color Cycle:</strong> The Beat Speed control drives the hue from the music, spreading the color along the Beat Travel direction so the color physically travels with the beat.</li>
+                        <li><strong>Advanced Audio Data:</strong> We tapped into unused AudioLink data to add Sonar waves that wash over you from where the speakers actually are in the room, Chromatic Bloom for individual ColorChord notes, Note Swarms, and Spectrum Ribbons that draw the last second and a half of the track onto your body.</li>
+                    </ul>
+
+                    <h3 class="text-glow-cyan">Switched Off Now Means Gone</h3>
+                    <p>
+                        Turn a feature off in these shaders and, until now, it was still in there. The textures it reserved, the code it needed, and the build time it cost all went onto your avatar whether you used it or not. This release takes it back out.
+                    </p>
+                    <ul class="pledge-list">
+                        <li><strong>Aggressive Stripping:</strong> Disabling heavy hitters like Light Volumes, LTCGI, Micro Detail, Toon ramps, or region masks removes them entirely. This hands back up to 16 of the 64 texture slots Unity allows, stopping them from taking up memory on your avatar.</li>
+                        <li><strong>Inspector Folding:</strong> Switch a feature off and its controls fold away instead of sitting greyed out in your way. Nothing is ever stranded out of reach, as the Enable always stays put.</li>
+                        <li><strong>Setup Button:</strong> A new tool under Channel Mapping points to an empty slot, offers to build a packed map, opens the Texture Packer already wired up, and fills the slots from your metallic, smoothness, and mask textures.</li>
+                    </ul>
+
+                    <h3 class="text-glow-cyan">New VixForge Editor Tools</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Director Preview Rig:</strong> Drops a VixForge Director and an AudioLink into your scene at the origin, already wired together. Put a track on its Audio Source, press Play, and your material reacts the way it will in a world.</li>
+                        <li><strong>World Lighting Check:</strong> Finds every material with LTCGI, Light Volumes, or VRSL switched on. Dropping LTCGI and Light Volumes on a material can slash a 28-second build time down to just 7 seconds.</li>
+                        <li><strong>Texture Check:</strong> Weighs your texture cost against VRChat's 500 MB upload ceiling and flags oversized bent normal maps, saving around 4 MB each with one click.</li>
+                        <li><strong>Eighteen One-Click Presets:</strong> Six for Latex Ultra, and four each for Toon, Clothing Pro, and Fur Pro. They set the finish only, leaving your textures and colors exactly as you had them.</li>
+                    </ul>
+
+                    <p>
+                        This arc of updates rolls out across Latex Ultra 4.6.0, Toon 1.5.0, Clothing Pro 1.2.0, Fur Pro 1.2.0, and the editor at 1.6.0. Every new control defaults to what your materials already look like, meaning your existing setups will not shift until you decide to reach for a new control.
+                    </p>
+
+                    <div class="row mt-4" style="gap: 10px; flex-wrap: wrap;">
+                        <fluent-anchor href="shader-changelogs.html" appearance="accent" class="custom-accent-btn">Read the Full Changelog</fluent-anchor>
+                        <fluent-anchor href="index.html" class="custom-stealth-btn">Add to VCC</fluent-anchor>
+                    </div>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5">
+                <div class="news-hero-art">
+                    <img src="promos/PromoBanner.png" width="1536" height="657" alt="The Living Goo Update banner from VixForge Interactive: an avatar coated in glossy black goo with green energy trails, standing in a neon pink VRChat club." />
                 </div>
                 <h2 class="sr-only">Living goo, and two new shaders join the family</h2>
 
@@ -355,7 +415,7 @@
 
             <article class="glass-panel news-article w-100 mb-5">
                 <div class="news-hero-art">
-                    <img src="PromoBanner2.png" width="1920" height="1080" alt="VixForge Interactive Infinity Mirror and Inner Cosmos 3D Professional Studio Shader Update." />
+                    <img src="promos/PromoBanner2.png" width="1920" height="1080" alt="VixForge Interactive Infinity Mirror and Inner Cosmos 3D Professional Studio Shader Update." />
                 </div>
                 <h2 class="sr-only">Shaders Ascend to crazy new heights: Showcasing the raw beauty of Unity</h2>
 
@@ -417,7 +477,7 @@
 
             <article class="glass-panel news-article w-100 mb-5">
                 <div class="news-hero-art">
-                    <img src="PromoBanner.png" width="1920" height="1080" alt="VixForge Interactive Vixens Toolbox milestone celebration banner marking 1,500 downloads by the VRChat creator community." />
+                    <img src="promos/PromoBanner3.png" width="1920" height="1080" alt="VixForge Interactive Vixens Toolbox milestone celebration banner marking 1,500 downloads by the VRChat creator community." />
                 </div>
                 <h2 class="sr-only">Vixens Toolbox Milestone: Over 1,500 Downloads and Counting</h2>
 
