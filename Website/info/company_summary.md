@@ -44,7 +44,7 @@ Beyond the shipping toolbox, VixForge Interactive invests in R&D for next-genera
 
 - Website: https://vixencreations.github.io/VixenToolBox/
 - Repository: https://github.com/VixenCreations/VixenToolBox
-- X (Twitter): @VixenVRC (https://x.com/VixenVRC)
+- X (Twitter): @VixForge (https://x.com/VixForge)
 - YouTube: @vixenlicous
 - Discord: https://discord.gg/3vbJCKcPtJ
 

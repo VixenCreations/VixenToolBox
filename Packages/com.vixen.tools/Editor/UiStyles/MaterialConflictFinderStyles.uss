@@ -1,0 +1,147 @@
+/* =====================================================================
+   Vixforge Toolkit - Material Toggle Conflict Finder Styles
+   Aesthetic: Dark Glass UI / Neon Cyberpunk
+   ===================================================================== */
+
+/* --- Root & Layout --- */
+.mcf-root {
+    background-color: #121217;
+    flex-grow: 1;
+    padding-bottom: 12px;
+}
+
+.mcf-scroll-view {
+    flex-grow: 1;
+    padding: 0 12px;
+}
+
+/* --- Cyber-Noir Header Box --- */
+/* Translates the EditorGUI.DrawRect and Color(0.11f, 0.11f, 0.14f, 1f) */
+.mcf-header {
+    background-color: rgba(28, 28, 36, 0.95);
+    border-bottom-width: 2px;
+    border-bottom-color: #00e5ff;
+    padding: 12px 15px;
+    margin-bottom: 12px;
+}
+
+/* Translates Color(0.0f, 0.94f, 1.0f) */
+.mcf-header-title {
+    font-size: 15px;
+    -unity-font-style: bold;
+    color: #00f0ff; 
+    letter-spacing: 1px;
+}
+
+/* Translates Color(0.7f, 0.7f, 0.75f) */
+.mcf-header-subtitle {
+    font-size: 11px;
+    color: #b2b2bf;
+    margin-top: 2px;
+}
+
+/* --- Diagnostic Panels (Cyber Panels) --- */
+.mcf-panel {
+    background-color: rgba(35, 35, 45, 0.6);
+    border-radius: 4px;
+    border-left-width: 3px;
+    padding: 10px;
+    margin-bottom: 8px;
+}
+
+/* Warning State (Cross-Material Mismatch) - Translates Color(1.0f, 0.82f, 0.28f) */
+.mcf-panel-warning {
+    border-left-color: #ffe147;
+}
+
+/* Error State (Animation Desyncs) - Translates Color(1f, 0.45f, 0.45f) */
+.mcf-panel-error {
+    border-left-color: #ff7373;
+}
+
+/* --- Recommended Actions Card --- */
+.mcf-recommendation-box {
+    background-color: rgba(0, 229, 255, 0.05);
+    border-width: 1px;
+    border-color: rgba(0, 229, 255, 0.2);
+    border-radius: 4px;
+    padding: 8px;
+    margin: 6px 0;
+}
+
+/* Translates Color(0.2f, 0.9f, 1.0f) */
+.mcf-recommendation-title {
+    -unity-font-style: bold;
+    color: #33e5ff;
+    margin-bottom: 6px;
+}
+
+/* --- Buttons --- */
+.mcf-action-btn-main {
+    height: 32px;
+    -unity-font-style: bold;
+    border-radius: 4px;
+    margin: 8px 12px;
+    background-color: rgba(0, 229, 255, 0.15);
+    border-color: #00e5ff;
+    color: #00e5ff;
+    transition-duration: 0.15s;
+}
+
+.mcf-action-btn-main:hover {
+    background-color: #00e5ff;
+    color: #121217;
+}
+
+/* Batch Sync Buttons */
+.mcf-sync-btn-group {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 4px;
+}
+
+.mcf-btn-sync {
+    height: 24px;
+    flex-grow: 1;
+    margin: 0 2px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #d2d2d2;
+    border-radius: 3px;
+    transition-duration: 0.15s;
+}
+
+.mcf-btn-sync:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.mcf-btn-fix {
+    width: 60px;
+    height: 22px;
+    background-color: rgba(255, 170, 0, 0.15);
+    border-color: #ffaa00;
+    color: #ffaa00;
+    border-radius: 3px;
+    align-self: center;
+}
+
+.mcf-btn-fix:hover {
+    background-color: #ffaa00;
+    color: #121217;
+}
+
+/* --- Data Rows (Inventory & Breakdowns) --- */
+.mcf-data-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 4px 8px;
+    margin-bottom: 2px;
+    border-radius: 2px;
+}
+
+.mcf-label-mini {
+    font-size: 10px;
+    color: #999999;
+}

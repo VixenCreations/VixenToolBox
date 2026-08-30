@@ -448,6 +448,7 @@ namespace VixenTools.Editor
                 (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Quest Conversion Engine"), "Quest Conversion Engine", "Makes a Quest copy of your avatar without touching the original, checked against every Android limit."),
                 (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/PhysBone Blueprints"), "PhysBone Blueprints", "Saves every PhysBone setup on an avatar as a blueprint, then puts it back on another one."),
                 (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Animator Forge"), "Animator Forge", "Diagnoses broken animators (missing params, mixed Write Defaults, menu desync) and forges fully-rigged toggles, sliders, swaps, and exclusive groups."),
+                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Material Conflict Finder"), "Material Conflict Finder", "Finds materials that disagree on a shader setting, leftover keywords, and toggles your animations or VRCFury fight over, then syncs them for you."),
                 (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Accessory Engine"), "Accessory Mounting Engine", "Clones a clean armature and mounts accessories onto it, either by re-rigging them or with parent constraints."),
                 (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Optimization Suite"), "Optimization Suite", "Checks your avatar against VRChat limits, then shrinks meshes and textures to fit.")
             };
@@ -549,7 +550,7 @@ namespace VixenTools.Editor
             var list = new List<(System.Action action, string title, string desc)>
             {
                 (() => Application.OpenURL("https://github.com/VixenCreations/VixenToolBox"), "GitHub Repository", "Core ecosystem source code and release tracking."),
-                (() => Application.OpenURL("https://x.com/VixenVRC"), "Twitter", "Where I post All Kinds of things and Interact with the community."),
+                (() => Application.OpenURL("https://x.com/VixForge"), "Twitter", "Where I post All Kinds of things and Interact with the community."),
                 (() => Application.OpenURL("https://discord.com/invite/3vbJCKcPtJ"), "Discord", "My Official Community to get help with things."),
                 (() => Application.OpenURL("https://github.com/VixenCreations/VixenToolBox/issues"), "Report An Issue", "Report an Issue or Request a new feature."),
                 (() => Application.OpenURL("https://www.youtube.com/@vixenlicous"), "YouTube Channel", "Technical breakdowns, tutorials and development logs.")

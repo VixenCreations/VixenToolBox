@@ -29,7 +29,7 @@
     <meta name="twitter:title" content="Vixens Toolbox | Shader Changelogs &amp; Version History">
     <meta name="twitter:description" content="Release notes for the VixForge VRChat avatar shaders - VixenWear Latex Ultra, VixForge Toon, Clothing Pro and Fur Pro.">
     <meta name="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
-    <meta name="twitter:site" content="@VixenVRC">
+    <meta name="twitter:site" content="@VixForge">
 
     <!-- Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -72,7 +72,7 @@
           },
           "knowsAbout": ["VRChat avatar shaders", "Unity 2022.3", "Built-in Render Pipeline", "AudioLink", "VRC Light Volumes", "LTCGI", "VRSL", "VRCFury", "Modular Avatar"],
           "sameAs": [
-            "https://x.com/VixenVRC",
+            "https://x.com/VixForge",
             "https://www.youtube.com/@vixenlicous",
             "https://vixenlicous.gumroad.com",
             "https://jinxxy.com/Vixenlicious",
@@ -183,10 +183,15 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 190px;">
+                        <fluent-option value="toon-1.5.1">Toon 1.5.1</fluent-option>
                         <fluent-option value="toon-1.5.0">Toon 1.5.0</fluent-option>
+												<fluent-option value="latex-4.6.1">Latex Ultra 4.6.1</fluent-option>
 												<fluent-option value="latex-4.6.0">Latex Ultra 4.6.0</fluent-option>
+												<fluent-option value="clothingpro-1.2.1">Clothing Pro 1.2.1</fluent-option>
 												<fluent-option value="clothingpro-1.2.0">Clothing Pro 1.2.0</fluent-option>
+                        <fluent-option value="furpro-1.2.1">Fur Pro 1.2.1</fluent-option>
                         <fluent-option value="furpro-1.2.0">Fur Pro 1.2.0</fluent-option>
+                        <fluent-option value="editor-1.6.1">VixForge Editor 1.6.1</fluent-option>
                         <fluent-option value="editor-1.6.0">VixForge Editor 1.6.0</fluent-option>
                         <fluent-option value="toon-1.4.0">Toon 1.4.0</fluent-option>
                         <fluent-option value="toon-1.3.0">Toon 1.3.0</fluent-option>
@@ -236,6 +241,20 @@
             <p class="caption1 m-0 mb-4" style="color: #9ca3af; max-width: 70ch;">Release notes for the VixForge avatar shaders. Each entry is titled with the shader it belongs to. Tool and editor releases live on the <a href="changelog.html">Changelog</a> page.</p>
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
+
+                <div class="changelog-entry" data-version="toon-1.5.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Toon 1.5.1 - 2026-08-30</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Housekeeping. Nothing on your material looks any different.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The X button in the material footer now opens the VixForge account</strong>, not the old VixenVRC one.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The Light Volumes, LTCGI, VRSL, Micro Detail and Outline checkboxes no longer set a leftover keyword.</strong> Nothing renders differently, but the leftovers made the Material Toggle Conflict Finder report desyncs that were not real.</li>
+                    </ul>
+                </div>
 
                 <div class="changelog-entry" data-version="toon-1.5.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Toon 1.5.0 - 2026-08-24</h5>
@@ -444,6 +463,20 @@
                         <li class="mb-2"><strong>Lock your materials before uploading</strong>, the same three ways as Latex Ultra. The SDK Build button does it for you.</li>
                         <li class="mb-2"><strong>Toon needs triangle meshes.</strong> If a model looks torn or shredded, turn off <strong>Keep Quads</strong> in its import settings, or run <strong>VixenTools &gt; VixForge Mesh Fixes &gt; Scan for Quad Meshes</strong>.</li>
                         <li class="mb-2"><strong>Light Volumes and LTCGI start off</strong>, because they make Unity builds much slower. Turn them on only if your world uses them.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-4.6.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 4.6.1 - 2026-08-30</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Housekeeping. Nothing on your material looks any different.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The X button in the material footer now opens the VixForge account</strong>, not the old VixenVRC one.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The Light Volumes, LTCGI, VRSL, Micro Detail and Outline checkboxes no longer set a leftover keyword.</strong> Nothing renders differently, but the leftovers made the Material Toggle Conflict Finder report desyncs that were not real.</li>
                     </ul>
                 </div>
 
@@ -1059,6 +1092,20 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="clothingpro-1.2.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Clothing Pro 1.2.1 - 2026-08-30</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Housekeeping. Nothing on your material looks any different.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The X button in the material footer now opens the VixForge account</strong>, not the old VixenVRC one.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The Light Volumes, LTCGI, VRSL, Micro Detail and Outline checkboxes no longer set a leftover keyword.</strong> Nothing renders differently, but the leftovers made the Material Toggle Conflict Finder report desyncs that were not real.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="clothingpro-1.2.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Clothing Pro 1.2.0 - 2026-08-24</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>The beat you hear is now the beat that crosses you. Emission layers carry a hit from one edge to the other at the speed the music played it, colour cycles that only run while the track does, and an Infinity Mirror that finally falls into itself.</em></p>
@@ -1161,6 +1208,20 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="furpro-1.2.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Fur Pro 1.2.1 - 2026-08-30</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Housekeeping. Nothing on your material looks any different.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The X button in the material footer now opens the VixForge account</strong>, not the old VixenVRC one.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The Light Volumes, LTCGI, VRSL, Micro Detail and Outline checkboxes no longer set a leftover keyword.</strong> Nothing renders differently, but the leftovers made the Material Toggle Conflict Finder report desyncs that were not real.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="furpro-1.2.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Fur Pro 1.2.0 - 2026-08-24</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>The beat you hear is now the beat that crosses you. Emission layers carry a hit from one edge to the other at the speed the music played it, colour cycles that only run while the track does, and an Infinity Mirror that finally falls into itself.</em></p>
@@ -1260,6 +1321,26 @@
                         <li class="mb-2"><strong>Lock your materials before uploading.</strong> The SDK Build button does it for you.</li>
                         <li class="mb-2"><strong>Fur Pro needs triangle meshes.</strong> Like the others it tessellates, so if a model looks torn, turn off <strong>Keep Quads</strong> in its import settings, or run <strong>VixenTools &gt; VixForge Mesh Fixes &gt; Scan for Quad Meshes</strong>.</li>
                         <li class="mb-2"><strong>Light Volumes and LTCGI start off</strong>, because they make Unity builds much slower. Turn them on only if your world uses them.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="editor-1.6.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Editor 1.6.1 - 2026-08-30</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Toggles that a menu or a VRCFury item drives keep working after you lock.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Unlock and re-lock anything whose toggles you animate.</strong> Materials locked before this build still carry the old frozen state, and re-locking is what applies the fix. Lock All and Unlock All on the Hub do the whole avatar in one go.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The X button in the material footer now opens the VixForge account</strong>, not the old VixenVRC one.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Animated toggles stopped responding once the material was locked.</strong> Locking freezes every control you have not told it to keep live, so a toggle driven by a menu or a VRCFury item quietly did nothing on the locked material, in both directions, with nothing in the console to say so. Locking now reads your animations first and keeps every control they touch live by itself. Marking a control by hand still works and still wins, and each one kept is named in the log.</li>
+                        <li class="mb-2"><strong>Five checkboxes wrote a leftover keyword onto every material.</strong> Light Volumes, LTCGI, VRSL, Micro Detail and Outline each set a keyword that nothing in the shaders has read for a long time. Nothing rendered differently, but the leftovers made the Material Toggle Conflict Finder report desyncs that were not real. The checkboxes look and behave exactly as before; they just stop writing the keyword.</li>
+                        <li class="mb-2"><strong>Twelve "potentially uninitialized variable" warnings on import</strong>, across the fog, outline, decal, parallax, AudioLink and Light Volumes code. The maths was already right in every one of them, so nothing looks different; the console is just quieter.</li>
                     </ul>
                 </div>
 

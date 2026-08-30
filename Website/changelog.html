@@ -29,7 +29,7 @@
     <meta name="twitter:title" content="Vixens Toolbox | Changelog, Release Notes & Version History">
     <meta name="twitter:description" content="See every update to the Vixens Toolbox - detailed release notes, version history, and development progress.">
     <meta name="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
-    <meta name="twitter:site" content="@VixenVRC">
+    <meta name="twitter:site" content="@VixForge">
 
     <!-- Structured Data for Google Rich Results -->
     <script type="application/ld+json">
@@ -72,7 +72,7 @@
           },
           "knowsAbout": ["VRChat avatar shaders", "Unity 2022.3", "Built-in Render Pipeline", "AudioLink", "VRC Light Volumes", "LTCGI", "VRSL", "VRCFury", "Modular Avatar"],
           "sameAs": [
-            "https://x.com/VixenVRC",
+            "https://x.com/VixForge",
             "https://www.youtube.com/@vixenlicous",
             "https://vixenlicous.gumroad.com",
             "https://jinxxy.com/Vixenlicious",
@@ -184,6 +184,7 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
+                        <fluent-option value="v2.16.0">v2.16.0</fluent-option>
                         <fluent-option value="v2.15.1">v2.15.1</fluent-option>
                         <fluent-option value="v2.15.0">v2.15.0</fluent-option>
                         <fluent-option value="v2.14.0">v2.14.0</fluent-option>
@@ -232,6 +233,26 @@
             </div>
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
+
+                <div class="changelog-entry" data-version="v2.16.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.16.0 - 2026-08-30</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A new tool for when your materials quietly disagree with each other, and our X handle is now @VixForge.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-3" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Material Conflict Finder</strong>, a new tool at <code>VixenTools/Avatars/Material Conflict Finder</code> and on the Hub's Avatar Tools grid. Drop an avatar in, press <strong>Analyze Materials &amp; Toggles</strong>, and it reports what it found in four sections, each with the buttons to settle it.</li>
+                        <li class="mb-2"><strong>Cross-Material Property Mismatches.</strong> Toggle properties holding different values across your materials, grouped by value so you can see which materials sit on which side. <strong>Sync All to 0.0 (OFF)</strong>, <strong>Sync All to 1.0 (ON)</strong> and <strong>Align Majority</strong> settle a whole group in one press, and <strong>Select All</strong> and <strong>Ping</strong> take you to the materials involved.</li>
+                        <li class="mb-2"><strong>Orphaned Shader Keywords.</strong> A toggle switched off while its shader keyword is still enabled. That is the state where a feature reads as disabled in the inspector but still renders. <strong>Fix</strong> clears one, <strong>Fix All Keywords</strong> clears them all.</li>
+                        <li class="mb-2"><strong>Animation &amp; VRCFury Driven Toggle Conflicts.</strong> A clip drives a toggle up to 1.0, but the keyword it needs is switched off on the material, so the animation changes nothing in game. It reads your VRC base and special playable layers, plus any clips VRCFury carries.</li>
+                        <li class="mb-2"><strong>Scanned Materials Inventory.</strong> Everything the scan looked at, in one list.</li>
+                        <li class="mb-2"><strong>Locked materials read correctly.</strong> A locked material carries no keywords, because the locker bakes them into the generated shader, so a plain keyword check calls every animated toggle broken. The finder reads the pre-lock keyword list stashed on the material instead, and leaves alone any property the lock deliberately kept animated.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Our X handle is now @VixForge.</strong> The Hub's <strong>Twitter</strong> button, the package and VPM listing author links, and every page on this website point at <code>x.com/VixForge</code>.</li>
+                    </ul>
+                </div>
 
                 <div class="changelog-entry" data-version="v2.15.1">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.15.1 - 2026-08-17</h5>

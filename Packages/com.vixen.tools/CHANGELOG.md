@@ -5,6 +5,20 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.16.0] - 2026-08-30
+*A new tool for when your materials quietly disagree with each other, and our X handle is now @VixForge.*
+
+### Added
+* **Material Conflict Finder**, a new tool at `VixenTools/Avatars/Material Conflict Finder` and on the Hub's Avatar Tools grid. Drop an avatar in, press **Analyze Materials & Toggles**, and it reports what it found in four sections, each with the buttons to settle it.
+* **Cross-Material Property Mismatches.** Toggle properties holding different values across your materials, grouped by value so you can see which materials sit on which side. **Sync All to 0.0 (OFF)**, **Sync All to 1.0 (ON)** and **Align Majority** settle a whole group in one press, and **Select All** and **Ping** take you to the materials involved.
+* **Orphaned Shader Keywords.** A toggle switched off while its shader keyword is still enabled. That is the state where a feature reads as disabled in the inspector but still renders. **Fix** clears one, **Fix All Keywords** clears them all.
+* **Animation & VRCFury Driven Toggle Conflicts.** A clip drives a toggle up to 1.0, but the keyword it needs is switched off on the material, so the animation changes nothing in game. It reads your VRC base and special playable layers, plus any clips VRCFury carries.
+* **Scanned Materials Inventory.** Everything the scan looked at, in one list.
+* **Locked materials read correctly.** A locked material carries no keywords, because the locker bakes them into the generated shader, so a plain keyword check calls every animated toggle broken. The finder reads the pre-lock keyword list stashed on the material instead, and leaves alone any property the lock deliberately kept animated.
+
+### Changed
+* **Our X handle is now @VixForge.** The Hub's **Twitter** button, the package and VPM listing author links, and every page on the website point at `x.com/VixForge`.
+
 ## [2.15.1] - 2026-08-16
 *Every button, panel and dialog in plain English, two Hub fixes, and the PhysBone Topology Mapper is now PhysBone Blueprints.*
 
