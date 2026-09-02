@@ -280,6 +280,80 @@
 
             <article class="glass-panel news-article w-100 mb-5">
                 <div class="news-hero-art">
+                    <img src="promos/PromoBanner5.png" width="1536" height="657" alt="Built From What You Turn On banner from VixForge Interactive: a glossy black and white VRChat avatar with magenta and purple hair and a spiked ruff, looking down at the camera against a pale blue sky and a glass tower." />
+                </div>
+                <h2 class="sr-only">Built from what you turn on</h2>
+
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Shader Update</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">VixForge Toon</span>
+                        <span class="news-tag">Clothing Pro</span>
+                        <span class="news-tag">Fur Pro</span>
+                        <span class="news-tag">VixForge Editor</span>
+                        <span class="news-date">September 2, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Built From What You Turn On - Latex Ultra 5.0 &amp; Friends</h2>
+                    <p>
+                        Every one of our shaders used to carry every feature we have ever written, whether you switched it on
+                        or not. All of it compiled into your material, all of it loaded, all of it sitting right against the
+                        limit your graphics card allows. We had genuinely run out of room to add anything else. So this
+                        release takes the whole thing apart and puts it back together: your material is now built from the
+                        features you actually turned on, and nothing else. A default material went from sixty five textures
+                        down to five.
+                    </p>
+
+                    <h3 class="text-glow-cyan">Genuinely Modular Now</h3>
+                    <p>
+                        Sixty five was not a comfortable number. It was one over the point where Unity refuses to load a
+                        shader at all, which is a wall we had already hit. Features are now compiled in only when their
+                        toggle is on, so what you build is what you asked for.
+                    </p>
+                    <ul class="pledge-list">
+                        <li><strong>Faster to work with:</strong> Imports and locks are quicker, because a material with a handful of features on is no longer compiling all of them.</li>
+                        <li><strong>Room to grow:</strong> We can keep adding without every new map pushing the whole thing over the edge for everyone.</li>
+                        <li><strong>Nothing changes in how you work:</strong> Tick a feature on and it appears, tick it off and it goes. One thing to know: if an animation switches a feature on, right-click that toggle and tick Animated (when locked), so the feature is there for the clip to switch on.</li>
+                        <li><strong>Locked materials tell the truth:</strong> Once locked, a feature you left off is not in there and cannot be switched back on without unlocking. Those sections now step aside instead of offering a control that cannot work.</li>
+                    </ul>
+
+                    <h3 class="text-glow-cyan">World Lights That Were Going Missing</h3>
+                    <p>
+                        This one had been quietly wrong for a long time. Lights a world marks Not Important were being dropped
+                        completely, and most worlds only run four pixel lights. Anywhere busy, that was the majority of the
+                        lighting never reaching you at all. Your material will look brighter in those worlds now, and that is
+                        the result it should always have given.
+                    </p>
+                    <ul class="pledge-list">
+                        <li><strong>Lighting Check:</strong> A new view under RENDERING that paints your material with the light actually reaching it, so you can see which system a world is lighting you with instead of guessing. All Sources tints them all at once, or pick one to see it on its own.</li>
+                        <li><strong>Light Volumes:</strong> Up to date with 3.0.0-dev.17.</li>
+                        <li><strong>AudioLink everywhere:</strong> Chromatic Bloom, Note Swarm, Spectrum Ribbon and the separate goo, HUD and trail passes were each deciding for themselves whether AudioLink was live, and some ignored the media switch entirely. They all ask the same question now.</li>
+                    </ul>
+
+                    <h3 class="text-glow-cyan">Glitter, Hyperspace And The Rest</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Flake sprites have their own slot:</strong> Shape set to Texture now reads a Shape Sprite slot of its own instead of borrowing a channel of the glitter Mask. If you already used Texture, drop your sprite in the new slot.</li>
+                        <li><strong>Hyperspace:</strong> The surface stops behaving like a surface. A ray carries on past it into a space that is not there, so what you see has real depth and swings as you walk around it. Tunnel flies you down a twisting glowing pipe, Weave winds a vortex of fine threads away from you, and both move to the music.</li>
+                        <li><strong>Three glitter layers:</strong> Each with its own shape, depth, swirl and twinkle, so fine dust can settle over big flakes.</li>
+                        <li><strong>Micro Detail:</strong> Now its own section under Bent Normals, with its map and settings inside it instead of loose among the normal map rows.</li>
+                    </ul>
+
+                    <p>
+                        This lands as Latex Ultra 5.0.0, VixForge Toon 2.0.0, Clothing Pro 2.0.0, Fur Pro 2.0.0 and the editor
+                        at 2.0.0. Major version numbers across the board, because the way your material is built has genuinely
+                        changed underneath. Everything you had set stays set.
+                    </p>
+
+                    <div class="row mt-4" style="gap: 10px; flex-wrap: wrap;">
+                        <fluent-anchor href="shader-changelogs.html" appearance="accent" class="custom-accent-btn">Read the Full Changelog</fluent-anchor>
+                        <fluent-anchor href="index.html" class="custom-stealth-btn">Add to VCC</fluent-anchor>
+                    </div>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5">
+                <div class="news-hero-art">
                     <img src="promos/PromoBanner4.png" width="1536" height="657" alt="The AudioLink and Optimization Overhaul." />
                 </div>
                 <h2 class="sr-only">The AudioLink and Optimization Overhaul</h2>
