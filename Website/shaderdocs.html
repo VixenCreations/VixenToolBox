@@ -1018,6 +1018,12 @@
                     <li class="mb-2"><strong>AudioLink Band</strong> / <strong>AudioLink Amount</strong> - Makes the flakes flare and multiply on the beat. Shown only when AudioLink is enabled.</li>
                 </ul>
 
+                <p class="opt-note mt-3 mb-2"><strong>Flake Shape</strong></p>
+                <ul class="custom-list m-0 ps-4 mb-3">
+                    <li class="mb-2"><strong>Shape</strong> - The outline of every flake. Round is the classic sparkle. Star and Cross throw a hard glint, Shard reads as broken foil, Ring as tiny bubbles. Texture reads a sprite you drew yourself.</li>
+                    <li class="mb-2"><strong>Shape Sprite</strong> - Your own flake shape, drawn white on black. Only used when Shape is set to Texture.</li>
+                    <li class="mb-2"><strong>Shape Channel</strong> - Which channel of the sprite holds the flake. Most sprites use Red.</li>
+                </ul>
                 <p class="opt-note mt-3 mb-2"><strong>Glitter Lighting</strong></p>
                 <p class="opt-note">The flakes are lit like a real surface rather than painted on, so they answer to whatever is lighting the room. Lit By chooses which lighting that is.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -1148,6 +1154,20 @@
                     <li class="mb-2"><strong>Height</strong> / <strong>Trail Fade</strong> - How tall the readout stands, and how quickly the older part of the track dims out behind it.</li>
                     <li class="mb-2"><strong>Placement</strong> - Where it sits, how big it is, and how far it is turned.</li>
                     <li class="mb-2"><strong>AudioLink Band</strong> - Which band the readout traces.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Hyperspace</h3>
+                <p class="opt-note">The surface stops behaving like a surface: a ray carries on past it into a space that is not
+                    there, so what you see has real depth and swings as you walk around it instead of sitting flat. Off by
+                    default. The Tunnel field is after Yohei Nishitsuji, used under the MIT licence he publishes his work
+                    under. The Weave field is ours, written after seeing a lattice effect by XorDev.</p>
+                <ul class="custom-list m-0 ps-4 mb-3">
+                    <li class="mb-2"><strong>Style</strong> - Tunnel flies you down a twisting glowing pipe. Weave winds a vortex of fine glowing threads away from you.</li>
+                    <li class="mb-2"><strong>Colour</strong> - The tint of the space inside.</li>
+                    <li class="mb-2"><strong>Distance</strong> - How far into the material the ride reaches.</li>
+                    <li class="mb-2"><strong>Turbulence</strong> - How much the walls churn as they pass.</li>
+                    <li class="mb-2"><strong>Quality</strong> - How many steps the ray takes. This is the part that costs framerate, so leave it as low as still looks good.</li>
+                    <li class="mb-2"><strong>Beat Rush</strong> + <strong>Beat Churn</strong> - The music shoves you forward down the ride and stirs up the turbulence, each on a band you pick.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Inner Cosmos</h3>
@@ -1657,6 +1677,12 @@
                     <li class="mb-2"><strong>Comparison</strong> - The test against the buffer that decides whether the pixel draws.</li>
                     <li class="mb-2"><strong>Pass</strong> + <strong>Fail</strong> + <strong>Z Fail</strong> - What happens to the stored stencil value on each outcome.</li>
                     <li class="mb-2"><strong>Read Mask</strong> + <strong>Write Mask</strong> - Which bits of the stencil the test reads and the write touches.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Lighting Check</strong> - Paints the material with the light actually reaching it, so you can see which system a world is lighting you with instead of guessing. Set it back to Off before you upload.</p>
+                <ul class="custom-list m-0 ps-4">
+                    <li class="mb-2"><strong>View</strong> - Off, or one source on its own. <strong>All Sources</strong> tints them all at once: red direct, green vertex, blue probes, yellow Light Volumes, magenta Point Light Volumes.</li>
+                    <li class="mb-2"><strong>Brightness</strong> - Scales the view. Turn it up when the picture is nearly black, down when it washes out to white.</li>
                 </ul>
             </div>
 

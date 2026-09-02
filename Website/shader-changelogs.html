@@ -183,14 +183,19 @@
                 <div class="row align-items-center">
                     <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
                     <fluent-select id="versionSelect" title="Select Version" style="min-width: 190px;">
+                        <fluent-option value="toon-2.0.0">Toon 2.0.0</fluent-option>
                         <fluent-option value="toon-1.5.1">Toon 1.5.1</fluent-option>
                         <fluent-option value="toon-1.5.0">Toon 1.5.0</fluent-option>
+												<fluent-option value="latex-5.0.0">Latex Ultra 5.0.0</fluent-option>
 												<fluent-option value="latex-4.6.1">Latex Ultra 4.6.1</fluent-option>
 												<fluent-option value="latex-4.6.0">Latex Ultra 4.6.0</fluent-option>
+												<fluent-option value="clothingpro-2.0.0">Clothing Pro 2.0.0</fluent-option>
 												<fluent-option value="clothingpro-1.2.1">Clothing Pro 1.2.1</fluent-option>
 												<fluent-option value="clothingpro-1.2.0">Clothing Pro 1.2.0</fluent-option>
+                        <fluent-option value="furpro-2.0.0">Fur Pro 2.0.0</fluent-option>
                         <fluent-option value="furpro-1.2.1">Fur Pro 1.2.1</fluent-option>
                         <fluent-option value="furpro-1.2.0">Fur Pro 1.2.0</fluent-option>
+                        <fluent-option value="editor-2.0.0">VixForge Editor 2.0.0</fluent-option>
                         <fluent-option value="editor-1.6.1">VixForge Editor 1.6.1</fluent-option>
                         <fluent-option value="editor-1.6.0">VixForge Editor 1.6.0</fluent-option>
                         <fluent-option value="toon-1.4.0">Toon 1.4.0</fluent-option>
@@ -242,6 +247,48 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
+                <div class="changelog-entry" data-version="toon-2.0.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Toon 2.0.0 - 2026-09-02</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>The big one. Every feature is now built into your material only when you switch it on, so a material carries what it uses and nothing else. Alongside that: world lights that were quietly going missing, a glitter flake sprite with a slot of its own, and AudioLink reaching every effect instead of most of them.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>If an animation switches a feature on, mark that toggle Animated.</strong> Features are now built in and out of your material, so a toggle a clip drives has to be marked or the feature will not be there for the clip to switch on. Right-click the toggle and tick <strong>Animated (when locked)</strong>. Anything you only set by hand needs nothing.</li>
+                        <li class="mb-2"><strong>Glitter's Texture shape has moved to its own slot.</strong> If any layer's <strong>Shape</strong> was set to <strong>Texture</strong>, drop your sprite in the new <strong>Shape Sprite</strong> slot and pick its channel again. It used to share a channel of the glitter Mask.</li>
+                        <li class="mb-2"><strong>Your material may look brighter in busy worlds.</strong> Lights a world marks Not Important were being dropped completely and now reach you, the way every other shader has always handled them.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Lighting Check.</strong> New under RENDERING. Paints the material with the light actually reaching it, so you can see at a glance which system a world is lighting you with. <strong>All Sources</strong> tints each one, or pick a single source to see it on its own. Set it back to Off before you upload.</li>
+                        <li class="mb-2"><strong>Glitter flake sprites have their own slot.</strong> <strong>Shape Sprite</strong>, under Glitter, takes the shape you draw instead of borrowing a channel from the Mask.</li>
+                        <li class="mb-2"><strong>Hyperspace.</strong> New under SPECIAL EFFECTS. The surface stops being a surface: a ray carries on past it into a space that is not there, so what you see has real depth and swings as you walk around it instead of sitting there like a picture painted on. <strong>Tunnel</strong> flies you down a twisting glowing pipe. <strong>Weave</strong> winds a vortex of fine glowing threads away from you. Start with <strong>Style</strong> and <strong>Colour</strong>, then <strong>Distance</strong> for how far in it reaches and <strong>Turbulence</strong> for how much the walls churn. <strong>Quality</strong> is the part that costs you framerate, so leave it as low as still looks good. The Tunnel field is after Yohei Nishitsuji, used under the MIT licence he publishes his work under, with thanks. The Weave field is ours, written after seeing a lattice effect by XorDev, with thanks to them too.</li>
+                        <li class="mb-2"><strong>Hyperspace moves to the music.</strong> <strong>Beat Rush</strong> shoves you forward down the ride and <strong>Beat Churn</strong> stirs up the turbulence, each on a band you pick.</li>
+                        <li class="mb-2"><strong>Glitter has three layers.</strong> Layer 1 is the glitter you already had and nothing about it has changed. <strong>Layer 2</strong> and <strong>Layer 3</strong> each bring their own full set of the controls below, so you can settle fine dust over big flakes, or run a rainbow layer through a tinted one.</li>
+                        <li class="mb-2"><strong>Flakes have a shape.</strong> Every layer picks its own <strong>Shape</strong>: <strong>Round</strong> as before, or <strong>Hexagon</strong>, <strong>Diamond</strong>, <strong>Star</strong>, <strong>Cross</strong>, <strong>Shard</strong> or <strong>Ring</strong>. Star and Cross throw a hard glint, Shard reads as broken foil and Ring as tiny bubbles. Each flake is turned its own way, so a field of them never looks printed on.</li>
+                        <li class="mb-2"><strong>Draw your own flake shape.</strong> <strong>Texture</strong>, at the bottom of every layer's <strong>Shape</strong> list, reads a sprite from the <strong>Shape Sprite</strong> slot. Draw your shape as white on black, then point each layer at the channel it sits in with <strong>Shape Channel</strong>.</li>
+                        <li class="mb-2"><strong>Flakes can sit under the surface.</strong> <strong>Depth</strong> sinks a layer below the material, so it slides against you as you move your head the way real flake does under a clear coat. Put each layer at a different Depth and the glitter reads as suspended in something thick.</li>
+                        <li class="mb-2"><strong>Swirl.</strong> Pulls a layer into flowing veins instead of an even scatter, for a marbled, liquid look. <strong>Swirl Scale</strong> sets whether that is a few broad rivers or fine curling detail.</li>
+                        <li class="mb-2"><strong>Twinkle.</strong> Every flake blinks on its own clock, so the material shimmers even when you and the light are both standing still. <strong>Twinkle Rate</strong> sets how fast.</li>
+                        <li class="mb-2"><strong>Prism, a new Colour mode.</strong> The hue rides the angle between the flake and your eye, so a single flake sweeps the spectrum as it turns. That is the dichroic, oil-slick look, and <strong>Rainbow Amount</strong> widens the sweep.</li>
+                        <li class="mb-2"><strong>Glitter can move.</strong> Every layer gets <strong>Scroll</strong> to drift the flakes across the material, <strong>Spin</strong> to turn the whole field, and <strong>Angle</strong> to set where it starts. Leave them at zero and the glitter sits still exactly as it always did.</li>
+                        <li class="mb-2"><strong>The music can carry the glitter.</strong> Under <strong>Motion</strong>, <strong>Beat Drift</strong> puts the Scroll on the beat and <strong>Beat Spin</strong> drives the Spin from the track. <strong>Beat Swirl</strong> churns the veins and <strong>Beat Twinkle</strong> flashes the flakes in time, and <strong>Swirl Speed</strong> sets how fast the veins drift on their own. Each layer also picks its own <strong>AudioLink Band</strong> and <strong>AudioLink Amount</strong>.</li>
+                        <li class="mb-2"><strong>A mask can borrow from a matcap as well as an emission layer.</strong> Every <strong>Mask Source</strong> dropdown now lists <strong>Matcap 1</strong> to <strong>Matcap 5</strong> under the emission layers, so an effect can take its shape from a matcap mask you have already painted. Nothing you have set changes: the existing options keep the places they had.</li>
+                        <li class="mb-2"><strong>Each glitter layer can take a mask of its own.</strong> Every layer has its own <strong>Mask Source</strong>, borrowing an emission layer or a matcap, so fine dust can sit on one part of the material and big flakes on another. The <strong>Mask</strong> above the layers covers all three together, and once every live layer has a Mask Source of its own it steps aside and its rows hide, since there is nothing left for it to do.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Features are built into your material only when you turn them on.</strong> This is the whole point of the release. A material with a few features on used to carry all of them anyway, right up against the 64-texture ceiling your graphics card allows; a default material now carries five. Imports and locks are quicker, and there is room to keep adding without running out. Turning a feature on and off works exactly as it always did.</li>
+                        <li class="mb-2"><strong>AudioLink reaches every effect.</strong> Chromatic Bloom, Note Swarm, Spectrum Ribbon and the separate goo, HUD and trail passes were each deciding for themselves whether AudioLink was live, and some ignored the media-playing switch entirely. They all ask the same question now.</li>
+                        <li class="mb-2"><strong>A locked material only lists what is actually in it.</strong> Once locked, a feature that is off has been built out and cannot be switched back on without unlocking, so its section no longer takes up room. Anything you marked Animated stays put, because that feature is still in there waiting for the clip.</li>
+                        <li class="mb-2"><strong>Micro Detail is its own section</strong>, under Bent Normals, with its map and settings tucked inside it instead of loose among the normal map rows.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Lights a world marks Not Important now light your material.</strong> They were being dropped entirely, which in a world with more than four lights meant most of its lighting never reached you.</li>
+                        <li class="mb-2"><strong>Light Volumes Intensity has its own description.</strong> It was showing the one belonging to Normal Stability.</li>
+                        <li class="mb-2">Light Volumes is up to date with 3.0.0-dev.17.</li>
+                    </ul>
+                </div>
                 <div class="changelog-entry" data-version="toon-1.5.1">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Toon 1.5.1 - 2026-08-30</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Housekeeping. Nothing on your material looks any different.</em></p>
@@ -466,6 +513,49 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="latex-5.0.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 5.0.0 - 2026-09-02</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>The big one. Every feature is now built into your material only when you switch it on, so a material carries what it uses and nothing else. Alongside that: world lights that were quietly going missing, a glitter flake sprite with a slot of its own, and AudioLink reaching every effect instead of most of them.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>If an animation switches a feature on, mark that toggle Animated.</strong> Features are now built in and out of your material, so a toggle a clip drives has to be marked or the feature will not be there for the clip to switch on. Right-click the toggle and tick <strong>Animated (when locked)</strong>. Anything you only set by hand needs nothing.</li>
+                        <li class="mb-2"><strong>Glitter's Texture shape has moved to its own slot.</strong> If any layer's <strong>Shape</strong> was set to <strong>Texture</strong>, drop your sprite in the new <strong>Shape Sprite</strong> slot and pick its channel again. It used to share a channel of the glitter Mask.</li>
+                        <li class="mb-2"><strong>Your material may look brighter in busy worlds.</strong> Lights a world marks Not Important were being dropped completely and now reach you, the way every other shader has always handled them.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Lighting Check.</strong> New under RENDERING. Paints the material with the light actually reaching it, so you can see at a glance which system a world is lighting you with. <strong>All Sources</strong> tints each one, or pick a single source to see it on its own. Set it back to Off before you upload.</li>
+                        <li class="mb-2"><strong>Glitter flake sprites have their own slot.</strong> <strong>Shape Sprite</strong>, under Glitter, takes the shape you draw instead of borrowing a channel from the Mask.</li>
+                        <li class="mb-2"><strong>Hyperspace.</strong> New under SPECIAL EFFECTS. The surface stops being a surface: a ray carries on past it into a space that is not there, so what you see has real depth and swings as you walk around it instead of sitting there like a picture painted on. <strong>Tunnel</strong> flies you down a twisting glowing pipe. <strong>Weave</strong> winds a vortex of fine glowing threads away from you. Start with <strong>Style</strong> and <strong>Colour</strong>, then <strong>Distance</strong> for how far in it reaches and <strong>Turbulence</strong> for how much the walls churn. <strong>Quality</strong> is the part that costs you framerate, so leave it as low as still looks good. The Tunnel field is after Yohei Nishitsuji, used under the MIT licence he publishes his work under, with thanks. The Weave field is ours, written after seeing a lattice effect by XorDev, with thanks to them too.</li>
+                        <li class="mb-2"><strong>Hyperspace moves to the music.</strong> <strong>Beat Rush</strong> shoves you forward down the ride and <strong>Beat Churn</strong> stirs up the turbulence, each on a band you pick.</li>
+                        <li class="mb-2"><strong>Glitter has three layers.</strong> Layer 1 is the glitter you already had and nothing about it has changed. <strong>Layer 2</strong> and <strong>Layer 3</strong> each bring their own full set of the controls below, so you can settle fine dust over big flakes, or run a rainbow layer through a tinted one.</li>
+                        <li class="mb-2"><strong>Flakes have a shape.</strong> Every layer picks its own <strong>Shape</strong>: <strong>Round</strong> as before, or <strong>Hexagon</strong>, <strong>Diamond</strong>, <strong>Star</strong>, <strong>Cross</strong>, <strong>Shard</strong> or <strong>Ring</strong>. Star and Cross throw a hard glint, Shard reads as broken foil and Ring as tiny bubbles. Each flake is turned its own way, so a field of them never looks printed on.</li>
+                        <li class="mb-2"><strong>Draw your own flake shape.</strong> <strong>Texture</strong>, at the bottom of every layer's <strong>Shape</strong> list, reads a sprite from the <strong>Shape Sprite</strong> slot. Draw your shape as white on black, then point each layer at the channel it sits in with <strong>Shape Channel</strong>.</li>
+                        <li class="mb-2"><strong>Flakes can sit under the surface.</strong> <strong>Depth</strong> sinks a layer below the material, so it slides against you as you move your head the way real flake does under a clear coat. Put each layer at a different Depth and the glitter reads as suspended in something thick.</li>
+                        <li class="mb-2"><strong>Swirl.</strong> Pulls a layer into flowing veins instead of an even scatter, for a marbled, liquid look. <strong>Swirl Scale</strong> sets whether that is a few broad rivers or fine curling detail.</li>
+                        <li class="mb-2"><strong>Twinkle.</strong> Every flake blinks on its own clock, so the material shimmers even when you and the light are both standing still. <strong>Twinkle Rate</strong> sets how fast.</li>
+                        <li class="mb-2"><strong>Prism, a new Colour mode.</strong> The hue rides the angle between the flake and your eye, so a single flake sweeps the spectrum as it turns. That is the dichroic, oil-slick look, and <strong>Rainbow Amount</strong> widens the sweep.</li>
+                        <li class="mb-2"><strong>Glitter can move.</strong> Every layer gets <strong>Scroll</strong> to drift the flakes across the material, <strong>Spin</strong> to turn the whole field, and <strong>Angle</strong> to set where it starts. Leave them at zero and the glitter sits still exactly as it always did.</li>
+                        <li class="mb-2"><strong>The music can carry the glitter.</strong> Under <strong>Motion</strong>, <strong>Beat Drift</strong> puts the Scroll on the beat and <strong>Beat Spin</strong> drives the Spin from the track. <strong>Beat Swirl</strong> churns the veins and <strong>Beat Twinkle</strong> flashes the flakes in time, and <strong>Swirl Speed</strong> sets how fast the veins drift on their own. Each layer also picks its own <strong>AudioLink Band</strong> and <strong>AudioLink Amount</strong>.</li>
+                        <li class="mb-2"><strong>A mask can borrow from a matcap as well as an emission layer.</strong> Every <strong>Mask Source</strong> dropdown now lists <strong>Matcap 1</strong> to <strong>Matcap 5</strong> under the emission layers, so an effect can take its shape from a matcap mask you have already painted. Nothing you have set changes: the existing options keep the places they had.</li>
+                        <li class="mb-2"><strong>Each glitter layer can take a mask of its own.</strong> Every layer has its own <strong>Mask Source</strong>, borrowing an emission layer or a matcap, so fine dust can sit on one part of the material and big flakes on another. The <strong>Mask</strong> above the layers covers all three together, and once every live layer has a Mask Source of its own it steps aside and its rows hide, since there is nothing left for it to do.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Features are built into your material only when you turn them on.</strong> This is the whole point of the release. A material with a few features on used to carry all of them anyway, right up against the 64-texture ceiling your graphics card allows; a default material now carries five. Imports and locks are quicker, and there is room to keep adding without running out. Turning a feature on and off works exactly as it always did.</li>
+                        <li class="mb-2"><strong>AudioLink reaches every effect.</strong> Chromatic Bloom, Note Swarm, Spectrum Ribbon and the separate goo, HUD and trail passes were each deciding for themselves whether AudioLink was live, and some ignored the media-playing switch entirely. They all ask the same question now.</li>
+                        <li class="mb-2"><strong>A switched-off feature puts its controls away.</strong> Wet Effects and Goo Effects alone had fourteen panels that stayed open with nothing behind them.</li>
+                        <li class="mb-2"><strong>A locked material only lists what is actually in it.</strong> Once locked, a feature that is off has been built out and cannot be switched back on without unlocking, so its section no longer takes up room. Anything you marked Animated stays put, because that feature is still in there waiting for the clip.</li>
+                        <li class="mb-2"><strong>Micro Detail is its own section</strong>, under Bent Normals, with its map and settings tucked inside it instead of loose among the normal map rows.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Lights a world marks Not Important now light your material.</strong> They were being dropped entirely, which in a world with more than four lights meant most of its lighting never reached you.</li>
+                        <li class="mb-2"><strong>Light Volumes Intensity has its own description.</strong> It was showing the one belonging to Normal Stability.</li>
+                        <li class="mb-2">Light Volumes is up to date with 3.0.0-dev.17.</li>
+                    </ul>
+                </div>
                 <div class="changelog-entry" data-version="latex-4.6.1">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 4.6.1 - 2026-08-30</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Housekeeping. Nothing on your material looks any different.</em></p>
@@ -1092,6 +1182,48 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="clothingpro-2.0.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Clothing Pro 2.0.0 - 2026-09-02</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>The big one. Every feature is now built into your material only when you switch it on, so a material carries what it uses and nothing else. Alongside that: world lights that were quietly going missing, a glitter flake sprite with a slot of its own, and AudioLink reaching every effect instead of most of them.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>If an animation switches a feature on, mark that toggle Animated.</strong> Features are now built in and out of your material, so a toggle a clip drives has to be marked or the feature will not be there for the clip to switch on. Right-click the toggle and tick <strong>Animated (when locked)</strong>. Anything you only set by hand needs nothing.</li>
+                        <li class="mb-2"><strong>Glitter's Texture shape has moved to its own slot.</strong> If any layer's <strong>Shape</strong> was set to <strong>Texture</strong>, drop your sprite in the new <strong>Shape Sprite</strong> slot and pick its channel again. It used to share a channel of the glitter Mask.</li>
+                        <li class="mb-2"><strong>Your material may look brighter in busy worlds.</strong> Lights a world marks Not Important were being dropped completely and now reach you, the way every other shader has always handled them.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Lighting Check.</strong> New under RENDERING. Paints the material with the light actually reaching it, so you can see at a glance which system a world is lighting you with. <strong>All Sources</strong> tints each one, or pick a single source to see it on its own. Set it back to Off before you upload.</li>
+                        <li class="mb-2"><strong>Glitter flake sprites have their own slot.</strong> <strong>Shape Sprite</strong>, under Glitter, takes the shape you draw instead of borrowing a channel from the Mask.</li>
+                        <li class="mb-2"><strong>Hyperspace.</strong> New under SPECIAL EFFECTS. The surface stops being a surface: a ray carries on past it into a space that is not there, so what you see has real depth and swings as you walk around it instead of sitting there like a picture painted on. <strong>Tunnel</strong> flies you down a twisting glowing pipe. <strong>Weave</strong> winds a vortex of fine glowing threads away from you. Start with <strong>Style</strong> and <strong>Colour</strong>, then <strong>Distance</strong> for how far in it reaches and <strong>Turbulence</strong> for how much the walls churn. <strong>Quality</strong> is the part that costs you framerate, so leave it as low as still looks good. The Tunnel field is after Yohei Nishitsuji, used under the MIT licence he publishes his work under, with thanks. The Weave field is ours, written after seeing a lattice effect by XorDev, with thanks to them too.</li>
+                        <li class="mb-2"><strong>Hyperspace moves to the music.</strong> <strong>Beat Rush</strong> shoves you forward down the ride and <strong>Beat Churn</strong> stirs up the turbulence, each on a band you pick.</li>
+                        <li class="mb-2"><strong>Glitter has three layers.</strong> Layer 1 is the glitter you already had and nothing about it has changed. <strong>Layer 2</strong> and <strong>Layer 3</strong> each bring their own full set of the controls below, so you can settle fine dust over big flakes, or run a rainbow layer through a tinted one.</li>
+                        <li class="mb-2"><strong>Flakes have a shape.</strong> Every layer picks its own <strong>Shape</strong>: <strong>Round</strong> as before, or <strong>Hexagon</strong>, <strong>Diamond</strong>, <strong>Star</strong>, <strong>Cross</strong>, <strong>Shard</strong> or <strong>Ring</strong>. Star and Cross throw a hard glint, Shard reads as broken foil and Ring as tiny bubbles. Each flake is turned its own way, so a field of them never looks printed on.</li>
+                        <li class="mb-2"><strong>Draw your own flake shape.</strong> <strong>Texture</strong>, at the bottom of every layer's <strong>Shape</strong> list, reads a sprite from the <strong>Shape Sprite</strong> slot. Draw your shape as white on black, then point each layer at the channel it sits in with <strong>Shape Channel</strong>.</li>
+                        <li class="mb-2"><strong>Flakes can sit under the surface.</strong> <strong>Depth</strong> sinks a layer below the material, so it slides against you as you move your head the way real flake does under a clear coat. Put each layer at a different Depth and the glitter reads as suspended in something thick.</li>
+                        <li class="mb-2"><strong>Swirl.</strong> Pulls a layer into flowing veins instead of an even scatter, for a marbled, liquid look. <strong>Swirl Scale</strong> sets whether that is a few broad rivers or fine curling detail.</li>
+                        <li class="mb-2"><strong>Twinkle.</strong> Every flake blinks on its own clock, so the material shimmers even when you and the light are both standing still. <strong>Twinkle Rate</strong> sets how fast.</li>
+                        <li class="mb-2"><strong>Prism, a new Colour mode.</strong> The hue rides the angle between the flake and your eye, so a single flake sweeps the spectrum as it turns. That is the dichroic, oil-slick look, and <strong>Rainbow Amount</strong> widens the sweep.</li>
+                        <li class="mb-2"><strong>Glitter can move.</strong> Every layer gets <strong>Scroll</strong> to drift the flakes across the material, <strong>Spin</strong> to turn the whole field, and <strong>Angle</strong> to set where it starts. Leave them at zero and the glitter sits still exactly as it always did.</li>
+                        <li class="mb-2"><strong>The music can carry the glitter.</strong> Under <strong>Motion</strong>, <strong>Beat Drift</strong> puts the Scroll on the beat and <strong>Beat Spin</strong> drives the Spin from the track. <strong>Beat Swirl</strong> churns the veins and <strong>Beat Twinkle</strong> flashes the flakes in time, and <strong>Swirl Speed</strong> sets how fast the veins drift on their own. Each layer also picks its own <strong>AudioLink Band</strong> and <strong>AudioLink Amount</strong>.</li>
+                        <li class="mb-2"><strong>A mask can borrow from a matcap as well as an emission layer.</strong> Every <strong>Mask Source</strong> dropdown now lists <strong>Matcap 1</strong> to <strong>Matcap 5</strong> under the emission layers, so an effect can take its shape from a matcap mask you have already painted. Nothing you have set changes: the existing options keep the places they had.</li>
+                        <li class="mb-2"><strong>Each glitter layer can take a mask of its own.</strong> Every layer has its own <strong>Mask Source</strong>, borrowing an emission layer or a matcap, so fine dust can sit on one part of the material and big flakes on another. The <strong>Mask</strong> above the layers covers all three together, and once every live layer has a Mask Source of its own it steps aside and its rows hide, since there is nothing left for it to do.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Features are built into your material only when you turn them on.</strong> This is the whole point of the release. A material with a few features on used to carry all of them anyway, right up against the 64-texture ceiling your graphics card allows; a default material now carries five. Imports and locks are quicker, and there is room to keep adding without running out. Turning a feature on and off works exactly as it always did.</li>
+                        <li class="mb-2"><strong>AudioLink reaches every effect.</strong> Chromatic Bloom, Note Swarm, Spectrum Ribbon and the separate goo, HUD and trail passes were each deciding for themselves whether AudioLink was live, and some ignored the media-playing switch entirely. They all ask the same question now.</li>
+                        <li class="mb-2"><strong>A locked material only lists what is actually in it.</strong> Once locked, a feature that is off has been built out and cannot be switched back on without unlocking, so its section no longer takes up room. Anything you marked Animated stays put, because that feature is still in there waiting for the clip.</li>
+                        <li class="mb-2"><strong>Micro Detail is its own section</strong>, under Bent Normals, with its map and settings tucked inside it instead of loose among the normal map rows.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Lights a world marks Not Important now light your material.</strong> They were being dropped entirely, which in a world with more than four lights meant most of its lighting never reached you.</li>
+                        <li class="mb-2"><strong>Light Volumes Intensity has its own description.</strong> It was showing the one belonging to Normal Stability.</li>
+                        <li class="mb-2">Light Volumes is up to date with 3.0.0-dev.17.</li>
+                    </ul>
+                </div>
                 <div class="changelog-entry" data-version="clothingpro-1.2.1">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Clothing Pro 1.2.1 - 2026-08-30</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Housekeeping. Nothing on your material looks any different.</em></p>
@@ -1208,6 +1340,48 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="furpro-2.0.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Fur Pro 2.0.0 - 2026-09-02</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>The big one. Every feature is now built into your material only when you switch it on, so a material carries what it uses and nothing else. Alongside that: world lights that were quietly going missing, a glitter flake sprite with a slot of its own, and AudioLink reaching every effect instead of most of them.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>If an animation switches a feature on, mark that toggle Animated.</strong> Features are now built in and out of your material, so a toggle a clip drives has to be marked or the feature will not be there for the clip to switch on. Right-click the toggle and tick <strong>Animated (when locked)</strong>. Anything you only set by hand needs nothing.</li>
+                        <li class="mb-2"><strong>Glitter's Texture shape has moved to its own slot.</strong> If any layer's <strong>Shape</strong> was set to <strong>Texture</strong>, drop your sprite in the new <strong>Shape Sprite</strong> slot and pick its channel again. It used to share a channel of the glitter Mask.</li>
+                        <li class="mb-2"><strong>Your material may look brighter in busy worlds.</strong> Lights a world marks Not Important were being dropped completely and now reach you, the way every other shader has always handled them.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Lighting Check.</strong> New under RENDERING. Paints the material with the light actually reaching it, so you can see at a glance which system a world is lighting you with. <strong>All Sources</strong> tints each one, or pick a single source to see it on its own. Set it back to Off before you upload.</li>
+                        <li class="mb-2"><strong>Glitter flake sprites have their own slot.</strong> <strong>Shape Sprite</strong>, under Glitter, takes the shape you draw instead of borrowing a channel from the Mask.</li>
+                        <li class="mb-2"><strong>Hyperspace.</strong> New under SPECIAL EFFECTS. The surface stops being a surface: a ray carries on past it into a space that is not there, so what you see has real depth and swings as you walk around it instead of sitting there like a picture painted on. <strong>Tunnel</strong> flies you down a twisting glowing pipe. <strong>Weave</strong> winds a vortex of fine glowing threads away from you. Start with <strong>Style</strong> and <strong>Colour</strong>, then <strong>Distance</strong> for how far in it reaches and <strong>Turbulence</strong> for how much the walls churn. <strong>Quality</strong> is the part that costs you framerate, so leave it as low as still looks good. The Tunnel field is after Yohei Nishitsuji, used under the MIT licence he publishes his work under, with thanks. The Weave field is ours, written after seeing a lattice effect by XorDev, with thanks to them too.</li>
+                        <li class="mb-2"><strong>Hyperspace moves to the music.</strong> <strong>Beat Rush</strong> shoves you forward down the ride and <strong>Beat Churn</strong> stirs up the turbulence, each on a band you pick.</li>
+                        <li class="mb-2"><strong>Glitter has three layers.</strong> Layer 1 is the glitter you already had and nothing about it has changed. <strong>Layer 2</strong> and <strong>Layer 3</strong> each bring their own full set of the controls below, so you can settle fine dust over big flakes, or run a rainbow layer through a tinted one.</li>
+                        <li class="mb-2"><strong>Flakes have a shape.</strong> Every layer picks its own <strong>Shape</strong>: <strong>Round</strong> as before, or <strong>Hexagon</strong>, <strong>Diamond</strong>, <strong>Star</strong>, <strong>Cross</strong>, <strong>Shard</strong> or <strong>Ring</strong>. Star and Cross throw a hard glint, Shard reads as broken foil and Ring as tiny bubbles. Each flake is turned its own way, so a field of them never looks printed on.</li>
+                        <li class="mb-2"><strong>Draw your own flake shape.</strong> <strong>Texture</strong>, at the bottom of every layer's <strong>Shape</strong> list, reads a sprite from the <strong>Shape Sprite</strong> slot. Draw your shape as white on black, then point each layer at the channel it sits in with <strong>Shape Channel</strong>.</li>
+                        <li class="mb-2"><strong>Flakes can sit under the surface.</strong> <strong>Depth</strong> sinks a layer below the material, so it slides against you as you move your head the way real flake does under a clear coat. Put each layer at a different Depth and the glitter reads as suspended in something thick.</li>
+                        <li class="mb-2"><strong>Swirl.</strong> Pulls a layer into flowing veins instead of an even scatter, for a marbled, liquid look. <strong>Swirl Scale</strong> sets whether that is a few broad rivers or fine curling detail.</li>
+                        <li class="mb-2"><strong>Twinkle.</strong> Every flake blinks on its own clock, so the material shimmers even when you and the light are both standing still. <strong>Twinkle Rate</strong> sets how fast.</li>
+                        <li class="mb-2"><strong>Prism, a new Colour mode.</strong> The hue rides the angle between the flake and your eye, so a single flake sweeps the spectrum as it turns. That is the dichroic, oil-slick look, and <strong>Rainbow Amount</strong> widens the sweep.</li>
+                        <li class="mb-2"><strong>Glitter can move.</strong> Every layer gets <strong>Scroll</strong> to drift the flakes across the material, <strong>Spin</strong> to turn the whole field, and <strong>Angle</strong> to set where it starts. Leave them at zero and the glitter sits still exactly as it always did.</li>
+                        <li class="mb-2"><strong>The music can carry the glitter.</strong> Under <strong>Motion</strong>, <strong>Beat Drift</strong> puts the Scroll on the beat and <strong>Beat Spin</strong> drives the Spin from the track. <strong>Beat Swirl</strong> churns the veins and <strong>Beat Twinkle</strong> flashes the flakes in time, and <strong>Swirl Speed</strong> sets how fast the veins drift on their own. Each layer also picks its own <strong>AudioLink Band</strong> and <strong>AudioLink Amount</strong>.</li>
+                        <li class="mb-2"><strong>A mask can borrow from a matcap as well as an emission layer.</strong> Every <strong>Mask Source</strong> dropdown now lists <strong>Matcap 1</strong> to <strong>Matcap 5</strong> under the emission layers, so an effect can take its shape from a matcap mask you have already painted. Nothing you have set changes: the existing options keep the places they had.</li>
+                        <li class="mb-2"><strong>Each glitter layer can take a mask of its own.</strong> Every layer has its own <strong>Mask Source</strong>, borrowing an emission layer or a matcap, so fine dust can sit on one part of the material and big flakes on another. The <strong>Mask</strong> above the layers covers all three together, and once every live layer has a Mask Source of its own it steps aside and its rows hide, since there is nothing left for it to do.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Features are built into your material only when you turn them on.</strong> This is the whole point of the release. A material with a few features on used to carry all of them anyway, right up against the 64-texture ceiling your graphics card allows; a default material now carries five. Imports and locks are quicker, and there is room to keep adding without running out. Turning a feature on and off works exactly as it always did.</li>
+                        <li class="mb-2"><strong>AudioLink reaches every effect.</strong> Chromatic Bloom, Note Swarm, Spectrum Ribbon and the separate goo, HUD and trail passes were each deciding for themselves whether AudioLink was live, and some ignored the media-playing switch entirely. They all ask the same question now.</li>
+                        <li class="mb-2"><strong>A locked material only lists what is actually in it.</strong> Once locked, a feature that is off has been built out and cannot be switched back on without unlocking, so its section no longer takes up room. Anything you marked Animated stays put, because that feature is still in there waiting for the clip.</li>
+                        <li class="mb-2"><strong>Micro Detail is its own section</strong>, under Bent Normals, with its map and settings tucked inside it instead of loose among the normal map rows.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Lights a world marks Not Important now light your material.</strong> They were being dropped entirely, which in a world with more than four lights meant most of its lighting never reached you.</li>
+                        <li class="mb-2"><strong>Light Volumes Intensity has its own description.</strong> It was showing the one belonging to Normal Stability.</li>
+                        <li class="mb-2">Light Volumes is up to date with 3.0.0-dev.17.</li>
+                    </ul>
+                </div>
                 <div class="changelog-entry" data-version="furpro-1.2.1">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Fur Pro 1.2.1 - 2026-08-30</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Housekeeping. Nothing on your material looks any different.</em></p>
@@ -1324,6 +1498,30 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="editor-2.0.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Editor 2.0.0 - 2026-09-02</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Feature toggles now switch a feature in and out of the shader itself, and the inspector keeps up with them.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Right-click any feature toggle an animation drives and tick Animated (when locked).</strong> A toggle now decides whether the feature is built into your material at all. An animation moves the toggle at runtime, which is too late, so a toggle a clip drives has to be marked or the feature will not be there for it to switch on. Toggles you only set by hand need nothing.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Animated toggles keep their feature.</strong> Anything marked Animated has its feature kept in the material even while the toggle reads off, so the animation has something to switch on.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Feature toggles drive the shader directly.</strong> Turning a feature off now leaves it out of the built material instead of switching it off inside. A material with a handful of features on imports and locks noticeably faster.</li>
+                        <li class="mb-2"><strong>A switched-off feature hides its controls.</strong> Wet Effects and Goo Effects had fourteen panels between them that stayed open with nothing behind them.</li>
+                        <li class="mb-2"><strong>A locked material only lists the features it contains.</strong> A feature that is off has been built out of a locked material and cannot be turned back on without unlocking, so showing its section only offered a control that could not work. Sections you marked Animated stay, because those features really are still there.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The package now ships every editor script.</strong> Three were being left out of the built package, so importing gave a compile error naming a class that was not there, and Bake Outline Normals and World Lighting Check were missing with it.</li>
+                        <li class="mb-2"><strong>The inspector no longer breaks on a material whose locked shader has been deleted.</strong> It threw and stopped drawing, which left no way to see the material or repair it. It now draws, so you can reassign the shader or unlock.</li>
+                    </ul>
+                </div>
                 <div class="changelog-entry" data-version="editor-1.6.1">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Editor 1.6.1 - 2026-08-30</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Toggles that a menu or a VRCFury item drives keep working after you lock.</em></p>
