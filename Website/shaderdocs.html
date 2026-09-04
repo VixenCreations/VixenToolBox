@@ -260,6 +260,11 @@
                 Shader Changelogs
             </fluent-anchor>
 
+            <fluent-anchor href="upcoming-changes.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Upcoming Changes
+            </fluent-anchor>
+
             <fluent-anchor href="support.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                 Support the Projects
@@ -559,7 +564,7 @@
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Shadow Detail</h3>
-<p class="opt-note">Occlusion and shadow, gathered in one place. AO Strength and Shadow Hardness always apply; the dedicated maps below stay off until you enable them and read through the Albedo sampler, so they cost nothing against the texture budget.</p>
+<p class="opt-note">Occlusion and shadow, gathered in one place. AO Strength and Shadow Hardness always apply; the dedicated maps below stay off until you enable them.</p>
 
                 <ul class="custom-list m-0 ps-4 mb-3">
                     <li class="mb-2"><strong>AO Strength</strong> - How strongly the surface map's packed AO channel darkens ambient and indirect light. 0 = off, 1 = full, higher deepens the shading in creases.</li>
@@ -609,37 +614,19 @@
                     worlds fall back to deringed light probes.
                 </p>
                 <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Enable Light Volumes</strong> - Runtime gate for the whole Light Volumes path, so VRCFury can toggle it without a recompile. Off by default.</li>
-                    <li class="mb-2"><strong>Light Volumes Intensity</strong> - Overall contribution of Light Volumes
-                        lighting.</li>
-                    <li class="mb-2"><strong>Light Volumes Specular Mix</strong> - How much Light Volume data feeds the
-                        base specular lobe.</li>
-                    <li class="mb-2"><strong>Light Volumes Clearcoat Specular</strong> - How much Light Volume data feeds
-                        the clearcoat-specific specular.</li>
-                    <li class="mb-2"><strong>Clearcoat Specular Tightness</strong> - Shrinks the clearcoat's Light Volume
-                        specular lobe so a bright point or area light reads as a tight glint instead of a broad wash
-                        (0 = soft / wide, 1 = tightest).</li>
-                    <li class="mb-2"><strong>Specular (Dominant Mode)</strong> - Uses the dominant light direction instead
-                        of the full L1 reconstruction for cheaper specular.</li>
-                    <li class="mb-2"><strong>Point Light Volume Specular (Per-Light)</strong> - Opt-in: gives each point,
-                        spot and area light its own size-aware specular highlight for sharper, more accurate glints on
-                        glossy latex, instead of deriving point-light specular from the blended light direction. Off by
-                        default.</li>
-                    <li class="mb-2"><strong>Point Light Volume Shading</strong> - How softly point / spot / area lights
-                        wrap across the surface normal (higher = softer falloff).</li>
-                    <li class="mb-2"><strong>Shadow / Volumetric Normal Stability</strong> - How geometric the normal is
-                        that drives V3's point / spot / area-light shading and their baked (EVSM) shadows. At 1 (default)
-                        a stable geometric normal is used, so parallax, detail normals, wetness, and drips no longer
-                        smear the new shadowcasting and volumetrics; lower it to let surface bump feed back into the
-                        point-light shadow mask.</li>
-                    <li class="mb-2"><strong>Normal Bias</strong> - Offsets the sample point along the normal to fix
-                        light bleed at sharp edges.</li>
-                    <li class="mb-2"><strong>Position Offset</strong> - Manual world-space sample offset for thin or
-                        sleeve geometry that samples the wrong cell.</li>
-                    <li class="mb-2"><strong>Additive-Only Mode</strong> - Adds Light Volume light on top of Unity's
-                        probe baseline instead of replacing it.</li>
-                    <li class="mb-2"><strong>Use Deringed Probes (Bakery L1, opt-in)</strong> - Opt-in Bakery L1
-                        deringed-probe fallback for worlds without Light Volumes.</li>
+                    <li class="mb-2"><strong>Enable</strong> - Master switch for the whole Light Volumes path. An animation can flip it at runtime, so a menu toggle works without rebuilding the material. Off by default.</li>
+                    <li class="mb-2"><strong>Intensity</strong> - How much of the world's Light Volume lighting reaches your avatar overall. This is the one to reach for if a world lights you too hot or too flat.</li>
+                    <li class="mb-2"><strong>Specular Mix</strong> - How much that lighting feeds your shine. Turn it down and Light Volumes still light you, but stop putting highlights on you.</li>
+                    <li class="mb-2"><strong>Clearcoat Specular</strong> - The same thing for the glossy coat on top, so a latex sheen can answer to the room separately from the material underneath. Needs Polish on to do anything.</li>
+                    <li class="mb-2"><strong>Clearcoat Tightness</strong> - How focused that coat highlight is. At 0 a bright lamp reads as a broad wash across you, at 1 it reads as a tight glint. Default 0.5.</li>
+                    <li class="mb-2"><strong>Dominant Mode Specular</strong> - Takes the single strongest light direction instead of reconstructing the full lighting. Cheaper, and slightly less accurate when several lights hit you at once.</li>
+                    <li class="mb-2"><strong>Per-Light Specular</strong> - Gives every point, spot and area light in the world its own highlight on you, sized to that light, instead of one highlight blended from all of them. Sharper and more correct on glossy material, and it costs more. Off by default.</li>
+                    <li class="mb-2"><strong>Point Light Shading</strong> - How strongly point, spot and area lights follow your normal map. At 0 they ignore it entirely and light you as if you were smooth. 3 is the default and matches what Light Volumes itself expects, so leave it there unless you want a deliberately flatter look.</li>
+                    <li class="mb-2"><strong>Normal Stability</strong> - Blends the normal those lights use away from your normal map and toward the raw mesh. At 0, the default, they see your normal map and your surface detail reads properly under them. Raise it only if parallax, detail normals, wetness or drips make a baked point-light shadow visibly crawl across you, and raise it as little as you can: at 1 your normal map stops affecting point lights altogether.</li>
+                    <li class="mb-2"><strong>Normal Bias</strong> - Pushes the point the material samples from slightly along its normal. Use it if light bleeds through a sharp edge or a thin part of the mesh.</li>
+                    <li class="mb-2"><strong>Position Offset</strong> - Moves that sample point by hand. For thin geometry like a sleeve or a collar that ends up sampling the cell on the wrong side of itself.</li>
+                    <li class="mb-2"><strong>Additive-Only Mode</strong> - Adds Light Volume light on top of the world's ordinary probe lighting instead of replacing it. Useful where a world has both and replacing looks too dark.</li>
+                    <li class="mb-2"><strong>Smoother Probe Lighting</strong> - A fallback for worlds with no Light Volumes at all: smooths the ordinary probe lighting so it does not blotch on a large smooth surface. Off by default.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">LTCGI V2</h3>
@@ -651,17 +638,13 @@
                     directly.
                 </p>
                 <ul class="custom-list m-0 ps-4">
-                    <li class="mb-2"><strong>Enable LTCGI</strong> - Runtime gate for the LTCGI path, off by default;
-                        VRCFury can flip it without a recompile.</li>
-                    <li class="mb-2"><strong>LTCGI Intensity</strong> - Master contribution of LTCGI area lighting.</li>
-                    <li class="mb-2"><strong>LTCGI Specular Mix</strong> - Area-light specular contribution, dialed
-                        independently.</li>
-                    <li class="mb-2"><strong>LTCGI Diffuse Mix</strong> - Area-light diffuse contribution, dialed
-                        independently.</li>
-                    <li class="mb-2"><strong>LTCGI Mode</strong> - Which lobes the area lights feed: <code>Both</code>,
-                        <code>Diffuse Only</code>, or <code>Specular Only</code>.</li>
-                    <li class="mb-2"><strong>LTCGI Diffuse Color</strong> - Tints the LTCGI diffuse contribution.</li>
-                    <li class="mb-2"><strong>LTCGI Specular Color</strong> - Tints the LTCGI specular contribution.</li>
+                    <li class="mb-2"><strong>Enable</strong> - Master switch for the LTCGI path, off by default. An animation can flip it at runtime, so a menu toggle works without rebuilding the material.</li>
+                    <li class="mb-2"><strong>Intensity</strong> - How much of the world's area lighting reaches you overall. The first control to reach for if a screen or a neon sign lights you too hot.</li>
+                    <li class="mb-2"><strong>Specular Mix</strong> - How much of it feeds your shine, set separately from the rest.</li>
+                    <li class="mb-2"><strong>Diffuse Mix</strong> - How much of it lights the material itself, set separately from the shine.</li>
+                    <li class="mb-2"><strong>Mode</strong> - Which of those two the area lights are allowed to feed: <code>Both</code>, <code>Diffuse Only</code>, or <code>Specular Only</code>. Use Specular Only for a material that should catch a screen's glint without being washed by its colour.</li>
+                    <li class="mb-2"><strong>Diffuse Color</strong> - Tints the light this contributes to the material.</li>
+                    <li class="mb-2"><strong>Specular Color</strong> - Tints the highlights it puts on you, so a cold screen can throw a warm glint if you want one.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Stage Lighting &amp; VRSL</h3>
@@ -677,8 +660,16 @@
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Enable VRSL DMX Link</strong> - Master toggle that connects the material to
                         the world's VRSL DMX buffers.</li>
-                    <li class="mb-2"><strong>DMX Base Channel</strong> - Which fixture sector / base
-                        channel this material reads from the DMX universe.</li>
+                    <li class="mb-2"><strong>DMX Base Channel</strong> - Which fixture this material follows: its first
+                        channel in the DMX universe. Set it to the same base channel as the fixture you want your
+                        avatar to react to.</li>
+                    <li class="mb-2"><strong>Channel Mode</strong> - Match this to the Channel Mode on that fixture, so
+                        the material reads the right channels rather than whatever happens to sit at those numbers.
+                        Counting from your base channel: <strong>1CH</strong> is a dimmer only and takes its colour from
+                        the material. <strong>4CH</strong> is a dimmer then red, green and blue. <strong>5CH</strong> is
+                        the same with a strobe channel after it. <strong>13CH</strong> is a moving head, with pan and
+                        tilt first, the dimmer on 6, then red, green and blue on 8, 9 and 10. 13CH is the default
+                        because it is what VRSL's moving heads use.</li>
                     <li class="mb-2"><strong>Override Strength</strong> - How strongly the stage data takes over the
                         surface (0 = no override, up = full hijack).</li>
                     <li class="mb-2"><strong>Pan/Tilt Geo-Warping</strong> - How far the tessellated mesh physically warps
@@ -711,7 +702,7 @@
                     <h2 class="text-glow-cyan m-0">DECALS</h2>
                     <div class="badge">Section 5 of 12</div>
                 </div>
-                <p class="tab-desc">Place up to four logos, stickers, brand graphics or tattoos on the latex. Each layer is positioned right in the Scene view: select the material on your mesh and drag the on-screen gizmo handles to move, scale and rotate the decal. All four layers share one texture sampler, so they cost nothing against the texture budget, and the whole section stays off until you enable it.</p>
+                <p class="tab-desc">Place up to four logos, stickers, brand graphics or tattoos on the latex. Each layer is positioned right in the Scene view: select the material on your mesh and drag the on-screen gizmo handles to move, scale and rotate the decal. The whole section stays off until you enable it.</p>
 
                 <h3 class="text-glow-pink opt-group">Setup</h3>
                 <ul class="custom-list m-0 ps-4">
@@ -1024,6 +1015,23 @@
                     <li class="mb-2"><strong>Shape Sprite</strong> - Your own flake shape, drawn white on black. Only used when Shape is set to Texture.</li>
                     <li class="mb-2"><strong>Shape Channel</strong> - Which channel of the sprite holds the flake. Most sprites use Red.</li>
                 </ul>
+                <p class="opt-note mt-3 mb-2"><strong>Swirl and Twinkle</strong></p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Swirl</strong> + <strong>Swirl Scale</strong> - Pulls the layer into flowing veins instead of an even scatter, for a marbled, liquid look. Scale sets how big those swirls are: low gives a few broad rivers, high gives fine curling detail.</li>
+                    <li class="mb-2"><strong>Twinkle</strong> + <strong>Twinkle Rate</strong> - Every flake blinks on its own clock, so the material shimmers even when you and the light are both standing still. Rate sets how fast they blink.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Motion</strong></p>
+                <p class="opt-note">Leave every one of these at zero and the glitter sits perfectly still, exactly as it always did.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Scroll</strong> + <strong>Spin</strong> + <strong>Angle</strong> - Drifts the flakes across the material, turns the whole field, and sets where that turn starts from.</li>
+                    <li class="mb-2"><strong>Swirl Speed</strong> - How fast the veins drift on their own. Turn it down for a swirl that sits still.</li>
+                    <li class="mb-2"><strong>Beat Drift</strong> - The music carries the Scroll along, so the flakes travel on the beat instead of on a free clock.</li>
+                    <li class="mb-2"><strong>Beat Spin</strong> - The music drives the Spin, so the field turns with the track.</li>
+                    <li class="mb-2"><strong>Beat Swirl</strong> - The music churns the Swirl, so the veins flow with the track.</li>
+                    <li class="mb-2"><strong>Beat Twinkle</strong> - The music drives the blinking, so the flakes flash on the beat.</li>
+                </ul>
+
                 <p class="opt-note mt-3 mb-2"><strong>Glitter Lighting</strong></p>
                 <p class="opt-note">The flakes are lit like a real surface rather than painted on, so they answer to whatever is lighting the room. Lit By chooses which lighting that is.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -1092,6 +1100,8 @@
                         - How far back the tunnel reaches, how quickly each copy dims, and how fast the copies shrink into
                         the distance.</li>
                     <li class="mb-2"><strong>Vanishing Point</strong> - Where the tunnel recedes toward on the surface.</li>
+                    <li class="mb-2"><strong>Ring Shape</strong> - Three settings for the Ring of Lights pattern in one row: <strong>Size</strong> of the ring, <strong>Width</strong> of each light, and how many <strong>Lights</strong> sit around it.</li>
+                    <li class="mb-2"><strong>Beat Vortex</strong> - Four settings in one row that put the tunnel on the music: <strong>Travel</strong> pushes the copies down it, <strong>Spacing</strong> sets how far apart they sit, <strong>Pull</strong> drags them toward the centre, and <strong>Twist</strong> turns each one further than the last.</li>
                     <li class="mb-2"><strong>Depth Reach</strong> - How far down the tunnel you can still see.</li>
                     <li class="mb-2"><strong>Motion</strong> - Sets the whole stack drifting and spinning, with every layer
                         deeper moving further than the one in front, so the tunnel genuinely falls away from you instead of
@@ -1167,7 +1177,21 @@
                     <li class="mb-2"><strong>Distance</strong> - How far into the material the ride reaches.</li>
                     <li class="mb-2"><strong>Turbulence</strong> - How much the walls churn as they pass.</li>
                     <li class="mb-2"><strong>Quality</strong> - How many steps the ray takes. This is the part that costs framerate, so leave it as low as still looks good.</li>
+                    <li class="mb-2"><strong>Detail</strong> - More layers of churn in the walls. Past four it starts to sparkle at a distance.</li>
+                    <li class="mb-2"><strong>Saturation</strong> - Turn it down for the raw colours the field makes on its own. Turn it up to pull everything toward the Colour you picked.</li>
+                    <li class="mb-2"><strong>Colour Spread</strong> - How far the colour travels between the near end and the far end.</li>
+                    <li class="mb-2"><strong>Clear Space</strong> - Raise it to burn off the haze between the structures and leave them sitting in black.</li>
                     <li class="mb-2"><strong>Beat Rush</strong> + <strong>Beat Churn</strong> - The music shoves you forward down the ride and stirs up the turbulence, each on a band you pick.</li>
+                </ul>
+                <p class="opt-note mt-3 mb-2"><strong>Tunnel only</strong></p>
+                <ul class="custom-list m-0 ps-4 mb-3">
+                    <li class="mb-2"><strong>Tunnel Width</strong> - How wide the pipe is around you. Lower is a tight throat, higher opens it out into a hall.</li>
+                    <li class="mb-2"><strong>Mirror</strong> - Folds the tunnel down the middle so the two sides match.</li>
+                </ul>
+                <p class="opt-note mt-3 mb-2"><strong>Weave only</strong></p>
+                <ul class="custom-list m-0 ps-4 mb-3">
+                    <li class="mb-2"><strong>Weave Scale</strong> - How tightly the threads are packed. Low is a few broad ribbons, high is fine lace.</li>
+                    <li class="mb-2"><strong>Cross Threads</strong> - Adds a second set of threads running the other way, so the weave reads as woven rather than combed.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Inner Cosmos</h3>
@@ -1372,6 +1396,13 @@
                     <li class="mb-2"><strong>Projection</strong> - Blends matcap sampling between camera-aligned and mesh-aligned. 0 = pure camera-aligned (sliding / reflective), 1 = pure mesh-UV-aligned (glued to the geometry). Higher values pin the matcap to the surface and reduce the sliding feeling as the camera moves. Applies to every layer; for a per-layer lock, use that layer's Freeze instead.</li>
                 </ul>
 
+                <h3 class="text-glow-pink opt-group">Atlas Sections</h3>
+                <p class="opt-note">One row per cell of a Packed Atlas grid, in reading order. Every layer set to <code>Packed Atlas</code> shares these, so you set the look of each section once and any layer can use it. Only the number of sections you declared is shown.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Section 1</strong> to <strong>Section 8</strong> - Four values per cell: <strong>Intensity</strong> for how bright that matcap comes through, <strong>Emission</strong> for how much of it feeds the glow, <strong>Lit Mix</strong> for how much it dims with the light in the room, and <strong>Opacity</strong> for how far it covers what is underneath.</li>
+                    <li class="mb-2"><strong>Section 1 Tint</strong> to <strong>Section 8 Tint</strong> - A colour for each cell, so one grey sheet can produce eight differently coloured finishes.</li>
+                </ul>
+
                 <h3 class="text-glow-pink opt-group">Car Paint</h3>
                 <p class="opt-note">A layered paint look. The Base and Flip colours travel with your view for a
                     pearlescent flip-flop, metallic flake sparkles at grazing angles, and Gloss sets the wet clearcoat
@@ -1396,7 +1427,8 @@
                 <h3 class="text-glow-pink opt-group">Matcap 1</h3>
                 <ul class="custom-list m-0 ps-4 mb-3">
                     <li class="mb-2"><strong>Enable</strong> - Turns layer 1 on.</li>
-                    <li class="mb-2"><strong>Texture</strong> - The material-capture sphere texture.</li>
+                    <li class="mb-2"><strong>Source</strong> - Where the layer gets its image. <code>Texture</code> reads the sphere image you drop in. <code>Packed Atlas</code> splits one image into a grid so it holds several matcaps at once, and a mask picks which one shows where. <code>Procedural</code> builds the look from maths and needs no image at all. The three groups at the bottom of the layer belong to these last two.</li>
+                    <li class="mb-2"><strong>Texture</strong> - The material-capture sphere texture. Used when Source is <code>Texture</code> or <code>Packed Atlas</code>.</li>
                     <li class="mb-2"><strong>Mask</strong> + <strong>Mask Channel</strong> - Mask, and which channel, restricting the layer to painted regions.</li>
                     <li class="mb-2"><strong>Tint</strong> - Colour tint applied to the matcap.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Rotates the matcap sample.</li>
@@ -1408,6 +1440,61 @@
                 </ul>
                 <p class="opt-note"><strong>Tiling &amp; Movement</strong> (sub-section) - <strong>Freeze</strong> stops the matcap sliding as the camera moves, so it reads as baked-in detail that turns naturally with the avatar (0 = classic reflective matcap). <strong>Tiling</strong> repeats the matcap around its centre. <strong>Scroll / Animate</strong> gives continuous motion: Pan X / Y move it over time (Pan Y = up / down), Spin rotates it, Speed scales the animation.</p>
                 <p class="opt-note mb-4"><strong>Offsets</strong> (sub-section) - <strong>Position Offset</strong> nudges the matcap statically: Offset X moves it side to side, Offset Y up and down.</p>
+
+                <p class="opt-note mt-3 mb-2"><strong>Projection</strong></p>
+                <p class="opt-note">How the sphere image gets wrapped onto you. This is the group that decides whether a matcap reads as paint, as chrome, or as a rim light.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Mode</strong> - <code>View</code> is the classic matcap look. <code>Skew Free</code> stops it stretching at the edge of the screen. <code>Reflection</code> tracks like real chrome. <code>Fresnel Ramp</code> reads the image left to right by viewing angle, so a plain gradient becomes a rim light. <code>Light Direction</code> turns it with the world light. <code>Screen</code> pins it to the camera.</li>
+                    <li class="mb-2"><strong>Zoom</strong> - Higher shows less of the sphere, so the middle of the image fills more of you.</li>
+                    <li class="mb-2"><strong>Normal Follow</strong> - At 0 the matcap ignores your normal map and reads as paint over the detail. Turn it up and it follows every bump, which is what makes it look like the surface really is that material. Left at 0 so nothing you already have changes.</li>
+                    <li class="mb-2"><strong>Normal</strong> - Which normal that follows. <code>Surface</code> is your normal map and detail. <code>Bent</code> leans into the crevices, so the matcap darkens where the shape closes in. <code>Flat</code> is the raw mesh.</li>
+                    <li class="mb-2"><strong>Depth</strong> - Sinks the layer below the surface so it slides against you as you move your head, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.</li>
+                    <li class="mb-2"><strong>Mirror Flip</strong> - Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Masking</strong></p>
+                <p class="opt-note">Where the layer shows, beyond the plain Mask at the top. Every one of these narrows it further.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Invert</strong> - Swaps what the mask keeps and what it cuts.</li>
+                    <li class="mb-2"><strong>Mask Source</strong> + <strong>Borrowed Channel</strong> - Borrows another layer's map so this matcap only shows where that layer does, and this layer then needs no Mask of its own. That layer has to be switched on, and the inspector warns you if it is not.</li>
+                    <li class="mb-2"><strong>Circle Mask</strong> + <strong>Circle Radius</strong> + <strong>Circle Softness</strong> - Fades the matcap out toward the rim of the sphere image, so it lands as a soft round highlight instead of covering everything. Radius sets how big that circle is, Softness how gradually it fades.</li>
+                    <li class="mb-2"><strong>Angle Start</strong> + <strong>Angle End</strong> - Fades the layer in over a range of viewing angles. 0 is straight at you and 1 is edge on, so Start 0.5 with End 1 gives a rim that only lights up at glancing angles.</li>
+                    <li class="mb-2"><strong>Fade Start</strong> + <strong>Fade End</strong> - Fades the layer out with distance, in metres. Leave Fade End at 0 and it never fades. Handy for a strong chrome up close that calms down across a room.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Colour</strong></p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Two Tone</strong> + <strong>Shadow Colour</strong> + <strong>Highlight Colour</strong> - Remaps the image between two colours by brightness, so one plain grey matcap serves any palette.</li>
+                    <li class="mb-2"><strong>Hue Shift</strong> + <strong>Hue Speed</strong> - Turns the colour, and drifts it on its own. Leave Speed at 0 to hold it still.</li>
+                    <li class="mb-2"><strong>Albedo Mix</strong> - Tints the matcap by whatever is painted underneath, so it picks up your texture instead of sitting on top of it as one flat colour.</li>
+                    <li class="mb-2"><strong>Light Colour Mix</strong> - Tints the matcap by the colour of the light on you, so it belongs to the room it is standing in.</li>
+                    <li class="mb-2"><strong>Emission</strong> - Feeds the matcap into the glow, so it blooms in a world that has bloom.</li>
+                    <li class="mb-2"><strong>Blur</strong> + <strong>Blur Channel</strong> - Softens the image. It costs nothing, because it reads a smaller copy the texture already carries.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Surface</strong></p>
+                <p class="opt-note">The matcap sets how polished the material is where it lands, not only what colour it is. Paint a mask and one part of you goes wet-looking while the rest stays matte. Note that <code>Replace</code> covers the lit surface, so these three cannot show while Blend Mode is <code>Replace</code>, however far you turn them up. Switch that layer to <code>Base Colour</code> to let the matcap set the material and still catch the light, or to <code>Add</code>.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Smoothness Push</strong> + <strong>Metallic Push</strong> + <strong>Clearcoat Push</strong> - How far the matcap pushes each of those three where it lands.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Packed Atlas</strong></p>
+                <p class="opt-note">One image holding several matcaps in a grid, with a mask picking which cell shows where. Shown when Source is set to <code>Packed Atlas</code>.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Build Atlas In Unity</strong> - Opens the builder. Drop a matcap into each cell and it lays the sheet out, saves it, and fills in Grid and Sections for you. Its second tab builds the mask too, from one black and white mask per section.</li>
+                    <li class="mb-2"><strong>Grid</strong> - How the sheet is divided, as Columns and Rows.</li>
+                    <li class="mb-2"><strong>Sections</strong> - How many of those cells actually hold a matcap.</li>
+                    <li class="mb-2"><strong>Section Source</strong> + <strong>Section Channel</strong> - Where the section number is read from. <code>None</code> reads the Mask above. Anything else borrows another layer's map, so the atlas needs no map of its own.</li>
+                </ul>
+                <p class="opt-note mb-4">Set each cell up once under <strong>Atlas Sections</strong>, near the top of MATCAPS. Every layer using Packed Atlas shares those settings.</p>
+
+                <p class="opt-note mt-3 mb-2"><strong>Procedural</strong></p>
+                <p class="opt-note">A matcap built from maths, with no image at all. Shown when Source is set to <code>Procedural</code>.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Style</strong> - <code>Studio Rig</code> is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. <code>Liquid Flow</code> churns. <code>Shatter</code> reads as broken foil. <code>Iridescent Film</code> is the oil slick sweep. <code>Plasma</code> and <code>Caustics</code> are the two moving ones.</li>
+                    <li class="mb-2"><strong>Colour A</strong> + <strong>Colour B</strong> - The two colours the style works between.</li>
+                    <li class="mb-2"><strong>Scale</strong> + <strong>Speed</strong> + <strong>Sharpness</strong> + <strong>Warp</strong> - How big the pattern is, how fast it moves, how hard its edges are, and how much it distorts.</li>
+                </ul>
 
                 <h3 class="text-glow-pink opt-group">Matcap 2</h3>
                 <p class="opt-note mb-4">A second matcap layer with the same controls, including its own AudioLink Band and Amount, Tiling &amp; Movement, and Offsets sub-sections. Tip: drop a red/blue/black region mask into both Layer 1's and Layer 2's Mask, set Layer 1's channel to R and Layer 2's to B, and each colour zone shows a different matcap.</p>
