@@ -278,6 +278,80 @@
             </div>
             <article class="glass-panel news-article w-100 mb-5" data-chips="shaders">
                 <div class="news-hero-art">
+                    <img src="promos/PromoBanner5.png" width="1536" height="657" alt="The Matcaps Rebuilt banner from VixForge Interactive: a glossy black and white VRChat avatar with magenta and purple hair and a spiked ruff, looking down at the camera against a pale blue sky and a glass tower." />
+                </div>
+                <h2 class="sr-only">The matcaps, rebuilt</h2>
+
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Shader Update</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">VixForge Toon</span>
+                        <span class="news-tag">Clothing Pro</span>
+                        <span class="news-tag">Fur Pro</span>
+                        <span class="news-tag">VixForge Editor</span>
+                        <span class="news-date">September 6, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">The Matcaps, Rebuilt - Latex Ultra 5.1 &amp; Friends</h2>
+                    <p>
+                        A matcap layer used to do one thing: wrap an image on you and add it on top. Five layers meant five
+                        of the same thing. This release rebuilds them, so each layer decides how the image gets wrapped,
+                        what fades it, what colour it comes out, and whether it changes the material underneath instead of
+                        just painting over it.
+                    </p>
+
+                    <h3 class="text-glow-cyan">Five Layers That Can Each Do Everything</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Six procedural styles that need no image at all:</strong> Studio Rig, Liquid Flow, Shatter, Iridescent Film, Plasma and Caustics. Colour A and B set the palette, and Scale, Speed, Sharpness and Warp shape it.</li>
+                        <li><strong>Packed Atlas:</strong> one texture holds up to eight matcaps in a grid and a mask picks which one shows where. <strong>Build Atlas In Unity</strong> lays the sheet out, saves it, imports it and fills in the settings for you, section mask included.</li>
+                        <li><strong>Normal Follow:</strong> matcaps have always ignored your normal map, so they sat flat over your surface detail and read as paint. Turn this up and the matcap follows every bump. It starts at 0, so nothing moves until you move it.</li>
+                        <li><strong>Base Colour, and three Surface pushes:</strong> a matcap can set the material now, not just the colour. Base Colour paints it on as the surface itself and then lets the light fall on it, and <strong>Smoothness</strong>, <strong>Metallic</strong> and <strong>Clearcoat Push</strong> let a masked patch read wet or metal while the rest stays as it was.</li>
+                        <li><strong>Eight more blend modes:</strong> Screen, Overlay, Soft Light, Subtract, Lighten, Darken, Boost and Base Colour join Add, Replace, Multiply and Car Paint.</li>
+                        <li><strong>Depth, Two Tone, Hue Shift, Emission, Blur and Zoom</strong>, three ways to fade a layer, and a <strong>Mask Source</strong> so a layer can borrow its shape from an emission layer or another matcap rather than carrying a map of its own.</li>
+                        <li><strong>Copy Layer</strong> and <strong>Paste Layer</strong>, at the top of every matcap, decal, glitter layer and emission layer. It works across materials, so a second piece of gear is two clicks.</li>
+                    </ul>
+
+                    <h3 class="text-glow-cyan">Two Lighting Controls That Were Not Doing Their Job</h3>
+                    <p>
+                        <strong>Specular Highlight Clamp</strong> ran 0 to 10 and capped the highlight at that number. A
+                        highlight bright enough to need taming is far brighter than 10, so every setting above about 1
+                        still came out pure white and the control read as an on/off switch. It runs 0 to 1 now and works
+                        the whole way along, and it eases the highlight down instead of slicing the top off it.
+                    </p>
+                    <p>
+                        Its new neighbour, <strong>Reflection Clamp</strong>, does the same for light bouncing off the
+                        world: reflection probes, Light Volumes, LTCGI and stage lighting, with a slider each so you can
+                        leave one source out of it. Both are off by default.
+                    </p>
+                    <p>
+                        <strong>VRSL</strong> was reading the wrong channels for colour, picking a fixture's movement and
+                        dimmer channels instead of its red, green and blue, so the tint was wrong and shifted whenever the
+                        light moved. There is a <strong>Channel Mode</strong> picker now to match your fixture: 1CH, 4CH,
+                        5CH or 13CH.
+                    </p>
+
+                    <h3 class="text-glow-cyan">Before You Carry On</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Two sliders to change on materials you already have.</strong> Under <strong>Light Volumes V3</strong>, set <strong>Normal Stability</strong> to 0 and <strong>Point Light Shading</strong> to 3. They shipped at 1 and 1, which had point lights in a world ignore your normal map and light the surface off the bare mesh instead.</li>
+                        <li><strong>If you lowered Specular Highlight Clamp</strong>, set it again on the new 0 to 1 scale. Materials sitting at either end of the old slider are unaffected.</li>
+                        <li><strong>If you have saved your own presets</strong>, run <strong>Migrate Preset Tags</strong> once, under <strong>Assets &gt; VixForge Editor &gt; Materials</strong>. Presets used to carry the same mark every ThryEditor-based inspector looks for, so another editor installed alongside would list yours in its own menu. Your presets keep working whether you run it or not.</li>
+                    </ul>
+
+                    <p>
+                        This lands as Latex Ultra 5.1.0, VixForge Toon 2.1.0, Clothing Pro 2.1.0, Fur Pro 2.1.0 and the
+                        editor at 2.1.0.
+                    </p>
+
+                    <div class="row mt-4" style="gap: 10px; flex-wrap: wrap;">
+                        <fluent-anchor href="shader-changelogs.html" appearance="accent" class="custom-accent-btn">Read the Full Changelog</fluent-anchor>
+                        <fluent-anchor href="index.html" class="custom-stealth-btn">Add to VCC</fluent-anchor>
+                    </div>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders">
+                <div class="news-hero-art">
                     <img src="promos/PromoBanner5.png" width="1536" height="657" alt="Built From What You Turn On banner from VixForge Interactive: a glossy black and white VRChat avatar with magenta and purple hair and a spiked ruff, looking down at the camera against a pale blue sky and a glass tower." />
                 </div>
                 <h2 class="sr-only">Built from what you turn on</h2>
