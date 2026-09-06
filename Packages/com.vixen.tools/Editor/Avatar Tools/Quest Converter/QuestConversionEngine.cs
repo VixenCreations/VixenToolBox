@@ -35,8 +35,7 @@ namespace VixenTools.Editor
         private int _uniqueTextureCount = 0;
         private bool _hasScanned = false;
 
-        private enum TargetQuestShader { VRCMobileToonStandard, VRCMobileToonLit, VRCMobileStandard, VRCMobileMatcap, UnityMobileStandard }
-        private TargetQuestShader _selectedTargetShader = TargetQuestShader.VRCMobileToonStandard;
+        private MobileShaderTarget _selectedTargetShader = MobileShaderTarget.ToonStandard;
 
         private List<string> _textureSizeLabels = new List<string> { "256 (Aggressive - 10MB)", "512 (Balanced - 18MB)", "1024 (Standard - 40MB)", "2048 (Heavy - Very Poor)" };
         private int[] _textureSizeOptions = { 256, 512, 1024, 2048 };
@@ -141,9 +140,9 @@ namespace VixenTools.Editor
             });
             panel.Add(sourceField);
 
-            var shaderEnum = new EnumField("Target Mobile Shader", _selectedTargetShader);
-            shaderEnum.RegisterValueChangedCallback(e => _selectedTargetShader = (TargetQuestShader)e.newValue);
-            panel.Add(shaderEnum);
+            var shaderDropdown = new DropdownField("Target Mobile Shader", VixenQuestKit.AllShaderLabels(), VixenQuestKit.GetShaderLabel(_selectedTargetShader));
+            shaderDropdown.RegisterValueChangedCallback(e => _selectedTargetShader = VixenQuestKit.TargetFromLabel(e.newValue));
+            panel.Add(shaderDropdown);
 
             var texDropdown = new DropdownField("Max Texture Resolution", _textureSizeLabels, _selectedTextureSizeIndex);
             texDropdown.RegisterValueChangedCallback(e => _selectedTextureSizeIndex = _textureSizeLabels.IndexOf(e.newValue));
@@ -748,7 +747,15 @@ namespace VixenTools.Editor
 
                 EditorUtility.DisplayProgressBar("VixForge Quest Engine", "Cloning and Converting ALL System Materials...", 0.4f);
                 Dictionary<Material, Material> materialCache = new Dictionary<Material, Material>();
-                Shader targetShader = GetShaderForEnum(_selectedTargetShader);
+                Shader targetShader = VixenQuestKit.ResolveShader(_selectedTargetShader);
+                if (targetShader == null)
+                {
+                    EditorUtility.ClearProgressBar();
+                    EditorUtility.DisplayDialog("Quest Conversion Engine",
+                        "Could not find a VRChat mobile shader in this project. Import the VRChat SDK sample assets and try again.",
+                        "OK");
+                    return;
+                }
 
                 int matIndex = 0;
                 foreach (Material originalMat in _scannedMaterials)
@@ -1065,23 +1072,6 @@ namespace VixenTools.Editor
                     DestroyImmediate(targetTransform.gameObject, true);
                 }
             }
-        }
-
-        private Shader GetShaderForEnum(TargetQuestShader target)
-        {
-            string shaderName = "VRChat/Mobile/Toon Standard";
-            switch (target)
-            {
-                case TargetQuestShader.VRCMobileToonStandard: shaderName = "VRChat/Mobile/Toon Standard"; break;
-                case TargetQuestShader.VRCMobileToonLit: shaderName = "VRChat/Mobile/Toon Lit"; break;
-                case TargetQuestShader.VRCMobileStandard: shaderName = "VRChat/Mobile/Standard Lite"; break;
-                case TargetQuestShader.VRCMobileMatcap: shaderName = "VRChat/Mobile/MatCap Lit"; break;
-                case TargetQuestShader.UnityMobileStandard: shaderName = "Mobile/Standard"; break;
-            }
-
-            Shader found = Shader.Find(shaderName);
-            if (found == null) return Shader.Find("Standard");
-            return found;
         }
 
         private void TransferProperties(Material source, Material target)

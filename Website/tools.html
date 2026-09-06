@@ -91,9 +91,10 @@
     <!-- UI Framework -->
     <script type="module" src="web-components.min.js"></script>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="docs-shell.css">
 </head>
 
-<body>
+<body class="docs-shell">
     <div class="background-art"></div>
 
     <nav class="sidebar">
@@ -139,11 +140,6 @@
                 List of Tools
             </fluent-anchor>
 
-            <fluent-anchor href="docs.html" class="nav-item">
-                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                Deep-Dive Docs
-            </fluent-anchor>
-
             <fluent-anchor href="shaderdocs.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M7 9.5a5.5 5.5 0 0 1 5-3"></path><circle cx="9.5" cy="9.5" r="1.2" fill="currentColor" stroke="none"></circle></svg>
                 Shader Docs
@@ -174,21 +170,23 @@
                 Get Help Here
             </fluent-anchor>
 
-            <fluent-anchor href="extended-projects.html" class="nav-item">
-                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                Extended Projects
-            </fluent-anchor>
-        </div>
+            </div>
     </nav>
 
     <main class="main-wrapper">
         <!-- PAGE HEADER -->
+        
+
+
+        <!-- TOOL GRID -->
+        <div class="docs-layout">
+        <div class="docs-main" data-chip-label="Project" data-search-label="Filter tools and features&hellip;">
         <div class="col align-items-center content page-header">
             <div class="col w-100 text-center mb-2">
                 <h1 class="text-glow-pink">Everything In The Toolbox</h1>
 
                 <p class="caption1 mt-2 page-subtitle">
-                    Engineered entirely on Unity's modern UI Toolkit. This is a comprehensive suite of custom Editor utilities
+                    Built on Unity's modern UI Toolkit. A suite of Editor tools
                     focused strictly on <strong>getting avatars and worlds ready to ship</strong>. Click any interface
                     below to expand the preview.
                 </p>
@@ -204,46 +202,25 @@
             </div>
         </div>
 
-        <!-- COMPARISON BANNER -->
-        <div class="col w-100 align-items-center comparison-section">
-            <div class="comparison-banner preview-trigger">
-                <img src="previews/Quest_vs_PC_Comparison.png"
-                     alt="High Fidelity PC to Quest Comparison">
-            </div>
-
-            <p class="caption1 text-center comparison-caption">
-                <em>
-                    Absolute Parity: Visual proof of the Quest Conversion Engine's Magick.NET texture downsampling and Advanced
-                    Material Translation preserving micro-contrast and custom shader routing on mobile hardware.
-                </em>
-            </p>
-        </div>
-
-        <!-- TOOL GRID -->
-        <div class="tools-grid w-100">
-
             <!-- ========================= -->
             <!-- VIXEN HUB -->
             <!-- ========================= -->
-            <div class="tool-card">
-                <div class="tool-image-container">
-                    <img src="previews/Flagship_HubLauncher_Preview.png"
-                         alt="Vixen Hub Interface"
-                         class="preview-trigger">
+<div id="vixen-hub" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Vixen Hub</h2>
+                    <div class="badge">Any Project</div>
                 </div>
-
-                <div class="tool-content">
-                    <h3 class="text-glow-cyan">Vixen Hub</h3>
-
-                    <p class="mb-3">
-                        One window inside the Unity Editor for your tools, your docs and your changelogs. Seven tabs in an
-                        avatar project, eight in a world, where the Metrics Engine breakdown joins them.
-                    </p>
-
-                    <ul class="custom-list m-0 ps-4">
+                <div class="tag-row"><span class="shader-tag">Any Project</span></div>
+                <p class="tab-desc">One window inside the Unity Editor for your tools, your docs and your changelogs. Seven tabs in an
+                        avatar project, eight in a world, where the Metrics Engine breakdown joins them.</p>
+                <div class="tool-shot">
+                    <img src="previews/Flagship_HubLauncher_Preview.png" alt="Vixen Hub Interface" class="preview-trigger" loading="lazy">
+                </div>
+                <h3 class="text-glow-pink opt-group">What it does</h3>
+                <ul class="custom-list m-0 ps-4">
 
                         <li class="mb-2">
-                            <strong>Autonomous Update HUD:</strong>
+                            <strong>Update notice in the Scene view:</strong>
                             A SceneView-injected cyber badge appears automatically whenever the package version changes.
                             The notifier reads <code>package.json</code>, compares stored versions, and spawns a neon
                             update badge that routes directly to the Changelog tab.
@@ -266,7 +243,7 @@
                         <li class="mb-2">
                             <strong>Action Delegates:</strong>
                             Every module card in the Hub is backed by a direct C# delegate.
-                            Clicking a button executes the corresponding Unity menu command instantly - no reflection hacks,
+                            Clicking a button runs the matching Unity menu command straight away - no reflection hacks,
                             no string-based routing, no fragile editor scripts.
                         </li>
 
@@ -302,7 +279,7 @@
                         <li class="mb-2">
                             <strong>Support Buttons and Links:</strong>
                             A dedicated tab for supporting the developer, complete with Ko-Fi, Gumroad, Patreon, CashApp,
-                            and storefront links - all rendered through the same markdown-driven UI pipeline.
+                            and storefront links - all rendered from the same markdown.
                         </li>
 
                         <li class="mb-2">
@@ -312,28 +289,35 @@
                         </li>
 
                     </ul>
-                </div>
+                                <h3 class="text-glow-pink opt-group" data-collapsed>Under the hood</h3>
+                <p class="opt-note">One window for your tools, your docs and your changelogs, built on Unity's newer UI so it stays responsive while the Editor is busy.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Update notice in the Scene view</strong> - When the package version changes, a small badge appears in the Scene view rather than a popup that interrupts you. Click it and the Hub opens on the changelog.</li>
+                    <li class="mb-2"><strong>Links inside the docs work</strong> - Markdown links in any document the Hub shows become real buttons. Some open a web page, others run a tool for you, so a doc can walk you into the thing it is describing.</li>
+                </ul>
+                <h3 class="text-glow-pink opt-group" data-collapsed>In practice</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Where to find it</strong> - <code>Vixens Toolbox &gt; Hub Dashboard</code>.</li>
+                    <li class="mb-2"><strong>Always current</strong> - The Hub reads the installed version and the changelog straight from the package, so what you see is what you have. Nothing to refresh and nothing to sync.</li>
+                </ul>
             </div>
 
             <!-- ========================= -->
             <!-- AVATAR OPTIMIZATION SUITE -->
             <!-- ========================= -->
-            <div class="tool-card">
-                <div class="tool-image-container">
-                    <img src="previews/Optimization_Suite_Preview.png"
-                         alt="Avatar Optimization Suite"
-                         class="preview-trigger">
+<div id="avatar-optimization-suite" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Avatar Optimization Suite</h2>
+                    <div class="badge">Avatar</div>
                 </div>
-
-                <div class="tool-content">
-                    <h3 class="text-glow-cyan">Avatar Optimization Suite</h3>
-
-                    <p class="mb-3">
-                        Crushes avatar complexity while leaving the parts that matter alone,
-                        with the texture pass running across every core your machine has.
-                    </p>
-
-                    <ul class="custom-list m-0 ps-4">
+                <div class="tag-row"><span class="shader-tag">Avatar</span></div>
+                <p class="tab-desc">Crushes avatar complexity while leaving the parts that matter alone,
+                        with the texture pass running across every core your machine has.</p>
+                <div class="tool-shot">
+                    <img src="previews/Optimization_Suite_Preview.png" alt="Avatar Optimization Suite" class="preview-trigger" loading="lazy">
+                </div>
+                <h3 class="text-glow-pink opt-group">What it does</h3>
+                <ul class="custom-list m-0 ps-4">
 
                         <li class="mb-2">
                             <strong>Precision QEM Decimation:</strong>
@@ -374,13 +358,13 @@
                         </li>
 
                         <li class="mb-2">
-                            <strong>Orphaned Transform Purger:</strong>
+                            <strong>Empty object cleanup:</strong>
                             Detects and removes empty GameObjects with zero components and no vertex influence, flattening
                             bloated hierarchies and reducing serialization overhead.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Disabled Component Stripper:</strong>
+                            <strong>Disabled component cleanup:</strong>
                             Automatically removes hard-disabled Behaviours (excluding Animator) to reduce build size and
                             eliminate dead logic paths.
                         </li>
@@ -397,7 +381,7 @@
                         </li>
 
                         <li class="mb-2">
-                            <strong>VRAM Reduction Pipeline:</strong>
+                            <strong>Texture size reduction:</strong>
                             When you do need to resize, ImageMagick handles unique textures - including those hidden
                             inside VRCFury dependencies - while skipping RenderTextures to avoid corruption. Downscale to
                             claw back VRAM, or upscale when you need to go the other way. Every texture is listed largest
@@ -408,42 +392,51 @@
                         <li class="mb-2">
                             <strong>Physics Node Depth Sorter:</strong>
                             Maps all PhysBones, Colliders, Contacts, and Constraints, then sorts them by hierarchy depth.
-                            Enables safe culling of leaf-node physics without destabilizing core rig behavior.
+                            Lets you safely remove leaf-node physics without upsetting the core rig.
                         </li>
 
                         <li class="mb-2">
-                            <strong>PC & Quest Pipeline Validator:</strong>
+                            <strong>PC and Quest checks:</strong>
                             Performs full SDK-level compliance checks, including illegal component detection, shader
-                            whitelist enforcement, joint removal, camera stripping, and performance-rank-based warnings.
+                            whitelist enforcement, joint removal, camera removal, and warnings tied to the Performance Rank you are aiming for.
                         </li>
 
                     </ul>
-                </div>
+                                <h3 class="text-glow-pink opt-group" data-collapsed>Under the hood</h3>
+                <p class="opt-note">Brings a heavy PC avatar down to a Performance Rank you pick, without wrecking the face or losing your expressions. It works on a copy, and every step is a single undo.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Welding, not blind decimation</strong> - On meshes over 15,000 polygons it fuses vertices that sit in the same place. It matches on position <em>and</em> UV, so texture seams stay intact instead of tearing open the way a plain position weld does.</li>
+                    <li class="mb-2"><strong>The face is protected automatically</strong> - Material slots named for eyes, visors or the face are left alone, and so is anything weighted to the neck bone. You get the polygon saving in the body and keep the detail where people actually look.</li>
+                    <li class="mb-2"><strong>Expressions survive</strong> - Welding a mesh normally throws away its blendshapes. The suite saves all of them first, then rebuilds each one across the fused vertices, so visemes and facial expressions still work after a heavy reduction.</li>
+                    <li class="mb-2"><strong>No more disappearing avatar</strong> - It recalculates mesh bounds from the root bone, which fixes the bug where an optimised avatar vanishes at certain camera angles.</li>
+                </ul>
+                <h3 class="text-glow-pink opt-group" data-collapsed>In practice</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Pick a rank, not a number</strong> - Choose Excellent, Good, Medium or Poor and the limits for animators, contacts and PhysBones all move to match. No guessing at thresholds.</li>
+                    <li class="mb-2"><strong>You choose what physics goes</strong> - Rather than removing physics behind your back, it lists every component by depth in the hierarchy and lets you tick what to drop. Take the tail fluff and hair tips, keep the structural bones.</li>
+                    <li class="mb-2"><strong>Finds textures you would miss</strong> - It follows animator controllers and VRCFury toggles to reach textures that are not on the avatar directly, so the VRAM figure covers what actually loads in game rather than only what is visible in the Inspector.</li>
+                </ul>
             </div>
 
             <!-- ========================= -->
             <!-- QUEST CONVERSION ENGINE -->
             <!-- ========================= -->
-            <div class="tool-card">
-                <div class="tool-image-container">
-                    <img src="previews/Quest_Conversion_Engine_Preview.png"
-                         alt="Quest Conversion Engine"
-                         class="preview-trigger">
+<div id="quest-conversion-engine" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Quest Conversion Engine</h2>
+                    <div class="badge">Avatar</div>
                 </div>
-
-                <div class="tool-content">
-                    <h3 class="text-glow-cyan">Quest Conversion Engine</h3>
-
-                    <p class="mb-3">
-                        A fully non-destructive, enterprise-grade conversion pipeline engineered to translate complex PC avatars
-                        into VRChat Mobile–compliant builds.
-                    </p>
-
-                    <ul class="custom-list m-0 ps-4">
+                <div class="tag-row"><span class="shader-tag">Avatar</span></div>
+                <p class="tab-desc">A non-destructive conversion that turns a PC avatar into one that meets VRChat Mobile–compliant builds.</p>
+                <div class="tool-shot">
+                    <img src="previews/Quest_Conversion_Engine_Preview.png" alt="Quest Conversion Engine" class="preview-trigger" loading="lazy">
+                </div>
+                <h3 class="text-glow-pink opt-group">What it does</h3>
+                <ul class="custom-list m-0 ps-4">
 
                         <li class="mb-2">
                             <strong>Magick.NET Linear Downsampling:</strong>
-                            Executes gamma-correct, high-fidelity texture reduction using ImageMagick’s offline pipeline.
+                            Resizes textures in linear light using ImageMagick, outside Unity.
                             Supports 256–2048px targets, preserves micro-contrast, and automatically skips RenderTextures
                             to avoid corruption. Every texture is processed deterministically for perfect VRAM control.
                         </li>
@@ -456,7 +449,7 @@
                         </li>
 
                         <li class="mb-2">
-                            <strong>Auto-Cull Purge:</strong>
+                            <strong>Removes what mobile rejects:</strong>
                             Components mobile will not accept - Cameras, Lights, Cloth, Rigidbodies and Joints - are flagged
                             and locked with neon-red, non-overrideable toggles, so they cannot slip into the build.
                             Particle Systems, Trail and Line Renderers are handled separately: they are capped by your
@@ -516,27 +509,39 @@
                         </li>
 
                     </ul>
-                </div>
+                                <h3 class="text-glow-pink opt-group" data-collapsed>Under the hood</h3>
+                <p class="opt-note">Turns a PC avatar into a Quest one in a sandbox copy. Your original prefab is never touched, so you can run it, look at the result, and run it again with different choices.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Textures shrink without going soft</strong> - Resizing is done in linear light so highlights do not crush, then a light sharpen pass puts back the fine detail that Android's ASTC compression usually eats. It is the difference between a Quest avatar that reads as low-res and one that just reads as smaller.</li>
+                    <li class="mb-2"><strong>Finds every kind of PhysBone</strong> - It matches on the base type rather than a name list, so VRCFury conversions and older migrated components are all found. Components Quest bans outright, like cameras and audio sources, come out too.</li>
+                    <li class="mb-2"><strong>Respects your ignore lists</strong> - If you have told a PhysBone to ignore certain transforms, it reads that and removes the dead leaf bones underneath, which a name-based sweep would leave behind.</li>
+                    <li class="mb-2"><strong>Reaches materials hidden in VRCFury</strong> - Materials buried in toggles, blend trees and state behaviours get found and remapped to Android-safe copies. This is what stops the pink-shader surprise after upload.</li>
+                    <li class="mb-2"><strong>Face tracking is caught and flagged</strong> - PC face tracking will not run on Android, so it is detected three ways (prefab, hierarchy name and component type) and put on a locked removal list you can see but cannot switch off by accident.</li>
+                    <li class="mb-2"><strong>You choose the mobile shader</strong> - Pick from the VRChat mobile shaders or Unity's, and it makes the small corrections that restore the look: emission maps reset, multiply blending on particle lenses, additive on visors.</li>
+                </ul>
+                <h3 class="text-glow-pink opt-group" data-collapsed>In practice</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Triage in bulk</strong> - Keep All and Remove All let you sweep a long component list quickly, then go back and rescue the handful that matter.</li>
+                    <li class="mb-2"><strong>The triangle cap has a bypass</strong> - When the only thing making you Very Poor is the hard 20,000 triangle limit rather than a real problem, you can build anyway for a showcase or a test.</li>
+                    <li class="mb-2"><strong>Your locomotion is safe</strong> - The avatar's root animator is found and locked, so removing components can never take out your locomotion, FX layers or toggle logic.</li>
+                </ul>
             </div>
 
             <!-- ========================= -->
             <!-- PHYSBONE BLUEPRINTS -->
             <!-- ========================= -->
-            <div class="tool-card">
-                <div class="tool-image-container">
-                    <img src="previews/Physbone_Topology_Mapper_Preview.png"
-                         alt="PhysBone Blueprints"
-                         class="preview-trigger">
+<div id="physbone-blueprints" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">PhysBone Blueprints</h2>
+                    <div class="badge">Avatar</div>
                 </div>
-
-                <div class="tool-content">
-                    <h3 class="text-glow-cyan">PhysBone Blueprints</h3>
-
-                    <p class="mb-3">
-                        Physics preservation and avatar iteration: snapshot a whole PhysBone setup, then rebuild it later.
-                    </p>
-
-                    <ul class="custom-list m-0 ps-4">
+                <div class="tag-row"><span class="shader-tag">Avatar</span></div>
+                <p class="tab-desc">Physics preservation and avatar iteration: snapshot a whole PhysBone setup, then rebuild it later.</p>
+                <div class="tool-shot">
+                    <img src="previews/Physbone_Topology_Mapper_Preview.png" alt="PhysBone Blueprints" class="preview-trigger" loading="lazy">
+                </div>
+                <h3 class="text-glow-pink opt-group">What it does</h3>
+                <ul class="custom-list m-0 ps-4">
 
                         <li class="mb-2">
                             <strong>Master Blueprint System:</strong>
@@ -560,7 +565,7 @@
                                 <li>Applies the original preset with <code>preset.ApplyTo()</code></li>
                                 <li>Logs missing bones with graceful fallback</li>
                             </ul>
-                            Perfect for re-rigs, mesh swaps, and multi-variant avatar pipelines.
+                            Handy for re-rigs, mesh swaps, and avatars you ship in several variants.
                         </li>
 
                         <li class="mb-2">
@@ -620,27 +625,35 @@
                         </li>
 
                     </ul>
-                </div>
+                                <h3 class="text-glow-pink opt-group" data-collapsed>Under the hood</h3>
+                <p class="opt-note">Saves your whole PhysBone setup as a reusable file, so a rig you tuned once can be put back on any version of the avatar in one click.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Saved by bone path, not by reference</strong> - Each PhysBone is stored against its position in the skeleton rather than a direct link, so a blueprint still applies after the avatar has been rebuilt, re-imported or optimised.</li>
+                    <li class="mb-2"><strong>Two steps, both repeatable</strong> - Save Blueprint walks the source avatar and writes the file. Apply Blueprint walks the target and puts the components back, adding any that are missing.</li>
+                    <li class="mb-2"><strong>Safe without the VRChat SDK</strong> - In a project with no SDK the window still opens, with anything destructive switched off and labelled, so nothing can be run by mistake.</li>
+                </ul>
+                <h3 class="text-glow-pink opt-group" data-collapsed>In practice</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Making one</strong> - Select your master avatar root and hit Save Blueprint. It catalogues every physics component and writes the file under your project's Blueprints folder.</li>
+                    <li class="mb-2"><strong>Putting physics back</strong> - After a Quest conversion or a heavy optimisation has removed the components, select that avatar and hit Apply. Dozens of individually tuned PhysBones come back across the whole rig at once.</li>
+                </ul>
             </div>
 
             <!-- ========================= -->
             <!-- ANIMATOR FORGE -->
             <!-- ========================= -->
-            <div class="tool-card">
-                <div class="tool-image-container">
-                    <img src="previews/Animator_Forge_Preview.png"
-                         alt="Animator Forge"
-                         class="preview-trigger">
+<div id="animator-forge" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Animator Forge</h2>
+                    <div class="badge">Avatar</div>
                 </div>
-
-                <div class="tool-content">
-                    <h3 class="text-glow-cyan">Animator Forge</h3>
-
-                    <p class="mb-3">
-                        A two-in-one avatar animator tool: diagnose broken controllers and forge fully-rigged toggles in a single click.
-                    </p>
-
-                    <ul class="custom-list m-0 ps-4">
+                <div class="tag-row"><span class="shader-tag">Avatar</span></div>
+                <p class="tab-desc">A two-in-one avatar animator tool: diagnose broken controllers and forge fully-rigged toggles in a single click.</p>
+                <div class="tool-shot">
+                    <img src="previews/Animator_Forge_Preview.png" alt="Animator Forge" class="preview-trigger" loading="lazy">
+                </div>
+                <h3 class="text-glow-pink opt-group">What it does</h3>
+                <ul class="custom-list m-0 ps-4">
 
                         <li class="mb-2">
                             <strong>Animator Doctor:</strong>
@@ -683,32 +696,129 @@
                         </li>
 
                     </ul>
-                </div>
+                <h3 class="text-glow-pink opt-group" data-collapsed>Under the hood</h3>
+                <p class="opt-note">A two-sided avatar animator tool. The <em>Doctor</em> scans every playable-layer controller plus the
+                    Expression Parameters and Menu and reports ranked findings with one-click fixes. The <em>Forge</em>
+                    builds complete, fully-wired rigs (parameter, menu control, FX layer, states, transitions and clips)
+                    from a single form. Both halves are non-destructive by construction.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li>
+                        <strong>Ranked Finding Model:</strong> Every diagnostic is emitted as a finding carrying a
+                        <code>Severity</code> (<code>Error</code>, <code>Warning</code>, <code>Info</code>), a title, a
+                        detail string, a context object, an <code>IsSafe</code> flag, and an optional <code>Fix</code>
+                        delegate. The UI renders a <code>LOCATE</code> button per finding that drives
+                        <code>EditorGUIUtility.PingObject</code> onto the offending asset, plus a
+                        <code>FIX ALL SAFE ISSUES</code> batch that runs only the findings where
+                        <code>IsSafe &amp;&amp; Fix != null</code>, leaving every judgement call to the creator.
+                    </li>
+                    <li>
+                        <strong>Driver-Parameter Recognition:</strong> Controllers that reference parameters which were
+                        never declared are the single most common source of SDK panel spam on a purchased base. The Doctor
+                        separates the two cases: parameters VRChat itself provides at runtime (<code>Seated</code>,
+                        <code>AFK</code>, <code>VRMode</code>, <code>GestureLeft</code>/<code>GestureRight</code> and the
+                        rest of the driver set) are re-added to the controller with the correct type, while genuinely
+                        undefined parameters are reported rather than invented.
+                    </li>
+                    <li>
+                        <strong>Write Defaults Normalizer:</strong> Detection follows the widely-used VRCFury model.
+                        States are grouped as normal, Direct blend tree, or additive; the target value is taken from the
+                        FX layer's majority (falling back to the avatar-wide majority on smaller rigs); and normalization
+                        always forces Direct blend trees and additive layers on, because those break otherwise. The exact
+                        offending states are named in the report and nothing is written until asked.
+                    </li>
+                    <li>
+                        <strong>Empty-Clip Repair:</strong> Reproduces VRChat's own scan for the
+                        "Write Defaults disabled where the animation clip is either missing or empty" warning.
+                        <code>MotionHasEmptyIssue</code> walks blend trees recursively, so a Direct tree with one empty
+                        child is caught as readily as a bare null motion. The fix assigns a shared inert clip from
+                        <code>Assets/VixenTools/AnimatorForge/_Empty.anim</code> carrying a single constant
+                        <code>m_IsActive</code> curve, which is what actually clears the warning: a genuinely empty clip
+                        still reads as empty to the SDK.
+                    </li>
+                    <li>
+                        <strong>Expression Asset Auditing:</strong> Cross-checks the Expression Parameters and Menu against
+                        the controllers. It catches duplicate parameter names, type mismatches between a controller and the
+                        expression asset, synced cost overflow against
+                        <code>VRCExpressionParameters.MAX_PARAMETER_COST</code>, menus exceeding
+                        <code>VRCExpressionsMenu.MAX_CONTROLS</code>, SubMenu controls with a null target menu, controls
+                        with no parameter at all, and controls bound to parameters that were never declared.
+                    </li>
+                    <li>
+                        <strong>Layer &amp; Transition Hygiene:</strong> Flags duplicate layer names, layers with no states,
+                        layers with no default state, layers sitting at weight 0, transition conditions using a comparison
+                        mode invalid for the parameter's type (for example <code>Greater</code> on a Bool), and instant
+                        zero-duration transitions.
+                    </li>
+                    <li>
+                        <strong>Five Rig Types:</strong> <code>GameObjectToggle</code> (one or many objects at once),
+                        <code>BlendshapeToggle</code>, <code>BlendshapeSlider</code> (a radial-puppet dial),
+                        <code>MaterialSwap</code>, and <code>ExclusiveGroup</code>, a radio set where enabling one option
+                        drives the rest off. Each build generates the Expression parameter, the menu control or submenu,
+                        the FX layer with its states and transitions, and the animation clips.
+                    </li>
+                    <li>
+                        <strong>Convention Matching:</strong> New states are created to match the avatar's own Write
+                        Defaults convention rather than a hardcoded default, so a forged toggle does not become the one
+                        odd state that desyncs an otherwise consistent controller.
+                    </li>
+                    <li>
+                        <strong>Non-Destructive Asset Handling:</strong> Reuses an existing FX controller and expression
+                        assets or creates them when absent, clones read-only sample controllers before touching them, and
+                        never deletes existing layers or parameters. Generated assets land in
+                        <code>Assets/VixenTools/AnimatorForge/&lt;AvatarName&gt;</code> via a step-through
+                        <code>IsValidFolder &rarr; CreateFolder</code> chain.
+                    </li>
+                </ul>
+                <h3 class="text-glow-pink opt-group" data-collapsed>In practice</h3>
+                <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
+                    <li>
+                        <strong>Triage On A New Base:</strong> A freshly purchased avatar is dropped into the Doctor tab and
+                        scanned. The typical first result is a cluster of missing driver parameters on the Sit and Action
+                        layers plus a mixed Write Defaults report. <code>FIX ALL SAFE ISSUES</code> clears the unambiguous
+                        parameter findings in one pass; the Write Defaults normalization is reviewed and applied separately
+                        because it changes animation behavior.
+                    </li>
+                    <li>
+                        <strong>Clearing The SDK Panel:</strong> Where the SDK complains about Write-Defaults-off states
+                        with missing or empty clips, the empty-clip fix assigns the shared inert clip across every offending
+                        state, and the warning clears on the next build check.
+                    </li>
+                    <li>
+                        <strong>Forging A Toggle:</strong> On the Forge tab the creator names the rig, picks
+                        <em>GameObject toggle</em>, drags in one or several objects, and builds. The parameter, the menu
+                        entry, the FX layer, both states and both clips are generated together and matched to the avatar's
+                        existing Write Defaults convention, so the toggle works on the first upload without hand-wiring the
+                        Animator.
+                    </li>
+                    <li>
+                        <strong>Exclusive Outfit Sets:</strong> For a set of mutually exclusive outfit pieces the
+                        <em>Exclusive group</em> type generates an Int parameter with one state per option, so selecting one
+                        drives every sibling off. This is deliberately an Int plus toggles rather than a radial, because
+                        landing exactly on option three with a thumbstick is miserable.
+                    </li>
+                </ul>
             </div>
 
             <!-- ========================= -->
             <!-- ACCESSORY MOUNTING ENGINE -->
             <!-- ========================= -->
-            <div class="tool-card">
-                <div class="tool-image-container">
-                    <img src="previews/Accessory_Mounting_Engine_Preview.png"
-                         alt="Accessory Mounting Engine"
-                         class="preview-trigger">
+<div id="accessory-mounting-engine" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Accessory Mounting Engine</h2>
+                    <div class="badge">Avatar</div>
                 </div>
-
-                <div class="tool-content">
-                    <h3 class="text-glow-cyan">Accessory Mounting Engine</h3>
-
-                    <p class="mb-3">
-                        Clones a sterile armature from your avatar's rig, then mounts accessories onto it. For horns, tails,
-                        jewellery, props and anything else that has to move with the body.
-                    </p>
-
-                    <ul class="custom-list m-0 ps-4">
+                <div class="tag-row"><span class="shader-tag">Avatar</span></div>
+                <p class="tab-desc">Clones a clean armature from your avatar's rig, then mounts accessories onto it. For horns, tails,
+                        jewellery, props and anything else that has to move with the body.</p>
+                <div class="tool-shot">
+                    <img src="previews/Accessory_Mounting_Engine_Preview.png" alt="Accessory Mounting Engine" class="preview-trigger" loading="lazy">
+                </div>
+                <h3 class="text-glow-pink opt-group">What it does</h3>
+                <ul class="custom-list m-0 ps-4">
 
                         <li class="mb-2">
-                            <strong>Two Pipeline Modes:</strong>
-                            <em>Full Generation</em> clones a fresh sterile armature from the source rig and mounts onto it,
+                            <strong>Two ways to mount:</strong>
+                            <em>Full Generation</em> clones a fresh clean armature from the source rig and mounts onto it,
                             preserving local position, rotation and scale at every node.
                             <em>Append To Existing</em> skips the clone and maps straight onto an armature you already
                             generated, so a second and third accessory land on the same rig.
@@ -727,38 +837,50 @@
                         </li>
 
                         <li class="mb-2">
-                            <strong>Built To Survive Culling:</strong>
+                            <strong>Stays visible on screen:</strong>
                             PhysBone-safe root locking, generous bounds so mounted parts do not vanish at the edge of frame,
                             GUID-suffixed asset names so nothing overwrites anything, and the whole run collapses into a
                             single undo step.
                         </li>
 
                     </ul>
-                </div>
+                                <h3 class="text-glow-pink opt-group" data-collapsed>Under the hood</h3>
+                <p class="opt-note">Mounts props and outfit pieces onto a clean copy of your armature, so convention badges, seasonal props and rigid attachments stop being a manual rigging job. The whole run is one undo.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Two ways to mount</strong> - Full Generation builds a fresh clean armature from your source rig. Append To Existing reuses one you generated earlier and just adds the new piece, so later accessories do not mean rebuilding what is already mounted.</li>
+                    <li class="mb-2"><strong>Soft pieces are baked to follow the rig</strong> - Cloth and anything that deforms gets baked onto the target skeleton, and every blendshape is carried through the same transform, so a piece that had shapekeys still has them afterwards.</li>
+                    <li class="mb-2"><strong>Rigid pieces are constrained instead</strong> - Props, particles and audio sources skip the bake and get a locked constraint that holds exactly the placement you set them at. Cheaper and it survives edits better.</li>
+                    <li class="mb-2"><strong>PhysBones on the accessory keep working</strong> - The accessory root is parented and constrained rather than zeroed out, because zeroing it breaks the anchor and inertia that its PhysBones depend on.</li>
+                    <li class="mb-2"><strong>It will not vanish at the edge of the screen</strong> - Baked accessories get generous bounds, which stops Unity hiding them when the avatar's own bounds do not cover where the mesh ended up.</li>
+                    <li class="mb-2"><strong>Nothing overwrites anything</strong> - Baked meshes are saved with unique names, and the folders they need are created on the way in, so a fresh install works the same as an established project.</li>
+                </ul>
+                <h3 class="text-glow-pink opt-group" data-collapsed>In practice</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>The first mount</strong> - Drop in your source armature, the destination object, and a list of accessories with the bone each one belongs on. One click clones the rig, bakes the pieces and parents the result.</li>
+                    <li class="mb-2"><strong>Adding more later</strong> - Switch to Append To Existing and the mappings you made against the original rig still resolve, so a new badge goes on without disturbing what is already there.</li>
+                    <li class="mb-2"><strong>Mixing the two</strong> - The method is chosen per run, so the same target can carry baked cloth from one pass and a constrained rigid badge from another.</li>
+                </ul>
             </div>
 
             <!-- ========================= -->
-            <!-- BADGE STUDIO -->
+            <!-- VIXEN BADGE STUDIO -->
             <!-- ========================= -->
-            <div class="tool-card">
-                <div class="tool-image-container">
-                    <img src="previews/Badge_Studio_Preview.png"
-                         alt="Vixen Badge Studio"
-                         class="preview-trigger">
+<div id="vixen-badge-studio" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Vixen Badge Studio</h2>
+                    <div class="badge">Avatar</div>
                 </div>
-
-                <div class="tool-content">
-                    <h3 class="text-glow-cyan">Vixen Badge Studio</h3>
-
-                    <p class="mb-3">
-                        A high-fidelity, CSS-driven badge builder for VRChat creators, convention staff,
-                        and avatar artists.
-                    </p>
-
-                    <ul class="custom-list m-0 ps-4">
+                <div class="tag-row"><span class="shader-tag">Avatar</span></div>
+                <p class="tab-desc">A high-fidelity, CSS-driven badge builder for VRChat creators, convention staff,
+                        and avatar artists.</p>
+                <div class="tool-shot">
+                    <img src="previews/Badge_Studio_Preview.png" alt="Vixen Badge Studio" class="preview-trigger" loading="lazy">
+                </div>
+                <h3 class="text-glow-pink opt-group">What it does</h3>
+                <ul class="custom-list m-0 ps-4">
 
                         <li class="mb-2">
-                            <strong>Emissive Compositing Pipeline:</strong>
+                            <strong>Clean emission masks:</strong>
                             Generates clean <code>_EMI</code> masks through ImageMagick. Your name and title plates are
                             composited onto the tier's emissive map, then the result is flattened onto solid black and its
                             alpha channel dropped, so nothing outside the lit text glows. Umbra tiers are desaturated
@@ -807,28 +929,37 @@
                         </li>
 
                     </ul>
-                </div>
+                                <h3 class="text-glow-pink opt-group" data-collapsed>Under the hood</h3>
+                <p class="opt-note">Builds convention badges from a layout file instead of by hand in Photoshop, with Furality templates supported out of the box.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Emission that does not bloom out</strong> - Badge text is rendered on black and flattened before it becomes the emission map, so the lit parts glow cleanly instead of bleeding into everything around them.</li>
+                    <li class="mb-2"><strong>It writes into whichever shader you use</strong> - Poiyomi, lilToon and the VRC mobile shaders are all recognised, and your chosen base and emission colours are written into the right slots for that shader.</li>
+                    <li class="mb-2"><strong>Place text by clicking the badge</strong> - The UV mapper lets you click the badge in the Scene view and takes the position from where you clicked, so you do not have to work out coordinates.</li>
+                </ul>
+                <h3 class="text-glow-pink opt-group" data-collapsed>In practice</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Layouts generate themselves</strong> - Point it at the Furality SDK and Generate Layouts finds the badge parts and writes the bounds your text has to sit inside.</li>
+                    <li class="mb-2"><strong>Swapping shaders keeps your work</strong> - Move a badge from Standard to Furality Aqua and the generated textures are placed into the new shader's slots for you.</li>
+                    <li class="mb-2"><strong>Nudging text without leaving Unity</strong> - Turn on Scene Mapping, click the new spot, adjust width and height, rebuild. No image editor in the loop.</li>
+                </ul>
             </div>
 
             <!-- ========================= -->
             <!-- LIVE SCENE UV MAPPER -->
             <!-- ========================= -->
-            <div class="tool-card">
-                <div class="tool-image-container">
-                    <img src="previews/Scene_UVMapper_Preview.png"
-                         alt="Live Scene UV Mapper"
-                         class="preview-trigger">
+<div id="live-scene-uv-mapper" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Live Scene UV Mapper</h2>
+                    <div class="badge">Avatar</div>
                 </div>
-
-                <div class="tool-content">
-                    <h3 class="text-glow-cyan">Live Scene UV Mapper</h3>
-
-                    <p class="mb-3">
-                        Click a point on your mesh in the Scene view and it reads the UV there. For placing names, pronouns
-                        and titles on curved or irregular badge surfaces.
-                    </p>
-
-                    <ul class="custom-list m-0 ps-4">
+                <div class="tag-row"><span class="shader-tag">Avatar</span></div>
+                <p class="tab-desc">Click a point on your mesh in the Scene view and it reads the UV there. For placing names, pronouns
+                        and titles on curved or irregular badge surfaces.</p>
+                <div class="tool-shot">
+                    <img src="previews/Scene_UVMapper_Preview.png" alt="Live Scene UV Mapper" class="preview-trigger" loading="lazy">
+                </div>
+                <h3 class="text-glow-pink opt-group">What it does</h3>
+                <ul class="custom-list m-0 ps-4">
 
                         <li class="mb-2">
                             <strong>Interactive Raycasting:</strong>
@@ -869,28 +1000,24 @@
                         </li>
 
                     </ul>
-                </div>
             </div>
 
             <!-- ========================= -->
             <!-- ANIMATION WORKBENCH PRO -->
             <!-- ========================= -->
-            <div class="tool-card">
-                <div class="tool-image-container">
-                    <img src="previews/Animation_Workbench_Pro_Preview.png"
-                         alt="Animation Workbench Pro"
-                         class="preview-trigger">
+<div id="animation-workbench-pro" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Animation Workbench Pro</h2>
+                    <div class="badge">Any Project</div>
                 </div>
-
-                <div class="tool-content">
-                    <h3 class="text-glow-cyan">Animation Workbench Pro</h3>
-
-                    <p class="mb-3">
-                        A curve editor for avatar animation. Shape the curves, bind material properties, and watch the
-                        result update live, all in one window.
-                    </p>
-
-                    <ul class="custom-list m-0 ps-4">
+                <div class="tag-row"><span class="shader-tag">Any Project</span></div>
+                <p class="tab-desc">A curve editor for avatar animation. Shape the curves, bind material properties, and watch the
+                        result update live, all in one window.</p>
+                <div class="tool-shot">
+                    <img src="previews/Animation_Workbench_Pro_Preview.png" alt="Animation Workbench Pro" class="preview-trigger" loading="lazy">
+                </div>
+                <h3 class="text-glow-pink opt-group">What it does</h3>
+                <ul class="custom-list m-0 ps-4">
 
                         <li class="mb-2">
                             <strong>Explicit Intent Paradigm:</strong>
@@ -1009,28 +1136,96 @@
                         </li>
 
                     </ul>
-                </div>
+                <h3 class="text-glow-pink opt-group" data-collapsed>Under the hood</h3>
+                <p class="opt-note">An advanced visual workspace for staging, easing, and sampling complex animation curves, built to bypass
+                    Unity's clunky default Animation window completely. The Workbench treats curves, bindings, and material
+                    properties as a programmable instead of a fragile hand-drawn timeline.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li>
+                        <strong>Runtime Math Library & Easing:</strong> Mathematical keyframe generation driven by
+                        <code>EasingFunctions.cs</code>. <code>CurveOperations.BuildStretchedCurve</code> rebuilds a curve
+                        between <code>[sTime, eTime]</code>, preserving keys before the region while injecting intermediate
+                        keys using selectable easing (Linear, SmoothStep, EaseInOutCubic, etc.). Keys after the region are
+                        intentionally dropped, letting the generated segment define the tail.
+                    </li>
+                    <li>
+                        <strong>CurveGraphView Engine:</strong> A custom <code>VisualElement</code> graph powered by
+                        <code>IMGUIContainer</code>. Supports zooming, panning, double-click key insertion, and right-click
+                        key deletion with per-binding color hashing. It computes dynamic value ranges and renders both
+                        continuous curves and discrete key markers.
+                    </li>
+                    <li>
+                        <strong>Live Preview Engine:</strong> <code>PreviewEngine</code> hooks into
+                        <code>AnimationMode.StartAnimationMode()</code> and <code>EditorApplication.update</code> to sample
+                        clips directly on a target GameObject. It plays back at adjustable speed, stops automatically at
+                        clip end, and never dirties the scene hierarchy.
+                    </li>
+                    <li>
+                        <strong>TimelineRibbon Range Control:</strong> A dedicated IMGUI ribbon that exposes start/end
+                        sliders for the active clip. It prevents zero-length collapse, supports expanding beyond clip
+                        length, and broadcasts range changes back into the graph and generation logic.
+                    </li>
+                    <li>
+                        <strong>Multidimensional Material Extraction:</strong> The Workbench walks all renderers on a
+                        preview target, inspects shader properties, and explodes Color/Vector fields into per-channel float
+                        tracks (R/G/B/A, X/Y/Z/W). This prevents native API crashes and makes even locked Poiyomi properties
+                        fully animatable.
+                    </li>
+                    <li>
+                        <strong>Property search:</strong> A dedicated search window that groups properties by
+                        Material → Category → Property. It supports fuzzy search, nested foldouts, and click-to-bind
+                        behavior, returning a structured entry back to the Workbench.
+                    </li>
+                    <li>
+                        <strong>EasingDropdown Selector:</strong> A lightweight UI Toolkit control backed by
+                        <code>GenericMenu</code>. It renders textual previews of easing shapes and broadcasts changes via
+                        <code>OnValueChanged</code>, allowing global default easing to be applied across all selected
+                        bindings.
+                    </li>
+                </ul>
+                <h3 class="text-glow-pink opt-group" data-collapsed>In practice</h3>
+                <ul class="custom-list m-0 ps-4 caption1" style="color: #bfa8d2; line-height: 1.7;">
+                    <li>
+                        <strong>Hidden Property Discovery:</strong> The property picker reads straight from a shader's active parameters. For example, it allows a creator to easily
+                        locate an obscure third-party property like <code>_LumaFlowSpeed</code> and extract its exact
+                        resting value (e.g., <code>0.00121</code>).
+                    </li>
+                    <li>
+                        <strong>Mathematical Smoothing:</strong> Rather than manually dragging bezier curves, a creator
+                        inputs the exact start and end values, selects a mathematical easing profile (e.g.,
+                        <code>SmoothStep</code>), and defines key density. Generating 40 keys over 3 seconds creates a
+                        perfectly smooth stepped curve instantly.
+                    </li>
+                    <li>
+                        <strong>Iterative Prototyping:</strong> The timeline can be scrubbed live via the
+                        <code>PreviewEngine</code>. If the animation feels too fast, the user can instantly re-generate the
+                        curve with 80 keys spread over 6 seconds, visually verifying the ultra-smooth transition directly in
+                        the editor without launching Play mode.
+                    </li>
+                    <li>
+                        <strong>Explicit Intent Safeguards:</strong> Staged curves are held in an internal dictionary until
+                        the user explicitly applies or commits them. This prevents accidental destructive writes to live
+                        clips and keeps experimentation reversible.
+                    </li>
+                </ul>
             </div>
 
             <!-- ========================= -->
             <!-- PIPELINE PRESET MANAGER -->
             <!-- ========================= -->
-            <div class="tool-card">
-                <div class="tool-image-container">
-                    <img src="previews/Preset_Engine_Manager_Preview.png"
-                         alt="Pipeline Preset Manager"
-                         class="preview-trigger">
+<div id="pipeline-preset-manager" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Pipeline Preset Manager</h2>
+                    <div class="badge">Any Project</div>
                 </div>
-
-                <div class="tool-content">
-                    <h3 class="text-glow-cyan">Pipeline Preset Manager</h3>
-
-                    <p class="mb-3">
-                        Pulls Unity import settings off assets you have already set up, then registers them project-wide so
-                        everything imports the same way without you touching each one.
-                    </p>
-
-                    <ul class="custom-list m-0 ps-4">
+                <div class="tag-row"><span class="shader-tag">Any Project</span></div>
+                <p class="tab-desc">Pulls Unity import settings off assets you have already set up, then registers them project-wide so
+                        everything imports the same way without you touching each one.</p>
+                <div class="tool-shot">
+                    <img src="previews/Preset_Engine_Manager_Preview.png" alt="Pipeline Preset Manager" class="preview-trigger" loading="lazy">
+                </div>
+                <h3 class="text-glow-pink opt-group">What it does</h3>
+                <ul class="custom-list m-0 ps-4">
 
                         <li class="mb-2">
                             <strong>Phantom Asset Detection:</strong>
@@ -1106,22 +1301,21 @@
                         </li>
 
                     </ul>
-                </div>
             </div>
 
             <!-- ========================= -->
             <!-- SCENE PLACEMENT TOOLS -->
             <!-- ========================= -->
-            <div class="tool-card">
-                <div class="tool-content">
-                    <h3 class="text-glow-cyan">Scene Placement Tools</h3>
-
-                    <p class="mb-3">
-                        Two Scene View modes for world building, both toggled from the Hub or the
-                        <code>VixenTools &gt; Scene</code> menu. The Hub card shows whether each one is currently on.
-                    </p>
-
-                    <ul class="custom-list m-0 ps-4">
+<div id="scene-placement-tools" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Scene Placement Tools</h2>
+                    <div class="badge">World</div>
+                </div>
+                <div class="tag-row"><span class="shader-tag">World</span></div>
+                <p class="tab-desc">Two Scene View modes for world building, both toggled from the Hub or the
+                        <code>VixenTools &gt; Scene</code> menu. The Hub card shows whether each one is currently on.</p>
+                <h3 class="text-glow-pink opt-group">What it does</h3>
+                <ul class="custom-list m-0 ps-4">
 
                         <li class="mb-2">
                             <strong>Live Surface Snapping:</strong>
@@ -1150,22 +1344,35 @@
                         </li>
 
                     </ul>
-                </div>
+                                <h3 class="text-glow-pink opt-group" data-collapsed>Under the hood</h3>
+                <p class="opt-note">Two Scene view helpers for world building, plus the fixes that keep a scene importing cleanly on someone else's machine.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Objects drop onto what is under them</strong> - Move something with the gizmo and it settles flush onto the surface below when you let go, using the bottom of its bounds rather than its pivot.</li>
+                    <li class="mb-2"><strong>Click to place</strong> - Aim at a shelf, a wall or terrain and the object lands there, turned to match the surface. A coloured disc shows where it will go before you commit.</li>
+                    <li class="mb-2"><strong>It ignores the layers it should</strong> - Water, UI and pickup layers are skipped so you do not snap onto a trigger volume, and the object's own colliders are held back so it cannot land on itself.</li>
+                    <li class="mb-2"><strong>Udon objects register the move</strong> - Snapped objects carrying Udon behaviours are marked as changed properly, so their positions survive a world build instead of rolling back.</li>
+                    <li class="mb-2"><strong>Lightmaps stop going missing</strong> - It re-saves the scene's lighting data reference, which fixes the black or missing lightmaps you get after moving a scene between machines.</li>
+                </ul>
+                <h3 class="text-glow-pink opt-group" data-collapsed>In practice</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Set your import rules once</strong> - Build a preset with the texture size and compression you want and it becomes the default for everything imported afterwards, so you are not fixing import settings file by file.</li>
+                    <li class="mb-2"><strong>Then build without thinking about it</strong> - With rules in place and snapping on, assets come in at the right settings and land where you point them.</li>
+                </ul>
             </div>
 
             <!-- ========================= -->
             <!-- WORLD PROFILER -->
             <!-- ========================= -->
-            <div class="tool-card">
-                <div class="tool-content">
-                    <h3 class="text-glow-cyan">World Profiler</h3>
-
-                    <p class="mb-3">
-                        Opens from the World Engine and turns a scan into a single number you can act on: an
-                        <strong>OPTIMAL / MODERATE / SEVERE</strong> compute threat level for the whole world.
-                    </p>
-
-                    <ul class="custom-list m-0 ps-4">
+<div id="world-profiler" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">World Profiler</h2>
+                    <div class="badge">World</div>
+                </div>
+                <div class="tag-row"><span class="shader-tag">World</span></div>
+                <p class="tab-desc">Opens from the World Engine and turns a scan into a single number you can act on: an
+                        <strong>OPTIMAL / MODERATE / SEVERE</strong> compute threat level for the whole world.</p>
+                <h3 class="text-glow-pink opt-group">What it does</h3>
+                <ul class="custom-list m-0 ps-4">
 
                         <li class="mb-2">
                             <strong>Real VRAM, Not Estimates:</strong>
@@ -1196,41 +1403,36 @@
                         </li>
 
                     </ul>
-                </div>
             </div>
 
             <!-- ========================= -->
-            <!-- WORLD ENGINE -->
+            <!-- VIXEN WORLD ENGINE: OMNI-SYSTEM DIAGNOSTIC SPIDER -->
             <!-- ========================= -->
-            <div class="tool-card expanded-matrix-card">
-
-                <div class="tool-image-container">
-                    <img src="previews/Vixen_World_Engine_Spider_Preview.png"
-                         alt="Vixen World Engine"
-                         class="preview-trigger">
+<div id="vixen-world-engine" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Vixen World Engine: Omni-System Diagnostic Spider</h2>
+                    <div class="badge">World</div>
                 </div>
-
-                <div class="tool-content">
-                    <h3 class="text-glow-cyan">Vixen World Engine: Omni-System Diagnostic Spider</h3>
-
-                    <p class="mb-3">
-                        Scans a world for what will break it once people are in it: memory, network load, broken shaders and
-                        heavy scripts. Around 137 checks across nine supported ecosystems, most with a one-click fix.
-                    </p>
-
-                    <!-- FLEXBOX MATRIX GRID -->
+                <div class="tag-row"><span class="shader-tag">World</span></div>
+                <p class="tab-desc">Scans a world for what will break it once people are in it: memory, network load, broken shaders and
+                        heavy scripts. Around 137 checks across nine supported ecosystems, most with a one-click fix.</p>
+                <div class="tool-shot">
+                    <img src="previews/Vixen_World_Engine_Spider_Preview.png" alt="Vixen World Engine" class="preview-trigger" loading="lazy">
+                </div>
+                <h3 class="text-glow-pink opt-group">What it does</h3>
+                <!-- FLEXBOX MATRIX GRID -->
                     <div class="matrix-grid">
 
                         <!-- LEFT COLUMN -->
                         <div class="matrix-column">
                             <h4 class="text-glow-pink caption1 mb-2">ECOSYSTEM & SCENE CHECKS</h4>
                             <ul class="custom-list ps-4 caption2">
-                                <li class="mb-2"><strong>ProTV Pipeline Guard:</strong> Deep-scans ProTV instances for HDR VRAM bloat, baked GSV conflicts, RTGI mobile sinks, aggressive playlist search loops, and emissive GI blowouts. Automatically patches unsafe fields via reflection-based fix payloads.</li>
+                                <li class="mb-2"><strong>ProTV checks:</strong> Deep-scans ProTV instances for HDR VRAM bloat, baked GSV conflicts, RTGI mobile sinks, aggressive playlist search loops, and emissive GI blowouts. Automatically patches unsafe fields via reflection-based fix payloads.</li>
                                 <li class="mb-2"><strong>IwaSync3 Stability System:</strong> Flags 1080p+ video blowouts, unbounded playlist growth, non-spatialized global audio, aggressive sync frequencies, emissive screen overdrive, and GC-heavy event invokers that destabilize frame pacing.</li>
                                 <li class="mb-2"><strong>Mesh & Geometry Auditor:</strong> Flags meshes past 10,000 vertices, missing LOD chains, uncompressed and Read/Write-enabled meshes, material slot bloat, non-convex MeshCollider drag, high-poly convex colliders, and physics sinks that create unpredictable CPU spikes.</li>
                                 <li class="mb-2"><strong>TXL Logic Scraper:</strong> Catches orphaned Udon behaviours with no program source, DebugUserList string-garbage sinks, inline user whitelists that should be remote, CRT update-mode and screen-tearing risks, queue auto-play deadlocks, and proxy queue rejections.</li>
-                                <li class="mb-2"><strong>Native Video Throttling:</strong> Automatically clamps AVPro and Unity Video components from <strong>Unlimited (0)</strong> or 4K down to safe 1080p limits, preventing bandwidth nukes and Quest-side crashes.</li>
-                                <li class="mb-2"><strong>Omni-Chaos Stress Fabricator:</strong> Generates a full stress-test environment with VRAM nukes, heavy meshes, reflection probes, network sync storms, and video pipeline overloads to validate world stability under extreme conditions.</li>
+                                <li class="mb-2"><strong>Native Video Throttling:</strong> Automatically clamps AVPro and Unity Video components from <strong>Unlimited (0)</strong> or 4K down to safe 1080p limits, preventing runaway bandwidth use and Quest-side crashes.</li>
+                                <li class="mb-2"><strong>Omni-Chaos Stress Fabricator:</strong> Generates a full stress-test environment with heavy textures and meshes, reflection probes, network sync storms, and video overload to check world stability under extreme conditions.</li>
                             </ul>
                         </div>
 
@@ -1240,10 +1442,10 @@
                             <ul class="custom-list ps-4 caption2">
                                 <li class="mb-2"><strong>Raw UASM Bytecode Scraper:</strong> Pierces <code>UdonSharpEditorCache</code> to analyze raw Udon assembly. Detects lethal <code>PlayerData.Set</code> calls inside <code>Update()</code>, infinite sync loops, and network-rate-limit bombs before they reach a build.</li>
                                 <li class="mb-2"><strong>UI & Font Hunter:</strong> Finds TMP and legacy text components whose font does not match the one you nominate in the window, then swaps them all in one pass. Also catches missing TMP shader channels, canvases with no event camera, missing VRC UI Shape, and nested GraphicRaycasters.</li>
-                                <li class="mb-2"><strong>Shader Integrity System:</strong> Protects core SDK shaders, IwaSync internals, ProTV internals, and VRC Billiards materials from the autonomous shader replacer to preserve logic-driven material behavior.</li>
+                                <li class="mb-2"><strong>Shader Integrity System:</strong> Protects core SDK shaders, IwaSync internals, ProTV internals, and VRC Billiards materials from the automatic shader replacer, so logic-driven materials keep working.</li>
                                 <li class="mb-2"><strong>Hardware-Level VRAM Profiling:</strong> Uses <code>Profiler.GetRuntimeMemorySizeLong()</code> to capture true GPU footprint, exposing procedural 4K RenderTextures, TMP atlases, UI masks, and unmanaged memory hogs that evade standard project scanners.</li>
                                 <li class="mb-2"><strong>Canvas Rebuild Tracker:</strong> Maps layout-modifying UI elements on root canvases to prevent rebuild storms across playlist UIs, queue systems, and dynamic world-space interfaces.</li>
-                                <li class="mb-2"><strong>Texture & Audio Forensics:</strong> Scans all textures, UI atlases, meshes, and audio clips to generate a full VRAM breakdown and compute threat-level score.</li>
+                                <li class="mb-2"><strong>Texture and audio audit:</strong> Scans all textures, UI atlases, meshes, and audio clips to generate a full VRAM breakdown and compute threat-level score.</li>
                                 <li class="mb-2"><strong>Network & Persistence Auditor:</strong> Detects continuous sync storms, hollow player objects, unsafe persistence calls, and Udon behaviours configured for uncontrolled network replication.</li>
                             </ul>
                         </div>
@@ -1265,7 +1467,7 @@
                             <h4 class="text-glow-pink caption1 mb-2">SCENE, LIGHTING & AUDIO</h4>
                             <ul class="custom-list ps-4 caption2">
                                 <li class="mb-2"><strong>AudioLink Setup:</strong> Finds missing or duplicated cores, players that never got linked (AVPro, Unity Video, ProTV, TXL, IwaSync3), reactive objects wired to nothing, orphaned Poiyomi and lilToon AudioLink materials, and Quest GPU readback stalls.</li>
-                                <li class="mb-2"><strong>Lighting &amp; Lightmaps:</strong> Realtime shadow casters, point and spot lights, oversized light ranges, realtime reflection probes, 4K/2K probe VRAM nukes, global realtime GI, directional lightmaps, excessive lightmap counts and bake resolutions.</li>
+                                <li class="mb-2"><strong>Lighting &amp; Lightmaps:</strong> Realtime shadow casters, point and spot lights, oversized light ranges, realtime reflection probes, 4K and 2K probe memory costs, global realtime GI, directional lightmaps, excessive lightmap counts and bake resolutions.</li>
                                 <li class="mb-2"><strong>Environment &amp; Terrain:</strong> Insane heightmap resolutions, low pixel error, and draw-instancing left disabled on terrain.</li>
                                 <li class="mb-2"><strong>Audio Optimization:</strong> Decompress-On-Load clips, stereo files that should be mono, and global 2D audio that should be spatialized.</li>
                                 <li class="mb-2"><strong>Materials &amp; Umbrella Logic:</strong> GPU instancing left off, unlocked toon shaders, missing material references, dead ColliderActionProxies and ZoneTriggers with no collider.</li>
@@ -1277,14 +1479,28 @@
                     <div class="tool-footer mt-3 pt-2">
                         <p class="caption2 m-0">
                             <strong>Automated Fix Library:</strong>
-                            Includes 1-click surgical repairs for font migrations, spatialization, resolution throttling,
+                            Includes one-click repairs for font migrations, spatialization, resolution throttling,
                             shader replacement, GSV conflict resolution, and Udon component cleanup.
                         </p>
                     </div>
-
-                </div> <!-- end .tool-content -->
-
-            </div> <!-- end .tool-card -->
+                                <h3 class="text-glow-pink opt-group" data-collapsed>Under the hood</h3>
+                <p class="opt-note">Scans a world for the things that break it once people are actually in it: memory, network load, broken shaders and heavy scripts. Most findings come with a one-click fix, and it reads third-party systems as well as Unity's own.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>It knows the video systems</strong> - ProTV, IwaSync, TXL, VizVid and Rinvo are each checked on their own terms, so a finding points at the setting in that system rather than at a generic Unity component.</li>
+                    <li class="mb-2"><strong>Meshes and geometry</strong> - Flags the heavy meshes, missing detail levels and awkward colliders that cost the most frame time in a busy instance.</li>
+                    <li class="mb-2"><strong>Real memory, not estimates</strong> - VRAM is measured from what the GPU actually holds, so render textures, font atlases and UI masks are counted rather than guessed at.</li>
+                    <li class="mb-2"><strong>Reads your Udon before it ships</strong> - Compiled Udon is checked for the patterns that get a world rate-limited or desynced, such as network calls made every frame.</li>
+                    <li class="mb-2"><strong>Lighting integrations</strong> - LTCGI, Light Volumes and AudioLink are each checked for the setup mistakes that leave a screen dark, a bake stuck, or a reactive object silently unlinked.</li>
+                    <li class="mb-2"><strong>A stress scene on demand</strong> - It can build a deliberately punishing test scene so you can see how your world behaves under load before an event rather than during one.</li>
+                    <li class="mb-2"><strong>Your custom entries survive updates</strong> - The shader lists it works from live in your project rather than inside the package, so upgrading the toolbox does not wipe what you added.</li>
+                </ul>
+                <h3 class="text-glow-pink opt-group" data-collapsed>In practice</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Scan, then triage</strong> - Run it and you get findings ranked by how much they matter, each with a button that selects the offending object so you can see it in context.</li>
+                    <li class="mb-2"><strong>One number to aim at</strong> - The World Profiler turns the whole scan into an OPTIMAL, MODERATE or SEVERE verdict, weighted heavily toward realtime shadow casters because that is usually what is hurting.</li>
+                </ul>
+            </div>
+        </div>
         </div>
 
             <div id="lightboxOverlay" class="lightbox-overlay">
@@ -1304,5 +1520,6 @@
 </main>
 
     <script type="module" src="app.js"></script>
+    <script src="docs-shell.js" defer></script>
 </body>
 </html>

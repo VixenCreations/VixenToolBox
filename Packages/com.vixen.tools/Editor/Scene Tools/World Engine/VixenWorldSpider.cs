@@ -297,9 +297,7 @@ namespace VixenTools.Editor
                     }
                     else
                     {
-                        string fallback = _validShaderList.Contains("VRChat/Mobile/Toon Standard")
-                            ? "VRChat/Mobile/Toon Standard"
-                            : _validShaderList[0];
+                        string fallback = PickDefaultReplacementShader();
 
                         _shaderSelectButton.text = fallback;
                         _targetReplacementShader = Shader.Find(fallback);
@@ -579,9 +577,15 @@ namespace VixenTools.Editor
             AuditUdonPersistence();
 
             AuditNativeVideoPipelines();
+            AuditPostProcessing();
+            AuditLightmapAndGI();
             AuditLightVolumesEcosystem();
+            AuditParticleVolumesEcosystem();
             AuditProTVEcosystem();
             AuditTxlEcosystem();
+            AuditTxlPlayerAudio();
+            AuditTxlPortal();
+            AuditTxlMisc();
             AuditIwaSyncEcosystem();
             AuditVizVidEcosystem();
             AuditRinvoSearchEcosystem();
@@ -742,8 +746,153 @@ namespace VixenTools.Editor
             return null;
         }
 
+        private const int UDON_HEAVY_INSTRUCTION_THRESHOLD = 4000;
+
+        private static readonly string[] VrslAudioLinkTypeNames =
+        {
+            "VRSL.VRStageLighting_AudioLink_Static",
+            "VRSL.VRStageLighting_AudioLink_Laser",
+            "VRSL_AudioLink_SmoothingPanel",
+        };
+
+        private static readonly string[] ProTvUrlInputHostTypeNames =
+        {
+            "ArchiTech.ProTV.MediaControls",
+            "ArchiTech.ProTV.QueueUI",
+            "ArchiTech.ProTV.PlaylistUI",
+        };
+
+        private VRC.SDK3.Components.VRCUrlInputField FindProTvUrlInput()
+        {
+            foreach (var typeName in ProTvUrlInputHostTypeNames)
+            {
+                Type hostType = GetTypeSafe(typeName);
+                if (hostType == null) continue;
+
+                foreach (var host in GetCachedObjects(hostType, true))
+                {
+                    var comp = host as Component;
+                    if (comp == null) continue;
+
+                    var field = comp.GetComponentInChildren<VRC.SDK3.Components.VRCUrlInputField>(true);
+                    if (field != null) return field;
+                }
+            }
+            return null;
+        }
+
+        private Component FindProTvUrlInputHost()
+        {
+            foreach (var typeName in ProTvUrlInputHostTypeNames)
+            {
+                Type hostType = GetTypeSafe(typeName);
+                if (hostType == null) continue;
+
+                foreach (var host in GetCachedObjects(hostType, true))
+                {
+                    var comp = host as Component;
+                    if (comp != null && comp.GetComponentInChildren<VRC.SDK3.Components.VRCUrlInputField>(true) != null)
+                    {
+                        return comp;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private string PickDefaultReplacementShader()
+        {
+            foreach (var name in ShaderDictionaryAsset.AllVixenShaders())
+            {
+                if (_validShaderList.Contains(name)) return name;
+            }
+            return _validShaderList.Count > 0 ? _validShaderList[0] : "VixForge/World Surface";
+        }
+
+        private Shader ResolveReplacementShader()
+        {
+            if (_targetReplacementShader != null) return _targetReplacementShader;
+
+            foreach (var name in ShaderDictionaryAsset.AllVixenShaders())
+            {
+                Shader s = Shader.Find(name);
+                if (s != null) return s;
+            }
+            return null;
+        }
+
+        private static readonly HashSet<string> UdonOpcodes = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "NOP", "PUSH", "POP", "JUMP_IF_FALSE", "JUMP", "EXTERN", "ANNOTATION", "JUMP_INDIRECT", "COPY",
+        };
+
+        private static int CountUdonInstructions(string uasm)
+        {
+            if (string.IsNullOrEmpty(uasm)) return 0;
+
+            int count = 0;
+            bool inCode = false;
+
+            using (var reader = new System.IO.StringReader(uasm))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    string trimmed = line.Trim();
+                    if (trimmed.Length == 0) continue;
+
+                    if (trimmed.StartsWith(".code_start", StringComparison.Ordinal)) { inCode = true; continue; }
+                    if (trimmed.StartsWith(".code_end", StringComparison.Ordinal)) { inCode = false; continue; }
+                    if (!inCode || trimmed[0] == '.') continue;
+
+                    int cut = trimmed.IndexOfAny(new[] { ',', ' ', '\t' });
+                    string token = cut < 0 ? trimmed : trimmed.Substring(0, cut);
+                    if (UdonOpcodes.Contains(token)) count++;
+                }
+            }
+
+            return count;
+        }
+
         private static System.Reflection.MethodInfo _getUdonTypeMethod;
         private static bool _udonReflectionInitialized = false;
+
+        private static void EnsureUdonReflection()
+        {
+            if (_udonReflectionInitialized) return;
+
+            try
+            {
+                var editorAsm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "UdonSharp.Editor");
+                if (editorAsm != null)
+                {
+                    Type utilityType = editorAsm.GetType("UdonSharp.Editor.UdonSharpEditorUtility");
+                    _getUdonTypeMethod = utilityType?.GetMethod("GetUdonSharpBehaviourType", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                }
+            }
+            catch (Exception) { }
+            finally
+            {
+                _udonReflectionInitialized = true;
+            }
+        }
+
+        private static Type GetUdonBackingType(UdonBehaviour udon)
+        {
+            if (udon == null || udon.programSource == null) return null;
+
+            EnsureUdonReflection();
+            if (_getUdonTypeMethod == null) return null;
+
+            try
+            {
+                return _getUdonTypeMethod.Invoke(null, new object[] { udon }) as Type;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
 
         private Dictionary<VRC.Udon.AbstractUdonProgramSource, string> _udonTypeNameCache = new Dictionary<VRC.Udon.AbstractUdonProgramSource, string>();
 
@@ -756,35 +905,12 @@ namespace VixenTools.Editor
                 return cachedName;
             }
 
-            if (!_udonReflectionInitialized)
-            {
-                try
-                {
-                    var editorAsm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "UdonSharp.Editor");
-                    if (editorAsm != null)
-                    {
-                        Type utilityType = editorAsm.GetType("UdonSharp.Editor.UdonSharpEditorUtility");
-                        _getUdonTypeMethod = utilityType?.GetMethod("GetUdonSharpBehaviourType", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-                    }
-                }
-                catch (Exception) { }
-                finally
-                {
-                    _udonReflectionInitialized = true;
-                }
-            }
+            EnsureUdonReflection();
 
             string resolvedName = string.Empty;
 
-            if (_getUdonTypeMethod != null)
-            {
-                try
-                {
-                    Type backingType = _getUdonTypeMethod.Invoke(null, new object[] { udon }) as Type;
-                    if (backingType != null) resolvedName = backingType.FullName;
-                }
-                catch (Exception) { }
-            }
+            Type resolvedType = GetUdonBackingType(udon);
+            if (resolvedType != null) resolvedName = resolvedType.FullName;
 
             if (string.IsNullOrEmpty(resolvedName))
             {
@@ -2373,12 +2499,19 @@ namespace VixenTools.Editor
                 }
             }
 
-            Type vrslAdapterType = GetTypeSafe("VRSL.AudioLinkAdapter.VRSL_AudioLinkAdapter");
-            if (vrslAdapterType != null)
+            foreach (var vrslTypeName in VrslAudioLinkTypeNames)
             {
-                foreach (var adapter in GetCachedObjects(vrslAdapterType, true))
+                Type vrslType = GetTypeSafe(vrslTypeName);
+                if (vrslType == null) continue;
+
+                foreach (var fixture in GetCachedObjects(vrslType, true))
                 {
-                    if (!coreExists) LogDiagnostic("3RD PARTY: VRSL", "Dead VRSL Adapter", "VRSL is waiting for AudioLink but the Core is missing.", "#ff00aa", (Component)adapter);
+                    if (!coreExists)
+                    {
+                        LogDiagnostic("3RD PARTY: VRSL", "VRSL Fixture Without AudioLink",
+                            $"'{((Component)fixture).gameObject.name}' is an AudioLink VRSL fixture, but there is no AudioLink in this scene. It will not react to music.",
+                            "#ff00aa", (Component)fixture);
+                    }
                 }
             }
 
@@ -2458,17 +2591,13 @@ namespace VixenTools.Editor
                     int detectedEnum = 0;
                     string detectedName = "";
 
-                    Type protvUrlInputType = GetTypeSafe("ArchiTech.ProTV.UrlInput");
-                    if (protvUrlInputType != null)
+                    Component protvInputHost = FindProTvUrlInputHost();
+                    if (protvInputHost != null)
                     {
-                        var protvInput = FindObjectOfType(protvUrlInputType);
-                        if (protvInput != null)
-                        {
-                            detectedUi = protvInput as UdonBehaviour;
-                            detectedInput = ((Component)protvInput).GetComponentInChildren<VRC.SDK3.Components.VRCUrlInputField>(true);
-                            detectedEnum = 2;
-                            detectedName = "ProTV 3";
-                        }
+                        detectedUi = protvInputHost as UdonBehaviour;
+                        detectedInput = protvInputHost.GetComponentInChildren<VRC.SDK3.Components.VRCUrlInputField>(true);
+                        detectedEnum = 2;
+                        detectedName = "ProTV 3";
                     }
 
                     if (detectedUi == null)
@@ -2559,17 +2688,15 @@ namespace VixenTools.Editor
                     string expectedName = "";
 
                     Type protvTvType = GetTypeSafe("ArchiTech.ProTV.TVManager");
-                    Type protvInputType = GetTypeSafe("ArchiTech.ProTV.UrlInput");
                     if (protvTvType != null && currentUiController.GetComponent(protvTvType) != null)
                     {
                         expectedEnum = 2; expectedName = "ProTV 3";
-                        if (protvInputType != null)
                         {
-                            var actualInput = currentUiController.GetComponentInChildren(protvInputType) ?? FindObjectOfType(protvInputType);
+                            var actualInput = FindProTvUrlInputHost();
                             if (actualInput != null)
                             {
                                 LogDiagnostic("PROTV + RINVO ECOSYSTEM", "Invalid ProTV UI Target",
-                                    $"'{component.gameObject.name}' is pointing directly to the TVManager instead of the UrlInput component. Rinvo's custom event ('EndEditUrlInput') exclusively targets the UrlInput script.",
+                                    $"'{component.gameObject.name}' points at the TVManager instead of the panel that holds the URL box. Rinvo sends its event to that panel, so search results never reach the TV.",
                                     "#ff00aa", component, () => {
                                         Undo.RecordObject(component, "Fix ProTV Target");
                                         uiControllerField?.SetValue(searchManager, actualInput as UdonBehaviour);
@@ -2761,9 +2888,428 @@ namespace VixenTools.Editor
             }
         }
 
+        private object GetFieldValue(Type type, object instance, string fieldName)
+        {
+            var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
+            var field = type.GetField(fieldName, flags);
+            return field?.GetValue(instance);
+        }
+
+        private void AuditTxlPlayerAudio()
+        {
+            Type managerType = GetTypeSafe("Texel.AudioOverrideManager");
+            Type zoneType = GetTypeSafe("Texel.AudioOverrideZone");
+
+            if (managerType != null)
+            {
+                var managers = GetCachedObjects(managerType, true);
+
+                if (managers.Length > 1)
+                {
+                    LogDiagnostic("TXL PLAYER AUDIO", "More Than One Audio Manager",
+                        $"Found {managers.Length} Audio Override Managers. Keep one, or they will fight over each player's voice settings.",
+                        "#ff00aa", (Component)managers[1]);
+                }
+
+                foreach (var manager in managers)
+                {
+                    var comp = (Component)manager;
+
+                    if (GetFieldValue(managerType, manager, "defaultZone") == null)
+                    {
+                        LogDiagnostic("TXL PLAYER AUDIO", "No Default Audio Zone",
+                            $"'{comp.gameObject.name}' has no default zone, so players outside every zone keep VRChat's default voice range.",
+                            "#ffaa00", comp);
+                    }
+
+                    var zones = GetFieldValue(managerType, manager, "overrideZones") as Array;
+                    if (zones != null)
+                    {
+                        int empty = 0;
+                        foreach (var z in zones) if (z == null) empty++;
+
+                        if (empty > 0)
+                        {
+                            LogDiagnostic("TXL PLAYER AUDIO", "Empty Zone Slot",
+                                $"'{comp.gameObject.name}' lists {empty} empty zone slots. Remove them so the zones you set up are the ones that run.",
+                                "#ffaa00", comp);
+                        }
+                    }
+                }
+            }
+
+            if (zoneType != null)
+            {
+                foreach (var zone in GetCachedObjects(zoneType, true))
+                {
+                    var comp = (Component)zone;
+
+                    bool hasZone = GetFieldValue(zoneType, zone, "zone") != null
+                                   || GetFieldValue(zoneType, zone, "trackedZone") != null;
+
+                    if (!hasZone)
+                    {
+                        LogDiagnostic("TXL PLAYER AUDIO", "Audio Zone Has No Trigger",
+                            $"'{comp.gameObject.name}' has no Zone Trigger assigned, so nothing can ever enter it and its voice settings never apply.",
+                            "#ff00aa", comp);
+                    }
+
+                    if (GetFieldValue(zoneType, zone, "localZoneSettings") == null
+                        && GetFieldValue(zoneType, zone, "defaultSettings") == null)
+                    {
+                        LogDiagnostic("TXL PLAYER AUDIO", "Audio Zone Has No Settings",
+                            $"'{comp.gameObject.name}' has neither local nor default voice settings assigned, so entering it changes nothing.",
+                            "#ffaa00", comp);
+                    }
+                }
+            }
+        }
+
+        private void AuditTxlPortal()
+        {
+            Type portalType = GetTypeSafe("Texel.PortalManager");
+            if (portalType == null) return;
+
+            foreach (var portal in GetCachedObjects(portalType, true))
+            {
+                var comp = (Component)portal;
+
+                if (GetFieldValue(portalType, portal, "station") == null)
+                {
+                    LogDiagnostic("TXL PORTAL", "Portal Has No Station",
+                        $"'{comp.gameObject.name}' has no VRC Station assigned. The portal cannot seat anyone without one.",
+                        "#ff00aa", comp);
+                }
+
+                if (GetFieldValue(portalType, portal, "botZone") == null)
+                {
+                    LogDiagnostic("TXL PORTAL", "Portal Has No Zone Trigger",
+                        $"'{comp.gameObject.name}' has no zone trigger assigned, so it will not detect anyone arriving.",
+                        "#ffaa00", comp);
+                }
+            }
+        }
+
+        private void AuditTxlMisc()
+        {
+            Type chairType = GetTypeSafe("Texel.BasicChair");
+            if (chairType != null)
+            {
+                foreach (var chair in GetCachedObjects(chairType, true))
+                {
+                    var comp = (Component)chair;
+                    var station = comp.GetComponentInChildren<VRC.SDK3.Components.VRCStation>(true);
+
+                    if (station == null)
+                    {
+                        LogDiagnostic("TXL MISC", "Chair Has No Station",
+                            $"'{comp.gameObject.name}' is a chair with no VRC Station on it or under it. Nobody will be able to sit down.",
+                            "#ff00aa", comp);
+                    }
+                }
+            }
+
+            Type swapperType = GetTypeSafe("Texel.MaterialSwapper");
+            if (swapperType != null)
+            {
+                foreach (var swapper in GetCachedObjects(swapperType, true))
+                {
+                    var comp = (Component)swapper;
+                    var meshes = GetFieldValue(swapperType, swapper, "meshList") as Array;
+                    var materials = GetFieldValue(swapperType, swapper, "materialList") as Array;
+
+                    if (meshes == null || meshes.Length == 0)
+                    {
+                        LogDiagnostic("TXL MISC", "Material Swapper Has No Meshes",
+                            $"'{comp.gameObject.name}' swaps materials but has no meshes listed, so it does nothing.",
+                            "#ffaa00", comp);
+                    }
+                    else if (materials == null || materials.Length == 0)
+                    {
+                        LogDiagnostic("TXL MISC", "Material Swapper Has No Materials",
+                            $"'{comp.gameObject.name}' lists {meshes.Length} meshes but no materials to swap in.",
+                            "#ffaa00", comp);
+                    }
+                }
+            }
+        }
+
+        private void AuditPostProcessing()
+        {
+            Type layerType = GetTypeSafe("UnityEngine.Rendering.PostProcessing.PostProcessLayer");
+            Type volumeType = GetTypeSafe("UnityEngine.Rendering.PostProcessing.PostProcessVolume");
+
+            if (layerType == null || volumeType == null) return;
+
+            var volumes = GetCachedObjects(volumeType, true);
+            if (volumes.Length == 0) return;
+
+            Camera referenceCamera = null;
+            VRCSceneDescriptor descriptor = null;
+
+            foreach (var d in GetCachedObjects<VRCSceneDescriptor>(true))
+            {
+                descriptor = d;
+                referenceCamera = d.ReferenceCamera != null ? d.ReferenceCamera.GetComponent<Camera>() : null;
+                break;
+            }
+
+            if (descriptor != null && referenceCamera == null)
+            {
+                LogDiagnostic("POST PROCESSING", "No Reference Camera",
+                    "This scene has post processing volumes, but the Scene Descriptor has no Reference Camera. VRChat will not show any post processing until you set one.",
+                    "#ff00aa", descriptor);
+            }
+
+            object activeLayer = null;
+            if (referenceCamera != null)
+            {
+                activeLayer = referenceCamera.GetComponent(layerType);
+
+                if (activeLayer == null)
+                {
+                    LogDiagnostic("POST PROCESSING", "Reference Camera Has No Post Process Layer",
+                        $"'{referenceCamera.name}' is the Reference Camera but has no Post Process Layer, so none of your volumes will render.",
+                        "#ff00aa", referenceCamera);
+                }
+            }
+
+            int volumeMask = 0;
+            bool haveMask = false;
+
+            if (activeLayer != null)
+            {
+                var maskValue = GetFieldValue(layerType, activeLayer, "volumeLayer");
+                if (maskValue is LayerMask mask)
+                {
+                    volumeMask = mask.value;
+                    haveMask = true;
+                }
+
+                if (haveMask && volumeMask == 0)
+                {
+                    LogDiagnostic("POST PROCESSING", "Volume Layer Set To Nothing",
+                        $"The Post Process Layer on '{referenceCamera.name}' is not watching any layer, so it will never pick up a volume. Set it to the layer your volumes sit on.",
+                        "#ff00aa", referenceCamera);
+                }
+
+                var aaValue = GetFieldValue(layerType, activeLayer, "antialiasingMode");
+                if (aaValue != null && aaValue.ToString() == "TemporalAntialiasing")
+                {
+                    LogDiagnostic("POST PROCESSING", "Temporal Anti-Aliasing Not Supported",
+                        $"The Post Process Layer on '{referenceCamera.name}' uses Temporal Anti-Aliasing. VRChat does not support it and will reject the upload. Pick FXAA or SMAA instead.",
+                        "#ff00aa", referenceCamera);
+                }
+
+                bool triggerMissing = GetFieldValue(layerType, activeLayer, "volumeTrigger") == null;
+                if (triggerMissing)
+                {
+                    int localVolumes = 0;
+                    foreach (var v in volumes)
+                    {
+                        var isGlobal = GetFieldValue(volumeType, v, "isGlobal");
+                        if (isGlobal is bool g && !g) localVolumes++;
+                    }
+
+                    if (localVolumes > 0)
+                    {
+                        LogDiagnostic("POST PROCESSING", "No Volume Trigger",
+                            $"The Post Process Layer on '{referenceCamera.name}' has no Trigger set. Global volumes still work, but the {localVolumes} volumes with a blend area will never activate. Set Trigger to the camera itself.",
+                            "#ffaa00", referenceCamera, () => {
+                                Undo.RecordObject((Component)activeLayer, "Set Volume Trigger");
+                                layerType.GetField("volumeTrigger").SetValue(activeLayer, referenceCamera.transform);
+                                PrefabUtility.RecordPrefabInstancePropertyModifications((Component)activeLayer);
+                            });
+                    }
+                }
+            }
+
+            foreach (var v in volumes)
+            {
+                var comp = (Component)v;
+
+                if (GetFieldValue(volumeType, v, "sharedProfile") == null)
+                {
+                    LogDiagnostic("POST PROCESSING", "Volume Has No Profile",
+                        $"'{comp.gameObject.name}' is a post processing volume with no profile assigned, so it changes nothing.",
+                        "#ffaa00", comp);
+                    continue;
+                }
+
+                if (haveMask && volumeMask != 0 && (volumeMask & (1 << comp.gameObject.layer)) == 0)
+                {
+                    LogDiagnostic("POST PROCESSING", "Volume On An Ignored Layer",
+                        $"'{comp.gameObject.name}' sits on layer '{LayerMask.LayerToName(comp.gameObject.layer)}', which the Post Process Layer is not watching. This volume is skipped.",
+                        "#ff00aa", comp);
+                }
+            }
+        }
+
+        private void AuditLightmapAndGI()
+        {
+            bool sceneIsBaked = LightmapSettings.lightmaps != null && LightmapSettings.lightmaps.Length > 0;
+            bool hasBakedProbes = LightmapSettings.lightProbes != null && LightmapSettings.lightProbes.count > 0;
+            bool hasProbeGroup = GetCachedObjects<LightProbeGroup>(true).Length > 0;
+            bool hasLightVolumes = GetTypeSafe("VRCLightVolumes.LightVolumeManager") != null
+                                   && GetCachedObjects(GetTypeSafe("VRCLightVolumes.LightVolumeManager"), true).Length > 0;
+
+            int unlitDynamics = 0;
+            Renderer firstUnlit = null;
+
+            foreach (var renderer in GetCachedObjects<Renderer>(true))
+            {
+                if (renderer == null) continue;
+                if (renderer is ParticleSystemRenderer) continue;
+
+                bool contributesGI = GameObjectUtility.AreStaticEditorFlagsSet(renderer.gameObject, StaticEditorFlags.ContributeGI);
+
+                if (contributesGI)
+                {
+                    var rb = renderer.GetComponentInParent<Rigidbody>();
+                    if (rb != null && !rb.isKinematic)
+                    {
+                        LogDiagnostic("LIGHTING & GI", "Baked Lighting On A Moving Object",
+                            $"'{renderer.gameObject.name}' is set to Contribute GI but sits under a physics Rigidbody. Its baked lighting stays where it was baked, so the object will look wrong once it moves. Untick Contribute GI and light it with Light Probes or Light Volumes.",
+                            "#ff00aa", renderer, () => {
+                                Undo.RecordObject(renderer.gameObject, "Stop Contributing GI");
+                                var current = GameObjectUtility.GetStaticEditorFlags(renderer.gameObject);
+                                GameObjectUtility.SetStaticEditorFlags(renderer.gameObject, current & ~StaticEditorFlags.ContributeGI);
+                                PrefabUtility.RecordPrefabInstancePropertyModifications(renderer.gameObject);
+                            });
+                    }
+                    continue;
+                }
+
+                if (!sceneIsBaked) continue;
+                if (hasLightVolumes) continue;
+                if (renderer.lightProbeUsage != UnityEngine.Rendering.LightProbeUsage.Off) continue;
+
+                unlitDynamics++;
+                if (firstUnlit == null) firstUnlit = renderer;
+            }
+
+            if (unlitDynamics > 0 && firstUnlit != null)
+            {
+                LogDiagnostic("LIGHTING & GI", "Moving Objects Have No Lighting",
+                    $"{unlitDynamics} objects are not marked Contribute GI and have Light Probes turned off, so baked lighting never reaches them and they render flat. Set Light Probes to Blend Probes, or add Light Volumes.",
+                    "#ffaa00", firstUnlit, () => {
+                        foreach (var renderer in GetCachedObjects<Renderer>(true))
+                        {
+                            if (renderer == null || renderer is ParticleSystemRenderer) continue;
+                            if (GameObjectUtility.AreStaticEditorFlagsSet(renderer.gameObject, StaticEditorFlags.ContributeGI)) continue;
+                            if (renderer.lightProbeUsage != UnityEngine.Rendering.LightProbeUsage.Off) continue;
+
+                            Undo.RecordObject(renderer, "Turn On Light Probes");
+                            renderer.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.BlendProbes;
+                            PrefabUtility.RecordPrefabInstancePropertyModifications(renderer);
+                        }
+                    });
+            }
+
+            if (unlitDynamics > 0 && !hasProbeGroup && !hasLightVolumes && sceneIsBaked)
+            {
+                LogDiagnostic("LIGHTING & GI", "No Light Probes In Scene",
+                    "This scene has baked lighting but no Light Probe Group and no Light Volumes. Anything that moves, including players and pickups, will have no lighting to read.",
+                    "#ff00aa", null);
+            }
+
+            if (sceneIsBaked && hasProbeGroup && !hasBakedProbes && !hasLightVolumes)
+            {
+                LogDiagnostic("LIGHTING & GI", "Light Probes Not Baked",
+                    "There is a Light Probe Group in this scene, but no probe data has been baked. Bake your lighting so moving objects pick it up.",
+                    "#ffaa00", null);
+            }
+        }
+
+        private void AuditParticleVolumesEcosystem()
+        {
+            var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
+
+            Type managerType = GetTypeSafe("GPUParticleVolumes.ParticleVolumeManager");
+            if (managerType == null) return;
+
+            var rendererField = managerType.GetField("MeshRenderer", flags);
+            var includersField = managerType.GetField("ParticleVolumesIncluders", flags);
+            var excludersField = managerType.GetField("ParticleVolumesExcluders", flags);
+            var autoUpdateField = managerType.GetField("AutoUpdateVolumes", flags);
+
+            foreach (var manager in GetCachedObjects(managerType, true))
+            {
+                var comp = (Component)manager;
+
+                if (rendererField != null && rendererField.GetValue(manager) as MeshRenderer == null)
+                {
+                    LogDiagnostic("GPU PARTICLE VOLUMES", "No Mesh Assigned",
+                        $"'{comp.gameObject.name}' has no Mesh Renderer assigned, so it will not draw any grass or particles.",
+                        "#ff00aa", comp);
+                }
+
+                if (autoUpdateField != null && Convert.ToBoolean(autoUpdateField.GetValue(manager)))
+                {
+                    LogDiagnostic("GPU PARTICLE VOLUMES", "Volumes Update Every Frame",
+                        $"'{comp.gameObject.name}' recalculates its volumes every frame. Turn this off unless the volumes actually move at runtime.",
+                        "#ffaa00", comp, () => {
+                            Undo.RecordObject(comp, "Stop Per Frame Volume Updates");
+                            autoUpdateField.SetValue(manager, false);
+                            PrefabUtility.RecordPrefabInstancePropertyModifications(comp);
+                        });
+                }
+
+                CheckParticleVolumeList(comp, includersField, manager, "include");
+                CheckParticleVolumeList(comp, excludersField, manager, "exclude");
+            }
+        }
+
+        private void CheckParticleVolumeList(Component comp, System.Reflection.FieldInfo field, object manager, string role)
+        {
+            if (field == null) return;
+
+            var list = field.GetValue(manager) as Transform[];
+            if (list == null) return;
+
+            int empty = 0;
+            foreach (var t in list)
+            {
+                if (t == null) empty++;
+            }
+
+            if (empty > 0)
+            {
+                LogDiagnostic("GPU PARTICLE VOLUMES", "Empty Volume Slot",
+                    $"'{comp.gameObject.name}' has {empty} empty {role} slots. Remove them so the grass area matches what you set up.",
+                    "#ffaa00", comp);
+            }
+        }
+
         private void AuditLightVolumesEcosystem()
         {
             var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
+
+            Type shadowBakerType = GetTypeSafe("VRCLightVolumes.PointLightShadowRuntimeBaker");
+            if (shadowBakerType != null)
+            {
+                var targetField = shadowBakerType.GetField("TargetPointLightVolume", flags);
+                var realtimeField = shadowBakerType.GetField("Realtime", flags);
+
+                foreach (var baker in GetCachedObjects(shadowBakerType, true))
+                {
+                    var comp = (Component)baker;
+
+                    if (targetField != null && targetField.GetValue(baker) == null)
+                    {
+                        LogDiagnostic("LIGHT VOLUMES ECOSYSTEM", "Shadow Baker Has No Target",
+                            $"'{comp.gameObject.name}' bakes shadows but no Point Light Volume is assigned to receive them, so it does nothing.",
+                            "#ff00aa", comp);
+                    }
+
+                    if (realtimeField != null && Convert.ToBoolean(realtimeField.GetValue(baker)))
+                    {
+                        LogDiagnostic("LIGHT VOLUMES ECOSYSTEM", "Shadows Rebake Continuously",
+                            $"'{comp.gameObject.name}' is set to Realtime, so it rebakes a full shadow cubemap on a repeating loop. Use this only for a light that actually moves.",
+                            "#ffaa00", comp);
+                    }
+                }
+            }
 
             Type managerType = GetTypeSafe("VRCLightVolumes.LightVolumeManager");
             if (managerType != null)
@@ -2883,7 +3429,7 @@ namespace VixenTools.Editor
             {
                 bool isDeclaredNoSync = false;
                 string typeName = GetUdonTypeNameSafe(udon);
-                Type backingType = GetTypeSafe(typeName);
+                Type backingType = GetUdonBackingType(udon);
 
                 if (backingType != null && udbSyncModeAttrType != null)
                 {
@@ -2921,7 +3467,7 @@ namespace VixenTools.Editor
                             $"'{udon.gameObject.name}' is set to Continuous in the inspector, but its C# script '{typeName}' explicitly declares NoVariableSync. This is a Unity serialization ghost wasting network IDs. Click Fix to align the inspector to the code.",
                             "#ff00aa", udon.gameObject, () => {
                                 Undo.RecordObject(udon, "Align Udon Sync Mode");
-                                udon.SyncMethod = (VRC.SDKBase.Networking.SyncType)4;
+                                udon.SyncMethod = VRC.SDKBase.Networking.SyncType.None;
                                 PrefabUtility.RecordPrefabInstancePropertyModifications(udon);
                             });
                     }
@@ -2944,17 +3490,14 @@ namespace VixenTools.Editor
                     string uasm = (string)getUasm.Invoke(cache, new object[] { uAsset });
                     if (!string.IsNullOrEmpty(uasm))
                     {
-                        int count = 0;
-                        using (var reader = new System.IO.StringReader(uasm))
-                        {
-                            string line;
-                            while ((line = reader.ReadLine()) != null)
-                            {
-                                if (line.Contains(',') || line.TrimEnd().EndsWith("EXTERN")) count++;
-                            }
-                        }
+                        int count = CountUdonInstructions(uasm);
 
-                        if (count > 4000) LogDiagnostic("UDON COMPUTE: HEAVY INSTRUCTIONS", "Heavy Instruction Count", $"'{uAsset.name}' executes ~{count} UASM lines.", "#ffaa00", udon.gameObject);
+                        if (count > UDON_HEAVY_INSTRUCTION_THRESHOLD)
+                        {
+                            LogDiagnostic("UDON COMPUTE: HEAVY INSTRUCTIONS", "Heavy Instruction Count",
+                                $"'{uAsset.name}' runs about {count} Udon instructions. Large scripts cost frame time every time they run.",
+                                "#ffaa00", udon.gameObject);
+                        }
                     }
                 }
             }
@@ -3072,8 +3615,97 @@ namespace VixenTools.Editor
             }
         }
 
+        private const int VRC_LAYER_PLAYER = 9;
+        private const int VRC_LAYER_PLAYER_LOCAL = 10;
+
+        private static bool CollidesWithPlayers(int layer)
+        {
+            return !Physics.GetIgnoreLayerCollision(layer, VRC_LAYER_PLAYER_LOCAL)
+                || !Physics.GetIgnoreLayerCollision(layer, VRC_LAYER_PLAYER);
+        }
+
+        private static string DescribeColliderType(Collider c)
+        {
+            if (c is BoxCollider) return "Box";
+            if (c is SphereCollider) return "Sphere";
+            if (c is CapsuleCollider) return "Capsule";
+            if (c is TerrainCollider) return "Terrain";
+            if (c is WheelCollider) return "Wheel";
+            if (c is MeshCollider mc) return mc.convex ? "Mesh (convex)" : "Mesh (concave)";
+            return c.GetType().Name;
+        }
+
+        private void AuditCollisionTypes()
+        {
+            var counts = new Dictionary<string, int>();
+            int triggers = 0;
+            int walkThrough = 0;
+
+            foreach (var col in GetCachedObjects<Collider>(true))
+            {
+                if (col == null) continue;
+
+                string kind = DescribeColliderType(col);
+                counts.TryGetValue(kind, out int n);
+                counts[kind] = n + 1;
+
+                if (col.isTrigger)
+                {
+                    triggers++;
+                    continue;
+                }
+
+                int layer = col.gameObject.layer;
+
+                if (!CollidesWithPlayers(layer))
+                {
+                    walkThrough++;
+
+                    if (col.GetComponent<Renderer>() != null)
+                    {
+                        LogDiagnostic("PHYSICS & COLLIDERS", "Players Walk Through This",
+                            $"'{col.gameObject.name}' has a collider on layer '{LayerMask.LayerToName(layer)}', which players pass straight through. Move it to Environment or Default if it should be solid.",
+                            "#ffaa00", col, () => {
+                                Undo.RecordObject(col.gameObject, "Make Collider Solid");
+                                col.gameObject.layer = LayerMask.NameToLayer("Environment") >= 0
+                                    ? LayerMask.NameToLayer("Environment")
+                                    : 0;
+                                PrefabUtility.RecordPrefabInstancePropertyModifications(col.gameObject);
+                            });
+                    }
+                }
+            }
+
+            if (counts.Count > 0)
+            {
+                var parts = counts.OrderByDescending(kv => kv.Value).Select(kv => $"{kv.Value} {kv.Key}");
+                LogDiagnostic("PHYSICS & COLLIDERS", "Collider Breakdown",
+                    $"This scene has {string.Join(", ", parts)}. {triggers} are triggers, and {walkThrough} sit on layers players pass through.",
+                    "#00e5ff", null);
+            }
+
+            foreach (var mc in GetCachedObjects<MeshCollider>(true))
+            {
+                if (mc == null || mc.convex) continue;
+
+                var rb = mc.GetComponentInParent<Rigidbody>();
+                if (rb != null && !rb.isKinematic)
+                {
+                    LogDiagnostic("PHYSICS & COLLIDERS", "Concave Collider On Moving Object",
+                        $"'{mc.gameObject.name}' has a concave mesh collider under a physics Rigidbody. Unity cannot simulate that, so the object will not collide correctly. Tick Convex, or use box and sphere colliders.",
+                        "#ff00aa", mc, () => {
+                            Undo.RecordObject(mc, "Make Convex");
+                            mc.convex = true;
+                            PrefabUtility.RecordPrefabInstancePropertyModifications(mc);
+                        });
+                }
+            }
+        }
+
         private void AuditPhysics()
         {
+            AuditCollisionTypes();
+
             foreach (var collider in GetCachedObjects<MeshCollider>(true))
             {
                 var component = (Component)collider;
@@ -3408,7 +4040,7 @@ namespace VixenTools.Editor
                             {
                                 if (mats[i] == null)
                                 {
-                                    Shader targetShader = _targetReplacementShader != null ? _targetReplacementShader : Shader.Find("Standard");
+                                    Shader targetShader = ResolveReplacementShader() ?? Shader.Find("Standard");
                                     Material newMat = new Material(targetShader);
 
                                     string cleanName = string.Join("_", renderer.gameObject.name.Split(System.IO.Path.GetInvalidFileNameChars()));
@@ -3806,7 +4438,15 @@ namespace VixenTools.Editor
 
                             if (!isWhitelisted)
                             {
-                                LogDiagnostic("SHADERS & REPLACER", "Non-Whitelisted Shader", $"'{mat.name}' uses '{shaderName}'. Ready to convert.", "#ffaa00", mat, () => {
+                                bool isRetired = ShaderDictionaryAsset.IsRetiredVixenShader(mat.shader);
+
+                                string findingName = isRetired ? "Retired VixForge Shader" : "Non-Whitelisted Shader";
+                                string findingDesc = isRetired
+                                    ? $"'{mat.name}' still uses '{shaderName}', which we replaced in a later release. Click Fix to move it to {_targetReplacementShader.name}."
+                                    : $"'{mat.name}' uses '{shaderName}'. Ready to convert.";
+                                string findingColour = isRetired ? "#ff00aa" : "#ffaa00";
+
+                                LogDiagnostic("SHADERS & REPLACER", findingName, findingDesc, findingColour, mat, () => {
                                     if (_targetReplacementShader != null)
                                     {
                                         Undo.RecordObject(mat, "Replace Shader");
@@ -3818,7 +4458,26 @@ namespace VixenTools.Editor
                         }
                     }
 
-                    if (shaderName.IndexOf("Poiyomi", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    if (ShaderDictionaryAsset.IsOrphanedPoiyomiShader(mat.shader))
+                    {
+                        bool locked = ShaderDictionaryAsset.IsLockedPoiyomiShader(mat.shader);
+
+                        string detail = locked
+                            ? $"'{mat.name}' uses a locked Poiyomi shader, but Poiyomi is not in this project. The material still renders, but its inspector will not load and you cannot unlock or edit it."
+                            : $"'{mat.name}' uses '{shaderName}', but Poiyomi is not in this project. This material is broken.";
+
+                        LogDiagnostic("SHADERS & REPLACER", "Poiyomi Missing From Project",
+                            detail + " Install Poiyomi, or convert this material to one of your own shaders.",
+                            "#ff00aa", mat, () => {
+                                if (_targetReplacementShader != null)
+                                {
+                                    Undo.RecordObject(mat, "Replace Orphaned Poiyomi Shader");
+                                    mat.shader = _targetReplacementShader;
+                                    EditorUtility.SetDirty(mat);
+                                }
+                            });
+                    }
+                    else if (shaderName.IndexOf("Poiyomi", StringComparison.OrdinalIgnoreCase) >= 0 ||
                         shaderName.IndexOf("lilToon", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         if (shaderName.IndexOf("Locked", StringComparison.OrdinalIgnoreCase) < 0 &&

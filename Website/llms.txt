@@ -23,7 +23,6 @@
 
 - [Shader changelogs](https://vixencreations.github.io/VixenToolBox/shader-changelogs.html): release notes for each shader.
 - [Toolbox changelog](https://vixencreations.github.io/VixenToolBox/changelog.html): release notes for the editor suite.
-- [Deep-dive docs](https://vixencreations.github.io/VixenToolBox/docs.html): longer guides for the editor tools.
 - [Why choose us](https://vixencreations.github.io/VixenToolBox/why-choose-us.html): how these tools compare to the alternatives.
 - [About](https://vixencreations.github.io/VixenToolBox/about.html): who makes this.
 - [AI transparency](https://vixencreations.github.io/VixenToolBox/ai-transparency.html): where AI was and was not used in building these tools.

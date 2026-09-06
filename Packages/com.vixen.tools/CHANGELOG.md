@@ -5,6 +5,30 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.17.0] - 2026-09-05
+*Quest conversion for worlds, and the World Engine learns collision layers, baked lighting and four more packages.*
+
+### Added
+* **Quest World Converter**, a new tool at `VixenTools/Scene/Quest World Converter`. Worlds never had a Quest conversion path, only avatars did. Press **Scan Open Scenes** and it collects every material on your renderers, terrains and skybox, then **Convert Selected Materials** writes Quest-ready copies into `Assets/VixenTools/Quest World/<Scene>/`. Your originals are never touched. Materials already using a Quest shader are detected and left alone. **Point the scene at the new materials** is off by default, and asks before it swaps anything.
+* **Collision layers, not just collider shapes.** The World Engine now reports what your colliders actually are, and reads your project's real collision matrix to find geometry players will walk straight through. It also catches a concave mesh collider under a physics Rigidbody, which Unity cannot simulate at all.
+* **Baked lighting checks.** New findings for objects set to Contribute GI that sit under a Rigidbody, so their baked lighting stays behind when they move; for moving objects with Light Probes switched off in a baked scene; for a baked scene with no probes and no Light Volumes; and for a probe group that was never baked. If Light Volumes is in your scene, the probe findings stay quiet, because Light Volumes already covers that job.
+* **Post processing checks.** Missing Reference Camera, a reference camera with no Post Process Layer, a volume layer set to Nothing, volumes sitting on a layer the camera is not watching, volumes with no profile, and Temporal Anti-Aliasing, which VRChat does not accept.
+* **GPU Particle Volumes** support, covering a manager with no mesh assigned, volumes recalculating every frame, and empty include or exclude slots.
+* **TXL Player Audio, Portal and Misc** support, covering duplicate audio managers, zones with no trigger or no settings, portals missing their station or zone, chairs with no station, and material swappers with nothing to swap.
+* **Light Volumes 3.0** support for the runtime shadow baker, catching one with no target assigned and one left on Realtime.
+
+### Fixed
+* **Two World Engine checks had quietly stopped working.** The VRSL check looked for a class that no longer exists in VRSL, and the ProTV check looked for a `UrlInput` component that ProTV 3 removed. Both had been finding nothing at all. They now look for what those packages actually ship.
+* **The Udon sync fix wrote a value that does not exist.** Aligning an Udon behaviour's sync mode set the field to an undefined number, and VRChat's own setter then copied that number onto every other Udon behaviour on the same object. It now sets None properly.
+* **Udon instruction counts were inflated.** The heavy script warning counted data declarations as executed instructions. Measured across 251 real Udon programs, counts were about 22 percent high and up to 43 percent on individual scripts.
+* **Colliders and contacts could be deleted from an avatar.** The Optimization Suite only protected a PhysBone collider or contact when its Root Transform was filled in, but leaving that empty is the default and means the component uses its own transform. Those bones were left eligible for removal. Every collider and contact now protects the object it sits on.
+* **The Quest converter offered shaders VRChat rejects.** `Mobile/Standard` was a target and `Standard` was the fallback, and neither is on VRChat's mobile shader list, so uploads replaced them. Both converters now read that list from the SDK itself and offer all ten shaders on it.
+
+### Changed
+* **The shader replacer works with our shaders.** `VixenWear/` and `VixForge/` shaders are the replacement targets and are never flagged for conversion. Retired `VixenWorld/` and `Vixen/` shaders from earlier releases are flagged so you can move off them.
+* **Poiyomi materials are treated as broken when Poiyomi is missing.** A locked Poiyomi material still renders but its inspector will not load and it cannot be unlocked. These used to be protected from replacement by the rules covering hidden and optimized shaders. When Poiyomi is not in your project they are now offered for conversion instead.
+* **More third-party shaders left alone.** Towel, GPU Grass, GPU Infinite Grass, QvPen, Silent and Mochie shaders are no longer flagged for conversion.
+
 ## [2.16.0] - 2026-08-30
 *A new tool for when your materials quietly disagree with each other, and our X handle is now @VixForge.*
 

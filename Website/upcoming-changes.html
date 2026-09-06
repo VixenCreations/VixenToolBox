@@ -91,9 +91,10 @@
     <!-- UI Framework -->
     <script type="module" src="web-components.min.js"></script>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="docs-shell.css">
 </head>
 
-<body>
+<body class="docs-shell">
     <div class="background-art"></div>
 
 <nav class="sidebar">
@@ -139,11 +140,6 @@
                 List of Tools
             </fluent-anchor>
 
-            <fluent-anchor href="docs.html" class="nav-item">
-                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                Deep-Dive Docs
-            </fluent-anchor>
-
             <fluent-anchor href="shaderdocs.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M7 9.5a5.5 5.5 0 0 1 5-3"></path><circle cx="9.5" cy="9.5" r="1.2" fill="currentColor" stroke="none"></circle></svg>
                 Shader Docs
@@ -174,29 +170,15 @@
                 Get Help Here
             </fluent-anchor>
 
-            <fluent-anchor href="extended-projects.html" class="nav-item">
-                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                Extended Projects
-            </fluent-anchor>
-        </div>
+            </div>
     </nav>
     <main class="main-wrapper">
+        <div class="docs-layout">
+        <div class="docs-main" data-chip-label="Shader" data-chip-attr="data-version" data-chip-mode="prefix" data-shell-sections=".changelog-entry" data-shell-heading="h5" data-shell-mode="picker" data-search-label="Filter planned changes&hellip;">
         <div class="col align-items-center content">
 
             <div class="row align-items-center w-100 justify-content-between mb-4">
                 <h2 class="m-0 text-glow-pink">Upcoming Changes</h2>
-                <div class="row align-items-center">
-                    <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
-                    <fluent-select id="versionSelect" title="Select Version" style="min-width: 190px;">
-                        <fluent-option value="editor-2.1.0">VixForge Editor 2.1.0</fluent-option>
-                        <fluent-option value="toon-2.1.0">Toon 2.1.0</fluent-option>
-                        <fluent-option value="latex-5.1.0">Latex Ultra 5.1.0</fluent-option>
-                        <fluent-option value="clothingpro-2.1.0">Clothing Pro 2.1.0</fluent-option>
-                        <fluent-option value="furpro-2.1.0">Fur Pro 2.1.0</fluent-option>
-                        <fluent-option value="worldsurface-1.0.0">World Surface 1.0.0</fluent-option>
-                        <fluent-option value="worldfur-1.0.0">World Fur 1.0.0</fluent-option>
-                    </fluent-select>
-                </div>
             </div>
 
             <p class="caption1 m-0 mb-4" style="color: #9ca3af; max-width: 70ch;">What is coming in the next release, written as it stands today. Nothing here has shipped yet, so any of it may still change before it does. Everything already released is on the <a href="shader-changelogs.html">Shader Changelogs</a> page.</p>
@@ -474,6 +456,9 @@
 
         </div>
 
+        </div>
+      </div>
+
         <button id="jumpToTopBtn" class="jump-to-top" title="Back to top">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="12" y1="19" x2="12" y2="5"></line>
@@ -484,5 +469,6 @@
     </main>
 
     <script type="module" src="app.js"></script>
+    <script src="docs-shell.js" defer></script>
 </body>
 </html>

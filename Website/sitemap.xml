@@ -16,16 +16,6 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://vixencreations.github.io/VixenToolBox/shaderdocs.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://vixencreations.github.io/VixenToolBox/docs.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
     <loc>https://vixencreations.github.io/VixenToolBox/changelog.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -54,11 +44,6 @@
     <loc>https://vixencreations.github.io/VixenToolBox/social.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://vixencreations.github.io/VixenToolBox/extended-projects.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://vixencreations.github.io/VixenToolBox/about.html</loc>

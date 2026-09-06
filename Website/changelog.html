@@ -91,9 +91,10 @@
     <!-- UI Framework -->
     <script type="module" src="web-components.min.js"></script>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="docs-shell.css">
 </head>
 
-<body>
+<body class="docs-shell">
     <div class="background-art"></div>
 
     <nav class="sidebar">
@@ -139,11 +140,6 @@
                 List of Tools
             </fluent-anchor>
 
-            <fluent-anchor href="docs.html" class="nav-item">
-                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                Deep-Dive Docs
-            </fluent-anchor>
-
             <fluent-anchor href="shaderdocs.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M7 9.5a5.5 5.5 0 0 1 5-3"></path><circle cx="9.5" cy="9.5" r="1.2" fill="currentColor" stroke="none"></circle></svg>
                 Shader Docs
@@ -174,70 +170,51 @@
                 Get Help Here
             </fluent-anchor>
 
-            <fluent-anchor href="extended-projects.html" class="nav-item">
-                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                Extended Projects
-            </fluent-anchor>
-        </div>
+            </div>
     </nav>
 
     <main class="main-wrapper">
+        <div class="docs-layout">
+        <div class="docs-main" data-chip-label="Version" data-shell-sections=".changelog-entry" data-shell-heading="h5" data-shell-mode="picker" data-chip-attr="data-version" data-chip-mode="major" data-search-label="Filter releases&hellip;">
         <div class="col align-items-center content">
 
             <div class="row align-items-center w-100 justify-content-between mb-4">
                 <h1 class="m-0 text-glow-pink">Ecosystem Changelog</h1>
-                <div class="row align-items-center">
-                    <span class="caption1 me-2" style="font-weight: 600;">Jump to:</span>
-                    <fluent-select id="versionSelect" title="Select Version" style="min-width: 140px;">
-                        <fluent-option value="v2.16.0">v2.16.0</fluent-option>
-                        <fluent-option value="v2.15.1">v2.15.1</fluent-option>
-                        <fluent-option value="v2.15.0">v2.15.0</fluent-option>
-                        <fluent-option value="v2.14.0">v2.14.0</fluent-option>
-                        <fluent-option value="v2.13.1">v2.13.1</fluent-option>
-                        <fluent-option value="v2.12.0">v2.12.0</fluent-option>
-                        <fluent-option value="v2.11.0">v2.11.0</fluent-option>
-                        <fluent-option value="v2.10.1">v2.10.1</fluent-option>
-                        <fluent-option value="v2.10.0">v2.10.0</fluent-option>
-                        <fluent-option value="v2.8.1">v2.8.1</fluent-option>
-                        <fluent-option value="v2.8.0">v2.8.0</fluent-option>
-                        <fluent-option value="v2.7.0">v2.7.0</fluent-option>
-                        <fluent-option value="v2.6.0">v2.6.0</fluent-option>
-                        <fluent-option value="v2.5.0">v2.5.0</fluent-option>
-                        <fluent-option value="v2.4.0">v2.4.0</fluent-option>
-                        <fluent-option value="v2.3.4">v2.3.4</fluent-option>
-                        <fluent-option value="v2.3.3">v2.3.3</fluent-option>
-                        <fluent-option value="v2.3.2">v2.3.2</fluent-option>
-                        <fluent-option value="v2.3.1">v2.3.1</fluent-option>
-                        <fluent-option value="v2.3.0">v2.3.0</fluent-option>
-                        <fluent-option value="v2.1.5">v2.1.5</fluent-option>
-                        <fluent-option value="v2.1.0">v2.1.0</fluent-option>
-                        <fluent-option value="v2.0.4">v2.0.4</fluent-option>
-                        <fluent-option value="v2.0.3">v2.0.3</fluent-option>
-                        <fluent-option value="v2.0.2">v2.0.2</fluent-option>
-                        <fluent-option value="v2.0.1">v2.0.1</fluent-option>
-                        <fluent-option value="v2.0.0">v2.0.0</fluent-option>
-                        <fluent-option value="v1.6.1">v1.6.1</fluent-option>
-                        <fluent-option value="v1.6.0">v1.6.0</fluent-option>
-                        <fluent-option value="v1.5.1">v1.5.1</fluent-option>
-                        <fluent-option value="v1.5.0">v1.5.0</fluent-option>
-                        <fluent-option value="v1.4.5">v1.4.5</fluent-option>
-                        <fluent-option value="v1.4.4">v1.4.4</fluent-option>
-                        <fluent-option value="v1.4.3">v1.4.3</fluent-option>
-                        <fluent-option value="v1.4.0">v1.4.0</fluent-option>
-                        <fluent-option value="v1.3.1">v1.3.1</fluent-option>
-                        <fluent-option value="v1.3.0">v1.3.0</fluent-option>
-                        <fluent-option value="v1.2.0">v1.2.0</fluent-option>
-                        <fluent-option value="v1.1.1">v1.1.1</fluent-option>
-                        <fluent-option value="v1.1.0">v1.1.0</fluent-option>
-                        <fluent-option value="v1.0.3">v1.0.3</fluent-option>
-                        <fluent-option value="v1.0.2">v1.0.2</fluent-option>
-                        <fluent-option value="v1.0.1">v1.0.1</fluent-option>
-                        <fluent-option value="v1.0.0">v1.0.0</fluent-option>
-                    </fluent-select>
-                </div>
             </div>
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
+
+                <div class="changelog-entry" data-version="v2.17.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.17.0 - 2026-09-05</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Quest conversion for worlds, and the World Engine learns collision layers, baked lighting and four more packages.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-3" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Quest World Converter</strong>, a new tool at <code>VixenTools/Scene/Quest World Converter</code>. Worlds never had a Quest conversion path, only avatars did. Press <strong>Scan Open Scenes</strong> and it collects every material on your renderers, terrains and skybox, then <strong>Convert Selected Materials</strong> writes Quest-ready copies into <code>Assets/VixenTools/Quest World/&lt;Scene&gt;/</code>. Your originals are never touched. Materials already using a Quest shader are detected and left alone. <strong>Point the scene at the new materials</strong> is off by default, and asks before it swaps anything.</li>
+                        <li class="mb-2"><strong>Collision layers, not just collider shapes.</strong> The World Engine now reports what your colliders actually are, and reads your project's real collision matrix to find geometry players will walk straight through. It also catches a concave mesh collider under a physics Rigidbody, which Unity cannot simulate at all.</li>
+                        <li class="mb-2"><strong>Baked lighting checks.</strong> New findings for objects set to Contribute GI that sit under a Rigidbody, so their baked lighting stays behind when they move; for moving objects with Light Probes switched off in a baked scene; for a baked scene with no probes and no Light Volumes; and for a probe group that was never baked. If Light Volumes is in your scene, the probe findings stay quiet, because Light Volumes already covers that job.</li>
+                        <li class="mb-2"><strong>Post processing checks.</strong> Missing Reference Camera, a reference camera with no Post Process Layer, a volume layer set to Nothing, volumes sitting on a layer the camera is not watching, volumes with no profile, and Temporal Anti-Aliasing, which VRChat does not accept.</li>
+                        <li class="mb-2"><strong>GPU Particle Volumes</strong> support, covering a manager with no mesh assigned, volumes recalculating every frame, and empty include or exclude slots.</li>
+                        <li class="mb-2"><strong>TXL Player Audio, Portal and Misc</strong> support, covering duplicate audio managers, zones with no trigger or no settings, portals missing their station or zone, chairs with no station, and material swappers with nothing to swap.</li>
+                        <li class="mb-2"><strong>Light Volumes 3.0</strong> support for the runtime shadow baker, catching one with no target assigned and one left on Realtime.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-3" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Two World Engine checks had quietly stopped working.</strong> The VRSL check looked for a class that no longer exists in VRSL, and the ProTV check looked for a <code>UrlInput</code> component that ProTV 3 removed. Both had been finding nothing at all. They now look for what those packages actually ship.</li>
+                        <li class="mb-2"><strong>The Udon sync fix wrote a value that does not exist.</strong> Aligning an Udon behaviour's sync mode set the field to an undefined number, and VRChat's own setter then copied that number onto every other Udon behaviour on the same object. It now sets None properly.</li>
+                        <li class="mb-2"><strong>Udon instruction counts were inflated.</strong> The heavy script warning counted data declarations as executed instructions. Measured across 251 real Udon programs, counts were about 22 percent high and up to 43 percent on individual scripts.</li>
+                        <li class="mb-2"><strong>Colliders and contacts could be deleted from an avatar.</strong> The Optimization Suite only protected a PhysBone collider or contact when its Root Transform was filled in, but leaving that empty is the default and means the component uses its own transform. Those bones were left eligible for removal. Every collider and contact now protects the object it sits on.</li>
+                        <li class="mb-2"><strong>The Quest converter offered shaders VRChat rejects.</strong> <code>Mobile/Standard</code> was a target and <code>Standard</code> was the fallback, and neither is on VRChat's mobile shader list, so uploads replaced them. Both converters now read that list from the SDK itself and offer all ten shaders on it.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The shader replacer works with our shaders.</strong> <code>VixenWear/</code> and <code>VixForge/</code> shaders are the replacement targets and are never flagged for conversion. Retired <code>VixenWorld/</code> and <code>Vixen/</code> shaders from earlier releases are flagged so you can move off them.</li>
+                        <li class="mb-2"><strong>Poiyomi materials are treated as broken when Poiyomi is missing.</strong> A locked Poiyomi material still renders but its inspector will not load and it cannot be unlocked. These used to be protected from replacement by the rules covering hidden and optimized shaders. When Poiyomi is not in your project they are now offered for conversion instead.</li>
+                        <li class="mb-2"><strong>More third-party shaders left alone.</strong> Towel, GPU Grass, GPU Infinite Grass, QvPen, Silent and Mochie shaders are no longer flagged for conversion.</li>
+                    </ul>
+                </div>
 
                 <div class="changelog-entry" data-version="v2.16.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.16.0 - 2026-08-30</h5>
@@ -1362,6 +1339,9 @@
 
         </div>
 
+        </div>
+      </div>
+
         <button id="jumpToTopBtn" class="jump-to-top" title="Back to top">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="12" y1="19" x2="12" y2="5"></line>
@@ -1372,5 +1352,6 @@
     </main>
 
     <script type="module" src="app.js"></script>
+    <script src="docs-shell.js" defer></script>
 </body>
 </html>

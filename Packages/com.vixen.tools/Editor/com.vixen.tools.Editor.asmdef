@@ -21,6 +21,22 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.vrchat.avatars",
+            "expression": "",
+            "define": "VIXEN_VRC_AVATARS"
+        },
+        {
+            "name": "com.vrchat.worlds",
+            "expression": "",
+            "define": "VIXEN_VRC_WORLDS"
+        },
+        {
+            "name": "com.vrchat.base",
+            "expression": "3.10.5",
+            "define": "VIXEN_VRCSDK_3_10_5"
+        }
+    ],
     "noEngineReferences": false
 }

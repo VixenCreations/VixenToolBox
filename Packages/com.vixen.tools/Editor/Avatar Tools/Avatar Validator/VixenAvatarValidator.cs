@@ -171,8 +171,24 @@ namespace VixenTools.Editor
                     }
                 }
             }
-            foreach (var col in avatarRoot.GetComponentsInChildren<VRCPhysBoneColliderBase>(true)) if (col.rootTransform != null) protectedTransforms.Add(col.rootTransform);
-            foreach (var contact in avatarRoot.GetComponentsInChildren<VRCContactReceiver>(true)) if (contact.rootTransform != null) protectedTransforms.Add(contact.rootTransform);
+            foreach (var col in avatarRoot.GetComponentsInChildren<VRCPhysBoneColliderBase>(true))
+            {
+                if (col == null) continue;
+                protectedTransforms.Add(col.transform);
+                if (col.rootTransform != null) protectedTransforms.Add(col.rootTransform);
+            }
+            foreach (var contact in avatarRoot.GetComponentsInChildren<VRCContactReceiver>(true))
+            {
+                if (contact == null) continue;
+                protectedTransforms.Add(contact.transform);
+                if (contact.rootTransform != null) protectedTransforms.Add(contact.rootTransform);
+            }
+            foreach (var sender in avatarRoot.GetComponentsInChildren<VRCContactSender>(true))
+            {
+                if (sender == null) continue;
+                protectedTransforms.Add(sender.transform);
+                if (sender.rootTransform != null) protectedTransforms.Add(sender.rootTransform);
+            }
             foreach (var constraint in avatarRoot.GetComponentsInChildren<UnityEngine.Animations.IConstraint>(true))
             {
                 Component comp = constraint as Component;
@@ -798,7 +814,25 @@ namespace VixenTools.Editor
             }
 
             foreach (var sender in avatarRoot.GetComponentsInChildren<VRCContactSender>(true))
+            {
+                if (sender == null) continue;
+                referenced.Add(sender.transform);
                 if (sender.rootTransform != null) referenced.Add(sender.rootTransform);
+            }
+
+            foreach (var col in avatarRoot.GetComponentsInChildren<VRCPhysBoneColliderBase>(true))
+            {
+                if (col == null) continue;
+                referenced.Add(col.transform);
+                if (col.rootTransform != null) referenced.Add(col.rootTransform);
+            }
+
+            foreach (var receiver in avatarRoot.GetComponentsInChildren<VRCContactReceiver>(true))
+            {
+                if (receiver == null) continue;
+                referenced.Add(receiver.transform);
+                if (receiver.rootTransform != null) referenced.Add(receiver.rootTransform);
+            }
 
             foreach (var constraint in avatarRoot.GetComponentsInChildren<UnityEngine.Animations.IConstraint>(true))
             {

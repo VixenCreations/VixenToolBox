@@ -251,6 +251,7 @@
     <!-- UI Framework -->
     <script type="module" src="web-components.min.js"></script>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="docs-shell.css">
 
     <!-- Page-Specific Styling -->
     <style>
@@ -270,7 +271,7 @@
     </style>
 </head>
 
-<body>
+<body class="docs-shell">
     <div class="background-art"></div>
 
     <nav class="sidebar">
@@ -316,11 +317,6 @@
                 List of Tools
             </fluent-anchor>
 
-            <fluent-anchor href="docs.html" class="nav-item">
-                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                Deep-Dive Docs
-            </fluent-anchor>
-
             <fluent-anchor href="shaderdocs.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M7 9.5a5.5 5.5 0 0 1 5-3"></path><circle cx="9.5" cy="9.5" r="1.2" fill="currentColor" stroke="none"></circle></svg>
                 Shader Docs
@@ -351,11 +347,7 @@
                 Get Help Here
             </fluent-anchor>
 
-            <fluent-anchor href="extended-projects.html" class="nav-item">
-                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                Extended Projects
-            </fluent-anchor>
-        </div>
+            </div>
     </nav>
 
     <main class="main-wrapper">
@@ -364,88 +356,203 @@
             <div class="col w-100 text-center mb-4">
                 <h1 class="text-glow-cyan">Our Products</h1>
                 <p class="caption1 mt-2" style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
-                    Everything shipping today, and where to pick each one up. All four shaders share the same lighting stack and the same toolkit, so whatever you learn on one carries straight over to the others. The Vixens Toolbox itself is free on the <a href="index.html" class="neon-link">VPM Registry</a> page.
+                    Everything shipping today, and where to pick each one up. Everything shipping today, everything still being built, and where to get each one. The Vixens Toolbox itself is free on the <a href="index.html" class="neon-link">VPM Registry</a> page.
                 </p>
             </div>
 
-            <div class="ecosystem-cards product-grid">
+      <div class="docs-layout">
+          <div class="docs-main" data-chip-label="Kind" data-search-label="Filter products&hellip;">
 
-                <a class="ecosystem-card" id="latex-ultra" href="https://vixenlicous.gumroad.com/l/latex-ultra" target="_blank" rel="noopener">
-                    <div class="ecosystem-tags">
-                        <span class="ecosystem-tag">Shader</span>
-                        <span class="ecosystem-tag ecosystem-tag-cyan">Free</span>
-                    </div>
-                    <h2 class="ecosystem-name text-glow-cyan">VixenWear Latex Ultra</h2>
-                    <p class="ecosystem-desc">A dual-lobe GGX shader for synthetic materials: clearcoat, thin-film, wet and drip, melting goo, triple matcaps, and live reactions to AudioLink, LTCGI, VRC Light Volumes and VRSL.</p>
-                    <span class="ecosystem-cta">View on Gumroad</span>
-                </a>
+              <!-- ========================= -->
+              <!-- SHADERS -->
+              <!-- ========================= -->
+              <div id="shaders" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                  <div class="row justify-content-between align-items-center mb-3">
+                      <h2 class="text-glow-cyan m-0">Shaders</h2>
+                      <div class="badge">4 shipping</div>
+                  </div>
+                  <div class="tag-row"><span class="shader-tag">Shader</span></div>
+                  <p class="tab-desc">Four avatar shaders on one lighting core, so what you learn on one carries straight to the others. Desktop PC only.</p>
+                  <div class="ecosystem-cards product-grid">
+                      <a class="ecosystem-card" href="https://vixenlicous.gumroad.com/l/latex-ultra" target="_blank" rel="noopener">
+                          <div class="ecosystem-tags"><span class="ecosystem-tag">Shader</span><span class="ecosystem-tag ecosystem-tag-cyan">Free</span></div>
+                          <h3 class="ecosystem-name text-glow-cyan">VixenWear Latex Ultra</h3>
+                          <p class="ecosystem-desc">The synthetic-material shader: clearcoat, thin film, wet and drip, melting goo, matcaps, and live reactions to AudioLink, LTCGI, VRC Light Volumes and VRSL.</p>
+                          <span class="ecosystem-cta">View on Gumroad</span>
+                      </a>
+                      <a class="ecosystem-card" href="https://vixenlicous.gumroad.com/l/vixforge-toon" target="_blank" rel="noopener">
+                          <div class="ecosystem-tags"><span class="ecosystem-tag">Shader</span><span class="ecosystem-tag ecosystem-tag-cyan">Free</span></div>
+                          <h3 class="ecosystem-name text-glow-cyan">VixForge Toon</h3>
+                          <p class="ecosystem-desc">The cel and anime sibling. Same toolkit, plus control over how light falls off, from hard steps to a fully realistic pass.</p>
+                          <span class="ecosystem-cta">View on Gumroad</span>
+                      </a>
+                      <a class="ecosystem-card" href="https://www.patreon.com/cw/Vixenlicious/membership" target="_blank" rel="noopener">
+                          <div class="ecosystem-tags"><span class="ecosystem-tag">Shader</span><span class="ecosystem-tag ecosystem-tag-cyan">Patreon $35/mo</span></div>
+                          <h3 class="ecosystem-name text-glow-cyan">VixenWear Clothing Pro</h3>
+                          <p class="ecosystem-desc">Garments: fabric sheen from 72 presets, surface fur, and real grown fur you can brush in the Scene view.</p>
+                          <span class="ecosystem-cta">Get on Patreon</span>
+                      </a>
+                      <a class="ecosystem-card" href="https://www.patreon.com/cw/Vixenlicious/membership" target="_blank" rel="noopener">
+                          <div class="ecosystem-tags"><span class="ecosystem-tag">Shader</span><span class="ecosystem-tag ecosystem-tag-cyan">Patreon $15/mo</span></div>
+                          <h3 class="ecosystem-name text-glow-cyan">VixForge Fur Pro</h3>
+                          <p class="ecosystem-desc">Fur on its own, without the cloth sheen. The same combing, curling and shell strands as Clothing Pro.</p>
+                          <span class="ecosystem-cta">Get on Patreon</span>
+                      </a>
+                  </div>
+              </div>
 
-                <a class="ecosystem-card" id="vixforge-toon" href="https://vixenlicous.gumroad.com/l/vixforge-toon" target="_blank" rel="noopener">
-                    <div class="ecosystem-tags">
-                        <span class="ecosystem-tag">Shader</span>
-                        <span class="ecosystem-tag ecosystem-tag-cyan">Free</span>
-                    </div>
-                    <h2 class="ecosystem-name text-glow-cyan">VixForge Toon</h2>
-                    <p class="ecosystem-desc">A cel and anime shader carrying the same toolkit, with rebuilt outlines. Coming from lilToon, Poiyomi or VRChat's Toon Standard, the inspector translates your existing materials across in one click, and can convert a whole avatar at once with a backup and full undo.</p>
-                    <span class="ecosystem-cta">View on Gumroad</span>
-                </a>
+              <!-- ========================= -->
+              <!-- VIXENS TOOLBOX -->
+              <!-- ========================= -->
+              <div id="toolbox" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                  <div class="row justify-content-between align-items-center mb-3">
+                      <h2 class="text-glow-cyan m-0">Vixens Toolbox</h2>
+                      <div class="badge">Free</div>
+                  </div>
+                  <div class="tag-row"><span class="shader-tag">Toolbox</span></div>
+                  <p class="tab-desc">The editor suite the shaders ship alongside. Free, installed through the VPM registry.</p>
+                  <div class="ecosystem-cards product-grid">
+                      <a class="ecosystem-card" href="index.html">
+                          <div class="ecosystem-tags"><span class="ecosystem-tag">Toolbox</span><span class="ecosystem-tag ecosystem-tag-cyan">Free</span></div>
+                          <h3 class="ecosystem-name text-glow-cyan">Vixens Toolbox</h3>
+                          <p class="ecosystem-desc">Thirteen editor tools for getting avatars and worlds ready to ship: optimisation, Quest conversion, PhysBone blueprints, an animator doctor, badge studio and a world scanner.</p>
+                          <span class="ecosystem-cta">Add to the VCC</span>
+                      </a>
+                      <a class="ecosystem-card" href="tools.html">
+                          <div class="ecosystem-tags"><span class="ecosystem-tag">Toolbox</span><span class="ecosystem-tag ecosystem-tag-cyan">Reference</span></div>
+                          <h3 class="ecosystem-name text-glow-cyan">What each tool does</h3>
+                          <p class="ecosystem-desc">The full control-by-control reference for every tool in the suite, with the detail behind each one.</p>
+                          <span class="ecosystem-cta">Read the reference</span>
+                      </a>
+                  </div>
+              </div>
 
-                <a class="ecosystem-card" href="https://www.patreon.com/cw/Vixenlicious/membership" target="_blank" rel="noopener">
-                    <div class="ecosystem-tags">
-                        <span class="ecosystem-tag">Shader</span>
-                        <span class="ecosystem-tag ecosystem-tag-cyan">Patreon $35/mo</span>
-                    </div>
-                    <h2 class="ecosystem-name text-glow-cyan" id="clothing-pro">VixenWear Clothing Pro</h2>
-                    <p class="ecosystem-desc">The fabric companion to Latex Ultra. A soft sheen so silk, satin and velvet catch the light at grazing angles, surface fur for wool and fleece, real fur grown as geometry, and a Material Type picker with 72 fabrics that sets a sensible starting point in one click.</p>
-                    <span class="ecosystem-cta">Get on Patreon</span>
-                </a>
+              <!-- ========================= -->
+              <!-- IN THE WORKS -->
+              <!-- ========================= -->
+              <div id="in-the-works" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                  <div class="row justify-content-between align-items-center mb-3">
+                      <h2 class="text-glow-cyan m-0">In The Works</h2>
+                      <div class="badge">Not out yet</div>
+                  </div>
+                  <div class="tag-row"><span class="shader-tag">In Development</span></div>
+                  <p class="tab-desc">Being built now. Nothing here is buyable, and the shape of it can still change. If you were following <em>Surface Ultra</em>, it became the two world shaders below.</p>
+                  <div class="ecosystem-cards product-grid">
+                      <a class="ecosystem-card" href="https://vixencreations.github.io/VixenToolBox/" target="_blank" rel="noopener">
+                          <div class="ecosystem-tags"><span class="ecosystem-tag">In Development</span><span class="ecosystem-tag ecosystem-tag-cyan">Avatar Tool</span></div>
+                          <h3 class="ecosystem-name text-glow-cyan">VixForge Camera Pro</h3>
+                          <p class="ecosystem-desc">A real camera for VRChat photos: depth of field with proper bokeh, film colour response, and a light meter that sets exposure and focus for you.</p>
+                          <span class="ecosystem-cta">Desktop PC only</span>
+                      </a>
+                      <a class="ecosystem-card" href="https://vixencreations.github.io/VixenToolBox/" target="_blank" rel="noopener">
+                          <div class="ecosystem-tags"><span class="ecosystem-tag">In Development</span><span class="ecosystem-tag ecosystem-tag-cyan">Worlds</span></div>
+                          <h3 class="ecosystem-name text-glow-cyan">VixForge Director</h3>
+                          <p class="ecosystem-desc">An automatic VJ for worlds, built to run the lighting when a DJ has nobody to run it for them.</p>
+                          <span class="ecosystem-cta">Worlds, UdonSharp</span>
+                      </a>
+                      <a class="ecosystem-card" href="shaderdocs.html">
+                          <div class="ecosystem-tags"><span class="ecosystem-tag">In Development</span><span class="ecosystem-tag ecosystem-tag-cyan">Shader</span></div>
+                          <h3 class="ecosystem-name text-glow-cyan">VixForge World Surface</h3>
+                          <p class="ecosystem-desc">The world-side counterpart to Latex Ultra, on the same lighting core, so a world and the avatars in it react to the same systems.</p>
+                          <span class="ecosystem-cta">See the inspector reference</span>
+                      </a>
+                      <a class="ecosystem-card" href="shaderdocs.html">
+                          <div class="ecosystem-tags"><span class="ecosystem-tag">In Development</span><span class="ecosystem-tag ecosystem-tag-cyan">Shader</span></div>
+                          <h3 class="ecosystem-name text-glow-cyan">VixForge World Fur</h3>
+                          <p class="ecosystem-desc">World Surface with the fur passes, for grown fur on world props and set dressing.</p>
+                          <span class="ecosystem-cta">See the inspector reference</span>
+                      </a>
+                      <a class="ecosystem-card" href="https://vixencreations.github.io/VixenToolBox/">
+                          <div class="ecosystem-tags"><span class="ecosystem-tag">In Development</span><span class="ecosystem-tag ecosystem-tag-cyan">Worlds</span></div>
+                          <h3 class="ecosystem-name text-glow-cyan">VixForge Light Baker</h3>
+                          <p class="ecosystem-desc">World Light Baker Based on Radeon Path Tracing Accelleration And Compute Shaders.</p>
+                          <span class="ecosystem-cta">Worlds, Bakery, Lighting</span>
+                      </a>
+                  </div>
+              </div>
 
-                <a class="ecosystem-card" href="https://www.patreon.com/cw/Vixenlicious/membership" target="_blank" rel="noopener">
-                    <div class="ecosystem-tags">
-                        <span class="ecosystem-tag">Shader</span>
-                        <span class="ecosystem-tag ecosystem-tag-cyan">Patreon $15/mo</span>
-                    </div>
-                    <h2 class="ecosystem-name text-glow-cyan" id="fur-pro">VixForge Fur Pro</h2>
-                    <p class="ecosystem-desc">Real fur, grown as geometry rather than painted on. Every hair is one continuous strand from root to tip, with self shadowing, guard hairs and tufting, and a brush that lets you comb the coat straight in the scene view. Clothing Pro with the cloth half taken out and the fur turned up.</p>
-                    <span class="ecosystem-cta">Get on Patreon</span>
-                </a>
+              <!-- ========================= -->
+              <!-- OTHER PROJECTS -->
+              <!-- ========================= -->
+              <div id="projects" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                  <div class="row justify-content-between align-items-center mb-3">
+                      <h2 class="text-glow-cyan m-0">Other Projects</h2>
+                      <div class="badge">Shipping</div>
+                  </div>
+                  <div class="tag-row"><span class="shader-tag">Project</span></div>
+                  <p class="tab-desc">Things built outside the VRChat toolbox that are out and usable today.</p>
+                  <div class="ecosystem-cards product-grid">
+                      <a class="ecosystem-card" href="https://github.com/VixenCreations/VixenLens" target="_blank" rel="noopener">
+                          <div class="ecosystem-tags"><span class="ecosystem-tag">Project</span><span class="ecosystem-tag ecosystem-tag-cyan">Rust</span></div>
+                          <h3 class="ecosystem-name text-glow-cyan">VixenLens</h3>
+                          <p class="ecosystem-desc">Indexes and searches file metadata fast. Rust underneath with a desktop front end.</p>
+                          <span class="ecosystem-cta">View repository</span>
+                      </a>
+                      <a class="ecosystem-card" href="https://github.com/VixenCreations/Fish-Appraiser-Engine" target="_blank" rel="noopener">
+                          <div class="ecosystem-tags"><span class="ecosystem-tag">Project</span><span class="ecosystem-tag ecosystem-tag-cyan">Community</span></div>
+                          <h3 class="ecosystem-name text-glow-cyan">Fish Validator</h3>
+                          <p class="ecosystem-desc">Checks structured community data for mistakes before they spread. Documented on its wiki.</p>
+                          <span class="ecosystem-cta">View repository</span>
+                      </a>
+                      <a class="ecosystem-card" href="https://vixencreations.github.io/Stream-Connector-Public/" target="_blank" rel="noopener">
+                          <div class="ecosystem-tags"><span class="ecosystem-tag">Project</span><span class="ecosystem-tag ecosystem-tag-cyan">Haptics</span></div>
+                          <h3 class="ecosystem-name text-glow-cyan">Stream Connector</h3>
+                          <p class="ecosystem-desc">Turns live stream events into hardware you can feel, with very little delay. Runs on your own machine rather than through a service.</p>
+                          <span class="ecosystem-cta">See the site</span>
+                      </a>
+                      <a class="ecosystem-card" href="https://vixencreations.github.io/Stream-Connector-Public/" target="_blank" rel="noopener">
+                          <div class="ecosystem-tags"><span class="ecosystem-tag">Project</span><span class="ecosystem-tag ecosystem-tag-cyan">Hardware</span></div>
+                          <h3 class="ecosystem-name text-glow-cyan">Haptics Nexus</h3>
+                          <p class="ecosystem-desc">The hardware half of Stream Connector. One place to drive PiShock, Intiface, OWO and OSC devices together.</p>
+                          <span class="ecosystem-cta">See the site</span>
+                      </a>
+                  </div>
+              </div>
 
+              <div id="faq" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                  <div class="row justify-content-between align-items-center mb-3">
+                      <h2 class="text-glow-cyan m-0">Before You Grab One</h2>
+                      <div class="badge">Questions</div>
+                  </div>
+
+                  <h2 class="text-glow-pink mb-4" style="font-size: 2rem;">Before You Grab One</h2>
+
+                  <h3 class="text-glow-cyan mb-2">Do these shaders work on Quest or Android?</h3>
+                  <p class="caption1 mb-4" style="line-height: 1.7; color: #e0d5eb;">No. They are for VRChat on desktop PC only. VRChat replaces any non-mobile shader with its own on Quest and Android, so use one of VRChat's mobile shaders for those builds.</p>
+
+                  <h3 class="text-glow-cyan mb-2">Which Unity version and render pipeline do I need?</h3>
+                  <p class="caption1 mb-4" style="line-height: 1.7; color: #e0d5eb;">Unity 2022.3 and the Built-in Render Pipeline, which is what VRChat uses. They are not built for URP or HDRP.</p>
+
+                  <h3 class="text-glow-cyan mb-2">Do they work with VRCFury and Modular Avatar?</h3>
+                  <p class="caption1 mb-4" style="line-height: 1.7; color: #e0d5eb;">Yes. Materials lock automatically when you press the VRChat SDK build button, and that pass runs after VRCFury has finished building, so anything VRCFury generates gets covered too.</p>
+
+                  <h3 class="text-glow-cyan mb-2">Do I have to lock my materials before I upload?</h3>
+                  <p class="caption1 mb-4" style="line-height: 1.7; color: #e0d5eb;">No, it happens for you on upload. You can also lock or unlock a whole avatar at any time from the Hub.</p>
+
+                  <h3 class="text-glow-cyan mb-2">My mesh renders as shredded triangles. What happened?</h3>
+                  <p class="caption1 mb-4" style="line-height: 1.7; color: #e0d5eb;">The model was imported with Keep Quads switched on. These shaders tessellate, and tessellation needs triangles. Run <strong>VixenTools &gt; VixForge Mesh Fixes &gt; Scan for Quad Meshes</strong>, and it will find the meshes and fix them.</p>
+
+                  <h3 class="text-glow-cyan mb-2">Can I use these on avatars I sell?</h3>
+                  <p class="caption1 mb-4" style="line-height: 1.7; color: #e0d5eb;">Latex Ultra and VixForge Toon, yes, commercial work included. Leave the copyright headers in the files and do not resell the package on its own. Clothing Pro and Fur Pro are supporter-only and may not be redistributed.</p>
+
+                  <h3 class="text-glow-cyan mb-2">What do they cost?</h3>
+                  <p class="caption1" style="line-height: 1.7; color: #e0d5eb;">Latex Ultra and VixForge Toon are free on Gumroad. Clothing Pro and Fur Pro come with a Patreon membership, at $35 and $15 a month.</p>
+              </div>
+
+              <div class="col w-100 text-center mt-5">
+                  <p class="caption1 ecosystem-intro">
+                      Want to know what a control does before you commit? Every shader is documented on the
+                      <a href="shaderdocs.html" class="neon-link">Shader Docs</a> page, and each release is written up on
+                      <a href="shader-changelogs.html" class="neon-link">Shader Changelogs</a>.
+                  </p>
+              </div>
+
+          </div>
             </div>
-
-            <div class="glass-panel w-100 mt-5" style="padding: 2.5rem;">
-                <h2 class="text-glow-pink mb-4" style="font-size: 2rem;">Before You Grab One</h2>
-
-                <h3 class="text-glow-cyan mb-2">Do these shaders work on Quest or Android?</h3>
-                <p class="caption1 mb-4" style="line-height: 1.7; color: #e0d5eb;">No. They are for VRChat on desktop PC only. VRChat replaces any non-mobile shader with its own on Quest and Android, so use one of VRChat's mobile shaders for those builds.</p>
-
-                <h3 class="text-glow-cyan mb-2">Which Unity version and render pipeline do I need?</h3>
-                <p class="caption1 mb-4" style="line-height: 1.7; color: #e0d5eb;">Unity 2022.3 and the Built-in Render Pipeline, which is what VRChat uses. They are not built for URP or HDRP.</p>
-
-                <h3 class="text-glow-cyan mb-2">Do they work with VRCFury and Modular Avatar?</h3>
-                <p class="caption1 mb-4" style="line-height: 1.7; color: #e0d5eb;">Yes. Materials lock automatically when you press the VRChat SDK build button, and that pass runs after VRCFury has finished building, so anything VRCFury generates gets covered too.</p>
-
-                <h3 class="text-glow-cyan mb-2">Do I have to lock my materials before I upload?</h3>
-                <p class="caption1 mb-4" style="line-height: 1.7; color: #e0d5eb;">No, it happens for you on upload. You can also lock or unlock a whole avatar at any time from the Hub.</p>
-
-                <h3 class="text-glow-cyan mb-2">My mesh renders as shredded triangles. What happened?</h3>
-                <p class="caption1 mb-4" style="line-height: 1.7; color: #e0d5eb;">The model was imported with Keep Quads switched on. These shaders tessellate, and tessellation needs triangles. Run <strong>VixenTools &gt; VixForge Mesh Fixes &gt; Scan for Quad Meshes</strong>, and it will find the meshes and fix them.</p>
-
-                <h3 class="text-glow-cyan mb-2">Can I use these on avatars I sell?</h3>
-                <p class="caption1 mb-4" style="line-height: 1.7; color: #e0d5eb;">Latex Ultra and VixForge Toon, yes, commercial work included. Leave the copyright headers in the files and do not resell the package on its own. Clothing Pro and Fur Pro are supporter-only and may not be redistributed.</p>
-
-                <h3 class="text-glow-cyan mb-2">What do they cost?</h3>
-                <p class="caption1" style="line-height: 1.7; color: #e0d5eb;">Latex Ultra and VixForge Toon are free on Gumroad. Clothing Pro and Fur Pro come with a Patreon membership, at $35 and $15 a month.</p>
-            </div>
-
-            <div class="col w-100 text-center mt-5">
-                <p class="caption1 ecosystem-intro">
-                    Want to know what a control does before you commit? Every shader is documented on the
-                    <a href="shaderdocs.html" class="neon-link">Shader Docs</a> page, and each release is written up on
-                    <a href="shader-changelogs.html" class="neon-link">Shader Changelogs</a>.
-                </p>
-            </div>
-
         </div>
+      
+
+
 
         <button id="jumpToTopBtn" class="jump-to-top" title="Back to top">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -457,5 +564,6 @@
     </main>
 
     <script type="module" src="app.js"></script>
+    <script src="docs-shell.js" defer></script>
 </body>
 </html>

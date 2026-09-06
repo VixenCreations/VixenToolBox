@@ -1,0 +1,561 @@
+/* ============================================================================
+   VIXFORGE DOCS SHELL
+   Navigation, filtering and reading styles for the long reference pages.
+   Loaded only by pages that opt in with <body class="docs-shell">.
+   Pairs with initDocsShell() in app.js.
+   ============================================================================ */
+
+:root {
+    --docs-rail-width: 250px;
+    --docs-measure: 74ch;
+    /* Reading surface: lifted off the #9ca3af body grey so long passages hold up */
+    --docs-text: #b9c2cf;
+    --docs-text-dim: #8a93a2;
+    --docs-term: #f0e6d8;
+    --heat-line: linear-gradient(90deg, var(--forge-core), var(--forge-fire) 45%, rgba(255, 69, 0, 0) 100%);
+}
+
+/* ---------------------------------------------------------------- layout -- */
+
+.docs-shell .main-wrapper {
+    align-items: flex-start;
+    padding: 2rem 2rem 4rem;
+}
+
+/* The header lives inside the content column, as shaderdocs has it, so it
+   lines up with the toolbar and the sections instead of spanning the rail. */
+.docs-shell .page-header {
+    max-width: none !important;
+    width: 100%;
+    margin: 0 0 1.25rem;
+    padding: 2rem 2.25rem !important;
+}
+
+/* Centred banner, matching shaderdocs: the measure does the readability work,
+   not the alignment. Left-aligning it against the full panel width was the
+   thing that made it hard to read. */
+.docs-shell .page-header .page-subtitle,
+.docs-shell .page-header p {
+    text-align: center;
+    max-width: 850px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.65;
+}
+
+.docs-shell .page-header h1 {
+    text-align: center;
+}
+
+/* Tags belong on their own line. Inline at the head of a sentence they read as
+   part of it: "Any ProjectOne window inside the Unity Editor". */
+.tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0;
+    margin: 0 0 0.6rem;
+}
+
+.docs-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--docs-rail-width);
+    gap: 2.5rem;
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    align-items: start;
+}
+
+.docs-main {
+    min-width: 0; /* lets long code strings shrink instead of blowing the grid out */
+}
+
+/* ------------------------------------------------------------------ rail -- */
+
+.docs-rail {
+    position: sticky;
+    top: 1.5rem;
+    max-height: calc(100vh - 3rem);
+    display: flex;
+    flex-direction: column;
+    background: rgba(10, 6, 8, 0.92);
+    border: 1px solid rgba(255, 69, 0, 0.18);
+    border-top: 2px solid var(--forge-fire);
+    border-radius: 4px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7), inset 0 14px 24px -18px var(--forge-fire);
+    overflow: hidden;
+}
+
+.docs-rail-title {
+    flex: 0 0 auto;
+    padding: 0.75rem 1rem 0.6rem;
+    font-size: 0.72rem;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: var(--forge-core);
+    border-bottom: 1px solid rgba(255, 69, 0, 0.15);
+    position: relative;
+}
+
+    .docs-rail-title::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -1px;
+        height: 1px;
+        background: var(--heat-line);
+    }
+
+.docs-rail-list {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0.5rem 0 0.75rem;
+    margin: 0;
+    list-style: none;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 69, 0, 0.35) transparent;
+}
+
+    .docs-rail-list::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .docs-rail-list::-webkit-scrollbar-thumb {
+        background: rgba(255, 69, 0, 0.3);
+        border-radius: 4px;
+    }
+
+.docs-rail-link {
+    display: block;
+    padding: 5px 1rem 5px calc(1rem - 2px);
+    border-left: 2px solid transparent;
+    color: var(--docs-text-dim);
+    font-size: 0.84rem;
+    line-height: 1.35;
+    text-decoration: none;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+    .docs-rail-link:hover {
+        color: var(--neon-cyan);
+        background: rgba(0, 229, 255, 0.05);
+    }
+
+    /* Sub-group entries sit in from their section */
+    .docs-rail-link.is-sub {
+        padding-left: calc(2rem - 2px);
+        font-size: 0.78rem;
+        color: #767f8d;
+    }
+
+    .docs-rail-link.is-section {
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        font-size: 0.8rem;
+        color: #a6afbd;
+        margin-top: 0.35rem;
+    }
+
+    /* Ember on the section you are reading */
+    .docs-rail-link.is-active {
+        color: var(--forge-core);
+        border-left-color: var(--forge-fire);
+        background: linear-gradient(90deg, rgba(255, 69, 0, 0.16), rgba(255, 69, 0, 0));
+        text-shadow: 0 0 12px var(--forge-fire-glow);
+    }
+
+    .docs-rail-link.is-hidden {
+        display: none;
+    }
+
+/* --------------------------------------------------------------- toolbar -- */
+
+.docs-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+    background: rgba(9, 5, 6, 0.96);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 69, 0, 0.2);
+    border-top: 2px solid var(--forge-fire);
+    border-radius: 4px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), inset 0 14px 22px -18px var(--forge-fire);
+}
+
+.docs-toolbar-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+}
+
+.docs-search {
+    flex: 1 1 240px;
+    min-width: 180px;
+    padding: 7px 11px;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 69, 0, 0.28);
+    border-radius: 3px;
+    color: #e8edf4;
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+    .docs-search::placeholder {
+        color: #6b7280;
+    }
+
+    .docs-search:focus {
+        border-color: var(--forge-fire);
+        box-shadow: 0 0 0 1px rgba(255, 69, 0, 0.25), 0 0 18px rgba(255, 69, 0, 0.18);
+    }
+
+.docs-count {
+    flex: 0 0 auto;
+    font-size: 0.78rem;
+    color: var(--docs-text-dim);
+    white-space: nowrap;
+}
+
+    .docs-count strong {
+        color: var(--forge-core);
+        font-weight: 600;
+    }
+
+.docs-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+    margin-top: 0.65rem;
+}
+
+.docs-chips-label {
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin-right: 0.15rem;
+}
+
+.filter-chip {
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-family: inherit;
+    letter-spacing: 0.4px;
+    color: #8a93a2;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+    .filter-chip:hover {
+        color: var(--neon-cyan);
+        border-color: rgba(0, 229, 255, 0.4);
+    }
+
+    .filter-chip.is-on {
+        color: #ffd9a0;
+        border-color: var(--forge-fire);
+        background: linear-gradient(180deg, rgba(255, 69, 0, 0.28), rgba(255, 69, 0, 0.12));
+        box-shadow: 0 0 14px rgba(255, 69, 0, 0.3), inset 0 1px 0 rgba(255, 170, 0, 0.35);
+    }
+
+/* Standalone chip bar, for flat-list pages that do not need the whole shell. */
+.docs-chipbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+    margin: 0 0 1.5rem;
+    padding: 0.7rem 0.9rem;
+    background: rgba(9, 5, 6, 0.9);
+    border: 1px solid rgba(255, 69, 0, 0.2);
+    border-top: 2px solid var(--forge-fire);
+    border-radius: 4px;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.7), inset 0 12px 20px -18px var(--forge-fire);
+}
+
+    .docs-chipbar .docs-count {
+        margin-left: auto;
+    }
+
+.docs-tool-btn {
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-family: inherit;
+    color: #8a93a2;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+    .docs-tool-btn:hover {
+        color: var(--forge-core);
+        border-color: rgba(255, 69, 0, 0.45);
+    }
+
+/* ------------------------------------------------- section + group heads -- */
+
+/* Heat bar under every section title */
+.docs-shell .shader-section > .row:first-child {
+    position: relative;
+    padding-bottom: 0.6rem;
+}
+
+    .docs-shell .shader-section > .row:first-child::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--heat-line);
+        opacity: 0.85;
+    }
+
+/* Sub-group headings double as collapse toggles */
+.docs-shell .opt-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    padding-left: 1.1rem;
+    transition: color 0.15s ease;
+}
+
+    .docs-shell .opt-group::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 0;
+        height: 0;
+        border-left: 5px solid var(--forge-fire);
+        border-top: 4px solid transparent;
+        border-bottom: 4px solid transparent;
+        transform: translateY(-50%) rotate(90deg);
+        transition: transform 0.18s ease;
+    }
+
+    .docs-shell .opt-group.is-collapsed::before {
+        transform: translateY(-50%) rotate(0deg);
+    }
+
+    .docs-shell .opt-group:hover {
+        color: var(--forge-core);
+    }
+
+.docs-group-body.is-collapsed {
+    display: none;
+}
+
+/* ------------------------------------------------------------- filtering -- */
+
+.docs-hidden {
+    display: none !important;
+}
+
+.docs-hit {
+    background: linear-gradient(180deg, rgba(255, 170, 0, 0.16), rgba(255, 69, 0, 0.1));
+    box-shadow: inset 2px 0 0 var(--forge-core);
+    border-radius: 2px;
+}
+
+.docs-empty {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--docs-text-dim);
+    font-size: 0.95rem;
+}
+
+/* --------------------------------------------------------- tool preview -- */
+
+.tool-shot {
+    position: relative;
+    margin: 0 0 1.5rem;
+    border: 1px solid rgba(255, 69, 0, 0.2);
+    border-bottom: 2px solid var(--forge-fire);
+    border-radius: 3px;
+    overflow: hidden;
+    background: var(--dark-void);
+    max-height: 340px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .tool-shot img {
+        width: 100%;
+        height: auto;
+        display: block;
+        cursor: zoom-in;
+        opacity: 0.92;
+        transition: opacity 0.2s ease, transform 0.4s ease;
+    }
+
+    .tool-shot:hover img {
+        opacity: 1;
+        transform: scale(1.015);
+    }
+
+    /* Molten wash along the bottom edge, so the shot sits in the panel rather
+       than on top of it. */
+    .tool-shot::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 40%;
+        pointer-events: none;
+        background: linear-gradient(180deg, rgba(5, 3, 4, 0), rgba(5, 3, 4, 0.75));
+    }
+
+/* ------------------------------------------------------------------ news -- */
+
+/* The hero art shipped at its native 1536x657, so one article filled the whole
+   viewport and the page read as a slideshow. Cap it and crop, so the headline
+   and the first paragraph are on screen with the image. */
+.docs-shell .news-hero-art {
+    max-height: 260px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 2px solid var(--forge-fire);
+    background: var(--dark-void);
+}
+
+    .docs-shell .news-hero-art img {
+        width: 100%;
+        height: 100%;
+        max-height: 260px;
+        object-fit: cover;
+        object-position: center 32%;
+        display: block;
+    }
+
+.docs-shell .news-article {
+    margin-bottom: 1.75rem !important;
+}
+
+.docs-shell .news-body {
+    padding: 1.5rem 1.75rem 1.75rem;
+    max-width: calc(var(--docs-measure) + 3.5rem);
+    margin: 0 auto;
+}
+
+.docs-shell .news-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+}
+
+.docs-shell .news-article h2 {
+    font-size: 1.35rem;
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+}
+
+.docs-shell .news-article p {
+    line-height: 1.65;
+}
+
+@media (max-width: 900px) {
+    .docs-shell .news-hero-art,
+    .docs-shell .news-hero-art img {
+        max-height: 180px;
+    }
+
+    .docs-shell .news-body {
+        padding: 1.1rem 1.1rem 1.4rem;
+    }
+}
+
+/* ------------------------------------------------------------- reading  -- */
+
+.docs-shell .shader-section p,
+.docs-shell .shader-section li {
+    color: var(--docs-text);
+}
+
+.docs-shell .shader-section ul.custom-list {
+    max-width: var(--docs-measure);
+}
+
+.docs-shell .shader-section > p.tab-desc,
+.docs-shell .shader-section > p.opt-note {
+    max-width: var(--docs-measure);
+}
+
+.docs-shell ul.custom-list > li {
+    margin-bottom: 14px;
+    line-height: 1.62;
+}
+
+/* Control names read as terms, not as bolded prose */
+.docs-shell ul.custom-list > li > strong:first-child {
+    color: var(--docs-term);
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+
+.docs-shell .shader-section code {
+    color: #ffcf9a;
+}
+
+/* ------------------------------------------------------------ responsive -- */
+
+/* The rail replaces the top jump strip wherever there is room for it. Below
+   1200px the rail goes and the strip comes back, so navigation never vanishes. */
+@media (min-width: 1201px) {
+    .docs-shell .shader-toc {
+        display: none;
+    }
+}
+
+@media (max-width: 1200px) {
+    .docs-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .docs-rail {
+        display: none;
+    }
+}
+
+@media (max-width: 900px) {
+    .docs-shell .main-wrapper {
+        padding: 1.25rem 1rem 3rem;
+    }
+
+    .docs-toolbar {
+        padding: 0.7rem 0.75rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .docs-rail-link,
+    .filter-chip,
+    .docs-tool-btn,
+    .docs-shell .opt-group::before {
+        transition: none;
+    }
+}

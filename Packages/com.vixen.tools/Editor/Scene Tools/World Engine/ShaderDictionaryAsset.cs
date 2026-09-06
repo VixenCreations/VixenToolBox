@@ -12,30 +12,85 @@ namespace VixenTools.Editor
         [Header("Contained Shaders")]
         public List<Shader> shaders = new List<Shader>();
 
+        public static readonly string[] VixenWorldShaders = new string[]
+        {
+            "VixForge/World Surface",
+            "VixForge/World Fur",
+        };
+
+        public static readonly string[] VixenAvatarShaders = new string[]
+        {
+            "VixenWear/Latex Ultra",
+            "VixenWear/Clothing Pro",
+            "VixForge/Fur Pro",
+            "VixForge/Toon",
+        };
+
+        public static readonly string[] VixenShaderPrefixes = new string[]
+        {
+            "VixenWear/",
+            "VixForge/",
+        };
+
+        public static readonly string[] VixenRetiredShaderPrefixes = new string[]
+        {
+            "VixenWorld/",
+            "Vixen/",
+        };
+
+        public static readonly string[] ProtectedShaderPrefixes = new string[]
+        {
+            "Towel/",
+            "GPU Grass/",
+            "GPU Infinite Grass/",
+            "QvPen/",
+            "Silent/",
+            "Mochie/",
+        };
+
+        public static IEnumerable<string> AllVixenShaders()
+        {
+            foreach (var name in VixenWorldShaders) yield return name;
+            foreach (var name in VixenAvatarShaders) yield return name;
+        }
+
+        public static bool IsVixenShader(Shader s)
+        {
+            if (s == null) return false;
+            foreach (var prefix in VixenShaderPrefixes)
+            {
+                if (s.name.StartsWith(prefix, System.StringComparison.OrdinalIgnoreCase)) return true;
+            }
+            return false;
+        }
+
+        public static bool IsRetiredVixenShader(Shader s)
+        {
+            if (s == null) return false;
+            foreach (var prefix in VixenRetiredShaderPrefixes)
+            {
+                if (s.name.StartsWith(prefix, System.StringComparison.OrdinalIgnoreCase)) return true;
+            }
+            return false;
+        }
+
         public static void AutoPopulateTargets(ShaderDictionaryAsset dict)
         {
             if (dict == null) return;
             int addedCount = 0;
-            string[] targetPaths = new string[] {
-                "Packages/com.vrchat.base/Runtime/VRCSDK/Sample Assets/Shaders/Mobile/ToonStandard/ToonStandard.shader",
-                "Packages/com.vrchat.base/Runtime/VRCSDK/Sample Assets/Shaders/Mobile/ToonStandard/ToonStandardOutline.shader",
-                "Packages/com.vrchat.base/Runtime/VRCSDK/Sample Assets/Shaders/Mobile/VRChat-Mobile-StandardLite.shader",
-                "Packages/com.vrchat.base/Runtime/VRCSDK/Sample Assets/Shaders/Mobile/VRChat-Mobile-ToonLit.shader",
-                "Packages/s-ilent.filamented/Filamented/Standard.shader",
-                "Packages/s-ilent.filamented/Filamented/StandardCloth.shader",
-                "Packages/s-ilent.filamented/Filamented/StandardRoughness.shader",
-                "Packages/s-ilent.filamented/Filamented/StandardSpecular.shader",
-                "Assets/Mochie/Standard Shader/Standard.shader",
-                "Assets/Mochie/Standard Shader/Standard Lite.shader",
-                "Assets/Mochie/Standard Shader/Standard Mobile.shader"
-            };
+            int missingCount = 0;
 
-            foreach (var path in targetPaths)
+            foreach (var name in AllVixenShaders())
             {
-                Shader s = AssetDatabase.LoadAssetAtPath<Shader>(path);
-                if (s == null) s = Shader.Find(path);
+                Shader s = Shader.Find(name);
 
-                if (s != null && !dict.shaders.Contains(s))
+                if (s == null)
+                {
+                    missingCount++;
+                    continue;
+                }
+
+                if (!dict.shaders.Contains(s))
                 {
                     dict.shaders.Add(s);
                     addedCount++;
@@ -46,8 +101,60 @@ namespace VixenTools.Editor
             {
                 EditorUtility.SetDirty(dict);
                 AssetDatabase.SaveAssets();
-                Debug.Log($"[Vixen System] Auto-Populated Target Dictionary with {addedCount} PBR/Toon shaders.");
+                Debug.Log($"[Vixen System] Added {addedCount} VixForge shaders to the replacement list.");
             }
+
+            if (missingCount > 0)
+            {
+                Debug.Log($"[Vixen System] {missingCount} VixForge shaders are not in this project. Install VixenWear to use them as replacements.");
+            }
+        }
+
+        public const string PoiyomiLockedPrefix = "Hidden/Locked/.poiyomi/";
+        public const string PoiyomiUnlockedPrefix = ".poiyomi/";
+
+        private static bool? _poiyomiInstalled;
+
+        public static void ResetPoiyomiCache()
+        {
+            _poiyomiInstalled = null;
+        }
+
+        public static bool IsPoiyomiInstalled()
+        {
+            if (_poiyomiInstalled.HasValue) return _poiyomiInstalled.Value;
+
+            bool found = false;
+            foreach (var info in ShaderUtil.GetAllShaderInfo())
+            {
+                if (info.name.StartsWith(PoiyomiUnlockedPrefix, System.StringComparison.OrdinalIgnoreCase))
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            _poiyomiInstalled = found;
+            return found;
+        }
+
+        public static bool IsLockedPoiyomiShader(Shader s)
+        {
+            return s != null && s.name.StartsWith(PoiyomiLockedPrefix, System.StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool IsPoiyomiShader(Shader s)
+        {
+            if (s == null) return false;
+
+            return s.name.StartsWith(PoiyomiLockedPrefix, System.StringComparison.OrdinalIgnoreCase)
+                || s.name.StartsWith(PoiyomiUnlockedPrefix, System.StringComparison.OrdinalIgnoreCase)
+                || s.name.IndexOf("Poiyomi", System.StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        public static bool IsOrphanedPoiyomiShader(Shader s)
+        {
+            return IsPoiyomiShader(s) && !IsPoiyomiInstalled();
         }
 
         public static bool IsGloballyProtected(Shader s)
@@ -55,6 +162,10 @@ namespace VixenTools.Editor
             if (s == null) return false;
 
             string name = s.name;
+
+            if (IsRetiredVixenShader(s)) return false;
+            if (IsVixenShader(s)) return true;
+            if (IsOrphanedPoiyomiShader(s)) return false;
 
             if (name == "Particles/Standard Unlit" || name == "Unlit/Color") return true;
 
@@ -72,6 +183,11 @@ namespace VixenTools.Editor
                 name.Contains("InternalErrorShader"))
             {
                 return true;
+            }
+
+            foreach (var prefix in ProtectedShaderPrefixes)
+            {
+                if (name.StartsWith(prefix, System.StringComparison.OrdinalIgnoreCase)) return true;
             }
 
             string path = AssetDatabase.GetAssetPath(s);
