@@ -189,6 +189,10 @@
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Editor 2.1.0 - Unreleased</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A builder for the new Packed Atlas matcaps, copy and paste for every stacked layer in the shader, and the tools all put where you can find them.</em></p>
 
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>If you have saved your own presets, run Migrate Preset Tags once.</strong> A preset used to be marked with the same tag every ThryEditor-based inspector uses, so if Thry's editor or Poiyomi sits in the same project, your VixForge presets were being listed in their preset menus too. Presets now carry a VixForge mark of their own. The ones we ship are already updated; yours need one pass, under <strong>Assets &gt; VixForge Editor &gt; Materials &gt; Migrate Preset Tags</strong>. Your presets keep working whether you run it or not, so there is no rush.</li>
+                    </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Matcap Atlas Builder.</strong> Under <strong>VixenTools &gt; VixForge Editor</strong>, and on the <strong>Build Atlas In Unity</strong> button inside any matcap layer's Packed Atlas panel. Drop a matcap into each cell of the grid and it lays the sheet out, saves it, imports it as colour, and fills in Source, Grid and Sections on the material.</li>
@@ -200,6 +204,8 @@
                     </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Lighting Check has moved out of RENDERING.</strong> It now has its own section at the bottom of the inspector, <strong>DEBUG TOOLS</strong>, in every shader. Same two controls, same behaviour, somewhere you can actually find it. Nothing on your materials changes and no animation breaks, because only the heading moved.</li>
+                        <li class="mb-2"><strong>The console is quieter.</strong> Opening a project printed a version line that was not the VixForge Editor version at all, it was an internal number the upgrade check compares against, and beside another shader editor's identical line it read as the same message twice. That line and five preset traces now only show when you set logging to Detailed in Settings. The Settings window still shows the real version.</li>
                         <li class="mb-2"><strong>Texture Check no longer changes compression.</strong> It still tells you which textures are uncompressed and what they cost, because that is the biggest saving on most avatars. Setting it stays yours: the right format depends on whether the texture carries alpha, and getting that wrong doubles the memory instead of halving it.</li>
                         <li class="mb-2"><strong>Locking says what it removed, not what it did not.</strong> The line read "removed 0 unused properties" on a material that had nothing to remove, which looked like a failure. Zero is the right answer there: that pass only clears leftovers from a shader the material used to be on.</li>
                         <li class="mb-2"><strong>Texture Check asks before it fixes.</strong> Fix All rewrites import settings on your own textures and Ctrl+Z does not put an import setting back, so it now says what it is about to change and waits. When it finishes, the full list goes to the console.</li>
@@ -212,6 +218,7 @@
                     </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Other shader editors were claiming your presets.</strong> The mark that says "this material is a preset" was the exact string every ThryEditor-based inspector looks for, so any of them installed alongside picked up your VixForge presets, listed them in its own menu and re-sorted them on every import. Ours is now its own mark. The other direction is fixed too: VixForge no longer picks up presets that belong to another editor's shaders, and it has stopped writing a console line for every material in the project.</li>
                         <li class="mb-2"><strong>The package now imports on Unity 2019.4.</strong> A dozen editor calls reached for things only newer Unity has, and each one stopped the import dead. Nothing changes on 2022.</li>
                         <li class="mb-2"><strong>A VRChat world project now compiles.</strong> Installing into one filled the console with errors: the Director could not find Udon, and three pieces of the editor took the base SDK being installed to mean the avatar SDK was too. Each now tests for what it actually needs.</li>
                         <li class="mb-2"><strong>Eight errors on a first install.</strong> The Shader Translator's window layouts still pointed at the folder layout of the editor this one was forked from, so a fresh project could not find their stylesheets and the windows came up unstyled.</li>
@@ -230,6 +237,7 @@
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Two sliders to change on materials you already have.</strong> Under <strong>Light Volumes V3</strong>, set <strong>Normal Stability</strong> to 0 and <strong>Point Light Shading</strong> to 3. They shipped at 1 and 1, which had point lights in a world ignore your normal map and light the surface off the bare mesh instead. New materials come with the corrected values.</li>
+                        <li class="mb-2"><strong>Specular Highlight Clamp now runs 0 to 1.</strong> Materials sitting at either end of the old slider are unaffected. If you set it somewhere in between, dial it in again on the new scale.</li>
                     </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
@@ -252,6 +260,8 @@
                         <li class="mb-2"><strong>Zoom</strong> shows less of the sphere as you turn it up, and <strong>Mirror Flip</strong> flips the matcap left to right in a mirror so your reflection catches light from the same side you do.</li>
                         <li class="mb-2"><strong>AudioLink reaches more of each matcap.</strong> Alongside the Band and Intensity you had, each layer now drives its <strong>Emission</strong>, its <strong>Hue</strong> and its <strong>Scroll</strong> from the track.</li>
                         <li class="mb-2"><strong>Copy a layer onto another one.</strong> <strong>Copy Layer</strong> and <strong>Paste Layer</strong> now sit at the top of every decal, every glitter layer and every emission layer as well as every matcap. Copy takes everything that layer has, textures included, and Paste writes it onto whichever layer you press it on, on this material or another one. Anything belonging to the whole group is left alone, like the controls in Glitter Layer 1 that light all three layers.</li>
+                        <li class="mb-2"><strong>Motion vectors are written now.</strong> A world that uses motion blur or temporal antialiasing has real per-object motion to work from. Nothing to set up.</li>
+                        <li class="mb-2"><strong>Reflection Clamp.</strong> Specular Highlight Clamp only ever tamed your scene lights. This does the same for light bouncing off the world: reflection probes, Light Volumes, LTCGI and stage lighting. It sits directly under it in LIGHTING, with a slider each for those four so you can leave one source out of it. Off by default, so nothing changes until you reach for it.</li>
                     </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
@@ -265,6 +275,8 @@
                         <li class="mb-2"><strong>LTCGI was reading the wrong pixel in worlds that bake it.</strong> The shader ran LTCGI in its world mode, which looks up a baked lightmap an avatar does not have, so it read one stray pixel of the world and let that decide how much LTCGI the whole material got. It now runs in the avatar mode LTCGI ships for exactly this case.</li>
                         <li class="mb-2"><strong>A switched-off feature no longer rides along in a locked material.</strong> Its controls were being baked in even though its code was correctly stripped, so a material with LTCGI off still carried every LTCGI setting. Measured on one outfit material with 10 features on and 55 off: 1063 controls in the locked shader where there were 1558, so 495 fewer.</li>
                         <li class="mb-2"><strong>Fog no longer breaks the shader on older Unity.</strong> The fog code tested its keywords in a way that only worked on the passes that happened to declare them. Fog looks exactly as it did.</li>
+                        <li class="mb-2"><strong>Specular Highlight Clamp only did anything in the first tenth of its travel.</strong> It ran 0 to 10 and capped the highlight at that number, but a highlight bright enough to need taming is far brighter than 10, so every setting above about 1 still came out pure white and the control read as an on/off switch. It runs 0 to 1 now and works the whole way along, and it eases the highlight down instead of slicing the top off it, so the bright core no longer lands as a hard-edged disc.</li>
+                        <li class="mb-2"><strong>Two tooltips sat on the wrong controls.</strong> Rim Light Strength was explaining Horizon Specular Occlusion and Specular Highlight Clamp, and the Scene Lights slider under Micro Shading was explaining the Assumed Direction picker. Each explanation is now on the control it describes, and Rim Light Strength, Horizon Specular Occlusion and Specular Highlight Clamp each have one of their own.</li>
                     </ul>
                 </div>
 
@@ -275,6 +287,7 @@
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Two sliders to change on materials you already have.</strong> Under <strong>Light Volumes V3</strong>, set <strong>Normal Stability</strong> to 0 and <strong>Point Light Shading</strong> to 3. They shipped at 1 and 1, which had point lights in a world ignore your normal map and light the surface off the bare mesh instead. New materials come with the corrected values.</li>
+                        <li class="mb-2"><strong>Specular Highlight Clamp now runs 0 to 1.</strong> Materials sitting at either end of the old slider are unaffected. If you set it somewhere in between, dial it in again on the new scale.</li>
                     </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
@@ -297,6 +310,8 @@
                         <li class="mb-2"><strong>Zoom</strong> shows less of the sphere as you turn it up, and <strong>Mirror Flip</strong> flips the matcap left to right in a mirror so your reflection catches light from the same side you do.</li>
                         <li class="mb-2"><strong>AudioLink reaches more of each matcap.</strong> Alongside the Band and Intensity you had, each layer now drives its <strong>Emission</strong>, its <strong>Hue</strong> and its <strong>Scroll</strong> from the track.</li>
                         <li class="mb-2"><strong>Copy a layer onto another one.</strong> <strong>Copy Layer</strong> and <strong>Paste Layer</strong> now sit at the top of every decal, every glitter layer and every emission layer as well as every matcap. Copy takes everything that layer has, textures included, and Paste writes it onto whichever layer you press it on, on this material or another one. Anything belonging to the whole group is left alone, like the controls in Glitter Layer 1 that light all three layers.</li>
+                        <li class="mb-2"><strong>Motion vectors are written now.</strong> A world that uses motion blur or temporal antialiasing has real per-object motion to work from. Nothing to set up.</li>
+                        <li class="mb-2"><strong>Reflection Clamp.</strong> Specular Highlight Clamp only ever tamed your scene lights. This does the same for light bouncing off the world: reflection probes, Light Volumes, LTCGI and stage lighting. It sits directly under it in LIGHTING, with a slider each for those four so you can leave one source out of it. Off by default, so nothing changes until you reach for it.</li>
                     </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
@@ -310,6 +325,8 @@
                         <li class="mb-2"><strong>LTCGI was reading the wrong pixel in worlds that bake it.</strong> The shader ran LTCGI in its world mode, which looks up a baked lightmap an avatar does not have, so it read one stray pixel of the world and let that decide how much LTCGI the whole material got. It now runs in the avatar mode LTCGI ships for exactly this case.</li>
                         <li class="mb-2"><strong>A switched-off feature no longer rides along in a locked material.</strong> Its controls were being baked in even though its code was correctly stripped, so a material with LTCGI off still carried every LTCGI setting. Measured on one outfit material with 10 features on and 55 off: 1180 controls in the locked shader where there were 1713, so 533 fewer.</li>
                         <li class="mb-2"><strong>Fog no longer breaks the shader on older Unity.</strong> The fog code tested its keywords in a way that only worked on the passes that happened to declare them. Fog looks exactly as it did.</li>
+                        <li class="mb-2"><strong>Specular Highlight Clamp only did anything in the first tenth of its travel.</strong> It ran 0 to 10 and capped the highlight at that number, but a highlight bright enough to need taming is far brighter than 10, so every setting above about 1 still came out pure white and the control read as an on/off switch. It runs 0 to 1 now and works the whole way along, and it eases the highlight down instead of slicing the top off it, so the bright core no longer lands as a hard-edged disc.</li>
+                        <li class="mb-2"><strong>Two tooltips sat on the wrong controls.</strong> Rim Light Strength was explaining Horizon Specular Occlusion and Specular Highlight Clamp, and the Scene Lights slider under Micro Shading was explaining the Assumed Direction picker. Each explanation is now on the control it describes, and Rim Light Strength, Horizon Specular Occlusion and Specular Highlight Clamp each have one of their own.</li>
                     </ul>
                 </div>
 
@@ -320,6 +337,7 @@
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Two sliders to change on materials you already have.</strong> Under <strong>Light Volumes V3</strong>, set <strong>Normal Stability</strong> to 0 and <strong>Point Light Shading</strong> to 3. They shipped at 1 and 1, which had point lights in a world ignore your normal map and light the surface off the bare mesh instead. New materials come with the corrected values.</li>
+                        <li class="mb-2"><strong>Specular Highlight Clamp now runs 0 to 1.</strong> Materials sitting at either end of the old slider are unaffected. If you set it somewhere in between, dial it in again on the new scale.</li>
                     </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
@@ -342,6 +360,8 @@
                         <li class="mb-2"><strong>Zoom</strong> shows less of the sphere as you turn it up, and <strong>Mirror Flip</strong> flips the matcap left to right in a mirror so your reflection catches light from the same side you do.</li>
                         <li class="mb-2"><strong>AudioLink reaches more of each matcap.</strong> Alongside the Band and Intensity you had, each layer now drives its <strong>Emission</strong>, its <strong>Hue</strong> and its <strong>Scroll</strong> from the track.</li>
                         <li class="mb-2"><strong>Copy a layer onto another one.</strong> <strong>Copy Layer</strong> and <strong>Paste Layer</strong> now sit at the top of every decal, every glitter layer and every emission layer as well as every matcap. Copy takes everything that layer has, textures included, and Paste writes it onto whichever layer you press it on, on this material or another one. Anything belonging to the whole group is left alone, like the controls in Glitter Layer 1 that light all three layers.</li>
+                        <li class="mb-2"><strong>Motion vectors are written now.</strong> A world that uses motion blur or temporal antialiasing has real per-object motion to work from. Nothing to set up.</li>
+                        <li class="mb-2"><strong>Reflection Clamp.</strong> Specular Highlight Clamp only ever tamed your scene lights. This does the same for light bouncing off the world: reflection probes, Light Volumes, LTCGI and stage lighting. It sits directly under it in LIGHTING, with a slider each for those four so you can leave one source out of it. Off by default, so nothing changes until you reach for it.</li>
                     </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
@@ -355,6 +375,8 @@
                         <li class="mb-2"><strong>LTCGI was reading the wrong pixel in worlds that bake it.</strong> The shader ran LTCGI in its world mode, which looks up a baked lightmap an avatar does not have, so it read one stray pixel of the world and let that decide how much LTCGI the whole material got. It now runs in the avatar mode LTCGI ships for exactly this case.</li>
                         <li class="mb-2"><strong>A switched-off feature no longer rides along in a locked material.</strong> Its controls were being baked in even though its code was correctly stripped, so a material with LTCGI off still carried every LTCGI setting. Measured on one outfit material with 10 features on and 55 off: 1063 controls in the locked shader where there were 1624, so 561 fewer.</li>
                         <li class="mb-2"><strong>Fog no longer breaks the shader on older Unity.</strong> The fog code tested its keywords in a way that only worked on the passes that happened to declare them. Fog looks exactly as it did.</li>
+                        <li class="mb-2"><strong>Specular Highlight Clamp only did anything in the first tenth of its travel.</strong> It ran 0 to 10 and capped the highlight at that number, but a highlight bright enough to need taming is far brighter than 10, so every setting above about 1 still came out pure white and the control read as an on/off switch. It runs 0 to 1 now and works the whole way along, and it eases the highlight down instead of slicing the top off it, so the bright core no longer lands as a hard-edged disc.</li>
+                        <li class="mb-2"><strong>Two tooltips sat on the wrong controls.</strong> Rim Light Strength was explaining Horizon Specular Occlusion and Specular Highlight Clamp, and the Scene Lights slider under Micro Shading was explaining the Assumed Direction picker. Each explanation is now on the control it describes, and Rim Light Strength, Horizon Specular Occlusion and Specular Highlight Clamp each have one of their own.</li>
                     </ul>
                 </div>
 
@@ -365,6 +387,7 @@
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Two sliders to change on materials you already have.</strong> Under <strong>Light Volumes V3</strong>, set <strong>Normal Stability</strong> to 0 and <strong>Point Light Shading</strong> to 3. They shipped at 1 and 1, which had point lights in a world ignore your normal map and light the surface off the bare mesh instead. New materials come with the corrected values.</li>
+                        <li class="mb-2"><strong>Specular Highlight Clamp now runs 0 to 1.</strong> Materials sitting at either end of the old slider are unaffected. If you set it somewhere in between, dial it in again on the new scale.</li>
                     </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
@@ -387,6 +410,8 @@
                         <li class="mb-2"><strong>Zoom</strong> shows less of the sphere as you turn it up, and <strong>Mirror Flip</strong> flips the matcap left to right in a mirror so your reflection catches light from the same side you do.</li>
                         <li class="mb-2"><strong>AudioLink reaches more of each matcap.</strong> Alongside the Band and Intensity you had, each layer now drives its <strong>Emission</strong>, its <strong>Hue</strong> and its <strong>Scroll</strong> from the track.</li>
                         <li class="mb-2"><strong>Copy a layer onto another one.</strong> <strong>Copy Layer</strong> and <strong>Paste Layer</strong> now sit at the top of every decal, every glitter layer and every emission layer as well as every matcap. Copy takes everything that layer has, textures included, and Paste writes it onto whichever layer you press it on, on this material or another one. Anything belonging to the whole group is left alone, like the controls in Glitter Layer 1 that light all three layers.</li>
+                        <li class="mb-2"><strong>Motion vectors are written now.</strong> A world that uses motion blur or temporal antialiasing has real per-object motion to work from. Nothing to set up.</li>
+                        <li class="mb-2"><strong>Reflection Clamp.</strong> Specular Highlight Clamp only ever tamed your scene lights. This does the same for light bouncing off the world: reflection probes, Light Volumes, LTCGI and stage lighting. It sits directly under it in LIGHTING, with a slider each for those four so you can leave one source out of it. Off by default, so nothing changes until you reach for it.</li>
                     </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
@@ -400,6 +425,8 @@
                         <li class="mb-2"><strong>LTCGI was reading the wrong pixel in worlds that bake it.</strong> The shader ran LTCGI in its world mode, which looks up a baked lightmap an avatar does not have, so it read one stray pixel of the world and let that decide how much LTCGI the whole material got. It now runs in the avatar mode LTCGI ships for exactly this case.</li>
                         <li class="mb-2"><strong>A switched-off feature no longer rides along in a locked material.</strong> Its controls were being baked in even though its code was correctly stripped, so a material with LTCGI off still carried every LTCGI setting. Measured on one outfit material with 10 features on and 55 off: 1063 controls in the locked shader where there were 1612, so 549 fewer.</li>
                         <li class="mb-2"><strong>Fog no longer breaks the shader on older Unity.</strong> The fog code tested its keywords in a way that only worked on the passes that happened to declare them. Fog looks exactly as it did.</li>
+                        <li class="mb-2"><strong>Specular Highlight Clamp only did anything in the first tenth of its travel.</strong> It ran 0 to 10 and capped the highlight at that number, but a highlight bright enough to need taming is far brighter than 10, so every setting above about 1 still came out pure white and the control read as an on/off switch. It runs 0 to 1 now and works the whole way along, and it eases the highlight down instead of slicing the top off it, so the bright core no longer lands as a hard-edged disc.</li>
+                        <li class="mb-2"><strong>Two tooltips sat on the wrong controls.</strong> Rim Light Strength was explaining Horizon Specular Occlusion and Specular Highlight Clamp, and the Scene Lights slider under Micro Shading was explaining the Assumed Direction picker. Each explanation is now on the control it describes, and Rim Light Strength, Horizon Specular Occlusion and Specular Highlight Clamp each have one of their own.</li>
                     </ul>
                 </div>
 
@@ -414,10 +441,18 @@
                         <li class="mb-2"><strong>Cloth and fibre, without geometry.</strong> The soft edge glow of silk, satin and velvet, and a painted-on fibre highlight for upholstery, carpet edges and moss on stone. Neither grows geometry, so neither costs you framerate.</li>
                         <li class="mb-2"><strong>LTCGI, and it belongs here.</strong> LTCGI's author discourages it on avatars and points them at Light Volumes instead. In a world it is the right tool: your emissive surfaces become real area lights, so a screen or a neon sign actually lights what is near it. Light Volumes, VRSL stage lighting and AudioLink are all here too, and they run together.</li>
                         <li class="mb-2"><strong>Every AudioLink effect comes across.</strong> The response engine, Chromatic Bloom, Note Swarm, Sonar, Spectrum Ribbon and the Cybernetic overlays. A club wall can read the music the same way an outfit can.</li>
-                        <li class="mb-2"><strong>Lighting Check.</strong> Under RENDERING. Paints the surface with the light actually reaching it, so you can see which system your world is lighting it with. Set it back to Off before you upload.</li>
+                        <li class="mb-2"><strong>Lighting Check.</strong> Under DEBUG TOOLS. Paints the surface with the light actually reaching it, so you can see which system your world is lighting it with. Set it back to Off before you upload.</li>
+                        <li class="mb-2"><strong>Your baked lighting is read and used.</strong> Mark your geometry Contribute GI, press Generate Lighting, and the shader reads the result. Directional lightmaps mean your normal maps still catch the baked light instead of going flat, and shadowmask lets baked and real-time shadows sit together. Subtractive mode works too, which is the one that suits a stylised or cel-shaded room.</li>
+                        <li class="mb-2"><strong>It contributes to the bake as well.</strong> Its colour bounces into the room, and its glow lights what is near it. Under <strong>Baked Lighting</strong>, set <strong>Global Illumination</strong> to <strong>Baked</strong> to turn a material's glow into a light source, then use <strong>Emitted Light</strong> beside it to set how bright that is in the bake without touching how the material looks on screen. Neon and screens usually want more than 1. <strong>Double Sided Global Illumination</strong> is there for a sign or a panel that should light both ways.</li>
+                        <li class="mb-2"><strong>Soft shadows and light cookies.</strong> The main directional light can cast soft shadows, point lights cast shadows now, and a light with a cookie projects it properly.</li>
+                        <li class="mb-2"><strong>Smooth Filter, under Baked Lighting.</strong> Reads the baked lightmap with a smoother filter, so a low resolution bake stops looking blocky. On by default. It costs a few extra reads and no extra memory.</li>
+                        <li class="mb-2"><strong>Highlight, under Baked Lighting.</strong> Baked light can now throw a specular highlight, so a polished floor or a wet tile is not flat under a bake. Set Directional Mode to Directional in your Lighting settings, or it has nothing to work from. <strong>Highlight Softness</strong> caps how sharp it gets, which hides the resolution of the lightmap.</li>
+                        <li class="mb-2"><strong>Motion vectors are written now.</strong> A world that uses motion blur or temporal antialiasing has real per-object motion to work from. Nothing to set up.</li>
+                        <li class="mb-2"><strong>Reflection Clamp, under LIGHTING.</strong> Eases down a blown highlight coming off reflection probes, Light Volumes, LTCGI or stage lighting, with a slider each so you can leave one source out of it. Its neighbour, Specular Highlight Clamp, does the same for your scene lights. Both are off by default.</li>
                     </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Notes</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The first lock after a bake takes a while.</strong> Supporting lightmaps, shadowmask and soft shadows means more shader variants to build. It is working, not stuck, so let it finish.</li>
                         <li class="mb-2"><strong>For carpets and rugs, use World Fur instead.</strong> Real Fur grows actual standing strands, and it lives in that shader. World Surface has the painted-on Surface Fur only.</li>
                     </ul>
                 </div>
@@ -432,13 +467,50 @@
                         <li class="mb-2"><strong>Surface Fur underneath it.</strong> A painted-on fibre highlight that costs nothing and fills in the backing between the strands, so the pile does not thin out into bare floor when you look straight down at it.</li>
                         <li class="mb-2"><strong>It keeps the cloth sheen that Fur Pro drops</strong>, so a rug can be velvet. Everything else the avatar shaders do is here too: the shading styles, matcaps, Car Paint, glitter, emissions, decals, outlines and the special effects.</li>
                         <li class="mb-2"><strong>LTCGI, Light Volumes, VRSL and AudioLink.</strong> All four, running together. LTCGI is the one that changes most in a world: your emissive surfaces become real area lights, which is what its author built it for.</li>
-                        <li class="mb-2"><strong>Lighting Check.</strong> Under RENDERING. Paints the surface with the light actually reaching it, so you can see which system your world is lighting it with. Set it back to Off before you upload.</li>
+                        <li class="mb-2"><strong>Lighting Check.</strong> Under DEBUG TOOLS. Paints the surface with the light actually reaching it, so you can see which system your world is lighting it with. Set it back to Off before you upload.</li>
+                        <li class="mb-2"><strong>Your baked lighting is read and used.</strong> Mark your geometry Contribute GI, press Generate Lighting, and the shader reads the result. Directional lightmaps mean your normal maps still catch the baked light instead of going flat, and shadowmask lets baked and real-time shadows sit together. Subtractive mode works too, which is the one that suits a stylised room.</li>
+                        <li class="mb-2"><strong>It contributes to the bake as well</strong>, so the colour of a rug bounces up into the room. Under <strong>Baked Lighting</strong>, <strong>Global Illumination</strong> set to <strong>Baked</strong> also turns a glowing material into a light source, and <strong>Emitted Light</strong> beside it sets how bright that is in the bake without changing how the material looks on screen.</li>
+                        <li class="mb-2"><strong>Soft shadows and light cookies.</strong> The main directional light can cast soft shadows, point lights cast shadows now, and a light with a cookie projects it properly.</li>
+                        <li class="mb-2"><strong>Smooth Filter, under Baked Lighting.</strong> Reads the baked lightmap with a smoother filter, so a low resolution bake stops looking blocky. On by default. It costs a few extra reads and no extra memory.</li>
+                        <li class="mb-2"><strong>Highlight, under Baked Lighting.</strong> Baked light can now throw a specular highlight, so a polished floor or a wet tile is not flat under a bake. Set Directional Mode to Directional in your Lighting settings, or it has nothing to work from. <strong>Highlight Softness</strong> caps how sharp it gets, which hides the resolution of the lightmap.</li>
+                        <li class="mb-2"><strong>Motion vectors are written now.</strong> A world that uses motion blur or temporal antialiasing has real per-object motion to work from. Nothing to set up.</li>
+                        <li class="mb-2"><strong>Reflection Clamp, under LIGHTING.</strong> Eases down a blown highlight coming off reflection probes, Light Volumes, LTCGI or stage lighting, with a slider each so you can leave one source out of it. Its neighbour, Specular Highlight Clamp, does the same for your scene lights. Both are off by default.</li>
                     </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Notes</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The first lock after a bake takes a while.</strong> Supporting lightmaps, shadowmask and soft shadows means more shader variants to build. It is working, not stuck, so let it finish.</li>
                         <li class="mb-2"><strong>No Wet or Goo here, on purpose.</strong> A carpet has no use for them and the textures are not free, so they are left out to keep the shader lighter. World Surface has both if you want a wet floor next to the rug.</li>
                     </ul>
                 </div>
+                <div class="changelog-entry" data-version="baker-1.0.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Light Baker 1.0.0 - Unreleased</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A light baker for VRChat worlds that runs on your graphics card. Point it at a scene, press Bake, and it fills in Unity's own lightmaps, light probes and Light Volumes. First release as a product of its own.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Bakes on your graphics card.</strong> A path tracer in a compute shader, with its own acceleration structure built over the scene, so a bake is a coffee rather than an evening.</li>
+                        <li class="mb-2"><strong>It writes into Unity's own slots.</strong> The result goes where Unity keeps its lightmaps, so the world carries nothing extra and there is nothing for VRChat to strip on upload. A world lit with this uploads exactly like a world lit with Unity's lightmapper.</li>
+                        <li class="mb-2"><strong>Directional lightmaps.</strong> The bake stores which way the light arrived, so normal maps still catch baked light instead of going flat. Turn it off for smaller files.</li>
+                        <li class="mb-2"><strong>Light probes</strong>, for everything that moves through the scene, players included. <strong>Probe Samples</strong> sets their quality and <strong>Dilate Invalid Probes</strong> fills in the ones that landed inside geometry.</li>
+                        <li class="mb-2"><strong>VRC Light Volumes are baked from the same trace</strong>, so your volumes agree with your lightmaps instead of being baked separately and drifting apart. <strong>Denoise Volumes</strong> cleans them, and <strong>Give Each Light Volume Its Own Name</strong> sorts out two volumes sharing a name and overwriting each other.</li>
+                        <li class="mb-2"><strong>Terrain.</strong> A Terrain gets its own lightmap, casts shadows and bounces its colour onto everything around it. Its colour comes from the splat maps, so a sandy patch bounces sand and a grassy one bounces green. <strong>Terrain Detail</strong> sets how finely the bake reads the shape: raise it if terrain shadows look blocky, lower it if a big terrain makes the bake slow.</li>
+                        <li class="mb-2"><strong>Emissive materials light the room.</strong> The baker aims rays straight at the glowing surfaces in your scene instead of waiting for a bounce to find one, so a neon sign or a screen actually lights what is near it rather than showing up as speckle. Set <strong>Global Illumination</strong> to <strong>Baked</strong> on the material for it to count, and <strong>Emitted Light</strong> beside it sets how bright it is in the bake.</li>
+                        <li class="mb-2"><strong>Make Missing Lightmap UVs.</strong> Finds everything in the scene that can receive a lightmap but has no lightmap UVs, and gives it some. Models get Generate Lightmap UVs switched on and reimported. Anything with no import settings to hold that, like a mesh built in script, gets a copy with the UVs unwrapped, saved under <code>Assets/VixenTools/BakedMeshes</code>. It says what it is about to do and waits, because a reimport is not something Ctrl+Z puts back.</li>
+                        <li class="mb-2"><strong>Ambient occlusion</strong>, with its own distance, for the creases and corners a bounce alone leaves flat.</li>
+                        <li class="mb-2"><strong>Denoising</strong>, through OpenImageDenoise, Optix or Radeon. Pick one under <strong>Backend</strong> and it falls back to the others if that one is not available on your machine. Set it to None to see the raw trace.</li>
+                        <li class="mb-2"><strong>Albedo Boost is read from your Lighting window</strong>, so how much colour bounces between surfaces matches what Unity's lightmapper would give you.</li>
+                        <li class="mb-2"><strong>Sky Colour and Sky Intensity</strong> light the scene where nothing else does, and <strong>Indirect Intensity</strong> scales the bounce on its own without touching direct light.</li>
+                        <li class="mb-2"><strong>Clear</strong> puts every renderer back to no lightmap, so a bake you do not like is one button to undo.</li>
+                        <li class="mb-2"><strong>The bake report says what was skipped and why</strong>, which is the fastest way to find the one object that did not get lit.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Notes</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>An object set to receive light from Light Probes still casts shadows and still bounces its colour into the bake.</strong> So does one with its Lightmap Scale at 0. That is exactly how you tell Unity an object should light the room without taking lightmap space of its own, and the report does not call these left out.</li>
+                        <li class="mb-2"><strong>Lightmap Scale on a renderer does what the field says</strong>, so raising it on one wall sharpens the shadows there without costing you resolution everywhere else.</li>
+                        <li class="mb-2"><strong>Worlds only.</strong> It bakes a scene, so there is nothing for it to do on an avatar.</li>
+                    </ul>
+                </div>
+
 
             </div>
 

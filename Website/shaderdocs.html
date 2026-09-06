@@ -578,9 +578,20 @@
                         detail would otherwise leak through the body at glancing angles, keeping reflection probes,
                         Light Volumes and stage lighting from showing through. Full by default; lower toward 0 to relax
                         it.</li>
-                    <li class="mb-2"><strong>Specular Highlight Clamp</strong> - Caps how bright a direct point-light
-                        highlight can get, taming the harsh sparkle very glossy latex can throw under bright lights.
-                        Effectively off at its default; lower it to clamp harder.</li>
+                    <li class="mb-2"><strong>Specular Highlight Clamp</strong> - Eases down the hotspot very
+                        glossy material throws under a bright light. 1 leaves it alone, lower softens the
+                        highlight, and 0 takes it out. Scene lights only, so reflections are not affected.</li>
+                </ul>
+
+                <p class="opt-note mt-3 mb-2"><strong>Reflection Clamp</strong></p>
+                <p class="opt-note">The same idea as Specular Highlight Clamp above, but for the light bouncing
+                    off the world rather than the lights in the scene. Off by default.</p>
+                <ul class="custom-list m-0 ps-4 mb-3">
+                    <li class="mb-2"><strong>Amount</strong> - How far the hotspot is eased down. 1 leaves it
+                        alone, lower softens it, and 0 takes it out.</li>
+                    <li class="mb-2"><strong>Reflection Probes</strong> / <strong>Light Volumes</strong> /
+                        <strong>LTCGI</strong> / <strong>VRSL</strong> - Trim it per source. 1 gives that source
+                        the full amount, 0 leaves that source out of it entirely.</li>
                 </ul>
 
                 <p class="opt-note mt-3 mb-2"><strong>Micro Lighting</strong></p>
