@@ -1636,6 +1636,34 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="editor-2.2.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Editor 2.2.0 - 2026-09-07</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A new tool that brings our lighting to shaders you already own, Velvet finally behaving like the pile fabric it is, and a much bigger haul when you convert a material over from Poiyomi.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Picking Velvet again will switch its Surface Fur on.</strong> Velvet and Velour are both pile fabrics, but only Velour was set up that way, so the pair never matched. Velvet now gets the same treatment: a short, tight pile with a bit more lustre. Nothing already on your material changes on its own; this only happens the next time you choose <strong>Velvet</strong> from <strong>Material Type</strong>. If you liked the flatter look, switch <strong>Surface Fur</strong> back off after you pick it.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Shader Patcher.</strong> Under <strong>VixenTools &gt; VixForge Editor &gt; Shader Patcher</strong>. It adds HDR, lighting and reflection upgrades to shaders you already own from other creators. Nothing is touched until you press <strong>Patch Shader</strong>, your original is copied out first, and <strong>Restore Original</strong> puts it back at any time. <strong>Check Steps</strong> shows you what a patch will change before it changes anything, and if a patched shader will not compile the tool restores your original on its own. Two patches ship with it, and it picks up any others you drop into the project.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Fur, Fleece and Angora now fill in a Real Fur profile.</strong> Choosing one of these three from <strong>Material Type</strong> sets the whole <strong>Real Fur</strong> group for you: <strong>Length</strong>, <strong>Strands Per Face</strong>, <strong>Curve Segments</strong>, <strong>Strand Width</strong>, <strong>Tip Taper</strong>, <strong>Tufting</strong>, <strong>Curl</strong>, <strong>Guard Hairs</strong>, <strong>Droop</strong>, <strong>Comb Bend</strong>, <strong>Tip Softness</strong>, <strong>Root Shading</strong>, <strong>Shade Variation</strong> and <strong>Self Shadowing</strong>. Fur gets a medium coat with guard hairs, Angora a long fine one, Fleece a short springy pile.</li>
+                        <li class="mb-2"><strong>It does not switch Real Fur on.</strong> Real Fur grows actual geometry and costs framerate, so it stays yours to turn on. The settings are simply waiting when you do. Every other preset leaves the Real Fur group untouched, exactly as before.</li>
+                        <li class="mb-2"><strong>Presets has a row of its own.</strong> The <strong>Presets</strong> button used to share a bar with the <strong>Rendering Mode</strong> dropdown and was squeezed into a third of the width. It now runs the full width of the inspector on its own line, and <strong>Rendering Mode</strong> sits on the line below with its label showing.</li>
+                        <li class="mb-2"><strong>Coming from Poiyomi now brings far more across.</strong> The Poiyomi translation carried 19 settings; it now carries 116. All four matcap layers come over with their textures, masks, tints, intensity, rotation, hue shift, emission and blend amounts, along with four emission layers, the outline, the render queue and blending settings, and the whole stencil block. Matcap and emission layers land on the matching layer number, so nothing is stacked on top of anything else.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Switching another shader onto Clothing Pro or Fur Pro now offers to bring your settings across.</strong> The <strong>Apply</strong> button only showed up when a translation existed for the exact shader you were changing to, and Clothing Pro and Fur Pro never had one. Coming from Poiyomi, lilToon or VRChat Mobile Toon Standard, that left your matcaps, textures, emission and colours behind. Both now have the full set, so all four of our shaders convert the same way. You could always pick a translation by hand from the shaders icon at the top of the inspector; now the right one is offered for you.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="editor-2.1.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Editor 2.1.0 - 2026-09-06</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A builder for the new Packed Atlas matcaps, copy and paste for every stacked layer in the shader, and the tools all put where you can find them.</em></p>
