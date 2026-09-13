@@ -3452,6 +3452,19 @@
                     <li class="mb-2"><strong>Read Mask</strong> - Which bits of the stencil the test is allowed to look at.</li>
                     <li class="mb-2"><strong>Write Mask</strong> - Which bits of the stencil this is allowed to change.</li>
                 </ul>
+
+                <h3 class="text-glow-pink opt-group">Shadow &amp; Depth</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Match Rendering</strong> - Keeps these settings following Cull and Offset above, with Depth Write on and Depth Test at LessEqual, which is how every material has always drawn its shadow. Turn it off to set them yourself.</li>
+                    <li class="mb-2"><strong>Cull</strong> - Which sides of your mesh cast a shadow and count as solid to depth effects. Match it to Cull above if you draw both sides, or effects behind a thin piece will show through it.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Front</code>, <code>Back</code></span></li>
+                    <li class="mb-2"><strong>Depth Write</strong> - Whether this material casts a shadow and counts as solid to depth effects at all. Off removes its shadow and lets effects behind it show through.
+                        <span class="opt-values">Options: <code>Off</code>, <code>On</code></span></li>
+                    <li class="mb-2"><strong>Depth Test</strong> - How the shadow and depth draw decides whether it is in front. Leave it on LessEqual unless you are building something unusual.
+                        <span class="opt-values">Options: <code>Disabled</code>, <code>Never</code>, <code>Less</code>, <code>Equal</code>, <code>LessEqual</code>, <code>Greater</code>, <code>NotEqual</code>, <code>GreaterEqual</code>, <code>Always</code></span></li>
+                    <li class="mb-2"><strong>Offset Factor</strong> - Pushes the depth this material leaves behind toward the camera with a negative value, or away with a positive one, without moving the mesh. A small negative value stops a depth effect showing through a surface it sits just behind. Too far and its shadow starts to look wrong.</li>
+                    <li class="mb-2"><strong>Offset Units</strong> - The fixed part of that same push. Small numbers go a long way.</li>
+                </ul>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Flip Backface Normals</strong> - Cull decides which side of each face gets drawn. Back suits most models. Switch to Off for flat single-sided pieces like hair cards, skirts or wings that need to be visible from both sides.</li>
                     <li class="mb-2"><strong>Ignore Fog</strong> - Keep your own colour in a foggy world instead of fading into the fog with everything else.</li>
