@@ -217,11 +217,6 @@
                 News
             </fluent-anchor>
 
-            <fluent-anchor href="ai-transparency.html" class="nav-item">
-                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                AI Transparency
-            </fluent-anchor>
-
             <fluent-anchor href="why-choose-us.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                 Why Choose Us?
@@ -262,6 +257,11 @@
                 Get Help Here
             </fluent-anchor>
 
+            <fluent-anchor href="ai-transparency.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                AI Transparency
+            </fluent-anchor>
+
             </div>
     </nav>
 
@@ -276,6 +276,76 @@
                     Studio updates, partnerships, and releases from VixForge Interactive. The latest news lands here first.
                 </p>
             </div>
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders">
+                <h2 class="sr-only">Every light in the room</h2>
+
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Shader Update</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">VixForge Toon</span>
+                        <span class="news-tag">Clothing Pro</span>
+                        <span class="news-tag">Fur Pro</span>
+                        <span class="news-tag">VixForge Editor</span>
+                        <span class="news-date">September 14, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Every Light In The Room - Latex Ultra 5.2 &amp; Friends</h2>
+                    <p>
+                        Worlds get lit by Light Volumes, LTCGI screens and stage rigs at least as often as by the sun, and
+                        a lot of the shader only ever listened to the sun. Walk into a club and the rim, the creases and
+                        the point lights quietly stopped taking part. This release brings every light in the room in,
+                        gives shading its natural falloff back, and puts a tooltip on every control.
+                    </p>
+
+                    <h3 class="text-glow-cyan">Light That Holds Its Shape</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Rim Light</strong> takes light from wherever it actually is, with a slider each for the scene lights, the ambient, Light Volumes, LTCGI and VRSL. <strong>Follow Light</strong> keeps the edge on the side the light comes from, and <strong>Wrap</strong> sets how far round the form it carries.</li>
+                        <li><strong>Cavity Lighting</strong> reaches Light Volumes, LTCGI and VRSL too, so the creases move with the room instead of sitting flat.</li>
+                        <li><strong>Point Light Strength</strong>, under <strong>Light Volumes V3</strong>, turns a world's point lights up or down on their own without dimming every volume with them.</li>
+                        <li><strong>Sharper Probes</strong> stops light probes going flat and grey on the side away from the light. The room gets no brighter, it just keeps its shape.</li>
+                        <li><strong>Soften Terminator</strong> turns the jagged shadow edge on a low poly mesh into a smooth gradient, and <strong>Shadow Normal Bias</strong> lifts a mesh off its own shadow.</li>
+                        <li><strong>Fracture</strong>, under <strong>Transmission</strong>, breaks light glowing through a thin part into rays that follow your surface detail, the way sun comes through the gaps between your fingers.</li>
+                    </ul>
+
+                    <h3 class="text-glow-cyan">Fur, Goo And Glitter</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Real Fur</strong> takes shadows and casts them, so a coat in the shade of a wall darkens with the body and throws a shadow of its own shape. <strong>Follow PBR Map</strong> lets your packed map set how shiny each hair is.</li>
+                        <li>Goo that hits the floor spreads smoothly instead of breaking into hard patches, and <strong>Pool Softness</strong> shapes the join.</li>
+                        <li>Glitter gets two more layers, a <strong>Style</strong> group on every layer for mixed flake sizes, sparkle, close shades, star rays and clumping, and flakes in two colours.</li>
+                        <li><strong>Shadow &amp; Depth</strong>, under <strong>RENDERING</strong>, sets how fluids, soft particles and depth fog meet your material. <strong>Match Rendering</strong> starts on and keeps it exactly as it was.</li>
+                    </ul>
+
+                    <h3 class="text-glow-cyan">Easier To Find Your Way Around</h3>
+                    <ul class="pledge-list">
+                        <li>Every control has a tooltip now. Hover anything and it tells you what it does in plain words.</li>
+                        <li>Lighting is split into named groups, <strong>Rim Light</strong>, <strong>Subsurface</strong>, <strong>Transmission</strong>, <strong>Anisotropy</strong> and <strong>Specular Response</strong>, and each AudioLink band sits right under the control it drives.</li>
+                        <li><strong>Switchboard</strong>, under <strong>VixenTools &gt; VixForge Editor</strong>, lists every toggle on every VixForge material in your scene and flips one across the whole room in a click.</li>
+                        <li><strong>Lightmap UV Fix</strong>, under <strong>VixenTools &gt; VixForge Mesh Fixes</strong>, finds the models behind Unity's overlapping UVs warning and sets their lightmap UVs up for the resolution you bake at.</li>
+                        <li>Right-click the <strong>Presets</strong> button to save the material you are looking at as a new preset.</li>
+                    </ul>
+
+                    <h3 class="text-glow-cyan">Before You Carry On</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Set Shadow Hardness to 0</strong> under <strong>Shadow Detail</strong> on materials you already have. It shipped at 1, which flattened the whole lit side to full brightness. New materials start at 0.</li>
+                        <li><strong>Mark what your animations change.</strong> A locked material now only lets values marked <strong>Animated (when locked)</strong> change. Right-click each value an animation or a VRCFury toggle drives, tick it, and lock again.</li>
+                        <li><strong>Transmission is stronger.</strong> It was being applied twice, so if you had it at 0.5, set it to 0.25 for the old look.</li>
+                        <li><strong>An emission layer left on with an empty map slot now glows.</strong> Untick <strong>Enable Layer 1</strong> (or 2 to 5) on any layer you did not mean to use.</li>
+                        <li><strong>A few things look a little different</strong>: point light highlights from Light Volumes, clearcoat reflections, rough metal and a rim on metal. The full changelog lists the setting that takes each one back.</li>
+                    </ul>
+
+                    <p>
+                        This lands as Latex Ultra 5.2.0, VixForge Toon 2.2.0, Clothing Pro 2.2.0, Fur Pro 2.2.0 and the
+                        editor at 2.3.0.
+                    </p>
+
+                    <div class="row mt-4" style="gap: 10px; flex-wrap: wrap;">
+                        <fluent-anchor href="shader-changelogs.html" appearance="accent" class="custom-accent-btn">Read the Full Changelog</fluent-anchor>
+                        <fluent-anchor href="index.html" class="custom-stealth-btn">Add to VCC</fluent-anchor>
+                    </div>
+                </div>
+            </article>
+
             <article class="glass-panel news-article w-100 mb-5" data-chips="shaders">
                 <div class="news-hero-art">
                     <img src="promos/PromoBanner5.png" width="1536" height="657" alt="The Matcaps Rebuilt banner from VixForge Interactive: a glossy black and white VRChat avatar with magenta and purple hair and a spiked ruff, looking down at the camera against a pale blue sky and a glass tower." />
