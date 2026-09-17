@@ -277,6 +277,22 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="toon-2.2.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Toon 2.2.1 - 2026-09-15</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>An emission layer you keep switched on only so another effect can borrow its map now stays dark, whatever the music is doing.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>An emission layer held at Strength 0 no longer glows with the music.</strong> The AudioLink controls under <strong>EMISSIONS</strong> lit every layer that was switched on, whether or not it drew anything, so a layer kept on only so another effect could borrow its <strong>Map</strong> flashed along with the music. If you were using one of those layers for its glow, set its <strong>Strength</strong> above 0.</li>
+                        <li class="mb-2"><strong>Emission Layer 1's AudioLink Amplitude lights Layer 1 and nothing else.</strong> It was pushing every emission layer on the material, so raising it brightened layers 2 to 5 with it. Every layer has its own <strong>AudioLink Amplitude</strong>, so raise that layer's own slider to get its pulse back.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The material still reacted to the beat with Emission Layer 1 switched off.</strong> Layer 1's <strong>AudioLink Amplitude</strong> was pushing <strong>Global Metallic</strong> with the music as well as the glow, and it kept pushing it after you switched the layer off, with the slider gone from the inspector.</li>
+                        <li class="mb-2"><strong>DFT Note Emission Amount ignored the layer's Strength.</strong> Emission Layer 1 lit up on the note even at Strength 0.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="toon-2.2.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Toon 2.2.0 - 2026-09-14</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>An emission layer with nothing in its map slot now glows, and a world can ask you to light yourself its way.</em></p>
@@ -445,6 +461,7 @@
                         <li class="mb-2">Light Volumes is up to date with 3.0.0-dev.17.</li>
                     </ul>
                 </div>
+
                 <div class="changelog-entry" data-version="toon-1.5.1">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Toon 1.5.1 - 2026-08-30</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Housekeeping. Nothing on your material looks any different.</em></p>
@@ -644,15 +661,16 @@
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>The Toon shader.</strong> Assign <strong>VixForge / Toon</strong> to a material, set up BASE, NORMAL MAPS and SURFACE just as you would on Latex Ultra, then pick a shading style. The <strong>Toon Shader</strong> tab in the Hub covers what is new; everything else follows How To Use and Shader Pipeline as written.</li>
                         <li class="mb-2"><strong>Start from your existing material.</strong> Coming from <strong>lilToon</strong>, <strong>Poiyomi</strong> or <strong>VRChat's Toon Standard</strong>? Assign VixForge Toon and the inspector offers a one-click button to bring the old shader's settings across. To convert a whole avatar at once, right-click it and choose <strong>VixForge Editor &gt; Materials &gt; Translate Avatar</strong>; it backs the avatar up first and is fully undoable.</li>
-                        <li class="mb-2"><strong>Five shading styles</strong>, in a new <strong>Shading Options</strong> block at the top of the SHADING section:
+                        <li class="mb-2">
+                            <strong>Five shading styles</strong>, in a new <strong>Shading Options</strong> block at the top of the SHADING section:
                             <ul class="custom-list ps-4 mt-2 mb-0">
                                 <li class="mb-2"><strong>Ramp Texture</strong> reads a gradient you supply, unlit on the left to lit on the right. Leave it white for a clean two-tone. Comes with an <strong>Offset</strong> that shifts where the ramp reads.</li>
                                 <li class="mb-2"><strong>Cel Steps</strong> posterises the light into flat bands. Set the <strong>Count</strong> from 2 to 8.</li>
                                 <li class="mb-2"><strong>Soft</strong> gives a smooth, rounded falloff.</li>
                                 <li class="mb-2"><strong>Hard</strong> draws one crisp terminator line, lit or unlit.</li>
                                 <li class="mb-2"><strong>Realistic</strong> switches the stylising off and lights like standard PBR, so you can keep realistic parts on the same material. It has its own <strong>Light Wrap</strong>.</li>
-                        </ul>
-</li>
+                            </ul>
+                        </li>
                         <li class="mb-2"><strong>Edge Softness and Light Wrap.</strong> Edge Softness sets how sharp the Cel and Ramp band edges are, from crisp to blurred. Light Wrap pulls light further around the surface and softens the terminator, the way skin and fabric do.</li>
                         <li class="mb-2"><strong>Two-layer outlines.</strong> An inner and an outer outline, each with its own scrolling texture for animated edges. Width reads as real thickness, so the line shrinks on screen as you move away, like a solid object.</li>
                         <li class="mb-2"><strong>The full toolkit, shared with Latex Ultra.</strong> Polish, Outlines, Emissions, Matcaps, Decals, AudioLink, Light Volumes, LTCGI, VRSL and TechnicallySane all behave exactly as they do on Latex Ultra. Turn shading off, or set the style to Realistic, and Toon lights like a normal PBR material.</li>
@@ -666,6 +684,22 @@
                         <li class="mb-2"><strong>Lock your materials before uploading</strong>, the same three ways as Latex Ultra. The SDK Build button does it for you.</li>
                         <li class="mb-2"><strong>Toon needs triangle meshes.</strong> If a model looks torn or shredded, turn off <strong>Keep Quads</strong> in its import settings, or run <strong>VixenTools &gt; VixForge Mesh Fixes &gt; Scan for Quad Meshes</strong>.</li>
                         <li class="mb-2"><strong>Light Volumes and LTCGI start off</strong>, because they make Unity builds much slower. Turn them on only if your world uses them.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-5.2.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 5.2.1 - 2026-09-15</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>An emission layer you keep switched on only so another effect can borrow its map now stays dark, whatever the music is doing.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>An emission layer held at Strength 0 no longer glows with the music.</strong> The AudioLink controls under <strong>EMISSIONS</strong> lit every layer that was switched on, whether or not it drew anything, so a layer kept on only so another effect could borrow its <strong>Map</strong> flashed along with the music. If you were using one of those layers for its glow, set its <strong>Strength</strong> above 0.</li>
+                        <li class="mb-2"><strong>Emission Layer 1's AudioLink Amplitude lights Layer 1 and nothing else.</strong> It was pushing every emission layer on the material, so raising it brightened layers 2 to 5 with it. Every layer has its own <strong>AudioLink Amplitude</strong>, so raise that layer's own slider to get its pulse back.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The material still reacted to the beat with Emission Layer 1 switched off.</strong> Layer 1's <strong>AudioLink Amplitude</strong> was pushing <strong>Global Metallic</strong> with the music as well as the glow, and it kept pushing it after you switched the layer off, with the slider gone from the inspector.</li>
+                        <li class="mb-2"><strong>DFT Note Emission Amount ignored the layer's Strength.</strong> Emission Layer 1 lit up on the note even at Strength 0.</li>
                     </ul>
                 </div>
 
@@ -1467,6 +1501,22 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="clothingpro-2.2.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Clothing Pro 2.2.1 - 2026-09-15</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>An emission layer you keep switched on only so another effect can borrow its map now stays dark, whatever the music is doing.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>An emission layer held at Strength 0 no longer glows with the music.</strong> The AudioLink controls under <strong>EMISSIONS</strong> lit every layer that was switched on, whether or not it drew anything, so a layer kept on only so another effect could borrow its <strong>Map</strong> flashed along with the music. If you were using one of those layers for its glow, set its <strong>Strength</strong> above 0.</li>
+                        <li class="mb-2"><strong>Emission Layer 1's AudioLink Amplitude lights Layer 1 and nothing else.</strong> It was pushing every emission layer on the material, so raising it brightened layers 2 to 5 with it. Every layer has its own <strong>AudioLink Amplitude</strong>, so raise that layer's own slider to get its pulse back.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The material still reacted to the beat with Emission Layer 1 switched off.</strong> Layer 1's <strong>AudioLink Amplitude</strong> was pushing <strong>Global Metallic</strong> with the music as well as the glow, and it kept pushing it after you switched the layer off, with the slider gone from the inspector.</li>
+                        <li class="mb-2"><strong>DFT Note Emission Amount ignored the layer's Strength.</strong> Emission Layer 1 lit up on the note even at Strength 0.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="clothingpro-2.2.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Clothing Pro 2.2.0 - 2026-09-14</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>An emission layer with nothing in its map slot now glows, and a world can ask you to light yourself its way.</em></p>
@@ -1753,6 +1803,22 @@
                         <li class="mb-2"><strong>Lock your materials before uploading</strong>, the same three ways as the other shaders. The SDK Build button does it for you.</li>
                         <li class="mb-2"><strong>Clothing Pro needs triangle meshes.</strong> Like the others it tessellates, so if a model looks torn, turn off <strong>Keep Quads</strong> in its import settings, or run <strong>VixenTools &gt; VixForge Mesh Fixes &gt; Scan for Quad Meshes</strong>.</li>
                         <li class="mb-2"><strong>Light Volumes and LTCGI start off</strong>, because they make Unity builds much slower. Turn them on only if your world uses them.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="furpro-2.2.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Fur Pro 2.2.1 - 2026-09-15</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>An emission layer you keep switched on only so another effect can borrow its map now stays dark, whatever the music is doing.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>An emission layer held at Strength 0 no longer glows with the music.</strong> The AudioLink controls under <strong>EMISSIONS</strong> lit every layer that was switched on, whether or not it drew anything, so a layer kept on only so another effect could borrow its <strong>Map</strong> flashed along with the music. If you were using one of those layers for its glow, set its <strong>Strength</strong> above 0.</li>
+                        <li class="mb-2"><strong>Emission Layer 1's AudioLink Amplitude lights Layer 1 and nothing else.</strong> It was pushing every emission layer on the material, so raising it brightened layers 2 to 5 with it. Every layer has its own <strong>AudioLink Amplitude</strong>, so raise that layer's own slider to get its pulse back.</li>
+                    </ul>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The material still reacted to the beat with Emission Layer 1 switched off.</strong> Layer 1's <strong>AudioLink Amplitude</strong> was pushing <strong>Global Metallic</strong> with the music as well as the glow, and it kept pushing it after you switched the layer off, with the slider gone from the inspector.</li>
+                        <li class="mb-2"><strong>DFT Note Emission Amount ignored the layer's Strength.</strong> Emission Layer 1 lit up on the note even at Strength 0.</li>
                     </ul>
                 </div>
 
