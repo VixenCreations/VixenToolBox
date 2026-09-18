@@ -190,6 +190,173 @@
 
 
 
+                <div class="changelog-entry" data-version="latex-5.2.2">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 5.2.2 - Unreleased</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A big AudioLink update: Cymatics, music reactions on every emission layer, outlines that move with the music, Speaker Glow, Drop Burst, a Body Equaliser and goo that moves to the beat, all starting switched off. Smoother Probe Lighting stays on your light probes in worlds made with the first version of Light Volumes, and a correction to the 5.2.0 notes.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Per-Light Specular is off by default, not on as the 5.2.0 notes said.</strong> Only the Best Soft preset turns it on. The doubled point light highlight that release fixed only ever showed with it on, so if you raised <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong> because of that note and <strong>Per-Light Specular</strong> is off on your material, set <strong>Specular Mix</strong> back to where you had it.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Light Volumes for outlines and shards.</strong> Outline lighting and the fracture shards took their room light from the light probes only, so in a world lit by Light Volumes they could look darker than the rest of you. Each outline now has a <strong>Light Volumes</strong> slider under its <strong>Lighting</strong>, and <strong>Vertex Fracture</strong> has <strong>Shard Light Volumes</strong>. Both follow your <strong>Light Volumes V3</strong> settings, and both start at 0, so nothing changes until you raise them.</li>
+                        <li class="mb-2"><strong>Cymatics.</strong> A new special effect that draws, in light, the figures sand makes on a singing metal plate. The music picks the figure, so it changes shape as a track moves from the kick to the hats, and a loud passage shakes the sand about until it settles. Pick a <strong>Style</strong>, then use <strong>Depth</strong> to stack plates down into the surface. With no music it drifts between figures on its own.</li>
+                        <li class="mb-2"><strong>Music Reactions</strong> on every emission layer. <strong>Note Trigger</strong> lights a layer only while its note is playing, <strong>Beat Strobe</strong> flashes it on each hit and leaves it dark in between, and <strong>Waveform Warp</strong> bends its pattern with the live sound wave, like the trace on an oscilloscope. Layers 2 to 5 also get the <strong>AudioLink Color Blend</strong> that layer 1 already had.</li>
+                        <li class="mb-2"><strong>Outlines that move with the music.</strong> Each outline gains <strong>Music Colour</strong>, <strong>Travelling Pulse</strong>, which runs each beat along the line, <strong>Beat Reveal</strong>, which keeps the line hidden until a beat pushes it out, and <strong>Equaliser Silhouette</strong>, which turns the line into an equaliser drawn up your body.</li>
+                        <li class="mb-2"><strong>Speaker Glow</strong> under <strong>Sonar</strong>. The side of you facing the speakers glows with the beat, with a rim light along your edges.</li>
+                        <li class="mb-2"><strong>Drop Burst</strong> under <strong>Vertex Fracture</strong>. When the track hits a big peak you burst into shards and pull back together as it passes.</li>
+                        <li class="mb-2"><strong>Body Equaliser</strong> under <strong>Vertex Pump</strong>. The music is laid up your body, bass at your feet and treble at your head, so each part of you swells with its own slice of the sound.</li>
+                        <li class="mb-2"><strong>Notes</strong> glitter colour. Every flake takes one of the notes AudioLink hears, so the glitter shows the chord being played.</li>
+                        <li class="mb-2"><strong>Beat Writhe</strong>, <strong>Beat Reach</strong> and <strong>Beat Drops</strong> for the goo. The music makes the goo writhe harder, flings the <strong>Cling</strong> strands further and swells the hanging drops.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Smoother Probe Lighting could pick up the wrong light in worlds made with the first version of Light Volumes.</strong> Those worlds store their volumes in a form this shader cannot read, and the option read them anyway. It uses your light probes there now, which is what the Light Volumes package itself does.</li>
+                    </ul>
+                </div>
+
+
+                <div class="changelog-entry" data-version="toon-2.2.2">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Toon 2.2.2 - Unreleased</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A big AudioLink update: Cymatics, music reactions on every emission layer, outlines that move with the music, Speaker Glow, Drop Burst and a Body Equaliser, all starting switched off. Smoother Probe Lighting stays on your light probes in worlds made with the first version of Light Volumes, and a correction to the 2.2.0 notes.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Per-Light Specular is off by default, not on as the 2.2.0 notes said.</strong> Only the Best Soft preset turns it on. The doubled point light highlight that release fixed only ever showed with it on, so if you raised <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong> because of that note and <strong>Per-Light Specular</strong> is off on your material, set <strong>Specular Mix</strong> back to where you had it.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Light Volumes for outlines and shards.</strong> Outline lighting and the fracture shards took their room light from the light probes only, so in a world lit by Light Volumes they could look darker than the rest of you. Each outline now has a <strong>Light Volumes</strong> slider under its <strong>Lighting</strong>, and <strong>Vertex Fracture</strong> has <strong>Shard Light Volumes</strong>. Both follow your <strong>Light Volumes V3</strong> settings, and both start at 0, so nothing changes until you raise them.</li>
+                        <li class="mb-2"><strong>Cymatics.</strong> A new special effect that draws, in light, the figures sand makes on a singing metal plate. The music picks the figure, so it changes shape as a track moves from the kick to the hats, and a loud passage shakes the sand about until it settles. Pick a <strong>Style</strong>, then use <strong>Depth</strong> to stack plates down into the surface. With no music it drifts between figures on its own.</li>
+                        <li class="mb-2"><strong>Music Reactions</strong> on every emission layer. <strong>Note Trigger</strong> lights a layer only while its note is playing, <strong>Beat Strobe</strong> flashes it on each hit and leaves it dark in between, and <strong>Waveform Warp</strong> bends its pattern with the live sound wave, like the trace on an oscilloscope. Layers 2 to 5 also get the <strong>AudioLink Color Blend</strong> that layer 1 already had.</li>
+                        <li class="mb-2"><strong>Outlines that move with the music.</strong> Each outline gains <strong>Music Colour</strong>, <strong>Travelling Pulse</strong>, which runs each beat along the line, <strong>Beat Reveal</strong>, which keeps the line hidden until a beat pushes it out, and <strong>Equaliser Silhouette</strong>, which turns the line into an equaliser drawn up your body.</li>
+                        <li class="mb-2"><strong>Speaker Glow</strong> under <strong>Sonar</strong>. The side of you facing the speakers glows with the beat, with a rim light along your edges.</li>
+                        <li class="mb-2"><strong>Drop Burst</strong> under <strong>Vertex Fracture</strong>. When the track hits a big peak you burst into shards and pull back together as it passes.</li>
+                        <li class="mb-2"><strong>Body Equaliser</strong> under <strong>Vertex Pump</strong>. The music is laid up your body, bass at your feet and treble at your head, so each part of you swells with its own slice of the sound.</li>
+                        <li class="mb-2"><strong>Notes</strong> glitter colour. Every flake takes one of the notes AudioLink hears, so the glitter shows the chord being played.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Smoother Probe Lighting could pick up the wrong light in worlds made with the first version of Light Volumes.</strong> Those worlds store their volumes in a form this shader cannot read, and the option read them anyway. It uses your light probes there now, which is what the Light Volumes package itself does.</li>
+                    </ul>
+                </div>
+
+
+                <div class="changelog-entry" data-version="clothingpro-2.2.2">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Clothing Pro 2.2.2 - Unreleased</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A big AudioLink update: Cymatics, music reactions on every emission layer, outlines that move with the music, Speaker Glow, Drop Burst and a Body Equaliser, all starting switched off. Real Fur answers to the Light Volumes V3 controls like the rest of the material, Smoother Probe Lighting stays on your light probes in worlds made with the first version of Light Volumes, and a correction to the 2.2.0 notes.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Per-Light Specular is off by default, not on as the 2.2.0 notes said.</strong> Only the Best Soft preset turns it on. The doubled point light highlight that release fixed only ever showed with it on, so if you raised <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong> because of that note and <strong>Per-Light Specular</strong> is off on your material, set <strong>Specular Mix</strong> back to where you had it.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Light Volumes for outlines and shards.</strong> Outline lighting and the fracture shards took their room light from the light probes only, so in a world lit by Light Volumes they could look darker than the rest of you. Each outline now has a <strong>Light Volumes</strong> slider under its <strong>Lighting</strong>, and <strong>Vertex Fracture</strong> has <strong>Shard Light Volumes</strong>. Both follow your <strong>Light Volumes V3</strong> settings, and both start at 0, so nothing changes until you raise them.</li>
+                        <li class="mb-2"><strong>Cymatics.</strong> A new special effect that draws, in light, the figures sand makes on a singing metal plate. The music picks the figure, so it changes shape as a track moves from the kick to the hats, and a loud passage shakes the sand about until it settles. Pick a <strong>Style</strong>, then use <strong>Depth</strong> to stack plates down into the surface. With no music it drifts between figures on its own.</li>
+                        <li class="mb-2"><strong>Music Reactions</strong> on every emission layer. <strong>Note Trigger</strong> lights a layer only while its note is playing, <strong>Beat Strobe</strong> flashes it on each hit and leaves it dark in between, and <strong>Waveform Warp</strong> bends its pattern with the live sound wave, like the trace on an oscilloscope. Layers 2 to 5 also get the <strong>AudioLink Color Blend</strong> that layer 1 already had.</li>
+                        <li class="mb-2"><strong>Outlines that move with the music.</strong> Each outline gains <strong>Music Colour</strong>, <strong>Travelling Pulse</strong>, which runs each beat along the line, <strong>Beat Reveal</strong>, which keeps the line hidden until a beat pushes it out, and <strong>Equaliser Silhouette</strong>, which turns the line into an equaliser drawn up your body.</li>
+                        <li class="mb-2"><strong>Speaker Glow</strong> under <strong>Sonar</strong>. The side of you facing the speakers glows with the beat, with a rim light along your edges.</li>
+                        <li class="mb-2"><strong>Drop Burst</strong> under <strong>Vertex Fracture</strong>. When the track hits a big peak you burst into shards and pull back together as it passes.</li>
+                        <li class="mb-2"><strong>Body Equaliser</strong> under <strong>Vertex Pump</strong>. The music is laid up your body, bass at your feet and treble at your head, so each part of you swells with its own slice of the sound.</li>
+                        <li class="mb-2"><strong>Notes</strong> glitter colour. Every flake takes one of the notes AudioLink hears, so the glitter shows the chord being played.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Real Fur follows the Light Volumes V3 controls.</strong> Turning <strong>Intensity</strong> down faded the coat toward black instead of back to your probe lighting, until it snapped back at 0. <strong>Point Light Strength</strong>, <strong>Additive-Only Mode</strong>, <strong>Normal Bias</strong> and <strong>Position Offset</strong> never reached the coat at all. They do now, and at their default settings the coat looks the same as before.</li>
+                        <li class="mb-2"><strong>Smoother Probe Lighting could pick up the wrong light in worlds made with the first version of Light Volumes.</strong> Those worlds store their volumes in a form this shader cannot read, and the option read them anyway. It uses your light probes there now, which is what the Light Volumes package itself does.</li>
+                    </ul>
+                </div>
+
+
+                <div class="changelog-entry" data-version="furpro-2.2.2">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Fur Pro 2.2.2 - Unreleased</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A big AudioLink update: Cymatics, music reactions on every emission layer, outlines that move with the music, Speaker Glow, Drop Burst and a Body Equaliser, all starting switched off. Real Fur answers to the Light Volumes V3 controls like the rest of the material, Smoother Probe Lighting stays on your light probes in worlds made with the first version of Light Volumes, and a correction to the 2.2.0 notes.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Per-Light Specular is off by default, not on as the 2.2.0 notes said.</strong> Only the Best Soft preset turns it on. The doubled point light highlight that release fixed only ever showed with it on, so if you raised <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong> because of that note and <strong>Per-Light Specular</strong> is off on your material, set <strong>Specular Mix</strong> back to where you had it.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Light Volumes for outlines and shards.</strong> Outline lighting and the fracture shards took their room light from the light probes only, so in a world lit by Light Volumes they could look darker than the rest of you. Each outline now has a <strong>Light Volumes</strong> slider under its <strong>Lighting</strong>, and <strong>Vertex Fracture</strong> has <strong>Shard Light Volumes</strong>. Both follow your <strong>Light Volumes V3</strong> settings, and both start at 0, so nothing changes until you raise them.</li>
+                        <li class="mb-2"><strong>Cymatics.</strong> A new special effect that draws, in light, the figures sand makes on a singing metal plate. The music picks the figure, so it changes shape as a track moves from the kick to the hats, and a loud passage shakes the sand about until it settles. Pick a <strong>Style</strong>, then use <strong>Depth</strong> to stack plates down into the surface. With no music it drifts between figures on its own.</li>
+                        <li class="mb-2"><strong>Music Reactions</strong> on every emission layer. <strong>Note Trigger</strong> lights a layer only while its note is playing, <strong>Beat Strobe</strong> flashes it on each hit and leaves it dark in between, and <strong>Waveform Warp</strong> bends its pattern with the live sound wave, like the trace on an oscilloscope. Layers 2 to 5 also get the <strong>AudioLink Color Blend</strong> that layer 1 already had.</li>
+                        <li class="mb-2"><strong>Outlines that move with the music.</strong> Each outline gains <strong>Music Colour</strong>, <strong>Travelling Pulse</strong>, which runs each beat along the line, <strong>Beat Reveal</strong>, which keeps the line hidden until a beat pushes it out, and <strong>Equaliser Silhouette</strong>, which turns the line into an equaliser drawn up your body.</li>
+                        <li class="mb-2"><strong>Speaker Glow</strong> under <strong>Sonar</strong>. The side of you facing the speakers glows with the beat, with a rim light along your edges.</li>
+                        <li class="mb-2"><strong>Drop Burst</strong> under <strong>Vertex Fracture</strong>. When the track hits a big peak you burst into shards and pull back together as it passes.</li>
+                        <li class="mb-2"><strong>Body Equaliser</strong> under <strong>Vertex Pump</strong>. The music is laid up your body, bass at your feet and treble at your head, so each part of you swells with its own slice of the sound.</li>
+                        <li class="mb-2"><strong>Notes</strong> glitter colour. Every flake takes one of the notes AudioLink hears, so the glitter shows the chord being played.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Real Fur follows the Light Volumes V3 controls.</strong> Turning <strong>Intensity</strong> down faded the coat toward black instead of back to your probe lighting, until it snapped back at 0. <strong>Point Light Strength</strong>, <strong>Additive-Only Mode</strong>, <strong>Normal Bias</strong> and <strong>Position Offset</strong> never reached the coat at all. They do now, and at their default settings the coat looks the same as before.</li>
+                        <li class="mb-2"><strong>Smoother Probe Lighting could pick up the wrong light in worlds made with the first version of Light Volumes.</strong> Those worlds store their volumes in a form this shader cannot read, and the option read them anyway. It uses your light probes there now, which is what the Light Volumes package itself does.</li>
+                    </ul>
+                </div>
+
+
+                <div class="changelog-entry" data-version="worldsurface-1.0.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / World Surface 1.0.1 - Unreleased</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A big AudioLink update: Cymatics, music reactions on every emission layer, outlines that move with the music, Speaker Glow, Drop Burst, a Height Equaliser and goo that moves to the beat, all starting switched off. Lightmapped surfaces take only the extra Light Volume lighting a world layers on top, the way the Light Volumes documentation asks.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Lightmapped surfaces no longer take highlights from a world's base Light Volumes.</strong> The lightmap already holds that light. The diffuse lighting already left the base volumes out, but the volume highlight, the clear coat highlight, glitter lit by Light Volumes and Micro Shading still read them. A lightmapped surface now takes only the additive volumes and the point lights, as the Light Volumes documentation specifies, and does less work per pixel. Surfaces without a lightmap are unchanged. If a lightmapped floor looks less glossy in a Light Volumes world, raise <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong>.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Light Volumes for outlines and shards.</strong> Outline lighting and the fracture shards took their room light from the light probes only, so in a world lit by Light Volumes they could look darker than the rest of you. Each outline now has a <strong>Light Volumes</strong> slider under its <strong>Lighting</strong>, and <strong>Vertex Fracture</strong> has <strong>Shard Light Volumes</strong>. Both follow your <strong>Light Volumes V3</strong> settings, and both start at 0, so nothing changes until you raise them.</li>
+                        <li class="mb-2"><strong>Cymatics.</strong> A new special effect that draws, in light, the figures sand makes on a singing metal plate. The music picks the figure, so it changes shape as a track moves from the kick to the hats, and a loud passage shakes the sand about until it settles. Pick a <strong>Style</strong>, then use <strong>Depth</strong> to stack plates down into the surface. With no music it drifts between figures on its own.</li>
+                        <li class="mb-2"><strong>Music Reactions</strong> on every emission layer. <strong>Note Trigger</strong> lights a layer only while its note is playing, <strong>Beat Strobe</strong> flashes it on each hit and leaves it dark in between, and <strong>Waveform Warp</strong> bends its pattern with the live sound wave, like the trace on an oscilloscope. Layers 2 to 5 also get the <strong>AudioLink Color Blend</strong> that layer 1 already had.</li>
+                        <li class="mb-2"><strong>Outlines that move with the music.</strong> Each outline gains <strong>Music Colour</strong>, <strong>Travelling Pulse</strong>, which runs each beat along the line, <strong>Beat Reveal</strong>, which keeps the line hidden until a beat pushes it out, and <strong>Equaliser Silhouette</strong>, which turns the line into an equaliser drawn up the object.</li>
+                        <li class="mb-2"><strong>Speaker Glow</strong> under <strong>Sonar</strong>. The side facing the speakers glows with the beat, with a rim light along the edges.</li>
+                        <li class="mb-2"><strong>Drop Burst</strong> under <strong>Vertex Fracture</strong>. When the track hits a big peak the surface bursts into shards and pulls back together as it passes.</li>
+                        <li class="mb-2"><strong>Height Equaliser</strong> under <strong>Vertex Pump</strong>. The music is laid up the object, bass at the bottom and treble at the top, so each height swells with its own slice of the sound.</li>
+                        <li class="mb-2"><strong>Notes</strong> glitter colour. Every flake takes one of the notes AudioLink hears, so the glitter shows the chord being played.</li>
+                        <li class="mb-2"><strong>Beat Writhe</strong> for the goo. The goo writhes harder while the music plays and settles when it stops.</li>
+                    </ul>
+                </div>
+
+
+                <div class="changelog-entry" data-version="worldfur-1.0.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / World Fur 1.0.1 - Unreleased</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A big AudioLink update: Cymatics, music reactions on every emission layer, outlines that move with the music, Speaker Glow, Drop Burst and a Height Equaliser, all starting switched off. Lightmapped surfaces take only the extra Light Volume lighting a world layers on top, the way the Light Volumes documentation asks, and Real Fur answers to the Light Volumes V3 controls like the rest of the material.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Lightmapped surfaces no longer take highlights from a world's base Light Volumes.</strong> The lightmap already holds that light. The diffuse lighting already left the base volumes out, but the volume highlight, the clear coat highlight, glitter lit by Light Volumes and Micro Shading still read them. A lightmapped surface now takes only the additive volumes and the point lights, as the Light Volumes documentation specifies, and does less work per pixel. Surfaces without a lightmap are unchanged, and neither is the fur coat, which never uses the lightmap. If a lightmapped floor looks less glossy in a Light Volumes world, raise <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong>.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Light Volumes for outlines and shards.</strong> Outline lighting and the fracture shards took their room light from the light probes only, so in a world lit by Light Volumes they could look darker than the rest of you. Each outline now has a <strong>Light Volumes</strong> slider under its <strong>Lighting</strong>, and <strong>Vertex Fracture</strong> has <strong>Shard Light Volumes</strong>. Both follow your <strong>Light Volumes V3</strong> settings, and both start at 0, so nothing changes until you raise them.</li>
+                        <li class="mb-2"><strong>Cymatics.</strong> A new special effect that draws, in light, the figures sand makes on a singing metal plate. The music picks the figure, so it changes shape as a track moves from the kick to the hats, and a loud passage shakes the sand about until it settles. Pick a <strong>Style</strong>, then use <strong>Depth</strong> to stack plates down into the surface. With no music it drifts between figures on its own.</li>
+                        <li class="mb-2"><strong>Music Reactions</strong> on every emission layer. <strong>Note Trigger</strong> lights a layer only while its note is playing, <strong>Beat Strobe</strong> flashes it on each hit and leaves it dark in between, and <strong>Waveform Warp</strong> bends its pattern with the live sound wave, like the trace on an oscilloscope. Layers 2 to 5 also get the <strong>AudioLink Color Blend</strong> that layer 1 already had.</li>
+                        <li class="mb-2"><strong>Outlines that move with the music.</strong> Each outline gains <strong>Music Colour</strong>, <strong>Travelling Pulse</strong>, which runs each beat along the line, <strong>Beat Reveal</strong>, which keeps the line hidden until a beat pushes it out, and <strong>Equaliser Silhouette</strong>, which turns the line into an equaliser drawn up the object.</li>
+                        <li class="mb-2"><strong>Speaker Glow</strong> under <strong>Sonar</strong>. The side facing the speakers glows with the beat, with a rim light along the edges.</li>
+                        <li class="mb-2"><strong>Drop Burst</strong> under <strong>Vertex Fracture</strong>. When the track hits a big peak the surface bursts into shards and pulls back together as it passes.</li>
+                        <li class="mb-2"><strong>Height Equaliser</strong> under <strong>Vertex Pump</strong>. The music is laid up the object, bass at the bottom and treble at the top, so each height swells with its own slice of the sound.</li>
+                        <li class="mb-2"><strong>Notes</strong> glitter colour. Every flake takes one of the notes AudioLink hears, so the glitter shows the chord being played.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Real Fur follows the Light Volumes V3 controls.</strong> Turning <strong>Intensity</strong> down faded the coat toward black instead of back to your probe lighting, until it snapped back at 0. <strong>Point Light Strength</strong>, <strong>Additive-Only Mode</strong>, <strong>Normal Bias</strong> and <strong>Position Offset</strong> never reached the coat at all. They do now, and at their default settings the coat looks the same as before.</li>
+                    </ul>
+                </div>
+
+
                 <div class="changelog-entry" data-version="baker-1.0.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Light Baker 1.0.0 - Unreleased</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A light baker for VRChat worlds that runs on your graphics card. Point it at a scene, press Bake, and it fills in Unity's own lightmaps, light probes and Light Volumes. First release as a product of its own.</em></p>
