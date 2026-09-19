@@ -1,0 +1,1828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary SEO -->
+    <title>VixForge Interactive | Behind The Forge</title>
+    <meta name="title" content="VixForge Interactive | Behind The Forge">
+    <meta name="description" content="Behind The Forge: the development notes VixForge Interactive posts on Discord, covering every update to the VixForge shaders and the Vixens Toolbox.">
+    <meta name="keywords" content="VixForge Interactive, Behind The Forge, dev notes, VRChat shaders, Latex Ultra, VixForge Toon, Clothing Pro, Fur Pro, World Surface, World Fur">
+    <meta name="author" content="Vixenlicous | VixForge Interactive">
+    <meta name="theme-color" content="#ff00aa">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://vixencreations.github.io/VixenToolBox/behind-the-forge.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/behind-the-forge.html">
+    <meta property="og:title" content="VixForge Interactive | Behind The Forge">
+    <meta property="og:description" content="Behind The Forge: the development notes VixForge Interactive posts on Discord, covering every update to the VixForge shaders and the Vixens Toolbox.">
+    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/promos/PromoBanner3.png">
+    <meta property="og:site_name" content="VixForge Interactive | Vixens Toolbox">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://vixencreations.github.io/VixenToolBox/behind-the-forge.html">
+    <meta name="twitter:title" content="VixForge Interactive | Behind The Forge">
+    <meta name="twitter:description" content="Behind The Forge: the development notes VixForge Interactive posts on Discord, covering every update to the VixForge shaders and the Vixens Toolbox.">
+    <meta name="twitter:image" content="https://vixencreations.github.io/VixenToolBox/promos/PromoBanner3.png">
+    <meta name="twitter:site" content="@VixForge">
+
+    <!-- Brand entity: ties every store front and channel to one identity -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://vixencreations.github.io/VixenToolBox/#organization",
+          "name": "VixForge Interactive",
+          "alternateName": ["Vixenlicous", "Vixenlicious", "Vixen Creations", "Vixens Toolbox"],
+          "url": "https://vixencreations.github.io/VixenToolBox/",
+          "logo": "https://vixencreations.github.io/VixenToolBox/banner.png",
+          "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
+          "description": "VixForge Interactive builds avatar shaders and Unity editor tooling for VRChat, for Unity 2022.3 on the Built-in Render Pipeline.",
+          "founder": {
+            "@type": "Person",
+            "name": "Vixenlicious",
+            "alternateName": "Vixenlicous",
+            "jobTitle": "Lead Developer"
+          },
+          "knowsAbout": ["VRChat avatar shaders", "Unity 2022.3", "Built-in Render Pipeline", "AudioLink", "VRC Light Volumes", "LTCGI", "VRSL", "VRCFury", "Modular Avatar"],
+          "sameAs": [
+            "https://x.com/VixForge",
+            "https://www.youtube.com/@vixenlicous",
+            "https://vixenlicous.gumroad.com",
+            "https://jinxxy.com/Vixenlicious",
+            "https://github.com/VixenCreations",
+            "https://www.patreon.com/cw/Vixenlicious",
+            "https://ko-fi.com/vixenlicous",
+            "https://discord.gg/3vbJCKcPtJ"
+          ]
+        }
+    </script>
+
+    <!-- Icons -->
+    <link rel="icon" href="./favicon.ico">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+
+    <!-- UI Framework -->
+    <script type="module" src="web-components.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="docs-shell.css">
+
+    <!-- Page-Specific Styling -->
+    <style>
+        .news-article {
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .news-hero-art {
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 0, 170, 0.3);
+        }
+
+        .news-hero-art img {
+            display: block;
+            width: 100%;
+            max-width: 880px;
+            height: auto;
+            margin: 0 auto;
+            border-radius: 8px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .news-body {
+            padding: 2rem;
+        }
+
+        .news-body p {
+            color: #bfa8d2;
+            line-height: 1.75;
+            margin-bottom: 1.1rem;
+        }
+
+        .news-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .news-tag {
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            color: var(--neon-cyan);
+        }
+
+        .news-date {
+            font-size: 0.85rem;
+            color: #8f7fa8;
+        }
+
+        .pledge-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 0.5rem 0 1.25rem;
+        }
+
+        .pledge-list li {
+            color: #e0d5eb;
+            line-height: 1.9;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .pledge-list li::before {
+            content: "\25B8";
+            color: var(--neon-pink);
+            position: absolute;
+            left: 0;
+        }
+
+        .news-milestone-hero {
+            padding: 2.75rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 0, 170, 0.3);
+            background:
+                radial-gradient(120% 140% at 50% 0%, rgba(255, 0, 85, 0.16), transparent 60%),
+                radial-gradient(120% 140% at 50% 100%, rgba(0, 229, 255, 0.10), transparent 60%);
+        }
+
+        .milestone-number {
+            font-size: clamp(3.5rem, 12vw, 6rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: 2px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .milestone-label {
+            margin-top: 0.6rem;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--neutral-foreground-rest);
+        }
+
+        .forge-where {
+            color: #bfa8d2;
+            font-style: italic;
+            margin: -0.25rem 0 0.6rem 0;
+        }
+
+        .forge-intro {
+            color: #e0d5eb;
+        }
+
+        .forge-status {
+            color: #bfa8d2;
+        }
+    </style>
+</head>
+
+<body class="docs-shell">
+    <div class="background-art"></div>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <a href="index.html" class="brand-logo-link"><img src="banner.png" class="sidebar-brand-logo" width="1536" height="665" alt="VixForge Interactive - Shaders, Worlds, Haptics" /></a>
+            <h2 class="text-glow-cyan">VIXENS TOOLBOX</h2>
+            <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">by VixForge Interactive</div>
+        </div>
+
+        <div class="nav-links">
+            <fluent-anchor href="index.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2.5L2 8.5H4V16.5H8V11.5H12V16.5H16V8.5H18L10 2.5Z" /></svg>
+                VPM Registry
+            </fluent-anchor>
+
+            <fluent-anchor href="about.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                About Us
+            </fluent-anchor>
+
+            <fluent-anchor href="products.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                Our Products
+            </fluent-anchor>
+
+            <fluent-anchor href="news.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v13H4a2 2 0 0 0-2 2 2 2 0 0 0 2 2z"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8z"></path></svg>
+                News
+            </fluent-anchor>
+
+            <fluent-anchor href="behind-the-forge.html" class="nav-item active">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+                Behind The Forge
+            </fluent-anchor>
+
+            <fluent-anchor href="why-choose-us.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                Why Choose Us?
+            </fluent-anchor>
+
+            <fluent-anchor href="tools.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2ZM11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14V10C9 9.44772 9.44772 9 10 9C10.5523 9 11 9.44772 11 10V14ZM10 8C9.44772 8 9 7.55228 9 7C9 6.44772 9.44772 6 10 6C10.5523 6 11 6.44772 11 7C11 7.55228 10.5523 8 10 8Z" /></svg>
+                List of Tools
+            </fluent-anchor>
+
+            <fluent-anchor href="shaderdocs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M7 9.5a5.5 5.5 0 0 1 5-3"></path><circle cx="9.5" cy="9.5" r="1.2" fill="currentColor" stroke="none"></circle></svg>
+                Shader Docs
+            </fluent-anchor>
+
+            <fluent-anchor href="changelog.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Toolbox Changes
+            </fluent-anchor>
+
+            <fluent-anchor href="shader-changelogs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                Shader Changelogs
+            </fluent-anchor>
+
+            <fluent-anchor href="upcoming-changes.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Upcoming Changes
+            </fluent-anchor>
+
+            <fluent-anchor href="support.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                Support the Projects
+            </fluent-anchor>
+
+            <fluent-anchor href="social.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                Get Help Here
+            </fluent-anchor>
+
+            <fluent-anchor href="ai-transparency.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                AI Transparency
+            </fluent-anchor>
+
+            </div>
+    </nav>
+
+    <main class="main-wrapper">
+        <div class="docs-layout">
+        <div class="docs-main" data-chip-label="Topic" data-chip-attr="data-chips" data-chip-mode="prefix" data-shell-sections=".news-article" data-shell-heading="h2" data-search-label="Filter posts&hellip;">
+        <div class="col align-items-center content" style="max-width: 1000px;">
+
+            <div class="col w-100 text-center mb-4">
+                <h1 class="text-glow-cyan">Behind The Forge</h1>
+                <p class="caption1 mt-2" style="font-size: 1.1rem; max-width: 760px; margin: 0 auto;">
+                    The notes we post in our Discord while we build: what's new, how to use it, and what to check before
+                    you update. Every one of them is here too, so you can read them without Discord.
+                </p>
+                <div class="row mt-3" style="gap: 10px; flex-wrap: wrap; justify-content: center;">
+                    <fluent-anchor href="https://discord.gg/3vbJCKcPtJ" target="_blank" class="custom-stealth-btn">Join the VixForge Discord</fluent-anchor>
+                    <fluent-anchor href="shader-changelogs.html" class="custom-stealth-btn">Shader Changelogs</fluent-anchor>
+                </div>
+            </div>
+            <!-- FORGE:START -->
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-09-18-latex-ultra-toon-clothing-pro-fur-pro-wo">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Dev Notes</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">Toon</span>
+                        <span class="news-tag">Clothing Pro</span>
+                        <span class="news-tag">Fur Pro</span>
+                        <span class="news-tag">World Surface</span>
+                        <span class="news-tag">World Fur</span>
+                        <span class="news-date">September 18, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Latex Ultra, Toon, Clothing Pro, Fur Pro, World Surface and World Fur: the music reaches every layer now.</h2>
+                    <p class="forge-status"><strong>Status:</strong> Built and in testing. Not out yet.</p>
+                    <p class="forge-intro"><em>Until now the music could light your emission, pump your mesh and not a lot else. This update gives every emission layer its own way to react, makes your outlines move with the beat, and adds a new effect drawn from the patterns sand makes on a speaker. It all starts switched off, so nothing changes until you go looking.</em></p>
+                    <h3 class="text-glow-cyan">Cymatics</h3>
+                    <p class="forge-where">Under <strong>SPECIAL EFFECTS</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Draws, in light, the figures sand makes on a singing metal plate. The music picks the figure, so it changes shape as a track moves from the kick to the hats.</li>
+                        <li>A loud passage shakes the sand about until it settles again.</li>
+                        <li>Pick a <strong>Style</strong>, then use <strong>Depth</strong> to stack plates down into the surface. With no music it drifts between figures on its own.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Music Reactions</h3>
+                    <p class="forge-where">On each layer under <strong>EMISSIONS</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Note Trigger</strong> lights a layer only while its note is playing.</li>
+                        <li><strong>Beat Strobe</strong> flashes it on each hit and leaves it dark in between.</li>
+                        <li><strong>Waveform Warp</strong> bends its pattern with the live sound wave, like the trace on an oscilloscope.</li>
+                        <li>Layers 2 to 5 also get the <strong>AudioLink Color Blend</strong> that layer 1 already had.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Outlines that move with the music</h3>
+                    <p class="forge-where">Under each outline in <strong>OUTLINES</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Music Colour</strong> tints the line, and <strong>Travelling Pulse</strong> runs each beat along it.</li>
+                        <li><strong>Beat Reveal</strong> keeps the line hidden until a beat pushes it out.</li>
+                        <li><strong>Equaliser Silhouette</strong> turns the line into an equaliser drawn up your body.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">A few more</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Speaker Glow</strong> under <strong>Sonar</strong>: the side of you facing the speakers glows with the beat, with a rim along your edges.</li>
+                        <li><strong>Drop Burst</strong> under <strong>Vertex Fracture</strong>: a big peak bursts you into shards, and you pull back together as it passes.</li>
+                        <li><strong>Body Equaliser</strong> under <strong>Vertex Pump</strong> lays the music up your body, bass at your feet and treble at your head, so each part swells with its own slice of the sound. The world shaders call it <strong>Height Equaliser</strong>.</li>
+                        <li><strong>Notes</strong> glitter colour: every flake takes one of the notes AudioLink hears, so the glitter shows the chord being played.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Native Touch</h3>
+                    <p class="forge-where">Under <strong>Touch</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Touch finds hands on its own, from what the camera already sees. No contacts, no animator.</li>
+                        <li>Hands dent the goo and push the water aside. Each person sees only their own touches, up close, and never in a mirror.</li>
+                        <li><strong>Touch</strong> is its own group now, so a wet-only material can use it too. The idea comes from Warren's Fast Fur.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Movement</h3>
+                    <p class="forge-where">Under <strong>Movement</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>The goo sloshes behind you, the wet streaks sweep back and the drops trail behind you. Land a jump and the goo wobbles and shakes drops loose.</li>
+                        <li><strong>VixenTools &gt; VixForge Editor &gt; Wet and Goo Movement Setup</strong> builds the animator layer for you from the VRChat Velocity and Grounded parameters.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Oobleck Dance</h3>
+                    <p class="forge-where">Under <strong>Goo Effects</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Like cornstarch on a speaker: on the beat the goo stands up into fingers along a sand-plate figure, and slumps back when the music stops.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">More music for the wet and the goo</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Travelling Beats</strong> runs each hit down the wet streaks and along the goo veins.</li>
+                        <li><strong>Music Colour</strong> tints the water, the veins and the drops.</li>
+                        <li><strong>Beat Shake-off</strong> throws a shower of drops loose on a big peak. <strong>Beat Writhe</strong>, <strong>Beat Reach</strong> and <strong>Beat Drops</strong> make the goo writhe harder, fling the <strong>Cling</strong> strands further and swell the hanging drops.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Water that acts like water</h3>
+                    <p class="forge-where">Under <strong>Wet Effects</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Gravity Pooling</strong> gathers water on the parts of you that face up.</li>
+                        <li><strong>Touch Wipe</strong> clears it aside where you're touched.</li>
+                        <li><strong>Glints</strong> put tiny sparkles in the water and on the drops.</li>
+                        <li>The drops and the <strong>Cling</strong> strands take the room's light now, so they don't glow in a dark world.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Masks and viewers</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Extra Mask</strong> borrows an Emission layer map or a Matcap mask as a second mask for the wet and the goo, at no texture cost.</li>
+                        <li><strong>Also Apply To Wet And Goo</strong> under <strong>Viewer Context</strong> can show them only in a mirror, only in photos or only up close.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Separate Maps</h3>
+                    <p class="forge-where">Under <strong>SURFACE</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Metallic and smoothness can come from their own textures now, not only the <strong>Packed PBR Mask</strong>. Tick <strong>Use Metallic Map</strong> or <strong>Use Smoothness Map</strong> and drop the texture in.</li>
+                        <li>Got a roughness map? Tick <strong>Map is Roughness</strong>.</li>
+                        <li><strong>Global Metallic</strong> and <strong>Global Smoothness</strong> still scale them, so raise those to see the whole map.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Set Up for Toon Standard Specular Map</h3>
+                    <p class="forge-where">Under <strong>Channel Mapping</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>One click reads a Substance ToonStandardSpecular export: metallic from red, smoothness from green, occlusion from blue.</li>
+                        <li>With the slot empty, it finds that file next to your Albedo and drops it in.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Channels pick themselves</h3>
+                    <ul class="pledge-list">
+                        <li>Drop a texture into a slot with a channel picker, like <strong>Occlusion Map</strong> or <strong>Height Map</strong>, and the picker moves to the channel that holds the data. An occlusion map stored in green just works.</li>
+                        <li>It only changes when the answer is clear, and the Console tells you what it set.</li>
+                        <li>The Packed PBR Mask builder packs occlusion and height too, only uses the files that match your Albedo's name, and offers a finished map it finds before building a new one.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Unity on Linux</h3>
+                    <ul class="pledge-list">
+                        <li>The shaders now run in the OpenGL and Vulkan editors that Unity uses on Linux, so you can see and set up your materials there.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Light Volumes for outlines and shards</h3>
+                    <p class="forge-where">Under <strong>Vertex Fracture</strong> and each outline's <strong>Lighting</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Outlines and fracture shards took their light from the light probes only, so they could look darker than you in a Light Volumes world.</li>
+                        <li>Raise <strong>Shard Light Volumes</strong>, or the <strong>Light Volumes</strong> slider on an outline. Both start at 0.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Fixed</h3>
+                    <p class="forge-where"><em>A round of fixes that came out of testing, plus everything that looks different once you update.</em></p>
+                    <ul class="pledge-list">
+                        <li>Touch could throw parts of the mesh out in long spikes, most of all on a mesh imported at 100 times scale. <strong>Depth</strong> is in metres now, as its tooltip always said.</li>
+                        <li><strong>Tessellation Detail</strong> was hidden, and did nothing, unless the goo sagged. It now works whenever <strong>Goo Effects</strong>, <strong>Touch</strong> or <strong>Kinetic Modules</strong> is on.</li>
+                        <li><strong>Vertex Fracture</strong> shards ignored <strong>Global Metallic</strong> and <strong>Global Smoothness</strong>, so on a material with no packed map they came out nearly black.</li>
+                        <li><strong>Follow PBR Map</strong> under <strong>Real Fur</strong> ignored <strong>Channel is Roughness</strong> and <strong>Invert Metallic</strong>, so with a roughness map the roughest hairs shone the most.</li>
+                        <li><strong>Real Fur</strong> follows the <strong>Light Volumes V3</strong> controls. Turning <strong>Intensity</strong> down used to fade the coat toward black.</li>
+                        <li><strong>Smoother Probe Lighting</strong> could pick up the wrong light in worlds made with the first version of Light Volumes.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Before you update</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Per-Light Specular</strong> is off by default, not on as the last notes said. If you raised <strong>Specular Mix</strong> because of that note and <strong>Per-Light Specular</strong> is off on your material, set it back.</li>
+                        <li>Drops and <strong>Cling</strong> strands now take the room's light, so they can look darker in a dim world. <strong>Room Lighting</strong> at 0 brings the old look back.</li>
+                        <li><strong>Vertex Fracture</strong> shards now follow <strong>Global Metallic</strong> and <strong>Global Smoothness</strong>. If you tuned your shard colours around the old look, check them again.</li>
+                        <li><strong>Real Fur</strong> highlights with <strong>Follow PBR Map</strong> on now follow <strong>Global Smoothness</strong> and <strong>Global Metallic</strong>, so they can look dimmer. Raise <strong>Strand Specular</strong> under <strong>Surface Fur</strong> to bring them back up.</li>
+                        <li>On World Surface and World Fur, lightmapped surfaces no longer take highlights from a world's base Light Volumes. If a lightmapped floor looks less glossy, raise <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong>.</li>
+                        <li>If you turned <strong>Depth</strong> under <strong>Touch</strong> right down to make up for a scaled mesh, turn it back up.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Everything here is built and going through testing on avatars now. None of it is out yet.</li>
+                        <li>Next: the test pass, then the release for all six shaders.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="worlds" id="forge-2026-09-14-world-surface-and-world-fur-are-out-the">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-tag">World Surface</span>
+                        <span class="news-tag">World Fur</span>
+                        <span class="news-date">September 14, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">World Surface and World Fur are out: the avatar shaders, built for the room around you.</h2>
+                    <h3 class="text-glow-cyan">World Surface</h3>
+                    <p class="forge-where"><em>Every shader we've made so far was for the avatar. Walk that avatar into a world and it stands on a floor, next to a wall, under a screen, and none of those know about the lighting it uses. World Surface and World Fur put the same lighting, the same effects and the same inspector on everything else in the scene.</em></p>
+                    <ul class="pledge-list">
+                        <li>For the things a world is made of: tile, glass, a bath tub, painted walls, polished floors, a sofa.</li>
+                        <li>It's the Toon shader with <strong>Wet Effects</strong> and <strong>Goo Effects</strong> from Latex Ultra and the cloth sheen from Clothing Pro. Water beads and runs down tile, and goo pools on the floor.</li>
+                        <li>The shading styles, matcaps, Car Paint, glitter, emissions, decals, outlines and special effects all come across.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">World Fur</h3>
+                    <ul class="pledge-list">
+                        <li>Real standing strands for carpets, shaggy rugs, moss over stone and grass across a field, with a pile you can see from the side.</li>
+                        <li><strong>Length</strong> and <strong>Density</strong> set the coat, <strong>Tufting</strong> clumps it, and <strong>Droop</strong> and <strong>Wind Sway</strong> make it hang and move. Keep <strong>Strands Per Face</strong> and <strong>Curve Segments</strong> as low as still looks good.</li>
+                        <li><strong>Surface Fur</strong> fills in underneath, so the pile doesn't thin out to bare floor when you look straight down.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Your bake, read and lit</h3>
+                    <p class="forge-where">Under <strong>Baked Lighting</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Press Generate Lighting and the shader uses the result. Directional lightmaps keep your normal maps catching the light, and shadowmask lets baked and real-time shadows sit together.</li>
+                        <li>Set <strong>Global Illumination</strong> to <strong>Baked</strong> and a glowing material becomes a light in the bake. <strong>Emitted Light</strong> sets how bright, without changing how it looks on screen.</li>
+                        <li><strong>Smooth Filter</strong> stops a low resolution bake looking blocky, and <strong>Highlight</strong> lets baked light throw a highlight on a polished floor.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">World Lighting Check</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; VixForge Editor</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Tells you when a material's <strong>Realtime Global Illumination</strong> toggle and your scene's Lighting settings disagree, and sets them right in one click.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Every light in the world</h3>
+                    <ul class="pledge-list">
+                        <li>LTCGI, Light Volumes, VRSL and AudioLink, running together. LTCGI changes the most: your screens and neon signs become real area lights.</li>
+                        <li><strong>Lighting Check</strong>, under <strong>DEBUG TOOLS</strong>, paints the surface with the light actually reaching it. Set it back to Off before you upload.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Both are out today as 1.0.0.</li>
+                        <li>To celebrate 3,500 Vixens Toolbox downloads, the whole shader package, World Surface and World Fur included, is free for everyone until <strong>September 21</strong>. Grab it from the give away post in the Discord.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-09-12-lighting-that-holds-its-shape-fur-that-c">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-date">September 12, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Lighting that holds its shape, fur that casts its own shadow, and every reactive control moved in beside the thing it drives.</h2>
+                    <p class="forge-intro"><em>You know all three of these. A material lit only by light probes goes flat and grey on the side away from the light. A low poly mesh draws its shadow edge as a jagged line along its own facets. Goo running onto the floor breaks into hard edged patches instead of spreading. We went after all three.</em></p>
+                    <h3 class="text-glow-cyan">Sharper Probes</h3>
+                    <p class="forge-where">Under <strong>Lighting</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Light probes are stored in a way that flattens out and goes grey on the side facing away from the light. This reads them differently, so the shape of the light survives.</li>
+                        <li>The room does not get brighter. The total is identical, it just stops being smeared into a flat wash.</li>
+                        <li>It starts off, so nothing changes until you turn it on.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Soften Terminator and Shadow Normal Bias</h3>
+                    <p class="forge-where">Two new controls under <strong>Shadow Detail</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Soften Terminator</strong> smooths the line between lit and unlit. On a low poly mesh with smoothed normals that line runs along the facets and reads as jagged, and this turns it into a gradient.</li>
+                        <li>It widens that line rather than just dimming it, the way a big soft light does.</li>
+                        <li><strong>Shadow Normal Bias</strong> lifts a mesh off its own shadow, for when one object needs more than the scene light is giving everything else.</li>
+                        <li>Both start at 0.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Goo that pools</h3>
+                    <p class="forge-where">Under <strong>Goo Effects</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Goo hitting the floor used to split into hard edged patches. Three things were doing it, and the worst was that the spread direction was picked per noise cell, so neighbouring parts of one strand got shoved opposite ways.</li>
+                        <li>It spreads smoothly now, and the new <strong>Pool Softness</strong> slider sets how rounded the join is where a strand meets the pool.</li>
+                        <li>The same jumpiness was scaling how far every strand stretched, so goo reads smoother everywhere, not only on the ground.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Fur that joins in with the lighting</h3>
+                    <p class="forge-where">Under <strong>Real Fur</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Grown strands took no shadows at all, so a coat standing in the shade of a wall stayed bright while the body underneath went dark. They read the same shadows the body does now.</li>
+                        <li>They cast shadows too. A coat throws a shadow of its own shape instead of the body casting a bare silhouette straight through it. Point lights are the one exception and still see only the body.</li>
+                        <li>The new <strong>Follow PBR Map</strong> slider lets your packed map set how shiny each hair is, so fur over a glossy patch catches more light than fur over a matte one. It starts at 0.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">AudioLink moved in with the controls it drives</h3>
+                    <p class="forge-where">Right under each control, and only while AudioLink is on.</p>
+                    <ul class="pledge-list">
+                        <li>The Band and amount for a reactive feature used to sit together in the <strong>AudioLink</strong> section, a long way from the slider they actually affect. Each pair now sits directly under its own control.</li>
+                        <li>Seven more things can react, depending on which shader you are on: <strong>Baked Shadow Map</strong>, <strong>Micro Detail</strong>, <strong>Transmission</strong>, <strong>Car Paint</strong>, <strong>Fabric</strong>, <strong>Surface Fur</strong> and <strong>Rim Light</strong>.</li>
+                        <li><strong>Flipbook</strong> drives the playback rate, so a sheet skips forward as the beat moves it rather than rolling on at its own pace.</li>
+                        <li>Every one of them starts at 0, so nothing reacts until you ask it to.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Fixed without you touching a thing</h3>
+                    <ul class="pledge-list">
+                        <li>Clearcoat was reflecting a sharper version of the room than the surface underneath it. The two match now.</li>
+                        <li>Light Probe Proxy Volumes were ignored outright. A large object set to use one took a single probe reading for the whole mesh.</li>
+                        <li>Parallax detail shimmered in the distance, because the height map was read at full resolution on every step however far away the surface was.</li>
+                        <li>Fabric sheen reflected about half the room it should have at high <strong>Roughness (soft to velvet)</strong>. It is measured properly now instead of estimated.</li>
+                        <li><strong>Tessellation Detail</strong> did nothing unless something was moving the surface, and nothing said so. It only appears now when something is.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The Lighting section, rebuilt</h3>
+                    <p class="forge-where">Under <strong>Lighting</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Rim Light</strong>, <strong>Subsurface</strong>, <strong>Transmission</strong>, <strong>Anisotropy</strong> and <strong>Specular Response</strong> each have their own group now, so you are not hunting down a flat list for the one slider you want.</li>
+                        <li>Every control in the section has a tooltip. Hover it and it tells you what it does.</li>
+                        <li>Labels dropped the word their group already says, so <strong>Rim Light Strength</strong> is just <strong>Strength</strong> inside <strong>Rim Light</strong>.</li>
+                        <li>The rim was built from your viewing angle and nothing else, so it glowed the same all the way round your outline whether the light was behind you or square in front of you. That is how a hard highlight behaves, not an edge light. <strong>Follow Light</strong> ties it to the light in the room, and <strong>Wrap</strong> sets how far round the form it carries. It starts at 0, so nothing changes until you turn it up.</li>
+                        <li><strong>Rim Light Strength</strong> read 0 to 5 while the shader clamped it at 1, so four fifths of the slider did nothing. It reads 0 to 1 now and looks identical.</li>
+                        <li><strong>Anisotropy</strong> only shows while <strong>Polish</strong> is on, which is the only time it has ever done anything.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Every control has a tooltip</h3>
+                    <p class="forge-where">Everywhere.</p>
+                    <ul class="pledge-list">
+                        <li>All 1320 of them, across every section, not just the ones that had picked one up over the years.</li>
+                        <li>Hover anything and it tells you what it does and what the numbers mean, in plain language rather than in shader terms.</li>
+                        <li>The only four without one are the credit lines for AudioLink, VRSL and Hyperspace, which are not controls.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Lightmap UV Fix</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; VixForge Mesh Fixes</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Finds the models behind Unity's overlapping UVs warning and sets their lightmap UVs up for the resolution your scene actually bakes at.</li>
+                        <li>It starts with only the objects Unity has flagged, and widens to every FBX in the project, or to whatever you have selected.</li>
+                        <li><strong>Read resolution from the scene</strong> fills the number in from your Lighting window.</li>
+                        <li>Models that came in with a package get fixed too, which is usually where broken lightmap UVs arrive from in the first place.</li>
+                        <li>You see the whole list before anything changes, and nothing is touched until you press the button.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Switchboard</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; VixForge Editor</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Every toggle on every VixForge material in your scene, one row each, with a count of how many materials have it switched on.</li>
+                        <li>Turn one on or off across the whole room in a click, or press <strong>Select</strong> to pick out the materials carrying it.</li>
+                        <li>Point it at your selection instead of the scene when you only want part of the room.</li>
+                        <li>Locked materials are counted and left alone, because a locked material has its toggles baked into its own shader.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The rim takes light from wherever it actually is</h3>
+                    <p class="forge-where">Under <strong>Lighting &gt; Rim Light</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Five sliders decide how much the scene lights, the ambient, a <strong>Light Volume</strong>, an <strong>LTCGI</strong> screen and a <strong>VRSL</strong> rig each feed the edge.</li>
+                        <li>LTCGI and the stage rig did not reach it at all before, so a material stood in front of a bright screen still wore an edge lit by the room behind it. Both start at 0.</li>
+                        <li><strong>Follow Light</strong> had nothing to follow in a room with no scene light, so the edge landed wherever Unity happened to leave the light slot pointing. It steers by the volume's own direction now.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Fracture</h3>
+                    <p class="forge-where">Under <strong>Lighting &gt; Transmission</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Hold a hand up to the sun and the light does not come through evenly. It comes through as rays that find the gaps between your fingers, bright where they got a thin path and dark where a knuckle blocked them.</li>
+                        <li>This makes the glow follow the detail in your height source the same way, and each shaft stretches along the light instead of spreading out evenly.</li>
+                        <li><strong>Spread</strong> sets how soft the edges are. Low gives hard rays from a small bright source, high gives the wash you get on an overcast day.</li>
+                        <li>Starts at 0, which is the flat glow you have now.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The creases see the whole room</h3>
+                    <p class="forge-where">Under <strong>Lighting &gt; Cavity Lighting</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Cavity Lighting reached the scene lights and the ambient and stopped there, so in a room lit only by volumes the creases sat flat however the light moved.</li>
+                        <li>Three new sliders for <strong>Light Volumes</strong>, <strong>LTCGI</strong> and <strong>VRSL</strong>, each starting at 0.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Point Light Strength</h3>
+                    <p class="forge-where">Under <strong>Light Volumes V3</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>A point light placed in a world arrived welded to the baked volumes, so the only handle on it was the Light Volumes strength, and that pulls every volume in the room down with it.</li>
+                        <li>This moves the point lights on their own. 1 leaves them exactly as the world author placed them, 0 takes them out.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Shading gets its falloff back</h3>
+                    <p class="forge-where">Under <strong>Shadow Detail</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Shadow Hardness</strong> shipped set to 1, and at 1 the old maths flattened the whole lit side of a material to full brightness. The normal fade from light into shade was simply gone, on every material, out of the box.</li>
+                        <li>It fades properly now, and new materials start at 0. Your existing ones still have it stored at 1, so set it to 0 for realistic shading.</li>
+                        <li>It was also being applied to your highlights, so turning it up spread the highlight across everything lit. Highlights use the true angle now, the way Unity's own lighting does.</li>
+                        <li><strong>Subsurface</strong> was being handed that flattened value too, which left it nothing to work with. It reads the true angle now.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Before you update</h3>
+                    <p class="forge-where"><em>Nearly everything in this release starts at your old values, so a material looks the way it did until you go looking. These are the exceptions: fixes that change how a material you already have looks, each with the setting that takes it back.</em></p>
+                    <ul class="pledge-list">
+                        <li><strong>Shadow Hardness</strong> under <strong>Shadow Detail</strong> is still stored at 1 on existing materials, and 1 brightens the lit side well above normal. Set it to 0 for realistic shading. New materials start at 0.</li>
+                        <li>A locked material only changes the values you mark. Right-click each value an animation or a VRCFury toggle should change, tick <strong>Animated (when locked)</strong>, and lock again.</li>
+                        <li><strong>Strength</strong> under <strong>Lighting &gt; Transmission</strong> was being applied twice. A mid setting is now close to twice as strong, so a material at 0.5 wants 0.25 for the old look.</li>
+                        <li>An emission layer switched on with an empty map slot now glows. Untick <strong>Enable Layer 1</strong> (or 2 to 5) on any layer you did not mean to use.</li>
+                        <li>Point light highlights from Light Volumes were added twice and are softer now. Raise <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong> if you liked them brighter.</li>
+                        <li>Clearcoat reflections are a little softer, so the coat agrees with the surface under it. Nudge <strong>Clearcoat Smoothness</strong> up for the old sharpness.</li>
+                        <li>A rim on metal takes the metal's colour instead of a flat grey haze. Pull <strong>Strength</strong> under <strong>Rim Light</strong> down if a metal material now reads too strong.</li>
+                        <li>Rough metal is a little brighter with <strong>Polish</strong> off. Untick <strong>Multi-Scatter Compensation</strong> under <strong>Lighting &gt; Specular Response</strong> for the darker look.</li>
+                        <li>Goo landing on the floor spreads smoothly. <strong>Pool Softness</strong> under <strong>Collision</strong> at 0 gives you the old hard landing.</li>
+                        <li>Goo can glow through on its own now. Set <strong>Translucency</strong> under <strong>Goo Effects</strong> to 0 if you do not want it.</li>
+                        <li>A <strong>Polish</strong> mask painted to black no longer lets the rim, subsurface and transmission through at full strength.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Glitter with a style of its own</h3>
+                    <p class="forge-where">Under <strong>SPECIAL EFFECTS &gt; Glitter</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Layers 4 and 5 join the other three, with the same controls. Both start off.</li>
+                        <li>Every layer gets a <strong>Style</strong> group. <strong>Size Variation</strong> and <strong>Sparkle Variation</strong> mix chunky flakes with fine dust, <strong>Hue Variation</strong> spreads one colour into close shades, <strong>Starburst</strong> throws star rays off each flake, and <strong>Clump</strong> gathers flakes into patches.</li>
+                        <li><strong>Colour</strong> can give each flake your <strong>Tint</strong> or a <strong>Second Colour</strong>, and <strong>Second Colour Share</strong> sets how many take the second.</li>
+                        <li>All of it starts at a setting that changes nothing.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Shadow &amp; Depth, and GPU Instancing</h3>
+                    <p class="forge-where">Under <strong>RENDERING</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Shadow &amp; Depth</strong> gives the draw behind your shadow its own <strong>Cull</strong>, <strong>Depth Write</strong>, <strong>Depth Test</strong>, <strong>Offset Factor</strong> and <strong>Offset Units</strong>. Fluids, soft particles and depth fog use that draw to decide what is solid. <strong>Match Rendering</strong> starts on and keeps every material exactly as it was.</li>
+                        <li><strong>Enable GPU Instancing</strong> helps when one material sits on lots of separate meshes. Leave it off otherwise and locking stays quicker.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Presets, locking and uploads</h3>
+                    <p class="forge-where">In the material inspector.</p>
+                    <ul class="pledge-list">
+                        <li>Right-click the <strong>Presets</strong> button and pick <strong>Create Preset</strong> to save the material you are looking at as a new preset, with or without its textures. It works on a locked material too.</li>
+                        <li>Variant stripping now recognises locked materials and the copies VRCFury makes for SPS, so an upload stops building versions nothing uses.</li>
+                        <li>Materials lock before VRCFury runs, so VRCFury can no longer change a value you locked in.</li>
+                        <li>Selecting an SPS copy of a material no longer throws errors.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Smaller fixes</h3>
+                    <ul class="pledge-list">
+                        <li>An emission layer with an empty map slot works on colour alone now, instead of multiplying itself away.</li>
+                        <li><strong>Vertex Fracture</strong> shards glow with the rest of the material.</li>
+                        <li>With <strong>Ignore Fog</strong> on, outlines and <strong>Real Fur</strong> keep their colour too.</li>
+                        <li>Rim Light Power is now called <strong>Width</strong>, because widening is what it does. Nothing renders differently.</li>
+                        <li><strong>Colour By Time Of Day (All Layers)</strong> moved to <strong>EMISSIONS</strong>, under <strong>Exposure (All Layers)</strong>. Your setting carries over.</li>
+                        <li>Three glitter tooltips, <strong>Scatter</strong>, <strong>Angle</strong> and <strong>Colour</strong>, now describe the right thing.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Shipping as Latex Ultra 5.2.0, Toon 2.2.0, Clothing Pro 2.2.0, Fur Pro 2.2.0 and VixForge Editor 2.3.0.</li>
+                        <li>The eleven items in Part Four are the only changes to how an existing material looks. Everything else starts at its old value.</li>
+                        <li>The goo pool, the terminator slider and Fracture are still the three worth putting eyes on first.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-09-07-a-new-tool-that-brings-our-lighting-to-s">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-date">September 7, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">A new tool that brings our lighting to shaders you already own, and a much bigger haul when you convert a material from Poiyomi</h2>
+                    <p class="forge-intro"><em>You buy an accessory, drop it on your avatar, and it lights nothing like the rest of you. Its shader was written before Light Volumes existed and never learned about them. Normally you would be stuck, because it is somebody else's shader and not yours to rewrite. So we built a tool that does the rewrite for you, keeps your original, and puts it back the moment you ask.</em></p>
+                    <h3 class="text-glow-cyan">Shader Patcher</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; VixForge Editor &gt; Shader Patcher</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Adds HDR, lighting and reflection upgrades to shaders you already own from other creators.</li>
+                        <li>Nothing is touched until you press <strong>Patch Shader</strong>. Your original is copied out first, and <strong>Restore Original</strong> puts it back whenever you want.</li>
+                        <li><strong>Check Steps</strong> shows you exactly what a patch will change, before it changes anything.</li>
+                        <li>If a patched shader will not compile, it restores your original on its own and tells you what went wrong.</li>
+                        <li>Two patches ship with it, and it picks up any others you drop into the project.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Converting from Poiyomi brings far more across</h3>
+                    <ul class="pledge-list">
+                        <li>The Poiyomi translation used to carry 19 settings. It now carries <strong>116</strong>.</li>
+                        <li>All four matcap layers come over: the texture, its mask, <strong>Tint</strong>, <strong>Intensity</strong>, <strong>Rotation</strong>, <strong>Hue Shift</strong>, <strong>Emission</strong> and the blend amounts.</li>
+                        <li>Four emission layers, the outline, the render queue and blending settings, and the whole stencil block come with them.</li>
+                        <li>Matcap and emission layers land on the matching layer number, so nothing gets stacked on top of anything else.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Clothing Pro and Fur Pro can be converted onto at last</h3>
+                    <ul class="pledge-list">
+                        <li>The <strong>Apply</strong> button only appeared when a translation existed for the exact shader you were switching to, and those two never had one.</li>
+                        <li>Coming from Poiyomi, lilToon or VRChat Mobile Toon Standard, that quietly left your matcaps, textures, emission and colours behind.</li>
+                        <li>Both have the full set now, so all four of our shaders convert the same way.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Presets has a row of its own</h3>
+                    <p class="forge-where">At the top of any material.</p>
+                    <ul class="pledge-list">
+                        <li>The <strong>Presets</strong> button used to share a bar with <strong>Rendering Mode</strong> and got squeezed into a third of the width.</li>
+                        <li>It now runs the full width on its own line, with <strong>Rendering Mode</strong> on the line below and its label showing.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Out now in <strong>VixForge Editor 2.2.0</strong>, which ships inside every VixForge shader package.</li>
+                        <li>The fabric presets landed in the same release. Choosing <strong>Velvet</strong> from <strong>Material Type</strong> now switches its <strong>Surface Fur</strong> on, because Velvet is a pile fabric and only Velour was ever set up that way. Nothing on your material changes on its own, only the next time you pick it. Switch <strong>Surface Fur</strong> back off if you preferred the flatter look.</li>
+                        <li><strong>Fur</strong>, <strong>Fleece</strong> and <strong>Angora</strong> now fill in a whole <strong>Real Fur</strong> profile for you. They do not switch <strong>Real Fur</strong> on, because it grows real geometry and costs framerate. The settings are simply waiting when you want them.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-09-03-the-matcaps-in-latex-ultra-toon-clothing">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Dev Notes</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">Toon</span>
+                        <span class="news-tag">Clothing Pro</span>
+                        <span class="news-tag">Fur Pro</span>
+                        <span class="news-date">September 3, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">The matcaps in Latex Ultra, Toon, Clothing Pro and Fur Pro, rebuilt from scratch</h2>
+                    <p class="forge-intro"><em>A matcap used to be an image and a tint. Five layers, a handful of sliders each, and if it looked like a sticker sitting on top of you there was nothing you could do about that. It turns out that last part was a real bug, and chasing it opened up everything else.</em></p>
+                    <h3 class="text-glow-cyan">Normal Follow</h3>
+                    <p class="forge-where">Under <strong>Matcaps</strong>, in each layer's <strong>Projection</strong> panel.</p>
+                    <ul class="pledge-list">
+                        <li>Matcaps have always ignored your normal map. They sat flat over your surface detail and read as paint.</li>
+                        <li>Turn <strong>Normal Follow</strong> up and the matcap follows every bump, which is what makes it look like the surface really is that material.</li>
+                        <li><strong>Normal</strong> picks what it follows: your normal map and detail, the <strong>Bent</strong> normal so it darkens where the shape closes in, or the raw mesh.</li>
+                        <li>It starts at 0, which is exactly how your material looks today, so nothing changes until you move it.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Six ways to wrap it on you</h3>
+                    <p class="forge-where">Same panel, at the top.</p>
+                    <ul class="pledge-list">
+                        <li><strong>View</strong> is the look you have now. <strong>Skew Free</strong> stops the image stretching at the edge of the screen.</li>
+                        <li><strong>Reflection</strong> tracks the way real chrome does. <strong>Light Direction</strong> turns it with the world light instead of with your head.</li>
+                        <li><strong>Fresnel Ramp</strong> reads the image by viewing angle, so a plain gradient becomes a rim light.</li>
+                        <li><strong>Screen</strong> pins it to the camera.</li>
+                        <li><strong>Depth</strong> sinks a layer below the surface so it slides against you as you move, the way flake does under a clear coat.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">A matcap with no image at all</h3>
+                    <p class="forge-where">Set <strong>Source</strong> to Procedural.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Studio Rig</strong> builds a lit sphere with a key light, a fill and a rim. That is what most matcap images are painted to imitate in the first place.</li>
+                        <li><strong>Shatter</strong> reads as broken foil. <strong>Liquid Flow</strong> churns. <strong>Iridescent Film</strong> is the oil slick sweep.</li>
+                        <li><strong>Plasma</strong> and <strong>Caustics</strong> are moving light patterns.</li>
+                        <li><strong>Colour A</strong>, <strong>Colour B</strong>, <strong>Scale</strong>, <strong>Speed</strong>, <strong>Sharpness</strong> and <strong>Warp</strong> shape all six.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Eight matcaps in one texture</h3>
+                    <p class="forge-where">Set <strong>Source</strong> to Packed Atlas, then press <strong>Build Atlas In Unity</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>One texture holds up to eight matcaps in a grid, and a mask picks which one shows where.</li>
+                        <li>The builder opens a grid, you drop a matcap into each cell, and it lays the sheet out, saves it and fills in the settings. No image editor.</li>
+                        <li>Its second tab does the mask too: give it one black and white mask per section and it works out the grey levels for you.</li>
+                        <li>Every cell has its own <strong>Tint</strong>, <strong>Intensity</strong>, <strong>Emission</strong>, <strong>Lit Mix</strong> and <strong>Opacity</strong> under <strong>Atlas Sections</strong>.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The rest of it</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Base Colour</strong>, a new blend mode: the matcap goes on as the material itself and the light falls on it, so gear catches highlights instead of reading as a sticker.</li>
+                        <li><strong>Smoothness Push</strong>, <strong>Metallic Push</strong> and <strong>Clearcoat Push</strong>: a matcap can set what the material is, not only what colour it is. Base Colour is what lets you see them.</li>
+                        <li>Seven more blend modes, <strong>Screen</strong>, <strong>Overlay</strong> and <strong>Soft Light</strong> among them.</li>
+                        <li><strong>Two Tone</strong> remaps one grey matcap into any palette. <strong>Hue Shift</strong>, <strong>Zoom</strong> and <strong>Blur</strong> are all per layer now.</li>
+                        <li>Three ways to fade a layer: <strong>Circle Mask</strong>, an <strong>Angle Start</strong> and <strong>Angle End</strong> window, and a <strong>Fade Start</strong> and <strong>Fade End</strong> distance.</li>
+                        <li><strong>Mask Source</strong> borrows an emission layer or another matcap, so a layer needs no map of its own.</li>
+                        <li><strong>Copy Layer</strong> and <strong>Paste Layer</strong> on every layer: sixty settings and their textures, onto any other layer or any other material.</li>
+                        <li>AudioLink drives each layer's <strong>Emission</strong>, <strong>Hue</strong> and <strong>Scroll</strong>, not only its brightness.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Every tool, on one screen</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Shader Hub</strong>, in a row right below Lock and Unlock.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Texture Check</strong> adds up what your textures cost and ranks it the way VRChat does, then fixes colour space, mipmaps and compression in one go. Start here if an upload was refused.</li>
+                        <li><strong>World Lighting Check</strong> finds materials with LTCGI, Light Volumes or VRSL left switched on. Those are what make locking slow.</li>
+                        <li><strong>Scan for Quad Meshes</strong> is the one to reach for when something looks torn or shredded.</li>
+                        <li><strong>Matcap Atlas Builder</strong>, <strong>Texture Packer</strong>, <strong>Cross Shader Editor</strong>, <strong>Bake Outline Normals</strong>, <strong>Material Lock Manager</strong> and <strong>Settings</strong> sit alongside them.</li>
+                        <li>Hover any button and it says what its tool is for. <strong>How To Use</strong> now lists all nine with their menu paths.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Copy Layer, everywhere else</h3>
+                    <p class="forge-where">At the top of every decal, every glitter layer and every emission layer.</p>
+                    <ul class="pledge-list">
+                        <li>Part One put <strong>Copy Layer</strong> and <strong>Paste Layer</strong> on the matcaps. They are on the other twelve layers now too.</li>
+                        <li>Copy takes everything that layer has, textures included. Paste writes it onto whichever layer you press it on, on this material or another one.</li>
+                        <li>The right-click Copy on a section header cannot do this. It matches controls by name, so it only ever pastes Decal 0 onto Decal 0.</li>
+                        <li>Anything belonging to the whole group is left alone, like the controls in <strong>Glitter Layer 1</strong> that light all three layers at once.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The tools stopped losing your work</h3>
+                    <ul class="pledge-list">
+                        <li>Anything that made Unity recompile used to empty every tool window. Eight matcaps dragged into the Atlas Builder grid could vanish while you were still working on them.</li>
+                        <li><strong>Preview</strong> on the Atlas Builder shows the sheet and the section map before it writes a file.</li>
+                        <li><strong>Fix All</strong> in Texture Check now says what it is about to change and waits, because Ctrl+Z does not put an import setting back. The full list goes to the console when it is done.</li>
+                        <li>The two long scans show progress and can be stopped part way.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">A switched-off feature stops riding along</h3>
+                    <p class="forge-where"><em>A feature you never switched on was still being baked into your locked material. Every control, every setting, sat there in the finished shader doing nothing. We went looking for why, found the answer, and took a third of it out.</em></p>
+                    <ul class="pledge-list">
+                        <li>Turn LTCGI off and your locked material still carried every LTCGI setting. Same for Light Volumes, VRSL, and most of the rest.</li>
+                        <li>The code was already being stripped correctly. It was the controls and their declarations that were staying behind, because nothing had ever been told to drop them.</li>
+                        <li>Measured on one outfit material with 10 features on and 55 off: <strong>1180 controls in the locked shader where there were 1713.</strong> That is 533 gone, close to a third.</li>
+                        <li>Nothing about how your material looks changes. This is weight that was never doing anything.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Texture Check was making avatars heavier</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Shader Hub</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Its <strong>Fix All</strong> button did three things that ADD memory. Switching mipmaps on costs a third more, and moving a normal map to BC5 doubles it if it was on a smaller format.</li>
+                        <li>The window leads with your texture total and your VRChat rank, so a button that raised that number was the one thing it should never do.</li>
+                        <li><strong>Fix All now only does what cannot make you heavier.</strong> The rest are one row at a time, on a button that reads <strong>Fix, adds memory</strong>, and each row tells you what it costs first.</li>
+                        <li><strong>It no longer touches compression at all.</strong> It still shows you which textures are uncompressed and what they cost, because that is usually the biggest saving on an avatar, but the row now reads <strong>Yours to set</strong>. The right format depends on whether the texture carries alpha, and getting that wrong doubles the memory instead of halving it. That call stays yours.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Locking slowly? It is almost always one setting</h3>
+                    <ul class="pledge-list">
+                        <li>Measured on a real avatar: <strong>12 seconds of processor time per shader variant</strong>, and 184 variants on one material.</li>
+                        <li>Nearly all of that is <strong>Light Volumes</strong> being switched on. With it and LTCGI off, the same work drops to about a quarter.</li>
+                        <li><strong>World Lighting Check</strong> on the Hub finds every material with those switched on and turns off the ones you pick. If locking takes forever, start there.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Unity 2019 for VTubers</h3>
+                    <ul class="pledge-list">
+                        <li>The shaders and the whole toolset now import and compile on Unity 2019.4, which is what a lot of VTuber setups still run.</li>
+                        <li>Eleven things had to be fixed to get there, all of them editor code reaching for something newer Unity added later.</li>
+                        <li>The VRChat SDK was already optional, so the package works in a project that has never heard of VRChat.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Everything compiles clean and the texture budget did not move.</li>
+                        <li><strong>Two features do not work on Unity 2019 yet.</strong> VRSL and Vertex Kinetics get quietly dropped there because the project runs out of shader keywords, and we would rather say so than let you find out. Everything else is fine, and it does not affect any other version.</li>
+                        <li>None of it has been looked at on an avatar yet, so a pass on a real one comes before release.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-09-02-latex-ultra-5-0-vixforge-toon-2-0-clothi">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">Toon</span>
+                        <span class="news-tag">Clothing Pro</span>
+                        <span class="news-tag">Fur Pro</span>
+                        <span class="news-date">September 2, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Latex Ultra 5.0, VixForge Toon 2.0, Clothing Pro 2.0 and Fur Pro 2.0</h2>
+                    <h3 class="text-glow-cyan">Built from what you turn on</h3>
+                    <p class="forge-where"><em>Your material used to carry every feature we have ever written, whether you switched them on or not. All of it compiled, all of it loaded, all of it sitting right against the limit your graphics card allows. We had run out of room to add anything at all. So this release takes it apart: your material is now built from the features you actually turned on, and nothing else.</em></p>
+                    <ul class="pledge-list">
+                        <li>A material with a handful of features on used to carry all of them anyway. It now carries the ones you ticked.</li>
+                        <li>A default material went from sixty five textures down to five. Sixty five was one over the ceiling where Unity refuses to load a shader at all.</li>
+                        <li>Imports and locks are quicker, and there is finally room for us to keep building.</li>
+                        <li>Nothing changes in how you work. Tick a feature on and it appears, tick it off and it goes.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Lighting Check</h3>
+                    <p class="forge-where">Under <strong>RENDERING</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>View</strong> paints your material with the light actually reaching it, so you can see which system a world is lighting you with instead of guessing.</li>
+                        <li><strong>All Sources</strong> tints them all at once: red direct, green vertex, blue probes, yellow Light Volumes, magenta Point Light Volumes.</li>
+                        <li>Pick a single source to see it on its own, and turn <strong>Brightness</strong> up when the view is nearly black.</li>
+                        <li>Set it back to Off before you upload.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">World lights that were going missing</h3>
+                    <ul class="pledge-list">
+                        <li>Lights a world marks Not Important were being dropped completely.</li>
+                        <li>Most worlds run four pixel lights, so anywhere busy that was most of the lighting never reaching you.</li>
+                        <li>Your material will look brighter in those worlds now, which is the result it should always have given.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Flake sprites have a slot of their own</h3>
+                    <p class="forge-where">Under <strong>Glitter</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Shape</strong> set to <strong>Texture</strong> now reads the new <strong>Shape Sprite</strong> slot instead of borrowing a channel of the glitter <strong>Mask</strong>.</li>
+                        <li>Draw your flake as white on black and point <strong>Shape Channel</strong> at the channel it sits in.</li>
+                        <li>If you already had Shape on Texture, drop your sprite in the new slot.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">A locked material only shows what is in it</h3>
+                    <ul class="pledge-list">
+                        <li>A feature you left off is not in a locked material and cannot be switched on without unlocking.</li>
+                        <li>Those sections now step aside instead of offering a control that cannot do anything.</li>
+                        <li>Anything you marked <strong>Animated (when locked)</strong> stays exactly where it is, because that feature really is still in there.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li><strong>If an animation switches a feature on, right-click that toggle and tick Animated (when locked).</strong> Features are built in and out now, so a toggle a clip drives has to be marked or the feature will not be there for the clip to switch on. Anything you only set by hand needs nothing.</li>
+                        <li><strong>AudioLink reaches every effect.</strong> Chromatic Bloom, Note Swarm, Spectrum Ribbon and the separate goo, HUD and trail passes were each deciding for themselves whether AudioLink was live, and some ignored the media switch entirely.</li>
+                        <li><strong>Micro Detail</strong> is its own section now, under <strong>Bent Normals</strong>, with its map and settings inside it.</li>
+                        <li>Light Volumes is up to date with 3.0.0-dev.17.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-08-31-glitter-with-a-shape-a-depth-and-a-pulse">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-date">August 31, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Glitter with a shape, a depth and a pulse</h2>
+                    <p class="forge-intro"><em>Glitter has always been a field of little round dots that catch the light. Fine, but every material ended up with the same dots. So we took the maths behind Hyperspace and pointed it at the flakes instead.</em></p>
+                    <h3 class="text-glow-cyan">Shape</h3>
+                    <p class="forge-where">On every glitter layer, right under Flake Size.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Round</strong> is the glitter you already have, unchanged.</li>
+                        <li><strong>Star</strong> and <strong>Cross</strong> throw a hard glint, the kind you get off cut foil.</li>
+                        <li><strong>Shard</strong> is broken foil, a different chip on every flake.</li>
+                        <li><strong>Hexagon</strong>, <strong>Diamond</strong> and <strong>Ring</strong> for cosmetic flake, confetti and tiny bubbles.</li>
+                        <li>Each flake is turned its own way, so a field of them never reads as a printed pattern.</li>
+                        <li><strong>Texture</strong> reads a sprite you paint into a channel of the glitter <strong>Mask</strong>. Put the shape in one channel and your coverage mask in another, then point each layer at the channel it should use with <strong>Shape Channel</strong>.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Depth</h3>
+                    <p class="forge-where">Under <strong>Scatter</strong>, on every layer.</p>
+                    <ul class="pledge-list">
+                        <li>Sinks the layer below the surface, so it slides against you as you move your head.</li>
+                        <li>That is what real flake does under a clear coat, and it is the part that sells the finish.</li>
+                        <li>Give the three layers three different depths and the glitter reads as suspended in something thick.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Swirl</h3>
+                    <p class="forge-where">With <strong>Scroll</strong> and <strong>Spin</strong>, on every layer.</p>
+                    <ul class="pledge-list">
+                        <li>Drags the flakes into flowing veins instead of an even scatter. Marbled, liquid.</li>
+                        <li><strong>Swirl Scale</strong> picks whether that is a few broad rivers or fine curling detail.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Twinkle</h3>
+                    <p class="forge-where">Just below Swirl.</p>
+                    <ul class="pledge-list">
+                        <li>Every flake blinks on its own clock, so the material shimmers with you and the light both standing still.</li>
+                        <li><strong>Twinkle Rate</strong> sets how fast.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Prism</h3>
+                    <p class="forge-where">In the <strong>Colour</strong> dropdown, on every layer.</p>
+                    <ul class="pledge-list">
+                        <li>The hue rides the angle between the flake and your eye, so one flake sweeps the spectrum as it turns.</li>
+                        <li>Oil slick, dichroic paint, beetle shell. <strong>Rainbow Amount</strong> widens the sweep.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">On the beat</h3>
+                    <p class="forge-where">Under <strong>Motion</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Beat Swirl</strong> puts the veins on the music. <strong>Beat Twinkle</strong> flashes the flakes with the track.</li>
+                        <li><strong>Swirl Speed</strong> sets how fast the veins drift when the music is not driving them.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>All of it is off by default and <strong>Layer 1</strong> is the glitter you already had. We checked that numerically rather than by eye: with nothing changed, the new code returns the identical numbers.</li>
+                        <li>Not one new texture slot in total. Every bit of this reuses maps you have already loaded.</li>
+                        <li>One thing to know: once every live layer has a <strong>Mask Source</strong> of its own, the <strong>Mask</strong> above them steps aside instead of multiplying on top, and its rows hide. Set a layer back to None and it returns. Your texture is never cleared.</li>
+                        <li>Fixed on the way past: Hyperspace's <strong>Cross Threads</strong> did nothing until the very top of its range, so the threads were either there or gone. It fades properly now, and a Weave material sitting at the default looks exactly as it did.</li>
+                        <li>The <strong>Latex Ultra</strong> tab in the Hub now writes all of this up properly, along with Hyperspace and the borrowed <strong>Mask Source</strong> dropdowns that nearly every effect has.</li>
+                        <li>Shipping in Latex 4.8.0, Toon 1.7.0, Clothing Pro 1.4.0 and Fur Pro 1.4.0.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-08-31-hyperspace-and-glitter-that-finally-move">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">Toon</span>
+                        <span class="news-tag">Clothing Pro</span>
+                        <span class="news-tag">Fur Pro</span>
+                        <span class="news-date">August 31, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Hyperspace, and glitter that finally moves. Latex Ultra, Toon, Clothing Pro and Fur Pro.</h2>
+                    <p class="forge-intro"><em>Glitter that sits perfectly still, and effects that sit on the surface looking painted on. This release fixes both. One of them cuts a hole in your material and puts a whole space behind it. The other lets the flakes drift, turn and travel with the track.</em></p>
+                    <h3 class="text-glow-cyan">Hyperspace</h3>
+                    <p class="forge-where">Under <strong>SPECIAL EFFECTS</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>The surface stops being a surface. A ray carries on past it into somewhere that is not there, so what you see has real depth and swings as you walk around it.</li>
+                        <li><strong>Style</strong> picks what is back there. <strong>Tunnel</strong> flies you down a twisting glowing pipe. <strong>Weave</strong> winds a vortex of fine glowing threads away from you.</li>
+                        <li>Set the mood with <strong>Colour</strong> and <strong>Saturation</strong>, then <strong>Distance</strong> for how far in it reaches and <strong>Turbulence</strong> for how much the walls churn.</li>
+                        <li><strong>Tunnel Width</strong> zooms the pipe. <strong>Weave Scale</strong> packs the threads tighter and <strong>Cross Threads</strong> fades in a second set running the other way.</li>
+                        <li><strong>Parallax</strong> is how much the inside swings as you move around it. Drop it to zero and it pins flat to the surface.</li>
+                        <li><strong>Quality</strong> is the part that costs you framerate. Leave it as low as still looks good.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Hyperspace on the beat</h3>
+                    <p class="forge-where">Same group, once AudioLink is on.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Beat Rush</strong> shoves you forward down the ride.</li>
+                        <li><strong>Beat Churn</strong> stirs up the turbulence.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Three layers instead of one</h3>
+                    <p class="forge-where">Under <strong>Glitter</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Layer 1</strong> is the glitter you already have. Nothing about it changed, and your materials look exactly as they did.</li>
+                        <li><strong>Layer 2</strong> and <strong>Layer 3</strong> bring their own <strong>Density</strong>, <strong>Flake Size</strong>, <strong>Coverage</strong>, <strong>Scatter</strong> and <strong>Colour</strong>.</li>
+                        <li>Settle fine dust over big flakes, or run an iridescent layer through a tinted one.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Glitter that moves</h3>
+                    <p class="forge-where">On every layer.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Scroll</strong> drifts the flakes across the material.</li>
+                        <li><strong>Spin</strong> turns the whole field. <strong>Angle</strong> sets where it starts.</li>
+                        <li>Leave them at zero and the glitter sits still exactly as it always did.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The music carries it</h3>
+                    <p class="forge-where">New <strong>Motion</strong> group.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Beat Drift</strong> puts the <strong>Scroll</strong> on the beat.</li>
+                        <li><strong>Beat Spin</strong> drives the <strong>Spin</strong> from the track, so the flakes travel with the music instead of on a clock of their own.</li>
+                        <li>Each layer still picks its own <strong>AudioLink Band</strong> and <strong>AudioLink Amount</strong>.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Before Part Two</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Tunnel</strong> is after Yohei Nishitsuji, used under the MIT licence he publishes under. <strong>Weave</strong> is ours, written after seeing a lattice effect by XorDev. Thanks to both of them.</li>
+                        <li>Part Two is the rest of the glitter rebuild, and it is the bigger half.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Shape</h3>
+                    <p class="forge-where">On every glitter layer, right under Flake Size.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Round</strong> is the glitter you already have, unchanged.</li>
+                        <li><strong>Star</strong> and <strong>Cross</strong> throw a hard glint, the kind you get off cut foil.</li>
+                        <li><strong>Shard</strong> is broken foil, a different chip on every flake.</li>
+                        <li><strong>Hexagon</strong>, <strong>Diamond</strong> and <strong>Ring</strong> for cosmetic flake, confetti and tiny bubbles.</li>
+                        <li>Each flake is turned its own way, so a field of them never reads as a printed pattern.</li>
+                        <li><strong>Texture</strong> reads a sprite you paint into a channel of the glitter <strong>Mask</strong>. Put the shape in one channel and your coverage mask in another, then point each layer at the channel it should use with <strong>Shape Channel</strong>.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Depth</h3>
+                    <p class="forge-where">Under <strong>Scatter</strong>, on every layer.</p>
+                    <ul class="pledge-list">
+                        <li>Sinks the layer below the surface, so it slides against you as you move your head.</li>
+                        <li>That is what real flake does under a clear coat, and it is the part that sells the finish.</li>
+                        <li>Give the three layers three different depths and the glitter reads as suspended in something thick.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Swirl</h3>
+                    <p class="forge-where">With <strong>Scroll</strong> and <strong>Spin</strong>, on every layer.</p>
+                    <ul class="pledge-list">
+                        <li>Drags the flakes into flowing veins instead of an even scatter. Marbled, liquid.</li>
+                        <li><strong>Swirl Scale</strong> picks whether that is a few broad rivers or fine curling detail.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Twinkle</h3>
+                    <p class="forge-where">Just below Swirl.</p>
+                    <ul class="pledge-list">
+                        <li>Every flake blinks on its own clock, so the material shimmers with you and the light both standing still.</li>
+                        <li><strong>Twinkle Rate</strong> sets how fast.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Prism</h3>
+                    <p class="forge-where">In the <strong>Colour</strong> dropdown, on every layer.</p>
+                    <ul class="pledge-list">
+                        <li>The hue rides the angle between the flake and your eye, so one flake sweeps the spectrum as it turns.</li>
+                        <li>Oil slick, dichroic paint, beetle shell. <strong>Rainbow Amount</strong> widens the sweep.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">On the beat</h3>
+                    <p class="forge-where">Under <strong>Motion</strong>, alongside Beat Drift and Beat Spin.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Beat Swirl</strong> puts the veins on the music. <strong>Beat Twinkle</strong> flashes the flakes with the track.</li>
+                        <li><strong>Swirl Speed</strong> sets how fast the veins drift when the music is not driving them.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Everything across both parts is off until you switch it on, and <strong>Layer 1</strong> is the glitter you already had. We checked that numerically rather than by eye: with nothing changed, the new code returns the identical numbers.</li>
+                        <li>Not one new texture slot in the whole release. Every bit of this reuses maps you have already loaded.</li>
+                        <li>One thing to know: once every live layer has a <strong>Mask Source</strong> of its own, the <strong>Mask</strong> above them steps aside instead of multiplying on top, and its rows hide. Set a layer back to None and it returns. Your texture is never cleared.</li>
+                        <li>The <strong>Latex Ultra</strong> tab in the Hub writes all of this up properly, along with the borrowed <strong>Mask Source</strong> dropdowns that nearly every effect has.</li>
+                        <li>Shipping in Latex Ultra 4.7.0, Toon 1.6.0, Clothing Pro 1.3.0 and Fur Pro 1.3.0.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-08-22-beat-travel-a-proper-vortex-and-a-way-to">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-date">August 22, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Beat travel, a proper vortex, and a way to test the lot before you upload</h2>
+                    <p class="forge-intro"><em>You dial in your emission layers, you upload, you get into a club, and the whole material just flashes on and off as one lump. That is not what the music is doing. This release makes a beat actually move across you, and gives you a way to see it in Unity first.</em></p>
+                    <h3 class="text-glow-cyan">Beat Travel</h3>
+                    <p class="forge-where">Under <strong>EMISSIONS</strong>, on all five layers.</p>
+                    <ul class="pledge-list">
+                        <li>Pick a <strong>Direction</strong>, turn <strong>Travel &gt; Amount</strong> up, and a hit lands at one edge and runs across the layer instead of lighting all of it at once.</li>
+                        <li>It moves at the speed the track really played it, because it reads what AudioLink heard a moment ago rather than following a timer.</li>
+                        <li><strong>Up</strong>, <strong>Down</strong>, <strong>Left</strong>, <strong>Right</strong>, <strong>Outward</strong>, <strong>Inward</strong>, <strong>Around</strong>, or set your own <strong>Angle</strong>.</li>
+                        <li><strong>Length</strong> is how long one beat takes to cross. <strong>Sharpness</strong> tightens it from a smear into a pulse. <strong>Glow</strong> flares the crest.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Color Cycle</h3>
+                    <p class="forge-where">Under <strong>EMISSIONS</strong>, directly below <strong>Hue Cycle Speed</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Beat Speed</strong> drives the hue from the music, so the colour only moves while the track does, and it never jumps.</li>
+                        <li><strong>Range</strong> keeps the cycle inside a slice of the wheel instead of running the whole rainbow. Leave it at 0 for the full wheel.</li>
+                        <li><strong>Beat Range</strong> lets the beat widen that slice.</li>
+                        <li><strong>Rainbow</strong> spreads the colour along the Beat Travel direction, so the colour travels with the beat.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Beat Vortex</h3>
+                    <p class="forge-where">Under <strong>SPECIAL EFFECTS &gt; Infinity Mirror</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Travel</strong> sends each beat down the tunnel one ring at a time, so a hit lands at the mouth and falls inward.</li>
+                        <li><strong>Spacing</strong> sets how far apart the rings hear it. <strong>Pull</strong> lets the music drag the whole tunnel in. <strong>Punch</strong> flares each ring as the beat goes past.</li>
+                        <li><strong>Motion</strong> gained <strong>Flow</strong>, which falls the tunnel inward endlessly, with no seam where it loops.</li>
+                        <li><strong>Ring Shape</strong> finally makes <strong>Ring of Lights</strong> a ring of lights. <strong>Lights</strong> breaks the band into that many separate lamps, and <strong>Glow</strong> gives each one a halo.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Add Director Preview Rig</h3>
+                    <p class="forge-where">On the Hub, next to Lock and Unlock.</p>
+                    <ul class="pledge-list">
+                        <li>Drops a VixForge Director and an AudioLink into your scene at the origin, already wired together.</li>
+                        <li>Put a track on its Audio Source, press Play, and your material reacts the way it will in a world.</li>
+                        <li>It only appears when AudioLink is in the project.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Latex Ultra 4.6.0, Toon 1.5.0, Clothing Pro 1.2.0, Fur Pro 1.2.0, and the editor at 1.6.0.</li>
+                        <li>Every new control defaults to what your materials already look like, so nothing shifts until you reach for one.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-08-21-your-material-stops-carrying-what-you-ne">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-date">August 21, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Your material stops carrying what you never switched on</h2>
+                    <h3 class="text-glow-cyan">Switched off now means gone</h3>
+                    <p class="forge-where"><em>Turn a feature off in these shaders and, until now, it was still in there. The textures it reserves, the code it needs and the build time it costs all went onto your avatar whether you used it or not. On a busy material that is what finally pushed you past Unity's texture limit and refused to compile. This release takes it back out.</em></p>
+                    <ul class="pledge-list">
+                        <li><strong>Light Volumes</strong> and <strong>LTCGI</strong> are the big two. A material with one turned off no longer carries it at all, which hands back 16 of the 64 texture slots Unity allows.</li>
+                        <li><strong>Micro Detail</strong>, the Shine layer's mask, the <strong>Toon</strong> ramp, bent normals, the AudioLink vertex effects and the region masks go the same way.</li>
+                        <li>Their textures drop off the material too, so they stop taking up memory on your avatar. Unlock puts everything back.</li>
+                        <li>Nothing looks different. This is only about what gets built.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The inspector only shows what you are using</h3>
+                    <ul class="pledge-list">
+                        <li>Switch a feature off and its controls fold away instead of sitting greyed out in your way.</li>
+                        <li>The <strong>Enable</strong> always stays put, so nothing is ever stranded out of reach.</li>
+                        <li>119 sections across the four shaders, from Glitter and the Matcaps to Outlines, Inner Cosmos and the Cybernetic meters.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Eighteen presets, one click each</h3>
+                    <p class="forge-where">Hit <strong>Presets</strong> at the top of the inspector.</p>
+                    <ul class="pledge-list">
+                        <li>Six for <strong>Latex Ultra</strong>: High Gloss, Matte Rubber, Wet Look, Liquid Chrome, Soft Silicone, Worn Rubber.</li>
+                        <li>Four each for <strong>Toon</strong>, <strong>Clothing Pro</strong> and <strong>Fur Pro</strong>.</li>
+                        <li>They set the finish only. Your textures and colours are left exactly as you had them, and <strong>Revert Preset</strong> puts it back if it was not what you wanted.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">World Lighting Check</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; VixForge Editor</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Finds every material with <strong>LTCGI</strong>, <strong>Light Volumes</strong> or <strong>VRSL</strong> switched on, and turns off the ones you pick.</li>
+                        <li>These three cost the most to build with. On one material that is 28 seconds a variant with LTCGI and Light Volumes on, against 7 with both off.</li>
+                        <li>LTCGI's own author discourages it on avatars and points at Light Volumes instead, so that one is usually safe to drop.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Texture Check</h3>
+                    <p class="forge-where">Same menu.</p>
+                    <ul class="pledge-list">
+                        <li>Adds up what your textures cost and weighs it against the <strong>500 MB</strong> ceiling VRChat refuses to upload past, not only the performance ranks.</li>
+                        <li>Flags <strong>bent normal maps</strong> that are bigger than they need to be. That map only feeds occlusion and ambient light, so taking one from 2048 to 1024 frees about 4 MB and changes nothing you can see.</li>
+                        <li>Normal maps on the right format, crunch off, mipmaps on. It all fixes in one click except resolution, which stays your call.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The Setup button builds the map it needs</h3>
+                    <p class="forge-where">Under <strong>Channel Mapping</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Set Up for Poiyomi / Mochie Metallic Map</strong> used to point at a packed map you had to go and make somewhere else.</li>
+                        <li>If the slot is empty it now offers to build one, opens the <strong>Texture Packer</strong> already wired up, and fills the slots from the metallic, smoothness and mask textures sitting next to your main texture.</li>
+                        <li>A roughness map gets inverted for you, and anything already packed is left alone.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Fixed</h3>
+                    <ul class="pledge-list">
+                        <li><strong>The Texture Packer's compression settings did nothing.</strong> <strong>With Alpha</strong> and <strong>Without Alpha</strong> were written against a platform name Unity does not recognise, so every packed map came out on the automatic format instead. They were quietly forcing packed maps down to 2048 as well, which they no longer do.</li>
+                        <li><strong>The Presets menu was listing other shaders' presets.</strong> Poiyomi's and lilToon's turned up in ours, and picking one carried across only whatever happened to share a name.</li>
+                        <li><strong>Matcap 1 kept its textures on your avatar with Matcap 1 switched off.</strong> Matcaps 2 to 5 already dropped theirs.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Latex Ultra 4.5.0, Toon 1.4.0, Clothing Pro 1.1.0, Fur Pro 1.1.0, editor 1.5.0.</li>
+                        <li>Tested in the editor and in-world. Update, relock, and you should get a shorter build and a lighter avatar with nothing looking different.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-08-21-audiolink-you-can-actually-dial-in-acros">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">Toon</span>
+                        <span class="news-tag">Clothing Pro</span>
+                        <span class="news-tag">Fur Pro</span>
+                        <span class="news-date">August 21, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">AudioLink you can actually dial in, across Latex Ultra, Toon, Clothing Pro and Fur Pro</h2>
+                    <p class="forge-intro"><em>You put a material in a club world, the bass hits, and everything pins to maximum and stays there. Then it glows anyway between tracks. That was not you setting it up wrong. Every audio reaction ran through one fixed curve that hit full at a quarter of AudioLink's range and lifted near-silence to a third of the way up, so three quarters of the music did nothing and the quiet bits were never quiet. Here is the rebuild.</em></p>
+                    <h3 class="text-glow-cyan">Response</h3>
+                    <p class="forge-where">Under <strong>AUDIOLINK</strong>, at the top.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Mode</strong> starts on Classic, which is exactly how your materials react today. Nothing you already made changes.</li>
+                        <li>Switch it to <strong>Calibrated</strong> and you get <strong>Quiet Cutoff</strong> and <strong>Loud Cutoff</strong>. Set them to match how loud the room really is, and the effects follow the music across its whole range instead of clipping on every kick.</li>
+                        <li><strong>Gain</strong> for a quiet track. <strong>Shape</strong> for the feel: left is a soft swell, right is punchy so only the peaks come through.</li>
+                        <li><strong>Smoothing</strong> eases each band in and out instead of letting it snap. Leave it at 0 for a sharp hit, turn it up for a slow pulse.</li>
+                        <li><strong>Manual Levels</strong> drives the four bands from sliders. Animate those and you get audio-style motion in worlds with no AudioLink at all.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Two new sources to listen to</h3>
+                    <p class="forge-where">Every <strong>AudioLink Band</strong> dropdown, everywhere.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Volume</strong> follows the overall loudness rather than one slice of the spectrum, so anything that should breathe with the whole track can.</li>
+                        <li><strong>Peak Hold</strong> jumps to a hit at once and falls back slowly. It holds a peak instead of chasing every wobble, which is what you want for something that should stay lit through a bar.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Emission you can place, move and drive</h3>
+                    <p class="forge-where">Under <strong>EMISSION</strong>, on all five layers.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Placement</strong> sets <strong>Position</strong>, <strong>Scale</strong> and <strong>Rotation</strong>. <strong>Movement</strong> adds <strong>Drift X</strong>, <strong>Drift Y</strong> and <strong>Spin</strong>, so a layer slides and turns on its own. Set both Drift values together to send it any direction you like.</li>
+                        <li><strong>On The Beat</strong> gives each layer <strong>Push X</strong>, <strong>Push Y</strong>, <strong>Twist</strong> and <strong>Hue</strong>. The music can now shove a layer sideways, spin it, and shift its colour, not only brighten it.</li>
+                        <li>Layer 1 has a <strong>Mask Channel</strong> at last. It was welded to the alpha channel. Pick <strong>Auto</strong> if you paint plain black-and-white masks.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Matcaps hear the music on purpose</h3>
+                    <p class="forge-where">Under each <strong>Matcap</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Each of the five gets its own <strong>AudioLink Band</strong> and <strong>AudioLink Amount</strong>.</li>
+                        <li>They were already reacting, secretly, off Emission Layer 1's slider, with no way to aim or stop it. That is gone. If you liked it, set <strong>AudioLink Amount</strong> to about 0.25 and it is back, on a band you chose.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Outlines do more than glow</h3>
+                    <p class="forge-where">Under <strong>OUTLINES</strong>, on both layers.</p>
+                    <ul class="pledge-list">
+                        <li><strong>AudioLink Width</strong> pushes the outline wider on the beat.</li>
+                        <li><strong>AudioLink Hue</strong> shifts its colour round the wheel.</li>
+                        <li><strong>AudioLink Scroll</strong> drives its texture along faster.</li>
+                        <li>The outer layer follows the inner one as it pulses, so the two never overlap.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">A tunnel that actually moves</h3>
+                    <p class="forge-where">Under <strong>SPECIAL EFFECTS &gt; Infinity Mirror</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Depth Reach</strong> decides how far down you can still see.</li>
+                        <li><strong>Motion</strong> sets the stack drifting and spinning, with every layer deeper moving further than the one in front, so it falls away from you instead of sitting there.</li>
+                        <li><strong>Opens Up Close</strong> keeps it flat from across the room and deep once someone walks up to it. <strong>Full Depth Distance</strong> and <strong>Approach Curve</strong> tune the walk-up.</li>
+                        <li><strong>Beat Depth</strong> pushes the tunnel in and out. <strong>Beat Twist</strong> kicks the vortex round.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Goo and Wet finally hear the track</h3>
+                    <p class="forge-where">Under <strong>WET &amp; GOO</strong>, on Latex Ultra.</p>
+                    <ul class="pledge-list">
+                        <li>Both were completely deaf to AudioLink. Goo gets <strong>Beat Swell</strong>, <strong>Beat Flow</strong> and <strong>Beat Veins</strong>. Wet gets <strong>Beat Wetness</strong>, <strong>Beat Flow</strong> and <strong>Beat Twist</strong>.</li>
+                        <li><strong>Flow Direction</strong> points the slime anywhere you want. Leave it down, or turn it sideways and it crawls across you. <strong>Run Direction</strong> does the same for wet streaks.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Sonar</h3>
+                    <p class="forge-where">New under <strong>SPECIAL EFFECTS</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>The material works out where the music is coming from and sends a wave out from it that washes over you. The side turned towards the sound lights up, the far side stays dark.</li>
+                        <li>Walk around a club and the wave arrives from wherever the speakers actually are.</li>
+                        <li>Turn <strong>Chronotensity FX</strong> on and it lands on the beat. <strong>Comes From</strong> switches the origin to You or Whoever Is Looking.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Chromatic Bloom</h3>
+                    <ul class="pledge-list">
+                        <li>Lays the twelve notes across the material and lights each one in its own colour as it sounds, so a chord reads as a chord and not as one lump of brightness.</li>
+                        <li><strong>Wheel</strong> puts them round a circle, <strong>Rings</strong> stacks them outwards, <strong>Bars</strong> lines them up. <strong>Octave</strong> picks whether you are watching the bass or the top end.</li>
+                        <li>Nothing lighting up? Raise <strong>Sensitivity</strong>. One note is quiet next to a full mix.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Note Swarm</h3>
+                    <ul class="pledge-list">
+                        <li>ColorChord keeps a set of lights, each locked to a note it has picked out of the music. This scatters them over you as drifting blobs that appear and vanish as the harmony moves.</li>
+                        <li><strong>How Many</strong>, <strong>Size</strong>, <strong>Softness</strong>, <strong>Drift Speed</strong> and <strong>Wander</strong> shape the swarm.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Spectrum Ribbon</h3>
+                    <ul class="pledge-list">
+                        <li>Draws the last second and a half of the track straight onto you as a moving readout, so you carry what the music just did and not only what it is doing now.</li>
+                        <li><strong>Bars</strong>, <strong>Line</strong> or <strong>Mirror</strong>, and <strong>Colour From The Music</strong> takes the palette from ColorChord.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Room Sense</h3>
+                    <p class="forge-where">Back under <strong>AUDIOLINK</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Busier Room, Wilder</strong> turns the whole reaction up as the instance fills. Set <strong>Quiet Room</strong> and <strong>Packed Room</strong> to the numbers you care about. Needs Mode on Calibrated.</li>
+                        <li><strong>Colour By Time Of Day</strong> drifts every emission layer's hue with the real local clock, so you are a different colour at midnight than at noon.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Latex Ultra 4.5.0, Toon 1.4.0, Clothing Pro 1.1.0, Fur Pro 1.1.0.</li>
+                        <li>Classic mode is the default, so updating changes nothing until you go looking. The one exception is the secret matcap link, and the changelog tells you how to get it back.</li>
+                        <li>Nothing across all three parts costs a new texture slot.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-08-16-four-releases-today-and-two-of-them-are">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">Toon</span>
+                        <span class="news-tag">Clothing Pro</span>
+                        <span class="news-tag">Fur Pro</span>
+                        <span class="news-date">August 16, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Four releases today, and two of them are shaders you have not seen before</h2>
+                    <h3 class="text-glow-cyan">Heads up: invert your Alpha Map</h3>
+                    <p class="forge-where"><em>Latex Ultra 4.4.0 finishes the goo work: it moves under its own power now, reaches off you onto whatever is behind, and finally touches the floor. Toon 1.3.0 picks up the masks and the outline fix alongside it. And Clothing Pro and Fur Pro land as 1.0.0, which means real fabric and real grown fur, both of them brushable right in the scene view.</em></p>
+                    <ul class="pledge-list">
+                        <li>The Alpha Map reads the other way round now. Black keeps the pixel, white takes it away, the way a body-hiding mask is painted.</li>
+                        <li><strong>If you already use one, invert it</strong>, or the material comes out inside out. An empty slot now shows everything.</li>
+                        <li>Latex Ultra and Toon both. The rest of the release is safe to take as it comes.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Latex Ultra 4.4.0</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Writhe</strong> makes the goo move on its own, swelling and crawling like something alive underneath.</li>
+                        <li><strong>Drips</strong> gather, hang on a long string and let go. <strong>Cling</strong> reaches off your outline and takes hold of whatever is behind you.</li>
+                        <li><strong>Touch</strong> dents and goes wet where someone touches you, driven from contact receivers through your animator.</li>
+                        <li><strong>Formation</strong> builds the piece out of goo from your feet up. Put it on a toggle or a radial.</li>
+                        <li><strong>Slime Shading</strong> turns the melt into wet slime with neon veins running through it, and the goo reaches the floor at last.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Toon 1.3.0</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Viewer Context Mask</strong> and <strong>AudioLink Reaction Mask</strong>, so either effect can be kept to part of the material.</li>
+                        <li>Outlines stop breaking up at seams. Bake once with <strong>Bake Outline Normals</strong>, then set <strong>Outward Direction</strong> to match.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Clothing Pro 1.0.0</h3>
+                    <p class="forge-where">Patreon, 35 a month, or a one-off that meets it.</p>
+                    <ul class="pledge-list">
+                        <li>A soft <strong>Fabric</strong> sheen for silk, satin and velvet, with <strong>72 fabric presets</strong> to start from.</li>
+                        <li><strong>Surface Fur</strong> for wool and fleece, and <strong>Real Fur</strong> grown as actual geometry for trims, collars and cuffs.</li>
+                        <li>Masks throughout, so velvet can sit on the collar and leave the rest of the garment plain.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Fur Pro 1.0.0</h3>
+                    <p class="forge-where">Patreon, 15 a month, or a one-off that meets it.</p>
+                    <ul class="pledge-list">
+                        <li>Real hairs grown as geometry. One continuous strand root to tip, from short pile to a full coat.</li>
+                        <li>Thirteen brushes in the scene view, <strong>Curling</strong>, <strong>Curved</strong>, <strong>Straight</strong> and <strong>Slicker</strong> among them.</li>
+                        <li><strong>Curl</strong> and <strong>Bend Height</strong> shape the strands themselves, so a coat reads with body instead of one flat lean.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>All four are out now. The full detail on each is on that shader's own Changelog tab in the Shader Hub.</li>
+                        <li>The inspector and the tools that ship alongside them are VixForge Editor 1.4.0, which has its own post.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-08-16-the-fur-brush-learns-to-shape-a-coat-not">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-date">August 16, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">The fur brush learns to shape a coat, not just point it</h2>
+                    <p class="forge-intro"><em>Combing could only ever choose which way a strand leaned, because under the hood every hair was one flat arc. Strands curve properly along their length now, so a brush can change the shape of the fur instead of its direction. And the thing where the brush refused to touch the fur along your seams is fixed, along with the reason it was happening.</em></p>
+                    <h3 class="text-glow-cyan">Four brushes that shape the fur</h3>
+                    <p class="forge-where">Under <strong>Comb Map</strong>, on Clothing Pro and Fur Pro.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Straight</strong> combs and takes any curl back out, leaving the coat as your sliders set it.</li>
+                        <li><strong>Curved</strong> bends low for a fuller coat with body.</li>
+                        <li><strong>Curling</strong> hooks the tips back under, the way hair comes off a round brush.</li>
+                        <li><strong>Slicker</strong> combs and thins gently as it passes. Build it up over a few strokes rather than one.</li>
+                        <li>The first three paint a <strong>Comb Shape Map</strong>, made for you the first time and saved next to your comb map.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Curl and Bend Height</h3>
+                    <p class="forge-where">In <strong>Real Fur</strong>, and they work on the whole coat without painting anything.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Curl</strong> hooks the tips round. Positive curls them under, negative flicks them out. It follows whichever way the coat is combed, so comb first and then curl.</li>
+                        <li><strong>Bend Height</strong> sets where along a strand the bend happens. High keeps it standing and curves it near the ends; low bends it at the roots so the coat lies flat and the tips point away.</li>
+                        <li>It never changes how far the coat lays over, only the shape of the arc. Both ship at the settings that reproduce your current coat exactly.</li>
+                        <li>Painted detail on top of them needs <strong>Map Shape</strong> raised.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The brush reaches the fur along your seams now</h3>
+                    <ul class="pledge-list">
+                        <li>Strokes took everywhere except along the seams of the model, however big the brush was.</li>
+                        <li>The brush decided a pixel belonged to a triangle only when the pixel's exact centre landed inside it, while the shader reads the map smoothly and so also reads the ring of pixels just outside. Over a third of hairs were growing from a pixel the brush could not write.</li>
+                        <li>In the middle of a UV shell the neighbouring triangle covered for it. At a seam there is no neighbour, which is why only seams showed it.</li>
+                        <li>Shaved fur also stayed shaved after you pressed Done, which it did not always do before.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Reach</h3>
+                    <p class="forge-where">New slider under <strong>Size</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>A stray hair standing out in the air could not be caught: you had to find the spot it grew from, which with long guard hairs can be a hand's width away in a direction the strand does not even point.</li>
+                        <li>Turn <strong>Reach</strong> up and a hair counts as touched when it passes through the brush, so you can aim straight at the stray.</li>
+                        <li>1 reaches the full length of the coat. It ships at 0, which is exactly the old behaviour.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Heads up: re-lock anything with an animated colour</h3>
+                    <ul class="pledge-list">
+                        <li>Marking <strong>Color</strong> as Animated (when locked) also caught every property whose name ended the same way, so the <strong>Slime Shading</strong> colour, the <strong>Glitter</strong> and <strong>Flipbook</strong> tints, the <strong>Infinity Mirror</strong> glow and the four <strong>Pathing</strong> colours came back at their defaults.</li>
+                        <li>The symptom is a colour that resets when you lock and looks right again when you unlock. Unlock and re-lock and it is done.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Somewhere to find us, and somewhere to tip</h3>
+                    <p class="forge-where">Both under <strong>VixenTools</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>VixForge Socials</strong>: the Discord, the VRChat group, Twitter, the Toolbox site and the Gumroad pages.</li>
+                        <li><strong>Support The Forge</strong>: Ko-Fi, Patreon, CashApp and a Gumroad tip jar. Never required, always appreciated.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Shipping now as VixForge Editor 1.4.0.</li>
+                        <li>Also in: <strong>Bake Outline Normals</strong> for outlines that break up at seams, a custom <strong>Render Queue</strong> showing its real value, and the mesh tools finally seeing Clothing Pro and Fur Pro.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-08-16-the-material-feels-it-when-someone-touch">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-date">August 16, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">The material feels it when someone touches you</h2>
+                    <p class="forge-intro"><em>Everything the goo did, it did on its own. It melted, it writhed, it reached off you, and none of it knew anyone was there. Now it does. Press a hand into it and the material dents, piles up around the edge of the press, squeezes strands out and goes glossy where the contact is.</em></p>
+                    <h3 class="text-glow-cyan">Touch</h3>
+                    <p class="forge-where">New group under <strong>Goo Effects</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Paint up to four areas into the <strong>Zones</strong> texture, one per colour channel, then drive that zone's <strong>Press</strong> slider from a VRChat contact receiver through your animator. That is the whole setup.</li>
+                        <li><strong>Depth</strong> is how far it pushes in and <strong>Spread</strong> how far the dent softens out past the painted area, so you can have anything from a fingertip to a broad squash.</li>
+                        <li><strong>Rim</strong> piles material up around the edge of the press, which is what makes it read as something soft being squeezed rather than a dent stamped into a solid. <strong>Tendrils</strong> squeezes strands of goo out around that same edge.</li>
+                        <li><strong>Shading</strong> is the one to leave up. Without it the surface moves but still catches light as though it were flat.</li>
+                        <li><strong>Wetness</strong> puts a gloss spike on the contact, <strong>Flow</strong> slides the slime pattern out of the way of the press, and <strong>Veins</strong> brightens the threads where the material is squeezed.</li>
+                        <li>It works on its own, so plain gear with no melt still presses in. Turn <strong>Tessellation</strong> up for smoother results.</li>
+                        <li>Give each <strong>Press</strong> slider a curve that overshoots and settles back rather than a straight ramp, and the material springs like real slime instead of sliding to a stop.</li>
+                        <li><strong>Right-click every Press slider you animate and tick Animated (when locked)</strong>, or locking freezes it at whatever it reads in the inspector and nothing moves in game.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Writhe stops going round in circles</h3>
+                    <p class="forge-where">New controls under <strong>Goo Effects &gt; Writhe</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>The writhing drifted one way at one speed, and after a few passes the eye picked up the repeat.</li>
+                        <li><strong>Fold</strong> is the one to reach for if the movement ever looks like it is on a timer. Turn it up and the material folds over itself instead: swellings turn, stall, double back and pull apart, and it never comes round again.</li>
+                        <li><strong>Wander</strong> lets them push sideways, up and underneath instead of only straight out from your body, and since the direction keeps turning, a swelling will change course halfway and zig-zag.</li>
+                        <li><strong>Stretch</strong> pulls them long instead of round, so the material reads as being drawn out rather than as lumps inflating.</li>
+                        <li><strong>Run</strong> lets the writhing feed the melt, which is what turns a tendril that waves into one that hangs, runs and drips off its own tip.</li>
+                        <li><strong>Wetness</strong> makes the swellings themselves go dark, deep and glossy with the veins brightening along anything drawn out. It is on by default, so turning <strong>Amount</strong> up is all you need for the look.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">From Writhe</h3>
+                    <p class="forge-where">Under <strong>Wet Effects &gt; Droplets</strong> and <strong>Goo Effects &gt; Cling</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Both now grow out of the places the writhing has actually drawn the material out, instead of picking spots at random.</li>
+                        <li>A drop comes off the tip of a tendril rather than appearing beside it, and a tendril reaching sideways sheds too, because it is the stretching and not the direction that thins it.</li>
+                        <li>The cling webbing hangs between the parts that are moving and the calm areas stay clean.</li>
+                        <li>Both ship at 0 and both need <strong>Writhe</strong> to be doing something, so nothing changes until you turn them up.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Pooling</h3>
+                    <p class="forge-where">Under <strong>Wet Effects &gt; Droplets</strong>, next to <strong>Floor Splat</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Drops used to spread and fade the moment they landed, so the ground never built up.</li>
+                        <li>Turn <strong>Pooling</strong> up and the splats stay wider for longer and overlap each other, so the floor reads as goo gathering under you rather than drops blinking out one at a time.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Touch</strong> is new and unproven in the wild. Set up one zone first, check it presses the way you expect, then paint the rest.</li>
+                        <li>Nothing here changes an existing material until you turn it up.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-08-15-latex-ultra-4-4-0-toon-1-3-0-and-clothin">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">Toon</span>
+                        <span class="news-tag">Clothing Pro</span>
+                        <span class="news-tag">Fur Pro</span>
+                        <span class="news-date">August 15, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Latex Ultra 4.4.0, Toon 1.3.0, and Clothing Pro and Fur Pro reach 1.0.0</h2>
+                    <p class="forge-intro"><em>Goo could already melt, sag and stretch, but it still shaded like everything around it. So it moved like slime and looked like latex. It gets its own look now: a deep glossy film with a mirror highlight, light coming through where it runs thin, and neon veins threaded through it.</em></p>
+                    <h3 class="text-glow-cyan">Slime Shading</h3>
+                    <p class="forge-where">Under <strong>Goo Effects</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Push <strong>Slime Shading</strong> above 0 to switch it on. At 0 an existing melt looks exactly as it did.</li>
+                        <li><strong>Slime Colour</strong> and <strong>Thickness</strong> do most of the work. Thicker swallows more light and pools on the undersides. Thinner lets the veins and the body underneath show through.</li>
+                        <li><strong>Vein Colour</strong>, <strong>Vein Glow</strong> and <strong>Vein Thinness</strong> shape the neon threads. They brighten around the silhouette and wherever the film runs thin, so they read strongest as it stretches and drips.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Gravity Flow</h3>
+                    <p class="forge-where">Under <strong>Wet Effects</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Wet streaks ran down the texture, so they ran sideways wherever the UVs happened to be laid out sideways.</li>
+                        <li>Turn <strong>Gravity Flow</strong> up and they run down in the world instead, however the model is unwrapped and however you tilt.</li>
+                        <li>At 0 nothing changes, so your existing materials are untouched.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Two fixes worth re-locking for</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Specular Anti-Aliasing</strong> showed 1 but only did anything while <strong>Polish</strong> was on. Fine detail and fur sparkled and flickered as you or the light moved. It works as shown now, so with <strong>Polish</strong> off expect that shimmer to settle down.</li>
+                        <li>A black <strong>Color</strong> on Opaque, with a texture still in the slot, made locking fail and left the material pink.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Both grow their strands from triangles, so they need triangle meshes. If a model looks torn, turn off <strong>Keep Quads</strong> in its import settings.</li>
+                        <li>Re-lock anything you locked before this update to pick up both fixes.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Cling</h3>
+                    <p class="forge-where">New group under <strong>Goo Effects</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Strands leave your outline and grab what is behind you, dragging it into the slime as you move past. Stand near someone and it reads as the goo latching onto them.</li>
+                        <li><strong>Spread</strong> is the one that matters. At 0 the strands point straight out from your body, where the camera barely sees them. Turn it up and they lean across the screen toward whatever is beside you.</li>
+                        <li><strong>Reach</strong> sets how far they go, <strong>Strands</strong> and <strong>Break-up</strong> how many and how choosy, <strong>Pull</strong> how hard they drag the background along, <strong>Distortion</strong> how much they ripple it.</li>
+                        <li>Its own <strong>Mask</strong>, so you can be covered head to toe and still only reach from the hands and shoulders.</li>
+                        <li><strong>Colour Source</strong> on Match Slime makes the strands look like the material they came off. Switch to Custom for a separate <strong>Colour</strong>, <strong>Absorption</strong>, <strong>Gloss</strong> and <strong>Vein Colour</strong>, for when the goo should read one way on you and another as it reaches out.</li>
+                        <li>It needs a copy of the screen, so expect a framerate cost in a busy world. It is off by default.</li>
+                        <li>For it to pick up other people, your material has to draw after them. If the strands come out empty, push <strong>Render Queue</strong> past 2500 or set <strong>Rendering Mode</strong> to Fade.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Writhe</h3>
+                    <p class="forge-where">New group under <strong>Goo Effects</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>The goo moving under its own power: the surface swells, sinks and crawls over you like something alive underneath.</li>
+                        <li><strong>Tendrils</strong> changes the whole character. At 0 the surface rolls evenly, as much sinking as rising. Turn it up and most of it goes still while a few places reach a long way.</li>
+                        <li><strong>Crawl</strong> lets the swellings travel across you instead of pulsing where they sit. <strong>Surge</strong> gathers them into a wave that climbs you.</li>
+                        <li>It does not need <strong>Sag Distance</strong>, so a material can writhe while hanging perfectly still. Turn <strong>Tessellation</strong> up for smoother results.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Custom Noise</h3>
+                    <p class="forge-where">New group at the top of <strong>Goo Effects</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Drop your own texture into <strong>Texture</strong> and it drives the whole effect at once: the tendrils, the writhing, the edge as it forms, the cling strands and the veins in the slime.</li>
+                        <li><strong>Blend</strong> mixes it against the built-in noise, and <strong>Depth</strong> decides whether it reads as printed on you or as something with real volume.</li>
+                        <li>The <strong>Scale</strong> sliders already on each part still set how big it tiles, so one texture can be fine in the veins and coarse in the tendrils.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Custom Particle</h3>
+                    <p class="forge-where">Under <strong>Wet Effects &gt; Droplets</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Use your own image instead of the water bead, so the same physics throws sweat, bubbles, sparks or petals off you. The alpha is the shape.</li>
+                        <li>Everything the droplets already did still happens. They swell, neck, pinch off, fall, sway, slide along you, splat on the floor and dry out.</li>
+                        <li><strong>Spin</strong> turns each one a random amount. With <strong>Glassiness</strong> at 0 your image shows exactly as painted.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-08-11-wet-effects-and-goo-effects-stop-being-o">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Dev Notes</span>
+                        <span class="news-date">August 11, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Wet Effects and Goo Effects stop being one long scroll</h2>
+                    <p class="forge-intro"><em>Goo Effects had grown to more than forty controls in a single flat list. Finding the two sliders you actually wanted meant scrolling past every one you did not. Both liquid groups are sorted now, and a pile of labels got shorter along the way.</em></p>
+                    <h3 class="text-glow-cyan">Soak, Streaks and Droplets</h3>
+                    <p class="forge-where">Under <strong>Wet Effects</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Soak</strong> is the wet look itself: Wetness, Darkening, Smoothness, Film Sheen and Normal Flatten.</li>
+                        <li><strong>Streaks</strong> is the water running down over it, <strong>Gravity Flow</strong> included.</li>
+                        <li><strong>Droplets</strong> is the real drops, and the three controls for how they move now sit with them rather than trailing off the end of the list.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Six groups instead of one list</h3>
+                    <p class="forge-where">Under <strong>Goo Effects</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Melt</strong> is the shape of the sag, <strong>Sway</strong> is how it swings, and <strong>Floor</strong> is everything about where it lands.</li>
+                        <li><strong>Formation</strong> keeps its eight controls together, so the one you animate is not buried between the floor settings and the slime.</li>
+                        <li><strong>Slime Shading</strong> and <strong>Veins</strong> are their own groups. <strong>Veins</strong> stays out of the way until you switch slime on.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Shorter names</h3>
+                    <ul class="pledge-list">
+                        <li>A control inside <strong>Streaks</strong> does not need to say "streak", so <strong>Streak Density</strong> is now just <strong>Density</strong>. Same story for <strong>Vein Glow</strong> into <strong>Glow</strong>, <strong>Ground Height</strong> into <strong>Height</strong>, and <strong>Formation Reach</strong> into <strong>Reach</strong>.</li>
+                        <li>Only the labels changed. Your materials, your animations and your radials keep working exactly as they are.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>In the build, not released.</li>
+                        <li>Latex Ultra only, since that is where both groups live.</li>
+                        <li>Every value is where you left it. Nothing to redo, nothing to re-lock.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Introducing VixForge / Fur Pro 1.0.0</h3>
+                    <p class="forge-where"><em>Welcome to the latest update. The forge has been running hot, and we have a massive rollout spanning our entire toolchain-from a brand new fur system to critical workflow overhauls that respect your time and project architecture. Here is everything shipping in the latest builds.</em></p>
+                    <p>We're bringing real, geometry-based hair and fur to the ecosystem. Fur Pro shares its lighting stack and toolkit with Latex Ultra, Toon, and Clothing Pro, but replaces the fabric systems entirely with a dedicated fur engine.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Real Geometry:</strong> Strands are grown directly from your mesh triangles, holding up at any angle from short pile to a thick coat.</li>
+                        <li><strong>Comb Maps &amp; Patterns:</strong> You can now brush the fur directly in the Unity Scene view using 9 distinct brushes (including Comb, Radial, Swirl, Part, and Ruffle). The tool generates the map for you, storing length, thickness, and direction in a single texture.</li>
+                        <li><strong>Smart Performance:</strong> Fur only grows where it hits pixels. Strand Spacing handles LOD adjustments automatically as you move away, and Mirror Quality lets you drop fur density by half (or completely) in mirrors to save frames.</li>
+                        <li><strong>Advanced Lighting:</strong> The fur responds properly to Light Volumes, features its own Fur Ambient control so root shading doesn't crush, and backlights realistically when light passes through the tips.</li>
+                        <li><strong>Mesh Detail:</strong> Bypasses low-density meshes by splitting triangles before growing hairs, pushing past the GPU's natural 12-hair limit.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Taming the Inspector &amp; Workflow</h3>
+                    <p>We've overhauled the VixForge Editor-powered by Thry's editor-to remove friction and get you back to creating faster.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Logical Groupings:</strong> <em>Goo Effects</em> and <em>Wet Effects</em> are no longer one massive flat scroll. Wet Effects is now split into <strong>Soak, Streaks, and Droplets</strong>. Goo Effects is divided into <strong>Melt, Sway, Floor, Formation, Slime Shading, and Veins</strong>.</li>
+                        <li><strong>Auto-Enabling Maps:</strong> Dropping a texture into a slot now automatically ticks its Enable box across both Latex Ultra and Toon.</li>
+                        <li><strong>Smarter Locking:</strong> The material lock now actively cleans up after your old shader. When converting from Poiyomi or lilToon, locking will strip out the hundreds of unused properties and keywords left behind, keeping your build lean.</li>
+                        <li><strong>Texture Packer Upgrades:</strong> The packer now opens instantly, features proper scrollbars, docks smoothly down to smaller window sizes, and automatically writes the compiled asset cache data directly to the project folder using unique asset database GUIDs.</li>
+                        <li><strong>VRCFury SPS Fix:</strong> Locked materials now write include paths relative to the full project, ensuring VRCFury SPS doesn't break them during the build. <em>(Note: Unlock and re-lock your older materials to pick this fix up.)</em></li>
+                    </ul>
+                    <p>Across both Toon and Latex Ultra, <strong>the Alpha Map now reads the other way around</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Black</strong> keeps the pixel, and <strong>White</strong> takes it away.</li>
+                        <li>It now behaves like a standard body-hiding mask.</li>
+                        <li><strong>Action Required:</strong> If you are updating an existing material that uses an Alpha Map, you <strong>must invert it</strong>, otherwise your material will render inside out. An empty slot now shows everything by default, so turning the map on before assigning one will no longer blank out your material.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-08-10-real-fur-gets-four-times-denser-stops-sp">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Dev Notes</span>
+                        <span class="news-date">August 10, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Real Fur gets four times denser, stops sparkling, and finally lights properly</h2>
+                    <p class="forge-intro"><em>Fur had two problems. Up close it read as a cloud of specks instead of hair, and standing near a mirror put the framerate on the floor. Both are fixed. While we were in there, the coat learned to comb itself.</em></p>
+                    <h3 class="text-glow-cyan">Four times the fur, and it thins itself out</h3>
+                    <p class="forge-where">Under <strong>Real Fur</strong>, in Special Effects.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Strands Per Face</strong> now goes to 48. It used to stop at 12, which was as much as we could pull out of the hardware in one pass until we found the way around it.</li>
+                        <li><strong>Strand Spacing</strong> is new, and does the opposite job: the coat grows only the hairs that will actually land on pixels. Walk away, turn side on, change your resolution or field of view, and it thins out on its own.</li>
+                        <li>Raise <strong>Strand Spacing</strong> first when you want framerate back. It is the cheapest control in the group.</li>
+                        <li><strong>Mirror Quality</strong> grows less fur in mirrors only, where you are drawn a second time up close on top of the view you already have. Half is the default and is hard to spot.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">No more sparkle</h3>
+                    <ul class="pledge-list">
+                        <li>A hair thinner than a pixel used to either take the whole pixel or vanish from it, and it flipped that decision every time you moved your head. That is what made a coat shimmer.</li>
+                        <li>It now shares the pixel properly, so fine fur holds still and reads as hair at any distance. Nothing to set, it just stopped doing it.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Fur that reads the room</h3>
+                    <ul class="pledge-list">
+                        <li>In worlds lit with Light Volumes the hairs came out almost black while the body lit fine. Real Fur now reads that lighting the same way the rest of the material does.</li>
+                        <li><strong>Fur Ambient</strong> is its own control, so turning Surface Fur's Ambient Response down no longer drags the grown hairs down with it.</li>
+                        <li><strong>Root Shading</strong> was quietly applying itself twice and crushing the roots. It behaves now.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Patterns, and nine brushes</h3>
+                    <p class="forge-where">Under <strong>Comb Map</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Comb Pattern</strong> sets how the whole coat lies before you paint anything: <strong>Uniform</strong>, <strong>Radial</strong> out of a point, <strong>Swirl</strong> into a rosette, or <strong>Wave</strong> for a rumpled trim. <strong>Pattern Centre</strong> places the middle.</li>
+                        <li>The scene brush went from three tools to nine. <strong>Comb</strong> follows your stroke, <strong>Radial</strong> and <strong>Swirl</strong> sweep out of wherever you click, <strong>Part</strong> lays a parting line, <strong>Ruffle</strong> scatters it. <strong>Smooth</strong> and <strong>Erase</strong> are unchanged.</li>
+                        <li><strong>Length</strong> and <strong>Density</strong> paint into that same map, so one texture holds which way the fur lies, how long it is, and how thick it grows. Paint them, then raise <strong>Map Length</strong> and <strong>Map Density</strong>.</li>
+                        <li>Both of those start at 0, so a painted map changes nothing until you ask it to.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>All of it compiles clean and is in the build. None of it is released yet.</li>
+                        <li>Existing materials are untouched. Every new control defaults to off, or to exactly what it did before.</li>
+                        <li>The goo work is its own post, below.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">It reaches the floor now</h3>
+                    <p class="forge-where">Under <strong>Goo Effects</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>The strands were always stopping a fraction short of the drop, so they only touched down when several things happened to line up at once. They go the whole way now, and <strong>Floor Pooling</strong> finally does something because of it.</li>
+                        <li><strong>Floor</strong> is new and finds the ground from the avatar itself, so the goo lands properly in any world and keeps up when you walk up stairs. Switch it to <strong>Manual Height</strong> for a prop that is not worn.</li>
+                        <li><strong>Floor Contact</strong> decides how many strands make it all the way. At 1 every strand reaches and pools. Lower it and only the longest get there, leaving the rest hanging as drips.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Formation</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Formation</strong> is the one to animate. Take it from 0 to 1 and the piece builds itself out of the goo, starting at your feet and climbing up you.</li>
+                        <li>Put it on a toggle or a radial and you get goo rising off the floor, reaching over you, and turning into your gear.</li>
+                        <li>The edge is not a line, it is tendrils. They reach up, sag under their own weight, curl over at the top, swing as they climb, and pull away from your body and settle back as they go.</li>
+                        <li><strong>Formation Reach</strong> is how far it has to climb, <strong>Formation Edge</strong> how deep the wet band is behind the front, <strong>Formation Break-up</strong> how wild the strands get and <strong>Formation Break-up Scale</strong> how many, <strong>Formation Drip</strong> how stringy, <strong>Formation Grab</strong> how far they reach ahead, and <strong>Formation Lift</strong> how far they pull off you.</li>
+                        <li>It borrows <strong>Flow Speed</strong>, <strong>Sway Amount</strong> and <strong>Sway Speed</strong> from the melt above, so the whole effect moves as one thing rather than two.</li>
+                        <li>Sits at 1 by default, which means fully formed and switched off. Nothing changes until you animate it.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Compiles clean and is in the build. Not released.</li>
+                        <li>Latex Ultra only, since that is where Goo Effects lives.</li>
+                        <li>Nothing on an existing material moves until you touch the new controls.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-08-09-locking-works-with-vrcfury-sps-again-and">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Dev Notes</span>
+                        <span class="news-date">August 9, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Locking works with VRCFury SPS again, and the toolbox stops wasting your time</h2>
+                    <h3 class="text-glow-cyan">Locking and VRCFury SPS</h3>
+                    <p class="forge-where"><em>Locking is the step between a material you are happy with and an avatar you can actually upload, so when it breaks it breaks at the worst possible moment. One way it broke was quiet and hard to pin on anything. That is fixed, and while we were in there we went after everything else in the toolbox that makes you wait.</em></p>
+                    <ul class="pledge-list">
+                        <li>Locking wrote its include paths relative to the folder the locked shader sat in. SPS copies that shader somewhere else while it builds your avatar, so the paths stopped pointing at anything and the material broke.</li>
+                        <li>They are full project paths now, so it no longer matters where the file ends up.</li>
+                        <li><strong>If you have already locked materials, unlock and relock them once after the update.</strong> They keep the old paths until you do.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Locking tidies up after your old shader</h3>
+                    <p class="forge-where">Its switch is under <strong>VixenTools &gt; VixForge Editor &gt; Settings</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Convert a material from Poiyomi or lilToon and it keeps carrying every property and keyword the old shader left behind, often a hundred or more that do nothing but sit in the file.</li>
+                        <li>Locking now drops the ones your shader has no use for and tells you how many in the console. Nothing that belongs to your material is touched.</li>
+                        <li><strong>Clean Up On Lock</strong> switches it off. Worth doing if you plan to move the material back to the shader it came from, because those leftovers are what it would restore from.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The Texture Packer got fixed</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; VixForge Editor &gt; Texture Packer</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>It opens instantly. It used to search every texture in your project before it would draw, so on a real avatar project it just sat there until it finished.</li>
+                        <li>Proper scrollbars, and the mouse wheel scrolls. Moving around the canvas used to need a middle mouse drag that nothing told you about, so a node off the edge of the window was simply out of reach.</li>
+                        <li>It fits in a docked panel now instead of demanding an 850 pixel wide window.</li>
+                        <li>It saves to <strong>Assets/VixenTools/TexturePacker</strong>, and makes the folder for you.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Settings that explain themselves</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; VixForge Editor &gt; Settings</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Every setting now says what it does and when you would want it. Six of them had no explanation at all.</li>
+                        <li>Labels stopped repeating the heading above them, so "Texture Packer Compression | Textures With Alpha" is now just <strong>With Alpha</strong>.</li>
+                        <li>The version at the top is the real one, and clicking it opens the changelog.</li>
+                        <li>Nothing changed about what any setting actually does.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">One less menu to remember</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Shader Hub</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>The <strong>VixenTools &gt; VixenWear</strong> menu is gone. Everything in it is one <strong>Material Tools</strong> button in the Hub: Edit Materials From Selection, Migrate SPS Materials, Purge Orphaned VRCFury SPS Shaders and Disable Media-State Gate.</li>
+                        <li><strong>Ctrl + Shift + M</strong> still works, and it turns up in Edit &gt; Shortcuts now, so you can rebind it.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>All of it is built and running, not released yet.</li>
+                        <li>The SPS locking fix is the one to remember: if you have locked materials already, relock them once after the update and you are done.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-08-09-brush-your-fur-by-hand-and-a-toolbox-tha">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Dev Notes</span>
+                        <span class="news-date">August 9, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Brush your fur by hand, and a toolbox that stops fighting you</h2>
+                    <p class="forge-intro"><em>You set one comb direction, the whole coat lies one way, and every animal you have ever seen tells you that is not how fur works. A real coat sweeps around the shoulder, parts down the back and curls at the cuff. So we built a brush.</em></p>
+                    <h3 class="text-glow-cyan">Comb Map and the fur brush</h3>
+                    <p class="forge-where">Under <strong>Real Fur</strong>, in <strong>Special Effects</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Leave <strong>Comb Map</strong> empty and <strong>Comb Direction</strong> combs the whole coat one way, exactly as it does today. Your existing materials do not change.</li>
+                        <li>Hit <strong>Brush in Scene</strong>, pick your mesh, and drag across it in the scene view. The fur follows your stroke, the way you would brush a real animal.</li>
+                        <li><strong>Comb</strong> points the hairs where you drag, and going over an area again lays it flatter. <strong>Smooth</strong> settles a patch that came out messy. <strong>Erase</strong> puts it back to following <strong>Comb Direction</strong>.</li>
+                        <li><strong>Size</strong>, <strong>Strength</strong> and <strong>Hardness</strong> shape the brush, <code>[</code> and <code>]</code> resize it, and Ctrl+Z takes back a stroke.</li>
+                        <li>It makes the map for you the first time, and asks before it saves.</li>
+                        <li>Anything you never brush keeps following <strong>Comb Direction</strong>, so you only paint the parts that want their own direction.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The Texture Packer got fixed</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; VixForge Editor &gt; Texture Packer</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>It opens instantly. It used to search every texture in your project before it would draw, so on a real avatar project it just hung until it finished.</li>
+                        <li>Proper scrollbars, and the mouse wheel scrolls. Moving around the canvas used to need a middle mouse drag that nothing told you about, so a node off the edge of the window was simply out of reach.</li>
+                        <li>It fits in a docked panel now instead of demanding an 850 pixel wide window.</li>
+                        <li>It saves to <strong>Assets/VixenTools/TexturePacker</strong>, and makes the folder for you.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Settings that explain themselves</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; VixForge Editor &gt; Settings</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Every setting now says what it does and when you would want it. Six of them had no explanation at all.</li>
+                        <li>Labels stopped repeating the heading above them, so "Texture Packer Compression | Textures With Alpha" is now just <strong>With Alpha</strong>.</li>
+                        <li>The version at the top is the real one, and clicking it opens the changelog.</li>
+                        <li>Nothing changed about what any setting actually does.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The Hub picks up the rest</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Shader Hub</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Once you have more than two shaders the tabs become one dropdown, grouped into Start Here, Shaders, Changelogs and About. Four shaders meant thirteen tabs wrapped across three rows.</li>
+                        <li>The <strong>VixenTools &gt; VixenWear</strong> menu is gone. Everything that lived in it is one <strong>Material Tools</strong> button in the Hub. <strong>Ctrl + Shift + M</strong> still works, and it turns up in Edit &gt; Shortcuts now, so you can rebind it.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>The brush is built and compiles clean, but it has not been used on a real avatar yet. Treat it as early.</li>
+                        <li>Existing materials are safe: no comb map means the behaviour you already have.</li>
+                        <li>Next is <strong>Surface Fur</strong> reading the same comb map, so a painted direction drives the cheap highlight as well as the grown strands.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-08-08-a-whole-new-shader-for-fur-and-real-grow">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Dev Notes</span>
+                        <span class="news-tag">Clothing Pro</span>
+                        <span class="news-date">August 8, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">A whole new shader for fur, and real grown strands in Clothing Pro</h2>
+                    <p class="forge-intro"><em>Fur that lives only in the lighting looks great head on and vanishes the moment you see it from the side. There is nothing there to catch the light, because there is nothing there. So we grew some.</em></p>
+                    <h3 class="text-glow-cyan">Fur Pro, a new shader</h3>
+                    <p class="forge-where">Assign <strong>VixForge / Fur Pro</strong> to a material and set up <strong>BASE</strong>, <strong>NORMAL MAPS</strong> and <strong>SURFACE</strong> exactly as you would on any of the others.</p>
+                    <ul class="pledge-list">
+                        <li>Everything in it exists to grow, light and control hair. It is Clothing Pro with the cloth half taken out.</li>
+                        <li>The whole toolkit comes along: <strong>Polish</strong>, <strong>Outlines</strong>, <strong>Emissions</strong>, <strong>Matcaps</strong>, <strong>Decals</strong>, the <strong>Special Effects</strong>, <strong>AudioLink</strong>, <strong>Light Volumes</strong>, <strong>LTCGI</strong> and <strong>VRSL</strong> all behave exactly as they do on Latex Ultra.</li>
+                        <li>Want velvet and satin alongside your fur? Use <strong>Clothing Pro</strong> instead. It has the same fur system plus the fabric side.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Real Fur</h3>
+                    <p class="forge-where">Its own group under <strong>Special Effects</strong>, directly below <strong>Surface Fur</strong>. In Fur Pro and Clothing Pro both.</p>
+                    <ul class="pledge-list">
+                        <li>Real hairs, grown as geometry. Every one is a single continuous strand from root to tip, so it holds up close, from the side, and at any length.</li>
+                        <li><strong>Strands Per Face</strong> grows hairs from each triangle of your mesh, <strong>Length</strong> takes it from short pile to a full coat, and <strong>Curve Segments</strong> sets how smoothly a long hair bends.</li>
+                        <li><strong>Strand Width</strong> and <strong>Tip Taper</strong> shape each hair. Hairs always come to a point, and nothing ever falls below a pixel on screen, so fine fur will not sparkle at distance.</li>
+                        <li><strong>Tufting</strong> clumps nearby hairs into locks the way real fur parts. <strong>Guard Hairs</strong> mixes longer strays over the short coat, so the outline breaks up instead of ending on one clean edge.</li>
+                        <li><strong>Comb Bend</strong> lays the coat over, <strong>Droop</strong> lets the tips fall under their own weight, and <strong>Wind Sway</strong> with <strong>Wind Speed</strong> keeps it moving.</li>
+                        <li><strong>Self Shadowing</strong> has the hairs shadow each other, so the coat opens up and closes down as the light moves around it. This is most of what gives fur its depth.</li>
+                        <li><strong>Shade Variation</strong> gives every hair its own slightly different colour. Backlight it and the tips glow, because light passes straight through a thin fibre.</li>
+                        <li><strong>Root Shading</strong> darkens the base, <strong>Coverage</strong> thins the coat to bald patches or packs it solid, and <strong>Tip Softness</strong> stops it ending on a hard edge.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Mesh Detail</h3>
+                    <p class="forge-where">Second control in the <strong>Real Fur</strong> group.</p>
+                    <ul class="pledge-list">
+                        <li>Splits your triangles into smaller ones before growing hairs, so you are not limited by how dense your mesh is.</li>
+                        <li>2 is about four times the hairs. 4 is about sixteen.</li>
+                        <li>It is the most expensive control in the shader, so raise it one step at a time and watch your framerate.</li>
+                        <li>It only spends the detail on triangles that are big on screen, so distance stays cheap. Off by default.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Masks for the things that had none</h3>
+                    <p class="forge-where">In <strong>Real Fur</strong>, <strong>Surface Fur</strong>, <strong>Viewer Context</strong> and <strong>AudioLink</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Real Fur &gt; Mask</strong> paints where hairs grow and how long they are. White is full <strong>Length</strong>, grey is shorter, black grows nothing at all and skips the work, so a fur trim on a hood costs you the hood.</li>
+                        <li><strong>Surface Fur &gt; Mask</strong> scopes the painted-on strand highlight, so fur sits on the hood and cuffs while the rest stays bare.</li>
+                        <li><strong>Viewer Context &gt; Mask</strong> keeps the mirror, photo and distance tricks on one patch and leaves the rest of the material alone.</li>
+                        <li><strong>AudioLink &gt; Reaction Mask</strong> keeps <strong>Audio Scanlines</strong> and the four <strong>Physical Lobe Thump</strong> effects to part of the material.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Fabric and Fur have moved</h3>
+                    <p class="forge-where">All three sit under <strong>Special Effects</strong> now, on Clothing Pro.</p>
+                    <ul class="pledge-list">
+                        <li>The old <strong>Fabric &amp; Fur</strong> section is gone. <strong>Fabric</strong>, <strong>Surface Fur</strong> and <strong>Real Fur</strong> are their own groups, each with its enable in the header.</li>
+                        <li><strong>Surface Fur</strong> is the highlight painted onto the surface. <strong>Real Fur</strong> grows the strands. Both together is usually what you want.</li>
+                        <li>Nothing underneath was renamed, so your materials and animations carry straight over.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Material Type</h3>
+                    <p class="forge-where">Top of the <strong>Fabric</strong> group, on Clothing Pro.</p>
+                    <ul class="pledge-list">
+                        <li>72 fabrics now, up from 10, sorted into Natural Fibres, Semi-Synthetic, Synthetic, Leather, Bio-Based, Mineral &amp; Metallic, Blends, Pile &amp; Fur, Sheer, Technical, Specialty and Coated.</li>
+                        <li>Pick one and it sets the sheen and the fur to a sensible starting point, then tune from there.</li>
+                        <li>The values come from how each fibre actually behaves. Silk and cupro get a tight bright sheen, jute and canvas a weak broad one, and the wool family gets its halo switched on.</li>
+                        <li><strong>Latex</strong> still resets everything back off.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Fur Pro</strong> and <strong>Real Fur</strong> are new and have not been through many avatars yet. Treat them as a preview and tell us what breaks.</li>
+                        <li>The <strong>Viewer Context</strong> and <strong>AudioLink</strong> masks land on <strong>Latex Ultra</strong> and <strong>Toon</strong> as well.</li>
+                        <li>Next up is the fur casting and receiving proper shadows, and reading <strong>Light Volumes</strong> like the rest of the material already does.</li>
+                    </ul>
+                </div>
+            </article>
+            <!-- FORGE:END -->
+
+        </div>
+
+        </div>
+      </div>
+
+        <button id="jumpToTopBtn" class="jump-to-top" title="Back to top">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+            </svg>
+        </button>
+
+    </main>
+
+    <script type="module" src="app.js"></script>
+    <script src="docs-shell.js" defer></script>
+</body>
+</html>

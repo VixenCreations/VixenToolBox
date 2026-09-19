@@ -56,6 +56,11 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://vixencreations.github.io/VixenToolBox/behind-the-forge.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://vixencreations.github.io/VixenToolBox/ai-transparency.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>

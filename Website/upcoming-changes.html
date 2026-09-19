@@ -125,6 +125,11 @@
                 News
             </fluent-anchor>
 
+            <fluent-anchor href="behind-the-forge.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+                Behind The Forge
+            </fluent-anchor>
+
             <fluent-anchor href="why-choose-us.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                 Why Choose Us?
@@ -192,11 +197,13 @@
 
                 <div class="changelog-entry" data-version="latex-5.2.2">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 5.2.2 - Unreleased</h5>
-                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A big AudioLink update: Cymatics, music reactions on every emission layer, outlines that move with the music, Speaker Glow, Drop Burst, a Body Equaliser and goo that moves to the beat, all starting switched off. Smoother Probe Lighting stays on your light probes in worlds made with the first version of Light Volumes, and a correction to the 5.2.0 notes.</em></p>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A big update for AudioLink and for the wet and goo effects: Cymatics, music reactions on every emission layer, outlines that move with the music, Speaker Glow, Drop Burst and a Body Equaliser, plus Native Touch, movement, gravity and Oobleck Dance for the wet and the goo. Everything new starts switched off except the room lighting on the drops and strands. Smoother Probe Lighting stays on your light probes in worlds made with the first version of Light Volumes, and a correction to the 5.2.0 notes.</em></p>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Per-Light Specular is off by default, not on as the 5.2.0 notes said.</strong> Only the Best Soft preset turns it on. The doubled point light highlight that release fixed only ever showed with it on, so if you raised <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong> because of that note and <strong>Per-Light Specular</strong> is off on your material, set <strong>Specular Mix</strong> back to where you had it.</li>
+                        <li class="mb-2"><strong>Drops and Cling strands now take the room's light.</strong> They used to show at the same brightness in every room. The drops under <strong>Droplets</strong> and <strong>Drips</strong>, and the <strong>Cling</strong> strands, now light like the rest of you, so they can look darker in a dim world. To get the old look back, set <strong>Room Lighting</strong> to 0 in each of those groups.</li>
+                        <li class="mb-2"><strong>Vertex Fracture shards look different.</strong> They now follow <strong>Global Metallic</strong> and <strong>Global Smoothness</strong>, so if you tuned your shard colours around the old look, check them again.</li>
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -210,11 +217,24 @@
                         <li class="mb-2"><strong>Body Equaliser</strong> under <strong>Vertex Pump</strong>. The music is laid up your body, bass at your feet and treble at your head, so each part of you swells with its own slice of the sound.</li>
                         <li class="mb-2"><strong>Notes</strong> glitter colour. Every flake takes one of the notes AudioLink hears, so the glitter shows the chord being played.</li>
                         <li class="mb-2"><strong>Beat Writhe</strong>, <strong>Beat Reach</strong> and <strong>Beat Drops</strong> for the goo. The music makes the goo writhe harder, flings the <strong>Cling</strong> strands further and swells the hanging drops.</li>
+                        <li class="mb-2"><strong>Native Touch.</strong> Touch can now find hands on its own, from what the camera already sees, with no contacts or animator. Hands dent the goo and push the water aside. Each person sees only their own touches, up close, and never in a mirror. Switch on <strong>Native Touch</strong> under <strong>Touch</strong>, which is now its own group and works for the wet as well as the goo. The idea comes from Warren's Fast Fur.</li>
+                        <li class="mb-2"><strong>Movement.</strong> A new group that makes the goo slosh behind you, the wet streaks sweep back and the drops trail behind you, and makes the goo wobble and shake drops loose when you land. Drive <strong>Velocity</strong> and <strong>Landing</strong> from the VRChat Velocity and Grounded parameters in your animator, or let <strong>VixenTools &gt; VixForge Editor &gt; Wet and Goo Movement Setup</strong> build that animator layer for you.</li>
+                        <li class="mb-2"><strong>Oobleck Dance.</strong> Like cornstarch on a speaker: on the beat the goo stands up into fingers along a sand-plate figure, and slumps back when the music stops.</li>
+                        <li class="mb-2"><strong>More music for the wet and the goo.</strong> <strong>Travelling Beats</strong> runs each hit down the wet streaks and along the goo veins, <strong>Music Colour</strong> tints the water, the veins and the drops, and <strong>Beat Shake-off</strong> throws a shower of drops loose on a big peak.</li>
+                        <li class="mb-2"><strong>Gravity Pooling</strong>, <strong>Touch Wipe</strong> and <strong>Glints</strong> for the wet. Water gathers on the parts of you that face up, a touch clears it aside, and tiny sparkles catch the light in the water and on the drops.</li>
+                        <li class="mb-2"><strong>Extra Mask</strong> for the wet and the goo. Borrow an Emission layer Map or a Matcap mask as a second mask, at no texture cost.</li>
+                        <li class="mb-2"><strong>Also Apply To Wet And Goo</strong> under <strong>Viewer Context</strong>, so the wet and the goo can show only in a mirror, only in photos or only up close.</li>
+                        <li class="mb-2"><strong>Separate Maps</strong> under <strong>Surface</strong>. Metallic and smoothness can now come from their own textures instead of the <strong>Packed PBR Mask</strong>, so a separate metallic, gloss or roughness file goes straight in. Tick <strong>Use Metallic Map</strong> or <strong>Use Smoothness Map</strong>, drop the texture in, and tick <strong>Map is Roughness</strong> for a roughness map. <strong>Global Metallic</strong> and <strong>Global Smoothness</strong> still scale them.</li>
+                        <li class="mb-2"><strong>Set Up for Toon Standard Specular Map</strong> under <strong>Channel Mapping</strong>. One click reads a Substance ToonStandardSpecular export: metallic from red, smoothness from green and occlusion from blue. With the slot empty, it finds that file next to your Albedo and drops it in.</li>
+                        <li class="mb-2"><strong>Unity on Linux.</strong> The shader now runs in the OpenGL and Vulkan editors Unity uses on Linux, so you can see and set up your materials there. Before, every part of it was switched off there.</li>
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Smoother Probe Lighting could pick up the wrong light in worlds made with the first version of Light Volumes.</strong> Those worlds store their volumes in a form this shader cannot read, and the option read them anyway. It uses your light probes there now, which is what the Light Volumes package itself does.</li>
+                        <li class="mb-2"><strong>Vertex Fracture shards ignored Global Metallic and Global Smoothness.</strong> They read your <strong>Packed PBR Mask</strong> at full strength, so they often came out darker and shinier than the surface they broke from, and nearly black on a material with no packed map. They match the surface now.</li>
+                        <li class="mb-2"><strong>Tessellation Detail was hidden, and did nothing, unless the goo sagged.</strong> <strong>Sway</strong>, <strong>Writhe</strong> and <strong>Touch</strong> move the surface too, but only <strong>Sag Distance</strong> switched tessellation on. It now works whenever <strong>Goo Effects</strong> or <strong>Touch</strong> is on, and it also shows whenever <strong>Kinetic Modules</strong> is on. Lower it if the goo costs more than you want.</li>
+                        <li class="mb-2"><strong>Touch could throw parts of the mesh out in long spikes.</strong> <strong>Native Touch</strong> took the goo's own moving surface for a hand, and every touch pushed in the mesh's own units instead of metres, so a mesh imported at 100 times scale pushed a hundred times too far. <strong>Depth</strong> is in metres now, as its tooltip says, and touch ignores a depth texture left behind by another camera, such as the Game view's while you work in the Scene view. If you turned <strong>Depth</strong> right down to make up for a scaled mesh, turn it back up.</li>
                     </ul>
                 </div>
 
@@ -226,6 +246,7 @@
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Per-Light Specular is off by default, not on as the 2.2.0 notes said.</strong> Only the Best Soft preset turns it on. The doubled point light highlight that release fixed only ever showed with it on, so if you raised <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong> because of that note and <strong>Per-Light Specular</strong> is off on your material, set <strong>Specular Mix</strong> back to where you had it.</li>
+                        <li class="mb-2"><strong>Vertex Fracture shards look different.</strong> They now follow <strong>Global Metallic</strong> and <strong>Global Smoothness</strong>, so if you tuned your shard colours around the old look, check them again.</li>
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -238,11 +259,16 @@
                         <li class="mb-2"><strong>Drop Burst</strong> under <strong>Vertex Fracture</strong>. When the track hits a big peak you burst into shards and pull back together as it passes.</li>
                         <li class="mb-2"><strong>Body Equaliser</strong> under <strong>Vertex Pump</strong>. The music is laid up your body, bass at your feet and treble at your head, so each part of you swells with its own slice of the sound.</li>
                         <li class="mb-2"><strong>Notes</strong> glitter colour. Every flake takes one of the notes AudioLink hears, so the glitter shows the chord being played.</li>
+                        <li class="mb-2"><strong>Separate Maps</strong> under <strong>Surface</strong>. Metallic and smoothness can now come from their own textures instead of the <strong>Packed PBR Mask</strong>, so a separate metallic, gloss or roughness file goes straight in. Tick <strong>Use Metallic Map</strong> or <strong>Use Smoothness Map</strong>, drop the texture in, and tick <strong>Map is Roughness</strong> for a roughness map. <strong>Global Metallic</strong> and <strong>Global Smoothness</strong> still scale them.</li>
+                        <li class="mb-2"><strong>Set Up for Toon Standard Specular Map</strong> under <strong>Channel Mapping</strong>. One click reads a Substance ToonStandardSpecular export: metallic from red, smoothness from green and occlusion from blue. With the slot empty, it finds that file next to your Albedo and drops it in.</li>
+                        <li class="mb-2"><strong>Unity on Linux.</strong> The shader now runs in the OpenGL and Vulkan editors Unity uses on Linux, so you can see and set up your materials there. Before, every part of it was switched off there.</li>
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Smoother Probe Lighting could pick up the wrong light in worlds made with the first version of Light Volumes.</strong> Those worlds store their volumes in a form this shader cannot read, and the option read them anyway. It uses your light probes there now, which is what the Light Volumes package itself does.</li>
+                        <li class="mb-2"><strong>Vertex Fracture shards ignored Global Metallic and Global Smoothness.</strong> They read your <strong>Packed PBR Mask</strong> at full strength, so they often came out darker and shinier than the surface they broke from, and nearly black on a material with no packed map. They match the surface now.</li>
+                        <li class="mb-2"><strong>Tessellation Detail stayed hidden when the Body Equaliser was the only thing moving the surface.</strong> It now shows whenever <strong>Kinetic Modules</strong> is on.</li>
                     </ul>
                 </div>
 
@@ -254,6 +280,8 @@
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Per-Light Specular is off by default, not on as the 2.2.0 notes said.</strong> Only the Best Soft preset turns it on. The doubled point light highlight that release fixed only ever showed with it on, so if you raised <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong> because of that note and <strong>Per-Light Specular</strong> is off on your material, set <strong>Specular Mix</strong> back to where you had it.</li>
+                        <li class="mb-2"><strong>Vertex Fracture shards look different.</strong> They now follow <strong>Global Metallic</strong> and <strong>Global Smoothness</strong>, so if you tuned your shard colours around the old look, check them again.</li>
+                        <li class="mb-2"><strong>Real Fur highlights look different with Follow PBR Map on.</strong> They now follow <strong>Global Smoothness</strong> and <strong>Global Metallic</strong>, which at the default smoothness of 0.5 makes them dimmer on glossy patches. Raise <strong>Strand Specular</strong> under <strong>Surface Fur</strong> to bring them back up.</li>
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -266,12 +294,18 @@
                         <li class="mb-2"><strong>Drop Burst</strong> under <strong>Vertex Fracture</strong>. When the track hits a big peak you burst into shards and pull back together as it passes.</li>
                         <li class="mb-2"><strong>Body Equaliser</strong> under <strong>Vertex Pump</strong>. The music is laid up your body, bass at your feet and treble at your head, so each part of you swells with its own slice of the sound.</li>
                         <li class="mb-2"><strong>Notes</strong> glitter colour. Every flake takes one of the notes AudioLink hears, so the glitter shows the chord being played.</li>
+                        <li class="mb-2"><strong>Separate Maps</strong> under <strong>Surface</strong>. Metallic and smoothness can now come from their own textures instead of the <strong>Packed PBR Mask</strong>, so a separate metallic, gloss or roughness file goes straight in. Tick <strong>Use Metallic Map</strong> or <strong>Use Smoothness Map</strong>, drop the texture in, and tick <strong>Map is Roughness</strong> for a roughness map. <strong>Global Metallic</strong> and <strong>Global Smoothness</strong> still scale them.</li>
+                        <li class="mb-2"><strong>Set Up for Toon Standard Specular Map</strong> under <strong>Channel Mapping</strong>. One click reads a Substance ToonStandardSpecular export: metallic from red, smoothness from green and occlusion from blue. With the slot empty, it finds that file next to your Albedo and drops it in.</li>
+                        <li class="mb-2"><strong>Unity on Linux.</strong> The shader now runs in the OpenGL and Vulkan editors Unity uses on Linux, so you can see and set up your materials there. Before, every part of it was switched off there.</li>
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Real Fur follows the Light Volumes V3 controls.</strong> Turning <strong>Intensity</strong> down faded the coat toward black instead of back to your probe lighting, until it snapped back at 0. <strong>Point Light Strength</strong>, <strong>Additive-Only Mode</strong>, <strong>Normal Bias</strong> and <strong>Position Offset</strong> never reached the coat at all. They do now, and at their default settings the coat looks the same as before.</li>
                         <li class="mb-2"><strong>Smoother Probe Lighting could pick up the wrong light in worlds made with the first version of Light Volumes.</strong> Those worlds store their volumes in a form this shader cannot read, and the option read them anyway. It uses your light probes there now, which is what the Light Volumes package itself does.</li>
+                        <li class="mb-2"><strong>Vertex Fracture shards ignored Global Metallic and Global Smoothness.</strong> They read your <strong>Packed PBR Mask</strong> at full strength, so they often came out darker and shinier than the surface they broke from, and nearly black on a material with no packed map. They match the surface now.</li>
+                        <li class="mb-2"><strong>Follow PBR Map under Real Fur ignored Channel is Roughness and Invert Metallic.</strong> With a roughness map, the roughest hairs shone the most. The hairs now read the map the same way the surface does.</li>
+                        <li class="mb-2"><strong>Tessellation Detail stayed hidden when the Body Equaliser was the only thing moving the surface.</strong> It now shows whenever <strong>Kinetic Modules</strong> is on.</li>
                     </ul>
                 </div>
 
@@ -283,6 +317,8 @@
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Per-Light Specular is off by default, not on as the 2.2.0 notes said.</strong> Only the Best Soft preset turns it on. The doubled point light highlight that release fixed only ever showed with it on, so if you raised <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong> because of that note and <strong>Per-Light Specular</strong> is off on your material, set <strong>Specular Mix</strong> back to where you had it.</li>
+                        <li class="mb-2"><strong>Vertex Fracture shards look different.</strong> They now follow <strong>Global Metallic</strong> and <strong>Global Smoothness</strong>, so if you tuned your shard colours around the old look, check them again.</li>
+                        <li class="mb-2"><strong>Real Fur highlights look different with Follow PBR Map on.</strong> They now follow <strong>Global Smoothness</strong> and <strong>Global Metallic</strong>, which at the default smoothness of 0.5 makes them dimmer on glossy patches. Raise <strong>Strand Specular</strong> under <strong>Surface Fur</strong> to bring them back up.</li>
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -295,23 +331,30 @@
                         <li class="mb-2"><strong>Drop Burst</strong> under <strong>Vertex Fracture</strong>. When the track hits a big peak you burst into shards and pull back together as it passes.</li>
                         <li class="mb-2"><strong>Body Equaliser</strong> under <strong>Vertex Pump</strong>. The music is laid up your body, bass at your feet and treble at your head, so each part of you swells with its own slice of the sound.</li>
                         <li class="mb-2"><strong>Notes</strong> glitter colour. Every flake takes one of the notes AudioLink hears, so the glitter shows the chord being played.</li>
+                        <li class="mb-2"><strong>Separate Maps</strong> under <strong>Surface</strong>. Metallic and smoothness can now come from their own textures instead of the <strong>Packed PBR Mask</strong>, so a separate metallic, gloss or roughness file goes straight in. Tick <strong>Use Metallic Map</strong> or <strong>Use Smoothness Map</strong>, drop the texture in, and tick <strong>Map is Roughness</strong> for a roughness map. <strong>Global Metallic</strong> and <strong>Global Smoothness</strong> still scale them.</li>
+                        <li class="mb-2"><strong>Set Up for Toon Standard Specular Map</strong> under <strong>Channel Mapping</strong>. One click reads a Substance ToonStandardSpecular export: metallic from red, smoothness from green and occlusion from blue. With the slot empty, it finds that file next to your Albedo and drops it in.</li>
+                        <li class="mb-2"><strong>Unity on Linux.</strong> The shader now runs in the OpenGL and Vulkan editors Unity uses on Linux, so you can see and set up your materials there. Before, every part of it was switched off there.</li>
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Real Fur follows the Light Volumes V3 controls.</strong> Turning <strong>Intensity</strong> down faded the coat toward black instead of back to your probe lighting, until it snapped back at 0. <strong>Point Light Strength</strong>, <strong>Additive-Only Mode</strong>, <strong>Normal Bias</strong> and <strong>Position Offset</strong> never reached the coat at all. They do now, and at their default settings the coat looks the same as before.</li>
                         <li class="mb-2"><strong>Smoother Probe Lighting could pick up the wrong light in worlds made with the first version of Light Volumes.</strong> Those worlds store their volumes in a form this shader cannot read, and the option read them anyway. It uses your light probes there now, which is what the Light Volumes package itself does.</li>
+                        <li class="mb-2"><strong>Vertex Fracture shards ignored Global Metallic and Global Smoothness.</strong> They read your <strong>Packed PBR Mask</strong> at full strength, so they often came out darker and shinier than the surface they broke from, and nearly black on a material with no packed map. They match the surface now.</li>
+                        <li class="mb-2"><strong>Follow PBR Map under Real Fur ignored Channel is Roughness and Invert Metallic.</strong> With a roughness map, the roughest hairs shone the most. The hairs now read the map the same way the surface does.</li>
+                        <li class="mb-2"><strong>Tessellation Detail stayed hidden when the Body Equaliser was the only thing moving the surface.</strong> It now shows whenever <strong>Kinetic Modules</strong> is on.</li>
                     </ul>
                 </div>
 
 
                 <div class="changelog-entry" data-version="worldsurface-1.0.1">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / World Surface 1.0.1 - Unreleased</h5>
-                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A big AudioLink update: Cymatics, music reactions on every emission layer, outlines that move with the music, Speaker Glow, Drop Burst, a Height Equaliser and goo that moves to the beat, all starting switched off. Lightmapped surfaces take only the extra Light Volume lighting a world layers on top, the way the Light Volumes documentation asks.</em></p>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A big update for AudioLink and for the wet and goo effects: Cymatics, music reactions on every emission layer, outlines that move with the music, Speaker Glow, Drop Burst and a Height Equaliser, plus Native Touch, movement, gravity and Oobleck Dance for the wet and the goo, all starting switched off. Lightmapped surfaces take only the extra Light Volume lighting a world layers on top, the way the Light Volumes documentation asks.</em></p>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Lightmapped surfaces no longer take highlights from a world's base Light Volumes.</strong> The lightmap already holds that light. The diffuse lighting already left the base volumes out, but the volume highlight, the clear coat highlight, glitter lit by Light Volumes and Micro Shading still read them. A lightmapped surface now takes only the additive volumes and the point lights, as the Light Volumes documentation specifies, and does less work per pixel. Surfaces without a lightmap are unchanged. If a lightmapped floor looks less glossy in a Light Volumes world, raise <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong>.</li>
+                        <li class="mb-2"><strong>Vertex Fracture shards look different.</strong> They now follow <strong>Global Metallic</strong> and <strong>Global Smoothness</strong>, so if you tuned your shard colours around the old look, check them again.</li>
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -325,6 +368,23 @@
                         <li class="mb-2"><strong>Height Equaliser</strong> under <strong>Vertex Pump</strong>. The music is laid up the object, bass at the bottom and treble at the top, so each height swells with its own slice of the sound.</li>
                         <li class="mb-2"><strong>Notes</strong> glitter colour. Every flake takes one of the notes AudioLink hears, so the glitter shows the chord being played.</li>
                         <li class="mb-2"><strong>Beat Writhe</strong> for the goo. The goo writhes harder while the music plays and settles when it stops.</li>
+                        <li class="mb-2"><strong>Native Touch.</strong> Touch can now find hands on its own, from what the camera already sees, with no contacts. Hands dent the goo and push the water aside. Each person sees only their own touches, up close, and never in a mirror. Switch on <strong>Native Touch</strong> under <strong>Touch</strong>, which is now its own group and works for the wet as well as the goo. The idea comes from Warren's Fast Fur.</li>
+                        <li class="mb-2"><strong>Movement.</strong> A new group that makes the goo slosh and the wet streaks sweep back as the object moves, and makes the goo wobble when it lands. An Udon script sets <strong>Velocity</strong> and <strong>Landing</strong> on the material.</li>
+                        <li class="mb-2"><strong>Oobleck Dance.</strong> Like cornstarch on a speaker: on the beat the goo stands up into fingers along a sand-plate figure, and slumps back when the music stops.</li>
+                        <li class="mb-2"><strong>More music for the wet and the goo.</strong> <strong>Travelling Beats</strong> runs each hit down the wet streaks and along the goo veins, and <strong>Music Colour</strong> tints the water and the veins.</li>
+                        <li class="mb-2"><strong>Gravity Pooling</strong>, <strong>Touch Wipe</strong> and <strong>Glints</strong> for the wet. Water gathers on the parts of the surface that face up, a touch clears it aside, and tiny sparkles catch the light in the water.</li>
+                        <li class="mb-2"><strong>Extra Mask</strong> for the wet and the goo. Borrow an Emission layer Map or a Matcap mask as a second mask, at no texture cost.</li>
+                        <li class="mb-2"><strong>Also Apply To Wet And Goo</strong> under <strong>Viewer Context</strong>, so the wet and the goo can show only in a mirror, only in photos or only up close.</li>
+                        <li class="mb-2"><strong>Separate Maps</strong> under <strong>Surface</strong>. Metallic and smoothness can now come from their own textures instead of the <strong>Packed PBR Mask</strong>, so a separate metallic, gloss or roughness file goes straight in. Tick <strong>Use Metallic Map</strong> or <strong>Use Smoothness Map</strong>, drop the texture in, and tick <strong>Map is Roughness</strong> for a roughness map. <strong>Global Metallic</strong> and <strong>Global Smoothness</strong> still scale them.</li>
+                        <li class="mb-2"><strong>Set Up for Toon Standard Specular Map</strong> under <strong>Channel Mapping</strong>. One click reads a Substance ToonStandardSpecular export: metallic from red, smoothness from green and occlusion from blue. With the slot empty, it finds that file next to your Albedo and drops it in.</li>
+                        <li class="mb-2"><strong>Unity on Linux.</strong> The shader now runs in the OpenGL and Vulkan editors Unity uses on Linux, so you can see and set up your materials there. Before, every part of it was switched off there.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Vertex Fracture shards ignored Global Metallic and Global Smoothness.</strong> They read your <strong>Packed PBR Mask</strong> at full strength, so they often came out darker and shinier than the surface they broke from, and nearly black on a material with no packed map. They match the surface now.</li>
+                        <li class="mb-2"><strong>Tessellation Detail was hidden, and did nothing, unless the goo sagged.</strong> <strong>Sway</strong>, <strong>Writhe</strong> and <strong>Touch</strong> move the surface too, but only <strong>Sag Distance</strong> switched tessellation on. It now works whenever <strong>Goo Effects</strong> or <strong>Touch</strong> is on, and it also shows whenever <strong>Kinetic Modules</strong> is on. Lower it if the goo costs more than you want.</li>
+                        <li class="mb-2"><strong>Touch could throw parts of the mesh out in long spikes.</strong> <strong>Native Touch</strong> took the goo's own moving surface for a hand, and every touch pushed in the mesh's own units instead of metres, so a mesh imported at 100 times scale pushed a hundred times too far. <strong>Depth</strong> is in metres now, as its tooltip says, and touch ignores a depth texture left behind by another camera, such as the Game view's while you work in the Scene view. If you turned <strong>Depth</strong> right down to make up for a scaled mesh, turn it back up.</li>
                     </ul>
                 </div>
 
@@ -336,6 +396,8 @@
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Lightmapped surfaces no longer take highlights from a world's base Light Volumes.</strong> The lightmap already holds that light. The diffuse lighting already left the base volumes out, but the volume highlight, the clear coat highlight, glitter lit by Light Volumes and Micro Shading still read them. A lightmapped surface now takes only the additive volumes and the point lights, as the Light Volumes documentation specifies, and does less work per pixel. Surfaces without a lightmap are unchanged, and neither is the fur coat, which never uses the lightmap. If a lightmapped floor looks less glossy in a Light Volumes world, raise <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong>.</li>
+                        <li class="mb-2"><strong>Vertex Fracture shards look different.</strong> They now follow <strong>Global Metallic</strong> and <strong>Global Smoothness</strong>, so if you tuned your shard colours around the old look, check them again.</li>
+                        <li class="mb-2"><strong>Real Fur highlights look different with Follow PBR Map on.</strong> They now follow <strong>Global Smoothness</strong> and <strong>Global Metallic</strong>, which at the default smoothness of 0.5 makes them dimmer on glossy patches. Raise <strong>Strand Specular</strong> under <strong>Surface Fur</strong> to bring them back up.</li>
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -348,11 +410,35 @@
                         <li class="mb-2"><strong>Drop Burst</strong> under <strong>Vertex Fracture</strong>. When the track hits a big peak the surface bursts into shards and pulls back together as it passes.</li>
                         <li class="mb-2"><strong>Height Equaliser</strong> under <strong>Vertex Pump</strong>. The music is laid up the object, bass at the bottom and treble at the top, so each height swells with its own slice of the sound.</li>
                         <li class="mb-2"><strong>Notes</strong> glitter colour. Every flake takes one of the notes AudioLink hears, so the glitter shows the chord being played.</li>
+                        <li class="mb-2"><strong>Separate Maps</strong> under <strong>Surface</strong>. Metallic and smoothness can now come from their own textures instead of the <strong>Packed PBR Mask</strong>, so a separate metallic, gloss or roughness file goes straight in. Tick <strong>Use Metallic Map</strong> or <strong>Use Smoothness Map</strong>, drop the texture in, and tick <strong>Map is Roughness</strong> for a roughness map. <strong>Global Metallic</strong> and <strong>Global Smoothness</strong> still scale them.</li>
+                        <li class="mb-2"><strong>Set Up for Toon Standard Specular Map</strong> under <strong>Channel Mapping</strong>. One click reads a Substance ToonStandardSpecular export: metallic from red, smoothness from green and occlusion from blue. With the slot empty, it finds that file next to your Albedo and drops it in.</li>
+                        <li class="mb-2"><strong>Unity on Linux.</strong> The shader now runs in the OpenGL and Vulkan editors Unity uses on Linux, so you can see and set up your materials there. Before, every part of it was switched off there.</li>
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Real Fur follows the Light Volumes V3 controls.</strong> Turning <strong>Intensity</strong> down faded the coat toward black instead of back to your probe lighting, until it snapped back at 0. <strong>Point Light Strength</strong>, <strong>Additive-Only Mode</strong>, <strong>Normal Bias</strong> and <strong>Position Offset</strong> never reached the coat at all. They do now, and at their default settings the coat looks the same as before.</li>
+                        <li class="mb-2"><strong>Vertex Fracture shards ignored Global Metallic and Global Smoothness.</strong> They read your <strong>Packed PBR Mask</strong> at full strength, so they often came out darker and shinier than the surface they broke from, and nearly black on a material with no packed map. They match the surface now.</li>
+                        <li class="mb-2"><strong>Follow PBR Map under Real Fur ignored Channel is Roughness and Invert Metallic.</strong> With a roughness map, the roughest hairs shone the most. The hairs now read the map the same way the surface does.</li>
+                        <li class="mb-2"><strong>Tessellation Detail stayed hidden when the Height Equaliser was the only thing moving the surface.</strong> It now shows whenever <strong>Kinetic Modules</strong> is on.</li>
+                    </ul>
+                </div>
+
+
+                <div class="changelog-entry" data-version="editor-2.3.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Editor 2.3.1 - Unreleased</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Texture maps get read the way your exporter wrote them.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Channels pick themselves.</strong> Drop a texture into a slot that has a channel picker, such as <strong>Occlusion Map</strong> or <strong>Height Map</strong>, and the picker moves to the channel that holds the data, so an occlusion map stored in green works as it is. It only changes when the answer is clear, and the Console says what it set.</li>
+                        <li class="mb-2"><strong>The Packed PBR Mask builder packs occlusion and height too.</strong> With no reflection or specular mask to pack, it builds the VixenWear layout: metallic in red, occlusion in green, height in blue and smoothness in alpha. It reads each source file from the channel that holds its data.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The Packed PBR Mask builder picked the wrong files.</strong> With body, eyes and fluff maps in one folder it could take a file from the wrong set, it took a ToonStandardSpecular export for a specular mask, and a set named Metals could hand over any of its files as the metallic map. It now uses only the files that share your Albedo's name, offers a finished map it finds, such as MetallicSmoothnessMaps, before building a new one, and fills <strong>Occlusion Map</strong> and <strong>Height Map</strong> from the files beside it.</li>
+                        <li class="mb-2"><strong>Set Up for Poiyomi / Mochie Metallic Map could leave its masks off.</strong> It ticked <strong>Enable Masks</strong> without updating the material, so the masks did nothing until you changed something else on it.</li>
                     </ul>
                 </div>
 
