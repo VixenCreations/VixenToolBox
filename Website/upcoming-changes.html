@@ -204,9 +204,7 @@
                         <li class="mb-2"><strong>Per-Light Specular is off by default, not on as the 5.2.0 notes said.</strong> Only the Best Soft preset turns it on. The doubled point light highlight that release fixed only ever showed with it on, so if you raised <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong> because of that note and <strong>Per-Light Specular</strong> is off on your material, set <strong>Specular Mix</strong> back to where you had it.</li>
                         <li class="mb-2"><strong>Drops and Cling strands now take the room's light.</strong> They used to show at the same brightness in every room. The drops under <strong>Droplets</strong> and <strong>Drips</strong>, and the <strong>Cling</strong> strands, now light like the rest of you, so they can look darker in a dim world. To get the old look back, set <strong>Room Lighting</strong> to 0 in each of those groups.</li>
                         <li class="mb-2"><strong>Vertex Fracture shards look different.</strong> They now follow <strong>Global Metallic</strong> and <strong>Global Smoothness</strong>, so if you tuned your shard colours around the old look, check them again.</li>
-                    
                         <li class="mb-2"><strong>Borrowed masks hold again, so an effect that was covering everything will snap back to its map.</strong> If an effect's <strong>Mask Source</strong> points at an Emission layer or a Matcap that is switched off, the mask used to read as fully open, so the effect covered the whole material, or disappeared completely if <strong>Invert Mask</strong> was on. It reads the map now. Go through <strong>Mask Source</strong> and <strong>Invert Mask</strong> on each effect you have masked, and set <strong>Mask Source</strong> to None on anything you meant to leave unmasked.</li>
-
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -230,56 +228,37 @@
                         <li class="mb-2"><strong>Separate Maps</strong> under <strong>Surface</strong>. Metallic and smoothness can now come from their own textures instead of the <strong>Packed PBR Mask</strong>, so a separate metallic, gloss or roughness file goes straight in. Tick <strong>Use Metallic Map</strong> or <strong>Use Smoothness Map</strong>, drop the texture in, and tick <strong>Map is Roughness</strong> for a roughness map. <strong>Global Metallic</strong> and <strong>Global Smoothness</strong> still scale them.</li>
                         <li class="mb-2"><strong>Set Up for Toon Standard Specular Map</strong> under <strong>Channel Mapping</strong>. One click reads a Substance ToonStandardSpecular export: metallic from red, smoothness from green and occlusion from blue. With the slot empty, it finds that file next to your Albedo and drops it in.</li>
                         <li class="mb-2"><strong>Unity on Linux.</strong> The shader now runs in the OpenGL and Vulkan editors Unity uses on Linux, so you can see and set up your materials there. Before, every part of it was switched off there.</li>
-                    
                         <li class="mb-2"><strong>Nine new ways for the music to move the goo.</strong> Beat Depth swells the writhe itself, so the tendrils surge and stretch on the hit instead of only running faster. Beat Sway swings the hanging strands wider. Beat Melt pulls the goo further toward the floor and Beat Pooling spreads the pool where it lands. Beat Formation pushes the wavefront up, so the gear builds itself in time. Beat Gloss, Beat Coat, Beat Absorption and Beat Refraction work the slime itself. Every one starts at zero, so nothing changes until you reach for it.</li>
-
                         <li class="mb-2"><strong>Melt reacts to the music now.</strong> Beat Sag, Beat Stretch, Beat Variation, Beat Flow and Beat Underside sit under the sliders they drive. Beat Flow adds to the clock rather than scaling it, so the goo gathers pace and settles again without jumping.</li>
-
-                    
                         <li class="mb-2"><strong>Biofeedback.</strong> A body pulse these shaders have always had, and never let you at. It builds a heartbeat from the bass, tension from the mids and a spike from the treble, then drives the subsurface glow, the light coming through the thin parts of you, the <strong>AudioLink Color Blend</strong> hue and <strong>Emission</strong> layer 1. It now has its own group under <strong>Special Effects</strong> with a control for each of those, plus <strong>Heartbeat</strong>, <strong>Tension</strong>, <strong>Spike</strong> and <strong>Breath</strong> to shape the pulse itself. Every slider starts at the value it has always run at, so nothing about your material changes until you move one, and <strong>Enable</strong> switches the whole thing off if you never wanted it.</li>
-
                         <li class="mb-2"><strong>Thickness</strong> and <strong>Thickness Map</strong> under <strong>Subsurface</strong>. How thick the material is where light soaks through used to be the music and nothing else, with no way to set it. There is a slider and an optional map for it now, and <strong>Subsurface</strong> under <strong>Biofeedback</strong> decides how far the pulse moves it on top. Leaving <strong>Thickness</strong> at 0 keeps exactly the look you have today.</li>
-
+                        <li class="mb-2"><strong>Steady Autocorrelator</strong> under <strong>AudioLink</strong>. The autocorrelator readouts grow with how loud the track is, so a quiet passage barely shows one and a loud one pins it. Switch this on to hold them at one strength whatever the volume. It starts off, so nothing about your material changes until you tick it.</li>
                     </ul>
-
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
-
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
-
-                    
                         <li class="mb-2"><strong>Cybernetic Overlays moved to Special Effects.</strong> It used to sit in the middle of <strong>AudioLink</strong>, which is a long way from the other effects. It is now the last group under <strong>Special Effects</strong>, and every readout inside it is exactly as it was. It still needs <strong>AudioLink</strong> switched on, so it only shows while that is on.</li>
-
-                        <li class="mb-2"><strong>Materials only load the textures you use.</strong> An empty slot, mask or map costs nothing now, and neither does AudioLink while it's off. That gives busy materials more room under the 32-texture limit of OpenGL editors on Linux.</li>
-
+                        <li class="mb-2"><strong>Materials only load the textures you use.</strong> An empty slot, mask or map costs nothing now. That gives busy materials more room under the 32-texture limit of OpenGL editors on Linux.</li>
                         <li class="mb-2"><strong>The goo AudioLink controls now sit with the sliders they drive.</strong> They were bunched together in the middle of the Veins group. Beat Writhe is under Writhe Speed, Beat Veins under Vein Glow, Beat Swell under Thickness, and the band that feeds them all is at the top of Goo Effects. No value changed.</li>
-
                     </ul>
+
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Smoother Probe Lighting could pick up the wrong light in worlds made with the first version of Light Volumes.</strong> Those worlds store their volumes in a form this shader cannot read, and the option read them anyway. It uses your light probes there now, which is what the Light Volumes package itself does.</li>
                         <li class="mb-2"><strong>Vertex Fracture shards ignored Global Metallic and Global Smoothness.</strong> They read your <strong>Packed PBR Mask</strong> at full strength, so they often came out darker and shinier than the surface they broke from, and nearly black on a material with no packed map. They match the surface now.</li>
                         <li class="mb-2"><strong>Tessellation Detail was hidden, and did nothing, unless the goo sagged.</strong> <strong>Sway</strong>, <strong>Writhe</strong> and <strong>Touch</strong> move the surface too, but only <strong>Sag Distance</strong> switched tessellation on. It now works whenever <strong>Goo Effects</strong> or <strong>Touch</strong> is on, and it also shows whenever <strong>Kinetic Modules</strong> is on. Lower it if the goo costs more than you want.</li>
                         <li class="mb-2"><strong>Touch could throw parts of the mesh out in long spikes.</strong> <strong>Native Touch</strong> took the goo's own moving surface for a hand, and every touch pushed in the mesh's own units instead of metres, so a mesh imported at 100 times scale pushed a hundred times too far. <strong>Depth</strong> is in metres now, as its tooltip says, and touch ignores a depth texture left behind by another camera, such as the Game view's while you work in the Scene view. If you turned <strong>Depth</strong> right down to make up for a scaled mesh, turn it back up.</li>
-                    
                         <li class="mb-2"><strong>The Normal Map tooltip describes the normal map again.</strong> It had picked up the text meant for Card Normal Smoothing. It now tells you what the map does and how to set it up.</li>
-
                         <li class="mb-2"><strong>Locking a material no longer warns about the glitter flake search.</strong> The Console used to print a shader warning for every locked material, on every build. Glitter renders exactly as it did.</li>
-
                         <li class="mb-2"><strong>Glitter layers you have switched off no longer ride along in a locked material.</strong> Layers 2 to 5 kept every one of their settings in the locked shader even when they were off. Only the layers you actually use are kept now.</li>
-
                         <li class="mb-2"><strong>A locked material now carries only the features you switched on.</strong> Matcaps, <strong>Wet Effects</strong>, <strong>Goo Effects</strong>, <strong>Glitter</strong>, both outlines, <strong>Car Paint</strong>, <strong>Viewer Context</strong>, <strong>Flipbook</strong>, <strong>Cybernetic Overlays</strong> and every effect under <strong>Special Effects</strong> used to keep every one of their settings in the locked shader even when they were off. On a material with all of those off that is about 460 settings that no longer ship.</li>
-
                         <li class="mb-2"><strong>Cybernetic Overlays left a broken group behind when you locked a material with it switched off.</strong> Locking dropped the start of its module list but not the end. It drops cleanly in its new home, so a material that does not use it no longer carries any of it.</li>
-
                         <li class="mb-2"><strong>Every texture slot now tells you what it is for.</strong> All 44 of them across the six shaders were missing a tooltip.</li>
-
-                    
                         <li class="mb-2"><strong>An effect could not borrow a mask from a layer you had switched off.</strong> Borrowing reads that layer's map, not its glow, but it was tied to the layer's own <strong>Enable</strong>, so the mask quietly stopped holding and the effect spread over everything. Every <strong>Mask Source</strong> now follows the map in the slot, so you can park a map on a layer you never light and mask from it. The map is kept for as long as something borrows it, locked or not, and the helpbox that told you to turn the layer back on is gone.</li>
-
+                        <li class="mb-2"><strong>Power Down on Pause/Stop stopped the material reacting at all.</strong> It looked for a signal no world sends, so it read as stopped everywhere and a material with it ticked never moved to the music, whatever was playing. It reads the player state AudioLink itself publishes now, so the material goes quiet on a pause or a stop and comes back when the track does. A world with no player reporting to AudioLink no longer silences anything. If you used <strong>Disable Media-State Gate On All Materials</strong> to work around this, you can switch the option back on.</li>
+                        <li class="mb-2"><strong>The HUD ring drew a sliver of the waveform.</strong> It read the first 128 of the 2048 samples AudioLink keeps, one sixteenth of the window, and pushed the result half a step off a signal that is already centred on zero. It reads the whole window now, through the same accessor the rest of the material uses, so the ring traces the real wave. Expect the ring to look different from the one you have.</li>
                     </ul>
                 </div>
-
 
                 <div class="changelog-entry" data-version="toon-2.2.2">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Toon 2.2.2 - Unreleased</h5>
@@ -289,9 +268,7 @@
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Per-Light Specular is off by default, not on as the 2.2.0 notes said.</strong> Only the Best Soft preset turns it on. The doubled point light highlight that release fixed only ever showed with it on, so if you raised <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong> because of that note and <strong>Per-Light Specular</strong> is off on your material, set <strong>Specular Mix</strong> back to where you had it.</li>
                         <li class="mb-2"><strong>Vertex Fracture shards look different.</strong> They now follow <strong>Global Metallic</strong> and <strong>Global Smoothness</strong>, so if you tuned your shard colours around the old look, check them again.</li>
-                    
                         <li class="mb-2"><strong>Borrowed masks hold again, so an effect that was covering everything will snap back to its map.</strong> If an effect's <strong>Mask Source</strong> points at an Emission layer or a Matcap that is switched off, the mask used to read as fully open, so the effect covered the whole material, or disappeared completely if <strong>Invert Mask</strong> was on. It reads the map now. Go through <strong>Mask Source</strong> and <strong>Invert Mask</strong> on each effect you have masked, and set <strong>Mask Source</strong> to None on anything you meant to leave unmasked.</li>
-
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -307,48 +284,33 @@
                         <li class="mb-2"><strong>Separate Maps</strong> under <strong>Surface</strong>. Metallic and smoothness can now come from their own textures instead of the <strong>Packed PBR Mask</strong>, so a separate metallic, gloss or roughness file goes straight in. Tick <strong>Use Metallic Map</strong> or <strong>Use Smoothness Map</strong>, drop the texture in, and tick <strong>Map is Roughness</strong> for a roughness map. <strong>Global Metallic</strong> and <strong>Global Smoothness</strong> still scale them.</li>
                         <li class="mb-2"><strong>Set Up for Toon Standard Specular Map</strong> under <strong>Channel Mapping</strong>. One click reads a Substance ToonStandardSpecular export: metallic from red, smoothness from green and occlusion from blue. With the slot empty, it finds that file next to your Albedo and drops it in.</li>
                         <li class="mb-2"><strong>Unity on Linux.</strong> The shader now runs in the OpenGL and Vulkan editors Unity uses on Linux, so you can see and set up your materials there. Before, every part of it was switched off there.</li>
-                    
                         <li class="mb-2"><strong>Biofeedback.</strong> A body pulse these shaders have always had, and never let you at. It builds a heartbeat from the bass, tension from the mids and a spike from the treble, then drives the subsurface glow, the light coming through the thin parts of you, the <strong>AudioLink Color Blend</strong> hue and <strong>Emission</strong> layer 1. It now has its own group under <strong>Special Effects</strong> with a control for each of those, plus <strong>Heartbeat</strong>, <strong>Tension</strong>, <strong>Spike</strong> and <strong>Breath</strong> to shape the pulse itself. Every slider starts at the value it has always run at, so nothing about your material changes until you move one, and <strong>Enable</strong> switches the whole thing off if you never wanted it.</li>
-
                         <li class="mb-2"><strong>Thickness</strong> and <strong>Thickness Map</strong> under <strong>Subsurface</strong>. How thick the material is where light soaks through used to be the music and nothing else, with no way to set it. There is a slider and an optional map for it now, and <strong>Subsurface</strong> under <strong>Biofeedback</strong> decides how far the pulse moves it on top. Leaving <strong>Thickness</strong> at 0 keeps exactly the look you have today.</li>
-
+                        <li class="mb-2"><strong>Steady Autocorrelator</strong> under <strong>AudioLink</strong>. The autocorrelator readouts grow with how loud the track is, so a quiet passage barely shows one and a loud one pins it. Switch this on to hold them at one strength whatever the volume. It starts off, so nothing about your material changes until you tick it.</li>
                     </ul>
-
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
-
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
-
-                    
                         <li class="mb-2"><strong>Cybernetic Overlays moved to Special Effects.</strong> It used to sit in the middle of <strong>AudioLink</strong>, which is a long way from the other effects. It is now the last group under <strong>Special Effects</strong>, and every readout inside it is exactly as it was. It still needs <strong>AudioLink</strong> switched on, so it only shows while that is on.</li>
-
-                        <li class="mb-2"><strong>Materials only load the textures you use.</strong> An empty slot, mask or map costs nothing now, and neither does AudioLink while it's off. That gives busy materials more room under the 32-texture limit of OpenGL editors on Linux.</li>
-
+                        <li class="mb-2"><strong>Materials only load the textures you use.</strong> An empty slot, mask or map costs nothing now. That gives busy materials more room under the 32-texture limit of OpenGL editors on Linux.</li>
                     </ul>
+
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Smoother Probe Lighting could pick up the wrong light in worlds made with the first version of Light Volumes.</strong> Those worlds store their volumes in a form this shader cannot read, and the option read them anyway. It uses your light probes there now, which is what the Light Volumes package itself does.</li>
                         <li class="mb-2"><strong>Vertex Fracture shards ignored Global Metallic and Global Smoothness.</strong> They read your <strong>Packed PBR Mask</strong> at full strength, so they often came out darker and shinier than the surface they broke from, and nearly black on a material with no packed map. They match the surface now.</li>
                         <li class="mb-2"><strong>Tessellation Detail stayed hidden when the Body Equaliser was the only thing moving the surface.</strong> It now shows whenever <strong>Kinetic Modules</strong> is on.</li>
-                    
                         <li class="mb-2"><strong>The Normal Map tooltip describes the normal map again.</strong> It had picked up the text meant for Card Normal Smoothing. It now tells you what the map does and how to set it up.</li>
-
                         <li class="mb-2"><strong>Locking a material no longer warns about the glitter flake search.</strong> The Console used to print a shader warning for every locked material, on every build. Glitter renders exactly as it did.</li>
-
                         <li class="mb-2"><strong>Glitter layers you have switched off no longer ride along in a locked material.</strong> Layers 2 to 5 kept every one of their settings in the locked shader even when they were off. Only the layers you actually use are kept now.</li>
-
                         <li class="mb-2"><strong>A locked material now carries only the features you switched on.</strong> Matcaps, <strong>Glitter</strong>, both outlines, <strong>Car Paint</strong>, <strong>Viewer Context</strong>, <strong>Flipbook</strong>, <strong>Cybernetic Overlays</strong> and every effect under <strong>Special Effects</strong> used to keep every one of their settings in the locked shader even when they were off. On a material with all of those off that is about 300 settings that no longer ship.</li>
-
                         <li class="mb-2"><strong>Cybernetic Overlays left a broken group behind when you locked a material with it switched off.</strong> Locking dropped the start of its module list but not the end. It drops cleanly in its new home, so a material that does not use it no longer carries any of it.</li>
-
                         <li class="mb-2"><strong>Every texture slot now tells you what it is for.</strong> All 44 of them across the six shaders were missing a tooltip.</li>
-
-                    
                         <li class="mb-2"><strong>An effect could not borrow a mask from a layer you had switched off.</strong> Borrowing reads that layer's map, not its glow, but it was tied to the layer's own <strong>Enable</strong>, so the mask quietly stopped holding and the effect spread over everything. Every <strong>Mask Source</strong> now follows the map in the slot, so you can park a map on a layer you never light and mask from it. The map is kept for as long as something borrows it, locked or not, and the helpbox that told you to turn the layer back on is gone.</li>
-
+                        <li class="mb-2"><strong>Power Down on Pause/Stop stopped the material reacting at all.</strong> It looked for a signal no world sends, so it read as stopped everywhere and a material with it ticked never moved to the music, whatever was playing. It reads the player state AudioLink itself publishes now, so the material goes quiet on a pause or a stop and comes back when the track does. A world with no player reporting to AudioLink no longer silences anything. If you used <strong>Disable Media-State Gate On All Materials</strong> to work around this, you can switch the option back on.</li>
+                        <li class="mb-2"><strong>The HUD ring drew a sliver of the waveform.</strong> It read the first 128 of the 2048 samples AudioLink keeps, one sixteenth of the window, and pushed the result half a step off a signal that is already centred on zero. It reads the whole window now, through the same accessor the rest of the material uses, so the ring traces the real wave. Expect the ring to look different from the one you have.</li>
                     </ul>
                 </div>
-
 
                 <div class="changelog-entry" data-version="clothingpro-2.2.2">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Clothing Pro 2.2.2 - Unreleased</h5>
@@ -359,12 +321,8 @@
                         <li class="mb-2"><strong>Per-Light Specular is off by default, not on as the 2.2.0 notes said.</strong> Only the Best Soft preset turns it on. The doubled point light highlight that release fixed only ever showed with it on, so if you raised <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong> because of that note and <strong>Per-Light Specular</strong> is off on your material, set <strong>Specular Mix</strong> back to where you had it.</li>
                         <li class="mb-2"><strong>Vertex Fracture shards look different.</strong> They now follow <strong>Global Metallic</strong> and <strong>Global Smoothness</strong>, so if you tuned your shard colours around the old look, check them again.</li>
                         <li class="mb-2"><strong>Real Fur highlights look different with Follow PBR Map on.</strong> They now follow <strong>Global Smoothness</strong> and <strong>Global Metallic</strong>, which at the default smoothness of 0.5 makes them dimmer on glossy patches. Raise <strong>Strand Specular</strong> under <strong>Surface Fur</strong> to bring them back up.</li>
-                    
                         <li class="mb-2"><strong>Unlock and lock your fur materials again.</strong> A locked fur material could fail to build the version of the shader VR headsets use, so its fur could go missing in VR. Locking it again picks up the fix.</li>
-
-                    
                         <li class="mb-2"><strong>Borrowed masks hold again, so an effect that was covering everything will snap back to its map.</strong> If an effect's <strong>Mask Source</strong> points at an Emission layer or a Matcap that is switched off, the mask used to read as fully open, so the effect covered the whole material, or disappeared completely if <strong>Invert Mask</strong> was on. It reads the map now. Go through <strong>Mask Source</strong> and <strong>Invert Mask</strong> on each effect you have masked, and set <strong>Mask Source</strong> to None on anything you meant to leave unmasked.</li>
-
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -380,24 +338,17 @@
                         <li class="mb-2"><strong>Separate Maps</strong> under <strong>Surface</strong>. Metallic and smoothness can now come from their own textures instead of the <strong>Packed PBR Mask</strong>, so a separate metallic, gloss or roughness file goes straight in. Tick <strong>Use Metallic Map</strong> or <strong>Use Smoothness Map</strong>, drop the texture in, and tick <strong>Map is Roughness</strong> for a roughness map. <strong>Global Metallic</strong> and <strong>Global Smoothness</strong> still scale them.</li>
                         <li class="mb-2"><strong>Set Up for Toon Standard Specular Map</strong> under <strong>Channel Mapping</strong>. One click reads a Substance ToonStandardSpecular export: metallic from red, smoothness from green and occlusion from blue. With the slot empty, it finds that file next to your Albedo and drops it in.</li>
                         <li class="mb-2"><strong>Unity on Linux.</strong> The shader now runs in the OpenGL and Vulkan editors Unity uses on Linux, so you can see and set up your materials there. Before, every part of it was switched off there.</li>
-                    
                         <li class="mb-2"><strong>Biofeedback.</strong> A body pulse these shaders have always had, and never let you at. It builds a heartbeat from the bass, tension from the mids and a spike from the treble, then drives the subsurface glow, the light coming through the thin parts of you, the <strong>AudioLink Color Blend</strong> hue and <strong>Emission</strong> layer 1. It now has its own group under <strong>Special Effects</strong> with a control for each of those, plus <strong>Heartbeat</strong>, <strong>Tension</strong>, <strong>Spike</strong> and <strong>Breath</strong> to shape the pulse itself. Every slider starts at the value it has always run at, so nothing about your material changes until you move one, and <strong>Enable</strong> switches the whole thing off if you never wanted it.</li>
-
                         <li class="mb-2"><strong>Thickness</strong> and <strong>Thickness Map</strong> under <strong>Subsurface</strong>. How thick the material is where light soaks through used to be the music and nothing else, with no way to set it. There is a slider and an optional map for it now, and <strong>Subsurface</strong> under <strong>Biofeedback</strong> decides how far the pulse moves it on top. Leaving <strong>Thickness</strong> at 0 keeps exactly the look you have today.</li>
-
+                        <li class="mb-2"><strong>Steady Autocorrelator</strong> under <strong>AudioLink</strong>. The autocorrelator readouts grow with how loud the track is, so a quiet passage barely shows one and a loud one pins it. Switch this on to hold them at one strength whatever the volume. It starts off, so nothing about your material changes until you tick it.</li>
                     </ul>
-
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
-
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
-
-                    
                         <li class="mb-2"><strong>Cybernetic Overlays moved to Special Effects.</strong> It used to sit in the middle of <strong>AudioLink</strong>, which is a long way from the other effects. It is now the last group under <strong>Special Effects</strong>, and every readout inside it is exactly as it was. It still needs <strong>AudioLink</strong> switched on, so it only shows while that is on.</li>
-
-                        <li class="mb-2"><strong>Materials only load the textures you use.</strong> An empty slot, mask or map costs nothing now, and neither does AudioLink while it's off. That gives busy materials more room under the 32-texture limit of OpenGL editors on Linux.</li>
-
+                        <li class="mb-2"><strong>Materials only load the textures you use.</strong> An empty slot, mask or map costs nothing now. That gives busy materials more room under the 32-texture limit of OpenGL editors on Linux.</li>
                     </ul>
+
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Real Fur follows the Light Volumes V3 controls.</strong> Turning <strong>Intensity</strong> down faded the coat toward black instead of back to your probe lighting, until it snapped back at 0. <strong>Point Light Strength</strong>, <strong>Additive-Only Mode</strong>, <strong>Normal Bias</strong> and <strong>Position Offset</strong> never reached the coat at all. They do now, and at their default settings the coat looks the same as before.</li>
@@ -405,27 +356,18 @@
                         <li class="mb-2"><strong>Vertex Fracture shards ignored Global Metallic and Global Smoothness.</strong> They read your <strong>Packed PBR Mask</strong> at full strength, so they often came out darker and shinier than the surface they broke from, and nearly black on a material with no packed map. They match the surface now.</li>
                         <li class="mb-2"><strong>Follow PBR Map under Real Fur ignored Channel is Roughness and Invert Metallic.</strong> With a roughness map, the roughest hairs shone the most. The hairs now read the map the same way the surface does.</li>
                         <li class="mb-2"><strong>Tessellation Detail stayed hidden when the Body Equaliser was the only thing moving the surface.</strong> It now shows whenever <strong>Kinetic Modules</strong> is on.</li>
-                    
                         <li class="mb-2"><strong>The Normal Map tooltip describes the normal map again.</strong> It had picked up the text meant for Card Normal Smoothing. It now tells you what the map does and how to set it up.</li>
-
                         <li class="mb-2"><strong>Fur shows in Unity on Linux.</strong> Fur used to stop Unity's shader compiler in the OpenGL editor that Linux uses. It draws there now, with slightly fewer strands on very dense fur. What you upload to VRChat is unchanged.</li>
-
                         <li class="mb-2"><strong>Locking a material no longer warns about the glitter flake search.</strong> The Console used to print a shader warning for every locked material, on every build. Glitter renders exactly as it did.</li>
-
                         <li class="mb-2"><strong>Glitter layers you have switched off no longer ride along in a locked material.</strong> Layers 2 to 5 kept every one of their settings in the locked shader even when they were off. Only the layers you actually use are kept now.</li>
-
                         <li class="mb-2"><strong>A locked material now carries only the features you switched on.</strong> Matcaps, <strong>Glitter</strong>, both outlines, <strong>Car Paint</strong>, <strong>Viewer Context</strong>, <strong>Flipbook</strong>, <strong>Cybernetic Overlays</strong> and every effect under <strong>Special Effects</strong> used to keep every one of their settings in the locked shader even when they were off. On a material with all of those off that is about 300 settings that no longer ship.</li>
-
                         <li class="mb-2"><strong>Cybernetic Overlays left a broken group behind when you locked a material with it switched off.</strong> Locking dropped the start of its module list but not the end. It drops cleanly in its new home, so a material that does not use it no longer carries any of it.</li>
-
                         <li class="mb-2"><strong>Every texture slot now tells you what it is for.</strong> All 44 of them across the six shaders were missing a tooltip.</li>
-
-                    
                         <li class="mb-2"><strong>An effect could not borrow a mask from a layer you had switched off.</strong> Borrowing reads that layer's map, not its glow, but it was tied to the layer's own <strong>Enable</strong>, so the mask quietly stopped holding and the effect spread over everything. Every <strong>Mask Source</strong> now follows the map in the slot, so you can park a map on a layer you never light and mask from it. The map is kept for as long as something borrows it, locked or not, and the helpbox that told you to turn the layer back on is gone.</li>
-
+                        <li class="mb-2"><strong>Power Down on Pause/Stop stopped the material reacting at all.</strong> It looked for a signal no world sends, so it read as stopped everywhere and a material with it ticked never moved to the music, whatever was playing. It reads the player state AudioLink itself publishes now, so the material goes quiet on a pause or a stop and comes back when the track does. A world with no player reporting to AudioLink no longer silences anything. If you used <strong>Disable Media-State Gate On All Materials</strong> to work around this, you can switch the option back on.</li>
+                        <li class="mb-2"><strong>The HUD ring drew a sliver of the waveform.</strong> It read the first 128 of the 2048 samples AudioLink keeps, one sixteenth of the window, and pushed the result half a step off a signal that is already centred on zero. It reads the whole window now, through the same accessor the rest of the material uses, so the ring traces the real wave. Expect the ring to look different from the one you have.</li>
                     </ul>
                 </div>
-
 
                 <div class="changelog-entry" data-version="furpro-2.2.2">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Fur Pro 2.2.2 - Unreleased</h5>
@@ -436,12 +378,8 @@
                         <li class="mb-2"><strong>Per-Light Specular is off by default, not on as the 2.2.0 notes said.</strong> Only the Best Soft preset turns it on. The doubled point light highlight that release fixed only ever showed with it on, so if you raised <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong> because of that note and <strong>Per-Light Specular</strong> is off on your material, set <strong>Specular Mix</strong> back to where you had it.</li>
                         <li class="mb-2"><strong>Vertex Fracture shards look different.</strong> They now follow <strong>Global Metallic</strong> and <strong>Global Smoothness</strong>, so if you tuned your shard colours around the old look, check them again.</li>
                         <li class="mb-2"><strong>Real Fur highlights look different with Follow PBR Map on.</strong> They now follow <strong>Global Smoothness</strong> and <strong>Global Metallic</strong>, which at the default smoothness of 0.5 makes them dimmer on glossy patches. Raise <strong>Strand Specular</strong> under <strong>Surface Fur</strong> to bring them back up.</li>
-                    
                         <li class="mb-2"><strong>Unlock and lock your fur materials again.</strong> A locked fur material could fail to build the version of the shader VR headsets use, so its fur could go missing in VR. Locking it again picks up the fix.</li>
-
-                    
                         <li class="mb-2"><strong>Borrowed masks hold again, so an effect that was covering everything will snap back to its map.</strong> If an effect's <strong>Mask Source</strong> points at an Emission layer or a Matcap that is switched off, the mask used to read as fully open, so the effect covered the whole material, or disappeared completely if <strong>Invert Mask</strong> was on. It reads the map now. Go through <strong>Mask Source</strong> and <strong>Invert Mask</strong> on each effect you have masked, and set <strong>Mask Source</strong> to None on anything you meant to leave unmasked.</li>
-
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -457,24 +395,17 @@
                         <li class="mb-2"><strong>Separate Maps</strong> under <strong>Surface</strong>. Metallic and smoothness can now come from their own textures instead of the <strong>Packed PBR Mask</strong>, so a separate metallic, gloss or roughness file goes straight in. Tick <strong>Use Metallic Map</strong> or <strong>Use Smoothness Map</strong>, drop the texture in, and tick <strong>Map is Roughness</strong> for a roughness map. <strong>Global Metallic</strong> and <strong>Global Smoothness</strong> still scale them.</li>
                         <li class="mb-2"><strong>Set Up for Toon Standard Specular Map</strong> under <strong>Channel Mapping</strong>. One click reads a Substance ToonStandardSpecular export: metallic from red, smoothness from green and occlusion from blue. With the slot empty, it finds that file next to your Albedo and drops it in.</li>
                         <li class="mb-2"><strong>Unity on Linux.</strong> The shader now runs in the OpenGL and Vulkan editors Unity uses on Linux, so you can see and set up your materials there. Before, every part of it was switched off there.</li>
-                    
                         <li class="mb-2"><strong>Biofeedback.</strong> A body pulse these shaders have always had, and never let you at. It builds a heartbeat from the bass, tension from the mids and a spike from the treble, then drives the subsurface glow, the light coming through the thin parts of you, the <strong>AudioLink Color Blend</strong> hue and <strong>Emission</strong> layer 1. It now has its own group under <strong>Special Effects</strong> with a control for each of those, plus <strong>Heartbeat</strong>, <strong>Tension</strong>, <strong>Spike</strong> and <strong>Breath</strong> to shape the pulse itself. Every slider starts at the value it has always run at, so nothing about your material changes until you move one, and <strong>Enable</strong> switches the whole thing off if you never wanted it.</li>
-
                         <li class="mb-2"><strong>Thickness</strong> and <strong>Thickness Map</strong> under <strong>Subsurface</strong>. How thick the material is where light soaks through used to be the music and nothing else, with no way to set it. There is a slider and an optional map for it now, and <strong>Subsurface</strong> under <strong>Biofeedback</strong> decides how far the pulse moves it on top. Leaving <strong>Thickness</strong> at 0 keeps exactly the look you have today.</li>
-
+                        <li class="mb-2"><strong>Steady Autocorrelator</strong> under <strong>AudioLink</strong>. The autocorrelator readouts grow with how loud the track is, so a quiet passage barely shows one and a loud one pins it. Switch this on to hold them at one strength whatever the volume. It starts off, so nothing about your material changes until you tick it.</li>
                     </ul>
-
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
-
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
-
-                    
                         <li class="mb-2"><strong>Cybernetic Overlays moved to Special Effects.</strong> It used to sit in the middle of <strong>AudioLink</strong>, which is a long way from the other effects. It is now the last group under <strong>Special Effects</strong>, and every readout inside it is exactly as it was. It still needs <strong>AudioLink</strong> switched on, so it only shows while that is on.</li>
-
-                        <li class="mb-2"><strong>Materials only load the textures you use.</strong> An empty slot, mask or map costs nothing now, and neither does AudioLink while it's off. That gives busy materials more room under the 32-texture limit of OpenGL editors on Linux.</li>
-
+                        <li class="mb-2"><strong>Materials only load the textures you use.</strong> An empty slot, mask or map costs nothing now. That gives busy materials more room under the 32-texture limit of OpenGL editors on Linux.</li>
                     </ul>
+
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Real Fur follows the Light Volumes V3 controls.</strong> Turning <strong>Intensity</strong> down faded the coat toward black instead of back to your probe lighting, until it snapped back at 0. <strong>Point Light Strength</strong>, <strong>Additive-Only Mode</strong>, <strong>Normal Bias</strong> and <strong>Position Offset</strong> never reached the coat at all. They do now, and at their default settings the coat looks the same as before.</li>
@@ -482,27 +413,18 @@
                         <li class="mb-2"><strong>Vertex Fracture shards ignored Global Metallic and Global Smoothness.</strong> They read your <strong>Packed PBR Mask</strong> at full strength, so they often came out darker and shinier than the surface they broke from, and nearly black on a material with no packed map. They match the surface now.</li>
                         <li class="mb-2"><strong>Follow PBR Map under Real Fur ignored Channel is Roughness and Invert Metallic.</strong> With a roughness map, the roughest hairs shone the most. The hairs now read the map the same way the surface does.</li>
                         <li class="mb-2"><strong>Tessellation Detail stayed hidden when the Body Equaliser was the only thing moving the surface.</strong> It now shows whenever <strong>Kinetic Modules</strong> is on.</li>
-                    
                         <li class="mb-2"><strong>The Normal Map tooltip describes the normal map again.</strong> It had picked up the text meant for Card Normal Smoothing. It now tells you what the map does and how to set it up.</li>
-
                         <li class="mb-2"><strong>Fur shows in Unity on Linux.</strong> Fur used to stop Unity's shader compiler in the OpenGL editor that Linux uses. It draws there now, with slightly fewer strands on very dense fur. What you upload to VRChat is unchanged.</li>
-
                         <li class="mb-2"><strong>Locking a material no longer warns about the glitter flake search.</strong> The Console used to print a shader warning for every locked material, on every build. Glitter renders exactly as it did.</li>
-
                         <li class="mb-2"><strong>Glitter layers you have switched off no longer ride along in a locked material.</strong> Layers 2 to 5 kept every one of their settings in the locked shader even when they were off. Only the layers you actually use are kept now.</li>
-
                         <li class="mb-2"><strong>A locked material now carries only the features you switched on.</strong> Matcaps, <strong>Glitter</strong>, both outlines, <strong>Car Paint</strong>, <strong>Viewer Context</strong>, <strong>Flipbook</strong>, <strong>Cybernetic Overlays</strong> and every effect under <strong>Special Effects</strong> used to keep every one of their settings in the locked shader even when they were off. On a material with all of those off that is about 300 settings that no longer ship.</li>
-
                         <li class="mb-2"><strong>Cybernetic Overlays left a broken group behind when you locked a material with it switched off.</strong> Locking dropped the start of its module list but not the end. It drops cleanly in its new home, so a material that does not use it no longer carries any of it.</li>
-
                         <li class="mb-2"><strong>Every texture slot now tells you what it is for.</strong> All 44 of them across the six shaders were missing a tooltip.</li>
-
-                    
                         <li class="mb-2"><strong>An effect could not borrow a mask from a layer you had switched off.</strong> Borrowing reads that layer's map, not its glow, but it was tied to the layer's own <strong>Enable</strong>, so the mask quietly stopped holding and the effect spread over everything. Every <strong>Mask Source</strong> now follows the map in the slot, so you can park a map on a layer you never light and mask from it. The map is kept for as long as something borrows it, locked or not, and the helpbox that told you to turn the layer back on is gone.</li>
-
+                        <li class="mb-2"><strong>Power Down on Pause/Stop stopped the material reacting at all.</strong> It looked for a signal no world sends, so it read as stopped everywhere and a material with it ticked never moved to the music, whatever was playing. It reads the player state AudioLink itself publishes now, so the material goes quiet on a pause or a stop and comes back when the track does. A world with no player reporting to AudioLink no longer silences anything. If you used <strong>Disable Media-State Gate On All Materials</strong> to work around this, you can switch the option back on.</li>
+                        <li class="mb-2"><strong>The HUD ring drew a sliver of the waveform.</strong> It read the first 128 of the 2048 samples AudioLink keeps, one sixteenth of the window, and pushed the result half a step off a signal that is already centred on zero. It reads the whole window now, through the same accessor the rest of the material uses, so the ring traces the real wave. Expect the ring to look different from the one you have.</li>
                     </ul>
                 </div>
-
 
                 <div class="changelog-entry" data-version="worldsurface-1.0.1">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / World Surface 1.0.1 - Unreleased</h5>
@@ -512,9 +434,7 @@
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Lightmapped surfaces no longer take highlights from a world's base Light Volumes.</strong> The lightmap already holds that light. The diffuse lighting already left the base volumes out, but the volume highlight, the clear coat highlight, glitter lit by Light Volumes and Micro Shading still read them. A lightmapped surface now takes only the additive volumes and the point lights, as the Light Volumes documentation specifies, and does less work per pixel. Surfaces without a lightmap are unchanged. If a lightmapped floor looks less glossy in a Light Volumes world, raise <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong>.</li>
                         <li class="mb-2"><strong>Vertex Fracture shards look different.</strong> They now follow <strong>Global Metallic</strong> and <strong>Global Smoothness</strong>, so if you tuned your shard colours around the old look, check them again.</li>
-                    
                         <li class="mb-2"><strong>Borrowed masks hold again, so an effect that was covering everything will snap back to its map.</strong> If an effect's <strong>Mask Source</strong> points at an Emission layer or a Matcap that is switched off, the mask used to read as fully open, so the effect covered the whole material, or disappeared completely if <strong>Invert Mask</strong> was on. It reads the map now. Go through <strong>Mask Source</strong> and <strong>Invert Mask</strong> on each effect you have masked, and set <strong>Mask Source</strong> to None on anything you meant to leave unmasked.</li>
-
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -538,55 +458,36 @@
                         <li class="mb-2"><strong>Separate Maps</strong> under <strong>Surface</strong>. Metallic and smoothness can now come from their own textures instead of the <strong>Packed PBR Mask</strong>, so a separate metallic, gloss or roughness file goes straight in. Tick <strong>Use Metallic Map</strong> or <strong>Use Smoothness Map</strong>, drop the texture in, and tick <strong>Map is Roughness</strong> for a roughness map. <strong>Global Metallic</strong> and <strong>Global Smoothness</strong> still scale them.</li>
                         <li class="mb-2"><strong>Set Up for Toon Standard Specular Map</strong> under <strong>Channel Mapping</strong>. One click reads a Substance ToonStandardSpecular export: metallic from red, smoothness from green and occlusion from blue. With the slot empty, it finds that file next to your Albedo and drops it in.</li>
                         <li class="mb-2"><strong>Unity on Linux.</strong> The shader now runs in the OpenGL and Vulkan editors Unity uses on Linux, so you can see and set up your materials there. Before, every part of it was switched off there.</li>
-                    
                         <li class="mb-2"><strong>Nine new ways for the music to move the goo.</strong> Beat Depth swells the writhe itself, so the tendrils surge and stretch on the hit instead of only running faster. Beat Sway swings the hanging strands wider. Beat Melt pulls the goo further toward the floor and Beat Pooling spreads the pool where it lands. Beat Formation pushes the wavefront up, so the gear builds itself in time. Beat Gloss, Beat Coat, Beat Absorption and Beat Refraction work the slime itself. Every one starts at zero, so nothing changes until you reach for it.</li>
-
                         <li class="mb-2"><strong>Melt reacts to the music now.</strong> Beat Sag, Beat Stretch, Beat Variation, Beat Flow and Beat Underside sit under the sliders they drive. Beat Flow adds to the clock rather than scaling it, so the goo gathers pace and settles again without jumping.</li>
-
-                    
                         <li class="mb-2"><strong>Biofeedback.</strong> A body pulse these shaders have always had, and never let you at. It builds a heartbeat from the bass, tension from the mids and a spike from the treble, then drives the subsurface glow, the light coming through the thin parts of you, the <strong>AudioLink Color Blend</strong> hue and <strong>Emission</strong> layer 1. It now has its own group under <strong>Special Effects</strong> with a control for each of those, plus <strong>Heartbeat</strong>, <strong>Tension</strong>, <strong>Spike</strong> and <strong>Breath</strong> to shape the pulse itself. Every slider starts at the value it has always run at, so nothing about your material changes until you move one, and <strong>Enable</strong> switches the whole thing off if you never wanted it.</li>
-
                         <li class="mb-2"><strong>Thickness</strong> and <strong>Thickness Map</strong> under <strong>Subsurface</strong>. How thick the material is where light soaks through used to be the music and nothing else, with no way to set it. There is a slider and an optional map for it now, and <strong>Subsurface</strong> under <strong>Biofeedback</strong> decides how far the pulse moves it on top. Leaving <strong>Thickness</strong> at 0 keeps exactly the look you have today.</li>
-
+                        <li class="mb-2"><strong>Steady Autocorrelator</strong> under <strong>AudioLink</strong>. The autocorrelator readouts grow with how loud the track is, so a quiet passage barely shows one and a loud one pins it. Switch this on to hold them at one strength whatever the volume. It starts off, so nothing about your material changes until you tick it.</li>
                     </ul>
-
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
-
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
-
-                    
                         <li class="mb-2"><strong>Cybernetic Overlays moved to Special Effects.</strong> It used to sit in the middle of <strong>AudioLink</strong>, which is a long way from the other effects. It is now the last group under <strong>Special Effects</strong>, and every readout inside it is exactly as it was. It still needs <strong>AudioLink</strong> switched on, so it only shows while that is on.</li>
-
-                        <li class="mb-2"><strong>Materials only load the textures you use.</strong> An empty slot, mask or map costs nothing now, and neither does AudioLink while it's off. That gives busy materials more room under the 32-texture limit of OpenGL editors on Linux.</li>
-
+                        <li class="mb-2"><strong>Materials only load the textures you use.</strong> An empty slot, mask or map costs nothing now. That gives busy materials more room under the 32-texture limit of OpenGL editors on Linux.</li>
                         <li class="mb-2"><strong>The goo AudioLink controls now sit with the sliders they drive.</strong> They were bunched together in the middle of the Veins group. Beat Writhe is under Writhe Speed, Beat Veins under Vein Glow, Beat Swell under Thickness, and the band that feeds them all is at the top of Goo Effects. No value changed.</li>
-
                     </ul>
+
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Vertex Fracture shards ignored Global Metallic and Global Smoothness.</strong> They read your <strong>Packed PBR Mask</strong> at full strength, so they often came out darker and shinier than the surface they broke from, and nearly black on a material with no packed map. They match the surface now.</li>
                         <li class="mb-2"><strong>Tessellation Detail was hidden, and did nothing, unless the goo sagged.</strong> <strong>Sway</strong>, <strong>Writhe</strong> and <strong>Touch</strong> move the surface too, but only <strong>Sag Distance</strong> switched tessellation on. It now works whenever <strong>Goo Effects</strong> or <strong>Touch</strong> is on, and it also shows whenever <strong>Kinetic Modules</strong> is on. Lower it if the goo costs more than you want.</li>
                         <li class="mb-2"><strong>Touch could throw parts of the mesh out in long spikes.</strong> <strong>Native Touch</strong> took the goo's own moving surface for a hand, and every touch pushed in the mesh's own units instead of metres, so a mesh imported at 100 times scale pushed a hundred times too far. <strong>Depth</strong> is in metres now, as its tooltip says, and touch ignores a depth texture left behind by another camera, such as the Game view's while you work in the Scene view. If you turned <strong>Depth</strong> right down to make up for a scaled mesh, turn it back up.</li>
-                    
                         <li class="mb-2"><strong>The Normal Map tooltip describes the normal map again.</strong> It had picked up the text meant for Card Normal Smoothing. It now tells you what the map does and how to set it up.</li>
-
                         <li class="mb-2"><strong>Locking a material no longer warns about the glitter flake search.</strong> The Console used to print a shader warning for every locked material, on every build. Glitter renders exactly as it did.</li>
-
                         <li class="mb-2"><strong>Glitter layers you have switched off no longer ride along in a locked material.</strong> Layers 2 to 5 kept every one of their settings in the locked shader even when they were off. Only the layers you actually use are kept now.</li>
-
                         <li class="mb-2"><strong>A locked material now carries only the features you switched on.</strong> Matcaps, <strong>Wet Effects</strong>, <strong>Goo Effects</strong>, <strong>Glitter</strong>, <strong>Surface Fur</strong>, <strong>Fabric</strong>, both outlines, <strong>Car Paint</strong>, <strong>Viewer Context</strong>, <strong>Flipbook</strong>, <strong>Cybernetic Overlays</strong> and every effect under <strong>Special Effects</strong> used to keep every one of their settings in the locked shader even when they were off. On a material with all of those off that is about 470 settings that no longer ship.</li>
-
                         <li class="mb-2"><strong>Cybernetic Overlays left a broken group behind when you locked a material with it switched off.</strong> Locking dropped the start of its module list but not the end. It drops cleanly in its new home, so a material that does not use it no longer carries any of it.</li>
-
                         <li class="mb-2"><strong>Every texture slot now tells you what it is for.</strong> All 44 of them across the six shaders were missing a tooltip.</li>
-
-                    
                         <li class="mb-2"><strong>An effect could not borrow a mask from a layer you had switched off.</strong> Borrowing reads that layer's map, not its glow, but it was tied to the layer's own <strong>Enable</strong>, so the mask quietly stopped holding and the effect spread over everything. Every <strong>Mask Source</strong> now follows the map in the slot, so you can park a map on a layer you never light and mask from it. The map is kept for as long as something borrows it, locked or not, and the helpbox that told you to turn the layer back on is gone.</li>
-
+                        <li class="mb-2"><strong>Power Down on Pause/Stop stopped the material reacting at all.</strong> It looked for a signal no world sends, so it read as stopped everywhere and a material with it ticked never moved to the music, whatever was playing. It reads the player state AudioLink itself publishes now, so the material goes quiet on a pause or a stop and comes back when the track does. A world with no player reporting to AudioLink no longer silences anything. If you used <strong>Disable Media-State Gate On All Materials</strong> to work around this, you can switch the option back on.</li>
+                        <li class="mb-2"><strong>The HUD ring drew a sliver of the waveform.</strong> It read the first 128 of the 2048 samples AudioLink keeps, one sixteenth of the window, and pushed the result half a step off a signal that is already centred on zero. It reads the whole window now, through the same accessor the rest of the material uses, so the ring traces the real wave. Expect the ring to look different from the one you have.</li>
                     </ul>
                 </div>
-
 
                 <div class="changelog-entry" data-version="worldfur-1.0.1">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / World Fur 1.0.1 - Unreleased</h5>
@@ -597,12 +498,8 @@
                         <li class="mb-2"><strong>Lightmapped surfaces no longer take highlights from a world's base Light Volumes.</strong> The lightmap already holds that light. The diffuse lighting already left the base volumes out, but the volume highlight, the clear coat highlight, glitter lit by Light Volumes and Micro Shading still read them. A lightmapped surface now takes only the additive volumes and the point lights, as the Light Volumes documentation specifies, and does less work per pixel. Surfaces without a lightmap are unchanged, and neither is the fur coat, which never uses the lightmap. If a lightmapped floor looks less glossy in a Light Volumes world, raise <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong>.</li>
                         <li class="mb-2"><strong>Vertex Fracture shards look different.</strong> They now follow <strong>Global Metallic</strong> and <strong>Global Smoothness</strong>, so if you tuned your shard colours around the old look, check them again.</li>
                         <li class="mb-2"><strong>Real Fur highlights look different with Follow PBR Map on.</strong> They now follow <strong>Global Smoothness</strong> and <strong>Global Metallic</strong>, which at the default smoothness of 0.5 makes them dimmer on glossy patches. Raise <strong>Strand Specular</strong> under <strong>Surface Fur</strong> to bring them back up.</li>
-                    
                         <li class="mb-2"><strong>Unlock and lock your fur materials again.</strong> A locked fur material could fail to build the version of the shader VR headsets use, so its fur could go missing in VR. Locking it again picks up the fix.</li>
-
-                    
                         <li class="mb-2"><strong>Borrowed masks hold again, so an effect that was covering everything will snap back to its map.</strong> If an effect's <strong>Mask Source</strong> points at an Emission layer or a Matcap that is switched off, the mask used to read as fully open, so the effect covered the whole material, or disappeared completely if <strong>Invert Mask</strong> was on. It reads the map now. Go through <strong>Mask Source</strong> and <strong>Invert Mask</strong> on each effect you have masked, and set <strong>Mask Source</strong> to None on anything you meant to leave unmasked.</li>
-
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
@@ -618,86 +515,35 @@
                         <li class="mb-2"><strong>Separate Maps</strong> under <strong>Surface</strong>. Metallic and smoothness can now come from their own textures instead of the <strong>Packed PBR Mask</strong>, so a separate metallic, gloss or roughness file goes straight in. Tick <strong>Use Metallic Map</strong> or <strong>Use Smoothness Map</strong>, drop the texture in, and tick <strong>Map is Roughness</strong> for a roughness map. <strong>Global Metallic</strong> and <strong>Global Smoothness</strong> still scale them.</li>
                         <li class="mb-2"><strong>Set Up for Toon Standard Specular Map</strong> under <strong>Channel Mapping</strong>. One click reads a Substance ToonStandardSpecular export: metallic from red, smoothness from green and occlusion from blue. With the slot empty, it finds that file next to your Albedo and drops it in.</li>
                         <li class="mb-2"><strong>Unity on Linux.</strong> The shader now runs in the OpenGL and Vulkan editors Unity uses on Linux, so you can see and set up your materials there. Before, every part of it was switched off there.</li>
-                    
                         <li class="mb-2"><strong>Biofeedback.</strong> A body pulse these shaders have always had, and never let you at. It builds a heartbeat from the bass, tension from the mids and a spike from the treble, then drives the subsurface glow, the light coming through the thin parts of you, the <strong>AudioLink Color Blend</strong> hue and <strong>Emission</strong> layer 1. It now has its own group under <strong>Special Effects</strong> with a control for each of those, plus <strong>Heartbeat</strong>, <strong>Tension</strong>, <strong>Spike</strong> and <strong>Breath</strong> to shape the pulse itself. Every slider starts at the value it has always run at, so nothing about your material changes until you move one, and <strong>Enable</strong> switches the whole thing off if you never wanted it.</li>
-
                         <li class="mb-2"><strong>Thickness</strong> and <strong>Thickness Map</strong> under <strong>Subsurface</strong>. How thick the material is where light soaks through used to be the music and nothing else, with no way to set it. There is a slider and an optional map for it now, and <strong>Subsurface</strong> under <strong>Biofeedback</strong> decides how far the pulse moves it on top. Leaving <strong>Thickness</strong> at 0 keeps exactly the look you have today.</li>
-
+                        <li class="mb-2"><strong>Steady Autocorrelator</strong> under <strong>AudioLink</strong>. The autocorrelator readouts grow with how loud the track is, so a quiet passage barely shows one and a loud one pins it. Switch this on to hold them at one strength whatever the volume. It starts off, so nothing about your material changes until you tick it.</li>
                     </ul>
-
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
-
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
-
-                    
                         <li class="mb-2"><strong>Cybernetic Overlays moved to Special Effects.</strong> It used to sit in the middle of <strong>AudioLink</strong>, which is a long way from the other effects. It is now the last group under <strong>Special Effects</strong>, and every readout inside it is exactly as it was. It still needs <strong>AudioLink</strong> switched on, so it only shows while that is on.</li>
-
-                        <li class="mb-2"><strong>Materials only load the textures you use.</strong> An empty slot, mask or map costs nothing now, and neither does AudioLink while it's off. That gives busy materials more room under the 32-texture limit of OpenGL editors on Linux.</li>
-
+                        <li class="mb-2"><strong>Materials only load the textures you use.</strong> An empty slot, mask or map costs nothing now. That gives busy materials more room under the 32-texture limit of OpenGL editors on Linux.</li>
                     </ul>
+
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Real Fur follows the Light Volumes V3 controls.</strong> Turning <strong>Intensity</strong> down faded the coat toward black instead of back to your probe lighting, until it snapped back at 0. <strong>Point Light Strength</strong>, <strong>Additive-Only Mode</strong>, <strong>Normal Bias</strong> and <strong>Position Offset</strong> never reached the coat at all. They do now, and at their default settings the coat looks the same as before.</li>
                         <li class="mb-2"><strong>Vertex Fracture shards ignored Global Metallic and Global Smoothness.</strong> They read your <strong>Packed PBR Mask</strong> at full strength, so they often came out darker and shinier than the surface they broke from, and nearly black on a material with no packed map. They match the surface now.</li>
                         <li class="mb-2"><strong>Follow PBR Map under Real Fur ignored Channel is Roughness and Invert Metallic.</strong> With a roughness map, the roughest hairs shone the most. The hairs now read the map the same way the surface does.</li>
                         <li class="mb-2"><strong>Tessellation Detail stayed hidden when the Height Equaliser was the only thing moving the surface.</strong> It now shows whenever <strong>Kinetic Modules</strong> is on.</li>
-                    
                         <li class="mb-2"><strong>The Normal Map tooltip describes the normal map again.</strong> It had picked up the text meant for Card Normal Smoothing. It now tells you what the map does and how to set it up.</li>
-
                         <li class="mb-2"><strong>Fur shows in Unity on Linux.</strong> Fur used to stop Unity's shader compiler in the OpenGL editor that Linux uses. It draws there now, with slightly fewer strands on very dense fur. What you upload to VRChat is unchanged.</li>
-
                         <li class="mb-2"><strong>Locking a material no longer warns about the glitter flake search.</strong> The Console used to print a shader warning for every locked material, on every build. Glitter renders exactly as it did.</li>
-
                         <li class="mb-2"><strong>Glitter layers you have switched off no longer ride along in a locked material.</strong> Layers 2 to 5 kept every one of their settings in the locked shader even when they were off. Only the layers you actually use are kept now.</li>
-
                         <li class="mb-2"><strong>A locked material now carries only the features you switched on.</strong> Matcaps, <strong>Glitter</strong>, both outlines, <strong>Car Paint</strong>, <strong>Viewer Context</strong>, <strong>Flipbook</strong>, <strong>Cybernetic Overlays</strong> and every effect under <strong>Special Effects</strong>, plus <strong>Fabric</strong> used to keep every one of their settings in the locked shader even when they were off. On a material with all of those off that is about 310 settings that no longer ship.</li>
-
                         <li class="mb-2"><strong>Cybernetic Overlays left a broken group behind when you locked a material with it switched off.</strong> Locking dropped the start of its module list but not the end. It drops cleanly in its new home, so a material that does not use it no longer carries any of it.</li>
-
                         <li class="mb-2"><strong>Every texture slot now tells you what it is for.</strong> All 44 of them across the six shaders were missing a tooltip.</li>
-
-                    
                         <li class="mb-2"><strong>An effect could not borrow a mask from a layer you had switched off.</strong> Borrowing reads that layer's map, not its glow, but it was tied to the layer's own <strong>Enable</strong>, so the mask quietly stopped holding and the effect spread over everything. Every <strong>Mask Source</strong> now follows the map in the slot, so you can park a map on a layer you never light and mask from it. The map is kept for as long as something borrows it, locked or not, and the helpbox that told you to turn the layer back on is gone.</li>
-
+                        <li class="mb-2"><strong>Power Down on Pause/Stop stopped the material reacting at all.</strong> It looked for a signal no world sends, so it read as stopped everywhere and a material with it ticked never moved to the music, whatever was playing. It reads the player state AudioLink itself publishes now, so the material goes quiet on a pause or a stop and comes back when the track does. A world with no player reporting to AudioLink no longer silences anything. If you used <strong>Disable Media-State Gate On All Materials</strong> to work around this, you can switch the option back on.</li>
+                        <li class="mb-2"><strong>The HUD ring drew a sliver of the waveform.</strong> It read the first 128 of the 2048 samples AudioLink keeps, one sixteenth of the window, and pushed the result half a step off a signal that is already centred on zero. It reads the whole window now, through the same accessor the rest of the material uses, so the ring traces the real wave. Expect the ring to look different from the one you have.</li>
                     </ul>
                 </div>
-
-
-                <div class="changelog-entry" data-version="editor-2.3.1">
-                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Editor 2.3.1 - Unreleased</h5>
-                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Texture maps get read the way your exporter wrote them.</em></p>
-
-                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
-                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
-                        <li class="mb-2"><strong>Channels pick themselves.</strong> Drop a texture into a slot that has a channel picker, such as <strong>Occlusion Map</strong> or <strong>Height Map</strong>, and the picker moves to the channel that holds the data, so an occlusion map stored in green works as it is. It only changes when the answer is clear, and the Console says what it set.</li>
-                        <li class="mb-2"><strong>The Packed PBR Mask builder packs occlusion and height too.</strong> With no reflection or specular mask to pack, it builds the VixenWear layout: metallic in red, occlusion in green, height in blue and smoothness in alpha. It reads each source file from the channel that holds its data.</li>
-                    
-                        <li class="mb-2"><strong>Fix Missing Texture Maps.</strong> Under <strong>Material Tools</strong> in the Hub. If a material shows without some of its maps after an update, such as a normal map, a mask or a matcap, this switches them back on for every material in the project. It tells you what it will change before it changes anything, and asks before it relocks a locked material that needs it.</li>
-
-                    </ul>
-
-
-                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
-
-                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
-
-                    
-                        <li class="mb-2"><strong>Materials refresh themselves after a shader update.</strong> Every unlocked material picks up the new shaders straight away, so all of its maps show without opening each one.</li>
-
-                        <li class="mb-2"><strong>Locked materials are lighter.</strong> Locking now leaves out the settings of every feature that's switched off, so the locked shader carries far fewer of them. Anything you mark <strong>Animated (when locked)</strong> stays, your material keeps every value, and unlocking brings them all back. <strong>Trim Unused Settings On Lock</strong> in <strong>Settings</strong> turns it off.</li>
-
-                    </ul>
-                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
-                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
-                        <li class="mb-2"><strong>The Packed PBR Mask builder picked the wrong files.</strong> With body, eyes and fluff maps in one folder it could take a file from the wrong set, it took a ToonStandardSpecular export for a specular mask, and a set named Metals could hand over any of its files as the metallic map. It now uses only the files that share your Albedo's name, offers a finished map it finds, such as MetallicSmoothnessMaps, before building a new one, and fills <strong>Occlusion Map</strong> and <strong>Height Map</strong> from the files beside it.</li>
-                        <li class="mb-2"><strong>Set Up for Poiyomi / Mochie Metallic Map could leave its masks off.</strong> It ticked <strong>Enable Masks</strong> without updating the material, so the masks did nothing until you changed something else on it.</li>
-                    
-                        <li class="mb-2"><strong>Locking took away a map another effect was borrowing.</strong> If an effect's <strong>Mask Source</strong> pointed at an Emission layer or a Matcap that was switched off, locking dropped that layer's map, and the mask stopped holding. Locking now keeps a map for as long as something on the material borrows it, and leaves the rest of that layer behind as before.</li>
-
-                    </ul>
-                </div>
-
 
                 <div class="changelog-entry" data-version="baker-1.0.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Light Baker 1.0.0 - Unreleased</h5>
@@ -726,6 +572,33 @@
                         <li class="mb-2"><strong>An object set to receive light from Light Probes still casts shadows and still bounces its colour into the bake.</strong> So does one with its Lightmap Scale at 0. That is exactly how you tell Unity an object should light the room without taking lightmap space of its own, and the report does not call these left out.</li>
                         <li class="mb-2"><strong>Lightmap Scale on a renderer does what the field says</strong>, so raising it on one wall sharpens the shadows there without costing you resolution everywhere else.</li>
                         <li class="mb-2"><strong>Worlds only.</strong> It bakes a scene, so there is nothing for it to do on an avatar.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="editor-2.3.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Editor 2.3.1 - Unreleased</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Texture maps get read the way your exporter wrote them.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Channels pick themselves.</strong> Drop a texture into a slot that has a channel picker, such as <strong>Occlusion Map</strong> or <strong>Height Map</strong>, and the picker moves to the channel that holds the data, so an occlusion map stored in green works as it is. It only changes when the answer is clear, and the Console says what it set.</li>
+                        <li class="mb-2"><strong>The Packed PBR Mask builder packs occlusion and height too.</strong> With no reflection or specular mask to pack, it builds the VixenWear layout: metallic in red, occlusion in green, height in blue and smoothness in alpha. It reads each source file from the channel that holds its data.</li>
+                        <li class="mb-2"><strong>Fix Missing Texture Maps.</strong> Under <strong>Material Tools</strong> in the Hub. If a material shows without some of its maps after an update, such as a normal map, a mask or a matcap, this switches them back on for every material in the project. It tells you what it will change before it changes anything, and asks before it relocks a locked material that needs it.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Materials refresh themselves after a shader update.</strong> Every unlocked material picks up the new shaders straight away, so all of its maps show without opening each one.</li>
+                        <li class="mb-2"><strong>Locked materials are lighter.</strong> Locking now leaves out the settings of every feature that's switched off, so the locked shader carries far fewer of them. Anything you mark <strong>Animated (when locked)</strong> stays, your material keeps every value, and unlocking brings them all back. <strong>Trim Unused Settings On Lock</strong> in <strong>Settings</strong> turns it off.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The Packed PBR Mask builder picked the wrong files.</strong> With body, eyes and fluff maps in one folder it could take a file from the wrong set, it took a ToonStandardSpecular export for a specular mask, and a set named Metals could hand over any of its files as the metallic map. It now uses only the files that share your Albedo's name, offers a finished map it finds, such as MetallicSmoothnessMaps, before building a new one, and fills <strong>Occlusion Map</strong> and <strong>Height Map</strong> from the files beside it.</li>
+                        <li class="mb-2"><strong>Set Up for Poiyomi / Mochie Metallic Map could leave its masks off.</strong> It ticked <strong>Enable Masks</strong> without updating the material, so the masks did nothing until you changed something else on it.</li>
+                        <li class="mb-2"><strong>Locking took away a map another effect was borrowing.</strong> If an effect's <strong>Mask Source</strong> pointed at an Emission layer or a Matcap that was switched off, locking dropped that layer's map, and the mask stopped holding. Locking now keeps a map for as long as something on the material borrows it, and leaves the rest of that layer behind as before.</li>
+                        <li class="mb-2"><strong>The Texture Packer leaked memory on every pack.</strong> Each run left its render targets, compute buffers and exported channel textures behind, so packing a few 4K maps in one session could hold on to gigabytes until the editor next reloaded scripts. Everything the packer creates is freed when it finishes now, including when a pack fails part way through.</li>
+                        <li class="mb-2"><strong>Locking a material warned about shaders it had actually found.</strong> The Console printed that the original shader could not be found even when it had been, and the message fired from paths that had asked for no logging at all, which is where the warnings about Poiyomi and other third-party materials came from. It warns only when the original shader really cannot be located now.</li>
                     </ul>
                 </div>
 
