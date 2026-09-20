@@ -421,6 +421,7 @@
                         <li><strong>Follow PBR Map</strong> under <strong>Real Fur</strong> ignored <strong>Channel is Roughness</strong> and <strong>Invert Metallic</strong>, so with a roughness map the roughest hairs shone the most.</li>
                         <li><strong>Real Fur</strong> follows the <strong>Light Volumes V3</strong> controls. Turning <strong>Intensity</strong> down used to fade the coat toward black.</li>
                         <li><strong>Smoother Probe Lighting</strong> could pick up the wrong light in worlds made with the first version of Light Volumes.</li>
+                        <li>An effect could not borrow a mask from an Emission layer or a Matcap you had switched off. Borrowing reads that layer's map, not its glow, so you can park a map on a layer you never light and mask from it now.</li>
                     </ul>
                     <h3 class="text-glow-cyan">Before you update</h3>
                     <ul class="pledge-list">
@@ -430,10 +431,55 @@
                         <li><strong>Real Fur</strong> highlights with <strong>Follow PBR Map</strong> on now follow <strong>Global Smoothness</strong> and <strong>Global Metallic</strong>, so they can look dimmer. Raise <strong>Strand Specular</strong> under <strong>Surface Fur</strong> to bring them back up.</li>
                         <li>On World Surface and World Fur, lightmapped surfaces no longer take highlights from a world's base Light Volumes. If a lightmapped floor looks less glossy, raise <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong>.</li>
                         <li>If you turned <strong>Depth</strong> under <strong>Touch</strong> right down to make up for a scaled mesh, turn it back up.</li>
+                        <li>Borrowed masks hold again, so an effect that was quietly covering your whole material will snap back to its map. Go through <strong>Mask Source</strong> and <strong>Invert Mask</strong> on each effect you have masked, and set <strong>Mask Source</strong> to None on anything you meant to leave unmasked.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The melt moves now</h3>
+                    <p class="forge-where">Under <strong>Goo Effects &gt; Melt</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Beat Sag</strong> pulls the goo further down you on the hit, <strong>Beat Stretch</strong> draws it thinner as it goes, and <strong>Beat Variation</strong> breaks up the edge so it does not run as one sheet.</li>
+                        <li><strong>Beat Underside</strong> thickens what hangs beneath you.</li>
+                        <li><strong>Beat Flow</strong> adds to the clock rather than scaling it, so the goo gathers pace on a busy passage and settles again without ever jumping.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">And so does everything else</h3>
+                    <p class="forge-where">Under <strong>Goo Effects</strong>, each one beneath the slider it drives.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Beat Depth</strong> surges the writhe itself, so the tendrils stretch on the hit instead of only running faster. <strong>Beat Sway</strong> swings the hanging strands wider.</li>
+                        <li><strong>Beat Melt</strong> and <strong>Beat Pooling</strong> send the goo toward the floor and spread the pool where it lands. <strong>Beat Formation</strong> pushes the wavefront up, so the gear builds itself in time with the track.</li>
+                        <li><strong>Beat Gloss</strong>, <strong>Beat Coat</strong>, <strong>Beat Absorption</strong> and <strong>Beat Refraction</strong> work the slime itself, from a wet flash on the beat to the colour sinking deeper into it.</li>
+                        <li><strong>Veins</strong>, <strong>Drips</strong> and <strong>Cling</strong> each got the same treatment, down to the speed of a single vein pulse.</li>
+                        <li>Every one of them starts at zero, so the goo you have today looks the same until you reach for one.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Cybernetic Overlays moved</h3>
+                    <p class="forge-where">Under <strong>SPECIAL EFFECTS</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>It used to sit in the middle of <strong>AUDIOLINK</strong>, a long way from the other effects. It is the last group under <strong>SPECIAL EFFECTS</strong> now.</li>
+                        <li>Everything inside it is exactly as it was, and it still shows only while <strong>AudioLink</strong> is on.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Lighter locked materials</h3>
+                    <ul class="pledge-list">
+                        <li>Locking used to keep every setting of every feature, whether you had it switched on or not. Now it keeps only what you use.</li>
+                        <li>Matcaps, <strong>Wet Effects</strong>, <strong>Goo Effects</strong>, <strong>Glitter</strong>, the outlines, <strong>Car Paint</strong>, <strong>Viewer Context</strong>, <strong>Flipbook</strong> and every effect under <strong>SPECIAL EFFECTS</strong> drop out when they are off. On a material using none of them that is around 460 settings gone.</li>
+                        <li><strong>Glitter</strong> layers 2 to 5 used to ride along even when switched off. Only the layers you use are kept now.</li>
+                        <li>Locking no longer prints a shader warning for every material, and all 44 texture slots across the six shaders now tell you what they are for.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Biofeedback</h3>
+                    <p class="forge-where">Under <strong>SPECIAL EFFECTS</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>A heartbeat from the bass, <strong>Tension</strong> from the mids and a <strong>Spike</strong> from the treble, with a slow <strong>Breath</strong> laid over the top so it never sits perfectly still.</li>
+                        <li>It has always driven four things with no way to see or stop it: your subsurface glow, the light coming through your thin parts, the <strong>AudioLink Color Blend</strong> hue, and <strong>Emission</strong> layer 1. Each of those has its own slider now.</li>
+                        <li>Every one of them starts exactly where the pulse has always run, so nothing about your material changes until you move one. <strong>Enable</strong> turns the lot off if you never wanted it.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Thickness</h3>
+                    <p class="forge-where">Under <strong>Subsurface</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>How thick your material is where light soaks through was the pulse and nothing else. There was no control for it at all.</li>
+                        <li>There is a <strong>Thickness</strong> slider and a <strong>Thickness Map</strong> for it now, and <strong>Subsurface</strong> under <strong>Biofeedback</strong> decides how far the pulse moves it on top.</li>
+                        <li>Left at 0 it looks exactly as it does today.</li>
                     </ul>
                     <h3 class="text-glow-cyan">Where this is at</h3>
                     <ul class="pledge-list">
-                        <li>Everything here is built and going through testing on avatars now. None of it is out yet.</li>
+                        <li>All six shaders build clean: no errors, no warnings.</li>
+                        <li>Everything across these six parts is going through testing on avatars now. None of it is out yet.</li>
                         <li>Next: the test pass, then the release for all six shaders.</li>
                     </ul>
                 </div>
