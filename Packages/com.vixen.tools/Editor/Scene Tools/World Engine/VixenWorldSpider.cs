@@ -14,7 +14,6 @@ using VRC.Udon;
 using VRC.SDK3.Components;
 using UdonSharp;
 using TMPro;
-using ImageMagick;
 
 namespace VixenTools.Editor
 {
@@ -28,6 +27,9 @@ namespace VixenTools.Editor
 
         private ScrollView _mainScroll;
         private VisualElement _systemContainer;
+        private VisualElement _performanceTab;
+        private Button _findingsTabButton;
+        private Button _performanceTabButton;
         private Font _cyberFont;
 
         private int _targetTextureResolution = 2048;
@@ -43,6 +45,8 @@ namespace VixenTools.Editor
         private List<string> _validShaderList = new List<string>();
 
         private HashSet<Texture> _detectedTextures = new HashSet<Texture>();
+        private readonly Dictionary<Texture, List<VixenTextureCheck.Slot>> _textureSlots = new Dictionary<Texture, List<VixenTextureCheck.Slot>>();
+        private readonly HashSet<Texture> _looseTextures = new HashSet<Texture>();
         private readonly HashSet<string> _processedTexturePaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private HashSet<AudioClip> _detectedAudio = new HashSet<AudioClip>();
         private HashSet<Mesh> _detectedMeshes = new HashSet<Mesh>();
@@ -57,6 +61,7 @@ namespace VixenTools.Editor
             public string HexColor;
             public UnityEngine.Object Context;
             public bool IsSelected = false;
+            public bool KeepOutOfBatch;
             public Action FixPayload;
             public Action OnFixedUIUpdate;
         }
@@ -89,7 +94,7 @@ namespace VixenTools.Editor
             StyleSheet styles = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath);
             if (styles != null) root.styleSheets.Add(styles);
 
-            var header = new VisualElement { name = "tool-header", style = { justifyContent = Justify.Center, alignItems = Align.Center, paddingLeft = 0 } };
+            var header = new VisualElement { name = "tool-header", style = { justifyContent = Justify.Center, alignItems = Align.Center, paddingLeft = 0, flexShrink = 0 } };
             var title = new Label();
             title.AddToClassList("panel-header");
             title.style.color = ColorUtility.TryParseHtmlString("#ffffff", out Color w) ? w : Color.white;
@@ -99,8 +104,26 @@ namespace VixenTools.Editor
             header.Add(title);
             root.Add(header);
 
-            _mainScroll = new ScrollView(ScrollViewMode.Vertical) { name = "main-scroll" };
+            var tabBar = new VisualElement { name = "engine-tabs", style = { flexDirection = FlexDirection.Row, marginLeft = 8, marginRight = 8, marginBottom = 6, flexShrink = 0 } };
+            _findingsTabButton = new Button(() => SelectEngineTab(false)) { text = "FINDINGS" };
+            _performanceTabButton = new Button(() => SelectEngineTab(true)) { text = "PERFORMANCE MAP" };
+            foreach (var tabButton in new[] { _findingsTabButton, _performanceTabButton })
+            {
+                tabButton.AddToClassList("spider-action-btn");
+                tabButton.style.flexGrow = 1;
+                tabBar.Add(tabButton);
+            }
+            root.Add(tabBar);
+
+            _mainScroll = new ScrollView(ScrollViewMode.Vertical) { name = "main-scroll", style = { flexGrow = 1, flexShrink = 1, flexBasis = 0 } };
             root.Add(_mainScroll);
+
+            _performanceTab = new VisualElement { name = "performance-map", style = { flexGrow = 1, flexShrink = 1, flexBasis = 0, display = DisplayStyle.None } };
+            var performanceHint = new Label("Press Scan Scene on the Findings tab to fill the performance map.");
+            performanceHint.AddToClassList("info-box-styled");
+            _performanceTab.Add(performanceHint);
+            root.Add(_performanceTab);
+            SelectEngineTab(false);
 
             var infoBox = new Label("Scanning your scene across every supported system.") { name = "info-box" };
             infoBox.AddToClassList("info-box-styled");
@@ -238,6 +261,18 @@ namespace VixenTools.Editor
             _mainScroll.Add(_systemContainer);
         }
 
+        private void SelectEngineTab(bool performance)
+        {
+            if (_mainScroll == null || _performanceTab == null) return;
+
+            _mainScroll.style.display = performance ? DisplayStyle.None : DisplayStyle.Flex;
+            _performanceTab.style.display = performance ? DisplayStyle.Flex : DisplayStyle.None;
+            _findingsTabButton.EnableInClassList("btn-cyan", !performance);
+            _performanceTabButton.EnableInClassList("btn-cyan", performance);
+            _findingsTabButton.style.opacity = performance ? 0.6f : 1f;
+            _performanceTabButton.style.opacity = performance ? 1f : 0.6f;
+        }
+
         private void EnsureDictionariesExist(bool forceRebuild = false)
         {
             string targetPath = Path.GetFullPath(TargetDictPath);
@@ -349,7 +384,7 @@ namespace VixenTools.Editor
             public List<AssetRecord> meshes = new List<AssetRecord>();
         }
 
-        private const int CURRENT_ENGINE_CACHE_VERSION = 1;
+        private const int CURRENT_ENGINE_CACHE_VERSION = 2;
 
         private WorldEngineCache _worldCache = new WorldEngineCache();
 
@@ -562,6 +597,10 @@ namespace VixenTools.Editor
 
             _diagnosticsDb.Clear();
             _detectedTextures.Clear();
+            _textureSlots.Clear();
+            _looseTextures.Clear();
+            _udonShapes.Clear();
+            _syncedVariableCounts.Clear();
             _detectedAudio.Clear();
             _detectedMeshes.Clear();
             _detectedUITextures.Clear();
@@ -594,7 +633,7 @@ namespace VixenTools.Editor
 
             RenderDiagnosticSystem();
 
-            VixenHeuristicsDashboard.Open(_detectedTextures, _detectedMeshes, _detectedAudio, _detectedUITextures);
+            VixenHeuristicsDashboard.Render(_performanceTab, _detectedTextures, _detectedMeshes, _detectedAudio, _detectedUITextures);
         }
 
         private void RenderDiagnosticSystem()
@@ -643,8 +682,8 @@ namespace VixenTools.Editor
 
         private void PopulateCategoryRows(string category, VisualElement contentContainer)
         {
-            var catIssues = _diagnosticsDb.Where(d => d.Category == category && d.FixPayload != null).ToList();
-            List<Toggle> categoryToggles = new List<Toggle>();
+            var catIssues = _diagnosticsDb.Where(d => d.Category == category && d.FixPayload != null && !d.KeepOutOfBatch).ToList();
+            var togglesByIssue = new Dictionary<EngineDiagnostic, Toggle>();
 
             if (catIssues.Count > 0)
             {
@@ -652,13 +691,10 @@ namespace VixenTools.Editor
 
                 var toggleAllBtn = new Button(() => {
                     bool anyUnchecked = catIssues.Any(i => !i.IsSelected);
-                    for (int i = 0; i < catIssues.Count; i++)
+                    foreach (var batchIssue in catIssues)
                     {
-                        catIssues[i].IsSelected = anyUnchecked;
-                        if (i < categoryToggles.Count && categoryToggles[i] != null)
-                        {
-                            categoryToggles[i].SetValueWithoutNotify(anyUnchecked);
-                        }
+                        batchIssue.IsSelected = anyUnchecked;
+                        if (togglesByIssue.TryGetValue(batchIssue, out Toggle batchToggle)) batchToggle.SetValueWithoutNotify(anyUnchecked);
                     }
                 }) { text = "Toggle All Fixes", style = { fontSize = 10, paddingLeft = 10, paddingRight = 10 } };
 
@@ -689,7 +725,7 @@ namespace VixenTools.Editor
                         var currentIssue = issue;
                         toggle.RegisterValueChangedCallback(e => currentIssue.IsSelected = e.newValue);
                         row.Add(toggle);
-                        categoryToggles.Add(toggle);
+                        togglesByIssue[issue] = toggle;
                     }
                     else
                     {
@@ -709,7 +745,9 @@ namespace VixenTools.Editor
                     bar.style.backgroundColor = ColorUtility.TryParseHtmlString(issue.HexColor, out Color c) ? c : Color.white;
                     row.Add(bar);
 
-                    var label = new Label(issue.Description) { enableRichText = true };
+                    string parents = ParentPath(issue.Context);
+                    string text = parents == null ? issue.Description : issue.Description + "\n<size=10><color=#8b93a1>in " + parents + "</color></size>";
+                    var label = new Label(text) { enableRichText = true };
                     label.AddToClassList("spider-label");
                     row.Add(label);
 
@@ -724,16 +762,30 @@ namespace VixenTools.Editor
             }
         }
 
-        private void LogDiagnostic(string category, string type, string desc, string hex, UnityEngine.Object context, Action fixPayload = null)
+        private EngineDiagnostic LogDiagnostic(string category, string type, string desc, string hex, UnityEngine.Object context, Action fixPayload = null)
         {
-            _diagnosticsDb.Add(new EngineDiagnostic {
+            var diagnostic = new EngineDiagnostic {
                 Category = category,
                 IssueType = type,
                 Description = desc,
                 HexColor = hex,
                 Context = context,
                 FixPayload = fixPayload
-            });
+            };
+            _diagnosticsDb.Add(diagnostic);
+            return diagnostic;
+        }
+
+        private static string ParentPath(UnityEngine.Object context)
+        {
+            GameObject go = context as GameObject;
+            if (go == null && context is Component component) go = component.gameObject;
+            if (go == null || EditorUtility.IsPersistent(go) || go.transform.parent == null) return null;
+
+            var names = new List<string>();
+            for (Transform t = go.transform.parent; t != null; t = t.parent) names.Add(t.name);
+            names.Reverse();
+            return string.Join(" / ", names);
         }
 
         private Type GetTypeSafe(string typeName)
@@ -746,7 +798,7 @@ namespace VixenTools.Editor
             return null;
         }
 
-        private const int UDON_HEAVY_INSTRUCTION_THRESHOLD = 4000;
+        private const int UDON_PER_FRAME_INSTRUCTION_THRESHOLD = 2500;
 
         private static readonly string[] VrslAudioLinkTypeNames =
         {
@@ -821,37 +873,163 @@ namespace VixenTools.Editor
             return null;
         }
 
-        private static readonly HashSet<string> UdonOpcodes = new HashSet<string>(StringComparer.Ordinal)
+        private static readonly Dictionary<string, uint> UdonOpcodeSizes = new Dictionary<string, uint>(StringComparer.Ordinal)
         {
-            "NOP", "PUSH", "POP", "JUMP_IF_FALSE", "JUMP", "EXTERN", "ANNOTATION", "JUMP_INDIRECT", "COPY",
+            { "NOP", 4 }, { "PUSH", 8 }, { "POP", 4 }, { "JUMP_IF_FALSE", 8 }, { "JUMP", 8 },
+            { "EXTERN", 8 }, { "ANNOTATION", 8 }, { "JUMP_INDIRECT", 8 }, { "COPY", 4 },
         };
 
-        private static int CountUdonInstructions(string uasm)
+        private static readonly string[] UdonPerFrameEvents =
         {
-            if (string.IsNullOrEmpty(uasm)) return 0;
+            "_update", "_lateUpdate", "_fixedUpdate", "_postLateUpdate", "_onAnimatorMove", "_onAnimatorIK",
+            "_onRenderObject", "_onWillRenderObject", "_onPreCull", "_onPreRender", "_onPostRender",
+        };
 
-            int count = 0;
+        private sealed class UdonProgramShape
+        {
+            public int TotalInstructions;
+            public int PerFrameInstructions;
+            public int SyncedVariables;
+            public readonly List<string> PerFrameEvents = new List<string>();
+            public readonly HashSet<string> PerFrameExterns = new HashSet<string>(StringComparer.Ordinal);
+        }
+
+        private readonly Dictionary<UdonSharpProgramAsset, UdonProgramShape> _udonShapes = new Dictionary<UdonSharpProgramAsset, UdonProgramShape>();
+
+        private UdonProgramShape GetUdonShape(UdonSharpProgramAsset asset, object cache, MethodInfo getUasm)
+        {
+            if (asset == null || cache == null || getUasm == null) return null;
+            if (_udonShapes.TryGetValue(asset, out UdonProgramShape known)) return known;
+
+            UdonProgramShape shape = null;
+            try
+            {
+                string uasm = (string)getUasm.Invoke(cache, new object[] { asset });
+                if (!string.IsNullOrEmpty(uasm)) shape = ReadUdonProgramShape(uasm);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[Vixen World Engine] Could not read the compiled program of '{asset.name}': {e.Message}");
+            }
+
+            _udonShapes[asset] = shape;
+            return shape;
+        }
+
+        private static UdonProgramShape ReadUdonProgramShape(string uasm)
+        {
+            var shape = new UdonProgramShape();
+            var codes = new List<string>();
+            var operands = new List<string>();
+            var indexAt = new Dictionary<uint, int>();
+            var exports = new Dictionary<string, int>(StringComparer.Ordinal);
+            var pending = new List<string>();
             bool inCode = false;
+            bool inData = false;
+            uint address = 0;
 
-            using (var reader = new System.IO.StringReader(uasm))
+            using (var reader = new StringReader(uasm))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    string trimmed = line.Trim();
-                    if (trimmed.Length == 0) continue;
+                    string t = line.Trim();
+                    if (t.Length == 0) continue;
+                    if (t.StartsWith(".data_start", StringComparison.Ordinal)) { inData = true; continue; }
+                    if (t.StartsWith(".data_end", StringComparison.Ordinal)) { inData = false; continue; }
+                    if (inData && t.StartsWith(".sync ", StringComparison.Ordinal)) { shape.SyncedVariables++; continue; }
+                    if (t.StartsWith(".code_start", StringComparison.Ordinal)) { inCode = true; continue; }
+                    if (t.StartsWith(".code_end", StringComparison.Ordinal)) { inCode = false; continue; }
+                    if (!inCode || t[0] == '.' || t[0] == '#') continue;
+                    if (t[t.Length - 1] == ':') { pending.Add(t.Substring(0, t.Length - 1)); continue; }
 
-                    if (trimmed.StartsWith(".code_start", StringComparison.Ordinal)) { inCode = true; continue; }
-                    if (trimmed.StartsWith(".code_end", StringComparison.Ordinal)) { inCode = false; continue; }
-                    if (!inCode || trimmed[0] == '.') continue;
+                    int comma = t.IndexOf(',');
+                    string code = (comma < 0 ? t : t.Substring(0, comma)).Trim();
+                    if (!UdonOpcodeSizes.TryGetValue(code, out uint size)) continue;
 
-                    int cut = trimmed.IndexOfAny(new[] { ',', ' ', '\t' });
-                    string token = cut < 0 ? trimmed : trimmed.Substring(0, cut);
-                    if (UdonOpcodes.Contains(token)) count++;
+                    foreach (string label in pending) exports[label] = codes.Count;
+                    pending.Clear();
+                    indexAt[address] = codes.Count;
+                    codes.Add(code);
+                    operands.Add(comma < 0 ? "" : t.Substring(comma + 1).Trim());
+                    address += size;
                 }
             }
 
+            shape.TotalInstructions = codes.Count;
+
+            var seen = new HashSet<int>();
+            var stack = new Stack<int>();
+            foreach (string ev in UdonPerFrameEvents)
+            {
+                if (!exports.TryGetValue(ev, out int start)) continue;
+                shape.PerFrameEvents.Add(ev);
+                stack.Push(start);
+            }
+
+            while (stack.Count > 0)
+            {
+                int i = stack.Pop();
+                while (i >= 0 && i < codes.Count && seen.Add(i))
+                {
+                    string code = codes[i];
+                    if (code == "JUMP_INDIRECT") break;
+                    if (code == "EXTERN") shape.PerFrameExterns.Add(operands[i].Trim('"'));
+                    if (code == "JUMP" || code == "JUMP_IF_FALSE")
+                    {
+                        if (TryParseUdonAddress(operands[i], out uint target) && indexAt.TryGetValue(target, out int next)) stack.Push(next);
+                        else if (code == "JUMP") break;
+                    }
+                    i++;
+                }
+            }
+
+            shape.PerFrameInstructions = seen.Count;
+            return shape;
+        }
+
+        private static bool TryParseUdonAddress(string operand, out uint address)
+        {
+            address = 0;
+            if (operand == null || operand.Length < 3 || operand[0] != '0' || (operand[1] != 'x' && operand[1] != 'X')) return false;
+            return uint.TryParse(operand.Substring(2), System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out address);
+        }
+
+        private static string UdonEventDisplayName(string udonEvent)
+        {
+            return udonEvent.Length > 1 ? char.ToUpperInvariant(udonEvent[1]) + udonEvent.Substring(2) : udonEvent;
+        }
+
+        private readonly Dictionary<UnityEngine.Object, int> _syncedVariableCounts = new Dictionary<UnityEngine.Object, int>();
+
+        private int CountSyncedVariables(UdonBehaviour udon)
+        {
+            var source = udon.programSource;
+            if (source == null) return 0;
+            if (_syncedVariableCounts.TryGetValue(source, out int known)) return known;
+
+            int count = -1;
+            try
+            {
+                var serialized = source.SerializedProgramAsset;
+                var program = serialized != null ? serialized.RetrieveProgram() : null;
+                if (program != null && program.SyncMetadataTable != null) count = program.SyncMetadataTable.GetAllSyncMetadata().Count();
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[Vixen World Engine] Could not read the synced variables of '{source.name}': {e.Message}");
+            }
+
+            _syncedVariableCounts[source] = count;
             return count;
+        }
+
+        private static bool HasPhysicsNearby(Transform t)
+        {
+            return t.GetComponentInParent<Rigidbody>(true) != null
+                || t.GetComponentInChildren<Rigidbody>(true) != null
+                || t.GetComponentInParent<VRC.SDKBase.VRC_Pickup>(true) != null
+                || t.GetComponentInChildren<VRC.SDKBase.VRC_Pickup>(true) != null;
         }
 
         private static System.Reflection.MethodInfo _getUdonTypeMethod;
@@ -866,7 +1044,7 @@ namespace VixenTools.Editor
                 var editorAsm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "UdonSharp.Editor");
                 if (editorAsm != null)
                 {
-                    Type utilityType = editorAsm.GetType("UdonSharp.Editor.UdonSharpEditorUtility");
+                    Type utilityType = editorAsm.GetType("UdonSharpEditor.UdonSharpEditorUtility") ?? editorAsm.GetType("UdonSharp.Editor.UdonSharpEditorUtility");
                     _getUdonTypeMethod = utilityType?.GetMethod("GetUdonSharpBehaviourType", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
                 }
             }
@@ -1155,7 +1333,7 @@ namespace VixenTools.Editor
                         if (blurCrtField != null)
                         {
                             CustomRenderTexture blurCrt = blurCrtField.GetValue(adapter) as CustomRenderTexture;
-                            if (blurCrt != null && blurCrt.material != null)
+                            if (blurCrt != null && blurCrt.material != null && blurCrt.material.HasTexture("_MainTex"))
                             {
                                 Texture mainTex = blurCrt.material.GetTexture("_MainTex");
                                 if (mainTex == null)
@@ -1345,10 +1523,15 @@ namespace VixenTools.Editor
                 if (syncPlayerType != null) players.AddRange(GetCachedObjects(syncPlayerType, true).Cast<Component>());
                 if (txlPlayerType != null) players.AddRange(GetCachedObjects(txlPlayerType, true).Cast<Component>());
 
-                foreach (var player in players)
+                foreach (var player in players.Distinct())
                 {
                     var sourcesField = player.GetType().GetField("audioSources", flags);
-                    var sources = sourcesField?.GetValue(player) as AudioSource[];
+                    if (sourcesField == null)
+                    {
+                        CheckTxlAudioManagerLink(player, alCore, flags);
+                        continue;
+                    }
+                    var sources = sourcesField.GetValue(player) as AudioSource[];
                     var alSourceField = audioLinkType.GetField("audioSource", flags);
                     var currentAlSource = alSourceField?.GetValue(alCore) as AudioSource;
 
@@ -1460,6 +1643,40 @@ namespace VixenTools.Editor
             }
         }
 
+        private static AudioSource[] GetProTvSpeakers(Type vpManagerType, object vpm, BindingFlags flags)
+        {
+            if (vpManagerType.GetField("speakers", flags)?.GetValue(vpm) is AudioSource[] legacy)
+                return legacy.Where(s => s != null).ToArray();
+
+            var spatial = vpManagerType.GetField("spatialSpeakers", flags)?.GetValue(vpm) as AudioSource[] ?? new AudioSource[0];
+            var stereo = vpManagerType.GetField("stereoSpeakers", flags)?.GetValue(vpm) as AudioSource[] ?? new AudioSource[0];
+            return spatial.Concat(stereo).Where(s => s != null).Distinct().ToArray();
+        }
+
+        private void CheckTxlAudioManagerLink(Component player, Component alCore, BindingFlags flags)
+        {
+            var manager = player.GetType().GetField("audioManager", flags)?.GetValue(player) as Component;
+            if (manager == null) return;
+
+            var alSystemField = manager.GetType().GetField("audioLinkSystem", flags);
+            if (alSystemField == null || (alSystemField.GetValue(manager) as UnityEngine.Object) != null) return;
+
+            UdonBehaviour alBehaviour = alCore.GetComponent<UdonBehaviour>();
+            Action fix = null;
+            if (alBehaviour != null)
+            {
+                fix = () => {
+                    Undo.RecordObject(manager, "Link TXL to AudioLink");
+                    alSystemField.SetValue(manager, alBehaviour);
+                    PrefabUtility.RecordPrefabInstancePropertyModifications(manager);
+                };
+            }
+
+            LogDiagnostic("AUDIOLINK: SETUP", "TXL Player Not Linked to AudioLink",
+                $"The Audio Manager of TXL Video Player '{player.gameObject.name}' has no AudioLink assigned. Reactive materials will not pulse during video playback.",
+                "#00e5ff", manager.gameObject, fix);
+        }
+
         private void AuditProTVEcosystem()
         {
             var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
@@ -1467,7 +1684,7 @@ namespace VixenTools.Editor
             Type proTvType = GetTypeSafe("ArchiTech.ProTV.TVManager");
             Type vpManagerType = GetTypeSafe("ArchiTech.ProTV.VPManager");
             Type audioLinkType = GetTypeSafe("AudioLink.AudioLink");
-            Type proTvAlAdapterType = GetTypeSafe("ArchiTech.ProTV.AudioLinkAdapter");
+            Type proTvAlAdapterType = GetTypeSafe("ArchiTech.ProTV.AudioAdapter") ?? GetTypeSafe("ArchiTech.ProTV.AudioLinkAdapter");
 
             var alInstances = audioLinkType != null ? GetCachedObjects(audioLinkType, true) : null;
             Component alCore = (alInstances != null && alInstances.Length > 0) ? (Component)alInstances[0] : null;
@@ -1492,9 +1709,8 @@ namespace VixenTools.Editor
                         {
                             foreach (var vpm in mainTv.GetComponentsInChildren(vpManagerType, true))
                             {
-                                var speakersField = vpManagerType.GetField("speakers", flags);
-                                var speakers = speakersField?.GetValue(vpm) as AudioSource[];
-                                if (speakers != null && speakers.Length > 0)
+                                var speakers = GetProTvSpeakers(vpManagerType, vpm, flags);
+                                if (speakers.Length > 0)
                                 {
                                     if (firstAvailableSpeaker == null) firstAvailableSpeaker = speakers[0];
                                     if (speakers.Contains(currentAlSource)) isLinked = true;
@@ -1505,7 +1721,7 @@ namespace VixenTools.Editor
                         if (!isLinked && firstAvailableSpeaker != null)
                         {
                             LogDiagnostic("PROTV SETUP", "AudioLink Disconnected from TV",
-                                $"AudioLink is not listening to any of '{mainTv.gameObject.name}'s speakers. Reactive materials will not pulse. (Note: Using the official ProTV AudioLinkAdapter prefab is recommended for multi-player switching).",
+                                $"AudioLink is not listening to any of '{mainTv.gameObject.name}'s speakers. Reactive materials will not pulse. (Note: Using ProTV's audio adapter is recommended for multi-player switching).",
                                 "#00e5ff", alCore, () => {
                                     Undo.RecordObject(alCore, "Link TV to AudioLink");
                                     alSourceField.SetValue(alCore, firstAvailableSpeaker);
@@ -1519,7 +1735,9 @@ namespace VixenTools.Editor
                         {
                             var comp = (Component)adapter;
                             var tvField = proTvAlAdapterType.GetField("tv", flags);
-                            var alField = proTvAlAdapterType.GetField("audioLink", flags);
+                            var alField = proTvAlAdapterType.GetField("audioLinkInstance", flags) ?? proTvAlAdapterType.GetField("audioLink", flags);
+                            var enableAlField = proTvAlAdapterType.GetField("enableAudioLink", flags);
+                            bool audioLinkWanted = enableAlField == null || Convert.ToBoolean(enableAlField.GetValue(adapter));
 
                             var linkedTv = tvField?.GetValue(adapter) as Component;
                             var linkedAl = alField?.GetValue(adapter) as Component;
@@ -1527,7 +1745,7 @@ namespace VixenTools.Editor
                             if (linkedTv == null)
                             {
                                 LogDiagnostic("PROTV SETUP", "Adapter Missing TV",
-                                    $"ProTV AudioLink Adapter '{comp.gameObject.name}' is not linked to a TVManager. It will not receive hot-swap events.",
+                                    $"ProTV audio adapter '{comp.gameObject.name}' is not linked to a TVManager. It will not receive hot-swap events.",
                                     "#00e5ff", comp, () => {
                                         Undo.RecordObject(comp, "Link Adapter to TV");
                                         tvField.SetValue(adapter, mainTv);
@@ -1535,10 +1753,10 @@ namespace VixenTools.Editor
                                     });
                             }
 
-                            if (linkedAl == null)
+                            if (linkedAl == null && alField != null && audioLinkWanted)
                             {
                                 LogDiagnostic("PROTV SETUP", "Adapter Missing AudioLink",
-                                    $"ProTV AudioLink Adapter '{comp.gameObject.name}' is not linked to the AudioLink Core.",
+                                    $"ProTV audio adapter '{comp.gameObject.name}' is not linked to the AudioLink Core.",
                                     "#00e5ff", comp, () => {
                                         Undo.RecordObject(comp, "Link Adapter to AudioLink");
                                         alField.SetValue(adapter, alCore);
@@ -1790,23 +2008,13 @@ namespace VixenTools.Editor
                         }
                     }
 
-                    var speakersField = vpManagerType.GetField("speakers", flags);
-                    if (speakersField != null)
+                    foreach (var speaker in GetProTvSpeakers(vpManagerType, vpm, flags))
                     {
-                        var speakers = speakersField.GetValue(vpm) as AudioSource[];
-                        if (speakers != null)
+                        if (speaker.spatialBlend > 0.8f && speaker.maxDistance > 100f)
                         {
-                            foreach (var speaker in speakers)
-                            {
-                                if (speaker == null) continue;
-
-                                if (speaker.spatialBlend > 0.8f && speaker.maxDistance > 100f)
-                                {
-                                    LogDiagnostic("PROTV AUDIO: SPATIALIZATION BLEED", "Excessive 3D Max Distance",
-                                        $"The speaker '{speaker.name}' on '{component.gameObject.name}' is set to 3D, but has a maxDistance of {speaker.maxDistance}m. This essentially forces it to behave as 2D audio that bleeds through walls, destroying occlusion logic.",
-                                        "#00e5ff", speaker);
-                                }
-                            }
+                            LogDiagnostic("PROTV AUDIO: SPATIALIZATION BLEED", "Excessive 3D Max Distance",
+                                $"The speaker '{speaker.name}' on '{component.gameObject.name}' is set to 3D, but has a maxDistance of {speaker.maxDistance}m. This essentially forces it to behave as 2D audio that bleeds through walls, destroying occlusion logic.",
+                                "#00e5ff", speaker);
                         }
                     }
 
@@ -2515,15 +2723,17 @@ namespace VixenTools.Editor
                 }
             }
 
-            Type ltcgiControllerType = GetTypeSafe("LTCGI.LTCGI_Controller");
-            if (ltcgiControllerType != null)
+            Type ltcgiControllerType = GetTypeSafe("pi.LTCGI.LTCGI_Controller") ?? GetTypeSafe("LTCGI.LTCGI_Controller");
+            if (ltcgiControllerType != null && !coreExists)
             {
+                var hasAudioLinkScreens = ltcgiControllerType.GetField("HasAudioLinkScreens", flags);
                 foreach (var ltcgi in GetCachedObjects(ltcgiControllerType, true))
                 {
-                    var alInput = ltcgiControllerType.GetField("audioLinkInput", flags);
-                    if (alInput != null && (int)alInput.GetValue(ltcgi) == 1 && !coreExists)
+                    if (hasAudioLinkScreens != null && Convert.ToBoolean(hasAudioLinkScreens.GetValue(ltcgi)))
                     {
-                        LogDiagnostic("3RD PARTY: LTCGI", "LTCGI Disconnect", "LTCGI set to AudioLink mode but no core found.", "#ff00aa", (Component)ltcgi);
+                        LogDiagnostic("3RD PARTY: LTCGI", "LTCGI Screens Without AudioLink",
+                            "Some LTCGI screens take their colour from AudioLink, but there is no AudioLink in this scene, so those screens will not light anything.",
+                            "#ff00aa", (Component)ltcgi);
                     }
                 }
             }
@@ -3424,6 +3634,7 @@ namespace VixenTools.Editor
             var getUasm = cacheType?.GetMethod("GetUASMStr", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
             Type udbSyncModeAttrType = GetTypeSafe("UdonSharp.UdonBehaviourSyncModeAttribute");
+            var perFrameCopies = new Dictionary<UdonSharpProgramAsset, List<UdonBehaviour>>();
 
             foreach (var udon in GetCachedObjects<UdonBehaviour>(true))
             {
@@ -3473,33 +3684,38 @@ namespace VixenTools.Editor
                     }
                     else
                     {
-                        bool hasPhysics = udon.GetComponent<Rigidbody>() != null;
-                        bool hasPickup = udon.GetComponent<VRC.SDKBase.VRC_Pickup>() != null;
-
-                        if (!hasPhysics && !hasPickup)
+                        int synced = CountSyncedVariables(udon);
+                        if (synced != 0 && !HasPhysicsNearby(udon.transform))
                         {
+                            string what = synced == 1 ? "its synced variable" : synced > 1 ? $"its {synced} synced variables" : "its synced variables";
                             LogDiagnostic("UDON BANDWIDTH: UNJUSTIFIED CONTINUOUS SYNC", "Continuous Sync Active",
-                                $"'{udon.gameObject.name}' consumes high bandwidth but lacks a Rigidbody/Pickup. Verify if manual sync is possible.",
+                                $"'{udon.gameObject.name}' keeps sending {what} all the time, but nothing on it, above it or under it can be picked up or moved by physics. Check whether Manual sync would do the job.",
                                 "#ffaa00", udon.gameObject);
                         }
                     }
                 }
 
-                if (udon.programSource is UdonSharpProgramAsset uAsset && getUasm != null && cache != null)
+                if (udon.programSource is UdonSharpProgramAsset uAsset && udon.enabled && udon.gameObject.activeInHierarchy)
                 {
-                    string uasm = (string)getUasm.Invoke(cache, new object[] { uAsset });
-                    if (!string.IsNullOrEmpty(uasm))
-                    {
-                        int count = CountUdonInstructions(uasm);
-
-                        if (count > UDON_HEAVY_INSTRUCTION_THRESHOLD)
-                        {
-                            LogDiagnostic("UDON COMPUTE: HEAVY INSTRUCTIONS", "Heavy Instruction Count",
-                                $"'{uAsset.name}' runs about {count} Udon instructions. Large scripts cost frame time every time they run.",
-                                "#ffaa00", udon.gameObject);
-                        }
-                    }
+                    if (!perFrameCopies.TryGetValue(uAsset, out List<UdonBehaviour> copies)) perFrameCopies[uAsset] = copies = new List<UdonBehaviour>();
+                    copies.Add(udon);
                 }
+            }
+
+            foreach (var pair in perFrameCopies)
+            {
+                UdonProgramShape shape = GetUdonShape(pair.Key, cache, getUasm);
+                if (shape == null || shape.PerFrameInstructions == 0) continue;
+
+                int copyCount = pair.Value.Count;
+                long total = (long)shape.PerFrameInstructions * copyCount;
+                if (total <= UDON_PER_FRAME_INSTRUCTION_THRESHOLD) continue;
+
+                string events = string.Join(", ", shape.PerFrameEvents.Select(UdonEventDisplayName));
+                string desc = copyCount == 1
+                    ? $"'{pair.Key.name}' runs {events} every frame, which can reach about {shape.PerFrameInstructions:N0} Udon instructions."
+                    : $"'{pair.Key.name}' runs {events} every frame on {copyCount} objects. Each can reach about {shape.PerFrameInstructions:N0} Udon instructions, {total:N0} in all.";
+                LogDiagnostic("UDON COMPUTE: HEAVY INSTRUCTIONS", "Heavy Every Frame", desc, "#ffaa00", pair.Value[0].gameObject);
             }
 
             foreach (var objSync in GetCachedObjects<VRCObjectSync>(true))
@@ -3892,7 +4108,7 @@ namespace VixenTools.Editor
 
                 foreach (var prop in shaderProperties)
                 {
-                    if (mat.HasProperty(prop))
+                    if (mat.HasTexture(prop))
                     {
                         activeProp = prop;
                         if (mat.GetTexture(prop) == null) slotNeedsRepair = true;
@@ -4181,8 +4397,8 @@ namespace VixenTools.Editor
 
             foreach (var proj in GetCachedObjects<Projector>(true)) if (proj.material != null) { sceneMaterials.Add(proj.material); ScrapeTexturesFromMaterial(proj.material); }
             foreach (var psr in GetCachedObjects<ParticleSystemRenderer>(true)) if (psr.trailMaterial != null) { sceneMaterials.Add(psr.trailMaterial); ScrapeTexturesFromMaterial(psr.trailMaterial); }
-            foreach (var light in GetCachedObjects<Light>(true)) if (light.cookie != null) _detectedTextures.Add(light.cookie);
-            foreach (var probe in GetCachedObjects<ReflectionProbe>(true)) if (probe.customBakedTexture != null) _detectedTextures.Add(probe.customBakedTexture);
+            foreach (var light in GetCachedObjects<Light>(true)) if (light.cookie != null) AddLooseTexture(light.cookie);
+            foreach (var probe in GetCachedObjects<ReflectionProbe>(true)) if (probe.customBakedTexture != null) AddLooseTexture(probe.customBakedTexture);
 
             foreach (var terrain in GetCachedObjects<Terrain>(true))
             {
@@ -4193,9 +4409,9 @@ namespace VixenTools.Editor
                     {
                         if (layer != null)
                         {
-                            if (layer.diffuseTexture != null) _detectedTextures.Add(layer.diffuseTexture);
-                            if (layer.normalMapTexture != null) _detectedTextures.Add(layer.normalMapTexture);
-                            if (layer.maskMapTexture != null) _detectedTextures.Add(layer.maskMapTexture);
+                            if (layer.diffuseTexture != null) AddLooseTexture(layer.diffuseTexture);
+                            if (layer.normalMapTexture != null) AddLooseTexture(layer.normalMapTexture);
+                            if (layer.maskMapTexture != null) AddLooseTexture(layer.maskMapTexture);
                         }
                     }
                 }
@@ -4211,8 +4427,8 @@ namespace VixenTools.Editor
                         {
                             if (val is Material m && m != null) { sceneMaterials.Add(m); ScrapeTexturesFromMaterial(m); }
                             else if (val is Material[] mats && mats != null) foreach (var mat in mats) if (mat != null) { sceneMaterials.Add(mat); ScrapeTexturesFromMaterial(mat); }
-                            else if (val is Texture tex && tex != null) _detectedTextures.Add(tex);
-                            else if (val is Texture[] texs && texs != null) foreach (var t in texs) if (t != null) _detectedTextures.Add(t);
+                            else if (val is Texture tex && tex != null) AddLooseTexture(tex);
+                            else if (val is Texture[] texs && texs != null) foreach (var t in texs) if (t != null) AddLooseTexture(t);
                         }
                     }
                 }
@@ -4250,22 +4466,22 @@ namespace VixenTools.Editor
                     else if (typeof(Texture).IsAssignableFrom(f.FieldType))
                     {
                         var tex = f.GetValue(b) as Texture;
-                        if (tex != null) _detectedTextures.Add(tex);
+                        if (tex != null) AddLooseTexture(tex);
                     }
                     else if (f.FieldType.IsArray && typeof(Texture).IsAssignableFrom(f.FieldType.GetElementType()))
                     {
                         var texs = f.GetValue(b) as Texture[];
-                        if (texs != null) foreach(var tex in texs) if (tex != null) _detectedTextures.Add(tex);
+                        if (texs != null) foreach(var tex in texs) if (tex != null) AddLooseTexture(tex);
                     }
                     else if (f.FieldType == typeof(Sprite))
                     {
                         var spr = f.GetValue(b) as Sprite;
-                        if (spr != null && spr.texture != null) _detectedTextures.Add(spr.texture);
+                        if (spr != null && spr.texture != null) AddLooseTexture(spr.texture);
                     }
                     else if (f.FieldType.IsArray && f.FieldType.GetElementType() == typeof(Sprite))
                     {
                         var sprs = f.GetValue(b) as Sprite[];
-                        if (sprs != null) foreach(var s in sprs) if (s != null && s.texture != null) _detectedTextures.Add(s.texture);
+                        if (sprs != null) foreach(var s in sprs) if (s != null && s.texture != null) AddLooseTexture(s.texture);
                     }
                 }
             }
@@ -4286,7 +4502,7 @@ namespace VixenTools.Editor
                     foreach (var field in texFields)
                     {
                         var tInfo = txlScreenMgrType.GetField(field, monoFlags);
-                        if (tInfo != null && tInfo.GetValue(sm) is Texture t && t != null) _detectedTextures.Add(t);
+                        if (tInfo != null && tInfo.GetValue(sm) is Texture t && t != null) AddLooseTexture(t);
                     }
                 }
             }
@@ -4296,7 +4512,7 @@ namespace VixenTools.Editor
                 foreach (var tv in GetCachedObjects(proTvType, true))
                 {
                     var customTexField = proTvType.GetField("customTexture", monoFlags);
-                    if (customTexField != null && customTexField.GetValue(tv) is Texture t && t != null) _detectedTextures.Add(t);
+                    if (customTexField != null && customTexField.GetValue(tv) is Texture t && t != null) AddLooseTexture(t);
                 }
             }
 
@@ -4310,7 +4526,7 @@ namespace VixenTools.Editor
                     {
                         foreach (var s in sprites)
                         {
-                            if (s != null && s.texture != null) _detectedTextures.Add(s.texture);
+                            if (s != null && s.texture != null) AddLooseTexture(s.texture);
                         }
                     }
                 }
@@ -4324,10 +4540,10 @@ namespace VixenTools.Editor
                     if (matField != null && matField.GetValue(al) is Material m && m != null) { sceneMaterials.Add(m); ScrapeTexturesFromMaterial(m); }
 
                     var rtField = audioLinkType.GetField("audioData", monoFlags);
-                    if (rtField != null && rtField.GetValue(al) is Texture t && t != null) _detectedTextures.Add(t);
+                    if (rtField != null && rtField.GetValue(al) is Texture t && t != null) AddLooseTexture(t);
 
                     var tex2DField = audioLinkType.GetField("audioData2D", monoFlags);
-                    if (tex2DField != null && tex2DField.GetValue(al) is Texture t2 && t2 != null) _detectedTextures.Add(t2);
+                    if (tex2DField != null && tex2DField.GetValue(al) is Texture t2 && t2 != null) AddLooseTexture(t2);
                 }
             }
 
@@ -4505,6 +4721,13 @@ namespace VixenTools.Editor
             }
         }
 
+        private void AddLooseTexture(Texture tex)
+        {
+            if (tex == null) return;
+            _detectedTextures.Add(tex);
+            _looseTextures.Add(tex);
+        }
+
         private void ScrapeTexturesFromMaterial(Material mat)
         {
             if (mat == null) return;
@@ -4513,10 +4736,13 @@ namespace VixenTools.Editor
             foreach (string propName in texNames)
             {
                 Texture tex = mat.GetTexture(propName);
-                if (tex != null)
-                {
-                    _detectedTextures.Add(tex);
-                }
+                if (tex == null) continue;
+
+                _detectedTextures.Add(tex);
+                if (!_textureSlots.TryGetValue(tex, out List<VixenTextureCheck.Slot> slots)) _textureSlots[tex] = slots = new List<VixenTextureCheck.Slot>();
+                if (slots.Any(s => s.Material == mat && s.Property == propName)) continue;
+                VixenTextureCheck.Slot slot = VixenTextureCheck.SlotFor(mat, propName);
+                if (slot != null) slots.Add(slot);
             }
         }
 
@@ -4524,6 +4750,7 @@ namespace VixenTools.Editor
         {
             _processedTexturePaths.Clear();
             bool cacheUpdatedDuringScan = false;
+            int targetMax = Mathf.Clamp(_targetTextureResolution, 32, 16384);
 
             foreach (var tex in _detectedTextures)
             {
@@ -4531,117 +4758,26 @@ namespace VixenTools.Editor
 
                 string path = AssetDatabase.GetAssetPath(tex);
                 if (string.IsNullOrEmpty(path) || (!path.StartsWith("Assets", StringComparison.OrdinalIgnoreCase) && !path.StartsWith("Packages", StringComparison.OrdinalIgnoreCase))) continue;
-
-                string guid = AssetDatabase.AssetPathToGUID(path);
-
-                if (!ShouldProcessTextureAsset(guid, path)) continue;
-
                 if (!_processedTexturePaths.Add(path)) continue;
 
                 TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
                 if (importer == null) continue;
 
-                bool isCompliant = true;
+                string guid = AssetDatabase.AssetPathToGUID(path);
+                _textureSlots.TryGetValue(tex, out List<VixenTextureCheck.Slot> slots);
 
-                if (importer.isReadable)
-                {
-                    isCompliant = false;
-                    LogDiagnostic("TEXTURES & VRAM", "Read/Write Enabled",
-                        $"'{tex.name}' has Read/Write enabled, keeping a duplicate copy of the texture in CPU RAM.",
-                        "#ffaa00", tex, () =>
-                        {
-                            Undo.RecordObject(importer, "Disable Read/Write");
-                            importer.isReadable = false;
-                            importer.SaveAndReimport();
-                            RecordTextureResult(guid, path, true);
-                        });
-                }
+                bool checkImport = ShouldProcessTextureAsset(guid, path);
+                List<VixenTextureCheck.Finding> importFindings = checkImport
+                    ? VixenTextureCheck.CheckImport(tex, importer, path, slots, targetMax)
+                    : new List<VixenTextureCheck.Finding>();
 
-                if (importer.textureCompression == TextureImporterCompression.Uncompressed)
-                {
-                    isCompliant = false;
-                    LogDiagnostic("TEXTURES & VRAM", "Uncompressed Texture",
-                        $"'{tex.name}' is fully uncompressed.",
-                        "#00e5ff", tex, () =>
-                        {
-                            Undo.RecordObject(importer, "Compress Texture");
-                            importer.textureCompression = TextureImporterCompression.Compressed;
-                            importer.crunchedCompression = true;
-                            importer.compressionQuality = 75;
-                            importer.SaveAndReimport();
-                            RecordTextureResult(guid, path, true);
-                        });
-                }
+                foreach (var finding in importFindings) LogTextureFinding(finding);
+                foreach (var finding in VixenTextureCheck.CheckSlots(tex, importer, path, slots)) LogTextureFinding(finding);
 
-                bool isUI = importer.textureType == TextureImporterType.Sprite || importer.textureType == TextureImporterType.GUI || importer.textureType == TextureImporterType.Cursor;
+                VixenTextureCheck.Finding source = VixenTextureCheck.CheckSource(tex, path, slots, _looseTextures.Contains(tex));
+                if (source != null) LogTextureFinding(source);
 
-                if (!isUI && (!Mathf.IsPowerOfTwo(tex.width) || !Mathf.IsPowerOfTwo(tex.height)))
-                {
-                    if (importer.npotScale == TextureImporterNPOTScale.None)
-                    {
-                        isCompliant = false;
-                        LogDiagnostic("TEXTURES & VRAM", "Non-Power of 2 Source",
-                            $"'{tex.name}' is {tex.width}x{tex.height}. Unity can scale this safely.",
-                            "#ff00aa", tex, () =>
-                            {
-                                Undo.RecordObject(importer, "Scale to Nearest Power of 2");
-                                importer.npotScale = TextureImporterNPOTScale.ToNearest;
-                                importer.SaveAndReimport();
-                                RecordTextureResult(guid, path, true);
-                            });
-                    }
-                }
-
-                importer.GetSourceTextureWidthAndHeight(out int srcWidth, out int srcHeight);
-                int targetMax = Mathf.Clamp(_targetTextureResolution, 32, 16384);
-
-                if (srcWidth > targetMax || srcHeight > targetMax)
-                {
-                    isCompliant = false;
-                    TextureImporter importerLocal = importer;
-                    string fullPathForResize = System.IO.Path.GetFullPath(path);
-
-                    LogDiagnostic("TEXTURES & VRAM", $"{targetMax}+ Oversized Texture",
-                        $"'{tex.name}' is {srcWidth}x{srcHeight}. Image Magick Will Resize to {targetMax}.",
-                        "#ff00aa", tex, () =>
-                        {
-                            EnqueueWork(() => {
-                                bool success = ResizeTextureWithMagick(fullPathForResize, path, targetMax, targetMax);
-                                if (success) {
-                                    Undo.RecordObject(importerLocal, "Clamp Texture Max Size");
-                                    importerLocal.maxTextureSize = targetMax;
-                                    importerLocal.SaveAndReimport();
-                                }
-                                RecordTextureResult(guid, path, success);
-                            });
-                        });
-                    continue;
-                }
-
-                string fullPath = System.IO.Path.GetFullPath(path);
-                if (System.IO.File.Exists(fullPath))
-                {
-                    string ext = System.IO.Path.GetExtension(fullPath).ToLowerInvariant();
-                    if (ext == ".png" || ext == ".jpg" || ext == ".jpeg" || ext == ".tga" || ext == ".tif" || ext == ".tiff")
-                    {
-                        long fileBytes = new System.IO.FileInfo(fullPath).Length;
-                        if (fileBytes > 15 * 1024 * 1024)
-                        {
-                            isCompliant = false;
-                            LogDiagnostic("TEXTURES & VRAM", "Massive Raw File Bloat",
-                                $"'{tex.name}' is {fileBytes / 1048576f:F1} MB on disk. Stripping metadata.",
-                                "#ff00aa", tex, () =>
-                                {
-                                    EnqueueWork(() => {
-                                        bool success = OptimizeTextureWithMagick(fullPath, path);
-                                        RecordTextureResult(guid, path, success);
-                                    });
-                                });
-                        }
-                    }
-                }
-
-                if (isCompliant)
+                if (checkImport && importFindings.Count == 0)
                 {
                     RecordTextureResult(guid, path, true);
                     cacheUpdatedDuringScan = true;
@@ -4651,50 +4787,14 @@ namespace VixenTools.Editor
             if (cacheUpdatedDuringScan) SaveLookupCache();
         }
 
-        private bool ResizeTextureWithMagick(string fullPath, string assetPath, int maxWidth, int maxHeight)
+        private void LogTextureFinding(VixenTextureCheck.Finding finding)
         {
-            if (VixenMagickKit.IsProtectedAsset(assetPath)) return false;
-            try
-            {
-                using (var img = new MagickImage(File.ReadAllBytes(fullPath), VixenMagickKit.DownscaleReadSettings((uint)maxWidth)))
-                {
-                    bool linear = VixenMagickKit.IsLinearOrNormalData(assetPath);
-                    VixenMagickKit.HighQualityResize(img, (uint)maxWidth, (uint)maxHeight, linear, FilterType.Lanczos, true, 0.5);
-                    VixenMagickKit.ApplyOptimalEncoding(img);
-                    img.Write(fullPath);
-                }
-                VixenMagickKit.TryLosslessOptimize(fullPath);
-
-                AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.LogWarning($"[Vixen World Engine] Magick resize failed for '{assetPath}': {ex.Message}");
-                return false;
-            }
-        }
-
-        private bool OptimizeTextureWithMagick(string fullPath, string assetPath)
-        {
-            if (VixenMagickKit.IsProtectedAsset(assetPath)) return false;
-            try
-            {
-                using (var img = new MagickImage(File.ReadAllBytes(fullPath)))
-                {
-                    VixenMagickKit.ApplyOptimalEncoding(img);
-                    img.Write(fullPath);
-                }
-                VixenMagickKit.TryLosslessOptimize(fullPath);
-
-                AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.LogWarning($"[Vixen World Engine] Magick optimize failed for '{assetPath}': {ex.Message}");
-                return false;
-            }
+            string category = finding.Kind == VixenTextureCheck.Issue.SourceFormat ? "TEXTURES: SOURCE FILES" : "TEXTURES & VRAM";
+            string hex = !finding.CanApply ? "#00e5ff" : finding.KeepOutOfBatch ? "#ffaa00" : "#ff00aa";
+            Action fix = null;
+            if (finding.CanApply) fix = () => VixenTextureCheck.Apply(finding);
+            EngineDiagnostic diagnostic = LogDiagnostic(category, finding.Title, finding.Description, hex, finding.Texture, fix);
+            diagnostic.KeepOutOfBatch = finding.KeepOutOfBatch;
         }
 
         private void AuditCanvasesAndUIMemory()
@@ -4904,17 +5004,18 @@ namespace VixenTools.Editor
                         if (!string.IsNullOrEmpty(uasm))
                         {
                             bool usesPlayerData = uasm.Contains("Persistence") && uasm.Contains("PlayerData");
-                            bool hasUpdate = uasm.Contains("_update") || uasm.Contains("_lateUpdate") || uasm.Contains("_fixedUpdate");
+                            UdonProgramShape shape = GetUdonShape(uAsset, cache, getUasm);
+                            bool setsEveryFrame = shape != null && shape.PerFrameExterns.Any(x => x.Contains("PlayerData.__Set"));
                             bool usesOnPlayerDataUpdated = uasm.Contains("_onPlayerDataUpdated");
-                            bool usesSet = uasm.Contains("PlayerData.__Set");
                             bool usesGet = uasm.Contains("PlayerData.__Get");
 
                             if (usesPlayerData)
                             {
-                                if (usesSet && hasUpdate)
+                                if (setsEveryFrame)
                                 {
-                                    LogDiagnostic("UDON PERSISTENCE", "PlayerData in Update Loop",
-                                        $"'{uAsset.name}' executes PlayerData.Set() alongside an Update loop. Writing to persistence every frame will instantly trigger VRChat's rate limits and cause total data loss for the player. Refactor to only save on discrete state changes.",
+                                    string events = string.Join(", ", shape.PerFrameEvents.Select(UdonEventDisplayName));
+                                    LogDiagnostic("UDON PERSISTENCE", "Player Data Saved Every Frame",
+                                        $"'{uAsset.name}' can save player data from {events}, which runs every frame. Save only when a value actually changes.",
                                         "#ff00aa", udon.gameObject);
                                 }
 

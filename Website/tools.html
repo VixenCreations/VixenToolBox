@@ -198,11 +198,14 @@
 
                 <p class="caption2 mt-3 page-subtitle">
                     <strong>Which tools you see depends on your project.</strong>
-                    The Hub, Animation Workbench Pro and the Pipeline Preset Manager load everywhere.
+                    The Hub, Animation Workbench Pro, the Pipeline Preset Manager, the Scene View Enhancer
+                    and Memory Diagnostics load everywhere.
                     Avatar projects get the Optimization Suite, Quest Conversion Engine, PhysBone Blueprints,
                     Animator Forge, Badge Studio, the Material Conflict Finder and the Accessory Mounting Engine.
-                    World projects get the World Engine, World Profiler and the Scene Placement tools.
-                    Everything except the Workbench and the Preset Manager needs the VRChat SDK.
+                    World projects get the World Engine with its Performance Map, the Quest World Converter
+                    and the Scene Placement tools.
+                    Everything except the Workbench, the Preset Manager, the Scene View Enhancer and Memory
+                    Diagnostics needs the VRChat SDK.
                 </p>
             </div>
         </div>
@@ -432,7 +435,7 @@
                     <div class="badge">Avatar</div>
                 </div>
                 <div class="tag-row"><span class="shader-tag">Avatar</span></div>
-                <p class="tab-desc">A non-destructive conversion that turns a PC avatar into one that meets VRChat Mobile–compliant builds.</p>
+                <p class="tab-desc">A non-destructive conversion that turns a PC avatar into one that meets VRChat Mobile-compliant builds.</p>
                 <div class="tool-shot">
                     <img src="previews/Quest_Conversion_Engine_Preview.png" alt="Quest Conversion Engine" class="preview-trigger" loading="lazy">
                 </div>
@@ -442,7 +445,7 @@
                         <li class="mb-2">
                             <strong>Magick.NET Linear Downsampling:</strong>
                             Resizes textures in linear light using ImageMagick, outside Unity.
-                            Supports 256–2048px targets, preserves micro-contrast, and automatically skips RenderTextures
+                            Supports 256-2048px targets, preserves micro-contrast, and automatically skips RenderTextures
                             to avoid corruption. Every texture is processed deterministically for perfect VRAM control.
                         </li>
 
@@ -469,7 +472,7 @@
                         </li>
 
                         <li class="mb-2">
-                            <strong>Face Tracking & VRCFT Hunter-Killer:</strong>
+                            <strong>Face tracking removal:</strong>
                             Detects VRCFaceTracking templates, adjerry91 prefabs, VRCFury face-tracking branches, and
                             namespace-based FT components. Automatically locks them for removal to maintain Quest compliance.
                         </li>
@@ -484,13 +487,13 @@
                             <strong>Hard-Cap Performance Mapping:</strong>
                             Calculates total triangles, skinned meshes, material slots, unique materials, unique textures,
                             and all physics nodes. Highlights violations using color-coded severity markers and applies
-                            VRChat’s mobile limits mathematically.
+                            VRChat's mobile limits mathematically.
                         </li>
 
                         <li class="mb-2">
                             <strong>Texture Map Selection:</strong>
                             Displays every detected texture with resolution metadata and toggleable processing flags.
-                            Supports “Select All / Deselect All” batch operations for rapid iteration.
+                            Supports "Select All / Deselect All" batch operations for rapid iteration.
                         </li>
 
                         <li class="mb-2">
@@ -503,7 +506,7 @@
                             <strong>Mobile Shader Targeting:</strong>
                             Automatically converts materials to your selected Quest shader:
                             <code>VRCMobileToonStandard</code>, <code>VRCMobileToonLit</code>,
-                            <code>VRCMobileStandard</code>, <code>VRCMobileMatcap</code>, or Unity’s Mobile Standard.
+                            <code>VRCMobileStandard</code>, <code>VRCMobileMatcap</code>, or Unity's Mobile Standard.
                         </li>
 
                         <li class="mb-2">
@@ -549,7 +552,7 @@
                 <ul class="custom-list m-0 ps-4">
 
                         <li class="mb-2">
-                            <strong>Master Blueprint System:</strong>
+                            <strong>Master blueprint:</strong>
                             Generates a complete physics blueprint using <code>AnimationUtility.CalculateTransformPath</code>.
                             Every PhysBone is serialized into a <em>ScriptableObject</em> containing:
                             <ul class="custom-list ps-4 mt-2">
@@ -578,7 +581,7 @@
                             Every PhysBone is exported as a standalone <code>.preset</code> file.
                             This allows:
                             <ul class="custom-list ps-4 mt-2">
-                                <li>Manual editing in Unity’s Preset Inspector</li>
+                                <li>Manual editing in Unity's Preset Inspector</li>
                                 <li>Version control diffing</li>
                                 <li>Cross-avatar reuse</li>
                                 <li>Bulk preset replacement</li>
@@ -587,7 +590,7 @@
 
                         <li class="mb-2">
                             <strong>Safe Extraction:</strong>
-                            The mapper walks the avatar hierarchy using Unity’s transform path system, ensuring:
+                            The mapper walks the avatar hierarchy by Unity's transform paths, so there is:
                             <ul class="custom-list ps-4 mt-2">
                                 <li>No reliance on object names alone</li>
                                 <li>No prefab-breaking references</li>
@@ -626,7 +629,7 @@
                                 <li>Body-type swaps</li>
                                 <li>LOD-based rigs</li>
                             </ul>
-                            Your physics system stays consistent across every version.
+                            Your PhysBone setup stays the same across every version.
                         </li>
 
                     </ul>
@@ -922,13 +925,13 @@
 
                         <li class="mb-2">
                             <strong>High-Fidelity Text Rendering:</strong>
-                            Uses Unity’s dynamic font rasterizer with your cyberpunk font to produce crisp,
+                            Uses Unity's dynamic font rasterizer with your cyberpunk font to produce crisp,
                             bloom-safe text at any resolution - including 4096×4096 convention-grade badges.
                         </li>
 
                         <li class="mb-2">
                             <strong>Material Auto-Apply:</strong>
-                            Optionally pushes generated textures directly into your avatar’s material, filling
+                            Optionally pushes generated textures directly into your avatar's material, filling
                             <code>_MainTex</code> (or <code>_BaseMap</code>) and <code>_EmissionMap</code> on whichever
                             shader it detects.
                         </li>
@@ -970,7 +973,7 @@
                             <strong>Interactive Raycasting:</strong>
                             Converts Scene View clicks into precise MeshCollider hit points, then mathematically
                             inverts the barycentric UV coordinates into ImageMagick pixel space.
-                            Supports 1K–4K badge maps with sub-pixel accuracy.
+                            Supports 1K-4K badge maps with sub-pixel accuracy.
                         </li>
 
                         <li class="mb-2">
@@ -982,7 +985,7 @@
                         <li class="mb-2">
                             <strong>Non-Destructive Workflow:</strong>
                             Temporarily injects a MeshCollider into your badge object for raycasting,
-                            suspends Unity’s native gizmos, and restores everything on exit.
+                            suspends Unity's native gizmos, and restores everything on exit.
                             No permanent components are added to your scene.
                         </li>
 
@@ -1069,7 +1072,7 @@
                                 <li>Color-coded curves per binding</li>
                                 <li>Dynamic value-range detection</li>
                             </ul>
-                            Designed for high-density animation editing without Unity’s native Timeline overhead.
+                            Designed for high-density animation editing without Unity's native Timeline overhead.
                         </li>
 
                         <li class="mb-2">
@@ -1234,7 +1237,7 @@
 
                         <li class="mb-2">
                             <strong>Phantom Asset Detection:</strong>
-                            The Create New Preset tab creates a temporary “phantom” PNG on disk, injects your import rules
+                            The Create New Preset tab creates a temporary "phantom" PNG on disk, injects your import rules
                             (texture type, mip-maps, readability, max resolution), then rips the importer state into a
                             permanent Preset. This allows you to author standardized presets without needing a real
                             source asset.
@@ -1254,7 +1257,7 @@
 
                         <li class="mb-2">
                             <strong>Global Preset Registration:</strong>
-                            Every generated preset can be automatically injected into Unity’s
+                            Every generated preset can be automatically injected into Unity's
                             <code>PresetManager</code> via <code>Preset.SetDefaultPresetsForType()</code>.
                             This means:
                             <ul class="custom-list ps-4 mt-2">
@@ -1289,8 +1292,8 @@
 
                         <li class="mb-2">
                             <strong>Preset Manager Integration:</strong>
-                            Automatically inserts your presets at the top of Unity’s default preset stack,
-                            ensuring they override Unity’s built-in importer behavior without manual intervention.
+                            Automatically inserts your presets at the top of Unity's default preset stack,
+                            ensuring they override Unity's built-in importer behavior without manual intervention.
                         </li>
 
                         <li class="mb-2">
@@ -1303,6 +1306,78 @@
                                 <li>PhysBone presets must be reusable</li>
                             </ul>
                             Eliminates drift, human error, and inconsistent asset states.
+                        </li>
+
+                    </ul>
+            </div>
+
+            <!-- ========================= -->
+            <!-- SCENE VIEW ENHANCER -->
+            <!-- ========================= -->
+<div id="scene-view-enhancer" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Scene View Enhancer</h2>
+                    <div class="badge">Any Project</div>
+                </div>
+                <div class="tag-row"><span class="shader-tag">Any Project</span></div>
+                <p class="tab-desc">Caps how fast the editor runs while it is idle, and shows what is slowing it down. Turn it on from
+                        the Hub or <code>VixenTools &gt; Unity Engine &gt; Scene View Enhancer</code>.</p>
+                <h3 class="text-glow-pink opt-group">What it does</h3>
+                <ul class="custom-list m-0 ps-4">
+
+                        <li class="mb-2">
+                            <strong>Frame cap:</strong>
+                            Sets Unity's own Interaction Mode to the frame rate you pick, from 30 to 240, and puts your
+                            previous setting back when you turn it off.
+                        </li>
+
+                        <li class="mb-2">
+                            <strong>Vixen Scene Stats:</strong>
+                            A panel in the Scene view shows how often the view redraws, the frame cap, script memory, engine
+                            memory and graphics driver memory. It refreshes once a second and never makes the Scene view
+                            redraw on its own, so a number that climbs while you are not touching anything is worth a look.
+                        </li>
+
+                        <li class="mb-2">
+                            <strong>One click away:</strong>
+                            The panel opens Memory Diagnostics, and <strong>Free Unused</strong> clears out memory nothing
+                            is using any more.
+                        </li>
+
+                    </ul>
+            </div>
+
+            <!-- ========================= -->
+            <!-- MEMORY DIAGNOSTICS -->
+            <!-- ========================= -->
+<div id="memory-diagnostics" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Memory Diagnostics</h2>
+                    <div class="badge">Any Project</div>
+                </div>
+                <div class="tag-row"><span class="shader-tag">Any Project</span></div>
+                <p class="tab-desc">Finds what a tool made and never freed. Open it from the Hub, the Scene Stats panel or
+                        <code>VixenTools &gt; Unity Engine &gt; Memory Diagnostics</code>.</p>
+                <h3 class="text-glow-pink opt-group">What it does</h3>
+                <ul class="custom-list m-0 ps-4">
+
+                        <li class="mb-2">
+                            <strong>Leak Check:</strong>
+                            Press <strong>Take Snapshot</strong>, repeat the task you are testing a few times, press
+                            <strong>Free Unused Memory</strong>, then <strong>Compare With Snapshot</strong>. The textures,
+                            materials and meshes that grew are what stayed behind.
+                        </li>
+
+                        <li class="mb-2">
+                            <strong>No false alarms from assets:</strong>
+                            Only things that are not saved in your project are counted, so a loaded texture or material never
+                            looks like a leak.
+                        </li>
+
+                        <li class="mb-2">
+                            <strong>Largest Textures:</strong>
+                            The 50 textures using the most editor memory, with the ones made at runtime, by a tool or by
+                            Unity itself, marked <strong>not saved</strong>.
                         </li>
 
                     </ul>
@@ -1356,7 +1431,7 @@
                     <li class="mb-2"><strong>Click to place</strong> - Aim at a shelf, a wall or terrain and the object lands there, turned to match the surface. A coloured disc shows where it will go before you commit.</li>
                     <li class="mb-2"><strong>It ignores the layers it should</strong> - Water, UI and pickup layers are skipped so you do not snap onto a trigger volume, and the object's own colliders are held back so it cannot land on itself.</li>
                     <li class="mb-2"><strong>Udon objects register the move</strong> - Snapped objects carrying Udon behaviours are marked as changed properly, so their positions survive a world build instead of rolling back.</li>
-                    <li class="mb-2"><strong>Lightmaps stop going missing</strong> - It re-saves the scene's lighting data reference, which fixes the black or missing lightmaps you get after moving a scene between machines.</li>
+                    <li class="mb-2"><strong>Lightmaps stop going missing</strong> - <code>VixenTools &gt; Unity Engine &gt; Fix Scene Data</code> re-saves the scene's lighting data reference, which fixes the black or missing lightmaps you get after moving a scene between machines.</li>
                 </ul>
                 <h3 class="text-glow-pink opt-group" data-collapsed>In practice</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -1366,61 +1441,93 @@
             </div>
 
             <!-- ========================= -->
-            <!-- WORLD PROFILER -->
+            <!-- QUEST WORLD CONVERTER -->
             <!-- ========================= -->
-<div id="world-profiler" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+<div id="quest-world-converter" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">World Profiler</h2>
+                    <h2 class="text-glow-cyan m-0">Quest World Converter</h2>
                     <div class="badge">World</div>
                 </div>
                 <div class="tag-row"><span class="shader-tag">World</span></div>
-                <p class="tab-desc">Opens from the World Engine and turns a scan into a single number you can act on: an
-                        <strong>OPTIMAL / MODERATE / SEVERE</strong> compute threat level for the whole world.</p>
+                <p class="tab-desc">Makes Quest copies of your world's materials and leaves the originals alone. Find it at
+                        <code>VixenTools &gt; Scene &gt; Quest World Converter</code>.</p>
                 <h3 class="text-glow-pink opt-group">What it does</h3>
                 <ul class="custom-list m-0 ps-4">
 
                         <li class="mb-2">
-                            <strong>Real VRAM, Not Estimates:</strong>
-                            Totals textures, meshes, audio and UI atlases through
-                            <code>Profiler.GetRuntimeMemorySizeLong()</code>, which reports what the GPU actually holds.
-                            Procedural render textures and unmanaged allocations that hide from project scanners show up here.
+                            <strong>Scan Open Scenes:</strong>
+                            Collects every material on your renderers, terrains and skybox.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Ghost Component Filter:</strong>
-                            Unity's own object search happily returns components that are disabled or sitting on inactive
-                            objects, which inflates any estimate built on it. Every component counted here has to pass an
-                            enabled and active-in-hierarchy check first, so switching off a room genuinely removes its cost
-                            from the score.
+                            <strong>Convert Selected Materials:</strong>
+                            Writes Quest-ready copies into <code>Assets/VixenTools/Quest World/</code>, using only shaders
+                            VRChat accepts on Quest. Materials already on a Quest shader are left as they are.
                         </li>
 
                         <li class="mb-2">
-                            <strong>Weighted, Not Guessed:</strong>
-                            Draw calls, mesh colliders, realtime shadow casters, physics bodies and dense Light Volume setups
-                            each carry their own multiplier based on what they really cost in the VRChat client. The full
-                            breakdown of those multipliers ships inside the Hub, on the Metrics Engine tab.
-                        </li>
-
-                        <li class="mb-2">
-                            <strong>Hardware-Agnostic:</strong>
-                            It scores structural complexity rather than frame times, so the result does not swing with
-                            whatever machine you happen to be sitting at.
+                            <strong>Point the scene at the new materials:</strong>
+                            Off by default, and it asks before it swaps anything.
                         </li>
 
                     </ul>
             </div>
 
             <!-- ========================= -->
-            <!-- VIXEN WORLD ENGINE: OMNI-SYSTEM DIAGNOSTIC SPIDER -->
+            <!-- PERFORMANCE MAP (World Engine tab) -->
+            <!-- ========================= -->
+<div id="world-profiler" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">Performance Map</h2>
+                    <div class="badge">World</div>
+                </div>
+                <div class="tag-row"><span class="shader-tag">World</span></div>
+                <p class="tab-desc">A tab in the World Engine window, next to <strong>FINDINGS</strong>. After a scan it rates how
+                        heavy your world is, <strong>Optimal, Moderate, High or Severe</strong>, and estimates its memory.</p>
+                <h3 class="text-glow-pink opt-group">What it does</h3>
+                <ul class="custom-list m-0 ps-4">
+
+                        <li class="mb-2">
+                            <strong>Memory estimate:</strong>
+                            Adds up textures, meshes, UI, lightmaps, Light Volumes, AudioLink and LTCGI data from Unity's own
+                            memory numbers, with audio on its own line. Render textures and font atlases that project
+                            scanners miss are counted too.
+                        </li>
+
+                        <li class="mb-2">
+                            <strong>Only what is switched on counts:</strong>
+                            Components have to be enabled and on an active object, so switching off a room takes its cost
+                            out of the score.
+                        </li>
+
+                        <li class="mb-2">
+                            <strong>Weighted by real cost:</strong>
+                            Draw calls, mesh colliders, realtime shadows, physics, realtime reflection probes, extra cameras,
+                            Light Volumes, LTCGI screens and AudioLink each carry their own weight. The Hub's Metrics Engine
+                            tab lists every one.
+                        </li>
+
+                        <li class="mb-2">
+                            <strong>The same on every machine:</strong>
+                            It scores what is in your scene rather than timing frames, so the result does not change with
+                            the PC you are sitting at.
+                        </li>
+
+                    </ul>
+            </div>
+
+            <!-- ========================= -->
+            <!-- VIXEN WORLD ENGINE -->
             <!-- ========================= -->
 <div id="vixen-world-engine" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">Vixen World Engine: Omni-System Diagnostic Spider</h2>
+                    <h2 class="text-glow-cyan m-0">Vixen World Engine</h2>
                     <div class="badge">World</div>
                 </div>
                 <div class="tag-row"><span class="shader-tag">World</span></div>
                 <p class="tab-desc">Scans a world for what will break it once people are in it: memory, network load, broken shaders and
-                        heavy scripts. Around 137 checks across nine supported ecosystems, most with a one-click fix.</p>
+                        heavy scripts. More than 160 checks across ten supported packages, most with a one-click fix.
+                        <strong>FINDINGS</strong> and <strong>PERFORMANCE MAP</strong> sit side by side as tabs in one window.</p>
                 <div class="tool-shot">
                     <img src="previews/Vixen_World_Engine_Spider_Preview.png" alt="Vixen World Engine" class="preview-trigger" loading="lazy">
                 </div>
@@ -1432,12 +1539,12 @@
                         <div class="matrix-column">
                             <h4 class="text-glow-pink caption1 mb-2">ECOSYSTEM & SCENE CHECKS</h4>
                             <ul class="custom-list ps-4 caption2">
-                                <li class="mb-2"><strong>ProTV checks:</strong> Deep-scans ProTV instances for HDR VRAM bloat, baked GSV conflicts, RTGI mobile sinks, aggressive playlist search loops, and emissive GI blowouts. Automatically patches unsafe fields via reflection-based fix payloads.</li>
-                                <li class="mb-2"><strong>IwaSync3 Stability System:</strong> Flags 1080p+ video blowouts, unbounded playlist growth, non-spatialized global audio, aggressive sync frequencies, emissive screen overdrive, and GC-heavy event invokers that destabilize frame pacing.</li>
+                                <li class="mb-2"><strong>ProTV checks:</strong> Flags HDR video memory bloat, baked global video texture conflicts, realtime GI on screens, heavy playlist search, speakers and the AudioLink link. Most come with a one-click fix.</li>
+                                <li class="mb-2"><strong>IwaSync3 checks:</strong> Flags 1080p+ video blowouts, unbounded playlist growth, non-spatialized global audio, aggressive sync frequencies, emissive screen overdrive, and GC-heavy event invokers that destabilize frame pacing.</li>
                                 <li class="mb-2"><strong>Mesh & Geometry Auditor:</strong> Flags meshes past 10,000 vertices, missing LOD chains, uncompressed and Read/Write-enabled meshes, material slot bloat, non-convex MeshCollider drag, high-poly convex colliders, and physics sinks that create unpredictable CPU spikes.</li>
-                                <li class="mb-2"><strong>TXL Logic Scraper:</strong> Catches orphaned Udon behaviours with no program source, DebugUserList string-garbage sinks, inline user whitelists that should be remote, CRT update-mode and screen-tearing risks, queue auto-play deadlocks, and proxy queue rejections.</li>
+                                <li class="mb-2"><strong>TXL checks:</strong> Catches a player whose Audio Manager is not linked to AudioLink, orphaned Udon behaviours with no program source, DebugUserList string-garbage sinks, inline user whitelists that should be remote, CRT update-mode and screen-tearing risks, queue auto-play deadlocks, and proxy queue rejections.</li>
                                 <li class="mb-2"><strong>Native Video Throttling:</strong> Automatically clamps AVPro and Unity Video components from <strong>Unlimited (0)</strong> or 4K down to safe 1080p limits, preventing runaway bandwidth use and Quest-side crashes.</li>
-                                <li class="mb-2"><strong>Omni-Chaos Stress Fabricator:</strong> Generates a full stress-test environment with heavy textures and meshes, reflection probes, network sync storms, and video overload to check world stability under extreme conditions.</li>
+                                <li class="mb-2"><strong>Omni-Chaos Generator:</strong> Generates a full stress-test environment with heavy textures and meshes, reflection probes, network sync storms, and video overload to check world stability under extreme conditions.</li>
                             </ul>
                         </div>
 
@@ -1445,12 +1552,13 @@
                         <div class="matrix-column">
                             <h4 class="text-glow-pink caption1 mb-2">UI, SECURITY & MEMORY</h4>
                             <ul class="custom-list ps-4 caption2">
-                                <li class="mb-2"><strong>Raw UASM Bytecode Scraper:</strong> Pierces <code>UdonSharpEditorCache</code> to analyze raw Udon assembly. Detects lethal <code>PlayerData.Set</code> calls inside <code>Update()</code>, infinite sync loops, and network-rate-limit bombs before they reach a build.</li>
+                                <li class="mb-2"><strong>Udon script checks:</strong> Reads your compiled Udon and flags scripts that do a lot every frame, player data saved every frame, and scripts that keep syncing when nothing on them moves, before they reach a build.</li>
+                                <li class="mb-2"><strong>Texture Check:</strong> Max Size over your target, normal maps not on BC5, mipmaps off, the wrong colour space for a slot and Read/Write left on, fixed in the import settings only. Your image files are never rewritten. PSD, JPG and big TIF, TGA or BMP files can be copied to PNG, with your materials pointed at the copy.</li>
                                 <li class="mb-2"><strong>UI & Font Hunter:</strong> Finds TMP and legacy text components whose font does not match the one you nominate in the window, then swaps them all in one pass. Also catches missing TMP shader channels, canvases with no event camera, missing VRC UI Shape, and nested GraphicRaycasters.</li>
-                                <li class="mb-2"><strong>Shader Integrity System:</strong> Protects core SDK shaders, IwaSync internals, ProTV internals, and VRC Billiards materials from the automatic shader replacer, so logic-driven materials keep working.</li>
-                                <li class="mb-2"><strong>Hardware-Level VRAM Profiling:</strong> Uses <code>Profiler.GetRuntimeMemorySizeLong()</code> to capture true GPU footprint, exposing procedural 4K RenderTextures, TMP atlases, UI masks, and unmanaged memory hogs that evade standard project scanners.</li>
+                                <li class="mb-2"><strong>Shader protection:</strong> Keeps core SDK shaders, IwaSync internals, ProTV internals, and VRC Billiards materials away from the shader replacer, so materials driven by scripts keep working.</li>
+                                <li class="mb-2"><strong>Memory estimate:</strong> Uses Unity's own memory numbers to count 4K render textures, TMP atlases and UI masks that project scanners miss.</li>
                                 <li class="mb-2"><strong>Canvas Rebuild Tracker:</strong> Maps layout-modifying UI elements on root canvases to prevent rebuild storms across playlist UIs, queue systems, and dynamic world-space interfaces.</li>
-                                <li class="mb-2"><strong>Texture and audio audit:</strong> Scans all textures, UI atlases, meshes, and audio clips to generate a full VRAM breakdown and compute threat-level score.</li>
+                                <li class="mb-2"><strong>Texture and audio audit:</strong> Scans all textures, UI atlases, meshes, and audio clips to build the memory breakdown and compute score on the Performance Map tab.</li>
                                 <li class="mb-2"><strong>Network & Persistence Auditor:</strong> Detects continuous sync storms, hollow player objects, unsafe persistence calls, and Udon behaviours configured for uncontrolled network replication.</li>
                             </ul>
                         </div>
@@ -1463,7 +1571,8 @@
                                 <li class="mb-2"><strong>VizVid (VVMW):</strong> Catches missing Quest AVPro fallbacks, absent rate-limit resolvers, orphaned UI and frontend handlers, duplicated global settings, non-whitelisted target shaders, and 2D audio bleed.</li>
                                 <li class="mb-2"><strong>VRC Light Volumes:</strong> Flags duplicate managers, compute-heavy area lights, aggressive brightness cutoffs, missing TVGI render targets, and anti-flicker or smoothing left off where strobing becomes a safety issue.</li>
                                 <li class="mb-2"><strong>YouTube Search (Rinvo):</strong> Re-aligns mismatched player target enums, restores missing queue and video player links, finds orphaned search managers, and clamps API pool sizes that would trip Udon rate limits.</li>
-                                <li class="mb-2"><strong>VRSL &amp; USharpVideo:</strong> Detects dead VRSL adapters, and USharpVideo players with live-stream auto-swap switched off.</li>
+                                <li class="mb-2"><strong>VRSL &amp; USharpVideo:</strong> Flags AudioLink VRSL fixtures in a scene with no AudioLink, and USharpVideo players with live-stream auto-swap switched off.</li>
+                                <li class="mb-2"><strong>GPU Particle Volumes:</strong> Flags a manager with no mesh, volumes that update every frame, and empty volume slots.</li>
                             </ul>
                         </div>
 
@@ -1473,7 +1582,7 @@
                             <ul class="custom-list ps-4 caption2">
                                 <li class="mb-2"><strong>AudioLink Setup:</strong> Finds missing or duplicated cores, players that never got linked (AVPro, Unity Video, ProTV, TXL, IwaSync3), reactive objects wired to nothing, orphaned Poiyomi and lilToon AudioLink materials, and Quest GPU readback stalls.</li>
                                 <li class="mb-2"><strong>Lighting &amp; Lightmaps:</strong> Realtime shadow casters, point and spot lights, oversized light ranges, realtime reflection probes, 4K and 2K probe memory costs, global realtime GI, directional lightmaps, excessive lightmap counts and bake resolutions.</li>
-                                <li class="mb-2"><strong>Environment &amp; Terrain:</strong> Insane heightmap resolutions, low pixel error, and draw-instancing left disabled on terrain.</li>
+                                <li class="mb-2"><strong>Environment &amp; Terrain:</strong> Very high heightmap resolutions, low pixel error, and draw-instancing left disabled on terrain.</li>
                                 <li class="mb-2"><strong>Audio Optimization:</strong> Decompress-On-Load clips, stereo files that should be mono, and global 2D audio that should be spatialized.</li>
                                 <li class="mb-2"><strong>Materials &amp; Umbrella Logic:</strong> GPU instancing left off, unlocked toon shaders, missing material references, dead ColliderActionProxies and ZoneTriggers with no collider.</li>
                             </ul>
@@ -1491,9 +1600,9 @@
                                 <h3 class="text-glow-pink opt-group" data-collapsed>Under the hood</h3>
                 <p class="opt-note">Scans a world for the things that break it once people are actually in it: memory, network load, broken shaders and heavy scripts. Most findings come with a one-click fix, and it reads third-party systems as well as Unity's own.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>It knows the video systems</strong> - ProTV, IwaSync, TXL, VizVid and Rinvo are each checked on their own terms, so a finding points at the setting in that system rather than at a generic Unity component.</li>
+                    <li class="mb-2"><strong>It knows the video systems</strong> - ProTV, IwaSync, TXL, VizVid and Rinvo are each checked on their own terms, so a finding points at the setting in that package rather than at a generic Unity component.</li>
                     <li class="mb-2"><strong>Meshes and geometry</strong> - Flags the heavy meshes, missing detail levels and awkward colliders that cost the most frame time in a busy instance.</li>
-                    <li class="mb-2"><strong>Real memory, not estimates</strong> - VRAM is measured from what the GPU actually holds, so render textures, font atlases and UI masks are counted rather than guessed at.</li>
+                    <li class="mb-2"><strong>Memory other scanners miss</strong> - Render textures, font atlases and UI masks are counted from Unity's own memory numbers instead of being left out.</li>
                     <li class="mb-2"><strong>Reads your Udon before it ships</strong> - Compiled Udon is checked for the patterns that get a world rate-limited or desynced, such as network calls made every frame.</li>
                     <li class="mb-2"><strong>Lighting integrations</strong> - LTCGI, Light Volumes and AudioLink are each checked for the setup mistakes that leave a screen dark, a bake stuck, or a reactive object silently unlinked.</li>
                     <li class="mb-2"><strong>A stress scene on demand</strong> - It can build a deliberately punishing test scene so you can see how your world behaves under load before an event rather than during one.</li>
@@ -1502,7 +1611,7 @@
                 <h3 class="text-glow-pink opt-group" data-collapsed>In practice</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Scan, then triage</strong> - Run it and you get findings ranked by how much they matter, each with a button that selects the offending object so you can see it in context.</li>
-                    <li class="mb-2"><strong>One number to aim at</strong> - The World Profiler turns the whole scan into an OPTIMAL, MODERATE or SEVERE verdict, weighted heavily toward realtime shadow casters because that is usually what is hurting.</li>
+                    <li class="mb-2"><strong>One number to aim at</strong> - The Performance Map tab turns the whole scan into an Optimal, Moderate, High or Severe rating, weighted heavily toward realtime shadows because that is usually what is hurting.</li>
                 </ul>
             </div>
         </div>

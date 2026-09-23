@@ -5,6 +5,37 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.18.0] - 2026-09-23
+*See what is slowing the editor down, find what a tool left in memory, World Engine texture fixes that never touch your image files, and a safer ImageMagick.*
+
+### Added
+* **Scene View Enhancer**, at `VixenTools/Unity Engine/Scene View Enhancer`, for world and avatar projects. It caps the editor's frame rate through Unity's own **Interaction Mode** setting, and puts your previous setting back when you turn it off. Its **Vixen Scene Stats** panel in the Scene view shows how often the Scene view redraws, the frame cap, script memory, engine memory and graphics driver memory. It refreshes once a second, so it adds at most one redraw a second of its own.
+* **Memory Diagnostics**, at `VixenTools/Unity Engine/Memory Diagnostics`. Press **Take Snapshot**, repeat the task you want to test, press **Free Unused Memory**, then **Compare With Snapshot** to see which textures, materials and meshes a tool made and never freed. Only objects that are not saved in your project are counted, so loaded assets never show up as leaks. **Largest Textures** lists the 50 textures using the most editor memory and marks the ones made at runtime, by a tool or by Unity itself.
+* **Convert To PNG**, in the World Engine's new **TEXTURES: SOURCE FILES** section. For a texture stored as a PSD, a JPG, or a TIF, TGA or BMP file over 15 MB, it saves a PNG copy to `Assets/VixenTools/Converted/<Material>/`, gives the copy the same import settings, and points your materials at it. Your original file is never changed or deleted. Files under `Packages/` are left alone, and a texture is only offered when every use of it in the scene is a material the tool can change, so the copy never loads alongside the original.
+
+### Changed
+* **The performance map is a tab in the World Engine.** It used to open in a window of its own after every scan. Now **FINDINGS** and **PERFORMANCE MAP** sit side by side in the World Engine window, and one scan fills both.
+* **The World Engine checks textures the way the VixForge Texture Check does.** Every texture fix changes import settings only. A texture that imports bigger than your target size gets a lower **Max Size**, where before its image file was overwritten at the smaller size. New findings cover normal maps that are not on BC5, mipmaps switched off, a texture in the wrong colour space for its slot, a normal map imported as a colour texture, and bent normal maps bigger than they need to be. A fix that makes a texture bigger in memory says so and is left out of **Toggle All Fixes**. Uncompressed textures are reported with advice, and the compression choice is left to you.
+* **Findings show which objects a nested object sits under**, below the description, so two objects with the same name can be told apart.
+
+### Removed
+* **The Massive Raw File Bloat check.** It flagged image files over 15 MB and re-saved them. VRChat never gets your source file, only the texture Unity imports from it, so the file's size on disk costs nothing in game.
+* **The non-power-of-two check.** Its fix stretched the texture to a new size, and Unity already imports those sizes as they are.
+
+### Fixed
+* **World Engine checks that had stopped working.** Newer ProTV, TXL, LTCGI and UdonSharp releases renamed what these checks looked for, so they found nothing. They now read the current names, and older versions are still checked the old way: ProTV 3 speakers (the AudioLink link check and the 3D speaker distance check), ProTV 3's audio adapter, TXL 2's Audio Manager AudioLink link (now with a one-click fix), LTCGI screens that take their colour from AudioLink in a scene without AudioLink, and the sync mode an UdonSharp script declares.
+* **The compute score counted things that cost nothing.** A baked reflection probe counted as much as a realtime one, and a camera with its Culling Mask set to Nothing counted like one that renders the world. Only realtime reflection probes and cameras that draw something count now.
+* **The heavy script check counted code that does not run every frame.** It added up every instruction in a script, so scripts that only react to clicks and events were flagged. Across 732 real Udon programs, 25 of the 33 over its limit run nothing every frame, among them TXL's player controls, playlist queue, audio manager and video manager. It now counts only what Update, LateUpdate, FixedUpdate, PostLateUpdate and the render events can reach, times the number of active objects running the script.
+* **Continuous sync was flagged on scripts with nothing to sync.** A script with no synced variables sends nothing, however it is set, and a pickup or Rigidbody on a parent or child object was missed. AudioLink's controller, whose pickups are its two handles, was flagged for both reasons. Both are checked now.
+* **The texture size fix overwrote original image files.** It shrank a texture by rewriting its source file, including files from other creators' packages, and it could set **Max Size** higher than you had it. It now only ever lowers **Max Size**.
+* **The player data check fired for any script with an Update.** It now fires only when saving player data can happen from an event that runs every frame.
+* **A scan logged an error for every TXL screen material.** The missing texture repair looked for an emission texture by name and found TXL's **Emission Scale**, a number with the same name. It now only looks at texture slots, so it can no longer put a texture into a colour or number setting either.
+
+### Security
+* **ImageMagick updated to 7.1.2-31** (Magick.NET 14.17.1). It brings 25 upstream security fixes made since the version we shipped, among them two code injection flaws in text labels, which Badge Studio uses to draw your badge text, and a flaw in how ImageMagick enforced its own format rules.
+* **ImageMagick only works with the formats the toolbox needs.** A security policy now blocks script formats (MSL, MVG, SVG), PostScript and PDF, web addresses, the clipboard and screenshots, and a set of rarely used formats that had recent security fixes. It also stops ImageMagick from starting any other program, and refuses images wider or taller than 32,768 pixels. The texture formats Unity imports are not blocked.
+
+***
 ## [2.17.0] - 2026-09-05
 *Quest conversion for worlds, and the World Engine learns collision layers, baked lighting and four more packages.*
 

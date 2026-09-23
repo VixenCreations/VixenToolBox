@@ -3,14 +3,41 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using ImageMagick;
+using ImageMagick.Configuration;
 
 namespace VixenTools.Editor
 {
     [InitializeOnLoad]
     public static class VixenMagickKit
     {
+        const string SecurityPolicy =
+            "<policymap>\n" +
+            "  <policy domain=\"delegate\" rights=\"none\" pattern=\"*\"/>\n" +
+            "  <policy domain=\"path\" rights=\"none\" pattern=\"[Ff][Dd]:*\"/>\n" +
+            "  <policy domain=\"coder\" rights=\"none\" pattern=\"{MSL,MVG,SVG,MSVG,RSVG,TEXT,URL,HTTP,HTTPS,FTP,EPHEMERAL,SHOW,WIN,X,CLIPBOARD,SCREENSHOT,VID,PANGO}\"/>\n" +
+            "  <policy domain=\"coder\" rights=\"none\" pattern=\"{PS,PS2,PS3,EPS,EPI,EPSF,EPSI,EPT,PDF,PDFA,AI,XPS,PCL}\"/>\n" +
+            "  <policy domain=\"coder\" rights=\"none\" pattern=\"{CIP,ASE,MAT,CUT,CALS,PCD,FLIF,HALD,CUBE,UHDR,YAML,JSON,INFO,WBINFO,YUV}\"/>\n" +
+            "  <policy domain=\"resource\" name=\"width\" value=\"32KP\"/>\n" +
+            "  <policy domain=\"resource\" name=\"height\" value=\"32KP\"/>\n" +
+            "</policymap>\n";
+
         static VixenMagickKit()
         {
+            try
+            {
+                IConfigurationFiles config = ConfigurationFiles.Default;
+                config.Policy.Data = SecurityPolicy;
+                string path = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Library", "VixenTools", "ImageMagick"));
+                Directory.CreateDirectory(path);
+                string policyFile = Path.Combine(path, config.Policy.FileName);
+                if (File.Exists(policyFile)) File.Delete(policyFile);
+                MagickNET.Initialize(config, path);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning("[VixForge] Could not apply the ImageMagick security policy: " + e.Message);
+            }
+
             try
             {
                 ResourceLimits.Thread = (ulong)System.Math.Max(1, System.Environment.ProcessorCount);

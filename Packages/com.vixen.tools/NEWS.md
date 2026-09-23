@@ -1,30 +1,31 @@
-# Project Milestone: Vixens Toolbox Crosses 1,500 Downloads
+# What's New In 2.18
 
-**Published:** July 10, 2026
+**See what slows the editor down, find what a tool left in memory, and a safer ImageMagick.**
 
-It is official: the Vixens Toolbox has crossed 1,500 downloads. Every single one of those represents a creator who trusted our tools with their avatars and their worlds, and we could not be more grateful.
+## Scene View Enhancer
 
-When VixForge Interactive started, the goal was simple: kill the repetitive, mind-numbing parts of the VRChat pipeline so creators could spend their time actually creating. Fifteen hundred downloads later, that mission is resonating far beyond what we ever imagined.
+Find it at `VixenTools/Unity Engine/Scene View Enhancer`. It caps the editor's frame rate while it is idle, through Unity's own Interaction Mode setting, and puts your old setting back when you turn it off. Its **Vixen Scene Stats** panel in the Scene view shows how often the view redraws and how much memory scripts, Unity and the graphics driver are using.
 
----
+## Memory Diagnostics
 
-## What 1,500+ Means to Us
+At `VixenTools/Unity Engine/Memory Diagnostics`. Take a snapshot, repeat the task you want to test a few times, then compare. Anything a tool made and never freed shows up in the list. **Largest Textures** shows what is using the most memory.
 
-Every download is a creator we get to build for, and a clear reason to keep raising the bar. For the ecosystem, this milestone highlights three core achievements:
+## World Engine
 
-* **Production-Ready Features:** Real QEM mesh decimation, non-destructive Quest conversion, multi-ecosystem world auditing, and the VixenWear Latex Ultra shader, all shipping in one free VPM package.
-* **Active Ecosystem Development:** A growing community that files issues, shares screenshots, and pushes these optimization tools to their absolute limits.
-* **A Standard for Creators:** Providing a reliable, unified hub that eliminates workflow friction.
+The performance map is now a tab in the World Engine window instead of a window of its own. Several checks that newer ProTV, TXL, LTCGI and UdonSharp releases had quietly broken work again, and the compute score no longer counts baked reflection probes or cameras that draw nothing.
 
----
+## Safer Images
 
-## The Next Chapter
+ImageMagick, which the toolbox uses to resize and build textures, is updated with 25 security fixes, and it now refuses file formats the toolbox never needs.
 
-To every creator who installed the toolbox, reported a bug, requested a feature, or simply told a friend: thank you. You are the reason this project keeps growing, and we are only just getting started.
+***
+# Thank You For 3,500 Downloads
 
-Here is to the next 1,500. Onward.
+**September 14, 2026**
 
-### Repository and Installation
+The Vixens Toolbox has passed 3,500 downloads. In July we were thanking you for 1,500, and you have more than doubled it since by installing it, telling us what broke and passing it on to friends. Thank you.
 
-The Vixens Toolbox can be added directly to the Creator Companion via the official page:
-[https://vixencreations.github.io/VixenToolBox/index.html](https://www.google.com/search?q=https://vixencreations.github.io/VixenToolBox/index.html)
+***
+### Get The Toolbox
+
+Add it to the Creator Companion from [vixencreations.github.io/VixenToolBox](https://vixencreations.github.io/VixenToolBox/).

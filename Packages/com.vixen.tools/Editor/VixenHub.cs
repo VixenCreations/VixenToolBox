@@ -437,7 +437,17 @@ namespace VixenTools.Editor
             var universalList = new List<(System.Action action, string title, string desc)>
             {
                 (() => EditorApplication.ExecuteMenuItem("VixenTools/Unity Engine/Animation Workbench Pro"), "Animation Workbench Pro", "A visual workspace for building and easing animation curves."),
-                (() => EditorApplication.ExecuteMenuItem("VixenTools/Unity Engine/Pipeline Preset Manager"), "Pipeline Preset Manager", "Pulls import settings out of your assets, or creates a preset from scratch.")
+                (() => EditorApplication.ExecuteMenuItem("VixenTools/Unity Engine/Pipeline Preset Manager"), "Pipeline Preset Manager", "Pulls import settings out of your assets, or creates a preset from scratch."),
+                (() =>
+                {
+                    VixenSceneViewEnhancer.SetEnabled(!VixenSceneViewEnhancer.IsEnabled);
+                    SelectTab(TabCoreModules);
+                },
+                VixenSceneViewEnhancer.IsEnabled
+                    ? "<color=#00e5ff>Scene View Enhancer [ ACTIVE ]</color>"
+                    : "Scene View Enhancer [ OFF ]",
+                "Caps the editor frame rate and adds a Scene view panel showing redraws and memory, so you can see what slows the editor down."),
+                (() => VixenMemoryDiagnostics.Open(), "Memory Diagnostics", "Finds what a tool left behind in memory, and lists the textures using the most of it.")
             };
 
             RenderActionGrid(container, "Universal Utilities", "#00e5ff", universalList);
@@ -499,7 +509,7 @@ namespace VixenTools.Editor
         private void RenderSupportedModules(VisualElement container)
         {
             string markdown = @"
-**VixForge tools** are built to work alongside the big third-party systems. The World Engine and Avatar Validators actively audit, scan, and protect these ecosystems natively.
+The **World Engine** checks each of these packages in your scene and fixes what it can. Click a card to open the package's own page.
 ";
             ParseMarkdownAndInject(markdown, container);
 
@@ -507,39 +517,43 @@ namespace VixenTools.Editor
             {
                 (() => Application.OpenURL("https://protv.dev/"),
                     "ProTV (Techanon)",
-                    "Audits your ProTV setup, resolves GSV conflicts and checks the AudioLink handshake."),
+                    "Checks screens, speakers and the AudioLink link, Quest fallbacks, global video textures, and heavy UI or queue settings."),
 
                 (() => Application.OpenURL("https://github.com/llealloo/audiolink"),
                     "AudioLink",
-                    "Reflective extraction of internal FFT textures, orphan detection, and global whitelist protection."),
+                    "Finds a missing or doubled AudioLink, video players and materials that are not linked to it, and a setting that stalls Quest."),
 
                 (() => Application.OpenURL("https://ltcgi.dev/"),
                     "LTCGI",
-                    "Area lighting checks, ghost screen cleanup and unsticking a jammed bake cache."),
+                    "Finds screens with no video texture, old screen data that needs a rebuild, a stuck bake, and AudioLink screens with no AudioLink."),
 
                 (() => Application.OpenURL("https://xtlcdn.github.io/VizVid/"),
                     "VizVid (VVMW)",
-                    "Video player checks, unlinked interface detection and Quest fallback validation."),
+                    "Checks player and UI handlers, the rate limit resolver, Quest fallbacks, 2D audio bleed and the AudioLink link."),
 
                 (() => Application.OpenURL("https://github.com/vrctxl/VideoTXL"),
                     "Video TXL",
-                    "CRT render ecosystem validation, GC sink detection, and Playlist Queue access control integration."),
+                    "Checks screen render textures, the queue and access settings, the AudioLink link, audio zones, portals, chairs and material swappers."),
 
                 (() => Application.OpenURL("https://booth.pm/en/items/2666275"),
                     "iwaSync3",
-                    "Network sync frequency tuning, blinding emissive bounds detection, and global 2D audio isolation."),
+                    "Flags very frequent sync, overbright screens, global 2D speakers, high default resolution and playlists that fetch without limit."),
 
                 (() => Application.OpenURL("https://rinvo.booth.pm/items/5757644"),
                     "YouTube Search (Rinvo)",
-                    "Autonomous video player target linking, UI decoupling, and API pool size validation."),
+                    "Checks that search results reach the right player UI for ProTV, TXL, iwaSync3 and USharpVideo, and the size of its request pool."),
 
                 (() => Application.OpenURL("https://github.com/REDSIM/VRCLightVolumes"),
                     "VRC Light Volumes",
-                    "Compute load detection, sphere threshold optimization, and TVGI/AudioLink strobe safety enforcement."),
+                    "Flags more than one manager, shadow bakers with no target or that rebake all the time, TVGI and AudioLink flicker settings, and area lights."),
 
                 (() => Application.OpenURL("https://github.com/AcChosen/VR-Stage-Lighting"),
                     "VR Stage Lighting",
-                    "Regex-based heuristic protection and DMX audit support.")
+                    "Flags AudioLink fixtures in a scene with no AudioLink."),
+
+                (() => Application.OpenURL("https://github.com/REDSIM/GPUParticleVolumes"),
+                    "GPU Particle Volumes",
+                    "Flags a manager with no mesh, volumes that update every frame, and empty volume slots.")
             };
 
             RenderActionGrid(container, "Ecosystem Integrations", "#00e5ff", list);

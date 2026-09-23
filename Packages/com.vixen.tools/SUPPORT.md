@@ -1,15 +1,12 @@
 ***
 
-# Fuel the VixenTools Engine
+# Support The Toolbox
 
-I didn't just wake up one day and decide to build a massive ecosystem. VixenTools started for one simple reason: I was sick of doing the exact same mind-numbing setups in Unity over and over again. 
+The Vixens Toolbox started because I was tired of doing the same setup in Unity over and over. It has grown into a full set of tools, from the Quest Conversion Engine to PhysBone Blueprints, and every one of them is free.
 
-Now, it's grown into an entire suite of tools. From the Quest Conversion Engine to PhysBone Blueprints, everything here is built to save us hundreds of hours of grinding so we can actually get back to creating.
+Keeping it that way takes a lot of time: every VRChat SDK update, every Unity quirk, and the VCC listing that brings updates to you. If the toolbox has saved you an evening, a coffee helps keep it going.
 
-I want the VRChat avatar pipeline to be as flawless as possible. But keeping it all running is a grind. Between ripping apart undocumented Unity APIs, fixing things every time an SDK update breaks the pipeline unannounced, and keeping the automated VPM distribution alive, this project eats up a massive amount of my time (and late-night sanity).
-
-### Support the Projects
-If my code has ever saved your scene from completely bricking, optimized your Quest fallback in under 10 seconds, or just made your workflow suck a little bit less... consider throwing a coffee my way:
+### Ways To Support
 
 * **[Ko-Fi: One-Time Support](https://ko-fi.com/vixenlicous)**
 * **[Gumroad: Donations](https://vixenlicous.gumroad.com/coffee)**
@@ -17,11 +14,12 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
 * **[Patreon: Full Storefront](https://www.patreon.com/cw/Vixenlicious)**
 * **[Jinxxy: Full Storefront](https://jinxxy.com/Vixenlicious)**
 
-### What Your Support Actually Does
-* **Keeps the R&D Alive:** So I can keep fighting with Unity's UI Toolkit, ImageMagick, and complex shader math so you don't have to.
-* **Builds the Next Generation:** Fueling the big upgrades I'm writing for the Animation Workbench, Badge Studio, and the core pipelines.
-* **Pays the Server Bills:** Keeping the GitHub Actions CI/CD pipelines and the VPM-native storefront up and running flawlessly.
+### What Your Support Pays For
 
-> *Just to be crystal clear: This is purely a tip jar. You aren't buying a paywalled feature or a locked script. You are directly supporting a solo dev trying to build the best VRChat pipeline possible and keeping it free for the community.*
+* **New tools and bigger updates,** like the ones coming for Animation Workbench and Badge Studio.
+* **Keeping up with VRChat and Unity,** so the tools keep working when the SDK changes.
+* **Hosting,** for the VCC listing, the automated builds and the website.
+
+> This is a tip jar. Nothing is locked behind it, and the toolbox stays free for everyone.
 
 Stay glossy.

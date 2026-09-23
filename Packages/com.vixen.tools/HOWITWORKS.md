@@ -1,62 +1,35 @@
-# VIXEN WORLD ENGINE : HOW THE SCORE WORKS
+# World Engine: How The Score Works
 
-The **Vixen Compute Score** is a proprietary, weighted heuristic model designed for the VRChat ecosystem. It evaluates the raw structural complexity of a scene rather than relying on Unity's frame-timing (ms) metrics. 
+The **PERFORMANCE MAP** tab in the World Engine gives your world a compute score. It counts what is switched on in your scene and weights each thing by how much it tends to cost in VRChat. It does not time your frames, because frame times depend on each player's PC or Quest, so the score comes out the same on every machine.
 
-Because frame times fluctuate drastically based on the end user's CPU/GPU, hardware-based profiling is notoriously unreliable for generalized world optimization. By analyzing the system of active components, draw calls, and mathematical operations, the VixForge World Engine provides a deterministic, hardware-agnostic threat level for your world.
-
-***
-## THE GHOST COMPONENT FILTER
-Unity's internal `FindObjectsOfType()` API suffers from a known serialization issue: it often includes components that are physically disabled, or reside on deactivated GameObjects, bloating performance estimates. 
-
-The Vixen Engine bypasses this using a **Strict Tuple-Keyed Scene Object Cache**. Every component calculated in the Compute Score undergoes a strict `object.enabled && object.gameObject.activeInHierarchy` lock. If a creator toggles off a room or a prop, every single draw call, light, and physics body inside it is instantly zeroed out of the threat level.
+Only enabled components on active objects count. Switch off a room and everything in it drops out of the score.
 
 ***
-## HEURISTIC MULTIPLIERS (COMPUTE LOAD)
-The compute score is calculated by multiplying active scene elements against their historical performance cost in the VRChat client.
+## What Counts, And How Much
 
-**DRAW CALLS (`x 0.50`)**
-Calculated by summing the `sharedMaterials` of all actively rendering meshes. Excessive draw calls bottleneck the CPU as it struggles to instruct the GPU on what to render.
-
-**MESH COLLIDERS (`x 0.50`)**
-Unlike primitive colliders (Box, Sphere, Capsule), Mesh Colliders require the physics engine to evaluate complex polygon intersections every frame.
-
-**AUDIO SOURCES (`x 1.50`)**
-Active audio sources require CPU time for spatialization, doppler effect calculations, and decoding decompression.
-
-**STATIC LIGHT VOLUMES (`x 1.50`)**
-VRC Light Volumes provide excellent baked lighting, but processing the spherical threshold parameters across the scene geometry carries a slight overhead.
-
-**RIGIDBODIES (`x 2.00`)**
-Every active rigidbody must be evaluated by the PhysX engine per fixed update step. Note: Rigidbodies are always calculated if their parent GameObject is active, as they do not have a separate `.enabled` toggle.
-
-**POINT LIGHT VOLUMES (`x 4.00`)**
-Dynamic variations of light volumes require constant recalculation of the volume system against moving objects.
-
-**REFLECTION PROBES (`x 10.00`)**
-A Realtime Reflection Probe is essentially a 6-sided camera. It forces the Unity rendering pipeline to draw the surrounding geometry 6 additional times to map the cubemap faces.
-
-**LTCGI SCREENS (`x 15.00`)**
-Real-time polygonal area lighting (LTCGI) is revolutionary, but evaluates complex intersection models and shadow masking per-fragment, per-screen.
-
-**ACTIVE ROGUE CAMERAS (`x 50.00`)**
-Any camera rendering to the screen (not a RenderTexture) with an active culling mask forces the engine to double-render the entire world geometry. This does *not* include safe UI Event Cameras (Culling Mask = 0).
-
-**RT SHADOW CASTERS (`x 80.00`)**
-Realtime Shadow casting lights (Point, Spot, or Directional) force the GPU to render a depth map of the scene for *each* active light. Overlapping realtime shadows will exponentially multiply your draw calls and instantly kill performance.
-
-**AUDIOLINK CORES (`x 150.00`)**
-AudioLink is incredibly powerful, but running the core requires Unity to read audio spectrum data, perform Fast Fourier Transforms (FFT), and push that data into a massive Render Texture every single frame. Multiple active cores will cripple a world.
+* **Draw calls, x0.5:** every material slot on an active renderer.
+* **Mesh colliders, x0.5.** Box, sphere and capsule colliders are much cheaper and do not count.
+* **Audio sources, x1.5.**
+* **Light Volumes, x1.5** each.
+* **Rigidbodies, x2.** These count whenever their object is active, because a Rigidbody has no on and off switch.
+* **Point Light Volumes, x4** each.
+* **Realtime reflection probes, x10.** A realtime probe draws the room six more times to build its cubemap. Baked probes cost nothing while the world runs and do not count.
+* **LTCGI screens, x15.**
+* **Extra cameras, x50.** A camera that renders the world draws the whole scene again, whether it renders to the screen or to a Render Texture. Your main camera and cameras with their Culling Mask set to Nothing do not count.
+* **Realtime shadows, x80** for each light that casts shadows and is not set to Baked. Each one draws the scene again for its shadow map.
+* **AudioLink, x150** for each active AudioLink.
 
 ***
-## THREAT LEVEL SCALES
+## The Ratings
 
-- **OPTIMAL (`< 100 Score`):** Nothing to worry about. Will run smoothly on Quest standalone and low-end VR hardware.
-- **MODERATE (`100 - 249 Score`):** Standard PCVR baseline. Expected performance for medium-sized social instances.
-- **HIGH (`250 - 499 Score`):** Heavy compute load. Requires users to have modern hardware; Quest instances will likely suffer severe frame drops.
-- **SEVERE (`500+ Score`):** Something is badly wrong. The scene is far too heavy. Expect massive frame hitching, high crash rates, and unplayable conditions on anything but top-tier hardware.
+* **Optimal (under 100):** nothing to worry about, even on Quest.
+* **Moderate (100 to 249):** a typical PC world.
+* **High (250 to 499):** heavy. Quest players will likely see frame drops.
+* **Severe (500 and up):** far too heavy. Expect stutter and crashes on anything but a strong PC.
 
 ***
-## VRAM ESTIMATION (MEMORY FOOTPRINT)
-Unlike Compute (which is entirely based on active state), VRAM is calculated using Unity's native `Profiler.GetRuntimeMemorySizeLong()`. 
+## Memory
 
-**Memory footprint remains static regardless of component active state.** Unity pushes all referenced textures, meshes, Lightmaps, LTCGI LUTs, and UI elements into GPU memory immediately upon scene load. To lower your VRAM, you must physically remove the asset from the scene, lower its Max Resolution in the inspector, or utilize aggressive Crunch Compression.
+The Performance Map also estimates how much memory your world needs: textures, meshes, UI, lightmaps, Light Volumes, AudioLink and LTCGI data. Audio memory is shown on its own line.
+
+Unity loads everything your scene uses as soon as the scene loads, so switching objects off does not lower this number. To bring it down, remove what you do not need, or lower a texture's Max Size or raise its compression.

@@ -301,6 +301,82 @@
                 </div>
             </div>
             <!-- FORGE:START -->
+            <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-09-23-vixens-toolbox-2-18-0-find-out-what-is-s">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Dev Notes</span>
+                        <span class="news-tag">Vixens Toolbox</span>
+                        <span class="news-date">September 23, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Vixens Toolbox 2.18.0: find out what is slowing your editor down</h2>
+                    <p class="forge-status"><strong>Status:</strong> In testing, not released yet</p>
+                    <p class="forge-intro"><em>An hour into a session the editor starts crawling, and there is no way to tell whether the Scene view is redrawing nonstop or a tool left a heap of textures behind. This release gives you two tools to find out, moves the World Engine's performance map into the World Engine itself, and brings ImageMagick up to date with 25 upstream security fixes.</em></p>
+                    <h3 class="text-glow-cyan">Scene View Enhancer</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Unity Engine &gt; Scene View Enhancer</strong>, in world and avatar projects. Click it again to turn it off.</p>
+                    <ul class="pledge-list">
+                        <li>Caps the editor's frame rate while you are not touching anything, through Unity's own <strong>Interaction Mode</strong> setting. Turning it off puts your own setting back.</li>
+                        <li>Turning it on opens the <strong>Vixen Scene Stats</strong> panel in the Scene view: <strong>Scene redraws</strong> a second, the <strong>Editor frame cap</strong>, <strong>Script memory</strong>, <strong>Engine memory</strong> and <strong>Graphics driver</strong> memory.</li>
+                        <li>Set the cap with the panel's <strong>Cap</strong> slider, anywhere from 30 to 240.</li>
+                        <li>Close to 0 redraws while nothing moves is normal. A high number while your hands are off the mouse means something keeps redrawing the Scene view.</li>
+                        <li><strong>Free Unused</strong> and <strong>Memory Diagnostics</strong> buttons sit right in the panel.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Memory Diagnostics</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Unity Engine &gt; Memory Diagnostics</strong>, or on the Hub's <strong>Universal Utilities</strong> grid.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Leak Check</strong>: press <strong>Take Snapshot</strong>, repeat the task you want to test a few times (a bake, a texture pack, a material lock), press <strong>Free Unused Memory</strong>, then <strong>Compare With Snapshot</strong>. The rows that grew are what a tool left behind.</li>
+                        <li>Only textures, materials and meshes that are not saved in your project count, so loaded assets never show up as leaks.</li>
+                        <li><strong>Largest Textures</strong>: press <strong>Scan Textures</strong> for the 50 textures using the most editor memory. The ones made at runtime are marked <strong>Not saved</strong>. Unity makes a few of its own, like its shadow map, but a big one from a tool is worth a look.</li>
+                        <li><strong>Select</strong> on any row selects it, and shows you where it lives if it is a saved asset.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The performance map is a tab now</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Scene &gt; Vixen World Engine</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>FINDINGS</strong> and <strong>PERFORMANCE MAP</strong> sit side by side, and one scan fills both. No more second window popping up after every scan.</li>
+                        <li>The compute score stopped counting things that cost nothing: baked reflection probes, and cameras with their Culling Mask set to Nothing.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Checks that had stopped working</h3>
+                    <p class="forge-where"><em>When a package renames something, a World Engine check that looks for it by name goes quiet and tells nobody. We went back through the packages it supports, release by release, and found five that had. Then we rebuilt the texture checks so no fix ever rewrites your image files, taught the Udon checks to count what really runs every frame, and brought ImageMagick up to date.</em></p>
+                    <ul class="pledge-list">
+                        <li>ProTV 3 split its speakers into two lists, so the AudioLink link check and the 3D speaker distance check found nothing. Both read the new lists.</li>
+                        <li>ProTV 3's new audio adapter is checked, and the missing AudioLink warning stays quiet when you switched AudioLink off on the adapter.</li>
+                        <li>TXL 2 moved AudioLink onto the <strong>Audio Manager</strong>. The check looks there now, with a one-click fix.</li>
+                        <li>The check for LTCGI screens that take their colour from AudioLink, in a scene with no AudioLink, never actually ran before. It does now.</li>
+                        <li>The UdonSharp sync mode check was looking in the wrong place, so it found nothing either.</li>
+                        <li>Older versions of every one of these packages are still checked the old way.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Texture fixes that leave your files alone</h3>
+                    <ul class="pledge-list">
+                        <li>The texture checks now work the way the VixForge Texture Check does: every fix changes import settings, and nothing rewrites your image files any more.</li>
+                        <li>A texture that imports bigger than your target gets a lower <strong>Max Size</strong>. Before, the file itself was overwritten at the smaller size, and the fix could even raise <strong>Max Size</strong>.</li>
+                        <li>New findings: normal maps not on BC5, mipmaps off, the wrong colour space for a slot, a normal map imported as a colour texture, and bent normal maps bigger than they need to be.</li>
+                        <li>A fix that makes a texture bigger in memory says so, and <strong>Toggle All Fixes</strong> leaves it for you to tick.</li>
+                        <li><strong>Convert To PNG</strong> copies PSD, JPG and big TIF, TGA or BMP files to <code>Assets/VixenTools/Converted/</code>, with the same import settings, and points your materials at the copy. The original stays exactly where it was.</li>
+                        <li>The big file check is gone. VRChat never sees your source file, only what Unity imports from it.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Udon checks that count the right thing</h3>
+                    <ul class="pledge-list">
+                        <li>The heavy script check added up every instruction in a script, so TXL's player controls, playlist queue and audio manager were flagged, though none of them runs anything every frame.</li>
+                        <li>It now counts only what Update, LateUpdate and the other every-frame events can reach, times the number of objects running the script.</li>
+                        <li>Continuous sync is only flagged when a script has synced variables, and a pickup or Rigidbody above or below it now counts. AudioLink's controller stops showing up.</li>
+                        <li>Findings show which objects a nested object sits under, so two with the same name can be told apart.</li>
+                        <li>The player data check only fires when saving can happen every frame.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">A safer ImageMagick</h3>
+                    <ul class="pledge-list">
+                        <li>Updated to ImageMagick 7.1.2-31. Among its 25 security fixes are two code injection flaws in text labels, which Badge Studio uses to draw your badge text.</li>
+                        <li>ImageMagick now only works with what the toolbox needs. Script formats, PostScript and PDF, web addresses, the clipboard and screenshots are blocked, and so are a set of rarely used formats that had recent security fixes.</li>
+                        <li>It can no longer start any other program, and it refuses images wider or taller than 32,768 pixels.</li>
+                        <li>Every texture format Unity imports is still allowed.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Everything above is in, and being tested in Unity before the release goes up.</li>
+                        <li>ImageMagick has fixed more since 7.1.2-31, and those fixes are not in a Magick.NET release yet. We will update again as soon as they are.</li>
+                    </ul>
+                </div>
+            </article>
+
             <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-09-18-latex-ultra-toon-clothing-pro-fur-pro-wo">
                 <div class="news-body">
                     <div class="news-meta">
@@ -315,7 +391,6 @@
                     </div>
 
                     <h2 class="text-glow-cyan" style="margin-top: 0;">Latex Ultra, Toon, Clothing Pro, Fur Pro, World Surface and World Fur: the music reaches every layer now.</h2>
-                    <p class="forge-status"><strong>Status:</strong> Built and in testing. Not out yet.</p>
                     <p class="forge-intro"><em>Until now the music could light your emission, pump your mesh and not a lot else. This update gives every emission layer its own way to react, makes your outlines move with the beat, and adds a new effect drawn from the patterns sand makes on a speaker. It all starts switched off, so nothing changes until you go looking.</em></p>
                     <h3 class="text-glow-cyan">Cymatics</h3>
                     <p class="forge-where">Under <strong>SPECIAL EFFECTS</strong>.</p>
@@ -757,6 +832,92 @@
                 </div>
             </article>
 
+            <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-09-05-vixens-toolbox-2-17-0-quest-conversion-f">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Dev Notes</span>
+                        <span class="news-tag">Vixens Toolbox</span>
+                        <span class="news-date">September 5, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Vixens Toolbox 2.17.0: Quest conversion for worlds, and a World Engine that reads your collision matrix</h2>
+                    <p class="forge-intro"><em>Quest conversion has only ever worked on avatars. Open a world project and the tool is not there at all. This release gives worlds their own converter, and while we were in the World Engine we went looking for checks that had quietly stopped finding anything. We found two that had been dead a while, and a fix button writing a number VRChat does not have.</em></p>
+                    <h3 class="text-glow-cyan">Quest World Converter</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Scene &gt; Quest World Converter</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Press <strong>Scan Open Scenes</strong>. It walks every loaded scene and collects the materials on your renderers, your terrains and your skybox.</li>
+                        <li>Materials already on a Quest shader are greyed out, so you only convert what actually needs it.</li>
+                        <li><strong>Convert Selected Materials</strong> writes copies into <code>Assets/VixenTools/Quest World/&lt;Scene&gt;/</code>. Your originals are never touched.</li>
+                        <li><strong>Point the scene at the new materials</strong> is off unless you turn it on, and it asks first. Pressing escape on that dialog cancels.</li>
+                        <li><strong>Target Shader</strong> and <strong>Max Texture Size</strong> work the same as they do on the avatar side.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Colliders, by what they actually are</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Scene &gt; Vixen World Engine</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>The scan reports your collider breakdown: how many are boxes, spheres, capsules, convex meshes, concave meshes, terrain.</li>
+                        <li>It reads your project's real collision matrix rather than assuming VRChat's defaults, then flags rendered geometry sitting on a layer players walk straight through. Pickup, Walkthrough and UI are the usual suspects.</li>
+                        <li>A concave mesh collider under a physics Rigidbody now gets called out. Unity cannot simulate that combination at all.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Baked lighting that will not follow your object</h3>
+                    <ul class="pledge-list">
+                        <li>An object set to Contribute GI under a Rigidbody keeps the lighting it was baked with. Move it and it looks wrong. The fix clears the flag for you.</li>
+                        <li>Moving objects with Light Probes switched off in a baked scene render flat. There is a batch fix that turns probes on.</li>
+                        <li>A baked scene with no probe group and no Light Volumes gets flagged, and so does a probe group nobody ever baked.</li>
+                        <li>If Light Volumes is in your scene the probe findings stay quiet, because Light Volumes already lights your moving objects.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Post processing</h3>
+                    <ul class="pledge-list">
+                        <li>Missing Reference Camera, a reference camera with no Post Process Layer, and a volume layer set to Nothing.</li>
+                        <li>Volumes sitting on a layer the camera is not watching. This is the common one when post processing was set up by another tool and the layer did not match.</li>
+                        <li>Volumes with no profile assigned, and Temporal Anti-Aliasing, which VRChat does not accept on upload.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Two checks that had stopped working</h3>
+                    <ul class="pledge-list">
+                        <li>The VRSL check looked for a class VRSL does not have any more, so it had been finding nothing.</li>
+                        <li>The ProTV check looked for a <code>UrlInput</code> component that ProTV 3 removed. Same story.</li>
+                        <li>Both now look for what those packages actually ship today.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The Udon sync fix was writing a bad value</h3>
+                    <ul class="pledge-list">
+                        <li>Aligning an Udon behaviour's sync mode set the field to a number that is not in VRChat's list.</li>
+                        <li>VRChat's own setter then copied that number onto every other Udon behaviour on the same object.</li>
+                        <li>It sets None properly now.</li>
+                        <li>Separately, the heavy script warning had been counting data declarations as executed instructions. Across 251 real Udon programs that ran about 22 percent high, and up to 43 percent on individual scripts.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Colliders could be removed from your avatar</h3>
+                    <ul class="pledge-list">
+                        <li>The Optimization Suite only protected a PhysBone collider or contact when its Root Transform was filled in. Leaving it empty is the default, and means the component uses its own transform.</li>
+                        <li>So a collider set up the normal way protected nothing, and the bone it sat on stayed eligible for removal.</li>
+                        <li>Every collider and contact now protects the object it sits on.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The shader replacer knows our shaders</h3>
+                    <ul class="pledge-list">
+                        <li><strong>VixenWear/Latex Ultra</strong>, <strong>VixenWear/Clothing Pro</strong>, <strong>VixForge/Fur Pro</strong>, <strong>VixForge/Toon</strong>, <strong>VixForge/World Fur</strong> and <strong>VixForge/World Surface</strong> are the replacement targets, and are never flagged for conversion.</li>
+                        <li>Retired <code>VixenWorld/</code> and <code>Vixen/</code> shaders from our earlier releases are flagged so you can move off them.</li>
+                        <li>Towel, GPU Grass, GPU Infinite Grass, QvPen, Silent and Mochie shaders are left alone now.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Poiyomi materials when Poiyomi is not installed</h3>
+                    <ul class="pledge-list">
+                        <li>A locked Poiyomi material still renders, but its inspector will not load and you cannot unlock or edit it.</li>
+                        <li>Those materials were protected from replacement by the rules covering hidden and optimized shaders, so the replacer could never touch them.</li>
+                        <li>When Poiyomi is not in your project they are reported as broken and offered for conversion instead.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">New packages covered</h3>
+                    <ul class="pledge-list">
+                        <li><strong>GPU Particle Volumes</strong>: a manager with no mesh, volumes recalculating every frame, empty include or exclude slots.</li>
+                        <li><strong>TXL Player Audio</strong>: duplicate managers, zones with no trigger, zones with no settings, empty zone slots.</li>
+                        <li><strong>TXL Portal</strong> and <strong>TXL Misc</strong>: portals missing their station or zone, chairs with no station, material swappers with nothing to swap.</li>
+                        <li><strong>Light Volumes 3.0</strong>: the runtime shadow baker with no target, and one left on Realtime.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>The Quest converter reads VRChat's own mobile shader list out of the SDK, so it can only ever offer shaders that survive an upload. The avatar converter now does the same, which drops two targets it used to offer that VRChat quietly replaced.</li>
+                        <li>The avatar and world converters share their texture and material work rather than each keeping a copy.</li>
+                        <li>Scanning only reads. The World Engine writes when you press a fix button and at no other time.</li>
+                    </ul>
+                </div>
+            </article>
+
             <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-09-03-the-matcaps-in-latex-ultra-toon-clothing">
                 <div class="news-body">
                     <div class="news-meta">
@@ -1101,6 +1262,59 @@
                 </div>
             </article>
 
+            <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-08-30-vixens-toolbox-2-16-0-find-the-material">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Dev Notes</span>
+                        <span class="news-tag">Vixens Toolbox</span>
+                        <span class="news-date">August 30, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Vixens Toolbox 2.16.0: find the material that is quietly ignoring your toggle</h2>
+                    <p class="forge-intro"><em>You flip a toggle in your menu and nothing happens. Usually it is one material out of eleven sitting on a different value, or a keyword left switched on under a toggle you turned off months ago, or a clip driving a property whose keyword got baked off when you locked the material. Nothing errors and nothing warns you, so you go material by material until you find it. This release adds a tool that goes and finds all three for you.</em></p>
+                    <h3 class="text-glow-cyan">Material Conflict Finder</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Avatars &gt; Material Conflict Finder</strong>, and on the <strong>Avatar Tools</strong> grid in the <strong>Core Modules</strong> tab of <strong>VixenTools &gt; Hub Dashboard</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Drop your avatar into <strong>Target Avatar Root</strong> and press <strong>Analyze Materials &amp; Toggles</strong>.</li>
+                        <li>It reads every renderer on the avatar, then the animator side: your VRC playable layers, every animator controller hanging off them, and any clips a VRCFury component is carrying.</li>
+                        <li>Four sections come back, each counting what it found and each carrying the buttons to settle it.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Cross-Material Property Mismatches</h3>
+                    <ul class="pledge-list">
+                        <li>The same toggle holding different values across your materials, grouped by value, so you can see the four that are on and the one that is not.</li>
+                        <li><strong>Sync All to 0.0 (OFF)</strong>, <strong>Sync All to 1.0 (ON)</strong> and <strong>Align Majority</strong> settle a whole group in one press. <strong>Align Majority</strong> takes whichever value most of your materials already use.</li>
+                        <li><strong>Select All</strong> grabs every material on one side of the split, and <strong>Ping</strong> flashes a single one in the Project window.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Orphaned Shader Keywords</h3>
+                    <ul class="pledge-list">
+                        <li>A toggle switched off while its shader keyword is still enabled. The inspector shows the feature as off and it renders anyway.</li>
+                        <li><strong>Fix</strong> clears one row. <strong>Fix All Keywords</strong> clears every one it found.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Animation &amp; VRCFury Driven Toggle Conflicts</h3>
+                    <ul class="pledge-list">
+                        <li>A clip drives a toggle up to 1.0, but the keyword that toggle needs is switched off on the material, so the animation changes nothing in game.</li>
+                        <li>It names the clip and where the clip came from, so you know whether you are chasing a VRC layer or something VRCFury added.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Locked materials do not lie to it</h3>
+                    <ul class="pledge-list">
+                        <li>A locked material carries no keywords at all, because the locker bakes them into the generated shader. Ask it the obvious question and it calls every animated toggle on your avatar broken.</li>
+                        <li>The finder reads the keyword list the locker stashed before locking, and skips any property the lock deliberately kept animated. On a locked avatar you get the real conflicts and nothing else.</li>
+                        <li>When one is real, it says so in plain terms: unlock, switch the keyword on or mark the property animated, then lock again.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Our X handle moved</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Hub Dashboard</strong>, on the <strong>Network</strong> tab.</p>
+                    <ul class="pledge-list">
+                        <li>We are <strong>@VixForge</strong> now. The <strong>Twitter</strong> button under <strong>Ecosystem Routing</strong> points at the new handle, along with the package and listing author links and every page on the site.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Built and compiling clean, and reachable from both the menu and the Hub.</li>
+                        <li>Nothing else in the toolbox moved. No settings, defaults or thresholds changed.</li>
+                        <li>Analyzing only reads. The tool writes to your materials when you press one of its fix buttons and at no other time.</li>
+                    </ul>
+                </div>
+            </article>
+
             <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-08-22-beat-travel-a-proper-vortex-and-a-way-to">
                 <div class="news-body">
                     <div class="news-meta">
@@ -1314,6 +1528,60 @@
                 </div>
             </article>
 
+            <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-08-17-vixens-toolbox-2-15-1-every-button-now-s">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Dev Notes</span>
+                        <span class="news-tag">Vixens Toolbox</span>
+                        <span class="news-date">August 17, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Vixens Toolbox 2.15.1: every button now says what it actually does</h2>
+                    <p class="forge-intro"><em>You should not have to guess what a button is about to do to your avatar. <strong>EXECUTE DEEP SYSTEM SCAN</strong> was a scan. <strong>EXECUTE TARGETED DOWNSCALE</strong> resized the textures you ticked. Both of them were named after how we think about the code rather than what you are trying to get done, and the whole toolbox was full of it. So this release is a language pass: every button, panel and dialog rewritten in plain English, with nothing about the behaviour touched.</em></p>
+                    <h3 class="text-glow-cyan">Buttons named after the job</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Avatars &gt; Optimization Suite</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>EXECUTE DEEP SYSTEM SCAN</strong> is now <strong>SCAN AVATAR</strong>. <strong>EXECUTE DESTRUCTIVE TOPOLOGY FIXES</strong> is <strong>APPLY SELECTED FIXES</strong>, <strong>EXECUTE PHYSICS ERADICATION</strong> is <strong>REMOVE SELECTED</strong>, and <strong>EXECUTE TARGETED DOWNSCALE</strong> is <strong>Downscale Selected Textures</strong>.</li>
+                        <li><strong>Optimization Target (px)</strong> is <strong>Max Texture Size (px)</strong>, because that is the number it sets. <strong>Decimation Target (tris / mesh)</strong> is <strong>Triangle Target (per mesh)</strong>.</li>
+                        <li>The panels read <strong>Settings</strong>, <strong>Physics Components</strong>, <strong>Textures</strong> and <strong>Memory &amp; Limits</strong>.</li>
+                        <li>The task list stopped shouting too. <strong>Purge N Orphaned Transforms</strong> is <strong>Delete N Unused Empty Objects</strong>, and <strong>Collapse N Dead-End Leaf Bones</strong> is <strong>Collapse N Unused End Bones</strong>.</li>
+                        <li>Same tools, same thresholds, same results. Only the words moved.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The Topology Mapper got a name people can say</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Avatars &gt; PhysBone Blueprints</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>It is <strong>PhysBone Blueprints</strong> now, and the menu path moved with it.</li>
+                        <li>Its two buttons are <strong>Save Blueprint</strong> and <strong>Apply Blueprint</strong>, in <strong>Phase 1: Save</strong> and <strong>Phase 2: Apply</strong>.</li>
+                        <li>New blueprints are named <code>Avatar_PhysBones</code>. Blueprints you already saved keep working exactly as they are; only the default name for new ones changed.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The component list reads like your avatar</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Avatars &gt; Quest Conversion Engine</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>The sections are just <strong>Animators</strong>, <strong>PhysBones</strong>, <strong>Colliders</strong>, <strong>Contacts</strong>, <strong>Constraints</strong> and the rest, instead of every one of them starting with "System:".</li>
+                        <li>The ones the converter strips for you say <strong>removed for you</strong> rather than <strong>(Auto-Culled)</strong>.</li>
+                        <li>The button at the end is <strong>Convert To Quest</strong>.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Two Hub fixes worth having</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Hub Dashboard</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>The update badge in the Scene View lands on <strong>Changelogs</strong> now. The first time you clicked it, it opened the Hub on <strong>News</strong> instead, because it asked for a tab that did not exist yet.</li>
+                        <li>Old releases stopped halfway down. Release 1.4.3 cut off partway because the Hub gave up on a document the moment it hit the words "Network Links", and that release happens to mention them.</li>
+                        <li>The <strong>Architecture</strong> tab is <strong>Overview</strong>, and the <strong>Pipeline Preset Manager</strong> tabs are <strong>EXTRACT FROM ASSETS</strong> and <strong>CREATE NEW PRESET</strong>.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">On the site</h3>
+                    <ul class="pledge-list">
+                        <li>Everything shipping today is on one page: <strong>Our Products</strong> lists Latex Ultra, Toon, Clothing Pro and Fur Pro with where to get each one.</li>
+                        <li><strong>Extended Projects</strong> is now only the things that are not out yet or are parked, each carrying its real status.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Built and compiling clean.</li>
+                        <li>Every menu path except PhysBone Blueprints is unchanged, and no setting, default or threshold moved.</li>
+                        <li>If a control you had memorised reads differently, that is this release and nothing is broken.</li>
+                    </ul>
+                </div>
+            </article>
+
             <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-08-16-four-releases-today-and-two-of-them-are">
                 <div class="news-body">
                     <div class="news-meta">
@@ -1476,6 +1744,57 @@
                     <ul class="pledge-list">
                         <li><strong>Touch</strong> is new and unproven in the wild. Set up one zone first, check it presses the way you expect, then paint the rest.</li>
                         <li>Nothing here changes an existing material until you turn it up.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-08-15-vixens-toolbox-2-15-0-the-optimization-s">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Dev Notes</span>
+                        <span class="news-tag">Vixens Toolbox</span>
+                        <span class="news-date">August 15, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Vixens Toolbox 2.15.0: the Optimization Suite stops reaching for the resize slider first</h2>
+                    <p class="forge-intro"><em>Shrinking a texture is the blunt way to save VRAM and it costs you detail every time, but it was the first thing the Suite put in front of you. Format is the lever that should come first, so now it does. While we were in there we went after the other half of it: tasks that arrived already ticked, and a purge that could not tell the difference between something dead and something your animations were still using.</em></p>
+                    <h3 class="text-glow-cyan">Compression before resolution</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Avatars &gt; Optimization Suite</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>A new task at the top of the list finds every texture still sitting on Uncompressed and offers to move it to high quality block compression.</li>
+                        <li>Uncompressed RGBA costs 32 bits per pixel. Compressed costs 8. That is the same saving you would get from halving the resolution, without the blur.</li>
+                        <li>It sits above <strong>Texture Optimization Targeting</strong> on purpose. Resize afterwards if you still need to, rather than first.</li>
+                        <li>Unity picks the block format per texture, so colour maps get BC7 and normal maps stay normal maps.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">A free pass on the transparent ones</h3>
+                    <ul class="pledge-list">
+                        <li>A second task finds textures already compressed on the older DXT5 format and moves them to BC7.</li>
+                        <li>Both are 8 bits per pixel, so memory does not move. Banding and block artifacts largely go with it.</li>
+                        <li>It skips opaque textures deliberately. Those sit on 4 bit DXT1, and moving them to BC7 would double their memory instead of costing nothing.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Nothing is ticked for you now</h3>
+                    <ul class="pledge-list">
+                        <li>Every task in <strong>Destructive Optimization Engine</strong> starts unchecked. The execute button does nothing until you have chosen something.</li>
+                        <li>They used to arrive pre-selected, which put a one click purge of your hierarchy behind a button you might press while still reading the list.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The purge stopped eating things you were using</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Orphaned Transforms</strong> and <strong>Dead-End Leaf Bones</strong> only ever looked at components and children. An empty object your clip toggled, or a bone a VRCFury component pointed at, read as dead weight and got destroyed.</li>
+                        <li>Both now check every animation clip on the avatar, your playable layers and whatever VRCFury carries, plus every object reference VRCFury holds, contact senders and receivers, and constraint sources.</li>
+                        <li>If something is using it, it stays.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The version in the header is the real one</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Hub Dashboard</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>The Hub read the SDK version out of its own manifest, so it printed the minimum we build against rather than the SDK you have installed. It reads yours now.</li>
+                        <li><strong>PhysBone Topology Mapper</strong> opens in projects without the VRChat SDK, with the "SDK required" screen it was always meant to show. The whole tool was compiled out before, so it simply never appeared.</li>
+                        <li>In <strong>Animation Workbench Pro</strong>, shader properties starting with <code>_AL</code> sort into AudioLink now, without catching <code>_Alpha</code> on the way past.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Built and running.</li>
+                        <li>Reach for compression before resolution. On a heavy avatar the format pass on its own can be the whole saving.</li>
+                        <li>Animator Forge writes to <strong>Assets/VixenTools/AnimatorForge</strong> now. Clips you already have keep working exactly where they are.</li>
                     </ul>
                 </div>
             </article>

@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 
 namespace VixenTools.Editor
 {
-    public class VixenHeuristicsDashboard : EditorWindow
+    public class VixenHeuristicsDashboard
     {
         private HashSet<Texture> _detectedTextures = new HashSet<Texture>();
         private HashSet<Mesh> _detectedMeshes = new HashSet<Mesh>();
@@ -24,7 +24,7 @@ namespace VixenTools.Editor
             var key = (typeof(T), includeInactive);
             if (_sceneObjectCache.TryGetValue(key, out var cached)) return cached as T[];
 
-            var objs = FindObjectsOfType<T>(includeInactive);
+            var objs = UnityEngine.Object.FindObjectsOfType<T>(includeInactive);
             _sceneObjectCache[key] = objs;
             return objs;
         }
@@ -36,39 +36,33 @@ namespace VixenTools.Editor
             var key = (t, includeInactive);
             if (_sceneObjectCache.TryGetValue(key, out var cached)) return cached;
 
-            var objs = FindObjectsOfType(t, includeInactive);
+            var objs = UnityEngine.Object.FindObjectsOfType(t, includeInactive);
             _sceneObjectCache[key] = objs;
             return objs;
         }
 
-        public static void Open(HashSet<Texture> textures, HashSet<Mesh> meshes, HashSet<AudioClip> audio, HashSet<Texture> uiTextures)
+        public static void Render(VisualElement root, HashSet<Texture> textures, HashSet<Mesh> meshes, HashSet<AudioClip> audio, HashSet<Texture> uiTextures)
         {
-            var window = GetWindow<VixenHeuristicsDashboard>("WORLD PROFILER", true);
+            if (root == null) return;
 
-            window.minSize = new Vector2(385, 625);
-            var pos = window.position;
-            window.position = new Rect(pos.x, pos.y, 385, 625);
-
-            window._detectedTextures = textures ?? new HashSet<Texture>();
-            window._detectedMeshes = meshes ?? new HashSet<Mesh>();
-            window._detectedAudio = audio ?? new HashSet<AudioClip>();
-            window._detectedUITextures = uiTextures ?? new HashSet<Texture>();
-
-            window.RenderDashboard();
-            window.ShowUtility();
+            var dashboard = new VixenHeuristicsDashboard
+            {
+                _detectedTextures = textures ?? new HashSet<Texture>(),
+                _detectedMeshes = meshes ?? new HashSet<Mesh>(),
+                _detectedAudio = audio ?? new HashSet<AudioClip>(),
+                _detectedUITextures = uiTextures ?? new HashSet<Texture>()
+            };
+            dashboard.RenderDashboard(root);
         }
 
-        private void RenderDashboard()
+        private void RenderDashboard(VisualElement root)
         {
-            rootVisualElement.Clear();
+            root.Clear();
             _sceneObjectCache.Clear();
 
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/VixenWorldSpider.uss");
-            if (styleSheet != null) rootVisualElement.styleSheets.Add(styleSheet);
-
-            rootVisualElement.style.backgroundColor = new StyleColor(new Color(0.04f, 0.04f, 0.06f));
+            root.style.backgroundColor = new StyleColor(new Color(0.04f, 0.04f, 0.06f));
             var scroll = new ScrollView { style = { flexGrow = 1 } };
-            rootVisualElement.Add(scroll);
+            root.Add(scroll);
 
             var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
 
@@ -310,10 +304,12 @@ namespace VixenTools.Editor
 
             int activeCameras = GetCachedObjects<Camera>(false).Count(c =>
                 c != null && c.enabled && c.gameObject.activeInHierarchy &&
+                c.cullingMask != 0 &&
                 c.name != "VRCCam" &&
                 c.gameObject.tag != "MainCamera");
 
-            int reflectionProbes = GetCachedObjects<ReflectionProbe>(false).Count(p => p != null && p.enabled && p.gameObject.activeInHierarchy);
+            int reflectionProbes = GetCachedObjects<ReflectionProbe>(false).Count(p => p != null && p.enabled && p.gameObject.activeInHierarchy &&
+                p.mode == UnityEngine.Rendering.ReflectionProbeMode.Realtime);
             int meshColliders = GetCachedObjects<MeshCollider>(false).Count(c => c != null && c.enabled && c.gameObject.activeInHierarchy);
             int terrains = GetCachedObjects<Terrain>(false).Count(t => t != null && t.enabled && t.gameObject.activeInHierarchy);
             int lightmapCount = LightmapSettings.lightmaps != null ? LightmapSettings.lightmaps.Length : 0;

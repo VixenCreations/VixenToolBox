@@ -377,13 +377,13 @@
                         <span class="opt-values">Options: <code>Opaque</code>, <code>Cutout</code>, <code>Fade</code>, <code>Transparent</code></span></li>
                     <li class="mb-2"><strong>CutOff</strong> - Anything in your texture more see-through than this is cut away completely. Only does anything in the Cutout rendering modes.</li>
                     <li class="mb-2"><strong>Use Mask Texture</strong> - Cut the see-through part from its own texture instead of from the alpha of your main one, so you can keep the two separate.</li>
-                    <li class="mb-2"><strong>Cutout Mask</strong></li>
+                    <li class="mb-2"><strong>Cutout Mask</strong> - Cuts holes in the material. Black is cut away. It needs a render mode that supports it, such as Cutout or Fade.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask holds the part to cut away.</li>
                     <li class="mb-2"><strong>Color</strong> - Albedo holds your colour in RGB. In Cutout its alpha is the cutout; in Fade and Transparent it multiplies the Color's opacity. Leave it empty to set opacity from the Color alpha alone.</li>
-                    <li class="mb-2"><strong>Albedo</strong></li>
+                    <li class="mb-2"><strong>Albedo</strong> - The main colour map. Everything else layers on top of this.</li>
                     <li class="mb-2"><strong>Minimum Brightness</strong> - A floor under how dark the material is allowed to get, so you never vanish completely in an unlit room. 0 lets the dark be dark.</li>
                     <li class="mb-2"><strong>Use Alpha Map</strong> - Drives opacity from a texture instead of the Albedo's alpha, handy when your Albedo has no alpha channel. Black keeps the pixel, white takes it away, so you paint over the parts you want gone. Pick the channel that holds the mask below, or turn on Invert for the usual opacity map.</li>
-                    <li class="mb-2"><strong>Alpha Map</strong></li>
+                    <li class="mb-2"><strong>Alpha Map</strong> - A separate map for transparency, for when the alpha in your albedo is doing something else. White is solid, black is clear.</li>
                     <li class="mb-2"><strong>Map Channel</strong> - Which channel of the alpha map holds the see-through part.</li>
                     <li class="mb-2"><strong>Invert</strong> - Off is our default: black keeps the pixel and white takes it away, so you paint over what you want gone. Turn it on for the usual opacity map that most other shaders use, where white keeps and black takes away.</li>
                     <li class="mb-2"><strong>Transparency</strong> - Fades the whole material out. 0 is solid, 1 is invisible. Only works in the Fade and Transparent modes; Opaque and Cutout ignore it.</li>
@@ -436,7 +436,7 @@
                 <p class="tab-desc">Macro normal map and the secondary micro-detail normal.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Normal Map</strong> - For hair cards, fur planes and other flat pieces: bends the lighting normals outward from the pivot so the whole shape lights as one volume instead of a stack of separate cards. Put the pivot at the centre of the shape, in object space.</li>
+                    <li class="mb-2"><strong>Normal Map</strong> - Adds fine surface detail such as creases, seams and weave without extra polygons. Use a normal map texture set to Normal map in its import settings. Normal Strength below sets how deep it looks.</li>
                     <li class="mb-2"><strong>Normal Strength</strong> - How strongly the normal map shapes the light. Above 1 exaggerates it, 0 ignores the map and lights the surface flat.</li>
                     <li class="mb-2"><strong>Card Normal Smoothing</strong> - Rounds the lighting on flat cards, so hair and fur planes catch light like the round shape they stand for rather than like the flat sheets they are. Set the middle of that shape with Smoothing Pivot below.</li>
                     <li class="mb-2"><strong>Smoothing Pivot</strong> - The point the smoothing rounds away from, in the model's own space. Put it at the centre of the head for hair, or the centre of the limb for fur.</li>
@@ -450,7 +450,7 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Second Normal Map Settings</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Map</strong></li>
+                    <li class="mb-2"><strong>Map</strong> - A second normal map laid over the first, for a pattern that repeats at its own scale.</li>
                     <li class="mb-2"><strong>Strength</strong> - How strongly the second map shapes the light. Above 1 exaggerates it, 0 ignores it.</li>
                     <li class="mb-2"><strong>Blend</strong> - Layered adds the second map's bumps on top of the first. Replace swaps the first map out for the second wherever the mask allows.
                         <span class="opt-values">Options: <code>Layered</code>, <code>Replace</code></span></li>
@@ -473,7 +473,7 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Bent Normals Settings</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Map</strong></li>
+                    <li class="mb-2"><strong>Map</strong> - A bent normal map, which leans away from nearby geometry so creases and folds catch light the way they should.</li>
                     <li class="mb-2"><strong>Ambient Shaping</strong> - How much the bent normal map steers the ambient light. It knows which way each part of the surface is open to the room, so creases take less sky and exposed areas take more.</li>
                     <li class="mb-2"><strong>Reflection Shaping</strong> - The same idea for reflections: how much the bent normal map dims what a crease is allowed to reflect. Creases reflect less of the room than a flat area does.</li>
                     </ul>
@@ -487,7 +487,7 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Micro Detail Settings</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Map</strong></li>
+                    <li class="mb-2"><strong>Map</strong> - A fine normal map tiled far tighter than the main one, for pores, weave and grain seen up close.</li>
                     <li class="mb-2"><strong>Strength</strong> - How strongly the detail normal map shapes the light on top of your main one. This is the fine stuff: grain, weave, pores.</li>
                     <li class="mb-2"><strong>Band</strong> - Which part of the music the detail raises with.</li>
                     <li class="mb-2"><strong>Raise</strong> - How far the beat pushes the detail up.</li>
@@ -522,6 +522,18 @@
                     <li class="mb-2"><strong>AO Channel</strong> - Which channel of the packed map holds ambient occlusion. Set it to None if your map does not carry one.
                         <span class="opt-values">Options: <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code>, <code>None</code></span></li>
                     <li class="mb-2"><strong>Mochie Metallic Map Setup</strong> - One-click: maps a Mochie/Poiyomi 'Metallic Maps' texture (R:Met G:Smooth B:Reflection A:Specular) onto the packed PBR. Drop the Mochie map into Packed PBR Mask above first.</li>
+                    <li class="mb-2"><strong>Toon Standard Specular Setup</strong> - One click for a Substance ToonStandardSpecular export: red is metallic, green is smoothness, blue is occlusion. With the Packed PBR Mask slot empty, it finds that file next to your Albedo and drops it in.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Separate Maps</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Use Metallic Map</strong> - Read metallic from its own texture instead of from the packed map. White is metal. Global Metallic still scales it, so raise that too.</li>
+                    <li class="mb-2"><strong>Metallic Map</strong> - Your metallic texture. White is metal, black is not.</li>
+                    <li class="mb-2"><strong>Metallic Channel</strong> - Which channel of that texture holds metallic. Usually picked for you when you drop the texture in.</li>
+                    <li class="mb-2"><strong>Use Smoothness Map</strong> - Read smoothness from its own texture instead of from the packed map. Gloss and smoothness maps work as they are. For a roughness map, tick Map is Roughness below. Global Smoothness still scales it.</li>
+                    <li class="mb-2"><strong>Smoothness Map</strong> - Your gloss, smoothness or roughness texture.</li>
+                    <li class="mb-2"><strong>Smoothness Channel</strong> - Which channel of that texture holds smoothness. Usually picked for you when you drop the texture in.</li>
+                    <li class="mb-2"><strong>Map is Roughness</strong> - Tick this for a roughness map, where white is rough. Gloss and smoothness maps leave it off.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Reflection &amp; Specular Masks</h3>
@@ -567,7 +579,7 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Height Settings</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Height Map</strong></li>
+                    <li class="mb-2"><strong>Height Map</strong> - How high each part of the surface sits, in greyscale. White is raised. It drives parallax and displacement.</li>
                     <li class="mb-2"><strong>Map Channel</strong> - Which channel of the separate height map to read. Auto picks for you.</li>
                         </ul>
                     </div>
@@ -583,7 +595,7 @@
                     <li class="mb-2"><strong>Band</strong> - Which part of the music the depth moves with.</li>
                     <li class="mb-2"><strong>Thump</strong> - How far the beat pushes the depth.</li>
                     <li class="mb-2"><strong>Displacement Strength</strong> - Pushes the surface out along its normals using your height source, so folds and seams become real geometry instead of shading. It needs a height source above. Tessellation Detail sets how finely the mesh is split to carry it.</li>
-                    <li class="mb-2"><strong>Tessellation Detail</strong> - Splits each triangle into smaller ones before the surface is moved, so displacement and goo land smoothly instead of blocky. Higher costs more framerate, and it only spends the detail on triangles that are large on screen. Nothing moving the surface means nothing to smooth, so this only appears once something is.</li>
+                    <li class="mb-2"><strong>Tessellation Detail</strong> - Splits each triangle into smaller ones before the surface is moved, so displacement and goo land smoothly instead of blocky. Higher costs more framerate, and it only spends the detail on triangles that are large on screen. Nothing moving the surface means nothing to smooth, so this only appears once something is. Set 0 to stop Touch from splitting triangles.</li>
                 </ul>
             </div>
             <!-- ========================= -->
@@ -667,6 +679,9 @@
                     <li class="mb-2"><strong>Strength</strong> - How much light soaks in. 0 turns it off.</li>
                     <li class="mb-2"><strong>Distance</strong> - How far the light spreads once it is inside. Small keeps the glow tight to the lit edge, large carries it round onto the shaded side.</li>
                     <li class="mb-2"><strong>Power</strong> - How much extra you get looking towards the light, the way a hand held up to a lamp glows at the edges. Low shows it across a wide range of angles, high only when the light is nearly behind.</li>
+                    <li class="mb-2"><strong>Thickness</strong> - How thick the material is where light soaks through. Thin parts pass more light and glow at the edges. Leave it at 0 to keep the fully thick look every material has had until now.</li>
+                    <li class="mb-2"><strong>Thickness Map</strong> - Paints the thickness across the mesh instead of one value for the whole material. White is thick, black is thin. It scales the slider above, so raise that first.</li>
+                    <li class="mb-2"><strong>Thickness Channel</strong> - Which channel of the map holds the thickness. Auto reads a plain greyscale map.</li>
                     </ul>
                 </div>
 
@@ -735,6 +750,15 @@
                     </ul>
                 </div>
 
+                <h3 class="text-glow-pink opt-group">World Post Processing</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>World Post Processing Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Brightness Limit</strong> - Keeps highlights from going brighter than this, so the world's bloom can't turn a small glint into a huge glow. It starts easing off at half this value, so nothing clips flat.</li>
+                    </ul>
+                </div>
+
                 <h3 class="text-glow-pink opt-group">Shadow Detail</h3>
                 <p class="opt-note">Occlusion and shadow, gathered in one place. AO Strength and Shadow Hardness always apply; the dedicated maps below stay off until you enable them.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -756,7 +780,7 @@
                 </div>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Enable Occlusion Map</strong> - Read occlusion from its own texture instead of from a channel of your packed map.</li>
-                    <li class="mb-2"><strong>Occlusion Map</strong></li>
+                    <li class="mb-2"><strong>Occlusion Map</strong> - A baked map of where ambient light cannot reach. Black is buried, white is open.</li>
                     <li class="mb-2"><strong>Occlusion Channel</strong> - Which channel of that texture holds the occlusion.</li>
                     <li class="mb-2"><strong>Occlusion Strength</strong> - How strongly that map darkens the creases.</li>
                     <li class="mb-2"><strong>Shadow Hardness</strong> - Sharpens the edge between lit and unlit. A light already gives you the sharpest edge the shape of your mesh allows, so turning this up brightens the surface just inside that edge rather than moving the edge itself. That is a stylised look rather than a realistic one. It eases back to normal as a surface turns to face the light. 0 is off.</li>
@@ -765,7 +789,7 @@
                     <li class="mb-2"><strong>Normal Bias Mode</strong> - Relative adds to the Normal Bias set on the light, so it keeps up with your shadow quality, and at 1 it adds three times what the light uses. Fixed moves a set distance instead, up to 2 cm at 1. Both need the light to have some bias of its own.
                         <span class="opt-values">Options: <code>Relative</code>, <code>Fixed</code></span></li>
                     <li class="mb-2"><strong>Enable Baked Shadow Map</strong> - Paint shadows on permanently from a texture, for detail no light in the room would ever give you.</li>
-                    <li class="mb-2"><strong>Baked Shadow Map</strong></li>
+                    <li class="mb-2"><strong>Baked Shadow Map</strong> - A baked shadow painted into the surface. Black is in shadow.</li>
                     <li class="mb-2"><strong>Shadow Channel</strong> - Which channel of that texture holds the painted shadow.</li>
                     <li class="mb-2"><strong>Shadow Strength</strong> - How dark those painted shadows go.</li>
                     <li class="mb-2"><strong>Band</strong> - Which part of the music the painted shadows deepen with.</li>
@@ -804,12 +828,13 @@
                     <li class="mb-2"><strong>Per-Light Specular</strong> - Gives every point light in the volume its own sharp highlight, shaped by how big the light is. Off, point lights still add to the softer highlight the volume gives you.</li>
                     <li class="mb-2"><strong>Point Light Strength</strong> - How strongly the point lights placed in the world reach this material. They used to arrive welded to the baked volumes, so the only way to bring one down was the Light Volumes strength above, and that pulls the whole room down with it. This moves the point lights on their own. 1 leaves them exactly as the world author placed them, above 1 leans into them, 0 takes them out.</li>
                     <li class="mb-2"><strong>Point Light Shading</strong> - How much a point light in the volume wraps around your shape. Low reads flat and even, high reads like a real light off to one side.</li>
+                    <li class="mb-2"><strong>Use Shading Options</strong> - Point, spot and area lights from the volumes take the same bands as the lights in the room, from your Shading Options style. Off, they light you smoothly, like ambient light. While this is on, the style shapes these lights and Point Light Shading is set aside. <span class="tag-inline"><span class="avail-tag">Toon</span><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span><span class="avail-tag">World Surface</span><span class="avail-tag">World Fur</span></span></li>
                     <li class="mb-2"><strong>Normal Stability</strong> - Keeps point, spot and area lights and their baked shadows from smearing when you use parallax, detail normals, wetness or drip. 1 is fully stable.</li>
                     <li class="mb-2"><strong>Normal Bias</strong> - Nudges where the material takes its reading from, along its own normal. A small amount stops a surface picking up light from the far side of a thin wall.</li>
                     <li class="mb-2"><strong>Position Offset</strong> - Shifts where the material takes its reading from, in world space. Useful when a volume boundary cuts through you.</li>
                     <li class="mb-2"><strong>Additive-Only Mode</strong> - Only take the extra volumes a world layers on top, and keep your normal probe lighting underneath. Reach for it when a volume is washing you out.</li>
                     <li class="mb-2"><strong>Smoother Probe Lighting</strong> - Smooths out the ringing you can get from light probes, where a bright light leaves a dark patch on the far side.</li>
-                    <li class="mb-2"><strong>Match This World</strong> - Compiles the material against the Light Volumes setup this world actually uses, instead of every feature Light Volumes can do. Turn it on when your world has the VRC Light Volumes package installed and the material is behaving differently from the rest of the room. Leave it off in a project that does not have that package. <span class="tag-inline"><span class="avail-tag">World Surface</span><span class="avail-tag">World Fur</span></span></li>
+                    <li class="mb-2"><strong>Match This World</strong> - Compiles the material against the Light Volumes setup this world actually uses, instead of every feature Light Volumes can do, which builds and runs faster. Turn it on when the material behaves differently from the rest of the room. It needs the VRC Light Volumes package and does nothing without it. <span class="tag-inline"><span class="avail-tag">World Surface</span><span class="avail-tag">World Fur</span></span></li>
                     </ul>
                 </div>
 
@@ -871,12 +896,12 @@
                 <p class="opt-note">Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Enable</strong> - Place logos, stickers, brand art or tattoos on the latex. Up to 4 layers, each positioned in the Scene view by dragging its handles. Each layer's Tint alpha sets how strong it is. Coverage From decides what makes a decal show: its alpha, or how light or dark it is. Painted shading on a white background wants Luminance Inverted, and a texture with no usable alpha wants Ignore Alpha.</li>
-                    <li class="mb-2"><strong>Decal Masks</strong></li>
+                    <li class="mb-2"><strong>Decal Masks</strong> - One image holding a mask for each decal, one per channel. Red masks Decal 0, green Decal 1, blue Decal 2 and alpha Decal 3.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Decal 0</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Decal</strong></li>
+                    <li class="mb-2"><strong>Decal</strong> - The image this decal stamps onto the material.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the decal. White leaves its own colours alone.</li>
                     <li class="mb-2"><strong>Position</strong> - Where the decal sits, across and up the surface.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns the decal, in degrees.</li>
@@ -901,7 +926,7 @@
 
                 <h3 class="text-glow-pink opt-group">Decal 1</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Decal</strong></li>
+                    <li class="mb-2"><strong>Decal</strong> - The image this decal stamps onto the material.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the decal. White leaves its own colours alone.</li>
                     <li class="mb-2"><strong>Position</strong> - Where the decal sits, across and up the surface.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns the decal, in degrees.</li>
@@ -926,7 +951,7 @@
 
                 <h3 class="text-glow-pink opt-group">Decal 2</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Decal</strong></li>
+                    <li class="mb-2"><strong>Decal</strong> - The image this decal stamps onto the material.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the decal. White leaves its own colours alone.</li>
                     <li class="mb-2"><strong>Position</strong> - Where the decal sits, across and up the surface.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns the decal, in degrees.</li>
@@ -951,7 +976,7 @@
 
                 <h3 class="text-glow-pink opt-group">Decal 3</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Decal</strong></li>
+                    <li class="mb-2"><strong>Decal</strong> - The image this decal stamps onto the material.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the decal. White leaves its own colours alone.</li>
                     <li class="mb-2"><strong>Position</strong> - Where the decal sits, across and up the surface.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns the decal, in degrees.</li>
@@ -1136,8 +1161,12 @@
                 <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">World Surface</span></div>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Enable</strong> - Soaks the masked area like fresh out of the shower: darkens the latex, turns reflections to a near-mirror water film, adds a wet sheen, and smooths out micro-detail.</li>
-                    <li class="mb-2"><strong>Mask</strong></li>
+                    <li class="mb-2"><strong>Mask</strong> - Where the wet look sits. White is wet, black stays dry.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the wet effects apply.</li>
+                    <li class="mb-2"><strong>Extra Mask</strong> - Borrows an Emission layer Map or a Matcap mask as a second mask, so the wet only shows where both allow it. It costs no extra texture. That layer has to be switched on.
+                        <span class="opt-values">Options: <code>None</code>, <code>Emission 1</code>, <code>Emission 2</code>, <code>Emission 3</code>, <code>Emission 4</code>, <code>Emission 5</code>, <code>Matcap 1</code>, <code>Matcap 2</code>, <code>Matcap 3</code>, <code>Matcap 4</code>, <code>Matcap 5</code></span></li>
+                    <li class="mb-2"><strong>Extra Mask Channel</strong> - Which channel of the extra mask says where the wet applies.</li>
+                    <li class="mb-2"><strong>Invert Extra Mask</strong> - Swap which side of the extra mask the wet shows on.</li>
                 </ul>
 
                 <div class="opt-subgroup">
@@ -1148,6 +1177,10 @@
                     <li class="mb-2"><strong>Smoothness</strong> - How glossy the wet areas are.</li>
                     <li class="mb-2"><strong>Film Sheen</strong> - How much of a film sits on top of the wetness.</li>
                     <li class="mb-2"><strong>Normal Flatten</strong> - How much the water smooths out the detail underneath it.</li>
+                    <li class="mb-2"><strong>Gravity Pooling</strong> - Lets the water follow gravity: it gathers on the parts of you facing up, clings under the parts facing down, and thins on the steep sides it runs off.</li>
+                    <li class="mb-2"><strong>Touch Wipe</strong> - A touch pushes the water aside, so the spot under a hand dries and the water gathers round its edge. Uses the Touch section below.</li>
+                    <li class="mb-2"><strong>Glints</strong> - Tiny sparkles in the water film and on the drops, where the light catches them. Density is how many, Size is how big each one is, and Twinkle makes them flicker.</li>
+                    <li class="mb-2"><strong>Music Colour</strong> - Tints the water, and the drops, with the colour of the music. It follows the Color Source in the AudioLink section.</li>
                     </ul>
                 </div>
 
@@ -1162,6 +1195,7 @@
                     <li class="mb-2"><strong>Beat Wetness</strong> - The beat wets the material down.</li>
                     <li class="mb-2"><strong>Beat Flow</strong> - The beat makes the runs pour faster.</li>
                     <li class="mb-2"><strong>Beat Twist</strong> - The beat swings the run direction round. In degrees.</li>
+                    <li class="mb-2"><strong>Travelling Beats</strong> - Runs each hit down the streaks from the top instead of swelling them all at once. Amount is how much of the streak the beat takes over, Length is how long it takes to run down, Sharpness tightens it, and Glow flares it. Volume or Peak Hold fall back to Bass.</li>
                     <li class="mb-2"><strong>Flow Speed</strong> - How fast they run.</li>
                     <li class="mb-2"><strong>Strength</strong> - How pronounced the drips are.</li>
                     <li class="mb-2"><strong>Bump</strong> - How much each drip stands out from the surface.</li>
@@ -1181,6 +1215,8 @@
                     <li class="mb-2"><strong>Floor Splat</strong> - Let the drips splash when they reach the floor.</li>
                     <li class="mb-2"><strong>From Writhe</strong> - Makes drops fall from wherever the writhing has drawn the material out, instead of at an even rate all over. The reaching places shed first and most, so a drop looks like it came off the tip of a tendril rather than appearing beside it. Needs Writhe under Goo Effects to be doing something. Leave at 0 and the droplets behave exactly as they always have.</li>
                     <li class="mb-2"><strong>Pooling</strong> - How much the drops build up where they land. At 0 each one spreads and fades on the spot, so the floor stays clear. Turn it up and the splats stay wider for longer and overlap, so the ground reads as goo gathering under you rather than drops blinking out one at a time.</li>
+                    <li class="mb-2"><strong>Room Lighting</strong> - Lights the drops with the room, the same way as the rest of you, so they sit in a dark club instead of glowing. At 0 they look the way they did before this option existed. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
+                    <li class="mb-2"><strong>Beat Shake-off</strong> - A big peak in the music shakes a shower of extra drops loose, water and goo, and throws the falling ones outward. Amount is how many, Threshold is how big the peak has to be, Hold is how long the shower lasts, and Softness fades it in and out. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     <li class="mb-2"><strong>Custom Particle</strong> - Use your own image for each drop instead of the built-in bead, so the same physics can throw sweat, bubbles, sparks, petals or anything else off you. The alpha decides the shape, so give it a transparent background. Everything above still applies: they swell, pinch off, fall and dry out exactly as before.</li>
                     </ul>
 
@@ -1199,8 +1235,13 @@
                 <p class="opt-note">Latex that melts, hangs, writhes and drips. Turn it on, paint a Mask for where it melts, then reach for the groups you want: Melt for the sag, Slime Shading for the wet look, Writhe to make it move on its own, and Floor to let it reach the ground.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Enable</strong> - Makes the latex sag and run downwards like it is melting. Melt To Ground, under Floor, pulls it toward the ground: set Height there to your world's floor level, usually 0. Turn Tessellation up for smoother results.</li>
-                    <li class="mb-2"><strong>Mask</strong></li>
+                    <li class="mb-2"><strong>Mask</strong> - Where the goo sits. White is covered, black stays bare.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the goo runs.</li>
+                    <li class="mb-2"><strong>Extra Mask</strong> - Borrows an Emission layer Map or a Matcap mask as a second mask, so the goo only runs where both allow it, drops and strands included. It costs no extra texture. That layer has to be switched on.
+                        <span class="opt-values">Options: <code>None</code>, <code>Emission 1</code>, <code>Emission 2</code>, <code>Emission 3</code>, <code>Emission 4</code>, <code>Emission 5</code>, <code>Matcap 1</code>, <code>Matcap 2</code>, <code>Matcap 3</code>, <code>Matcap 4</code>, <code>Matcap 5</code></span></li>
+                    <li class="mb-2"><strong>Extra Mask Channel</strong> - Which channel of the extra mask says where the goo runs.</li>
+                    <li class="mb-2"><strong>Invert Extra Mask</strong> - Swap which side of the extra mask the goo runs on.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music this reacts to.</li>
                 </ul>
 
                 <div class="opt-subgroup">
@@ -1223,11 +1264,16 @@
                     <p class="opt-note mt-2 mb-2"><strong>Melt</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Sag Distance</strong> - How far the goo sags down the surface.</li>
+                    <li class="mb-2"><strong>Beat Sag</strong> - The beat drags the goo further down.</li>
                     <li class="mb-2"><strong>Stretch Distance</strong> - How far a strand stretches before it lets go.</li>
+                    <li class="mb-2"><strong>Beat Stretch</strong> - The beat draws the strands out longer.</li>
                     <li class="mb-2"><strong>Strand Variation</strong> - How much one strand differs from the next, so they do not all move together.</li>
+                    <li class="mb-2"><strong>Beat Variation</strong> - The beat spreads the strands apart, so more of them break rank and run.</li>
                     <li class="mb-2"><strong>Tendril Scale</strong> - How fine the tendrils are. Low gives a few thick runs, high gives many thin ones.</li>
                     <li class="mb-2"><strong>Flow Speed</strong> - How fast it flows.</li>
+                    <li class="mb-2"><strong>Beat Flow</strong> - The beat hurries the flow along. It adds to the clock rather than scaling it, so the goo gathers pace and settles again without jumping.</li>
                     <li class="mb-2"><strong>Underside Bias</strong> - How much the goo hangs from the underside rather than clinging to it.</li>
+                    <li class="mb-2"><strong>Beat Underside</strong> - The beat pushes the goo toward the undersides, so it gathers where it would hang.</li>
                     </ul>
                 </div>
 
@@ -1235,6 +1281,7 @@
                     <p class="opt-note mt-2 mb-2"><strong>Sway</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Amount</strong> - How much the goo swings as you move.</li>
+                    <li class="mb-2"><strong>Beat Sway</strong> - The beat swings the hanging strands wider.</li>
                     <li class="mb-2"><strong>Speed</strong> - How fast it swings.</li>
                     <li class="mb-2"><strong>Surface Follow</strong> - How closely the goo hugs your shape rather than hanging straight down.</li>
                     </ul>
@@ -1244,16 +1291,31 @@
                     <p class="opt-note mt-2 mb-2"><strong>Writhe</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Amount</strong> - How far the surface pushes out and pulls in. Small is a slow churn under the material; large is full lumps rising and travelling.</li>
+                    <li class="mb-2"><strong>Beat Depth</strong> - The beat swells the writhe itself, so the tendrils surge and stretch on the hit instead of only running faster.</li>
                     <li class="mb-2"><strong>Scale</strong> - How big each swelling is. Low gives a few large masses moving through you; high gives a fine boil all over. The push shrinks as you turn this up so the surface keeps its shape, so if a fine setting looks too tame, raise Amount rather than fighting it here.</li>
                     <li class="mb-2"><strong>Speed</strong> - How fast the goo churns inside itself.</li>
+                    <li class="mb-2"><strong>Beat Writhe</strong> - The goo writhes harder while the music plays and settles back to its own pace when it stops. Needs Writhe turned up.</li>
                     <li class="mb-2"><strong>Tendrils</strong> - At 0 the whole surface rolls, as much sinking as rising. Turn it up and most of it goes still while a few places reach out a long way, which is what makes them read as tendrils rather than lumps.</li>
+                    <li class="mb-2"><strong>Beat Tendrils</strong> - The beat pushes the writhe from a rolling boil toward sharp tendrils.</li>
                     <li class="mb-2"><strong>Crawl</strong> - Lets the swellings travel across your body instead of pulsing where they sit. This is most of what makes it look alive.</li>
+                    <li class="mb-2"><strong>Beat Crawl</strong> - The beat slides the heaped goo across the surface harder.</li>
                     <li class="mb-2"><strong>Surge</strong> - Gathers the movement into a band that climbs up you, so it arrives in waves rather than simmering evenly everywhere.</li>
                     <li class="mb-2"><strong>Fold</strong> - Stops the movement travelling one way. At 0 the swellings all drift in the same direction at the same speed, and after a few passes that reads as a loop. Turn it up and the material folds over itself instead: swellings turn, stall, double back and pull apart, and it never repeats. This is the one to reach for first if the writhing looks like it is on a timer.</li>
+                    <li class="mb-2"><strong>Beat Fold</strong> - The beat folds the writhe in on itself, so it churns rather than drifting.</li>
                     <li class="mb-2"><strong>Wander</strong> - Lets the swellings push sideways, up and underneath instead of only straight out from your body. It is the difference between a surface breathing and goo reaching somewhere, and because the direction keeps turning, a swelling will change course halfway and zig-zag.</li>
+                    <li class="mb-2"><strong>Beat Wander</strong> - The beat leans the writhe further into the flow, so swellings reach sideways and under instead of straight out.</li>
                     <li class="mb-2"><strong>Stretch</strong> - Pulls the swellings long instead of round. They lengthen whichever way they are travelling and narrow across it, so the material reads as being drawn out rather than as lumps inflating. Pairs with Tendrils: Tendrils picks which places reach, this decides how far they draw out when they do.</li>
                     <li class="mb-2"><strong>Run</strong> - Lets the writhing feed the melt, so wherever the material has been drawn out thin it also sags and runs. That is what turns a tendril that waves into one that hangs, runs and drips off its own tip. Needs Sag Distance under Melt to be above 0, since this decides how much the stretching adds to the sag rather than creating it.</li>
+                    <li class="mb-2"><strong>Beat Run</strong> - The beat lets the stretched goo give way and run further down.</li>
                     <li class="mb-2"><strong>Wetness</strong> - Makes the swellings themselves read as thick wet goo: dark, glossy and deep where the material heaps up, thinner between, with the veins brightening along anything drawn out. This is on by default, so turning Amount up is all you need for the look. It borrows its colour and gloss from Slime Shading below, so setting those changes both together.</li>
+                    <li class="mb-2"><strong>Beat Wetness</strong> - The beat wets the stretched strands, so the writhe reads slicker as the music hits.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Oobleck Dance</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Fingers</strong> - Height is how tall the fingers stand, in metres. Scale is how tightly they are packed. Sharpness turns broad bumps into thin spikes, and Figure picks the pattern they rise in.</li>
                     </ul>
                 </div>
 
@@ -1261,13 +1323,17 @@
                     <p class="opt-note mt-2 mb-2"><strong>Floor</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Melt To Ground</strong> - Pull the goo toward the floor, so it runs down rather than following your shape.</li>
+                    <li class="mb-2"><strong>Beat Melt</strong> - The beat pulls the goo further down toward the floor.</li>
                     <li class="mb-2"><strong>Source</strong> - Where the floor is. Avatar Feet finds it from the avatar itself, so the goo lands on the ground in any world and keeps up when you walk up stairs. Manual Height lets you type a world height instead, for a prop that is not worn.
                         <span class="opt-values">Options: <code>Avatar Feet</code>, <code>Manual Height</code></span></li>
                     <li class="mb-2"><strong>Height</strong> - On Avatar Feet this nudges the floor up or down if the goo lands slightly off. On Manual Height it is the world height itself.</li>
                     <li class="mb-2"><strong>Contact</strong> - How many strands make it all the way down. At 1 every strand reaches the floor and pools. Lower it and only the longest get there, leaving the rest hanging as drips.</li>
+                    <li class="mb-2"><strong>Beat Contact</strong> - The beat sends more strands the whole way to the floor.</li>
                     <li class="mb-2"><strong>Collision</strong> - Let the goo pile up when it reaches the floor instead of passing through it.</li>
                     <li class="mb-2"><strong>Pooling</strong> - How much it spreads out into a pool where it lands.</li>
+                    <li class="mb-2"><strong>Beat Pooling</strong> - The beat spreads the pool wider where the goo lands.</li>
                     <li class="mb-2"><strong>Pool Softness</strong> - How far the goo eases into the floor instead of snapping flat onto it. Higher rounds off the join where a strand meets the pool, which is what stops it breaking into hard edged patches. At 0 it lands hard, the way it did before.</li>
+                    <li class="mb-2"><strong>Beat Pool Softness</strong> - The beat rounds the pool out where the goo meets the floor.</li>
                     </ul>
                 </div>
 
@@ -1275,13 +1341,20 @@
                     <p class="opt-note mt-2 mb-2"><strong>Formation</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Amount</strong> - Animate this from 0 to 1 and the piece builds itself out of the goo, starting at your feet and climbing. At 0 nothing has formed yet; at 1 it is all there and the effect is off entirely. Put it on a toggle or a radial and you have goo crawling up and becoming your gear.</li>
+                    <li class="mb-2"><strong>Beat Formation</strong> - The beat pushes the formation wavefront up, so the gear builds itself in time with the music.</li>
                     <li class="mb-2"><strong>Reach</strong> - How far up from the floor the goo has to climb to finish. Set it a little taller than the piece so a full Amount covers all of it.</li>
+                    <li class="mb-2"><strong>Beat Reach</strong> - The beat raises how far the formation front can climb.</li>
                     <li class="mb-2"><strong>Edge</strong> - How deep the wet band is at the leading edge. Small keeps a sharp waterline; large leaves a long wet gradient behind the front.</li>
+                    <li class="mb-2"><strong>Beat Edge</strong> - The beat widens the band at the formation front, so the boundary softens on the hit.</li>
                     <li class="mb-2"><strong>Break-up</strong> - How wild the leading edge gets. The goo climbs in tendrils that reach, sag and swing instead of rising as a flat line. Turn it up and a few strands go a long way ahead of the rest.</li>
+                    <li class="mb-2"><strong>Beat Break-up</strong> - The beat tears the formation edge into a rougher waterline.</li>
                     <li class="mb-2"><strong>Break-up Scale</strong> - How many tendrils. Higher gives more, finer strands.</li>
                     <li class="mb-2"><strong>Drip</strong> - How stringy the tendrils are. Low gives blobs and spots along the edge; high pulls them into long hanging strands. The tendrils borrow Flow Speed from Melt and the Sway settings above, so the whole effect moves as one.</li>
+                    <li class="mb-2"><strong>Beat Drip</strong> - The beat stretches the formation cells into longer hanging strands.</li>
                     <li class="mb-2"><strong>Grab</strong> - How far the goo reaches up past the edge as it climbs, so it looks like it is grabbing the next part of you rather than just appearing.</li>
+                    <li class="mb-2"><strong>Beat Grab</strong> - The beat makes the front reach further ahead of itself for the next piece of the body.</li>
                     <li class="mb-2"><strong>Lift</strong> - How far the strands pull away from your body and settle back as they climb. This is what makes them separate tendrils reaching out and taking hold, instead of a pattern sliding across the surface. Keep it small on tight gear so the goo does not lift through clothing above it.</li>
+                    <li class="mb-2"><strong>Beat Lift</strong> - The beat lifts the strands at the front higher off the surface.</li>
                     </ul>
                 </div>
 
@@ -1289,16 +1362,26 @@
                     <p class="opt-note mt-2 mb-2"><strong>Slime Shading</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Amount</strong> - Turns the sag into wet slime: a deep glossy film with a mirror highlight, light bleeding through where it thins out, and glowing veins threaded through it. Leave at 0 to keep the plain melt with no change to the look.</li>
+                    <li class="mb-2"><strong>Beat Coverage</strong> - The beat spreads the goo further across the material, so it creeps out on the hit and pulls back between.</li>
                     <li class="mb-2"><strong>Colour</strong> - The colour of the goo.</li>
                     <li class="mb-2"><strong>Gloss</strong> - How glossy the goo is. High reads wet, low reads like thick paint.</li>
+                    <li class="mb-2"><strong>Beat Gloss</strong> - The beat polishes the slime, so it flashes wetter on the hit.</li>
                     <li class="mb-2"><strong>Metallic</strong> - How metallic the goo is.</li>
+                    <li class="mb-2"><strong>Beat Metallic</strong> - The beat turns the slime more metallic, for a harder, wetter looking sheen.</li>
                     <li class="mb-2"><strong>Coat Strength</strong> - How much clear coat sits on the goo, which is what gives it a wet skin.</li>
+                    <li class="mb-2"><strong>Beat Coat</strong> - The beat builds the clear coat, for a harder sheen on top.</li>
                     <li class="mb-2"><strong>Coat Gloss</strong> - How sharp that wet skin's reflection is.</li>
+                    <li class="mb-2"><strong>Beat Coat Gloss</strong> - The beat polishes the clear coat on top of the slime.</li>
                     <li class="mb-2"><strong>Thickness</strong> - How deep the slime reads. Thicker swallows more light and pools more on downward-facing parts. Thinner lets the veins and the body underneath show through.</li>
+                    <li class="mb-2"><strong>Beat Swell</strong> - The beat thickens the slime.</li>
                     <li class="mb-2"><strong>Absorption</strong> - How much light the goo swallows as it passes through, so a thick run reads deeper in colour than a thin one.</li>
+                    <li class="mb-2"><strong>Beat Absorption</strong> - The beat deepens the colour the slime soaks up, so it darkens as it hits.</li>
                     <li class="mb-2"><strong>Translucency</strong> - How much light passes through the goo from behind.</li>
+                    <li class="mb-2"><strong>Beat Translucency</strong> - The beat lets more light through the slime, so it glows from behind on the hit.</li>
                     <li class="mb-2"><strong>Underside Pooling</strong> - How much the goo gathers on the underside before it falls.</li>
+                    <li class="mb-2"><strong>Beat Underside Pooling</strong> - The beat gathers more of the slime on the undersides.</li>
                     <li class="mb-2"><strong>Refraction</strong> - How much the goo bends what you see through it.</li>
+                    <li class="mb-2"><strong>Beat Refraction</strong> - The beat churns what you see through the slime.</li>
                     </ul>
                 </div>
 
@@ -1306,19 +1389,24 @@
                     <p class="opt-note mt-2 mb-2"><strong>Veins</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Colour</strong> - Veins running through the goo: their colour, how bright they glow, how fast they pulse and how fine they are.</li>
+                    <li class="mb-2"><strong>Music Colour</strong> - Hands the vein colour, and the goo drops, over to the colour of the music. It follows the Color Source in the AudioLink section.</li>
                     <li class="mb-2"><strong>Glow</strong> - Veins running through the goo: their colour, how bright they glow, how fast they pulse and how fine they are.</li>
+                    <li class="mb-2"><strong>Beat Veins</strong> - The beat lights the veins up.</li>
                     <li class="mb-2"><strong>Scale</strong> - Veins running through the goo: their colour, how bright they glow, how fast they pulse and how fine they are.</li>
                     <li class="mb-2"><strong>Thinness</strong> - Veins running through the goo: their colour, how bright they glow, how fast they pulse and how fine they are.</li>
+                    <li class="mb-2"><strong>Beat Thinness</strong> - The beat draws the veins finer, so they tighten as the music hits.</li>
                     <li class="mb-2"><strong>Flow Direction</strong> - Which way the slime runs. Down is 0, -1, 0. Point it sideways and it crawls across instead.</li>
-                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music this reacts to.</li>
-                    <li class="mb-2"><strong>Beat Swell</strong> - The beat thickens the slime.</li>
-                    <li class="mb-2"><strong>Beat Flow</strong> - The beat drives the slime along its flow direction.</li>
-                    <li class="mb-2"><strong>Beat Veins</strong> - The beat lights the veins up.</li>
+                    <li class="mb-2"><strong>Travelling Beats</strong> - Runs each hit along the veins in the way they flow, instead of every vein flashing at once. Amount is how much of the vein glow the beat takes over, Length is how long it takes to cross you, Sharpness tightens it, and Glow flares it. Volume or Peak Hold fall back to Bass.</li>
                     <li class="mb-2"><strong>Flow</strong> - Veins running through the goo: their colour, how bright they glow, how fast they pulse and how fine they are.</li>
+                    <li class="mb-2"><strong>Beat Flow</strong> - The beat drives the slime along its flow direction.</li>
                     <li class="mb-2"><strong>Pulse Speed</strong> - Veins running through the goo: their colour, how bright they glow, how fast they pulse and how fine they are.</li>
+                    <li class="mb-2"><strong>Beat Pulse Speed</strong> - The beat hurries the vein pulse along. It adds to the clock rather than scaling it, so the pulse gathers pace and settles again without jumping.</li>
                     <li class="mb-2"><strong>Pulse Depth</strong> - Veins running through the goo: their colour, how bright they glow, how fast they pulse and how fine they are.</li>
+                    <li class="mb-2"><strong>Beat Pulse Depth</strong> - The beat deepens the vein pulse, so they swing further between dim and bright.</li>
                     <li class="mb-2"><strong>Edge Bleed</strong> - Veins running through the goo: their colour, how bright they glow, how fast they pulse and how fine they are.</li>
+                    <li class="mb-2"><strong>Beat Edge Bleed</strong> - The beat pushes the veins out toward the thin edges of the goo.</li>
                     <li class="mb-2"><strong>Edge Falloff</strong> - How sharply the goo ends at its edge.</li>
+                    <li class="mb-2"><strong>Beat Edge Falloff</strong> - The beat tightens the glow around the rim of the goo.</li>
                     </ul>
                 </div>
 
@@ -1326,13 +1414,21 @@
                     <p class="opt-note mt-2 mb-2"><strong>Drips</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Amount</strong> - How solid the drops read. Turn it down to leave them thin and glassy.</li>
+                    <li class="mb-2"><strong>Beat Amount</strong> - The beat sheds more drops at once. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     <li class="mb-2"><strong>Coverage</strong> - How much of the goo sheds drops. Low leaves a few forming at a time, high has them coming off everywhere.</li>
+                    <li class="mb-2"><strong>Beat Coverage</strong> - The beat spreads the drops over more of the material. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     <li class="mb-2"><strong>Scale</strong> - How big each drop is.</li>
                     <li class="mb-2"><strong>Speed</strong> - How quickly a drop gathers, lets go and falls. Keep it low: slow is most of what makes it read as something thick rather than water.</li>
+                    <li class="mb-2"><strong>Beat Fall Speed</strong> - The beat hurries the drops down. It adds to the clock rather than scaling it, so they gather pace without jumping back up. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     <li class="mb-2"><strong>Stringiness</strong> - How long a drop stays joined to you as it falls. At 0 it pinches off cleanly the way water does. Turn it up and it draws out into a thread that follows the drop down and only snaps near the end.</li>
+                    <li class="mb-2"><strong>Beat Stringiness</strong> - The beat draws each drop into a longer string before it lets go. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     <li class="mb-2"><strong>Fall Length</strong> - How far a drop gets before it goes.</li>
+                    <li class="mb-2"><strong>Beat Fall Length</strong> - The beat sends the drops further before they fade. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     <li class="mb-2"><strong>From Writhe</strong> - Sheds the drops from wherever the writhing has drawn the material out, so they come off the tips of the tendrils instead of at an even rate all over. Needs Writhe above to be doing something.</li>
                     <li class="mb-2"><strong>Pool Spread</strong> - How wide a drop goes when it lands. Uses Collision and Pooling under Floor above. Drops keep landing and spreading rather than stacking up, so it reads as goo gathering under you rather than a puddle that grows while you stand still.</li>
+                    <li class="mb-2"><strong>Beat Pool Spread</strong> - The beat spreads the pool wider where the drops land. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
+                    <li class="mb-2"><strong>Beat Drops</strong> - The beat swells the hanging drops. It follows the AudioLink Band under Goo Effects. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
+                    <li class="mb-2"><strong>Room Lighting</strong> - Lights the drops with the room, the same way as the rest of you, so they sit in a dark club instead of glowing. At 0 they look the way they did before this option existed. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     </ul>
                 </div>
 
@@ -1346,27 +1442,40 @@
                     <li class="mb-2"><strong>Strands</strong> - How many. Low gives a few thick ropes, high gives fine webbing.</li>
                     <li class="mb-2"><strong>From Writhe</strong> - Grows the strands out of the places the writhing has drawn the material out, instead of picking spots at random around your outline. The webbing then hangs between the parts that are actually reaching and the calm areas stay clean. Needs Writhe under Goo Effects to be doing something. Leave at 0 and the strands form exactly as they always have.</li>
                     <li class="mb-2"><strong>Break-up</strong> - How picky the strands are about where they form. Low coats the whole outline; high leaves most of it clean and sends a few strands a long way.</li>
+                    <li class="mb-2"><strong>Beat Break-up</strong> - The beat breaks the coat into fewer, longer strands. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     <li class="mb-2"><strong>Speed</strong> - How quickly the strands crawl and re-form.</li>
+                    <li class="mb-2"><strong>Beat Speed</strong> - The beat runs the strands along faster. It adds to the clock rather than scaling it, so they gather pace without jumping. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     <li class="mb-2"><strong>Pull</strong> - How far the strands drag what is behind them. This is what sells the stickiness: whatever is back there smears along the goo instead of sitting still behind it.</li>
+                    <li class="mb-2"><strong>Beat Pull</strong> - The beat drags what shows through the strands further. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     <li class="mb-2"><strong>Distortion</strong> - Ripples the view through the strands, the way looking through something thick and wet does.</li>
+                    <li class="mb-2"><strong>Beat Distortion</strong> - The beat ripples what shows through the strands. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     <li class="mb-2"><strong>Edge Falloff</strong> - How tightly the strands hug your outline. Low lets them creep in over your body; high keeps them to the very edge.</li>
+                    <li class="mb-2"><strong>Beat Edge Falloff</strong> - The beat tightens the strands toward the silhouette. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     <li class="mb-2"><strong>Opacity</strong> - How solid the goo reads. Lower it to leave more of what is behind showing through.</li>
+                    <li class="mb-2"><strong>Beat Opacity</strong> - The beat thickens the strands so they hide more of what is behind them. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
+                    <li class="mb-2"><strong>Beat Reach</strong> - The beat flings the strands further out. It follows the AudioLink Band under Goo Effects. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
+                    <li class="mb-2"><strong>Room Lighting</strong> - Lights the colour of the strands with the room, the way the rest of you is lit. Dark goo barely changes; coloured goo stops glowing in a dark room. At 0 the strands look the way they did before this option existed. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     <li class="mb-2"><strong>Colour Source</strong> - Match Slime borrows the colour, absorption, gloss and veins from Slime Shading above, so the strands look like the material they came off. Switch to Custom to colour them separately, which is what you want when the goo reads one way on you and another way as it reaches out.
                         <span class="opt-values">Options: <code>Match Slime</code>, <code>Custom</code></span></li>
                     <li class="mb-2"><strong>Colour</strong> - The colour of the film. Dark keeps it reading as thick slime; light and saturated turns the strands into coloured glass.</li>
                     <li class="mb-2"><strong>Absorption</strong> - How much of what is behind gets swallowed. High makes the strands nearly solid, low leaves them tinted and see-through.</li>
+                    <li class="mb-2"><strong>Beat Absorption</strong> - The beat deepens the colour the strands soak up. It applies when Colour Source is set to its own. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     <li class="mb-2"><strong>Gloss</strong> - Sharpens the highlight and the reflection along the strands.</li>
+                    <li class="mb-2"><strong>Beat Gloss</strong> - The beat polishes the strands. It applies when Colour Source is set to its own. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     <li class="mb-2"><strong>Vein Colour</strong> - Neon threads running out along the strands. They brighten toward the reaching ends.</li>
                     <li class="mb-2"><strong>Vein Glow</strong> - Set to 0 for plain strands with no threads in them.</li>
+                    <li class="mb-2"><strong>Beat Vein Glow</strong> - The beat lights the veins inside the strands. It applies when Colour Source is set to its own. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     </ul>
                 </div>
 
-                <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Touch</strong></p>
+                <h3 class="text-glow-pink opt-group">Touch</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">World Surface</span></div>
 
-                    <div class="opt-subgroup">
-                        <p class="opt-note mt-2 mb-2"><strong>Touch Settings</strong></p>
-                        <ul class="custom-list m-0 ps-4 mb-4">
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Touch Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Native Touch</strong> - Finds hands, and anything else close to you, from what the camera already sees, so no contacts or animator are needed. Each person sees only their own hands, only up close, and never in a mirror. The world has to draw a depth texture, which most worlds with realtime shadows do.</li>
+                    <li class="mb-2"><strong>Sensing</strong> - Strength is how hard a hand presses. Reach is how far in front of you, in centimetres, a hand still counts. Radius is how wide an area each point feels around it. Max Distance is how close the viewer has to be, in metres, before it switches on, which keeps the cost down.</li>
                     <li class="mb-2"><strong>Zones</strong> - Four touchable areas, one per colour channel: red, green, blue and alpha. Paint soft edges rather than hard ones, since the material pushes in across the whole shape you paint.</li>
                     <li class="mb-2"><strong>Press Red</strong> - Animate this from a contact receiver. 0 is untouched, 1 is pressed all the way in. Give it a curve that overshoots and settles back rather than a straight ramp and the material springs like real slime.</li>
                     <li class="mb-2"><strong>Press Green</strong> - How hard a press at this contact point pushes into the goo. Driven by the contacts on your avatar, so it reacts to being touched.</li>
@@ -1380,9 +1489,16 @@
                     <li class="mb-2"><strong>Wetness</strong> - How much glossier the material goes where it is pressed.</li>
                     <li class="mb-2"><strong>Flow</strong> - Slides the slime pattern out of the way of the press, so the surface looks pushed rather than printed on. Needs Slime Shading above to be doing something.</li>
                     <li class="mb-2"><strong>Veins</strong> - Brightens the glowing veins where the material is squeezed. Needs Veins above to be turned up.</li>
-                        </ul>
-                    </div>
+                    </ul>
                 </div>
+
+                <h3 class="text-glow-pink opt-group">Movement</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">World Surface</span></div>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Velocity</strong> - How fast you are moving, in metres per second: X to your right, Y up, Z forward. Drive each from the matching VRChat Velocity parameter.</li>
+                    <li class="mb-2"><strong>Reactions</strong> - Slosh leaves the goo behind as you move. Sweep bends the wet streaks back. Splash wobbles the goo and shakes drops loose when you land. Fling makes falling drops trail behind you.</li>
+                    <li class="mb-2"><strong>Landing</strong> - Set this to 1 the moment you land and let it fade back to 0 over about half a second. Splash reads it.</li>
+                </ul>
 
                 <h3 class="text-glow-pink opt-group">Glitter</h3>
                 <p class="opt-note">Tiny flakes scattered across the material, each tilted its own way, so they catch the light one at a time and twinkle as you or the light moves. They are generated in the shader, so there is no texture to make and no resolution to run out of. Once flakes get too small on screen to draw individually they settle into a smooth sheen, so glitter never turns into crawling noise at a distance.</p>
@@ -1400,7 +1516,7 @@
                     <li class="mb-2"><strong>Minimum Light</strong> - A floor under how dim the flakes go, so they still read in a dark room.</li>
                     <li class="mb-2"><strong>Take Light Colour</strong> - How much each flake takes the colour of the light hitting it rather than its own.</li>
                     <li class="mb-2"><strong>Over Clearcoat</strong> - Put the flakes on top of the clear coat rather than under it, so they look sprinkled on rather than sealed in.</li>
-                    <li class="mb-2"><strong>Mask</strong></li>
+                    <li class="mb-2"><strong>Mask</strong> - Where the flakes go. White carries glitter, black carries none.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the glitter goes.</li>
                     </ul>
 
@@ -1416,8 +1532,8 @@
                     <li class="mb-2"><strong>Coverage</strong> - How much of the surface carries glitter at all.</li>
                     <li class="mb-2"><strong>Scatter</strong> - How far each flake tilts away from the surface. Low keeps them facing out together, so they flash as one sheet. High tilts them every which way, so they catch the light one at a time.</li>
                     <li class="mb-2"><strong>Depth</strong> - Sinks the flakes below the surface, so they slide as you move your head the way real flake does under a clear coat. Higher sits deeper.</li>
-                    <li class="mb-2"><strong>Colour</strong> - Where each flake gets its colour. Tint uses your colour. Iridescent gives every flake its own rainbow hue. ColorChord takes the colours AudioLink picks out of the music. Prism sweeps each flake through the spectrum as it turns. Two Tone gives every flake either your Tint or a Second Colour.
-                        <span class="opt-values">Options: <code>Tint</code>, <code>Iridescent</code>, <code>ColorChord</code>, <code>Prism</code>, <code>Two Tone</code></span></li>
+                    <li class="mb-2"><strong>Colour</strong> - Where each flake gets its colour. Tint uses your colour. Iridescent gives every flake its own rainbow hue. ColorChord takes the colours AudioLink picks out of the music. Prism sweeps each flake through the spectrum as it turns. Two Tone gives every flake either your Tint or a Second Colour. Notes gives every flake one of the notes AudioLink hears, so the glitter shows the chord being played.
+                        <span class="opt-values">Options: <code>Tint</code>, <code>Iridescent</code>, <code>ColorChord</code>, <code>Prism</code>, <code>Two Tone</code>, <code>Notes</code></span></li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the flakes.</li>
                     <li class="mb-2"><strong>Rainbow Amount</strong> - How much each flake carries its own colour, for a holographic finish rather than a plain metallic one.</li>
                     <li class="mb-2"><strong>Second Colour</strong> - The other colour a Two Tone flake can take.</li>
@@ -1463,8 +1579,8 @@
                     <li class="mb-2"><strong>Coverage</strong> - How much of the surface carries glitter at all.</li>
                     <li class="mb-2"><strong>Scatter</strong> - How far each flake tilts away from the surface. Low keeps them facing out together, so they flash as one sheet. High tilts them every which way, so they catch the light one at a time.</li>
                     <li class="mb-2"><strong>Depth</strong> - Sinks the flakes below the surface, so they slide as you move your head the way real flake does under a clear coat. Higher sits deeper.</li>
-                    <li class="mb-2"><strong>Colour</strong> - Where each flake gets its colour. Tint uses your colour. Iridescent gives every flake its own rainbow hue. ColorChord takes the colours AudioLink picks out of the music. Prism sweeps each flake through the spectrum as it turns. Two Tone gives every flake either your Tint or a Second Colour.
-                        <span class="opt-values">Options: <code>Tint</code>, <code>Iridescent</code>, <code>ColorChord</code>, <code>Prism</code>, <code>Two Tone</code></span></li>
+                    <li class="mb-2"><strong>Colour</strong> - Where each flake gets its colour. Tint uses your colour. Iridescent gives every flake its own rainbow hue. ColorChord takes the colours AudioLink picks out of the music. Prism sweeps each flake through the spectrum as it turns. Two Tone gives every flake either your Tint or a Second Colour. Notes gives every flake one of the notes AudioLink hears, so the glitter shows the chord being played.
+                        <span class="opt-values">Options: <code>Tint</code>, <code>Iridescent</code>, <code>ColorChord</code>, <code>Prism</code>, <code>Two Tone</code>, <code>Notes</code></span></li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the flakes.</li>
                     <li class="mb-2"><strong>Rainbow Amount</strong> - How much each flake carries its own colour, for a holographic finish rather than a plain metallic one.</li>
                     <li class="mb-2"><strong>Second Colour</strong> - The other colour a Two Tone flake can take.</li>
@@ -1510,8 +1626,8 @@
                     <li class="mb-2"><strong>Coverage</strong> - How much of the surface carries glitter at all.</li>
                     <li class="mb-2"><strong>Scatter</strong> - How far each flake tilts away from the surface. Low keeps them facing out together, so they flash as one sheet. High tilts them every which way, so they catch the light one at a time.</li>
                     <li class="mb-2"><strong>Depth</strong> - Sinks the flakes below the surface, so they slide as you move your head the way real flake does under a clear coat. Higher sits deeper.</li>
-                    <li class="mb-2"><strong>Colour</strong> - Where each flake gets its colour. Tint uses your colour. Iridescent gives every flake its own rainbow hue. ColorChord takes the colours AudioLink picks out of the music. Prism sweeps each flake through the spectrum as it turns. Two Tone gives every flake either your Tint or a Second Colour.
-                        <span class="opt-values">Options: <code>Tint</code>, <code>Iridescent</code>, <code>ColorChord</code>, <code>Prism</code>, <code>Two Tone</code></span></li>
+                    <li class="mb-2"><strong>Colour</strong> - Where each flake gets its colour. Tint uses your colour. Iridescent gives every flake its own rainbow hue. ColorChord takes the colours AudioLink picks out of the music. Prism sweeps each flake through the spectrum as it turns. Two Tone gives every flake either your Tint or a Second Colour. Notes gives every flake one of the notes AudioLink hears, so the glitter shows the chord being played.
+                        <span class="opt-values">Options: <code>Tint</code>, <code>Iridescent</code>, <code>ColorChord</code>, <code>Prism</code>, <code>Two Tone</code>, <code>Notes</code></span></li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the flakes.</li>
                     <li class="mb-2"><strong>Rainbow Amount</strong> - How much each flake carries its own colour, for a holographic finish rather than a plain metallic one.</li>
                     <li class="mb-2"><strong>Second Colour</strong> - The other colour a Two Tone flake can take.</li>
@@ -1557,8 +1673,8 @@
                     <li class="mb-2"><strong>Coverage</strong> - How much of the surface carries glitter at all.</li>
                     <li class="mb-2"><strong>Scatter</strong> - How far each flake tilts away from the surface. Low keeps them facing out together, so they flash as one sheet. High tilts them every which way, so they catch the light one at a time.</li>
                     <li class="mb-2"><strong>Depth</strong> - Sinks the flakes below the surface, so they slide as you move your head the way real flake does under a clear coat. Higher sits deeper.</li>
-                    <li class="mb-2"><strong>Colour</strong> - Where each flake gets its colour. Tint uses your colour. Iridescent gives every flake its own rainbow hue. ColorChord takes the colours AudioLink picks out of the music. Prism sweeps each flake through the spectrum as it turns. Two Tone gives every flake either your Tint or a Second Colour.
-                        <span class="opt-values">Options: <code>Tint</code>, <code>Iridescent</code>, <code>ColorChord</code>, <code>Prism</code>, <code>Two Tone</code></span></li>
+                    <li class="mb-2"><strong>Colour</strong> - Where each flake gets its colour. Tint uses your colour. Iridescent gives every flake its own rainbow hue. ColorChord takes the colours AudioLink picks out of the music. Prism sweeps each flake through the spectrum as it turns. Two Tone gives every flake either your Tint or a Second Colour. Notes gives every flake one of the notes AudioLink hears, so the glitter shows the chord being played.
+                        <span class="opt-values">Options: <code>Tint</code>, <code>Iridescent</code>, <code>ColorChord</code>, <code>Prism</code>, <code>Two Tone</code>, <code>Notes</code></span></li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the flakes.</li>
                     <li class="mb-2"><strong>Rainbow Amount</strong> - How much each flake carries its own colour, for a holographic finish rather than a plain metallic one.</li>
                     <li class="mb-2"><strong>Second Colour</strong> - The other colour a Two Tone flake can take.</li>
@@ -1604,8 +1720,8 @@
                     <li class="mb-2"><strong>Coverage</strong> - How much of the surface carries glitter at all.</li>
                     <li class="mb-2"><strong>Scatter</strong> - How far each flake tilts away from the surface. Low keeps them facing out together, so they flash as one sheet. High tilts them every which way, so they catch the light one at a time.</li>
                     <li class="mb-2"><strong>Depth</strong> - Sinks the flakes below the surface, so they slide as you move your head the way real flake does under a clear coat. Higher sits deeper.</li>
-                    <li class="mb-2"><strong>Colour</strong> - Where each flake gets its colour. Tint uses your colour. Iridescent gives every flake its own rainbow hue. ColorChord takes the colours AudioLink picks out of the music. Prism sweeps each flake through the spectrum as it turns. Two Tone gives every flake either your Tint or a Second Colour.
-                        <span class="opt-values">Options: <code>Tint</code>, <code>Iridescent</code>, <code>ColorChord</code>, <code>Prism</code>, <code>Two Tone</code></span></li>
+                    <li class="mb-2"><strong>Colour</strong> - Where each flake gets its colour. Tint uses your colour. Iridescent gives every flake its own rainbow hue. ColorChord takes the colours AudioLink picks out of the music. Prism sweeps each flake through the spectrum as it turns. Two Tone gives every flake either your Tint or a Second Colour. Notes gives every flake one of the notes AudioLink hears, so the glitter shows the chord being played.
+                        <span class="opt-values">Options: <code>Tint</code>, <code>Iridescent</code>, <code>ColorChord</code>, <code>Prism</code>, <code>Two Tone</code>, <code>Notes</code></span></li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the flakes.</li>
                     <li class="mb-2"><strong>Rainbow Amount</strong> - How much each flake carries its own colour, for a holographic finish rather than a plain metallic one.</li>
                     <li class="mb-2"><strong>Second Colour</strong> - The other colour a Two Tone flake can take.</li>
@@ -1671,6 +1787,7 @@
                     <li class="mb-2"><strong>Affects</strong> - What changes when that happens.
                         <span class="opt-values">Options: <code>Emission</code>, <code>Decals</code>, <code>Emission and Decals</code></span></li>
                     <li class="mb-2"><strong>Also Hide Outlines</strong> - Applies the same rules above to the outline passes, so a line stops showing up alone once what it traces is hidden.</li>
+                    <li class="mb-2"><strong>Also Apply To Wet And Goo</strong> - Applies the same rules above to the wet look and the goo, their drops and strands included, so they can show only in a mirror, only in photos, or only up close. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span><span class="avail-tag">World Surface</span></span></li>
                     <li class="mb-2"><strong>Reaction Glow</strong> - How far it changes.</li>
                     <li class="mb-2"><strong>Mask</strong> - Keeps the whole effect to part of the material. White is where it applies, black is left completely alone, so one patch can vanish in mirrors while the rest stays normal. The Reaction Glow follows the mask too.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says which parts react.</li>
@@ -1690,7 +1807,7 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Is Spritesheet</strong> - Off reads an imported flipbook: a GIF or image sequence baked into one array. On reads a single sprite-sheet texture laid out in a grid, and you set the Columns and Rows.</li>
                     <li class="mb-2"><strong>Frames</strong> - The frames to play, either as a texture array or as one sheet.</li>
-                    <li class="mb-2"><strong>Sheet</strong></li>
+                    <li class="mb-2"><strong>Sheet</strong> - Your animation laid out as a grid of frames on one image. Set the rows and columns below to match it.</li>
                     <li class="mb-2"><strong>Columns</strong> - How many columns the sheet is split into.</li>
                     <li class="mb-2"><strong>Rows</strong> - How many rows the sheet is split into.</li>
                     <li class="mb-2"><strong>Frame Count (0 = all cells)</strong> - How many frames are on that sheet.</li>
@@ -1715,7 +1832,7 @@
                     <li class="mb-2"><strong>Symmetry</strong> - Place a matching copy on the other side.
                         <span class="opt-values">Options: <code>Off</code>, <code>Symmetry</code>, <code>Flipped</code></span></li>
                     <li class="mb-2"><strong>Tiled</strong> - Repeat it across the whole surface instead of placing one.</li>
-                    <li class="mb-2"><strong>Mask</strong></li>
+                    <li class="mb-2"><strong>Mask</strong> - Where the flipbook plays. White shows it, black hides it.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where it plays.</li>
                     </ul>
                 </div>
@@ -1731,7 +1848,7 @@
                     <li class="mb-2"><strong>Pattern</strong> - What is reflected: a ring of lights, a grid of dots, or your own texture.
                         <span class="opt-values">Options: <code>Ring of Lights</code>, <code>Dot Grid</code>, <code>Texture</code></span></li>
                     <li class="mb-2"><strong>Ring Shape</strong> - Size and Width set the ring itself. Lights breaks it into that many separate lamps instead of one solid band, and Glow gives each lamp a halo.</li>
-                    <li class="mb-2"><strong>Pattern Texture</strong></li>
+                    <li class="mb-2"><strong>Pattern Texture</strong> - The shape repeated down the tunnel. It is read only when Pattern is set to Texture.</li>
                     <li class="mb-2"><strong>Glow Colour</strong> - The colour of the lights inside the mirror.</li>
                     <li class="mb-2"><strong>Reflections</strong> - How many reflections deep the mirror goes. More is deeper and costs more to draw.</li>
                     <li class="mb-2"><strong>Depth</strong> - How far apart those reflections sit, which sets how long the tunnel reads.</li>
@@ -1744,7 +1861,7 @@
                     <li class="mb-2"><strong>Full Depth Distance</strong> - How close someone has to be, in metres, before the portal is at full depth.</li>
                     <li class="mb-2"><strong>Approach Curve</strong> - Low opens it gradually across the room. High keeps it flat until they are almost touching it.</li>
                     <li class="mb-2"><strong>Rainbow Depth</strong> - Shifts each reflection's colour a little further round the wheel.</li>
-                    <li class="mb-2"><strong>Mask</strong></li>
+                    <li class="mb-2"><strong>Mask</strong> - Where the mirror opens. White is the window, black stays solid material.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the mirror shows.</li>
                     <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>Beat Depth</strong> - The beat pushes the tunnel in and out instead of only brightening it. Negative pulls it the other way.</li>
@@ -1821,6 +1938,7 @@
                     <li class="mb-2"><strong>Range</strong> - How far away the speakers can be, in metres, before the wave stops reaching you.</li>
                     <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>AudioLink Amount</strong> - How much the music drives it rather than it running on its own.</li>
+                    <li class="mb-2"><strong>Speaker Glow</strong> - The side of you facing the speakers glows with the beat. Glow lights that side, Rim lights your edges, Rim Width sets how thin that edge is, and Focus narrows the glow toward the speakers.</li>
                     <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
@@ -1878,7 +1996,7 @@
                     <li class="mb-2"><strong>Flow Speed</strong> - How fast it drifts.</li>
                     <li class="mb-2"><strong>Stars</strong> - How many stars there are.</li>
                     <li class="mb-2"><strong>Quality</strong> - How carefully it is drawn. Higher looks better and costs more, so lower it if your framerate suffers.</li>
-                    <li class="mb-2"><strong>Mask</strong></li>
+                    <li class="mb-2"><strong>Mask</strong> - Where the cosmos shows through. White is the window, black stays solid material.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the field shows.</li>
                     <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>AudioLink Amount</strong> - How far the beat pushes this.</li>
@@ -1929,6 +2047,172 @@
                     <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
                     </ul>
                 </div>
+
+                <h3 class="text-glow-pink opt-group">Cymatics</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Cymatics Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Style</strong> - Square Plate draws the classic figures of a square metal plate. Round Plate draws rings and spokes, like a drum head. Ripple Tank crosses the waves from three moving sources.
+                        <span class="opt-values">Options: <code>Square Plate</code>, <code>Round Plate</code>, <code>Ripple Tank</code></span></li>
+                    <li class="mb-2"><strong>Tint</strong> - Tints the figure.</li>
+                    <li class="mb-2"><strong>Brightness</strong> - How brightly the figure glows.</li>
+                    <li class="mb-2"><strong>Placement</strong> - Where the plate sits on the material, how big it is, and how far it is turned. Rotation is in degrees.</li>
+                    <li class="mb-2"><strong>Figure</strong> - Mode is how busy the figure is. Range is how far the music and the drift can move it from there. Snap holds it on clean figures and moves quickly between them, and Wander is how fast it drifts on its own.</li>
+                    <li class="mb-2"><strong>Lines</strong> - Sharpness is how fine the lines are. Sand dusts the plate between them. Grain roughens the lines, and Line Glow is how bright they are.</li>
+                    <li class="mb-2"><strong>Depth</strong> - Stacks more plates down into the surface, so the figure has depth and swings as you move around it. Depth is how far apart they sit, Layer Shift changes the figure from one plate to the next, and Fade dims the deeper ones. Each extra layer costs framerate.</li>
+                    <li class="mb-2"><strong>Motion</strong> - Warp ripples the figure and Detail adds finer ripples on top. Twist winds it into a vortex. Speed is how fast it all moves.</li>
+                    <li class="mb-2"><strong>Colour</strong> - Colour turns the figure round the colour wheel. Spread shifts it from the middle out and from one plate to the next. Music Colour hands it over to the colour of the music, from the Color Source in the AudioLink section.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music this reacts to.</li>
+                    <li class="mb-2"><strong>Music</strong> - Shake is how hard the beat throws the sand about. Steer is how far the music changes the figure. Pulse brightens it on the beat, and Beat Clock lets the motion run with the track.</li>
+                    <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer Map so this only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
+                    <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Biofeedback</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Biofeedback Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Heartbeat</strong> - How much of the pulse comes from the bass. This is the slow thump.</li>
+                    <li class="mb-2"><strong>Tension</strong> - How much comes from the mids. This is what keeps the pulse going through a busy passage.</li>
+                    <li class="mb-2"><strong>Spike</strong> - How much comes from the treble. This is the quick flick on a hat or a snare.</li>
+                    <li class="mb-2"><strong>Layer 1 Band Mix</strong> - How much the band you picked for Emission layer 1 feeds the heartbeat, against the bass. 0 is all bass.</li>
+                    <li class="mb-2"><strong>Breath</strong> - A slow rise and fall laid over the pulse so it never sits perfectly still.</li>
+                    <li class="mb-2"><strong>Subsurface</strong> - How much the pulse thickens the light soaking through you. Raise Strength under Subsurface for this to show.</li>
+                    <li class="mb-2"><strong>Transmission</strong> - How much the pulse pushes light through the thin parts of you.</li>
+                    <li class="mb-2"><strong>Colour Drift</strong> - How far the pulse drags the AudioLink Color Blend hue as it beats.</li>
+                    <li class="mb-2"><strong>Emission Pulse</strong> - How hard the pulse swells Emission layer 1. That layer AudioLink Amplitude scales this, so both have to be up for it to show.</li>
+                    <li class="mb-2"><strong>Glitch Trigger</strong> - How big a treble spike it takes to set off Digital Glitch. Lower fires more often.</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Cybernetic Overlays</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Lays readouts over the material, driven by the music: meters, waveforms and grids, the way a heads up display would look.</li>
+                </ul>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Cybernetic Modules</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Mask</strong> - Keeps the readouts to where this map is white, so they sit on a panel or a screen instead of spreading over the whole material. Leave it empty to cover everything.</li>
+                    <li class="mb-2"><strong>Hover Height</strong> - Floats the readouts off the surface so they read as projected in front of you rather than painted on.</li>
+                    <li class="mb-2"><strong>Hover Bob</strong> - How much they drift while they float. 0 holds them steady.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Cybernetic VU Meter</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - A volume meter readout, the bar that climbs with loudness.</li>
+                    </ul>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Cybernetic VU Meter Settings</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Style</strong> - Which way that meter is drawn.
+                        <span class="opt-values">Options: <code>Console</code>, <code>Bar</code></span></li>
+                    <li class="mb-2"><strong>Intensity</strong> - How strongly this shows.</li>
+                    <li class="mb-2"><strong>VU Transform</strong> - Where this readout sits and how big it is on the surface.</li>
+                    <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this meter only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
+                    <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Cybernetic CC Meter</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable Spectrum</strong> - A spectrum readout, showing the notes AudioLink has picked out.</li>
+                    </ul>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Cybernetic CC Meter Settings</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Spectrum Primary Band</strong> - Which part of the music this reacts to.</li>
+                    <li class="mb-2"><strong>Spectrum Strip Intensity</strong> - How strongly this shows.</li>
+                    <li class="mb-2"><strong>Spectrum Bar Count</strong> - How many bars the spectrum is drawn with.</li>
+                    <li class="mb-2"><strong>Spectrum Transform</strong> - Where this readout sits and how big it is on the surface.</li>
+                    <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this meter only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
+                    <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Cybernetic Waveform</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - A waveform readout, the line that traces the sound itself.</li>
+                    </ul>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Cybernetic Waveform Settings</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Band</strong> - Which part of the music this reacts to.</li>
+                    <li class="mb-2"><strong>Intensity</strong> - How strongly this shows.</li>
+                    <li class="mb-2"><strong>Transform</strong> - Where this readout sits and how big it is on the surface.</li>
+                    <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this meter only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
+                    <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Cybernetic DMX GRID</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - A grid readout driven by the world's stage lighting data.</li>
+                    </ul>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Cybernetic DMX GRID Settings</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Band</strong> - Which part of the music this reacts to.</li>
+                    <li class="mb-2"><strong>Intensity</strong> - How strongly this shows.</li>
+                    <li class="mb-2"><strong>Transform</strong> - Where this readout sits and how big it is on the surface.</li>
+                    <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this meter only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
+                    <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Cybernetic Autocorrelator</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - A readout driven by the repeating structure AudioLink finds in the track, which moves with the groove rather than with loudness.</li>
+                    </ul>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Cybernetic Autocorrelator Settings</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Band</strong> - Which part of the music this reacts to.</li>
+                    <li class="mb-2"><strong>Intensity</strong> - How strongly that readout shows.</li>
+                    <li class="mb-2"><strong>Transform</strong> - Where this readout sits and how big it is on the surface.</li>
+                    <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this meter only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
+                    <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Cybernetic Autocorrelator Effects</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>AC Shimmer Effect</strong> - Adds a moving sheen across it.</li>
+                    <li class="mb-2"><strong>AC Shimmer Band</strong> - Which part of the music this reacts to.</li>
+                    <li class="mb-2"><strong>AC Pop Effect</strong> - Makes it burst outward on a hit.</li>
+                    <li class="mb-2"><strong>AC Pop Band</strong> - Which part of the music this reacts to.</li>
+                    <li class="mb-2"><strong>AC Sizzle Effect</strong> - Adds a fine crackle over it.</li>
+                    <li class="mb-2"><strong>AC Sizzle Band</strong> - Which part of the music this reacts to.</li>
+                    <li class="mb-2"><strong>AC Electrify Effect</strong> - Adds arcs of light jumping across that readout.</li>
+                    <li class="mb-2"><strong>AC Electrify Band</strong> - Which part of the music this reacts to.</li>
+                    </ul>
+                </div>
             </div>
             <!-- ========================= -->
             <!-- OUTLINES -->
@@ -1968,21 +2252,28 @@
                     <li class="mb-2"><strong>Color</strong> - The colour of the line.</li>
                     <li class="mb-2"><strong>Emission</strong> - How much the line glows on its own, so it stays visible in a dark room.</li>
                     <li class="mb-2"><strong>Width</strong> - How thick the line is. It is a real thickness, so it stays the same on screen whether you are close or far.</li>
-                    <li class="mb-2"><strong>Mask</strong></li>
+                    <li class="mb-2"><strong>Mask</strong> - Where the outline draws. Black leaves that part of the model without one.</li>
                     <li class="mb-2"><strong>Width Channel</strong> - Which channel of the mask sets the thickness per area, so you can thin the line on the face and keep it heavy elsewhere.
                         <span class="opt-values">Options: <code>None</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
                     <li class="mb-2"><strong>Fade Channel</strong> - A second channel of the same Mask texture, this one fading the line rather than thinning it. Black takes the line away completely.
                         <span class="opt-values">Options: <code>None</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
                     <li class="mb-2"><strong>Tint From Texture</strong> - Pulls the line toward the colour of the material underneath it, so one outline can follow a multi-coloured texture.</li>
                     <li class="mb-2"><strong>Lighting</strong> - At 0 the line stays flat and unlit. Turn it up and the line sits in the room lighting with the rest of the material.</li>
+                    <li class="mb-2"><strong>Light Volumes</strong> - Lets the line take its room light from the world's Light Volumes, like the rest of the material, instead of only the light probes. At 1 it matches you. 0 lights it from the light probes only.</li>
                     <li class="mb-2"><strong>Opacity</strong> - How solid the line is. Lower lets the background through it.</li>
-                    <li class="mb-2"><strong>Texture</strong></li>
+                    <li class="mb-2"><strong>Texture</strong> - Colours the outline from an image instead of a flat colour.</li>
                     <li class="mb-2"><strong>Texture Scroll</strong> - Slides the outline texture along the line, forever.</li>
                     <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music the line glows with.</li>
                     <li class="mb-2"><strong>AudioLink Emission Boost</strong> - How far the beat pushes that glow up.</li>
                     <li class="mb-2"><strong>AudioLink Width</strong> - The beat pushes the outline wider.</li>
                     <li class="mb-2"><strong>AudioLink Hue</strong> - The beat shifts the outline colour round the wheel.</li>
                     <li class="mb-2"><strong>AudioLink Scroll</strong> - The beat drives the outline texture along faster.</li>
+                    <li class="mb-2"><strong>Music Colour</strong> - How much the colour of the music takes over the line. It follows the Color Source in the AudioLink section.</li>
+                    <li class="mb-2"><strong>Pulse Direction</strong> - Which way each beat runs along the line, following your UV layout. Outward and Inward travel from the middle, and Around sweeps in a circle.
+                        <span class="opt-values">Options: <code>Up</code>, <code>Down</code>, <code>Left</code>, <code>Right</code>, <code>Outward</code>, <code>Inward</code>, <code>Around</code></span></li>
+                    <li class="mb-2"><strong>Travelling Pulse</strong> - Runs each beat along the line instead of flashing all of it at once. Amount is how much of the line the pulse takes over, Length is how long it takes to cross, Sharpness tightens it into a thin pulse, and Glow flares its crest. Volume or Peak Hold fall back to Bass.</li>
+                    <li class="mb-2"><strong>Beat Reveal</strong> - Keeps the line tucked away until a beat pushes it out, so the outline appears with the music. At 1 it is gone completely between beats.</li>
+                    <li class="mb-2"><strong>Equaliser Silhouette</strong> - Turns the line into an equaliser drawn up your body, bass at your feet and treble at Height. Width is how far each part of the music pushes the line out, and Glow is how much it brightens. Height is in metres from your feet. Low Octave skips the deepest rumble.</li>
                     </ul>
                 </div>
 
@@ -2000,21 +2291,28 @@
                     <li class="mb-2"><strong>Color</strong> - The colour of the second line.</li>
                     <li class="mb-2"><strong>Emission</strong> - How much the second line glows on its own.</li>
                     <li class="mb-2"><strong>Width</strong> - How thick the second line is. It sits outside the first, for a two tone edge.</li>
-                    <li class="mb-2"><strong>Mask</strong></li>
+                    <li class="mb-2"><strong>Mask</strong> - Where this outline draws. Black leaves that part of the model without one.</li>
                     <li class="mb-2"><strong>Width Channel</strong> - Which channel of the mask sets the second line's thickness per area.
                         <span class="opt-values">Options: <code>None</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
                     <li class="mb-2"><strong>Fade Channel</strong> - A second channel of the same Mask texture, this one fading the line rather than thinning it. Black takes the line away completely.
                         <span class="opt-values">Options: <code>None</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
                     <li class="mb-2"><strong>Tint From Texture</strong> - Pulls the line toward the colour of the material underneath it, so one outline can follow a multi-coloured texture.</li>
                     <li class="mb-2"><strong>Lighting</strong> - At 0 the line stays flat and unlit. Turn it up and the line sits in the room lighting with the rest of the material.</li>
+                    <li class="mb-2"><strong>Light Volumes</strong> - Lets the line take its room light from the world's Light Volumes, like the rest of the material, instead of only the light probes. At 1 it matches you. 0 lights it from the light probes only.</li>
                     <li class="mb-2"><strong>Opacity</strong> - How solid the second line is.</li>
-                    <li class="mb-2"><strong>Texture</strong></li>
+                    <li class="mb-2"><strong>Texture</strong> - Colours this outline from an image instead of a flat colour.</li>
                     <li class="mb-2"><strong>Texture Scroll</strong> - Slides the second line's texture along it, forever.</li>
                     <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music the second line glows with.</li>
                     <li class="mb-2"><strong>AudioLink Emission Boost</strong> - How far the beat pushes that glow up.</li>
                     <li class="mb-2"><strong>AudioLink Width</strong> - The beat pushes the outline wider.</li>
                     <li class="mb-2"><strong>AudioLink Hue</strong> - The beat shifts the outline colour round the wheel.</li>
                     <li class="mb-2"><strong>AudioLink Scroll</strong> - The beat drives the outline texture along faster.</li>
+                    <li class="mb-2"><strong>Music Colour</strong> - How much the colour of the music takes over the line. It follows the Color Source in the AudioLink section.</li>
+                    <li class="mb-2"><strong>Pulse Direction</strong> - Which way each beat runs along the line, following your UV layout. Outward and Inward travel from the middle, and Around sweeps in a circle.
+                        <span class="opt-values">Options: <code>Up</code>, <code>Down</code>, <code>Left</code>, <code>Right</code>, <code>Outward</code>, <code>Inward</code>, <code>Around</code></span></li>
+                    <li class="mb-2"><strong>Travelling Pulse</strong> - Runs each beat along the line instead of flashing all of it at once. Amount is how much of the line the pulse takes over, Length is how long it takes to cross, Sharpness tightens it into a thin pulse, and Glow flares its crest. Volume or Peak Hold fall back to Bass.</li>
+                    <li class="mb-2"><strong>Beat Reveal</strong> - Keeps the line tucked away until a beat pushes it out, so the outline appears with the music. At 1 it is gone completely between beats.</li>
+                    <li class="mb-2"><strong>Equaliser Silhouette</strong> - Turns the line into an equaliser drawn up your body, bass at your feet and treble at Height. Width is how far each part of the music pushes the line out, and Glow is how much it brightens. Height is in metres from your feet. Low Octave skips the deepest rumble.</li>
                     </ul>
                 </div>
             </div>
@@ -2037,7 +2335,7 @@
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Enable Layer 1</strong> - Turns this emission layer on. Layers stack, so you can run several at once with different colours and masks.</li>
                     <li class="mb-2"><strong>Color</strong> - The colour this layer glows.</li>
-                    <li class="mb-2"><strong>Map</strong></li>
+                    <li class="mb-2"><strong>Map</strong> - The glow for this layer. Its colours set both the pattern and how bright each part reads.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the map decides where it glows. Auto uses the map's own brightness times its alpha, which is the setting to pick for a plain black-and-white mask.</li>
                     <li class="mb-2"><strong>Strength</strong> - How brightly this layer glows.</li>
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts this layer's colour round the colour wheel, without touching your texture.</li>
@@ -2069,11 +2367,22 @@
                     <li class="mb-2"><strong>AudioLink Color Blend</strong> - How much the music's own colour takes over this layer, instead of the colour you picked.</li>
                 </ul>
 
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Music Reactions</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Note</strong> - Which note Note Trigger listens for.
+                        <span class="opt-values">Options: <code>C</code>, <code>Db</code>, <code>D</code>, <code>Eb</code>, <code>E</code>, <code>F</code>, <code>Gb</code>, <code>G</code>, <code>Ab</code>, <code>A</code>, <code>Bb</code>, <code>B</code></span></li>
+                    <li class="mb-2"><strong>Note Trigger</strong> - The layer lights up only while its note is playing. Amount is how dark it goes the rest of the time. Octave picks how high the note sits, Gain is how easily it triggers, and All Octaves listens for the note at every height at once.</li>
+                    <li class="mb-2"><strong>Beat Strobe</strong> - The layer flashes on each hit and goes dark in between. Threshold is how hard a hit has to be, Hold is how long each flash lingers, and Softness rounds off its edges. It listens to this layer's AudioLink Band.</li>
+                    <li class="mb-2"><strong>Waveform Warp</strong> - The live sound wave bends the layer's pattern, like the trace on an oscilloscope. Length is how much of the wave spans the layer, Angle is which way it runs, and Glow brightens the peaks.</li>
+                    </ul>
+                </div>
+
                 <h3 class="text-glow-pink opt-group">Emission Layer 2</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Enable Layer 2</strong> - Turns this emission layer on. Layers stack, so you can run several at once with different colours and masks.</li>
                     <li class="mb-2"><strong>Color</strong> - The colour this layer glows.</li>
-                    <li class="mb-2"><strong>Map</strong></li>
+                    <li class="mb-2"><strong>Map</strong> - The glow for this layer. Its colours set both the pattern and how bright each part reads.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Strength</strong> - How brightly this layer glows.</li>
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts this layer's colour round the colour wheel, without touching your texture.</li>
@@ -2102,13 +2411,25 @@
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>AudioLink Amplitude</strong> - How far the beat pushes this layer's glow up.</li>
+                    <li class="mb-2"><strong>AudioLink Color Blend</strong> - How much the music's own colour takes over this layer, instead of the colour you picked.</li>
                 </ul>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Music Reactions</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Note</strong> - Which note Note Trigger listens for.
+                        <span class="opt-values">Options: <code>C</code>, <code>Db</code>, <code>D</code>, <code>Eb</code>, <code>E</code>, <code>F</code>, <code>Gb</code>, <code>G</code>, <code>Ab</code>, <code>A</code>, <code>Bb</code>, <code>B</code></span></li>
+                    <li class="mb-2"><strong>Note Trigger</strong> - The layer lights up only while its note is playing. Amount is how dark it goes the rest of the time. Octave picks how high the note sits, Gain is how easily it triggers, and All Octaves listens for the note at every height at once.</li>
+                    <li class="mb-2"><strong>Beat Strobe</strong> - The layer flashes on each hit and goes dark in between. Threshold is how hard a hit has to be, Hold is how long each flash lingers, and Softness rounds off its edges. It listens to this layer's AudioLink Band.</li>
+                    <li class="mb-2"><strong>Waveform Warp</strong> - The live sound wave bends the layer's pattern, like the trace on an oscilloscope. Length is how much of the wave spans the layer, Angle is which way it runs, and Glow brightens the peaks.</li>
+                    </ul>
+                </div>
 
                 <h3 class="text-glow-pink opt-group">Emission Layer 3</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Enable Layer 3</strong> - Turns this emission layer on. Layers stack, so you can run several at once with different colours and masks.</li>
                     <li class="mb-2"><strong>Color</strong> - The colour this layer glows.</li>
-                    <li class="mb-2"><strong>Map</strong></li>
+                    <li class="mb-2"><strong>Map</strong> - The glow for this layer. Its colours set both the pattern and how bright each part reads.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Strength</strong> - How brightly this layer glows.</li>
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts this layer's colour round the colour wheel, without touching your texture.</li>
@@ -2137,13 +2458,25 @@
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>AudioLink Amplitude</strong> - How far the beat pushes this layer's glow up.</li>
+                    <li class="mb-2"><strong>AudioLink Color Blend</strong> - How much the music's own colour takes over this layer, instead of the colour you picked.</li>
                 </ul>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Music Reactions</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Note</strong> - Which note Note Trigger listens for.
+                        <span class="opt-values">Options: <code>C</code>, <code>Db</code>, <code>D</code>, <code>Eb</code>, <code>E</code>, <code>F</code>, <code>Gb</code>, <code>G</code>, <code>Ab</code>, <code>A</code>, <code>Bb</code>, <code>B</code></span></li>
+                    <li class="mb-2"><strong>Note Trigger</strong> - The layer lights up only while its note is playing. Amount is how dark it goes the rest of the time. Octave picks how high the note sits, Gain is how easily it triggers, and All Octaves listens for the note at every height at once.</li>
+                    <li class="mb-2"><strong>Beat Strobe</strong> - The layer flashes on each hit and goes dark in between. Threshold is how hard a hit has to be, Hold is how long each flash lingers, and Softness rounds off its edges. It listens to this layer's AudioLink Band.</li>
+                    <li class="mb-2"><strong>Waveform Warp</strong> - The live sound wave bends the layer's pattern, like the trace on an oscilloscope. Length is how much of the wave spans the layer, Angle is which way it runs, and Glow brightens the peaks.</li>
+                    </ul>
+                </div>
 
                 <h3 class="text-glow-pink opt-group">Emission Layer 4</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Enable Layer 4</strong> - Turns this emission layer on. Layers stack, so you can run several at once with different colours and masks.</li>
                     <li class="mb-2"><strong>Color</strong> - The colour this layer glows.</li>
-                    <li class="mb-2"><strong>Map</strong></li>
+                    <li class="mb-2"><strong>Map</strong> - The glow for this layer. Its colours set both the pattern and how bright each part reads.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Strength</strong> - How brightly this layer glows.</li>
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts this layer's colour round the colour wheel, without touching your texture.</li>
@@ -2172,13 +2505,25 @@
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>AudioLink Amplitude</strong> - How far the beat pushes this layer's glow up.</li>
+                    <li class="mb-2"><strong>AudioLink Color Blend</strong> - How much the music's own colour takes over this layer, instead of the colour you picked.</li>
                 </ul>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Music Reactions</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Note</strong> - Which note Note Trigger listens for.
+                        <span class="opt-values">Options: <code>C</code>, <code>Db</code>, <code>D</code>, <code>Eb</code>, <code>E</code>, <code>F</code>, <code>Gb</code>, <code>G</code>, <code>Ab</code>, <code>A</code>, <code>Bb</code>, <code>B</code></span></li>
+                    <li class="mb-2"><strong>Note Trigger</strong> - The layer lights up only while its note is playing. Amount is how dark it goes the rest of the time. Octave picks how high the note sits, Gain is how easily it triggers, and All Octaves listens for the note at every height at once.</li>
+                    <li class="mb-2"><strong>Beat Strobe</strong> - The layer flashes on each hit and goes dark in between. Threshold is how hard a hit has to be, Hold is how long each flash lingers, and Softness rounds off its edges. It listens to this layer's AudioLink Band.</li>
+                    <li class="mb-2"><strong>Waveform Warp</strong> - The live sound wave bends the layer's pattern, like the trace on an oscilloscope. Length is how much of the wave spans the layer, Angle is which way it runs, and Glow brightens the peaks.</li>
+                    </ul>
+                </div>
 
                 <h3 class="text-glow-pink opt-group">Emission Layer 5</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Enable Layer 5</strong> - Turns this emission layer on. Layers stack, so you can run several at once with different colours and masks.</li>
                     <li class="mb-2"><strong>Color</strong> - The colour this layer glows.</li>
-                    <li class="mb-2"><strong>Map</strong></li>
+                    <li class="mb-2"><strong>Map</strong> - The glow for this layer. Its colours set both the pattern and how bright each part reads.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Strength</strong> - How brightly this layer glows.</li>
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts this layer's colour round the colour wheel, without touching your texture.</li>
@@ -2207,14 +2552,26 @@
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>AudioLink Amplitude</strong> - How far the beat pushes this layer's glow up.</li>
+                    <li class="mb-2"><strong>AudioLink Color Blend</strong> - How much the music's own colour takes over this layer, instead of the colour you picked.</li>
                 </ul>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Music Reactions</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Note</strong> - Which note Note Trigger listens for.
+                        <span class="opt-values">Options: <code>C</code>, <code>Db</code>, <code>D</code>, <code>Eb</code>, <code>E</code>, <code>F</code>, <code>Gb</code>, <code>G</code>, <code>Ab</code>, <code>A</code>, <code>Bb</code>, <code>B</code></span></li>
+                    <li class="mb-2"><strong>Note Trigger</strong> - The layer lights up only while its note is playing. Amount is how dark it goes the rest of the time. Octave picks how high the note sits, Gain is how easily it triggers, and All Octaves listens for the note at every height at once.</li>
+                    <li class="mb-2"><strong>Beat Strobe</strong> - The layer flashes on each hit and goes dark in between. Threshold is how hard a hit has to be, Hold is how long each flash lingers, and Softness rounds off its edges. It listens to this layer's AudioLink Band.</li>
+                    <li class="mb-2"><strong>Waveform Warp</strong> - The live sound wave bends the layer's pattern, like the trace on an oscilloscope. Length is how much of the wave spans the layer, Angle is which way it runs, and Glow brightens the peaks.</li>
+                    </ul>
+                </div>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Pathing</strong> - Runs lights along a path painted into a mask, for circuitry, piping and chase lighting.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Pathing</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Path Gradient</strong></li>
+                    <li class="mb-2"><strong>Path Gradient</strong> - A gradient telling the glow which way to travel. Dark is the start of the path and bright is the end.</li>
                     <li class="mb-2"><strong>Panning</strong> - Slides the whole path along the surface, forever.</li>
                     <li class="mb-2"><strong>Source</strong> - Which texture holds the path the lights run along.
                         <span class="opt-values">Options: <code>Gradient Texture</code>, <code>UV X</code>, <code>UV Y</code></span></li>
@@ -2363,7 +2720,7 @@
                     <li class="mb-2"><strong>Amount</strong> - How much car paint is laid over the material.</li>
                     <li class="mb-2"><strong>Band</strong> - Which part of the music the paint reacts to.</li>
                     <li class="mb-2"><strong>Flare</strong> - How far the beat pushes the flakes.</li>
-                    <li class="mb-2"><strong>Mask</strong></li>
+                    <li class="mb-2"><strong>Mask</strong> - Where the flake coat sits. White is painted, black stays bare.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the paint goes.</li>
                     <li class="mb-2"><strong>Base Colour</strong> - The base colour of the paint, under the flakes and the flip.</li>
                     <li class="mb-2"><strong>Flip Colour</strong> - The colour the paint turns as you look at it from a shallower angle. This is what makes a car look purple from the side and green head on.</li>
@@ -2388,8 +2745,8 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Source</strong> - Texture reads the sphere image you drop in. Packed Atlas splits that one image into a grid so it holds several matcaps at once, and a mask picks which one shows where. Procedural builds the look from maths and needs no image at all.
                         <span class="opt-values">Options: <code>Texture</code>, <code>Packed Atlas</code>, <code>Procedural</code></span></li>
-                    <li class="mb-2"><strong>Texture</strong></li>
-                    <li class="mb-2"><strong>Mask</strong></li>
+                    <li class="mb-2"><strong>Texture</strong> - The matcap image. It is read as a ball, so the middle shows face on and the edges show at grazing angles.</li>
+                    <li class="mb-2"><strong>Mask</strong> - Where this matcap shows. Black hides it.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this matcap shows.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the matcap. White keeps its own colours.</li>
                     <li class="mb-2"><strong>Intensity</strong> - How strong this matcap is.</li>
@@ -2521,8 +2878,8 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Source</strong> - Texture reads the sphere image you drop in. Packed Atlas splits that one image into a grid so it holds several matcaps at once, and a mask picks which one shows where. Procedural builds the look from maths and needs no image at all.
                         <span class="opt-values">Options: <code>Texture</code>, <code>Packed Atlas</code>, <code>Procedural</code></span></li>
-                    <li class="mb-2"><strong>Texture</strong></li>
-                    <li class="mb-2"><strong>Mask</strong></li>
+                    <li class="mb-2"><strong>Texture</strong> - The matcap image. It is read as a ball, so the middle shows face on and the edges show at grazing angles.</li>
+                    <li class="mb-2"><strong>Mask</strong> - Where this matcap shows. Black hides it.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this matcap shows.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the matcap. White keeps its own colours.</li>
                     <li class="mb-2"><strong>Intensity</strong> - How strong this matcap is.</li>
@@ -2654,8 +3011,8 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Source</strong> - Texture reads the sphere image you drop in. Packed Atlas splits that one image into a grid so it holds several matcaps at once, and a mask picks which one shows where. Procedural builds the look from maths and needs no image at all.
                         <span class="opt-values">Options: <code>Texture</code>, <code>Packed Atlas</code>, <code>Procedural</code></span></li>
-                    <li class="mb-2"><strong>Texture</strong></li>
-                    <li class="mb-2"><strong>Mask</strong></li>
+                    <li class="mb-2"><strong>Texture</strong> - The matcap image. It is read as a ball, so the middle shows face on and the edges show at grazing angles.</li>
+                    <li class="mb-2"><strong>Mask</strong> - Where this matcap shows. Black hides it.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this matcap shows.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the matcap. White keeps its own colours.</li>
                     <li class="mb-2"><strong>Intensity</strong> - How strong this matcap is.</li>
@@ -2787,8 +3144,8 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Source</strong> - Texture reads the sphere image you drop in. Packed Atlas splits that one image into a grid so it holds several matcaps at once, and a mask picks which one shows where. Procedural builds the look from maths and needs no image at all.
                         <span class="opt-values">Options: <code>Texture</code>, <code>Packed Atlas</code>, <code>Procedural</code></span></li>
-                    <li class="mb-2"><strong>Texture</strong></li>
-                    <li class="mb-2"><strong>Mask</strong></li>
+                    <li class="mb-2"><strong>Texture</strong> - The matcap image. It is read as a ball, so the middle shows face on and the edges show at grazing angles.</li>
+                    <li class="mb-2"><strong>Mask</strong> - Where this matcap shows. Black hides it.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this matcap shows.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the matcap. White keeps its own colours.</li>
                     <li class="mb-2"><strong>Intensity</strong> - How strong this matcap is.</li>
@@ -2920,8 +3277,8 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Source</strong> - Texture reads the sphere image you drop in. Packed Atlas splits that one image into a grid so it holds several matcaps at once, and a mask picks which one shows where. Procedural builds the look from maths and needs no image at all.
                         <span class="opt-values">Options: <code>Texture</code>, <code>Packed Atlas</code>, <code>Procedural</code></span></li>
-                    <li class="mb-2"><strong>Texture</strong></li>
-                    <li class="mb-2"><strong>Mask</strong></li>
+                    <li class="mb-2"><strong>Texture</strong> - The matcap image. It is read as a ball, so the middle shows face on and the edges show at grazing angles.</li>
+                    <li class="mb-2"><strong>Mask</strong> - Where this matcap shows. Black hides it.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this matcap shows.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the matcap. White keeps its own colours.</li>
                     <li class="mb-2"><strong>Intensity</strong> - How strong this matcap is.</li>
@@ -3071,6 +3428,7 @@
                     <li class="mb-2"><strong>Loud Cutoff</strong> - The level that counts as full. Raise it if every beat pins the effect at maximum. Lower it if the effect never gets there.</li>
                     <li class="mb-2"><strong>Gain</strong> - Multiplies the level before the cutoffs are applied. Handy for a quiet track.</li>
                     <li class="mb-2"><strong>Shape</strong> - Left is a soft swell. Middle is a straight response. Right is punchy, so only the peaks come through.</li>
+                    <li class="mb-2"><strong>Steady Autocorrelator</strong> - The autocorrelator readouts grow with how loud the track is, so a quiet passage barely shows and a loud one pins them. Turn this on to hold them at one strength whatever the volume. Off is the look every material has had.</li>
                 </ul>
 
                 <div class="opt-subgroup">
@@ -3126,131 +3484,6 @@
                     </ul>
                 </div>
 
-                <h3 class="text-glow-pink opt-group">Cybernetic Overlays</h3>
-                <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - Lays readouts over the material, driven by the music: meters, waveforms and grids, the way a heads up display would look.</li>
-                </ul>
-
-                <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Cybernetic Modules</strong></p>
-                    <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Mask</strong></li>
-                    <li class="mb-2"><strong>Hover Height</strong> - Floats the readouts off the surface so they read as projected in front of you rather than painted on.</li>
-                    <li class="mb-2"><strong>Hover Bob</strong> - How much they drift while they float. 0 holds them steady.</li>
-                    </ul>
-                </div>
-
-                <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Cybernetic VU Meter</strong></p>
-                    <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - A volume meter readout, the bar that climbs with loudness.</li>
-                    </ul>
-
-                    <div class="opt-subgroup">
-                        <p class="opt-note mt-2 mb-2"><strong>Cybernetic VU Meter Settings</strong></p>
-                        <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Style</strong> - Which way that meter is drawn.
-                        <span class="opt-values">Options: <code>Console</code>, <code>Bar</code></span></li>
-                    <li class="mb-2"><strong>Intensity</strong> - How strongly this shows.</li>
-                    <li class="mb-2"><strong>VU Transform</strong> - Where this readout sits and how big it is on the surface.</li>
-                    <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this meter only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
-                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
-                    <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Cybernetic CC Meter</strong></p>
-                    <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable Spectrum</strong> - A spectrum readout, showing the notes AudioLink has picked out.</li>
-                    </ul>
-
-                    <div class="opt-subgroup">
-                        <p class="opt-note mt-2 mb-2"><strong>Cybernetic CC Meter Settings</strong></p>
-                        <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Spectrum Primary Band</strong> - Which part of the music this reacts to.</li>
-                    <li class="mb-2"><strong>Spectrum Strip Intensity</strong> - How strongly this shows.</li>
-                    <li class="mb-2"><strong>Spectrum Bar Count</strong> - How many bars the spectrum is drawn with.</li>
-                    <li class="mb-2"><strong>Spectrum Transform</strong> - Where this readout sits and how big it is on the surface.</li>
-                    <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this meter only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
-                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
-                    <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Cybernetic Waveform</strong></p>
-                    <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - A waveform readout, the line that traces the sound itself.</li>
-                    </ul>
-
-                    <div class="opt-subgroup">
-                        <p class="opt-note mt-2 mb-2"><strong>Cybernetic Waveform Settings</strong></p>
-                        <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Band</strong> - Which part of the music this reacts to.</li>
-                    <li class="mb-2"><strong>Intensity</strong> - How strongly this shows.</li>
-                    <li class="mb-2"><strong>Transform</strong> - Where this readout sits and how big it is on the surface.</li>
-                    <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this meter only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
-                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
-                    <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Cybernetic DMX GRID</strong></p>
-                    <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - A grid readout driven by the world's stage lighting data.</li>
-                    </ul>
-
-                    <div class="opt-subgroup">
-                        <p class="opt-note mt-2 mb-2"><strong>Cybernetic DMX GRID Settings</strong></p>
-                        <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Band</strong> - Which part of the music this reacts to.</li>
-                    <li class="mb-2"><strong>Intensity</strong> - How strongly this shows.</li>
-                    <li class="mb-2"><strong>Transform</strong> - Where this readout sits and how big it is on the surface.</li>
-                    <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this meter only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
-                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
-                    <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Cybernetic Autocorrelator</strong></p>
-                    <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - A readout driven by the repeating structure AudioLink finds in the track, which moves with the groove rather than with loudness.</li>
-                    </ul>
-
-                    <div class="opt-subgroup">
-                        <p class="opt-note mt-2 mb-2"><strong>Cybernetic Autocorrelator Settings</strong></p>
-                        <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Band</strong> - Which part of the music this reacts to.</li>
-                    <li class="mb-2"><strong>Intensity</strong> - How strongly that readout shows.</li>
-                    <li class="mb-2"><strong>Transform</strong> - Where this readout sits and how big it is on the surface.</li>
-                    <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this meter only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
-                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
-                    <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Cybernetic Autocorrelator Effects</strong></p>
-                    <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>AC Shimmer Effect</strong> - Adds a moving sheen across it.</li>
-                    <li class="mb-2"><strong>AC Shimmer Band</strong> - Which part of the music this reacts to.</li>
-                    <li class="mb-2"><strong>AC Pop Effect</strong> - Makes it burst outward on a hit.</li>
-                    <li class="mb-2"><strong>AC Pop Band</strong> - Which part of the music this reacts to.</li>
-                    <li class="mb-2"><strong>AC Sizzle Effect</strong> - Adds a fine crackle over it.</li>
-                    <li class="mb-2"><strong>AC Sizzle Band</strong> - Which part of the music this reacts to.</li>
-                    <li class="mb-2"><strong>AC Electrify Effect</strong> - Adds arcs of light jumping across that readout.</li>
-                    <li class="mb-2"><strong>AC Electrify Band</strong> - Which part of the music this reacts to.</li>
-                    </ul>
-                </div>
-
                 <h3 class="text-glow-pink opt-group">Vertex Displacement &amp; Kinetics</h3>
                 <p class="opt-note">Vertex displacement plus a full flying-shard system driven by geometry passes.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -3265,6 +3498,8 @@
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>Distance</strong> - How far the model swells on the beat.</li>
+                    <li class="mb-2"><strong>Height Equaliser</strong> - Lays the music up the object, bass at Bottom and treble at Top, so each height swells with its own slice of the sound. Heights are in metres above the object's origin, or above world zero once it is static batched. Setting Bottom above Top flips it. Gain is how easily it moves. <span class="tag-inline"><span class="avail-tag">World Surface</span><span class="avail-tag">World Fur</span></span></li>
+                    <li class="mb-2"><strong>Body Equaliser</strong> - Lays the music up your body, bass at Bottom and treble at Top, so each part of you swells with its own slice of the sound. Heights are in metres from your feet, and setting Bottom above Top flips it. Gain is how easily it moves. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span><span class="avail-tag">Toon</span><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span></span></li>
                         </ul>
                     </div>
 
@@ -3280,8 +3515,10 @@
                     <li class="mb-2"><strong>Lift (Up/Down, Animate)</strong> - How much the shards rise as they go.</li>
                     <li class="mb-2"><strong>Float Drift</strong> - How much the shards hang in the air rather than snapping back.</li>
                     <li class="mb-2"><strong>Trail Length</strong> - How much of a streak each shard leaves behind it.</li>
+                    <li class="mb-2"><strong>Drop Burst</strong> - When the track hits a big peak, you burst into shards and pull back together as it passes. Amount is how far you burst, Threshold is how big the peak has to be, Hold is how long you stay apart, and Softness eases it in and out.</li>
                     <li class="mb-2"><strong>Shard Hue Shift</strong> - Shifts the shard colours round the colour wheel.</li>
                     <li class="mb-2"><strong>Shard Hue Cycle Speed</strong> - Cycles that shift on forever. 0 holds it still.</li>
+                    <li class="mb-2"><strong>Shard Light Volumes</strong> - Lets the shards take their room light from the world's Light Volumes, like the rest of the material, instead of only the light probes. At 1 they match you. 0 lights them from the light probes only.</li>
                     <li class="mb-2"><strong>Shard ColorChord</strong> - Colour each shard by the note that threw it, so the pieces carry the harmony.</li>
                         </ul>
 
@@ -3492,6 +3729,11 @@
                         <span class="opt-values">Options: <code>Off</code>, <code>All Sources</code>, <code>Direct Light</code>, <code>Vertex Lights</code>, <code>Light Probes</code>, <code>Light Volumes</code>, <code>Point Light Volumes</code></span></li>
                     <li class="mb-2"><strong>Brightness</strong> - Turn this up when the view is nearly black, down when it washes out to white.</li>
                 </ul>
+
+                <h3 class="text-glow-pink opt-group">Broken Pixels</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Show</strong> - Paints any pixel the lighting couldn't work out bright magenta, so you can see where it is. The material already blacks these out on its own. Turn this off before you upload.</li>
+                </ul>
             </div>
             <!-- ========================= -->
             <!-- VIXFORGE TOON -->
@@ -3506,7 +3748,8 @@
                 <p class="caption1 mb-4" style="color: #bfa8d2;">
                     All six run on one core, so the PBR base, matcaps, emissions, decals, outlines, AudioLink, Light
                     Volumes, LTCGI and VRSL work the same way in every one, with a few extra settings on the two world
-                    shaders. Only five blocks move around: <strong>Wet</strong> and <strong>Goo</strong>,
+                    shaders. Only five blocks move around: <strong>Wet</strong> and <strong>Goo</strong>, with the
+                    <strong>Touch</strong> and <strong>Movement</strong> groups that drive them,
                     <strong>Shading Options</strong>, the <strong>Fabric and Fur</strong> groups,
                     <strong>Baked Lighting</strong>, and <strong>Triplanar Projection</strong> with
                     <strong>Tiling Breakup</strong>.
@@ -3514,8 +3757,9 @@
 
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>VixenWear / Latex Ultra</strong> - The physically based latex finish, and
-                        the only one with the full liquid toolkit: it is the shader with <strong>Wet Effects</strong> and
-                        <strong>Goo Effects</strong>. No stylised shading, no fabric or fur.</li>
+                        the only one with the full liquid toolkit: it is the shader with <strong>Wet Effects</strong>,
+                        <strong>Goo Effects</strong>, <strong>Touch</strong> and <strong>Movement</strong>. No stylised
+                        shading, no fabric or fur.</li>
                     <li class="mb-2"><strong>VixForge / Toon</strong> - The cel and anime sibling. Adds
                         <strong>Shading Options</strong>; drops Wet and Goo, which are liquid-latex tricks that do not fit
                         a toon surface. Its Realistic style is a full physical pass, so you can stylise the body and keep
@@ -3527,7 +3771,8 @@
                         Shading Options, <strong>Surface Fur</strong> and <strong>Real Fur</strong>. Drops Wet, Goo and
                         Fabric.</li>
                     <li class="mb-2"><strong>VixForge / World Surface</strong> - The world build, and the widest of the
-                        six. It keeps <strong>Wet Effects</strong> and <strong>Goo Effects</strong> and adds Shading
+                        six. It keeps <strong>Wet Effects</strong>, <strong>Goo Effects</strong>, <strong>Touch</strong>
+                        and <strong>Movement</strong>, and adds Shading
                         Options, <strong>Fabric</strong>, <strong>Surface Fur</strong>, <strong>Baked Lighting</strong>,
                         <strong>Triplanar Projection</strong> and <strong>Tiling Breakup</strong>. No Real Fur.</li>
                     <li class="mb-2"><strong>VixForge / World Fur</strong> - The world build with the strands. Adds
