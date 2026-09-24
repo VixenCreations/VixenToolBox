@@ -189,6 +189,16 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
+                <div class="changelog-entry" data-version="v2.18.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.18.1 - 2026-09-24</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Linux and macOS editors can load the toolbox.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-3" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The toolbox would not load in the Linux or macOS editor.</strong> ImageMagick is only included for Windows, and the tools that use it stopped every other tool from loading. Everything else works on Linux and macOS now. Badge Studio's badge and template creation, texture resizing in the Avatar Validator, and the World Engine's <strong>Convert To PNG</strong> need ImageMagick, so they're turned off there and say why. Quest conversion still shrinks textures there, using <strong>Max Size</strong> instead of resizing the image file.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="v2.18.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.18.0 - 2026-09-23</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>See what is slowing the editor down, find what a tool left in memory, World Engine texture fixes that never touch your image files, and a safer ImageMagick.</em></p>

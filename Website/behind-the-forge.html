@@ -301,6 +301,32 @@
                 </div>
             </div>
             <!-- FORGE:START -->
+            <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-09-24-vixens-toolbox-2-18-1-now-it-loads-on-li">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Dev Notes</span>
+                        <span class="news-tag">Vixens Toolbox</span>
+                        <span class="news-date">September 24, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Vixens Toolbox 2.18.1: now it loads on Linux and macOS</h2>
+                    <p class="forge-status"><strong>Status:</strong> Released</p>
+                    <p class="forge-intro"><em>If you opened the toolbox in a Linux or macOS editor, none of the tools loaded, just a wall of "are you missing an assembly reference?" errors. Thanks to the Linux user who told us! This patch gets everything loading there, and the few tools that need ImageMagick tell you why they're switched off.</em></p>
+                    <h3 class="text-glow-cyan">Linux and macOS editors</h3>
+                    <ul class="pledge-list">
+                        <li>ImageMagick is only included for Windows, and the tools that use it stopped every other tool from loading. Everything else works on Linux and macOS now.</li>
+                        <li>Three things need ImageMagick, so they're turned off there and say why: making badges and templates in Badge Studio, resizing textures in the Avatar Validator, and <strong>Convert To PNG</strong> in the World Engine.</li>
+                        <li>Badge Studio's <strong>Scene UV Mapper</strong> tab still works there.</li>
+                        <li>Quest conversion still shrinks your textures, using <strong>Max Size</strong> instead of resizing the image file.</li>
+                        <li>Nothing changes on Windows.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>If anything still breaks on Linux or macOS, tell us and we'll fix it.</li>
+                    </ul>
+                </div>
+            </article>
+
             <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-09-23-vixens-toolbox-2-18-0-find-out-what-is-s">
                 <div class="news-body">
                     <div class="news-meta">

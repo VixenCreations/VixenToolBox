@@ -2,14 +2,19 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
 using ImageMagick;
 using ImageMagick.Configuration;
+#endif
 
 namespace VixenTools.Editor
 {
     [InitializeOnLoad]
     public static class VixenMagickKit
     {
+        public const string UnavailableMessage = "This needs ImageMagick, which the toolbox only includes for Windows.";
+
+#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
         const string SecurityPolicy =
             "<policymap>\n" +
             "  <policy domain=\"delegate\" rights=\"none\" pattern=\"*\"/>\n" +
@@ -44,6 +49,7 @@ namespace VixenTools.Editor
             }
             catch { }
         }
+#endif
 
         private static readonly string[] ProtectedPathFragments =
         {
@@ -83,6 +89,7 @@ namespace VixenTools.Editor
         {
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return false;
             if (IsProtectedAsset(path)) return false;
+#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
             try
             {
                 long fileBytes = new FileInfo(path).Length;
@@ -113,9 +120,11 @@ namespace VixenTools.Editor
             {
                 Debug.LogWarning($"[VixForge] LosslessCompress skipped for '{path}': {ex.Message}");
             }
+#endif
             return false;
         }
 
+#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
         public static bool TryGetDimensions(byte[] bytes, out uint width, out uint height)
         {
             width = 0;
@@ -141,6 +150,7 @@ namespace VixenTools.Editor
             }
             return settings;
         }
+#endif
 
         public static bool IsLinearOrNormalData(string assetPath)
         {
@@ -150,6 +160,7 @@ namespace VixenTools.Editor
             return !importer.sRGBTexture;
         }
 
+#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
         public static void HighQualityResize(MagickImage img, uint targetW, uint targetH, bool linearData, FilterType filter, bool onlyShrink, double sharpenSigma)
         {
             if (img == null) return;
@@ -180,11 +191,13 @@ namespace VixenTools.Editor
                 img.Quality = (uint)System.Math.Max(1, System.Math.Min(100, jpegQuality));
             }
         }
+#endif
 
         public static bool ProcessTextureFile(string path, uint targetSize, bool linearData, bool downscale)
         {
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return false;
             bool resized = false;
+#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
             try
             {
                 byte[] bytes = File.ReadAllBytes(path);
@@ -213,6 +226,7 @@ namespace VixenTools.Editor
             {
                 Debug.LogWarning($"[VixForge] Magick failed for '{path}': {e.Message}");
             }
+#endif
             return resized;
         }
     }

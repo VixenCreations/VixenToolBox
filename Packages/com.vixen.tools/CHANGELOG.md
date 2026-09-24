@@ -5,6 +5,13 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.18.1] - 2026-09-24
+*Linux and macOS editors can load the toolbox.*
+
+### Fixed
+* **The toolbox would not load in the Linux or macOS editor.** ImageMagick is only included for Windows, and the tools that use it stopped every other tool from loading. Everything else works on Linux and macOS now. Badge Studio's badge and template creation, texture resizing in the Avatar Validator, and the World Engine's **Convert To PNG** need ImageMagick, so they're turned off there and say why. Quest conversion still shrinks textures there, using **Max Size** instead of resizing the image file.
+
+***
 ## [2.18.0] - 2026-09-23
 *See what is slowing the editor down, find what a tool left in memory, World Engine texture fixes that never touch your image files, and a safer ImageMagick.*
 

@@ -9,7 +9,9 @@ using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Animations;
+#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
 using ImageMagick;
+#endif
 
 #if VRC_SDK_VRCSDK3
 using VRC.SDK3.Dynamics.PhysBone.Components;
@@ -1155,6 +1157,7 @@ namespace VixenTools.Editor
             string newPath = AssetDatabase.GenerateUniqueAssetPath($"{_activeTexturesDir}/{texName}_Quest{extension}");
             int targetSize = _textureSizeOptions[_selectedTextureSizeIndex];
 
+#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
             try
             {
                 using (MagickImage img = new MagickImage(File.ReadAllBytes(sourcePath), VixenMagickKit.DownscaleReadSettings((uint)targetSize)))
@@ -1183,6 +1186,9 @@ namespace VixenTools.Editor
                     return sourceTex;
                 }
             }
+#else
+            AssetDatabase.CopyAsset(sourcePath, newPath);
+#endif
 
             AssetDatabase.ImportAsset(newPath, ImportAssetOptions.ForceUpdate);
             TextureImporter importer = AssetImporter.GetAtPath(newPath) as TextureImporter;

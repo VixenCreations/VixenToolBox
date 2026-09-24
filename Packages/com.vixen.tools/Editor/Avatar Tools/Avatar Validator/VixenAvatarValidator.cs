@@ -13,7 +13,9 @@ using VRC.SDK3.Validation;
 using VRC.Dynamics;
 using VRC.SDK3.Dynamics.Contact.Components;
 using UnityEngine.Profiling;
+#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
 using ImageMagick;
+#endif
 using VRC.SDK3.Avatars;
 using VRC.SDKBase.Validation.Performance;
 using VRC.SDKBase.Validation.Performance.Stats;
@@ -1099,6 +1101,7 @@ namespace VixenTools.Editor
 
         public static void ProcessTexturesWithMagick(IEnumerable<Texture> textures, int targetSize, ResizeMode mode)
         {
+#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
             bool downscale = mode == ResizeMode.Downscale;
             string activeVerb = downscale ? "Downscaling" : "Upscaling";
 
@@ -1161,6 +1164,9 @@ namespace VixenTools.Editor
             string verb = downscale ? "compressed" : "upscaled";
             string tail = canceled ? " (canceled)" : "";
             Debug.Log($"[VixForge] Optimization Engine: {count} textures {verb}{tail} (parallel x{workers}).");
+#else
+            Debug.LogWarning("[VixForge] " + VixenMagickKit.UnavailableMessage);
+#endif
         }
     }
 
@@ -1622,6 +1628,12 @@ namespace VixenTools.Editor
                 executeTexBtn.AddToClassList("cyber-action-btn");
                 executeTexBtn.AddToClassList("cyan-btn");
                 texPanel.Add(executeTexBtn);
+#if !(UNITY_EDITOR_WIN || VIXEN_MAGICK_NET)
+                executeTexBtn.SetEnabled(false);
+                var magickNote = new Label(VixenMagickKit.UnavailableMessage);
+                magickNote.AddToClassList("md-p");
+                texPanel.Add(magickNote);
+#endif
 
                 _resultsContainer.Add(texPanel);
             }

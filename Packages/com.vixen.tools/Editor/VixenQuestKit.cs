@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
 using ImageMagick;
+#endif
 
 namespace VixenTools.Editor
 {
@@ -234,6 +236,7 @@ namespace VixenTools.Editor
 
             string newPath = AssetDatabase.GenerateUniqueAssetPath($"{outputDir}/{texName}_Quest{extension}");
 
+#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
             try
             {
                 using (MagickImage img = new MagickImage(File.ReadAllBytes(sourcePath), VixenMagickKit.DownscaleReadSettings((uint)targetSize)))
@@ -262,6 +265,9 @@ namespace VixenTools.Editor
                     return sourceTex;
                 }
             }
+#else
+            AssetDatabase.CopyAsset(sourcePath, newPath);
+#endif
 
             AssetDatabase.ImportAsset(newPath, ImportAssetOptions.ForceUpdate);
             TextureImporter importer = AssetImporter.GetAtPath(newPath) as TextureImporter;

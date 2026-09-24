@@ -2,7 +2,7 @@
 
 A free set of Unity editor tools for VRChat avatars and worlds. It checks your work against VRChat's limits, fixes what it can in one click, and takes the repetitive setup off your hands.
 
-* **Package:** `com.vixencreations.vixens-toolbox` (v2.18.0)
+* **Package:** `com.vixencreations.vixens-toolbox` (v2.18.1)
 * **Needs:** Unity 2022.3.22f1 and VRChat SDK 3.10.3 or newer
 * **Docs and install:** [vixencreations.github.io/VixenToolBox](https://vixencreations.github.io/VixenToolBox/)
 

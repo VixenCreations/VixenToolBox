@@ -653,7 +653,8 @@
                 <h3 class="text-glow-pink opt-group">Lighting</h3>
                 <p class="opt-note">Rim light, subsurface, transmission, anisotropy and how highlights respond to the lights around you.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Sharper Probes</strong> - Light probes flatten out and go grey on the side facing away from the light. This reads them a different way that keeps the shape of the light, without changing how bright the room is overall. Leave it off if you want your material to look exactly as it did before.</li>
+                    <li class="mb-2"><strong>Sharper Probes</strong> - Adds contrast to the light from light probes, so the side facing the light reads brighter and the far side darker. It is a look rather than a closer match: one strong light comes out up to a third brighter than Unity draws it. With Unified Light on it keeps that contrast and follows Soften and Hardness.</li>
+                    <li class="mb-2"><strong>Unified Light</strong> - Experimental, so you can compare it with the lighting you have now. It lights you the same way whichever route a light takes to reach you: realtime, the cheaper per-vertex lights, light probes or Light Volumes. Soften and Hardness then reach every light, Light Volumes look less flat, and the per-vertex lights pick up your normal map and highlights.</li>
                 </ul>
 
                 <div class="opt-subgroup">
@@ -662,14 +663,15 @@
                     <li class="mb-2"><strong>Strength</strong> - How bright that edge gets. 0 turns it off.</li>
                     <li class="mb-2"><strong>Band</strong> - Which part of the music the edge listens to.</li>
                     <li class="mb-2"><strong>Flare</strong> - How far the beat pushes the edge brightness up.</li>
-                    <li class="mb-2"><strong>Width</strong> - How far the edge reaches in from your outline. Low is a thin line right at the silhouette. Most of the widening happens near the top of the slider, and the last stretch covers the whole surface rather than an edge, which is a haze rather than a rim.</li>
-                    <li class="mb-2"><strong>Follow Light</strong> - Ties the edge to the light in the room. At 0 the whole outline glows evenly wherever the light is, which is what makes it read as a hard highlight rather than a rim. Turn it up and the edge only appears on the side the light is actually coming from, and detail in your height map shadows it.</li>
-                    <li class="mb-2"><strong>Wrap</strong> - How far around the form the edge carries past the point the light stops reaching. Low keeps it to the lit side only, high wraps it round for a fuller, softer edge.</li>
+                    <li class="mb-2"><strong>Width</strong> - How far in from your outline the edge reaches, in tenths of the way to the middle. 1 is a thin line, 10 covers the whole surface.</li>
+                    <li class="mb-2"><strong>Blur</strong> - How soft the inner side of the edge is. 0 is a crisp band, 1 fades all the way from your outline to Width.</li>
+                    <li class="mb-2"><strong>Follow Light</strong> - Ties the edge to where the light comes from. At 0 the whole outline glows evenly. At 1 the lights behind and beside you light the edge the way a real rim light does, a light in front of you barely touches it, and detail in your height map shadows it.</li>
+                    <li class="mb-2"><strong>Wrap</strong> - How big the light looks to the edge. Low is a small, sharp light that reaches only the side facing it, high a large, soft one that wraps further round you.</li>
                     <li class="mb-2"><strong>Scene Lights</strong> - How much the lights in the room feed the edge. 1 is full, 0 leaves them out.</li>
                     <li class="mb-2"><strong>Ambient</strong> - How much the ambient light and light probes feed the edge. 1 is full, 0 leaves them out.</li>
-                    <li class="mb-2"><strong>Light Volumes</strong> - How much of the room's Light Volume feeds the edge. A volume stands in for the probe light rather than adding beside it, so this trims its share of Ambient above. It also decides how far Follow Light steers by the volume instead of by a scene light, which is what makes the edge land correctly in a room lit only by volumes. 1 is full, 0 leaves them out.</li>
-                    <li class="mb-2"><strong>LTCGI</strong> - How much a lit LTCGI screen feeds the edge. It reached nothing before, so a material stood in front of a bright screen wearing an edge lit by the room behind it. Starts at 0.</li>
-                    <li class="mb-2"><strong>VRSL</strong> - How much the stage rig feeds the edge. Same gap as LTCGI above, so it also starts at 0.</li>
+                    <li class="mb-2"><strong>Light Volumes</strong> - How much of the room's Light Volume feeds the edge. A volume stands in for the probe light rather than adding beside it, so this trims its share of Ambient above. 1 is full, 0 leaves them out.</li>
+                    <li class="mb-2"><strong>LTCGI</strong> - How much a lit LTCGI screen feeds the edge. 1 is full, 0 leaves it out.</li>
+                    <li class="mb-2"><strong>VRSL</strong> - How much the stage rig feeds the edge. It takes its light from GI Wash Overrides in the VRSL section, so raise Intensity there first.</li>
                     </ul>
                 </div>
 
@@ -877,7 +879,7 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>GI Wash Overrides</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Intensity</strong> - How much of the rig's light washes over you generally, apart from the fixture you are following.</li>
+                    <li class="mb-2"><strong>Intensity</strong> - How much the fixture you follow also lights you, the way a light in the room would.</li>
                     <li class="mb-2"><strong>Specular Mix</strong> - How much the rig shows up as a highlight on you as well as lighting you.</li>
                     <li class="mb-2"><strong>Color Saturation</strong> - How colourful that wash is. Pull it down if the club's colour is overwhelming your own.</li>
                         </ul>
