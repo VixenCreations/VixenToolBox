@@ -24,6 +24,7 @@
 - [Shader changelogs](https://vixencreations.github.io/VixenToolBox/shader-changelogs.html): release notes for each shader.
 - [Toolbox changelog](https://vixencreations.github.io/VixenToolBox/changelog.html): release notes for the editor suite.
 - [Behind The Forge](https://vixencreations.github.io/VixenToolBox/behind-the-forge.html): the development notes posted on Discord for every shader and tool update, readable without Discord.
+- [Lighting research](https://vixencreations.github.io/VixenToolBox/research.html): One Light, Every Route, a research report on how the shaders and the light baker handle light in VRChat, with every number from a measurement.
 - [Why choose us](https://vixencreations.github.io/VixenToolBox/why-choose-us.html): how these tools compare to the alternatives.
 - [About](https://vixencreations.github.io/VixenToolBox/about.html): who makes this.
 - [AI transparency](https://vixencreations.github.io/VixenToolBox/ai-transparency.html): where AI was and was not used in building these tools.

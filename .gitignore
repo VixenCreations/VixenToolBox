@@ -87,3 +87,5 @@ TABLE.md
 /.parked-conflictfinder-backup-2026-08-25
 CLAUDE.md.pre-trim-backup
 /rules
+/.agents
+skills-lock.json

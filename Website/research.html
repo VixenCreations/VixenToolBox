@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary SEO -->
+    <title>VixForge Interactive | Lighting Research</title>
+    <meta name="title" content="VixForge Interactive | Lighting Research">
+    <meta name="description" content="One Light, Every Route: a research report from VixForge Interactive on lighting for VRChat avatars and worlds. Rim light, unified light routes, camera exposure, light baking and reflections, with every number from a reproducible measurement.">
+    <meta name="keywords" content="VixForge Interactive, VRChat lighting, spherical harmonics, light probes, VRC Light Volumes, LTCGI, lightmapping, GGX, anisotropic reflections, AgX, Unity 2022.3, Built-in Render Pipeline">
+    <meta name="author" content="Vixenlicous | VixForge Interactive">
+    <meta name="theme-color" content="#ff00aa">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://vixencreations.github.io/VixenToolBox/research.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/research.html">
+    <meta property="og:title" content="VixForge Interactive | Lighting Research">
+    <meta property="og:description" content="One Light, Every Route: measured lighting for VRChat avatars and worlds, from rim light to light baking and reflections.">
+    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/promos/PromoBanner3.png">
+    <meta property="og:site_name" content="VixForge Interactive | Vixens Toolbox">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://vixencreations.github.io/VixenToolBox/research.html">
+    <meta name="twitter:title" content="VixForge Interactive | Lighting Research">
+    <meta name="twitter:description" content="One Light, Every Route: measured lighting for VRChat avatars and worlds, from rim light to light baking and reflections.">
+    <meta name="twitter:image" content="https://vixencreations.github.io/VixenToolBox/promos/PromoBanner3.png">
+    <meta name="twitter:site" content="@VixForge">
+
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "ScholarlyArticle",
+          "headline": "One Light, Every Route: Measured Lighting for VRChat Avatars and Worlds",
+          "datePublished": "2026-09-24",
+          "author": {
+            "@type": "Person",
+            "name": "Vixenlicious",
+            "alternateName": "Vixenlicous"
+          },
+          "publisher": {
+            "@id": "https://vixencreations.github.io/VixenToolBox/#organization"
+          },
+          "about": ["VRChat avatar shaders", "Unity 2022.3", "Built-in Render Pipeline", "Spherical harmonics lighting", "Lightmapping", "Reflection probes"],
+          "url": "https://vixencreations.github.io/VixenToolBox/research.html"
+        }
+    </script>
+
+    <!-- Icons -->
+    <link rel="icon" href="./favicon.ico">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+
+    <!-- UI Framework -->
+    <script type="module" src="web-components.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="docs-shell.css">
+
+    <!-- Page-Specific Styling -->
+    <style>
+        .paper-section {
+            padding: 2rem;
+        }
+
+        .paper-section p,
+        .paper-section li {
+            color: #bfa8d2;
+            line-height: 1.75;
+        }
+
+        .paper-section p {
+            margin-bottom: 1.1rem;
+        }
+
+        .paper-section h3 {
+            margin-top: 1.8rem;
+            color: #e0d5eb;
+        }
+
+        .paper-section strong {
+            color: #e0d5eb;
+        }
+
+        .paper-meta {
+            color: #bfa8d2;
+            font-size: 0.95rem;
+            margin: 0.4rem auto 0;
+            max-width: 760px;
+        }
+
+        .paper-status {
+            margin: 1.2rem auto 0;
+            max-width: 760px;
+            padding: 0.8rem 1rem;
+            border: 1px solid rgba(0, 229, 255, 0.35);
+            border-radius: 4px;
+            background: rgba(0, 229, 255, 0.05);
+            color: #d8cbe4;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .paper-abstract {
+            border-left: 3px solid var(--neon-cyan);
+            padding: 0.2rem 0 0.2rem 1.1rem;
+        }
+
+        .key-findings {
+            padding-left: 1.2rem;
+        }
+
+        .key-findings li {
+            margin-bottom: 0.45rem;
+        }
+
+        .formula {
+            font-family: 'Consolas', monospace;
+            color: #e0d5eb;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.1rem 0.35rem;
+            border-radius: 3px;
+        }
+
+        .formula-block {
+            display: block;
+            font-family: 'Consolas', monospace;
+            color: #e0d5eb;
+            background: rgba(255, 255, 255, 0.04);
+            border-left: 2px solid rgba(255, 0, 170, 0.5);
+            padding: 0.6rem 0.9rem;
+            margin: 0.4rem 0 1.2rem;
+            overflow-x: auto;
+            line-height: 1.7;
+            white-space: pre;
+        }
+
+        .paper-table-wrap {
+            overflow-x: auto;
+            margin: 0.6rem 0 1.6rem;
+        }
+
+        table.paper-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .paper-table caption {
+            caption-side: top;
+            text-align: left;
+            color: #bfa8d2;
+            padding-bottom: 0.55rem;
+            line-height: 1.55;
+        }
+
+        .paper-table th,
+        .paper-table td {
+            padding: 0.45rem 0.7rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: left;
+            color: #d8cbe4;
+            vertical-align: top;
+        }
+
+        .paper-table th {
+            color: #e0d5eb;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 0, 170, 0.35);
+        }
+
+        .paper-table .num {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .paper-table .best {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .paper-figure {
+            margin: 1.4rem 0 1.8rem;
+        }
+
+        .paper-chart {
+            position: relative;
+        }
+
+        .paper-chart-svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            touch-action: pan-y;
+        }
+
+        .paper-chart-svg .grid {
+            stroke: rgba(255, 255, 255, 0.08);
+            stroke-width: 1;
+        }
+
+        .paper-chart-svg .tick {
+            fill: #9d91a9;
+            font-size: 12px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .paper-chart-svg .axis-label {
+            fill: #bfa8d2;
+            font-size: 12px;
+        }
+
+        .paper-chart-svg .direct-label {
+            fill: #e0d5eb;
+            font-size: 12px;
+        }
+
+        .paper-chart-svg .ref {
+            stroke: rgba(255, 255, 255, 0.35);
+            stroke-width: 1;
+        }
+
+        .paper-chart-svg .ref-label {
+            fill: #9d91a9;
+            font-size: 11px;
+        }
+
+        .paper-chart-svg .crosshair {
+            stroke: rgba(255, 255, 255, 0.55);
+            stroke-width: 1;
+            pointer-events: none;
+        }
+
+        .paper-chart-svg:focus {
+            outline: 1px solid var(--neon-cyan);
+            outline-offset: 4px;
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            color: #d8cbe4;
+            margin-bottom: 0.4rem;
+        }
+
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .chart-tip {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.12s ease-out;
+            background: rgba(20, 12, 18, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 6px;
+            padding: 0.45rem 0.6rem;
+            font-size: 0.8rem;
+            color: #d8cbe4;
+            min-width: 160px;
+            z-index: 2;
+        }
+
+        .chart-tip.on {
+            opacity: 1;
+        }
+
+        .tip-head {
+            color: #bfa8d2;
+            margin-bottom: 0.25rem;
+        }
+
+        .tip-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .tip-row strong {
+            color: #ffffff;
+            font-variant-numeric: tabular-nums;
+            min-width: 3.4rem;
+        }
+
+        .paper-figure figcaption {
+            color: #bfa8d2;
+            font-size: 0.88rem;
+            line-height: 1.6;
+            margin-top: 0.6rem;
+        }
+
+        .paper-refs li {
+            margin-bottom: 0.55rem;
+        }
+
+        @media (max-width: 600px) {
+            .paper-section {
+                padding: 1.25rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="docs-shell">
+    <div class="background-art"></div>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <a href="index.html" class="brand-logo-link"><img src="banner.png" class="sidebar-brand-logo" width="1536" height="665" alt="VixForge Interactive - Shaders, Worlds, Haptics" /></a>
+            <h2 class="text-glow-cyan">VIXENS TOOLBOX</h2>
+            <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">by VixForge Interactive</div>
+        </div>
+
+        <div class="nav-links">
+            <fluent-anchor href="index.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2.5L2 8.5H4V16.5H8V11.5H12V16.5H16V8.5H18L10 2.5Z" /></svg>
+                VPM Registry
+            </fluent-anchor>
+
+            <fluent-anchor href="about.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                About Us
+            </fluent-anchor>
+
+            <fluent-anchor href="products.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                Our Products
+            </fluent-anchor>
+
+            <fluent-anchor href="news.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v13H4a2 2 0 0 0-2 2 2 2 0 0 0 2 2z"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8z"></path></svg>
+                News
+            </fluent-anchor>
+
+            <fluent-anchor href="behind-the-forge.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+                Behind The Forge
+            </fluent-anchor>
+
+            <fluent-anchor href="research.html" class="nav-item active">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"></path><path d="M8.5 2h7"></path><path d="M7 16h10"></path></svg>
+                Research
+            </fluent-anchor>
+
+            <fluent-anchor href="why-choose-us.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                Why Choose Us?
+            </fluent-anchor>
+
+            <fluent-anchor href="tools.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2ZM11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14V10C9 9.44772 9.44772 9 10 9C10.5523 9 11 9.44772 11 10V14ZM10 8C9.44772 8 9 7.55228 9 7C9 6.44772 9.44772 6 10 6C10.5523 6 11 6.44772 11 7C11 7.55228 10.5523 8 10 8Z" /></svg>
+                List of Tools
+            </fluent-anchor>
+
+            <fluent-anchor href="shaderdocs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M7 9.5a5.5 5.5 0 0 1 5-3"></path><circle cx="9.5" cy="9.5" r="1.2" fill="currentColor" stroke="none"></circle></svg>
+                Shader Docs
+            </fluent-anchor>
+
+            <fluent-anchor href="changelog.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Toolbox Changes
+            </fluent-anchor>
+
+            <fluent-anchor href="shader-changelogs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                Shader Changelogs
+            </fluent-anchor>
+
+            <fluent-anchor href="upcoming-changes.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Upcoming Changes
+            </fluent-anchor>
+
+            <fluent-anchor href="support.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                Support the Projects
+            </fluent-anchor>
+
+            <fluent-anchor href="social.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                Get Help Here
+            </fluent-anchor>
+
+            <fluent-anchor href="ai-transparency.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                AI Transparency
+            </fluent-anchor>
+
+            </div>
+    </nav>
+
+    <main class="main-wrapper">
+        <div class="docs-layout">
+        <div class="docs-main" data-shell-sections=".paper-section" data-shell-heading="h2" data-search-label="Search the paper&hellip;">
+        <div class="col align-items-center content" style="max-width: 1000px;">
+
+            <div class="col w-100 text-center mb-4">
+                <h1 class="text-glow-cyan">One Light, Every Route</h1>
+                <p class="caption1 mt-2" style="font-size: 1.15rem; max-width: 780px; margin: 0 auto;">
+                    Measured lighting for VRChat avatars and worlds: rim light, light routes, camera exposure, light baking and reflections
+                </p>
+                <p class="paper-meta">Vixenlicious, VixForge Interactive &middot; Research report, 24 September 2026</p>
+                <p class="paper-meta">Five experiments across 23rd and 24th of September 2026 based on our original Fibonacci lattice script from August 31st 2026.</p>
+                <div class="paper-status">
+                    <strong>Status.</strong> Every result below is a numerical measurement. The shader and baker changes that came out of it
+                    are built and are listed on <a href="upcoming-changes.html">Upcoming Changes</a>; testing them in the Unity editor and in
+                    VRChat is under way, so treat the in-engine behaviour as unconfirmed until those changes are released.
+                </div>
+                <div class="row mt-3" style="gap: 10px; flex-wrap: wrap; justify-content: center;">
+                    <fluent-anchor href="upcoming-changes.html" class="custom-stealth-btn">Upcoming Changes</fluent-anchor>
+                </div>
+            </div>
+
+            <section class="glass-panel paper-section w-100 mb-5" id="abstract">
+                <h2 class="text-glow-cyan" style="margin-top: 0;">Abstract</h2>
+                <div class="paper-abstract">
+                    <p>
+                        An avatar in VRChat receives light through at least seven routes: per-pixel lights, per-vertex lights, spherical
+                        harmonic (SH) light probes, VRC Light Volumes, LTCGI area lights, the VRSL light wash and, in worlds, baked lightmaps.
+                        Each route delivers its own approximation of the same light, so a material can change its look depending on how a light
+                        happens to reach it. We report five numerical experiments that measure these differences and derive corrections,
+                        anchored to Unity's manual, Unity's C# source and Unity's open-source GPU lightmapper.
+                    </p>
+                    <p>
+                        A closed-form sphere-cap lobe with exact SH band weights lets rim light and terminator shaping reach every route, with
+                        probe error at most 0.057 RMS of the peak. The missing L2 band of Light Volume data can be rebuilt from its L1 band with a
+                        confidence weight, cutting single-light error from 0.115 to 0.046. The AgX response of our in-world camera keeps highlight
+                        detail up to about 7.2 in linear scene value, which sets how bright a shader's highlights may usefully be. In the light
+                        baker, rotated Fibonacci lattice sampling gives up to 13 times lower integration error than random sampling at the same
+                        cost, texel jitter removes stepped shadow edges, and a check against Unity's source found our baked light units off by
+                        factors of 2 to 25 before correction. For reflections, eight probe lookups along an anisotropic lobe cut error by up to
+                        46%, where the widely used bent-normal approximation raises it by up to 2.8 times, and L2 probe data gives usable
+                        reflections from perceptual roughness 0.8.
+                    </p>
+                </div>
+                <h3>Key findings</h3>
+                <ul class="key-findings">
+                    <li>Only per-pixel lights took the terminator controls; a light re-routed by Unity changed look by up to 0.29 RMS. Exact band weights carry the controls to every route.</li>
+                    <li>A non-linear L1 reconstruction adds contrast, never accuracy: on Unity's L2 probes it was six times less accurate than Unity's own path.</li>
+                    <li>Low-discrepancy sampling and per-sample shadow rays turn a lightmap texel from a point sample into an area integral: shadow-edge error falls from 0.256 to 0.007 RMS at 256 samples.</li>
+                    <li>A lightmap is not a light meter. Exposure fitted from lightmap data failed twice in the engine; fitting it to rendered views is the working method.</li>
+                    <li>Unity's lightmapper applies light intensity before the conversion to linear and uses its Legacy falloff; matching both is required before any baked scene can be compared with Unity's.</li>
+                </ul>
+            </section>
+
+            <section class="glass-panel paper-section w-100 mb-5" id="introduction">
+                <h2 class="text-glow-cyan" style="margin-top: 0;">1. Introduction</h2>
+                <p>
+                    Our shaders are used in VRChat, where the same avatar walks from a world lit by realtime lights into one lit by baked
+                    probes, Light Volumes and LTCGI screens. Creators tune a material once and expect it to hold up everywhere. That only
+                    works if a light is shaded the same way whichever route delivers it, and if the look survives the camera that finally
+                    records it.
+                </p>
+                <p>
+                    Two reference images set the goal. The first is a photograph taken with our Camera Pro: black gloss latex, neon emission,
+                    gold edges catching light, wide soft highlights, depth of field and halation. The second is an interior world: a large
+                    green screen lighting the room, soft pools under recessed downlights, smooth indirect light with no visible noise, tight
+                    contact shadows and a warm grade.
+                </p>
+                <p>
+                    The work followed four rules. Measure before building. Take every claim about the engine from Unity's manual or source,
+                    not from memory. Keep failed first runs beside the corrected ones, so the record shows how each result was reached. Ship
+                    new methods behind a switch that can be compared with the old look, and fix defects outright.
+                </p>
+            </section>
+
+            <section class="glass-panel paper-section w-100 mb-5" id="routes">
+                <h2 class="text-glow-cyan" style="margin-top: 0;">2. The light a VRChat material receives</h2>
+                <p>
+                    In Unity's forward rendering path on the Built-in Render Pipeline, the brightest lights reaching an object are shaded per
+                    pixel, up to four point lights are shaded per vertex, and the rest are folded into SH. A light changes route as it or the
+                    object moves [1]. SH lights and light probes are low frequency, ignore normal maps and give diffuse light only. Light probes
+                    store L2 SH, 27 values in the notation of Sloan [9], reconstructed as irradiance [8]. VRChat worlds add VRC Light Volumes
+                    (L1 SH in 3D textures, with point, spot and area lights projected to L1 per pixel) [15], LTCGI polygon lights through
+                    linearly transformed cosines [4, 16] and the VRSL light wash [17].
+                </p>
+                <p>
+                    Baked lighting has one more constraint. VRChat removes any component that is not on its allow list when a world loads, so
+                    baked data cannot live in a custom component. It has to be written into Unity's own serialised slots: the lightmap colour
+                    texture, its directional companion and the shadow mask.
+                </p>
+            </section>
+
+            <section class="glass-panel paper-section w-100 mb-5" id="method">
+                <h2 class="text-glow-cyan" style="margin-top: 0;">3. Method</h2>
+                <p>
+                    Every experiment is a set of Python scripts using NumPy, each writing a log. Integrals over the sphere use a Fibonacci
+                    lattice of 200,000 points, which covers the sphere evenly without clustering at the poles. Estimators that stand in for a
+                    shader or a baker use lattices given a random offset per sample site (Cranley-Patterson rotation [12]), so they stay
+                    unbiased. References are dense midpoint grids. Where a result depends on noise, the reference is computed twice with
+                    independent rotations and the difference is reported as the noise floor.
+                </p>
+                <p>
+                    Shader behaviour is checked with line-for-line Python ports of the shader code run on test scenes. Engine behaviour comes
+                    from the Unity 2022.3 manual [1], from Unity's C# reference source [2] and from Unity's open-source GPU lightmapper [3].
+                    Test environments are analytic: skies with a sun, studio softboxes and a room with a window, with dynamic ranges up to
+                    400 to 1.
+                </p>
+                <p>
+                    Errors are reported as RMS over many scenes, as a share of the peak or of the mean reference, and where outliers dominate
+                    also as a median relative error. Three first runs were wrong: a rim direction that made a ring, a highlight study with
+                    the wrong units and a light-size study with an energy factor applied twice. They are kept with the corrected runs.
+                </p>
+            </section>
+
+            <section class="glass-panel paper-section w-100 mb-5" id="rim">
+                <h2 class="text-glow-cyan" style="margin-top: 0;">4. The rim as a light lobe</h2>
+                <p>
+                    The starting point was a bug that rim lighting "does basically nothing" with the third-party lighting systems. An audit
+                    found four causes. The Width control was linear in a Fresnel exponent: at its default the rim rose above 0.1 only in the
+                    outer 0.72% of a silhouette, thinner than a pixel. The rim gathered light on a cosine lobe around the surface normal, so a
+                    light directly behind the silhouette, which is exactly what a rim light is, sat 90 degrees away and contributed nothing.
+                    Realtime point and spot lights never made a rim, because the additive pass had none. The LTCGI and VRSL rim feeds were
+                    off by default.
+                </p>
+                <p>
+                    We rebuilt the rim as one lobe fed by every light. Its band keeps the width and blur ramp common to VRChat toon shaders,
+                    such as Poiyomi's [18], measured across the silhouette. Its direction is <span class="formula">normalize(N - V)</span>, which
+                    always points behind the silhouette. Its falloff for a light is the clamped cosine integrated over a sphere cap, the
+                    base integral of the LTC work [4] in the closed form used for sphere lights [5]; the Wrap control sets the angular size of
+                    that cap. Because the lobe is symmetric about one axis, it scales each SH band by one number, so probe and Light Volume
+                    light take the same lobe through three band weights:
+                </p>
+                <code class="formula-block">a0 = 2 / (1 + cos s)      a1 = 1      a2 = cos s      (s = angular radius of the cap)</code>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 1.</strong> Verification of the rim lobe.</caption>
+                        <thead><tr><th>Check</th><th class="num">Result</th></tr></thead>
+                        <tbody>
+                            <tr><td>Cap falloff against brute-force integration</td><td class="num">worst error 0.0025</td></tr>
+                            <tr><td>Wrap 0 equals Lambert, Wrap 1 equals half Lambert (32-bit float)</td><td class="num">3e-8, 6.6e-4</td></tr>
+                            <tr><td>Band weights against the lattice</td><td class="num">within 0.002</td></tr>
+                            <tr><td>SH evaluation against the exact integral, 300 skies with a sun</td><td class="num">mean 0.2%, worst 0.9% of peak</td></tr>
+                            <tr><td>A realtime light and the same light baked into SH</td><td class="num">0.2929 and 0.2929</td></tr>
+                            <tr><td>Non-finite or out-of-range values over every control setting</td><td class="num">0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 2.</strong> Rim brightness 2%, 10% and 25% of the way in from the silhouette, at the default width, before and after.</caption>
+                        <thead><tr><th>Scene</th><th class="num">Before</th><th class="num">After</th></tr></thead>
+                        <tbody>
+                            <tr><td>Light Volume, light behind the avatar</td><td class="num">0.005 / 0.000 / 0.000</td><td class="num">0.638 / 0.520 / 0.187</td></tr>
+                            <tr><td>Light Volume, light beside the edge</td><td class="num">0.015 / 0.000 / 0.000</td><td class="num">0.818 / 0.913 / 0.463</td></tr>
+                            <tr><td>Light Volume, light at the camera</td><td class="num">0.008 / 0.000 / 0.000</td><td class="num">0.007 / 0.015 / 0.014</td></tr>
+                            <tr><td>Realtime sun behind the avatar</td><td class="num">0.011 / 0.000 / 0.000</td><td class="num">0.634 / 0.535 / 0.201</td></tr>
+                            <tr><td>Realtime sun at the camera</td><td class="num">0.011 / 0.000 / 0.000</td><td class="num">0.001 / 0.010 / 0.014</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    The first direction we tried, <span class="formula">normalize(N + reflect(-V, N))</span>, turns toward the camera away from
+                    the silhouette and drew a ring about a quarter of the way in (0.16) for a light at the camera. The final direction does not.
+                </p>
+            </section>
+
+            <section class="glass-panel paper-section w-100 mb-5" id="unified">
+                <h2 class="text-glow-cyan" style="margin-top: 0;">5. One light on every route</h2>
+                <p>
+                    Next we asked whether one light looks the same on the material on every route. Table 3 measures a single directional
+                    light against the per-pixel look.
+                </p>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 3.</strong> One directional light on each route, RMS against the per-pixel look as a share of the peak, and the value facing the light.</caption>
+                        <thead><tr><th>Route</th><th class="num">Soften 0</th><th class="num">Soften 0.5</th><th class="num">Soften 1</th><th class="num">Hardness 0.5</th><th class="num">Facing</th></tr></thead>
+                        <tbody>
+                            <tr><td>Per vertex</td><td class="num">0.000</td><td class="num">0.167</td><td class="num">0.289</td><td class="num">0.104</td><td class="num">1.000</td></tr>
+                            <tr><td>Unity SH light or probe, L2</td><td class="num">0.033</td><td class="num">0.158</td><td class="num">0.280</td><td class="num">0.113</td><td class="num">1.062</td></tr>
+                            <tr><td>Non-linear L1 plus L2 (Sharper Probes)</td><td class="num">0.118</td><td class="num">0.236</td><td class="num">0.338</td><td class="num">0.190</td><td class="num">1.312</td></tr>
+                            <tr><td>Light Volume, L1</td><td class="num">0.125</td><td class="num">0.125</td><td class="num">0.228</td><td class="num">0.142</td><td class="num">0.750</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    The terminator controls, Soften and Hardness, reached per-pixel lights only. A Light Volume light peaked 25% dimmer than
+                    the same light per pixel. The per-pixel terminator is one zonal kernel,
+                    <span class="formula">K(c) = saturate((c + s) / (1 + s))^p</span> with <span class="formula">s</span> the Soften value and
+                    <span class="formula">p = lerp(1, 0.15, Hardness)</span>. By the Funk-Hecke theorem [8] any zonal kernel scales each SH band
+                    by one number. Relative to the cosine lobe that Unity and Light Volumes store, the weights are exact:
+                </p>
+                <code class="formula-block">a0 = 2 (1 + s) / (p + 1)
+a1 = 3 (1 + s) ((1 + s) / (p + 2) - s / (p + 1))
+a2 = 4 (1 + s) (3 c2 - 1 / (p + 1)),   c2 = (1 + s)^2 / (p + 3) - 2 s (1 + s) / (p + 2) + s^2 / (p + 1)</code>
+                <p>
+                    At the defaults all three weights are 1, so nothing changes until a creator moves the controls. The lattice matched the
+                    closed forms with zero difference over 12 settings.
+                </p>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 4.</strong> RMS against the shaped per-pixel truth, 60 random sun-and-sky scenes per setting (s = Soften, h = Hardness).</caption>
+                        <thead><tr><th>Method</th><th class="num">s0 h0</th><th class="num">s0.5</th><th class="num">s1</th><th class="num">h0.5</th><th class="num">s0.5 h0.5</th></tr></thead>
+                        <tbody>
+                            <tr><td>Probe, linear L2 (before)</td><td class="num">0.030</td><td class="num">0.187</td><td class="num">0.333</td><td class="num">0.122</td><td class="num">0.318</td></tr>
+                            <tr><td>Probe, non-linear L1 plus L2 (before)</td><td class="num">0.194</td><td class="num">0.280</td><td class="num">0.400</td><td class="num">0.223</td><td class="num">0.380</td></tr>
+                            <tr><td>Probe, linear L2 with band weights</td><td class="num best">0.030</td><td class="num best">0.026</td><td class="num best">0.000</td><td class="num best">0.057</td><td class="num best">0.040</td></tr>
+                            <tr><td>Probe, non-linear L1 with band weights</td><td class="num">0.131</td><td class="num">0.239</td><td class="num">0.240</td><td class="num">0.208</td><td class="num">0.292</td></tr>
+                            <tr><td>Light Volume, linear L1 (before)</td><td class="num">0.115</td><td class="num">0.172</td><td class="num">0.312</td><td class="num">0.145</td><td class="num">0.292</td></tr>
+                            <tr><td>Light Volume, linear L1 with band weights</td><td class="num best">0.115</td><td class="num best">0.046</td><td class="num best">0.000</td><td class="num best">0.101</td><td class="num best">0.042</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    A non-linear L1 reconstruction, the form behind our Sharper Probes option, was less accurate than plain linear SH in every
+                    case. It adds contrast. On Unity's L2 probes it was six times less accurate than Unity's own path at the defaults, and its
+                    peak for one light was 31% too high. We keep it as an artistic option and describe it as such.
+                </p>
+                <h3>The missing band of Light Volume data</h3>
+                <p>
+                    Light Volumes carry L1 only. For one light plus a uniform sky, the L2 band is exactly
+                    <span class="formula">0.625 |L1| P2(n &middot; L1dir)</span> per colour channel. With several lights from different directions
+                    that estimate overshoots, so we scale it by <span class="formula">sqrt(d)</span>, where
+                    <span class="formula">d = |L1| / (2 L0)</span> is 1 for a single point light and 0 for a uniform sky.
+                </p>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 5.</strong> Light Volume error at the default shaping, RMS as a share of the peak.</caption>
+                        <thead><tr><th>Scene</th><th class="num">L1 today</th><th class="num">L1 + rebuilt L2</th><th class="num">L1 + rebuilt L2 &times; sqrt(d)</th></tr></thead>
+                        <tbody>
+                            <tr><td>One sun</td><td class="num">0.115</td><td class="num">0.044</td><td class="num best">0.046</td></tr>
+                            <tr><td>Two lights</td><td class="num">0.124</td><td class="num">0.094</td><td class="num best">0.087</td></tr>
+                            <tr><td>Six lights</td><td class="num">0.092</td><td class="num">0.103</td><td class="num best">0.087</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    The four per-vertex lights take a different fix: the shader reads them in the pixel stage and runs the same direct-light
+                    code as a per-pixel light, so they gain normal maps and highlights, which Unity's per-vertex path never gives them [1].
+                </p>
+            </section>
+
+            <section class="glass-panel paper-section w-100 mb-5" id="camera">
+                <h2 class="text-glow-cyan" style="margin-top: 0;">6. What the camera keeps</h2>
+                <p>
+                    Camera Pro <strong>(Our Experimental In Development Grab Pass Shader)</strong> reads the frame the world has already drawn, applies depth of field, exposure as
+                    <span class="formula">2^EV</span>, halation, local tone, white balance and grading, and ends in a response curve: AgX by
+                    default [14], with ACES and Khronos PBR Neutral as options. We ran shader values through the same curves, copied from the
+                    camera's source.
+                </p>
+                <p>
+                    Above mid grey, a highlight 10% brighter stops being visible at linear 7.2 in AgX (5.3 stops over mid grey), 4.2 in ACES
+                    and 1.5 in PBR Neutral. A world that renders without HDR clips at 1 before the camera sees the frame: a highlight of 8,
+                    darkened by two stops in the camera, shows at 0.877 display value from an HDR world and at 0.561, flat grey, from a clipped
+                    one. The Sharper Probes peak, 31% above Unity's, reads as a steady step of 0.03 to 0.05 in display value from one stop
+                    under to one stop over, so it holds up at any exposure.
+                </p>
+                <p>
+                    The largest lever for the photograph's wide latex highlights is the size of the light. A light of angular radius
+                    <span class="formula">r</span> widens the GGX lobe [7] as <span class="formula">alpha' = alpha + tan(r) / 2</span> [6]; the widened
+                    distribution still integrates to 1, so energy is kept without the extra normalisation of the representative-point method.
+                </p>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 6.</strong> Highlight of black latex (F0 0.04) under a light of 1: peak, and solid angle above 1 and inside AgX's detail band from 1 to 7.2 (sr &times; 1e-3).</caption>
+                        <thead><tr><th>Smoothness</th><th>Light size</th><th class="num">Peak</th><th class="num">Above 1</th><th class="num">In AgX's band</th></tr></thead>
+                        <tbody>
+                            <tr><td>0.95</td><td>point</td><td class="num">1111</td><td class="num">3.1</td><td class="num">2.0</td></tr>
+                            <tr><td>0.95</td><td>5 degrees</td><td class="num">4.7</td><td class="num">31.3</td><td class="num best">31.3</td></tr>
+                            <tr><td>0.95</td><td>10 degrees</td><td class="num">1.2</td><td class="num">10.7</td><td class="num">10.7</td></tr>
+                            <tr><td>0.97</td><td>point</td><td class="num">1909</td><td class="num">1.1</td><td class="num">0.7</td></tr>
+                            <tr><td>0.97</td><td>5 degrees</td><td class="num">5.0</td><td class="num">31.1</td><td class="num best">31.1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    A 5 degree light makes the highlight ten times larger and puts all of it where AgX shows detail. Unity's point and spot
+                    lights have no size, so the size has to come from the material. Light probes give no highlight at all [1]. A probe's own
+                    L1 band holds one: for a single small light, <span class="formula">2 |L1|</span> recovers its strength to 0.9998 and its
+                    direction to within 0.24 degrees. With a sky present, weighting that highlight by <span class="formula">d^0.5</span> halves
+                    the false highlight a plain sky would make (10% of the sky's power instead of 22%) while finding the sun within about 10
+                    degrees in the median case.
+                </p>
+            </section>
+
+            <section class="glass-panel paper-section w-100 mb-5" id="baking">
+                <h2 class="text-glow-cyan" style="margin-top: 0;">7. Baking at high definition</h2>
+                <p>
+                    Our light baker runs a path tracer on the graphics card and writes into Unity's own lightmap slots. Early bakes lacked the
+                    crisp look of the target. The causes were in the sampling: every sample left from the centre of its lightmap texel, baked
+                    lights cast one hard shadow ray from that centre, directional lightmaps held only the bounce, and all random numbers were
+                    independent. Figure 1 shows what a structured sample set gains.
+                </p>
+<figure class="paper-figure" id="fig-sampling">
+<div class="paper-chart" data-chart='{"px": [70.0, 276.67, 483.33, 690.0], "x": ["16 samples", "64 samples", "256 samples", "1024 samples"], "top": 22, "bottom": 300, "series": [{"name": "Random samples", "color": "#f0004f", "dash": false, "y": ["0.0495", "0.0246", "0.0123", "0.0061"]}, {"name": "Fibonacci lattice", "color": "#00a3bd", "dash": false, "y": ["0.0196", "0.00625", "0.0016", "0.00046"]}]}'>
+<div class="chart-legend"><span class="legend-item"><svg width="22" height="8" aria-hidden="true"><line x1="1" y1="4" x2="21" y2="4" stroke="#f0004f" stroke-width="2" stroke-linecap="round"/></svg>Random samples</span><span class="legend-item"><svg width="22" height="8" aria-hidden="true"><line x1="1" y1="4" x2="21" y2="4" stroke="#00a3bd" stroke-width="2" stroke-linecap="round"/></svg>Fibonacci lattice</span></div>
+<svg viewBox="0 0 720 360" class="paper-chart-svg" role="img" aria-labelledby="fig-sampling-title" tabindex="0">
+<title id="fig-sampling-title">Integration error against sample count</title>
+<line x1="70" x2="690" y1="242.4" y2="242.4" class="grid"/>
+<text x="62" y="246.4" class="tick" text-anchor="end">0.001</text>
+<line x1="70" x2="690" y1="189.8" y2="189.8" class="grid"/>
+<text x="62" y="193.8" class="tick" text-anchor="end">0.003</text>
+<line x1="70" x2="690" y1="132.2" y2="132.2" class="grid"/>
+<text x="62" y="136.2" class="tick" text-anchor="end">0.01</text>
+<line x1="70" x2="690" y1="79.6" y2="79.6" class="grid"/>
+<text x="62" y="83.6" class="tick" text-anchor="end">0.03</text>
+<line x1="70" x2="690" y1="22.0" y2="22.0" class="grid"/>
+<text x="62" y="26.0" class="tick" text-anchor="end">0.1</text>
+<line x1="70.0" x2="70.0" y1="22" y2="300" class="grid"/>
+<text x="70.0" y="318" class="tick" text-anchor="middle">16</text>
+<line x1="276.7" x2="276.7" y1="22" y2="300" class="grid"/>
+<text x="276.7" y="318" class="tick" text-anchor="middle">64</text>
+<line x1="483.3" x2="483.3" y1="22" y2="300" class="grid"/>
+<text x="483.3" y="318" class="tick" text-anchor="middle">256</text>
+<line x1="690.0" x2="690.0" y1="22" y2="300" class="grid"/>
+<text x="690.0" y="318" class="tick" text-anchor="middle">1024</text>
+<text x="380.0" y="354" class="axis-label" text-anchor="middle">Samples per texel</text>
+<text x="16" y="161.0" class="axis-label" text-anchor="middle" transform="rotate(-90 16 161.0)">RMS error</text>
+
+<polyline points="70.0,55.7 276.7,89.2 483.3,122.2 690.0,155.8" fill="none" stroke="#f0004f" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="70.0" cy="55.7" r="4" fill="#f0004f" stroke="#0e080a" stroke-width="2"/>
+<circle cx="276.7" cy="89.2" r="4" fill="#f0004f" stroke="#0e080a" stroke-width="2"/>
+<circle cx="483.3" cy="122.2" r="4" fill="#f0004f" stroke="#0e080a" stroke-width="2"/>
+<circle cx="690.0" cy="155.8" r="4" fill="#f0004f" stroke="#0e080a" stroke-width="2"/>
+<text x="684.0" y="147.8" class="direct-label" text-anchor="end">Random samples</text>
+<polyline points="70.0,100.1 276.7,154.7 483.3,219.9 690.0,279.5" fill="none" stroke="#00a3bd" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="70.0" cy="100.1" r="4" fill="#00a3bd" stroke="#0e080a" stroke-width="2"/>
+<circle cx="276.7" cy="154.7" r="4" fill="#00a3bd" stroke="#0e080a" stroke-width="2"/>
+<circle cx="483.3" cy="219.9" r="4" fill="#00a3bd" stroke="#0e080a" stroke-width="2"/>
+<circle cx="690.0" cy="279.5" r="4" fill="#00a3bd" stroke="#0e080a" stroke-width="2"/>
+<text x="684.0" y="271.5" class="direct-label" text-anchor="end">Fibonacci lattice</text>
+<line class="crosshair" x1="0" x2="0" y1="22" y2="300" visibility="hidden"/>
+<rect class="hit" x="70" y="22" width="620" height="278" fill="transparent"/>
+</svg>
+<div class="chart-tip" role="status" aria-live="polite"></div>
+</div>
+<figcaption><strong>Figure 1.</strong> Error of a cosine-weighted irradiance estimate under a sky with a wall, 40 scenes by 100 texels, against a 1500 by 1500 reference grid. Rotated Fibonacci lattice samples converge much faster than independent random samples: 2.5 times less error at 16 samples and 13.3 times less at 1024. Both are unbiased. Values in Table 7.</figcaption>
+</figure>
+
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 7.</strong> Irradiance under a sky with a wall, RMS error against the reference.</caption>
+                        <thead><tr><th class="num">Samples</th><th class="num">Random</th><th class="num">Fibonacci lattice</th><th class="num">Better by</th></tr></thead>
+                        <tbody>
+                            <tr><td class="num">16</td><td class="num">0.04946</td><td class="num">0.01955</td><td class="num">2.5 &times;</td></tr>
+                            <tr><td class="num">64</td><td class="num">0.02457</td><td class="num">0.00625</td><td class="num">3.9 &times;</td></tr>
+                            <tr><td class="num">256</td><td class="num">0.01233</td><td class="num">0.00160</td><td class="num">7.7 &times;</td></tr>
+                            <tr><td class="num">1024</td><td class="num">0.00610</td><td class="num best">0.00046</td><td class="num best">13.3 &times;</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    The baker now draws the first bounce direction from a Fibonacci lattice, and the position inside the texel and the point
+                    on a light from an R4 sequence, a four-dimensional relative of the R2 sequence [11]. Every texel gets its own random
+                    rotation of each set. Sharing one sample index across these sets costs nothing: a combined test gave 0.0189 RMS against
+                    0.0340 for independent random numbers.
+                </p>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 8.</strong> Soft shadow: visible share of a round light behind a straight edge, 16 samples, 20,000 texels.</caption>
+                        <thead><tr><th>Sample shape</th><th class="num">RMS error</th></tr></thead>
+                        <tbody>
+                            <tr><td>Square, random (the earlier shadow mask)</td><td class="num">0.1075</td></tr>
+                            <tr><td>Disc, random</td><td class="num">0.0947</td></tr>
+                            <tr><td>Disc, R4 sequence with rotation</td><td class="num best">0.0543</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 9.</strong> A shadow edge crossing a texel: error in the lit share of the texel, 4,000 texels.</caption>
+                        <thead><tr><th>Sampling</th><th class="num">16 samples</th><th class="num">64 samples</th><th class="num">256 samples</th></tr></thead>
+                        <tbody>
+                            <tr><td>Texel centre only (before)</td><td class="num">0.2564</td><td class="num">0.2564</td><td class="num">0.2564</td></tr>
+                            <tr><td>Jitter across the texel, random</td><td class="num">0.0932</td><td class="num">0.0470</td><td class="num">0.0235</td></tr>
+                            <tr><td>Jitter across the texel, R4 sequence</td><td class="num best">0.0606</td><td class="num best">0.0275</td><td class="num best">0.0073</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    Each sample now also sends one shadow ray to every light, aimed at a point on the light's disc, so baked lights take the
+                    size set by Unity's Baked Shadow Angle and Baked Shadow Radius. Direct light is added to the directional lightmap, so normal
+                    maps follow the lamps that light them.
+                </p>
+                <h3>A units error in emissive light</h3>
+                <p>
+                    The baker aims shadow rays straight at emissive surfaces, which makes small neon signs light a room without noise. Its
+                    estimator returned irradiance E, while the lightmap stores E divided by pi, the convention under which a baked and a
+                    realtime light of the same settings look alike. For three emitter sizes the ratio between the two paths was 3.1407, 3.1534
+                    and 3.1402. Unity's open-source lightmapper confirms the convention [3]: it multiplies punctual lights by pi and leaves area
+                    and emissive light as radiance, the same ratio.
+                </p>
+                <h3>Exposure from a bake</h3>
+                <p>
+                    The baker can tune a copy of a scene's post-processing profile to each bake. Our first version estimated scene brightness
+                    from lightmap values times surface colour, weighted by area. In the engine it set the exposure range to -9 to -8.5 EV and
+                    multiplied the frame by about 128. The lightmaps were fine, with median values of 0.078 and 0.033; the estimate missed the
+                    realtime direct light of Mixed lights and the sky, neither of which is in a lightmap. The second version rendered the scene
+                    from the camera and the spawn point, but took the range from the spread of pixel brightness inside those frames, 4.3 EV
+                    wide, while the post-processing stack limits the average of a whole view. The third version brackets the measured view
+                    averages with half a stop either side.
+                </p>
+            </section>
+
+            <section class="glass-panel paper-section w-100 mb-5" id="target">
+                <h2 class="text-glow-cyan" style="margin-top: 0;">8. Toward the target look</h2>
+                <p>
+                    The interior reference image was measured so that renders can be compared with it on the same numbers.
+                </p>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 10.</strong> The interior reference image in numbers.</caption>
+                        <thead><tr><th>Measure</th><th class="num">Value</th></tr></thead>
+                        <tbody>
+                            <tr><td>Display luma, median / 95th / 99th percentile</td><td class="num">0.188 / 0.693 / 0.874</td></tr>
+                            <tr><td>Near black (display below 0.03)</td><td class="num">17.5%</td></tr>
+                            <tr><td>Near white (display above 0.95)</td><td class="num">0.84%</td></tr>
+                            <tr><td>Mean saturation, share above 0.5</td><td class="num">0.663, 74%</td></tr>
+                            <tr><td>Hues of saturated pixels</td><td class="num">orange 36%, yellow-green 29%, yellow 16%, red 13%</td></tr>
+                            <tr><td>Contrast, 95th over 5th percentile in linear light</td><td class="num">10.6 stops</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>Light units against Unity's lightmapper</h3>
+                <p>
+                    Unity converts a light's colour and intensity as <span class="formula">(colour &times; intensity)</span> converted to linear,
+                    unless a project turns on linear intensity, which Built-in projects leave off [2]. Our baker converted the colour first and
+                    multiplied after. The two agree only at intensity 1 (Figure 3, Table 11).
+                </p>
+<figure class="paper-figure" id="fig-intensity">
+<div class="paper-chart" data-chart='{"px": [70.0, 76.2, 82.4, 88.6, 94.8, 101.0, 107.2, 113.4, 119.6, 125.8, 132.0, 138.2, 144.4, 150.6, 156.8, 163.0, 169.2, 175.4, 181.6, 187.8, 194.0, 200.2, 206.4, 212.6, 218.8, 225.0, 231.2, 237.4, 243.6, 249.8, 256.0, 262.2, 268.4, 274.6, 280.8, 287.0, 293.2, 299.4, 305.6, 311.8, 318.0, 324.2, 330.4, 336.6, 342.8, 349.0, 355.2, 361.4, 367.6, 373.8, 380.0, 386.2, 392.4, 398.6, 404.8, 411.0, 417.2, 423.4, 429.6, 435.8, 442.0, 448.2, 454.4, 460.6, 466.8, 473.0, 479.2, 485.4, 491.6, 497.8, 504.0, 510.2, 516.4, 522.6, 528.8, 535.0, 541.2, 547.4, 553.6, 559.8, 566.0, 572.2, 578.4, 584.6, 590.8, 597.0, 603.2, 609.4, 615.6, 621.8, 628.0, 634.2, 640.4, 646.6, 652.8, 659.0, 665.2, 671.4, 677.6, 683.8, 690.0], "x": ["intensity 0.25", "intensity 0.26", "intensity 0.27", "intensity 0.28", "intensity 0.29", "intensity 0.30", "intensity 0.31", "intensity 0.32", "intensity 0.33", "intensity 0.34", "intensity 0.35", "intensity 0.37", "intensity 0.38", "intensity 0.39", "intensity 0.41", "intensity 0.42", "intensity 0.44", "intensity 0.45", "intensity 0.47", "intensity 0.48", "intensity 0.50", "intensity 0.52", "intensity 0.54", "intensity 0.55", "intensity 0.57", "intensity 0.59", "intensity 0.62", "intensity 0.64", "intensity 0.66", "intensity 0.68", "intensity 0.71", "intensity 0.73", "intensity 0.76", "intensity 0.78", "intensity 0.81", "intensity 0.84", "intensity 0.87", "intensity 0.90", "intensity 0.93", "intensity 0.97", "intensity 1.00", "intensity 1.04", "intensity 1.07", "intensity 1.11", "intensity 1.15", "intensity 1.19", "intensity 1.23", "intensity 1.27", "intensity 1.32", "intensity 1.37", "intensity 1.41", "intensity 1.46", "intensity 1.52", "intensity 1.57", "intensity 1.62", "intensity 1.68", "intensity 1.74", "intensity 1.80", "intensity 1.87", "intensity 1.93", "intensity 2.00", "intensity 2.07", "intensity 2.14", "intensity 2.22", "intensity 2.30", "intensity 2.38", "intensity 2.46", "intensity 2.55", "intensity 2.64", "intensity 2.73", "intensity 2.83", "intensity 2.93", "intensity 3.03", "intensity 3.14", "intensity 3.25", "intensity 3.36", "intensity 3.48", "intensity 3.61", "intensity 3.73", "intensity 3.86", "intensity 4.00", "intensity 4.14", "intensity 4.29", "intensity 4.44", "intensity 4.59", "intensity 4.76", "intensity 4.92", "intensity 5.10", "intensity 5.28", "intensity 5.46", "intensity 5.66", "intensity 5.86", "intensity 6.06", "intensity 6.28", "intensity 6.50", "intensity 6.73", "intensity 6.96", "intensity 7.21", "intensity 7.46", "intensity 7.73", "intensity 8.00"], "top": 22, "bottom": 300, "series": [{"name": "Baker / Unity", "color": "#f0004f", "dash": false, "y": ["4.91", "4.75", "4.59", "4.44", "4.28", "4.13", "3.99", "3.85", "3.71", "3.58", "3.45", "3.32", "3.2", "3.08", "2.96", "2.85", "2.74", "2.63", "2.53", "2.43", "2.34", "2.24", "2.15", "2.07", "1.98", "1.9", "1.83", "1.75", "1.68", "1.61", "1.54", "1.48", "1.42", "1.36", "1.3", "1.24", "1.19", "1.14", "1.09", "1.05", "1", "0.957", "0.915", "0.875", "0.837", "0.8", "0.765", "0.732", "0.699", "0.668", "0.639", "0.61", "0.583", "0.557", "0.532", "0.508", "0.486", "0.464", "0.443", "0.423", "0.404", "0.385", "0.368", "0.351", "0.335", "0.32", "0.305", "0.291", "0.278", "0.265", "0.253", "0.242", "0.231", "0.22", "0.21", "0.2", "0.191", "0.182", "0.174", "0.166", "0.158", "0.151", "0.144", "0.137", "0.131", "0.125", "0.119", "0.113", "0.108", "0.103", "0.0982", "0.0936", "0.0893", "0.0851", "0.0811", "0.0773", "0.0737", "0.0703", "0.067", "0.0638", "0.0609"]}]}'>
+
+<svg viewBox="0 0 720 360" class="paper-chart-svg" role="img" aria-labelledby="fig-intensity-title" tabindex="0">
+<title id="fig-intensity-title">Baked brightness against Unity by light intensity</title>
+<line x1="70" x2="690" y1="259.8" y2="259.8" class="grid"/>
+<text x="62" y="263.8" class="tick" text-anchor="end">0.1</text>
+<line x1="70" x2="690" y1="206.5" y2="206.5" class="grid"/>
+<text x="62" y="210.5" class="tick" text-anchor="end">0.25</text>
+<line x1="70" x2="690" y1="166.3" y2="166.3" class="grid"/>
+<text x="62" y="170.3" class="tick" text-anchor="end">0.5</text>
+<line x1="70" x2="690" y1="126.0" y2="126.0" class="grid"/>
+<text x="62" y="130.0" class="tick" text-anchor="end">1</text>
+<line x1="70" x2="690" y1="85.8" y2="85.8" class="grid"/>
+<text x="62" y="89.8" class="tick" text-anchor="end">2</text>
+<line x1="70" x2="690" y1="32.6" y2="32.6" class="grid"/>
+<text x="62" y="36.6" class="tick" text-anchor="end">5</text>
+<line x1="70.0" x2="70.0" y1="22" y2="300" class="grid"/>
+<text x="70.0" y="318" class="tick" text-anchor="middle">0.25</text>
+<line x1="194.0" x2="194.0" y1="22" y2="300" class="grid"/>
+<text x="194.0" y="318" class="tick" text-anchor="middle">0.5</text>
+<line x1="318.0" x2="318.0" y1="22" y2="300" class="grid"/>
+<text x="318.0" y="318" class="tick" text-anchor="middle">1</text>
+<line x1="442.0" x2="442.0" y1="22" y2="300" class="grid"/>
+<text x="442.0" y="318" class="tick" text-anchor="middle">2</text>
+<line x1="566.0" x2="566.0" y1="22" y2="300" class="grid"/>
+<text x="566.0" y="318" class="tick" text-anchor="middle">4</text>
+<line x1="690.0" x2="690.0" y1="22" y2="300" class="grid"/>
+<text x="690.0" y="318" class="tick" text-anchor="middle">8</text>
+<text x="380.0" y="354" class="axis-label" text-anchor="middle">Light intensity</text>
+<text x="16" y="161.0" class="axis-label" text-anchor="middle" transform="rotate(-90 16 161.0)">Baker / Unity</text>
+<line x1="70" x2="690" y1="126.0" y2="126.0" class="ref"/><text x="76" y="120.0" class="ref-label">matches Unity</text>
+<polyline points="70.0,33.6 76.2,35.6 82.4,37.5 88.6,39.5 94.8,41.6 101.0,43.6 107.2,45.7 113.4,47.8 119.6,49.9 125.8,52.1 132.0,54.2 138.2,56.4 144.4,58.6 150.6,60.8 156.8,63.0 163.0,65.3 169.2,67.5 175.4,69.8 181.6,72.1 187.8,74.4 194.0,76.8 200.2,79.1 206.4,81.5 212.6,83.9 218.8,86.2 225.0,88.6 231.2,91.1 237.4,93.5 243.6,95.9 249.8,98.4 256.0,100.8 262.2,103.3 268.4,105.8 274.6,108.3 280.8,110.8 287.0,113.3 293.2,115.9 299.4,118.4 305.6,120.9 311.8,123.5 318.0,126.0 324.2,128.6 330.4,131.2 336.6,133.8 342.8,136.4 349.0,139.0 355.2,141.6 361.4,144.2 367.6,146.8 373.8,149.4 380.0,152.1 386.2,154.7 392.4,157.4 398.6,160.0 404.8,162.7 411.0,165.3 417.2,168.0 423.4,170.7 429.6,173.3 435.8,176.0 442.0,178.7 448.2,181.4 454.4,184.1 460.6,186.8 466.8,189.5 473.0,192.2 479.2,194.9 485.4,197.6 491.6,200.3 497.8,203.1 504.0,205.8 510.2,208.5 516.4,211.2 522.6,214.0 528.8,216.7 535.0,219.5 541.2,222.2 547.4,224.9 553.6,227.7 559.8,230.4 566.0,233.2 572.2,235.9 578.4,238.7 584.6,241.5 590.8,244.2 597.0,247.0 603.2,249.7 609.4,252.5 615.6,255.3 621.8,258.0 628.0,260.8 634.2,263.6 640.4,266.3 646.6,269.1 652.8,271.9 659.0,274.7 665.2,277.5 671.4,280.2 677.6,283.0 683.8,285.8 690.0,288.6" fill="none" stroke="#f0004f" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="684.0" y="276.6" class="direct-label" text-anchor="end">Baker / Unity</text>
+<line class="crosshair" x1="0" x2="0" y1="22" y2="300" visibility="hidden"/>
+<rect class="hit" x="70" y="22" width="620" height="278" fill="transparent"/>
+</svg>
+<div class="chart-tip" role="status" aria-live="polite"></div>
+</div>
+<figcaption><strong>Figure 3.</strong> Brightness the baker gave a white light before the fix, as a share of what Unity's lightmapper gives in a Built-in project, where intensity is applied before the conversion to linear. They agree only at intensity 1. At intensity 4 the baker was 0.16 of Unity, at 0.25 it was 4.9 times too bright. Values in Table 11.</figcaption>
+</figure>
+
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 11.</strong> A white light's baked brightness before the fix, against Unity's lightmapper.</caption>
+                        <thead><tr><th class="num">Intensity</th><th class="num">Unity</th><th class="num">Baker</th><th class="num">Baker / Unity</th></tr></thead>
+                        <tbody>
+                            <tr><td class="num">0.25</td><td class="num">0.051</td><td class="num">0.250</td><td class="num">4.91</td></tr>
+                            <tr><td class="num">0.5</td><td class="num">0.214</td><td class="num">0.500</td><td class="num">2.34</td></tr>
+                            <tr><td class="num">1</td><td class="num">1.000</td><td class="num">1.000</td><td class="num">1.00</td></tr>
+                            <tr><td class="num">2</td><td class="num">4.954</td><td class="num">2.000</td><td class="num">0.40</td></tr>
+                            <tr><td class="num">4</td><td class="num">25.315</td><td class="num">4.000</td><td class="num">0.16</td></tr>
+                            <tr><td class="num">8</td><td class="num">131.447</td><td class="num">8.000</td><td class="num">0.06</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    Unity bakes point, spot and area lights with its Legacy falloff [2]. Its open-source lightmapper gives the exact curve [3]:
+                    <span class="formula">1 / (1 + 25 x^2)</span> with <span class="formula">x</span> the distance over the range, faded linearly to
+                    zero as <span class="formula">x^2</span> goes from 0.64 to 1. The baker's earlier curve fell away far faster (Figure 2, Table 12).
+                    Together with the intensity error, a downlight at intensity 4 baked about 25 times too dim at 5 metres.
+                </p>
+<figure class="paper-figure" id="fig-falloff">
+<div class="paper-chart" data-chart='{"px": [73.1, 76.2, 79.3, 82.4, 85.5, 88.6, 91.7, 94.8, 97.9, 101.0, 104.1, 107.2, 110.3, 113.4, 116.5, 119.6, 122.7, 125.8, 128.9, 132.0, 135.1, 138.2, 141.3, 144.4, 147.5, 150.6, 153.7, 156.8, 159.9, 163.0, 166.1, 169.2, 172.3, 175.4, 178.5, 181.6, 184.7, 187.8, 190.9, 194.0, 197.1, 200.2, 203.3, 206.4, 209.5, 212.6, 215.7, 218.8, 221.9, 225.0, 228.1, 231.2, 234.3, 237.4, 240.5, 243.6, 246.7, 249.8, 252.9, 256.0, 259.1, 262.2, 265.3, 268.4, 271.5, 274.6, 277.7, 280.8, 283.9, 287.0, 290.1, 293.2, 296.3, 299.4, 302.5, 305.6, 308.7, 311.8, 314.9, 318.0, 321.1, 324.2, 327.3, 330.4, 333.5, 336.6, 339.7, 342.8, 345.9, 349.0, 352.1, 355.2, 358.3, 361.4, 364.5, 367.6, 370.7, 373.8, 376.9, 380.0, 383.1, 386.2, 389.3, 392.4, 395.5, 398.6, 401.7, 404.8, 407.9, 411.0, 414.1, 417.2, 420.3, 423.4, 426.5, 429.6, 432.7, 435.8, 438.9, 442.0, 445.1, 448.2, 451.3, 454.4, 457.5, 460.6, 463.7, 466.8, 469.9, 473.0, 476.1, 479.2, 482.3, 485.4, 488.5, 491.6, 494.7, 497.8, 500.9, 504.0, 507.1, 510.2, 513.3, 516.4, 519.5, 522.6, 525.7, 528.8, 531.9, 535.0, 538.1, 541.2, 544.3, 547.4, 550.5, 553.6, 556.7, 559.8, 562.9, 566.0, 569.1, 572.2, 575.3, 578.4, 581.5, 584.6, 587.7, 590.8, 593.9, 597.0, 600.1, 603.2, 606.3, 609.4, 612.5, 615.6, 618.7, 621.8, 624.9, 628.0, 631.1, 634.2, 637.3, 640.4, 643.5, 646.6, 649.7, 652.8, 655.9, 659.0, 662.1, 665.2, 668.3, 671.4, 674.5, 677.6, 680.7, 683.8, 686.9, 690.0], "x": ["0.05 m", "0.10 m", "0.15 m", "0.20 m", "0.25 m", "0.30 m", "0.35 m", "0.40 m", "0.45 m", "0.50 m", "0.55 m", "0.60 m", "0.65 m", "0.70 m", "0.75 m", "0.80 m", "0.85 m", "0.90 m", "0.95 m", "1.00 m", "1.05 m", "1.10 m", "1.15 m", "1.20 m", "1.25 m", "1.30 m", "1.35 m", "1.40 m", "1.45 m", "1.50 m", "1.55 m", "1.60 m", "1.65 m", "1.70 m", "1.75 m", "1.80 m", "1.85 m", "1.90 m", "1.95 m", "2.00 m", "2.05 m", "2.10 m", "2.15 m", "2.20 m", "2.25 m", "2.30 m", "2.35 m", "2.40 m", "2.45 m", "2.50 m", "2.55 m", "2.60 m", "2.65 m", "2.70 m", "2.75 m", "2.80 m", "2.85 m", "2.90 m", "2.95 m", "3.00 m", "3.05 m", "3.10 m", "3.15 m", "3.20 m", "3.25 m", "3.30 m", "3.35 m", "3.40 m", "3.45 m", "3.50 m", "3.55 m", "3.60 m", "3.65 m", "3.70 m", "3.75 m", "3.80 m", "3.85 m", "3.90 m", "3.95 m", "4.00 m", "4.05 m", "4.10 m", "4.15 m", "4.20 m", "4.25 m", "4.30 m", "4.35 m", "4.40 m", "4.45 m", "4.50 m", "4.55 m", "4.60 m", "4.65 m", "4.70 m", "4.75 m", "4.80 m", "4.85 m", "4.90 m", "4.95 m", "5.00 m", "5.05 m", "5.10 m", "5.15 m", "5.20 m", "5.25 m", "5.30 m", "5.35 m", "5.40 m", "5.45 m", "5.50 m", "5.55 m", "5.60 m", "5.65 m", "5.70 m", "5.75 m", "5.80 m", "5.85 m", "5.90 m", "5.95 m", "6.00 m", "6.05 m", "6.10 m", "6.15 m", "6.20 m", "6.25 m", "6.30 m", "6.35 m", "6.40 m", "6.45 m", "6.50 m", "6.55 m", "6.60 m", "6.65 m", "6.70 m", "6.75 m", "6.80 m", "6.85 m", "6.90 m", "6.95 m", "7.00 m", "7.05 m", "7.10 m", "7.15 m", "7.20 m", "7.25 m", "7.30 m", "7.35 m", "7.40 m", "7.45 m", "7.50 m", "7.55 m", "7.60 m", "7.65 m", "7.70 m", "7.75 m", "7.80 m", "7.85 m", "7.90 m", "7.95 m", "8.00 m", "8.05 m", "8.10 m", "8.15 m", "8.20 m", "8.25 m", "8.30 m", "8.35 m", "8.40 m", "8.45 m", "8.50 m", "8.55 m", "8.60 m", "8.65 m", "8.70 m", "8.75 m", "8.80 m", "8.85 m", "8.90 m", "8.95 m", "9.00 m", "9.05 m", "9.10 m", "9.15 m", "9.20 m", "9.25 m", "9.30 m", "9.35 m", "9.40 m", "9.45 m", "9.50 m", "9.55 m", "9.60 m", "9.65 m", "9.70 m", "9.75 m", "9.80 m", "9.85 m", "9.90 m", "9.95 m", "10.00 m"], "top": 22, "bottom": 300, "series": [{"name": "Unity Legacy", "color": "#00a3bd", "dash": false, "y": ["0.999", "0.998", "0.994", "0.99", "0.985", "0.978", "0.97", "0.962", "0.952", "0.941", "0.93", "0.917", "0.904", "0.891", "0.877", "0.862", "0.847", "0.832", "0.816", "0.8", "0.784", "0.768", "0.752", "0.735", "0.719", "0.703", "0.687", "0.671", "0.655", "0.64", "0.625", "0.61", "0.595", "0.581", "0.566", "0.552", "0.539", "0.526", "0.513", "0.5", "0.488", "0.476", "0.464", "0.452", "0.441", "0.431", "0.42", "0.41", "0.4", "0.39", "0.381", "0.372", "0.363", "0.354", "0.346", "0.338", "0.33", "0.322", "0.315", "0.308", "0.301", "0.294", "0.287", "0.281", "0.275", "0.269", "0.263", "0.257", "0.252", "0.246", "0.241", "0.236", "0.231", "0.226", "0.221", "0.217", "0.213", "0.208", "0.204", "0.2", "0.196", "0.192", "0.188", "0.185", "0.181", "0.178", "0.175", "0.171", "0.168", "0.165", "0.162", "0.159", "0.156", "0.153", "0.151", "0.148", "0.145", "0.143", "0.14", "0.138", "0.136", "0.133", "0.131", "0.129", "0.127", "0.125", "0.123", "0.121", "0.119", "0.117", "0.115", "0.113", "0.111", "0.11", "0.108", "0.106", "0.105", "0.103", "0.102", "0.1", "0.0985", "0.0971", "0.0956", "0.0943", "0.0929", "0.0916", "0.0902", "0.089", "0.0877", "0.0865", "0.0853", "0.0841", "0.0829", "0.0818", "0.0807", "0.0796", "0.0786", "0.0775", "0.0765", "0.0755", "0.0745", "0.0735", "0.0726", "0.0716", "0.0707", "0.0698", "0.0689", "0.0681", "0.0672", "0.0664", "0.0656", "0.0648", "0.064", "0.0632", "0.0624", "0.0617", "0.061", "0.0602", "0.0595", "0.0588", "0.0568", "0.0549", "0.053", "0.0511", "0.0492", "0.0474", "0.0456", "0.0439", "0.0421", "0.0404", "0.0388", "0.0371", "0.0355", "0.0339", "0.0323", "0.0308", "0.0293", "0.0278", "0.0263", "0.0248", "0.0234", "0.022", "0.0206", "0.0193", "0.0179", "0.0166", "0.0153", "0.014", "0.0127", "0.0115", "0.0103", "0.00906", "0.00787", "0.00669", "0.00554", "0.0044", "0.00327", "0.00217", "0.00108", "0"]}, {"name": "Baker, before the fix", "color": "#f0004f", "dash": false, "y": ["0.998", "0.99", "0.978", "0.962", "0.941", "0.917", "0.891", "0.862", "0.832", "0.8", "0.768", "0.735", "0.703", "0.671", "0.64", "0.61", "0.58", "0.552", "0.526", "0.5", "0.476", "0.452", "0.43", "0.41", "0.39", "0.372", "0.354", "0.338", "0.322", "0.307", "0.294", "0.281", "0.268", "0.257", "0.246", "0.235", "0.226", "0.216", "0.208", "0.199", "0.192", "0.184", "0.177", "0.17", "0.164", "0.158", "0.152", "0.147", "0.142", "0.137", "0.132", "0.128", "0.123", "0.119", "0.115", "0.112", "0.108", "0.105", "0.102", "0.0984", "0.0954", "0.0925", "0.0898", "0.0871", "0.0846", "0.0821", "0.0798", "0.0775", "0.0753", "0.0732", "0.0712", "0.0692", "0.0674", "0.0655", "0.0638", "0.0621", "0.0605", "0.0589", "0.0573", "0.0559", "0.0544", "0.053", "0.0517", "0.0504", "0.0491", "0.0479", "0.0467", "0.0455", "0.0444", "0.0433", "0.0422", "0.0412", "0.0402", "0.0392", "0.0382", "0.0373", "0.0364", "0.0355", "0.0346", "0.0338", "0.033", "0.0322", "0.0314", "0.0306", "0.0299", "0.0292", "0.0285", "0.0278", "0.0271", "0.0264", "0.0258", "0.0251", "0.0245", "0.0239", "0.0233", "0.0227", "0.0221", "0.0216", "0.021", "0.0205", "0.0199", "0.0194", "0.0189", "0.0184", "0.0179", "0.0174", "0.017", "0.0165", "0.0161", "0.0156", "0.0152", "0.0147", "0.0143", "0.0139", "0.0135", "0.0131", "0.0127", "0.0123", "0.0119", "0.0115", "0.0112", "0.0108", "0.0105", "0.0101", "0.00978", "0.00944", "0.00911", "0.00879", "0.00847", "0.00816", "0.00786", "0.00756", "0.00726", "0.00697", "0.00669", "0.00642", "0.00614", "0.00588", "0.00562", "0.00536", "0.00511", "0.00487", "0.00463", "0.0044", "0.00417", "0.00395", "0.00373", "0.00352", "0.00332", "0.00312", "0.00293", "0.00274", "0.00256", "0.00238", "0.00221", "0.00204", "0.00188", "0.00173", "0.00158", "0.00144", "0.00131", "0.00118", "0.00106", "0.000939", "0.000829", "0.000726", "0.000628", "0.000538", "0.000454", "0.000377", "0.000307", "0.000244", "0.000187", "0.000138", "9.66e-05", "6.21e-05", "3.51e-05", "1.57e-05", "3.94e-06", "0"]}]}'>
+<div class="chart-legend"><span class="legend-item"><svg width="22" height="8" aria-hidden="true"><line x1="1" y1="4" x2="21" y2="4" stroke="#00a3bd" stroke-width="2" stroke-linecap="round"/></svg>Unity Legacy</span><span class="legend-item"><svg width="22" height="8" aria-hidden="true"><line x1="1" y1="4" x2="21" y2="4" stroke="#f0004f" stroke-width="2" stroke-linecap="round"/></svg>Baker, before the fix</span></div>
+<svg viewBox="0 0 720 360" class="paper-chart-svg" role="img" aria-labelledby="fig-falloff-title" tabindex="0">
+<title id="fig-falloff-title">Point light falloff over a 10 metre range</title>
+<line x1="70" x2="690" y1="300.0" y2="300.0" class="grid"/>
+<text x="62" y="304.0" class="tick" text-anchor="end">0</text>
+<line x1="70" x2="690" y1="230.5" y2="230.5" class="grid"/>
+<text x="62" y="234.5" class="tick" text-anchor="end">0.25</text>
+<line x1="70" x2="690" y1="161.0" y2="161.0" class="grid"/>
+<text x="62" y="165.0" class="tick" text-anchor="end">0.5</text>
+<line x1="70" x2="690" y1="91.5" y2="91.5" class="grid"/>
+<text x="62" y="95.5" class="tick" text-anchor="end">0.75</text>
+<line x1="70" x2="690" y1="22.0" y2="22.0" class="grid"/>
+<text x="62" y="26.0" class="tick" text-anchor="end">1</text>
+<line x1="70.0" x2="70.0" y1="22" y2="300" class="grid"/>
+<text x="70.0" y="318" class="tick" text-anchor="middle">0</text>
+<line x1="194.0" x2="194.0" y1="22" y2="300" class="grid"/>
+<text x="194.0" y="318" class="tick" text-anchor="middle">2</text>
+<line x1="318.0" x2="318.0" y1="22" y2="300" class="grid"/>
+<text x="318.0" y="318" class="tick" text-anchor="middle">4</text>
+<line x1="442.0" x2="442.0" y1="22" y2="300" class="grid"/>
+<text x="442.0" y="318" class="tick" text-anchor="middle">6</text>
+<line x1="566.0" x2="566.0" y1="22" y2="300" class="grid"/>
+<text x="566.0" y="318" class="tick" text-anchor="middle">8</text>
+<line x1="690.0" x2="690.0" y1="22" y2="300" class="grid"/>
+<text x="690.0" y="318" class="tick" text-anchor="middle">10</text>
+<text x="380.0" y="354" class="axis-label" text-anchor="middle">Distance (m)</text>
+<text x="16" y="161.0" class="axis-label" text-anchor="middle" transform="rotate(-90 16 161.0)">Light reaching the surface</text>
+
+<polyline points="73.1,22.2 76.2,22.7 79.3,23.6 82.4,24.8 85.5,26.3 88.6,28.1 91.7,30.3 94.8,32.7 97.9,35.4 101.0,38.4 104.1,41.5 107.2,45.0 110.3,48.6 113.4,52.3 116.5,56.3 119.6,60.3 122.7,64.5 125.8,68.8 128.9,73.2 132.0,77.6 135.1,82.1 138.2,86.6 141.3,91.1 144.4,95.6 147.5,100.1 150.6,104.6 153.7,109.0 156.8,113.4 159.9,117.8 163.0,122.1 166.1,126.3 169.2,130.5 172.3,134.6 175.4,138.6 178.5,142.5 181.6,146.4 184.7,150.2 187.8,153.9 190.9,157.5 194.0,161.0 197.1,164.4 200.2,167.8 203.3,171.0 206.4,174.2 209.5,177.3 212.6,180.3 215.7,183.2 218.8,186.1 221.9,188.8 225.0,191.5 228.1,194.1 231.2,196.7 234.3,199.1 237.4,201.5 240.5,203.8 243.6,206.1 246.7,208.3 249.8,210.4 252.9,212.5 256.0,214.5 259.1,216.4 262.2,218.3 265.3,220.1 268.4,221.9 271.5,223.6 274.6,225.3 277.7,227.0 280.8,228.5 283.9,230.1 287.0,231.6 290.1,233.0 293.2,234.4 296.3,235.8 299.4,237.1 302.5,238.4 305.6,239.7 308.7,240.9 311.8,242.1 314.9,243.3 318.0,244.4 321.1,245.5 324.2,246.6 327.3,247.6 330.4,248.6 333.5,249.6 336.6,250.6 339.7,251.5 342.8,252.4 345.9,253.3 349.0,254.1 352.1,255.0 355.2,255.8 358.3,256.6 361.4,257.4 364.5,258.1 367.6,258.9 370.7,259.6 373.8,260.3 376.9,261.0 380.0,261.7 383.1,262.3 386.2,262.9 389.3,263.6 392.4,264.2 395.5,264.8 398.6,265.3 401.7,265.9 404.8,266.5 407.9,267.0 411.0,267.5 414.1,268.0 417.2,268.6 420.3,269.0 423.4,269.5 426.5,270.0 429.6,270.5 432.7,270.9 435.8,271.3 438.9,271.8 442.0,272.2 445.1,272.6 448.2,273.0 451.3,273.4 454.4,273.8 457.5,274.2 460.6,274.5 463.7,274.9 466.8,275.3 469.9,275.6 473.0,276.0 476.1,276.3 479.2,276.6 482.3,276.9 485.4,277.3 488.5,277.6 491.6,277.9 494.7,278.2 497.8,278.5 500.9,278.7 504.0,279.0 507.1,279.3 510.2,279.6 513.3,279.8 516.4,280.1 519.5,280.3 522.6,280.6 525.7,280.8 528.8,281.1 531.9,281.3 535.0,281.5 538.1,281.8 541.2,282.0 544.3,282.2 547.4,282.4 550.5,282.6 553.6,282.9 556.7,283.1 559.8,283.3 562.9,283.5 566.0,283.6 569.1,284.2 572.2,284.7 575.3,285.3 578.4,285.8 581.5,286.3 584.6,286.8 587.7,287.3 590.8,287.8 593.9,288.3 597.0,288.8 600.1,289.2 603.2,289.7 606.3,290.1 609.4,290.6 612.5,291.0 615.6,291.4 618.7,291.9 621.8,292.3 624.9,292.7 628.0,293.1 631.1,293.5 634.2,293.9 637.3,294.3 640.4,294.6 643.5,295.0 646.6,295.4 649.7,295.8 652.8,296.1 655.9,296.5 659.0,296.8 662.1,297.1 665.2,297.5 668.3,297.8 671.4,298.1 674.5,298.5 677.6,298.8 680.7,299.1 683.8,299.4 686.9,299.7 690.0,300.0" fill="none" stroke="#00a3bd" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="73.1,22.7 76.2,24.8 79.3,28.1 82.4,32.7 85.5,38.4 88.6,45.0 91.7,52.3 94.8,60.3 97.9,68.8 101.0,77.6 104.1,86.6 107.2,95.6 110.3,104.6 113.4,113.4 116.5,122.1 119.6,130.5 122.7,138.6 125.8,146.4 128.9,153.9 132.0,161.0 135.1,167.8 138.2,174.2 141.3,180.3 144.4,186.1 147.5,191.6 150.6,196.7 153.7,201.6 156.8,206.2 159.9,210.5 163.0,214.5 166.1,218.4 169.2,222.0 172.3,225.4 175.4,228.7 178.5,231.7 181.6,234.6 184.7,237.3 187.8,239.9 190.9,242.3 194.0,244.6 197.1,246.8 200.2,248.8 203.3,250.8 206.4,252.6 209.5,254.4 212.6,256.0 215.7,257.6 218.8,259.1 221.9,260.6 225.0,262.0 228.1,263.3 231.2,264.5 234.3,265.7 237.4,266.8 240.5,267.9 243.6,268.9 246.7,269.9 249.8,270.9 252.9,271.8 256.0,272.6 259.1,273.5 262.2,274.3 265.3,275.0 268.4,275.8 271.5,276.5 274.6,277.2 277.7,277.8 280.8,278.5 283.9,279.1 287.0,279.6 290.1,280.2 293.2,280.7 296.3,281.3 299.4,281.8 302.5,282.3 305.6,282.7 308.7,283.2 311.8,283.6 314.9,284.1 318.0,284.5 321.1,284.9 324.2,285.3 327.3,285.6 330.4,286.0 333.5,286.4 336.6,286.7 339.7,287.0 342.8,287.4 345.9,287.7 349.0,288.0 352.1,288.3 355.2,288.6 358.3,288.8 361.4,289.1 364.5,289.4 367.6,289.6 370.7,289.9 373.8,290.1 376.9,290.4 380.0,290.6 383.1,290.8 386.2,291.1 389.3,291.3 392.4,291.5 395.5,291.7 398.6,291.9 401.7,292.1 404.8,292.3 407.9,292.5 411.0,292.7 414.1,292.8 417.2,293.0 420.3,293.2 423.4,293.4 426.5,293.5 429.6,293.7 432.7,293.8 435.8,294.0 438.9,294.2 442.0,294.3 445.1,294.5 448.2,294.6 451.3,294.7 454.4,294.9 457.5,295.0 460.6,295.2 463.7,295.3 466.8,295.4 469.9,295.5 473.0,295.7 476.1,295.8 479.2,295.9 482.3,296.0 485.4,296.1 488.5,296.3 491.6,296.4 494.7,296.5 497.8,296.6 500.9,296.7 504.0,296.8 507.1,296.9 510.2,297.0 513.3,297.1 516.4,297.2 519.5,297.3 522.6,297.4 525.7,297.5 528.8,297.6 531.9,297.6 535.0,297.7 538.1,297.8 541.2,297.9 544.3,298.0 547.4,298.1 550.5,298.1 553.6,298.2 556.7,298.3 559.8,298.4 562.9,298.4 566.0,298.5 569.1,298.6 572.2,298.6 575.3,298.7 578.4,298.8 581.5,298.8 584.6,298.9 587.7,299.0 590.8,299.0 593.9,299.1 597.0,299.1 600.1,299.2 603.2,299.2 606.3,299.3 609.4,299.3 612.5,299.4 615.6,299.4 618.7,299.5 621.8,299.5 624.9,299.6 628.0,299.6 631.1,299.6 634.2,299.7 637.3,299.7 640.4,299.7 643.5,299.8 646.6,299.8 649.7,299.8 652.8,299.9 655.9,299.9 659.0,299.9 662.1,299.9 665.2,299.9 668.3,299.9 671.4,300.0 674.5,300.0 677.6,300.0 680.7,300.0 683.8,300.0 686.9,300.0 690.0,300.0" fill="none" stroke="#f0004f" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<line class="crosshair" x1="0" x2="0" y1="22" y2="300" visibility="hidden"/>
+<rect class="hit" x="70" y="22" width="620" height="278" fill="transparent"/>
+</svg>
+<div class="chart-tip" role="status" aria-live="polite"></div>
+</div>
+<figcaption><strong>Figure 2.</strong> Distance falloff of a point light with a 10 m range. Unity's Legacy curve, the Built-in default, is taken from Unity's own falloff table code. The baker's earlier curve fell far faster: 0.40 of Unity's value at 2 m, 0.25 at 5 m and 0.06 at 9 m. Values in Table 12.</figcaption>
+</figure>
+
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 12.</strong> Falloff of a light with a 10 m range.</caption>
+                        <thead><tr><th class="num">Distance</th><th class="num">Unity Legacy</th><th class="num">Baker before</th><th class="num">Baker / Unity</th></tr></thead>
+                        <tbody>
+                            <tr><td class="num">0.5 m</td><td class="num">0.9412</td><td class="num">0.8000</td><td class="num">0.85</td></tr>
+                            <tr><td class="num">1 m</td><td class="num">0.8000</td><td class="num">0.4999</td><td class="num">0.62</td></tr>
+                            <tr><td class="num">2 m</td><td class="num">0.5000</td><td class="num">0.1994</td><td class="num">0.40</td></tr>
+                            <tr><td class="num">3 m</td><td class="num">0.3077</td><td class="num">0.0984</td><td class="num">0.32</td></tr>
+                            <tr><td class="num">5 m</td><td class="num">0.1379</td><td class="num">0.0338</td><td class="num">0.25</td></tr>
+                            <tr><td class="num">7 m</td><td class="num">0.0755</td><td class="num">0.0115</td><td class="num">0.15</td></tr>
+                            <tr><td class="num">9 m</td><td class="num">0.0248</td><td class="num">0.0014</td><td class="num">0.06</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    The same source settled four more details. The bounce colour is the colour times intensity times the Indirect Multiplier,
+                    converted as one value. The spot light's inner cone is derived from its outer angle. Shadow size applies only to lights set
+                    to Soft Shadows. Rectangle and Disc area lights emit their colour times intensity as radiance from the front face, cut off at
+                    their range. The baker now does all four and bakes area lights with a new point on the light for every sample, so their
+                    shadows soften with their size.
+                </p>
+                <h3>Anisotropic reflections</h3>
+                <p>
+                    Stretched latex needs stretched reflections. Using Filament's roughness convention [10],
+                    <span class="formula">at = alpha (1 + k)</span> and <span class="formula">ab = alpha (1 - k)</span>, we compared the single
+                    isotropic probe lookup our shaders used, Filament's bent reflection normal and eight probe lookups placed on the real lobe's
+                    median ring, each at the smaller roughness, against the anisotropic lobe itself. The measured noise floor was 0.013 to
+                    0.028.
+                </p>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 13.</strong> Reflection of a studio environment, 200 random surfaces and views per row: RMS error as a share of the mean, and median relative error.</caption>
+                        <thead><tr><th class="num">Roughness</th><th class="num">Anisotropy</th><th class="num">One lookup</th><th class="num">Bent normal</th><th class="num">Eight lookups</th></tr></thead>
+                        <tbody>
+                            <tr><td class="num">0.3</td><td class="num">0.5</td><td class="num">0.991 / 0.351</td><td class="num">2.430 / 0.626</td><td class="num best">0.579 / 0.225</td></tr>
+                            <tr><td class="num">0.3</td><td class="num">0.9</td><td class="num">1.184 / 0.497</td><td class="num">3.274 / 0.892</td><td class="num best">0.637 / 0.315</td></tr>
+                            <tr><td class="num">0.5</td><td class="num">0.5</td><td class="num">0.962 / 0.534</td><td class="num">1.308 / 0.551</td><td class="num best">0.688 / 0.341</td></tr>
+                            <tr><td class="num">0.5</td><td class="num">0.9</td><td class="num">1.398 / 0.809</td><td class="num">2.017 / 1.127</td><td class="num best">0.945 / 0.462</td></tr>
+                            <tr><td class="num">0.7</td><td class="num">0.9</td><td class="num">1.353 / 0.890</td><td class="num">1.457 / 1.355</td><td class="num best">1.109 / 0.755</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    The bent normal is a look, not a match. The eight lookups cut error by 28 to 46% at anisotropy 0.5 and above, but are
+                    slightly worse without anisotropy (0.66 against 0.54 at roughness 0.3), so they switch on only above anisotropy 0.3. Even
+                    without anisotropy, one lookup misses the real lobe by 0.50 to 0.66 RMS in this high-contrast environment: at grazing views
+                    the reflection stretches, which a prefiltered cubemap cannot represent.
+                </p>
+                <h3>Reflection probe leaks</h3>
+                <p>
+                    A reflection probe captured in the middle of a room shows a bright window to a corner that cannot see it. We modelled an
+                    8 by 3 by 6 metre room with a bright window and an alcove behind a partition, and compared the probe as captured, with
+                    box projection, and scaled by local over probe irradiance, in full and in a form that only darkens.
+                </p>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 14.</strong> Floor reflections, 60 points and 3 views per region: RMS error as a share of the mean, and median relative error.</caption>
+                        <thead><tr><th>Region</th><th class="num">Roughness</th><th class="num">Probe</th><th class="num">Box projected</th><th class="num">Box + scaled</th><th class="num">Box + darken only</th></tr></thead>
+                        <tbody>
+                            <tr><td>Alcove</td><td class="num">0.2</td><td class="num">1.246 / 0.334</td><td class="num">2.613 / 0.198</td><td class="num">1.565 / 0.478</td><td class="num">1.565 / 0.478</td></tr>
+                            <tr><td>Alcove</td><td class="num">0.5</td><td class="num">2.491 / 0.200</td><td class="num">1.608 / 0.168</td><td class="num">0.985 / 0.498</td><td class="num">0.985 / 0.498</td></tr>
+                            <tr><td>Alcove</td><td class="num">0.8</td><td class="num">2.651 / 0.505</td><td class="num">1.651 / 0.157</td><td class="num">0.944 / 0.485</td><td class="num">0.944 / 0.485</td></tr>
+                            <tr><td>Open room</td><td class="num">0.2</td><td class="num">2.140 / 0.147</td><td class="num best">0.390 / 0.023</td><td class="num">3.957 / 0.911</td><td class="num best">0.390 / 0.023</td></tr>
+                            <tr><td>Open room</td><td class="num">0.5</td><td class="num">1.166 / 0.245</td><td class="num best">0.463 / 0.169</td><td class="num">2.869 / 1.007</td><td class="num best">0.463 / 0.169</td></tr>
+                            <tr><td>Open room</td><td class="num">0.8</td><td class="num">0.615 / 0.369</td><td class="num best">0.414 / 0.351</td><td class="num">1.839 / 0.749</td><td class="num best">0.414 / 0.351</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    Box projection is the largest single gain. Full scaling fights it in the open room; the darken-only form keeps the gain
+                    there and cuts the worst leaks in the alcove, at the cost of darkening some reflections that were right. In the Built-in
+                    pipeline, box projection is switched on per graphics tier in the project settings [1]; our shaders now also project a probe
+                    that carries box data when that setting is off.
+                </p>
+                <h3>Reflections from light probes</h3>
+                <p>
+                    A world without a useful reflection probe leaves an avatar indoors reflecting the sky. L2 probe data, convolved with the
+                    GGX prefilter lobe's own band weights, gives a reflection that follows the local light. The weights relative to Unity's
+                    stored bands, fitted over perceptual roughness 0.5 to 1 with a worst error of 0.0034, are
+                    <span class="formula">1.5 k1 = 0.52552 r^2 - 1.39581 r + 1.86946</span> and
+                    <span class="formula">4 k2 = 3.67256 r^2 - 8.81053 r + 6.14007</span>. At roughness 1 both reach 1, the irradiance weights,
+                    as they must.
+                </p>
+<figure class="paper-figure" id="fig-shspec">
+<div class="paper-chart" data-chart='{"px": [70.0, 276.67, 483.33, 690.0], "x": ["roughness 0.4", "roughness 0.6", "roughness 0.8", "roughness 1.0"], "top": 22, "bottom": 300, "series": [{"name": "Studio", "color": "#f0004f", "dash": false, "y": ["1.8", "0.639", "0.175", "0.094"]}, {"name": "Room with window", "color": "#00a3bd", "dash": false, "y": ["1.22", "0.471", "0.136", "0.057"]}, {"name": "Sun and sky", "color": "#c28600", "dash": true, "y": ["0.753", "0.252", "0.132", "0.144"]}]}'>
+<div class="chart-legend"><span class="legend-item"><svg width="22" height="8" aria-hidden="true"><line x1="1" y1="4" x2="21" y2="4" stroke="#f0004f" stroke-width="2" stroke-linecap="round"/></svg>Studio</span><span class="legend-item"><svg width="22" height="8" aria-hidden="true"><line x1="1" y1="4" x2="21" y2="4" stroke="#00a3bd" stroke-width="2" stroke-linecap="round"/></svg>Room with window</span><span class="legend-item"><svg width="22" height="8" aria-hidden="true"><line x1="1" y1="4" x2="21" y2="4" stroke="#c28600" stroke-width="2" stroke-linecap="round" stroke-dasharray="5 4"/></svg>Sun and sky</span></div>
+<svg viewBox="0 0 720 360" class="paper-chart-svg" role="img" aria-labelledby="fig-shspec-title" tabindex="0">
+<title id="fig-shspec-title">Light probe specular error by roughness</title>
+<line x1="70" x2="690" y1="285.0" y2="285.0" class="grid"/>
+<text x="62" y="289.0" class="tick" text-anchor="end">0.05</text>
+<line x1="70" x2="690" y1="238.4" y2="238.4" class="grid"/>
+<text x="62" y="242.4" class="tick" text-anchor="end">0.1</text>
+<line x1="70" x2="690" y1="191.8" y2="191.8" class="grid"/>
+<text x="62" y="195.8" class="tick" text-anchor="end">0.2</text>
+<line x1="70" x2="690" y1="130.2" y2="130.2" class="grid"/>
+<text x="62" y="134.2" class="tick" text-anchor="end">0.5</text>
+<line x1="70" x2="690" y1="83.6" y2="83.6" class="grid"/>
+<text x="62" y="87.6" class="tick" text-anchor="end">1</text>
+<line x1="70" x2="690" y1="37.0" y2="37.0" class="grid"/>
+<text x="62" y="41.0" class="tick" text-anchor="end">2</text>
+<line x1="70.0" x2="70.0" y1="22" y2="300" class="grid"/>
+<text x="70.0" y="318" class="tick" text-anchor="middle">0.4</text>
+<line x1="276.7" x2="276.7" y1="22" y2="300" class="grid"/>
+<text x="276.7" y="318" class="tick" text-anchor="middle">0.6</text>
+<line x1="483.3" x2="483.3" y1="22" y2="300" class="grid"/>
+<text x="483.3" y="318" class="tick" text-anchor="middle">0.8</text>
+<line x1="690.0" x2="690.0" y1="22" y2="300" class="grid"/>
+<text x="690.0" y="318" class="tick" text-anchor="middle">1</text>
+<text x="380.0" y="354" class="axis-label" text-anchor="middle">Perceptual roughness</text>
+<text x="16" y="161.0" class="axis-label" text-anchor="middle" transform="rotate(-90 16 161.0)">Relative RMS error</text>
+<line x1="483.3" x2="483.3" y1="22" y2="300" class="ref"/><text x="489.3" y="36" class="ref-label">blend complete</text>
+<polyline points="70.0,44.0 276.7,113.7 483.3,200.8 690.0,242.6" fill="none" stroke="#f0004f" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="70.0" cy="44.0" r="4" fill="#f0004f" stroke="#0e080a" stroke-width="2"/>
+<circle cx="276.7" cy="113.7" r="4" fill="#f0004f" stroke="#0e080a" stroke-width="2"/>
+<circle cx="483.3" cy="200.8" r="4" fill="#f0004f" stroke="#0e080a" stroke-width="2"/>
+<circle cx="690.0" cy="242.6" r="4" fill="#f0004f" stroke="#0e080a" stroke-width="2"/>
+<text x="684.0" y="232.6" class="direct-label" text-anchor="end">Studio</text>
+<polyline points="70.0,70.2 276.7,134.2 483.3,217.7 690.0,276.2" fill="none" stroke="#00a3bd" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="70.0" cy="70.2" r="4" fill="#00a3bd" stroke="#0e080a" stroke-width="2"/>
+<circle cx="276.7" cy="134.2" r="4" fill="#00a3bd" stroke="#0e080a" stroke-width="2"/>
+<circle cx="483.3" cy="217.7" r="4" fill="#00a3bd" stroke="#0e080a" stroke-width="2"/>
+<circle cx="690.0" cy="276.2" r="4" fill="#00a3bd" stroke="#0e080a" stroke-width="2"/>
+<text x="684.0" y="290.2" class="direct-label" text-anchor="end">Room with window</text>
+<polyline points="70.0,102.7 276.7,176.3 483.3,219.7 690.0,213.9" fill="none" stroke="#c28600" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="7 5"/>
+<circle cx="70.0" cy="102.7" r="4" fill="#c28600" stroke="#0e080a" stroke-width="2"/>
+<circle cx="276.7" cy="176.3" r="4" fill="#c28600" stroke="#0e080a" stroke-width="2"/>
+<circle cx="483.3" cy="219.7" r="4" fill="#c28600" stroke="#0e080a" stroke-width="2"/>
+<circle cx="690.0" cy="213.9" r="4" fill="#c28600" stroke="#0e080a" stroke-width="2"/>
+<text x="684.0" y="195.9" class="direct-label" text-anchor="end">Sun and sky</text>
+<line class="crosshair" x1="0" x2="0" y1="22" y2="300" visibility="hidden"/>
+<rect class="hit" x="70" y="22" width="620" height="278" fill="transparent"/>
+</svg>
+<div class="chart-tip" role="status" aria-live="polite"></div>
+</div>
+<figcaption><strong>Figure 4.</strong> Relative RMS error of specular reflection taken from L2 light probe data, convolved with the GGX lobe's own band weights, against the prefiltered reflection of three environments. From perceptual roughness 0.8 the error is 6 to 18%, so probe data can stand in for a reflection probe on rough surfaces. Values in Table 15.</figcaption>
+</figure>
+
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 15.</strong> Specular reflection from L2 probe data against the prefiltered reflection: RMS error as a share of the mean, and median relative error.</caption>
+                        <thead><tr><th>Environment</th><th class="num">Roughness 0.4</th><th class="num">0.6</th><th class="num">0.8</th><th class="num">1.0</th></tr></thead>
+                        <tbody>
+                            <tr><td>Room with a window</td><td class="num">1.221 / 1.351</td><td class="num">0.471 / 0.482</td><td class="num best">0.136 / 0.131</td><td class="num best">0.057 / 0.063</td></tr>
+                            <tr><td>Sun and sky</td><td class="num">0.753 / 0.412</td><td class="num">0.252 / 0.201</td><td class="num best">0.132 / 0.086</td><td class="num best">0.144 / 0.065</td></tr>
+                            <tr><td>Studio</td><td class="num">1.802 / 3.657</td><td class="num">0.639 / 0.740</td><td class="num best">0.175 / 0.160</td><td class="num best">0.094 / 0.077</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>What a lightmap texel should store</h3>
+                <p>
+                    Normal-mapped surfaces read a lightmap in directions other than the one it was baked for. We compared Unity's directional
+                    encoding as our baker writes it, MonoSH (L0 colour plus L1 of luminance), a variant we call MonoSH ratio (the exact
+                    lightmap colour times the L1 luminance ratio) and full L1 SH in colour, for normals tilted up to 45 degrees.
+                </p>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 16.</strong> Irradiance for 400 tilted normals: RMS error of luminance as a share of the mean, and mean colour shift.</caption>
+                        <thead><tr><th>Scene</th><th class="num">No direction</th><th class="num">Unity directional</th><th class="num">MonoSH</th><th class="num">MonoSH ratio</th><th class="num">L1 SH colour</th></tr></thead>
+                        <tbody>
+                            <tr><td>Screen and downlight</td><td class="num">0.262 / 0.255</td><td class="num">0.186 / 0.255</td><td class="num">0.111 / 0.379</td><td class="num best">0.085 / 0.255</td><td class="num">0.111 / 0.167</td></tr>
+                            <tr><td>Sun and sky</td><td class="num">0.304 / 0.081</td><td class="num">0.171 / 0.081</td><td class="num">0.151 / 0.086</td><td class="num best">0.124 / 0.081</td><td class="num">0.151 / 0.043</td></tr>
+                            <tr><td>Two opposed lights</td><td class="num">0.106 / 1.545</td><td class="num best">0.097 / 1.545</td><td class="num">0.154 / 1.552</td><td class="num">0.100 / 1.545</td><td class="num">0.154 / 0.702</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    MonoSH ratio fits the two textures Unity already serialises and beats Unity's directional encoding in two scenes of three,
+                    with a tie in the third. Full colour L1 is best for colour but needs three textures Unity has no slot for. Because other
+                    shaders read the directional texture as Unity's encoding, MonoSH ratio can only be an option for scenes lit entirely with
+                    our world shaders.
+                </p>
+            </section>
+
+            <section class="glass-panel paper-section w-100 mb-5" id="built">
+                <h2 class="text-glow-cyan" style="margin-top: 0;">9. What we built</h2>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 17.</strong> Changes that came out of this research, and their state on 24 September 2026.</caption>
+                        <thead><tr><th>Change</th><th>Where</th><th>State</th></tr></thead>
+                        <tbody>
+                            <tr><td>Rim as one lobe fed by every light, with Blur</td><td>All six shaders</td><td>On by default in the next release</td></tr>
+                            <tr><td>Band weights, the rebuilt L2 band, per-vertex lights through the per-pixel code</td><td>All six shaders</td><td>Behind the Unified Light switch, off by default</td></tr>
+                            <tr><td>Box projection without the tier setting, darken-only leak correction, probe reflections for rough surfaces, eight-lookup anisotropic reflections</td><td>All six shaders</td><td>Behind the Unified Light switch, off by default</td></tr>
+                            <tr><td>Sharper Probes</td><td>All six shaders</td><td>Kept as an artistic option</td></tr>
+                            <tr><td>Lattice sampling, texel jitter, soft baked shadows, direct light in the directional map, emissive units</td><td>Light Baker</td><td>Built, being tested</td></tr>
+                            <tr><td>Light units, falloff, bounce, spot cone and soft shadows matched to Unity; Rectangle and Disc area lights</td><td>Light Baker</td><td>Built, being tested</td></tr>
+                            <tr><td>Exposure and bloom fitted to rendered views after each bake</td><td>Light Baker</td><td>Built, third version being tested</td></tr>
+                            <tr><td>MonoSH ratio lightmaps</td><td>Light Baker and world shaders</td><td>Deferred</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    Methods that change a creator's look sit behind a switch so they can be compared with the old look before they become a
+                    default. Defects, such as the units errors, were fixed outright.
+                </p>
+            </section>
+
+            <section class="glass-panel paper-section w-100 mb-5" id="limitations">
+                <h2 class="text-glow-cyan" style="margin-top: 0;">10. Limitations</h2>
+                <ul class="key-findings">
+                    <li>All results are numerical. The environments are analytic models, not captured scenes, <strong>and the shader and baker changes are confirmed in the Unity editor.</strong></li>
+                    <li>Unity's spot light edge uses a lookup table that is not in any source we could read. The baker keeps a smooth ramp between the derived inner and outer cone.</li>
+                    <li>The range cut-off for area lights follows Unity's newer open-source lightmapper. The native lightmapper in Unity 2022.3 may treat that range differently.</li>
+                    <li>Keyword-free box projection relies on Unity uploading a probe's box data when the tier setting is off. Where it does not, the probe is left unprojected, as before.</li>
+                    <li>The darken-only leak correction trades accuracy in some corners for fewer bright leaks; per-texel reflection occlusion from the baker would be the complete answer and has no lightmap channel today.</li>
+                    <li>Fitting exposure to each bake brightens a scene that is dark on purpose; that option should stay off for such scenes.</li>
+                    <li>Estimating the L1 data MonoSH needs from the baker's cosine-weighted samples has unbounded variance at the horizon, which is why it is deferred.</li>
+                </ul>
+            </section>
+
+            <section class="glass-panel paper-section w-100 mb-5" id="references">
+                <h2 class="text-glow-cyan" style="margin-top: 0;">References</h2>
+                <ol class="paper-refs">
+                    <li><strong>Unity Technologies; Unity Manual 2022.3.</strong> <a href="https://docs.unity3d.com/2022.3/Documentation/Manual/RenderTech-ForwardRendering.html" target="_blank" rel="noopener noreferrer">Forward rendering path</a>; Light Probes technical information; Advanced Reflection Probe features; Lightmap Parameters; Light falloff.</li>
+                    <li><strong>Unity Technologies; UnityCsReference.</strong> <a href="https://github.com/Unity-Technologies/UnityCsReference/blob/2022.3/Runtime/Export/GI/Lightmapping.cs" target="_blank" rel="noopener noreferrer">Runtime/Export/GI/Lightmapping.cs</a>; (LightmapperUtils), Unity 2022.3.</li>
+                    <li><strong>Unity Technologies; Unity Graphics.</strong> <a href="https://github.com/Unity-Technologies/Graphics/tree/master/Packages/com.unity.render-pipelines.core/Runtime/PathTracing" target="_blank" rel="noopener noreferrer">com.unity.render-pipelines.core/Runtime/PathTracing</a> (LightFalloffLUT.cs, LightSampling.hlsl, PathTracingUtil.cs).</li>
+                    <li><strong>E. Heitz</strong> <a href="https://eheitzresearch.wordpress.com/415-2/" target="_blank" rel="noopener noreferrer">Real-Time Polygonal-Light Shading with Linearly Transformed Cosines.</a> <em>ACM Transactions on Graphics</em> 35(4), 2016.</li>
+                    <li><strong>S. Lagarde, C. de Rousiers.</strong> <a href="https://seblagarde.wordpress.com/wp-content/uploads/2015/07/course_notes_moving_frostbite_to_pbr_v32.pdf" target="_blank" rel="noopener noreferrer">Moving Frostbite to Physically Based Rendering 3.0.</a> <em>SIGGRAPH 2014 course notes.</em></li>
+                    <li><strong>B. Karis.</strong> <a href="https://cdn2.unrealengine.com/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf" target="_blank" rel="noopener noreferrer">Real Shading in Unreal Engine 4. SIGGRAPH 2013 course notes.</a></li>
+                    <li><strong>B. Walter, S. R. Marschner, H. Li, K. E. Torrance.</strong> <a href="https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf" target="_blank" rel="noopener noreferrer">Microfacet Models for Refraction through Rough Surfaces.</a> <em>Eurographics Symposium on Rendering</em>, 2007.</li>
+                    <li><strong>R. Ramamoorthi, P. Hanrahan.</strong> <a href="https://www.cs.columbia.edu/cg/backup/pdfs.bak_8jvmzfsdj20ff/60_envmap.pdf" target="_blank" rel="noopener noreferrer">An Efficient Representation for Irradiance Environment Maps. <em>SIGGRAPH 2001.</em></a></li>
+                    <li><strong>P.-P. Sloan.</strong> <a href="https://www.ppsloan.org/publications/StupidSH36.pdf" target="_blank" rel="noopener noreferrer">Stupid Spherical Harmonics (SH) Tricks. Game Developers Conference, 2008.</a></li>
+                    <li><strong>R. Guy, M. Agopian.</strong> <a href="https://google.github.io/filament/Filament.md.html" target="_blank" rel="noopener noreferrer">Physically Based Rendering in Filament.</a> <em>Google.</em></li>
+                    <li><strong>M. Roberts.</strong> <a href="https://math.stackexchange.com/a/2845473" target="_blank" rel="noopener noreferrer">Based on their Blog Post: The Unreasonable Effectiveness of Quasirandom Sequences. 2018.</a></li>
+                    <li><strong>R. Cranley, T. N. L. Patterson.</strong> <a href="https://epubs.siam.org/doi/abs/10.1137/0713071" target="_blank" rel="noopener noreferrer">Randomization of Number Theoretic Methods for Multiple Integration.</a> <em>SIAM Journal on Numerical Analysis</em> 13(6), 1976.</li>
+                    <li><strong>J. Jimenez, X. Wu, A. Pesce, A. Jarabo.</strong> <a href="https://epubs.siam.org/doi/abs/10.1137/0713071" target="_blank" rel="noopener noreferrer">Practical Real-Time Strategies for Accurate Indirect Occlusion.</a> <em>SIGGRAPH 2016 course notes.</em></li>
+                    <li><strong>T. J. Sobotka.</strong> <a href="https://epubs.siam.org/doi/abs/10.1137/0713071" target="_blank" rel="noopener noreferrer">AgX view transform,</a> as shipped in Blender.</li>
+                    <li><strong>RED_SIM.</strong> <a href="https://github.com/REDSIM/VRCLightVolumes" target="_blank" rel="noopener noreferrer">VRC Light Volumes.</a></li>
+                    <li><strong>_pi_ (PiMaker).</strong> <a href="https://github.com/pimaker/ltcgi" target="_blank" rel="noopener noreferrer">LTCGI.</a></li>
+                    <li><strong>AcChosen.</strong> <a href="https://github.com/AcChosen/VR-Stage-Lighting" target="_blank" rel="noopener noreferrer">VR Stage Lighting (VRSL).</a></li>
+                    <li><strong>Poiyomi.</strong> <a href="https://github.com/poiyomi/PoiyomiToonShader" target="_blank" rel="noopener noreferrer">Poiyomi Toon Shader.</a></li>
+                </ol>
+            </section>
+
+        </div>
+        </div>
+      </div>
+
+        <button id="jumpToTopBtn" class="jump-to-top" title="Back to top">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+            </svg>
+        </button>
+
+    </main>
+
+    <script>
+        (function () {
+            var SVGNS = 'http://www.w3.org/2000/svg';
+
+            function setup(box) {
+                var data;
+                try { data = JSON.parse(box.getAttribute('data-chart')); } catch (e) { return; }
+                var svg = box.querySelector('svg.paper-chart-svg');
+                var cross = svg.querySelector('.crosshair');
+                var hit = svg.querySelector('.hit');
+                var tip = box.querySelector('.chart-tip');
+                var current = -1;
+
+                function show(i) {
+                    if (i < 0 || i >= data.px.length) return;
+                    current = i;
+                    var x = data.px[i];
+                    cross.setAttribute('x1', x);
+                    cross.setAttribute('x2', x);
+                    cross.setAttribute('visibility', 'visible');
+                    while (tip.firstChild) tip.removeChild(tip.firstChild);
+                    var head = document.createElement('div');
+                    head.className = 'tip-head';
+                    head.textContent = data.x[i];
+                    tip.appendChild(head);
+                    data.series.forEach(function (s) {
+                        var row = document.createElement('div');
+                        row.className = 'tip-row';
+                        var key = document.createElementNS(SVGNS, 'svg');
+                        key.setAttribute('width', '16');
+                        key.setAttribute('height', '6');
+                        key.setAttribute('aria-hidden', 'true');
+                        var ln = document.createElementNS(SVGNS, 'line');
+                        ln.setAttribute('x1', '1');
+                        ln.setAttribute('y1', '3');
+                        ln.setAttribute('x2', '15');
+                        ln.setAttribute('y2', '3');
+                        ln.setAttribute('stroke', s.color);
+                        ln.setAttribute('stroke-width', '2');
+                        if (s.dash) ln.setAttribute('stroke-dasharray', '4 3');
+                        key.appendChild(ln);
+                        var val = document.createElement('strong');
+                        val.textContent = s.y[i];
+                        var name = document.createElement('span');
+                        name.textContent = s.name;
+                        row.appendChild(key);
+                        row.appendChild(val);
+                        row.appendChild(name);
+                        tip.appendChild(row);
+                    });
+                    var vb = svg.viewBox.baseVal;
+                    var scale = svg.getBoundingClientRect().width / vb.width;
+                    var left = svg.offsetLeft + x * scale;
+                    var width = tip.offsetWidth;
+                    var room = box.clientWidth;
+                    var pos = left + 12;
+                    if (pos + width > room) pos = left - width - 12;
+                    tip.style.left = Math.max(0, pos) + 'px';
+                    tip.style.top = (svg.offsetTop + data.top * scale) + 'px';
+                    tip.classList.add('on');
+                }
+
+                function hide() {
+                    cross.setAttribute('visibility', 'hidden');
+                    tip.classList.remove('on');
+                }
+
+                function nearest(evt) {
+                    var pt = svg.createSVGPoint();
+                    pt.x = evt.clientX;
+                    pt.y = evt.clientY;
+                    var p = pt.matrixTransform(svg.getScreenCTM().inverse());
+                    var best = 0;
+                    var bd = Infinity;
+                    for (var i = 0; i < data.px.length; i++) {
+                        var d = Math.abs(data.px[i] - p.x);
+                        if (d < bd) { bd = d; best = i; }
+                    }
+                    return best;
+                }
+
+                hit.addEventListener('pointermove', function (e) { show(nearest(e)); });
+                hit.addEventListener('pointerleave', hide);
+                svg.addEventListener('focus', function () { show(current < 0 ? data.px.length - 1 : current); });
+                svg.addEventListener('blur', hide);
+                svg.addEventListener('keydown', function (e) {
+                    if (e.key === 'ArrowRight') { show(Math.min(data.px.length - 1, current + 1)); e.preventDefault(); }
+                    else if (e.key === 'ArrowLeft') { show(Math.max(0, current - 1)); e.preventDefault(); }
+                });
+            }
+
+            document.querySelectorAll('.paper-chart').forEach(setup);
+        })();
+    </script>
+    <script type="module" src="app.js"></script>
+    <script src="docs-shell.js" defer></script>
+</body>
+</html>
