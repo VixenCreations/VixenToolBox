@@ -1,0 +1,49 @@
+=== A1. Mask moments: closed form against the lattice (mean over normals of mask and c*mask) ===
+  PLS 0.00: A 1.00000 (lattice 1.00000)  B 0.00000 (lattice 0.00000)  LV energy for kappa 1: 1.0000 x l0
+  PLS 0.25: A 0.94531 (lattice 0.94531)  B 0.02656 (lattice 0.02656)  LV energy for kappa 1: 0.9719 x l0
+  PLS 0.50: A 0.81250 (lattice 0.81250)  B 0.08750 (lattice 0.08750)  LV energy for kappa 1: 0.9000 x l0
+  PLS 1.00: A 0.50000 (lattice 0.50000)  B 0.20000 (lattice 0.20000)  LV energy for kappa 1: 0.7000 x l0
+  PLS 1.50: A 0.50000 (lattice 0.50000)  B 0.22778 (lattice 0.22778)  LV energy for kappa 1: 0.7278 x l0
+  PLS 2.00: A 0.50000 (lattice 0.50000)  B 0.23750 (lattice 0.23750)  LV energy for kappa 1: 0.7375 x l0
+  PLS 3.00: A 0.50000 (lattice 0.50000)  B 0.24444 (lattice 0.24444)  LV energy for kappa 1: 0.7444 x l0
+  PLS 5.00: A 0.50000 (lattice 0.50000)  B 0.24800 (lattice 0.24800)  LV energy for kappa 1: 0.7480 x l0
+  PLS 8.00: A 0.50000 (lattice 0.50000)  B 0.24922 (lattice 0.24922)  LV energy for kappa 1: 0.7492 x l0
+  worst difference 2.31e-09
+
+=== A2. Sphere cap closed form against lattice integration over the cap ===
+  worst difference over 6000 normals and 5 sizes: 0.0000 (of a peak of 1)
+
+=== A3. Point light: upstream SH against the exact shape with the same energy ===
+  LV result = l0 * mask(PLS) * (1 + kappa c).  Combined = l0 * M(PLS,kappa) * 2(1+cos s) * capLit(c, s).
+  Energy of both is l0 * M by construction. Columns: facing / 60 deg / 90 deg / 120 deg / RMS difference (share of the combined peak)
+  r 0.10 d 3.0 (source   1.9 deg) PLS 0.0: LV 1.999/1.500/1.000/0.500  combined 3.999/1.999/0.028/0.000  energy LV 1.0000 combined 1.0000  RMS diff 0.204
+  r 0.10 d 3.0 (source   1.9 deg) PLS 3.0: LV 1.999/1.500/0.500/0.000  combined 2.976/1.488/0.021/0.000  energy LV 0.7443 combined 0.7443  RMS diff 0.120
+  r 0.25 d 2.0 (source   7.1 deg) PLS 0.0: LV 1.992/1.496/1.000/0.504  combined 3.985/1.992/0.105/0.000  energy LV 1.0000 combined 1.0000  RMS diff 0.203
+  r 0.25 d 2.0 (source   7.1 deg) PLS 3.0: LV 1.992/1.496/0.500/0.000  combined 2.959/1.479/0.078/0.000  energy LV 0.7426 combined 0.7426  RMS diff 0.119
+  r 0.50 d 1.0 (source  26.6 deg) PLS 0.0: LV 1.894/1.447/1.000/0.553  combined 3.789/1.894/0.384/0.000  energy LV 1.0000 combined 1.0000  RMS diff 0.198
+  r 0.50 d 1.0 (source  26.6 deg) PLS 3.0: LV 1.894/1.447/0.500/0.000  combined 2.723/1.361/0.276/0.000  energy LV 0.7186 combined 0.7186  RMS diff 0.106
+  r 1.00 d 1.0 (source  45.0 deg) PLS 0.0: LV 1.707/1.354/1.000/0.646  combined 3.414/1.757/0.620/0.050  energy LV 1.0000 combined 1.0000  RMS diff 0.196
+  r 1.00 d 1.0 (source  45.0 deg) PLS 3.0: LV 1.707/1.354/0.500/0.000  combined 2.297/1.182/0.417/0.034  energy LV 0.6728 combined 0.6728  RMS diff 0.093
+
+=== A4. Area light: upstream SH, exact irradiance (lattice over the panel), vector form factor + sphere horizon ===
+  small panel, 3 m, face on: solid angle exact 0.0276, upstream 4 x atan 0.0276 (+0.0%), |F| fit 0.0088 exact 0.0088 truth-normal 0.0088
+     PLS 0.0: energy truth 0.00690 LV 0.00690 combined 0.00690 | RMS vs truth (share of peak): LV 0.203  combined 0.000 | peak LV 0.50x combined 1.00x | lit below horizon of the truth: LV 41.4% of normals, combined 0.0%
+     PLS 3.0: energy truth 0.00513 LV 0.00513 combined 0.00513 | RMS vs truth (share of peak): LV 0.119  combined 0.000 | peak LV 0.67x combined 1.00x | lit below horizon of the truth: LV 6.4% of normals, combined 0.0%
+  1x1 m panel, 1 m, face on: solid angle exact 0.8054, upstream 4 x atan 0.8054 (+0.0%), |F| fit 0.2395 exact 0.2395 truth-normal 0.2394
+     PLS 0.0: energy truth 0.20136 LV 0.20136 combined 0.20136 | RMS vs truth (share of peak): LV 0.189  combined 0.001 | peak LV 0.52x combined 1.00x | lit below horizon of the truth: LV 23.1% of normals, combined 0.0%
+     PLS 3.0: energy truth 0.14675 LV 0.14675 combined 0.14675 | RMS vs truth (share of peak): LV 0.100  combined 0.001 | peak LV 0.71x combined 1.00x | lit below horizon of the truth: LV 0.0% of normals, combined 0.0%
+  2x1 m panel, 0.5 m (close): solid angle exact 2.7389, upstream 4 x atan 2.7389 (-0.0%), |F| fit 0.6695 exact 0.6695 truth-normal 0.6694
+     PLS 0.0: energy truth 0.68472 LV 0.68472 combined 0.68472 | RMS vs truth (share of peak): LV 0.162  combined 0.021 | peak LV 0.58x combined 1.03x | lit below horizon of the truth: LV 6.5% of normals, combined 0.0%
+     PLS 3.0: energy truth 0.47326 LV 0.47326 combined 0.47326 | RMS vs truth (share of peak): LV 0.088  combined 0.021 | peak LV 0.84x combined 1.03x | lit below horizon of the truth: LV 0.0% of normals, combined 0.0%
+  strip 3x0.1 m, 1 m: solid angle exact 0.1663, upstream 4 x atan 0.1663 (+0.0%), |F| fit 0.0459 exact 0.0459 truth-normal 0.0459
+     PLS 0.0: energy truth 0.04156 LV 0.04156 combined 0.04156 | RMS vs truth (share of peak): LV 0.167  combined 0.078 | peak LV 0.57x combined 1.14x | lit below horizon of the truth: LV 15.6% of normals, combined 0.0%
+     PLS 3.0: energy truth 0.03081 LV 0.03081 combined 0.03081 | RMS vs truth (share of peak): LV 0.090  combined 0.078 | peak LV 0.77x combined 1.14x | lit below horizon of the truth: LV 0.4% of normals, combined 0.0%
+  1x1 m panel, 1 m, 60 deg off axis: solid angle exact 0.1790, upstream 4 x atan 0.1778 (-0.7%), |F| fit 0.0559 exact 0.0559 truth-normal 0.0559
+     PLS 0.0: energy truth 0.04444 LV 0.04444 combined 0.04444 | RMS vs truth (share of peak): LV 0.199  combined 0.005 | peak LV 0.51x combined 1.00x | lit below horizon of the truth: LV 33.0% of normals, combined 0.0%
+     PLS 3.0: energy truth 0.03293 LV 0.03293 combined 0.03293 | RMS vs truth (share of peak): LV 0.113  combined 0.005 | peak LV 0.68x combined 1.00x | lit below horizon of the truth: LV 0.4% of normals, combined 0.0%
+  4x4 m ceiling, 0.3 m (huge): solid angle exact 5.4425, upstream 4 x atan 5.4425 (+0.0%), |F| fit 0.9819 exact 0.9819 truth-normal 0.9818
+     PLS 0.0: energy truth 1.36063 LV 1.36062 combined 1.36062 | RMS vs truth (share of peak): LV 0.146  combined 0.000 | peak LV 0.69x combined 1.00x | lit below horizon of the truth: LV 0.4% of normals, combined 0.0%
+     PLS 3.0: energy truth 0.86886 LV 0.86886 combined 0.86886 | RMS vs truth (share of peak): LV 0.170  combined 0.000 | peak LV 1.08x combined 1.00x | lit below horizon of the truth: LV 0.0% of normals, combined 0.0%
+  1x1 m panel, receiver nearly in its plane: solid angle exact 0.0346, upstream 4 x atan 0.0354 (+2.2%), |F| fit 0.0108 exact 0.0108 truth-normal 0.0108
+     PLS 0.0: energy truth 0.00884 LV 0.00884 combined 0.00884 | RMS vs truth (share of peak): LV 0.197  combined 0.016 | peak LV 0.51x combined 1.02x | lit below horizon of the truth: LV 32.5% of normals, combined 0.0%
+     PLS 3.0: energy truth 0.00658 LV 0.00658 combined 0.00658 | RMS vs truth (share of peak): LV 0.112  combined 0.016 | peak LV 0.69x combined 1.02x | lit below horizon of the truth: LV 1.7% of normals, combined 0.0%

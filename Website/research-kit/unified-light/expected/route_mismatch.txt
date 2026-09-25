@@ -1,0 +1,38 @@
+Soften 0.0, Hardness 0.0: facing 1.000, at 110 deg 0.000, lit to 89 deg
+   route                            rms      facing   at 110 deg lit to
+   per vertex (Shade4PointLights)   0.000    1.000    0.000      89 deg
+   Unity SH light or probe, L2      0.033    1.062    0.000      180 deg
+   Sharper Probes, L2               0.118    1.312    0.000      180 deg
+   Light Volume, L1                 0.125    0.750    0.079      119 deg
+   Light Volume point light, L1     0.125    0.750    0.079      119 deg
+
+Soften 0.5, Hardness 0.0: facing 1.000, at 110 deg 0.105, lit to 119 deg
+   route                            rms      facing   at 110 deg lit to
+   per vertex (Shade4PointLights)   0.167    1.000    0.000      89 deg
+   Unity SH light or probe, L2      0.158    1.062    0.000      180 deg
+   Sharper Probes, L2               0.236    1.312    0.000      180 deg
+   Light Volume, L1                 0.125    0.750    0.079      119 deg
+   Light Volume point light, L1     0.125    0.750    0.079      119 deg
+
+Soften 0.0, Hardness 0.5: facing 1.000, at 110 deg 0.000, lit to 90 deg
+   route                            rms      facing   at 110 deg lit to
+   per vertex (Shade4PointLights)   0.104    1.000    0.000      89 deg
+   Unity SH light or probe, L2      0.113    1.062    0.000      180 deg
+   Sharper Probes, L2               0.190    1.312    0.000      180 deg
+   Light Volume, L1                 0.142    0.750    0.079      119 deg
+   Light Volume point light, L1     0.142    0.750    0.079      119 deg
+
+Soften 1.0, Hardness 0.0: facing 1.000, at 110 deg 0.329, lit to 169 deg
+   route                            rms      facing   at 110 deg lit to
+   per vertex (Shade4PointLights)   0.289    1.000    0.000      89 deg
+   Unity SH light or probe, L2      0.280    1.062    0.000      180 deg
+   Sharper Probes, L2               0.338    1.312    0.000      180 deg
+   Light Volume, L1                 0.228    0.750    0.079      119 deg
+   Light Volume point light, L1     0.228    0.750    0.079      119 deg
+
+Energy over the sphere (mean response, per pixel Lambert = 0.2500):
+   per vertex (Shade4PointLights)   0.2500
+   Unity SH light or probe, L2      0.2577
+   Sharper Probes, L2               0.2656
+   Light Volume, L1                 0.2812
+   Light Volume point light, L1     0.2812

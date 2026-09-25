@@ -1,0 +1,22 @@
+Rim at the default Width 4 (old: Follow 0; new: Blur 0.8, Follow 1, Wrap 0.5), Strength 1, white material.
+A point on the right edge of a limb; 'in' is how far in from the outline as a share of the limb radius.
+
+  scene                                  old  in 2% / 10% / 25% new  in 2% / 10% / 25%
+  Light Volume, light behind you         0.005 0.000 0.000   0.638 0.520 0.187
+  Light Volume, light beside the edge    0.015 0.000 0.000   0.818 0.913 0.463
+  Light Volume, light at the camera      0.008 0.000 0.000   0.007 0.015 0.014
+  Realtime sun behind you                0.011 0.000 0.000   0.634 0.535 0.201
+  Realtime sun at the camera             0.011 0.000 0.000   0.001 0.010 0.014
+  Dark room, no light                    0.002 0.000 0.000   0.000 0.000 0.000
+
+The same light, realtime or baked into SH, at Wrap 0.5: rim lobe response by angle between the rim direction and the light
+  angle   realtime (cap)   baked L1 SH (non-linear)
+    0     1.000            1.172
+   30     0.866            0.952
+   60     0.515            0.494
+   90     0.182            0.146
+  120     0.015            0.018
+  150     0.000            0.000
+
+Follow 0 (flat): realtime 0.2929, baked 0.2929
+out-of-range or non-finite values over the whole control range: 0

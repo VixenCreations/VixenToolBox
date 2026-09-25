@@ -1,0 +1,6 @@
+irradiance (E/pi) for 400 normals within 45 degrees; errors are RMS / mean of luminance | mean chroma shift
+MonoSH ratio = the lightmap colour at the surface normal times the L1 luminance ratio (same two textures as MonoSH)
+scene              non-directional   Unity directional   MonoSH            MonoSH ratio      L1 SH RGB
+screen+downlight   0.262 | 0.255     0.186 | 0.255       0.111 | 0.379     0.085 | 0.255     0.111 | 0.167
+sun+sky            0.304 | 0.081     0.171 | 0.081       0.151 | 0.086     0.124 | 0.081     0.151 | 0.043
+two lights         0.106 | 1.545     0.097 | 1.545       0.154 | 1.552     0.100 | 1.545     0.154 | 0.702

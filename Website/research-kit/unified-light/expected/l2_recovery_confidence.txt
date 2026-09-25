@@ -1,0 +1,5 @@
+default shaping, rms error as a share of each scene's peak, mean of 30 scenes
+  scene        no L2      k=0        k=0.5      k=1        k=2       
+  one sun      0.115      0.044      0.046      0.054      0.070     
+  two lights   0.124      0.094      0.087      0.089      0.098     
+  six lights   0.092      0.103      0.087      0.084      0.087     

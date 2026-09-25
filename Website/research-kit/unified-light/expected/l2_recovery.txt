@@ -1,0 +1,15 @@
+rms error as a share of each scene's peak, mean of 25 scenes; L1 data only (a Light Volume)
+  one sun
+    reconstruction            s0.0 h0.0  s0.5 h0.0  s1.0 h0.0  s0.0 h0.5  s0.5 h0.5
+    L1 linear + weights          0.115      0.043      0.000      0.104      0.042 
+    L1 + rebuilt L2 + weights     0.045      0.029      0.000      0.065      0.040 
+  two lights
+    reconstruction            s0.0 h0.0  s0.5 h0.0  s1.0 h0.0  s0.0 h0.5  s0.5 h0.5
+    L1 linear + weights          0.110      0.045      0.000      0.102      0.038 
+    L1 + rebuilt L2 + weights     0.092      0.039      0.000      0.091      0.037 
+  six lights
+    reconstruction            s0.0 h0.0  s0.5 h0.0  s1.0 h0.0  s0.0 h0.5  s0.5 h0.5
+    L1 linear + weights          0.093      0.034      0.000      0.081      0.026 
+    L1 + rebuilt L2 + weights     0.105      0.040      0.000      0.090      0.027 
+
+one 3-degree light, L1 magnitude over L0: 1.999 (2.0 for a point light); rebuilt L2 coefficient 0.625*|L1| = 0.0997

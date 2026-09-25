@@ -1,0 +1,19 @@
+Rim Width -> exponent, rim value at NdotV, silhouette band where rim > 0.1 (share of a cylinder's radius)
+  width  2: exp  24.02  0.292  0.080  0.005  0.000  0.000   band   0.42%
+  width  4: exp  18.04  0.396  0.149  0.018  0.002  0.000   band   0.72%
+  width  6: exp  12.06  0.539  0.281  0.068  0.014  0.000   band   1.52%
+  width  8: exp   6.08  0.732  0.527  0.258  0.114  0.015   band   5.10%
+  width  9: exp   3.09  0.853  0.722  0.502  0.332  0.117   band  14.91%
+  width 10: exp   0.10  0.995  0.990  0.978  0.965  0.933   band 100.00%
+
+Follow Light at 1, Wrap 0.5. Edge normal faces a screen on the left; sun comes from the right.
+  old: the LTCGI edge term was multiplied by 0.000 (steered by the sun)
+  new: the LTCGI edge term is multiplied by 1.000; LTCGI's own light at this normal decides it
+  sun-facing edge: old 1.000, new 1.000 (unchanged)
+
+Sharper Probes, one light in the probe (Unity irradiance bands: L0 0.25, L1 0.5 cos, L2 0.3125 P2(cos))
+    0 deg from the light: correct 1.062  doubled L2 1.375  (+29%)
+   45 deg from the light: correct 0.682  doubled L2 0.760  (+11%)
+   70 deg from the light: correct 0.320  doubled L2 0.218  (-32%)
+   90 deg from the light: correct 0.094  doubled L2 0.000  (-100%)
+  120 deg from the light: correct 0.000  doubled L2 0.000  (+0%)

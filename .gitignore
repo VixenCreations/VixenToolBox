@@ -43,6 +43,7 @@ ExportedObj/
 *.opendb
 *.VC.db
 *.py
+!Website/research-kit/**/*.py
 # Unity3D generated meta files
 *.pidb.meta
 *.pdb.meta

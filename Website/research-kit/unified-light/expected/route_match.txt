@@ -1,0 +1,26 @@
+1. Band weights a0 a1 a2 of the shaping kernel, closed form against the lattice
+   Soften 0.00 Hardness 0.0: closed [1. 1. 1.]  lattice [1. 1. 1.]
+   Soften 0.00 Hardness 0.5: closed [1.2698 1.165  0.817 ]  lattice [1.2698 1.165  0.817 ]
+   Soften 0.00 Hardness 1.0: closed [1.7391 1.3953 0.3313]  lattice [1.7391 1.3953 0.3313]
+   Soften 0.25 Hardness 0.0: closed [1.25   1.0938 0.7031]  lattice [1.25   1.0937 0.7031]
+   Soften 0.25 Hardness 0.5: closed [1.5873 1.2252 0.3358]  lattice [1.5873 1.2252 0.3358]
+   Soften 0.25 Hardness 1.0: closed [ 2.1739  1.365  -0.4526]  lattice [ 2.1739  1.365  -0.4526]
+   Soften 0.50 Hardness 0.0: closed [1.5   1.125 0.375]  lattice [1.5   1.125 0.375]
+   Soften 0.50 Hardness 0.5: closed [ 1.9048  1.1928 -0.1091]  lattice [ 1.9048  1.1928 -0.1091]
+   Soften 0.50 Hardness 1.0: closed [ 2.6087  1.183  -1.0053]  lattice [ 2.6087  1.183  -1.0053]
+   Soften 1.00 Hardness 0.0: closed [2. 1. 0.]  lattice [ 2.  1. -0.]
+   Soften 1.00 Hardness 0.5: closed [ 2.5397  0.8507 -0.2697]  lattice [ 2.5397  0.8507 -0.2697]
+   Soften 1.00 Hardness 1.0: closed [ 3.4783  0.364  -0.2619]  lattice [ 3.4783  0.364  -0.2619]
+   worst difference: 0.00000
+
+2. Route error against the shaped per-pixel look (rms as a share of the peak), 60 random scenes each
+   scene type: sun of 1-6 degrees with sky 0.02-0.3 (L2 probe and L1 volume)
+   method                                    s0.0 h0.0  s0.5 h0.0  s1.0 h0.0  s0.0 h0.5  s0.5 h0.5
+   probe L2 linear, today                       0.030      0.187      0.333      0.122      0.318 
+   probe Sharper Probes, today                  0.194      0.280      0.400      0.223      0.380 
+   probe L2 linear + weights                    0.030      0.026      0.000      0.057      0.040 
+   probe non-linear L1 + weights                0.131      0.239      0.240      0.208      0.292 
+   probe non-linear + weights + a2/2 L2         0.156      0.251      0.240      0.229      0.289 
+   volume L1 linear, today                      0.115      0.172      0.312      0.145      0.292 
+   volume L1 linear + weights                   0.115      0.046      0.000      0.101      0.042 
+   volume non-linear L1 + weights               0.131      0.239      0.240      0.208      0.292 

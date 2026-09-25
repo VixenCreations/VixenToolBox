@@ -1,0 +1,25 @@
+1. Wrap lobe band weights relative to the cosine lobe Unity stores, against the closed form
+   wrap   a0 lattice  a0 closed   a1 lattice  a1 closed   a2 lattice  a2 closed
+   0.00   1.0000      1.0000      1.0000      1.0000      1.0000      1.0000
+   0.25   1.0396      1.0396      1.0000      1.0000      0.9239      0.9239
+   0.50   1.1716      1.1716      1.0000      1.0000      0.7071      0.7071
+   0.75   1.4465      1.4465      1.0000      1.0000      0.3827      0.3827
+   1.00   1.9980      2.0000      1.0000      1.0000      0.0010      0.0000
+   worst difference: 0.0020
+
+2. A silhouette pixel: normal to the side, camera in front. Rim direction d = normalize(N + reflect(-V, N)) = [ 0.707  0.    -0.707]
+   light position            old rim (cosine at N)   new rim lobe, Wrap 0.5 (exact / from SH)
+   behind you                0.024                   0.248 / 0.247
+   beside the edge           0.343                   0.251 / 0.250
+   behind and beside         0.247                   0.344 / 0.348
+   above                     0.024                   0.082 / 0.082
+   at the camera             0.024                   0.023 / 0.022
+
+3. SH truncation error of the new lobe on 300 random skies with a sun (L2 probe, Wrap 0.5)
+   mean error 0.002, 95th percentile 0.005, worst 0.009 of each sky's peak
+
+4. Non-linear reconstruction with the Wrap weight on L0: never negative, same energy as the linear lobe
+   wrap 0.0: checked 4 ratios
+   wrap 0.5: checked 4 ratios
+   wrap 1.0: checked 4 ratios
+   PASS

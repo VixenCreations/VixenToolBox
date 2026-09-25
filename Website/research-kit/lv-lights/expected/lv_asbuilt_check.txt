@@ -1,0 +1,20 @@
+=== D1. vw_LVMaskMoments (as built) against the research closed form ===
+  61 values of Point Light Shading from 0 to 20: worst difference 8.58e-13
+
+=== D2. vw_ULSizedShape (as built, float32) against the research two-tap form (float64) ===
+  8 sizes x 3 Soften x 3 Hardness x 4000 normals: worst difference 7.07e-03
+  zero size against the per-pixel terminator (same look as a Unity light): 5.96e-08
+
+=== D3. One point light end to end: energy of the as-built diffuse against upstream's SH (same l0) ===
+  r 0.1 d 3.0 PLS 0.0: energy as built 1.0000 upstream 1.0000 (ratio 1.0000) | facing 3.998 against 1.999
+  r 0.1 d 3.0 PLS 3.0: energy as built 0.7443 upstream 0.7443 (ratio 1.0000) | facing 2.976 against 1.999
+  r 0.5 d 1.0 PLS 0.0: energy as built 1.0000 upstream 1.0000 (ratio 1.0000) | facing 3.788 against 1.894
+  r 0.5 d 1.0 PLS 3.0: energy as built 0.7186 upstream 0.7186 (ratio 1.0000) | facing 2.722 against 1.894
+  r 1.0 d 1.0 PLS 0.0: energy as built 1.0000 upstream 1.0000 (ratio 1.0000) | facing 3.413 against 1.707
+  r 1.0 d 1.0 PLS 3.0: energy as built 0.6728 upstream 0.6728 (ratio 1.0000) | facing 2.297 against 1.707
+
+=== D4. Extremes: every input at its limits, float32, looking for NaN, infinity or negatives ===
+  1162 values checked, 0 bad
+
+=== D5. Area light path as built: F from four corners with the fitted edge integral, against the exact acos form ===
+  worst relative difference of the fitted vector form factor: 0.00%

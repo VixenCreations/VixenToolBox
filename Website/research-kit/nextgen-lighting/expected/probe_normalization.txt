@@ -1,0 +1,9 @@
+floor points, views from above, 60 points x 3 views per region, 4096 lattice samples per lobe
+each cell: relative RMS error | median relative error; probe floor irradiance 0.465
+region                   rough  noise            raw              box              raw+norm         box+norm         box+darken      mean ref
+alcove (window hidden)   0.2    0.000 | 0.000    1.246 | 0.334    2.613 | 0.198    0.714 | 0.271    1.565 | 0.478    1.565 | 0.478   0.269
+alcove (window hidden)   0.5    0.001 | 0.000    2.491 | 0.200    1.608 | 0.168    1.358 | 0.326    0.985 | 0.498    0.985 | 0.498   0.276
+alcove (window hidden)   0.8    0.002 | 0.001    2.651 | 0.505    1.651 | 0.157    1.351 | 0.372    0.944 | 0.485    0.944 | 0.485   0.275
+open room (window seen)  0.2    0.006 | 0.003    2.140 | 0.147    0.390 | 0.023    2.076 | 0.999    3.957 | 0.911    0.390 | 0.023   0.843
+open room (window seen)  0.5    0.009 | 0.007    1.166 | 0.245    0.463 | 0.169    1.142 | 0.632    2.869 | 1.007    0.463 | 0.169   1.002
+open room (window seen)  0.8    0.010 | 0.007    0.615 | 0.369    0.414 | 0.351    0.965 | 0.260    1.839 | 0.749    0.414 | 0.351   1.099

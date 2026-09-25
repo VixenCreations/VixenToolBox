@@ -1,0 +1,11 @@
+float32: wrap 0 vs Lambert max diff 2.97e-08; wrap 1 vs half Lambert max diff 6.59e-04
+any non-finite over 41 wraps x 721 angles: False
+old wrap 0.5 slope either side of 120 deg: -0.01008 / -0.00000 per degree
+new wrap 0.5 slope either side of 135 deg: -0.00000 / 0.00000 per degree
+new wrap 0.5 slope either side of  45 deg: -0.01234 / -0.01235 per degree
+
+Width 4 (outer 40%), rim value by distance in from the outline, as a share of the limb radius
+  in:     0.00  0.05  0.10  0.15  0.20  0.25  0.30  0.35  0.40
+  blur 0.0: 1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00
+  blur 0.5: 1.00  1.00  1.00  1.00  1.00  0.84  0.50  0.16  0.00
+  blur 1.0: 1.00  0.96  0.84  0.68  0.50  0.32  0.16  0.04  0.00

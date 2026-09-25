@@ -58,6 +58,9 @@
     <script type="module" src="web-components.min.js"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="docs-shell.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 
     <!-- Page-Specific Styling -->
     <style>
@@ -308,6 +311,107 @@
                 padding: 1.25rem;
             }
         }
+
+        .math-block {
+            overflow-x: auto;
+            overflow-y: hidden;
+            margin: 0.4rem 0 1.1rem;
+            padding: 0.35rem 1rem;
+            background: rgba(0, 0, 0, 0.25);
+            border-left: 3px solid rgba(0, 229, 255, 0.45);
+            border-radius: 6px;
+            color: #efe4f8;
+        }
+
+        .math-block .katex-display {
+            margin: 0.45rem 0;
+        }
+
+        .paper-section .katex {
+            font-size: 1.05em;
+        }
+
+        .eq-note {
+            font-size: 0.92rem;
+        }
+
+        .run-steps code,
+        .paper-section p code {
+            background: rgba(0, 0, 0, 0.35);
+            padding: 0.1rem 0.35rem;
+            border-radius: 4px;
+            color: #efe4f8;
+        }
+
+        .paper-cmd {
+            display: block;
+            white-space: pre-wrap;
+            word-break: break-word;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 0.7rem 1rem;
+            margin: 0.4rem 0 1rem;
+            color: #efe4f8;
+            font-size: 0.9rem;
+        }
+
+        details.script-listing {
+            margin: 0.45rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        details.script-listing summary {
+            cursor: pointer;
+            padding: 0.6rem 0.9rem;
+            color: #00e5ff;
+            list-style-position: inside;
+        }
+
+        details.script-listing summary .script-meta {
+            color: #bfa8d2;
+            font-size: 0.88rem;
+            margin-left: 0.5rem;
+        }
+
+        .code-wrap {
+            position: relative;
+            margin: 0 0.6rem 0.7rem;
+        }
+
+        pre.paper-code {
+            max-height: 560px;
+            overflow: auto;
+            margin: 0;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 0.9rem 1rem;
+            font-size: 0.78rem;
+            line-height: 1.45;
+            color: #efe4f8;
+            white-space: pre;
+            tab-size: 4;
+        }
+
+        .code-copy {
+            position: absolute;
+            top: 0.45rem;
+            right: 0.9rem;
+            background: rgba(255, 0, 170, 0.25);
+            color: #fff;
+            border: 1px solid rgba(255, 0, 170, 0.5);
+            border-radius: 6px;
+            padding: 0.15rem 0.6rem;
+            font-size: 0.78rem;
+            cursor: pointer;
+        }
+
+        .code-copy:hover {
+            background: rgba(255, 0, 170, 0.45);
+        }
     </style>
 </head>
 
@@ -410,8 +514,8 @@
                 <p class="caption1 mt-2" style="font-size: 1.15rem; max-width: 780px; margin: 0 auto;">
                     Measured lighting for VRChat avatars and worlds: rim light, light routes, camera exposure, light baking and reflections
                 </p>
-                <p class="paper-meta">Vixenlicious, VixForge Interactive &middot; Research report, 24 September 2026</p>
-                <p class="paper-meta">Five experiments across 23rd and 24th of September 2026 based on our original Fibonacci lattice script from August 31st 2026.</p>
+                <p class="paper-meta">Vixenlicious, VixForge Interactive &middot; Research report, 25 September 2026</p>
+                <p class="paper-meta">Six experiments across 23rd to 25th of September 2026 based on our original Fibonacci lattice script from August 31st 2026.</p>
                 <div class="paper-status">
                     <strong>Status.</strong> Every result below is a numerical measurement. The shader and baker changes that came out of it
                     are built and are listed on <a href="upcoming-changes.html">Upcoming Changes</a>; testing them in the Unity editor and in
@@ -429,7 +533,7 @@
                         An avatar in VRChat receives light through at least seven routes: per-pixel lights, per-vertex lights, spherical
                         harmonic (SH) light probes, VRC Light Volumes, LTCGI area lights, the VRSL light wash and, in worlds, baked lightmaps.
                         Each route delivers its own approximation of the same light, so a material can change its look depending on how a light
-                        happens to reach it. We report five numerical experiments that measure these differences and derive corrections,
+                        happens to reach it. We report six numerical experiments that measure these differences and derive corrections,
                         anchored to Unity's manual, Unity's C# source and Unity's open-source GPU lightmapper.
                     </p>
                     <p>
@@ -441,7 +545,9 @@
                         cost, texel jitter removes stepped shadow edges, and a check against Unity's source found our baked light units off by
                         factors of 2 to 25 before correction. For reflections, eight probe lookups along an anisotropic lobe cut error by up to
                         46%, where the widely used bent-normal approximation raises it by up to 2.8 times, and L2 probe data gives usable
-                        reflections from perceptual roughness 0.8.
+                        reflections from perceptual roughness 0.8. For VRC Light Volumes' point, spot and area lights, shading each light at its
+                        true size with the energy Light Volumes gives it matches brute-force integration within 0.021 RMS where the packed
+                        form is off by up to 0.203, and it roughly halves the highlight error.
                     </p>
                 </div>
                 <h3>Key findings</h3>
@@ -451,6 +557,8 @@
                     <li>Low-discrepancy sampling and per-sample shadow rays turn a lightmap texel from a point sample into an area integral: shadow-edge error falls from 0.256 to 0.007 RMS at 256 samples.</li>
                     <li>A lightmap is not a light meter. Exposure fitted from lightmap data failed twice in the engine; fitting it to rendered views is the working method.</li>
                     <li>Unity's lightmapper applies light intensity before the conversion to linear and uses its Legacy falloff; matching both is required before any baked scene can be compared with Unity's.</li>
+                    <li>Light Volumes packs its point and area lights in two different conventions. Keeping each light's energy and giving it its true shape lights facing surfaces 1.5 to 2 times brighter and leaves surfaces that face away from a panel dark, where the packed form lit up to 41% of them.</li>
+                    <li>Our direct highlights were a third of Unity's, because Unity's Standard BRDF multiplies the specular term by pi, and normal strength above 1 pushed up to 18% of normals inside the surface. Both are fixed.</li>
                 </ul>
             </section>
 
@@ -509,9 +617,32 @@
                 </p>
                 <p>
                     Errors are reported as RMS over many scenes, as a share of the peak or of the mean reference, and where outliers dominate
-                    also as a median relative error. Three first runs were wrong: a rim direction that made a ring, a highlight study with
-                    the wrong units and a light-size study with an energy factor applied twice. They are kept with the corrected runs.
+                    also as a median relative error. Five first runs were wrong: a rim direction that made a ring, a highlight study with
+                    the wrong units, a light-size study with an energy factor applied twice, an edge integral divided by 2 pi twice and a
+                    highlight widened at the wrong point. They are kept with the corrected runs.
                 </p>
+                <h3>The equations</h3>
+                <p>
+                    The Fibonacci lattice places \(N\) points on the sphere with even spacing in height and the golden angle between
+                    neighbours. An integral over the sphere is then a plain average:
+                </p>
+                <div class="math-block">$$z_i = 1 - \frac{2i+1}{N},\qquad \phi_i = \left(i+\tfrac12\right)\pi\left(3-\sqrt5\right),\qquad \boldsymbol\omega_i = \left(\sqrt{1-z_i^2}\cos\phi_i,\ \sqrt{1-z_i^2}\sin\phi_i,\ z_i\right)$$
+$$\int_{S^2} f(\boldsymbol\omega)\,d\boldsymbol\omega \;\approx\; \frac{4\pi}{N}\sum_{i=0}^{N-1} f(\boldsymbol\omega_i)$$</div>
+                <p>
+                    Where an estimator must stay unbiased, each sample site \(t\) shifts the whole point set by its own random offset
+                    (Cranley-Patterson rotation [12]), with \(\{\cdot\}\) the fractional part:
+                </p>
+                <div class="math-block">$$\mathbf x_k^{(t)} = \left\{\mathbf x_k + \mathbf u^{(t)}\right\},\qquad \mathbf u^{(t)} \sim \mathcal U[0,1)^d$$</div>
+                <p>
+                    Higher-dimensional sets use the \(R_d\) sequence [11]. \(\varphi_d\) is the positive root of
+                    \(x^{d+1} = x + 1\), and point \(k\) is a Kronecker step:
+                </p>
+                <div class="math-block">$$\varphi_d^{\,d+1} = \varphi_d + 1,\qquad \alpha_j = \varphi_d^{-j}\ \ (j = 1,\dots,d),\qquad \mathbf t_k = \left\{\mathbf s + k\,\boldsymbol\alpha\right\}$$</div>
+                <p>
+                    Errors are reported as the root mean square over \(M\) test points, divided by the peak of the reference (or its mean,
+                    where the tables say so):
+                </p>
+                <div class="math-block">$$\mathrm{RMS} = \frac{1}{\max f}\sqrt{\frac1M\sum_{m=1}^{M}\left(\hat f_m - f_m\right)^2}$$</div>
             </section>
 
             <section class="glass-panel paper-section w-100 mb-5" id="rim">
@@ -564,6 +695,29 @@
                     The first direction we tried, <span class="formula">normalize(N + reflect(-V, N))</span>, turns toward the camera away from
                     the silhouette and drew a ring about a quarter of the way in (0.16) for a light at the camera. The final direction does not.
                 </p>
+                <h3>The equations</h3>
+                <p>
+                    The band measures how far a pixel sits from the silhouette as a share of the limb radius. \(w\) is Width over 10,
+                    \(b\) is Blur and \(\Delta\) is the screen-space derivative of \(u\), which keeps the edge one pixel soft at any
+                    distance:
+                </p>
+                <div class="math-block">$$u = 1 - \sqrt{1 - (\mathbf N\cdot\mathbf V)^2},\qquad t = \operatorname{sat}\!\left(\frac{u - w(1-b) + \Delta}{w\,b + 2\Delta}\right),\qquad \mathrm{rim} = 1 - \left(3t^2 - 2t^3\right)$$
+$$\mathbf d = \frac{\mathbf N - \mathbf V}{\lVert \mathbf N - \mathbf V \rVert}$$</div>
+                <p>
+                    A round light of radiance \(L\) and angular radius \(\sigma\), centred at angle \(\theta\) from the normal, gives the
+                    irradiance below. We divide by its value facing the light, so the curve reads 1 there and Wrap sets
+                    \(\sigma = \tfrac{\pi}{2}\,\mathrm{Wrap}\):
+                </p>
+                <div class="math-block">$$E(\theta,\sigma) = L\int_{\Omega_\sigma}\max(0,\ \mathbf n\cdot\boldsymbol\omega)\,d\boldsymbol\omega,\qquad \hat E(\theta,\sigma) = \frac{E(\theta,\sigma)}{\pi L \sin^2\sigma}$$
+$$\hat E(\theta,\sigma) = \begin{cases} \max(\cos\theta,\,0), &amp; \cos^2\theta \ge \sin^2\sigma \\[6pt] \dfrac{\left(\cos\theta\,\arccos y - x\,s_y\right)\sin^2\sigma + \arctan\!\left(s_y / x\right)}{\pi\sin^2\sigma}, &amp; \text{otherwise} \end{cases}$$
+$$x = \sqrt{\frac{1}{\sin^2\sigma} - 1},\qquad y = -x\cot\theta,\qquad s_y = \sin\theta\,\sqrt{1 - y^2}$$</div>
+                <p>
+                    By the Funk-Hecke theorem, a lobe that is symmetric about one axis scales each spherical harmonic band \(l\) by one
+                    number [8]. Dividing by the numbers of the clamped cosine that Unity and Light Volumes store gives the band weights:
+                </p>
+                <div class="math-block">$$\int_{S^2} K(\boldsymbol\omega\cdot\mathbf n)\,Y_{lm}(\boldsymbol\omega)\,d\boldsymbol\omega = \lambda_l\,Y_{lm}(\mathbf n),\qquad \lambda_l = 2\pi\int_{-1}^{1} K(t)\,P_l(t)\,dt$$
+$$a_l = \frac{\lambda_l(K)}{\lambda_l(\max(0,t))},\qquad \lambda_0,\lambda_1,\lambda_2 = \pi,\ \tfrac{2\pi}{3},\ \tfrac{\pi}{4}\ \text{for the clamped cosine}$$
+$$\text{rim lobe:}\qquad a_0 = \frac{2}{1+\cos\sigma},\qquad a_1 = 1,\qquad a_2 = \cos\sigma$$</div>
             </section>
 
             <section class="glass-panel paper-section w-100 mb-5" id="unified">
@@ -622,7 +776,7 @@ a2 = 4 (1 + s) (3 c2 - 1 / (p + 1)),   c2 = (1 + s)^2 / (p + 3) - 2 s (1 + s) / 
                     Light Volumes carry L1 only. For one light plus a uniform sky, the L2 band is exactly
                     <span class="formula">0.625 |L1| P2(n &middot; L1dir)</span> per colour channel. With several lights from different directions
                     that estimate overshoots, so we scale it by <span class="formula">sqrt(d)</span>, where
-                    <span class="formula">d = |L1| / (2 L0)</span> is 1 for a single point light and 0 for a uniform sky.
+                    <span class="formula">d = |L1| / (2 L0)</span> is 1 for a single light stored as Unity stores it and 0 for a uniform sky.
                 </p>
                 <div class="paper-table-wrap">
                     <table class="paper-table">
@@ -639,6 +793,28 @@ a2 = 4 (1 + s) (3 c2 - 1 / (p + 1)),   c2 = (1 + s)^2 / (p + 3) - 2 s (1 + s) / 
                     The four per-vertex lights take a different fix: the shader reads them in the pixel stage and runs the same direct-light
                     code as a per-pixel light, so they gain normal maps and highlights, which Unity's per-vertex path never gives them [1].
                 </p>
+                <h3>The equations</h3>
+                <p>
+                    The terminator kernel, with \(s\) the Soften value and \(h\) the Hardness value:
+                </p>
+                <div class="math-block">$$K(c) = \operatorname{sat}\!\left(\frac{c + s}{1 + s}\right)^{p},\qquad p = 1 - 0.85\,h$$</div>
+                <p>
+                    Substituting \(t = (1+s)u - s\) turns each Funk-Hecke integral into a sum of powers of \(u\), which is where the closed
+                    forms in the table come from:
+                </p>
+                <div class="math-block">$$\lambda_0 = 2\pi\int_{-s}^{1}\left(\frac{t+s}{1+s}\right)^{p}dt = \frac{2\pi(1+s)}{p+1}$$
+$$\lambda_1 = 2\pi(1+s)\left(\frac{1+s}{p+2} - \frac{s}{p+1}\right),\qquad \lambda_2 = \pi(1+s)\left(3c_2 - \frac{1}{p+1}\right)$$
+$$c_2 = \int_0^1 u^{p}\big((1+s)u - s\big)^2 du = \frac{(1+s)^2}{p+3} - \frac{2s(1+s)}{p+2} + \frac{s^2}{p+1}$$</div>
+                <p>
+                    A probe or a volume is then shaded with the weighted bands, in Unity's convention where the stored bands already hold
+                    the cosine:
+                </p>
+                <div class="math-block">$$E(\mathbf n) \approx a_0\,L_0 + a_1\,\mathbf L_1\cdot\mathbf n + a_2\,L_2(\mathbf n)$$</div>
+                <p>
+                    For one light the clamped cosine's third band is \(\tfrac{5}{16}E\,P_2\), and its second is \(\tfrac12 E\), which gives
+                    the rebuild for data that stops at L1:
+                </p>
+                <div class="math-block">$$L_2(\mathbf n) \approx 0.625\,\lVert\mathbf L_1\rVert\,\sqrt{d}\;P_2\!\left(\mathbf n\cdot\hat{\mathbf L}_1\right),\qquad d = \min\!\left(\frac{\lVert\mathbf L_1\rVert}{2L_0},\,1\right),\qquad P_2(x) = \tfrac12\left(3x^2 - 1\right)$$</div>
             </section>
 
             <section class="glass-panel paper-section w-100 mb-5" id="camera">
@@ -682,6 +858,22 @@ a2 = 4 (1 + s) (3 c2 - 1 / (p + 1)),   c2 = (1 + s)^2 / (p + 3) - 2 s (1 + s) / 
                     the false highlight a plain sky would make (10% of the sky's power instead of 22%) while finding the sun within about 10
                     degrees in the median case.
                 </p>
+                <h3>The equations</h3>
+                <p>
+                    Exposure scales the frame by a power of two. The AgX curve, as the camera ports it, works on the log of the colour
+                    after an input matrix, with a sixth-order fit to the sigmoid and a 2.2 power on the way out:
+                </p>
+                <div class="math-block">$$\mathbf c' = 2^{EV}\,\mathbf c,\qquad \mathbf c_{\text{in}} = M_{\text{in}}\max(\mathbf c', 0),\qquad x = \frac{\operatorname{clamp}\!\left(\log_2 \mathbf c_{\text{in}},\,-12.47393,\,4.026069\right) + 12.47393}{16.499999}$$
+$$y = 15.5x^6 - 40.14x^5 + 31.96x^4 - 6.868x^3 + 0.4298x^2 + 0.1191x - 0.00232,\qquad \mathbf c_{\text{out}} = \left(M_{\text{out}}\,\mathbf y\right)^{2.2}$$</div>
+                <p>
+                    A light of angular radius \(r\) widens the GGX lobe of roughness \(\alpha\) [6]:
+                </p>
+                <div class="math-block">$$\alpha' = \alpha + \tfrac12\tan r$$</div>
+                <p>
+                    A probe's L1 band points at its strongest light. For one small light of power \(P\), twice the band's length recovers
+                    it, and the directional share \(d\) damps the false highlight a plain sky would make:
+                </p>
+                <div class="math-block">$$\hat P = 2\,\lVert\mathbf L_1\rVert\,d^{\,k},\qquad \hat{\boldsymbol\ell} = \frac{\mathbf L_1}{\lVert\mathbf L_1\rVert},\qquad d = \min\!\left(\frac{\lVert\mathbf L_1\rVert}{2L_0},\,1\right),\qquad k = 0.5$$</div>
             </section>
 
             <section class="glass-panel paper-section w-100 mb-5" id="baking">
@@ -801,6 +993,23 @@ a2 = 4 (1 + s) (3 c2 - 1 / (p + 1)),   c2 = (1 + s)^2 / (p + 3) - 2 s (1 + s) / 
                     wide, while the post-processing stack limits the average of a whole view. The third version brackets the measured view
                     averages with half a stop either side.
                 </p>
+                <h3>The equations</h3>
+                <p>
+                    The first bounce leaves in a cosine-weighted direction built from a rotated Fibonacci set, where \(g\) is the golden
+                    ratio conjugate and \(o_1, o_2\) are the texel's own offsets:
+                </p>
+                <div class="math-block">$$u_1 = \left\{\frac{k + \frac12}{n} + o_1\right\},\qquad u_2 = \left\{k\,g + o_2\right\},\qquad g = \frac{\sqrt5 - 1}{2}$$
+$$\boldsymbol\omega_k = \left(\sqrt{u_1}\cos 2\pi u_2,\ \sqrt{u_1}\sin 2\pi u_2,\ \sqrt{1 - u_1}\right),\qquad p(\boldsymbol\omega) = \frac{\cos\theta}{\pi}\quad\Rightarrow\quad \hat E = \frac{\pi}{n}\sum_{k=0}^{n-1} L(\boldsymbol\omega_k)$$</div>
+                <p>
+                    The position inside the texel and the point on a light's disc come from the \(R_4\) sequence of section 3, with a
+                    per-texel rotation, and the disc point is area-uniform:
+                </p>
+                <div class="math-block">$$\mathbf p_k = \mathbf c_{\text{light}} + \rho\sqrt{t_{k,3}}\left(\cos 2\pi t_{k,4}\,\mathbf e_1 + \sin 2\pi t_{k,4}\,\mathbf e_2\right)$$</div>
+                <p>
+                    An emissive patch of area \(A\) and radiance \(L\) reached by a shadow ray adds this much to a texel, in the
+                    lightmap's convention of irradiance over pi:
+                </p>
+                <div class="math-block">$$\Delta = \frac{L\cos\theta_{\text{x}}\cos\theta_{\ell}\,A}{\pi\,r^2}$$</div>
             </section>
 
             <section class="glass-panel paper-section w-100 mb-5" id="target">
@@ -1102,13 +1311,174 @@ a2 = 4 (1 + s) (3 c2 - 1 / (p + 1)),   c2 = (1 + s)^2 / (p + 3) - 2 s (1 + s) / 
                     shaders read the directional texture as Unity's encoding, MonoSH ratio can only be an option for scenes lit entirely with
                     our world shaders.
                 </p>
+                <h3>The equations</h3>
+                <p>
+                    Unity's lightmapper takes a light's colour times its intensity through the sRGB decode [2], and its Legacy falloff
+                    over the distance ratio \(x\) [3]:
+                </p>
+                <div class="math-block">$$\mathbf c_{\text{lin}} = \operatorname{lin}(\mathbf c\,I),\qquad \operatorname{lin}(v) = \begin{cases} v / 12.92, &amp; v \le 0.04045 \\[4pt] \left(\dfrac{v + 0.055}{1.055}\right)^{2.4}, &amp; \text{otherwise} \end{cases}$$
+$$A(x) = \frac{1}{1 + 25x^2}\;\operatorname{sat}\!\left(\frac{1 - x^2}{0.36}\right),\qquad x = \frac{\text{distance}}{\text{range}}$$</div>
+                <p>
+                    The eight anisotropic lookups sit on the median ring of the GGX lobe (the half-vector sampling formula at
+                    \(u_1 = \tfrac12\)), each read at the smaller roughness and weighted by \(\mathbf N\cdot\mathbf l\):
+                </p>
+                <div class="math-block">$$\alpha_t = \alpha(1 + k),\qquad \alpha_b = \alpha(1 - k),\qquad \phi_i = \operatorname{atan2}\!\left(\alpha_b\sin\phi_i^0,\ \alpha_t\cos\phi_i^0\right),\qquad \phi_i^0 = \frac{\left(i + \frac12\right)\pi}{4}$$
+$$\tan^2\theta_i = \left(\frac{\cos^2\phi_i}{\alpha_t^2} + \frac{\sin^2\phi_i}{\alpha_b^2}\right)^{-1},\qquad \mathbf h_i = \sin\theta_i\left(\cos\phi_i\,\mathbf T + \sin\phi_i\,\mathbf B\right) + \cos\theta_i\,\mathbf N,\qquad \mathbf l_i = \operatorname{reflect}(-\mathbf V, \mathbf h_i)$$
+$$R \approx \frac{\sum_{i=0}^{7} w_i\,P\!\left(\mathbf l_i,\ r'\right)}{\sum_{i=0}^{7} w_i},\qquad w_i = \max(\mathbf N\cdot\mathbf l_i,\,0),\qquad r' = \sqrt{\max\!\left(\min(\alpha_t,\alpha_b),\ 0.35\,\alpha\right)}$$</div>
+                <p>
+                    The leak correction can only darken, and the light probe reflection weights the stored bands by the fitted lobe
+                    factors (with \(r\) the perceptual roughness):
+                </p>
+                <div class="math-block">$$R' = R_{\text{box}}\,\min\!\left(\frac{E_{\text{local}}}{E_{\text{probe}}},\ 1\right)$$
+$$S(\mathbf R) = L_0 + 1.5k_1\,\mathbf L_1\cdot\mathbf R + 4k_2\,L_2(\mathbf R),\qquad 1.5k_1 = 0.52552r^2 - 1.39581r + 1.86946,\qquad 4k_2 = 3.67256r^2 - 8.81053r + 6.14007$$</div>
+                <p>
+                    The MonoSH ratio keeps the lightmap's colour and takes its direction from the luminance L1 band, divided by that
+                    band's value at the normal the lightmap was baked for:
+                </p>
+                <div class="math-block">$$\mathbf E(\mathbf n) = \mathbf E_0\,\frac{Y(\mathbf n)}{Y(\mathbf n_0)},\qquad Y(\mathbf n) = \max\!\left(0,\ \pi c_0 Y_{00} + \tfrac{2\pi}{3}\,Y_1\,\mathbf c_1\cdot\mathbf n\right)$$</div>
+            </section>
+
+            <section class="glass-panel paper-section w-100 mb-5" id="lv-lights">
+                <h2 class="text-glow-cyan" style="margin-top: 0;">9. Light Volume lights, one at a time</h2>
+                <p>
+                    With the switch from section 5 on, a creator saw almost no change except in seams, creases and highlights, and area
+                    lights looked the least right. The cause was in how the switch treated Light Volumes' point, spot and area lights. Light
+                    Volumes computes each of these lights per pixel, with its exact direction and size, and only then packs them into L1 SH
+                    [15]. Our first method shaded the packed SH with the band weights of section 5, which are 1 at the default settings, so
+                    it changed next to nothing. Every light's direction and size is available per pixel, so we now shade each one
+                    individually.
+                </p>
+                <p>
+                    Doing so raised a question of scale, because Light Volumes packs its two families of light in different conventions.
+                    A point light reaches the surface as \(l_0(1 + \kappa c)\): twice its irradiance when facing the light, and half of
+                    that at 90 degrees. An area light is stored the way a baked volume stores light, with a quarter of the irradiance in
+                    its first band. No single scale matches both. We combined the two methods: each light keeps exactly the total light
+                    Light Volumes gives it, averaged over every direction a surface can face, and takes its shape from an exact
+                    integral over the light's real size. We then measured the difference against brute-force integration.
+                </p>
+                <h3>The equations</h3>
+                <p>
+                    What Light Volumes delivers, with \(C\) the light's colour, \(r\) its radius, \(d\) the distance, \(\Omega\) the
+                    solid angle of an area light, \(c = \mathbf n\cdot\hat{\boldsymbol\ell}\), and \(s\) the material's Point Light
+                    Shading:
+                </p>
+                <div class="math-block">$$\text{point, spot:}\quad l_0 = C\,\frac{r^2}{d^2 + r^2},\qquad \mathbf L_1 = l_0\,\kappa\,\hat{\boldsymbol\ell},\qquad \kappa = \frac{d}{\sqrt{d^2 + r^2}}$$
+$$\text{area:}\quad l_0 = C\,a\,\frac{\Omega}{4}\,T,\qquad \mathbf L_1 = l_0\left(1 - \frac{\Omega}{4\pi}\right)\hat{\boldsymbol\ell}_{\text{rep}}\qquad (a\ \text{attenuation},\ T\ \text{cookie})$$
+$$E_{\text{LV}}(\mathbf n) = l_0\,(1 + \kappa c)\,S\!\left(\operatorname{sat}\!\left(\tfrac{s}{2}c + b\right)\right),\qquad b = \tfrac12 + \tfrac12\operatorname{sat}(1 - s),\qquad S(x) = 3x^2 - 2x^3$$</div>
+                <p>
+                    Averaged over all normals, that result has a closed form. With \(u = \tfrac{s}{2}c + b\), \(h = \tfrac{s}{2}\), the
+                    range \([u_0, u_1] = [b - h,\ b + h]\), \(\bar u = \operatorname{sat}(u)\), \(P(u) = u^3 - \tfrac12 u^4\) and
+                    \(Q(u) = \tfrac34 u^4 - \tfrac25 u^5\):
+                </p>
+                <div class="math-block">$$\bar E_{\text{LV}} = \frac{1}{4\pi}\int_{S^2} E_{\text{LV}}\,d\mathbf n = l_0\,M,\qquad M = A(s) + \kappa\,B(s)$$
+$$A = \frac{P(\bar u_1) - P(\bar u_0) + \max\!\big(u_1 - \max(u_0, 1),\ 0\big)}{2h}$$
+$$B = \frac{Q(\bar u_1) - Q(\bar u_0) - b\big(P(\bar u_1) - P(\bar u_0)\big) + \mathbb 1_{u_1 \ge 1}\left[\tfrac12\big(u_1^2 - u_\star^2\big) - b\,(u_1 - u_\star)\right]}{2h^2},\qquad u_\star = \max(u_0, 1)$$</div>
+                <p>
+                    A sphere cap of angular radius \(\sigma\) averages \(1 / (2(1 + \cos\sigma))\) of its facing value over all normals,
+                    so this facing value keeps Light Volumes' total exactly. \(\hat E\) is the cap integral of section 4:
+                </p>
+                <div class="math-block">$$W = l_0\,M\cdot 2\,(1 + \cos\sigma),\qquad E(\mathbf n) = W\,\hat E(\theta,\sigma),\qquad \sin^2\sigma = \frac{r^2}{d^2 + r^2}\ \ \text{(point, spot)}$$</div>
+                <p>
+                    An area light becomes the cap with the same vector form factor [4]. Its four corners \(\mathbf v_i\), taken as unit
+                    vectors from the shading point, give
+                </p>
+                <div class="math-block">$$\mathbf F = \frac{1}{2\pi}\sum_{i=0}^{3}\arccos\!\left(\mathbf v_i\cdot\mathbf v_{i+1}\right)\frac{\mathbf v_i\times\mathbf v_{i+1}}{\lVert\mathbf v_i\times\mathbf v_{i+1}\rVert},\qquad \sin^2\sigma = \lVert\mathbf F\rVert,\qquad \hat{\boldsymbol\ell} = \frac{\mathbf F}{\lVert\mathbf F\rVert}$$</div>
+                <p>
+                    The horizon then comes for free from the cap integral. Soften and Hardness act on a light of size \(\sigma\) through a
+                    two-tap correction that is exact at zero size and exact when both are 0:
+                </p>
+                <div class="math-block">$$\tilde K(\theta) = \hat E(\theta,\sigma) + \frac12\sum_{\pm}\left[K\!\left(\cos\!\left(\theta \pm \tfrac{\sigma}{2}\right)\right) - \operatorname{sat}\!\left(\cos\!\left(\theta \pm \tfrac{\sigma}{2}\right)\right)\right]$$</div>
+                <p>
+                    Highlights blend Light Volumes' own widened lobe into a representative point [6] as the light grows, and never exceed
+                    the light's own radiance. \(\varepsilon\) is Light Volumes' spread term, \(h_{x,y}\) the half sizes of a panel and
+                    \(d_{\text{rep}}\) the distance to the representative point:
+                </p>
+                <div class="math-block">$$f_W = D\!\left(\mathbf h_c;\ \alpha_e\right)V\,(\mathbf n\cdot\mathbf l_c),\qquad \alpha_e^2 = \frac{\alpha^2 w + \varepsilon}{w + \varepsilon},\qquad w = 2 + 2\,\mathbf l_c\cdot\mathbf v$$
+$$f_K = D\!\left(\mathbf h_{\text{rep}};\ \alpha\right)\frac{\alpha^2}{\alpha'_x\,\alpha'_y}\,V\,(\mathbf n\cdot\mathbf l_{\text{rep}}),\qquad \alpha'_{x,y} = \min\!\left(1,\ \alpha + \frac{h_{x,y}}{2\,d_{\text{rep}}}\right)$$
+$$f = (1 - t)\min(f_W, \bar f) + t\min(f_K, \bar f),\qquad t = \operatorname{sat}(2.5\sin\sigma),\qquad \bar f = \frac{1 + \cos\sigma}{2\pi\sin^2\sigma}$$
+$$\text{highlight} = \pi\,E_s\,f\,F(\mathbf l_{\text{rep}}\cdot\mathbf h_{\text{rep}}),\qquad E_s = 4\,l_0\,M$$</div>
+                <p>
+                    A sphere light uses \(\alpha' = \min(1,\ \alpha + \tfrac12\sin\sigma)\) and \((\alpha/\alpha')^2\) in place of the two
+                    panel axes.
+                </p>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 17.</strong> One Light Volume light: Light Volumes' packed result against the combined operator. Both carry the same total light.</caption>
+                        <thead><tr><th>Case</th><th class="num">Light Volumes SH</th><th class="num">Combined</th></tr></thead>
+                        <tbody>
+                            <tr><td>Point light facing / at 90 degrees, Point Light Shading 3</td><td class="num">1.999 / 0.500</td><td class="num">2.976 / 0.021</td></tr>
+                            <tr><td>Point light facing / at 90 degrees, Point Light Shading 0</td><td class="num">1.999 / 1.000</td><td class="num">3.999 / 0.028</td></tr>
+                            <tr><td>Total light, every case</td><td class="num">\(l_0 M\)</td><td class="num best">\(l_0 M\) (ratio 1.0000)</td></tr>
+                            <tr><td>Area light, RMS against brute force, seven panels</td><td class="num">0.146 to 0.203</td><td class="num best">0.000 to 0.021 (strip 0.078)</td></tr>
+                            <tr><td>Area light, facing value against brute force</td><td class="num">0.50 to 0.69 &times;</td><td class="num best">1.00 to 1.03 &times;</td></tr>
+                            <tr><td>Normals lit that face away from the panel</td><td class="num">0.4% to 41.4%</td><td class="num best">0.0%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 18.</strong> Soften and Hardness on a light with a size: RMS against the shaded integral over the light, 5 sizes &times; 4 Soften &times; 3 Hardness.</caption>
+                        <thead><tr><th>Form</th><th class="num">Mean RMS</th><th class="num">Worst</th></tr></thead>
+                        <tbody>
+                            <tr><td>Ignore the size</td><td class="num">0.080</td><td class="num">0.295</td></tr>
+                            <tr><td>Representative cosine</td><td class="num">0.195</td><td class="num">0.455</td></tr>
+                            <tr><td>Kernel of the cap result</td><td class="num">0.115</td><td class="num">0.315</td></tr>
+                            <tr><td>Cap plus kernel minus Lambert</td><td class="num">0.062</td><td class="num">0.226</td></tr>
+                            <tr><td>Larger of cap and kernel</td><td class="num">0.067</td><td class="num">0.295</td></tr>
+                            <tr><td>Two-tap correction (built)</td><td class="num best">0.048</td><td class="num">0.260</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 19.</strong> Highlights of panels and round lights against GGX integrated over the light: mean and worst RMS over 18 cases.</caption>
+                        <thead><tr><th>Method</th><th class="num">Mean RMS</th><th class="num">Worst</th></tr></thead>
+                        <tbody>
+                            <tr><td>Light Volumes' widened lobe, panels</td><td class="num">0.293</td><td class="num">0.725</td></tr>
+                            <tr><td>Light Volumes' widened lobe, round lights</td><td class="num">0.133</td><td class="num">0.501</td></tr>
+                            <tr><td>Representative point, capped, panels</td><td class="num">0.168</td><td class="num">0.350</td></tr>
+                            <tr><td>Blend by size, capped (built)</td><td class="num best">0.117</td><td class="num">0.350</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    Light Volumes' widened lobe is the best choice for a small light (0.001 to 0.013 at 3.5 degrees), so the blend keeps it
+                    there and moves to the representative point as the light grows. Two first runs were wrong and are kept: one divided a
+                    fitted edge integral by \(2\pi\) twice, and one widened the lobe at the representative point, which put two to five
+                    times too much energy into a halo.
+                </p>
+                <h3>Two defects found on the way</h3>
+                <p>
+                    Unity's Standard shader multiplies the direct specular term by \(\pi\), because its light colour is irradiance over pi
+                    and its diffuse term drops the \(1/\pi\) of Lambert. Our shaders dropped the \(1/\pi\) from diffuse and kept it in the
+                    specular distribution, so every highlight from a light in the room was a third of Unity's, and of the Light Volumes and
+                    LTCGI highlights on the same material:
+                </p>
+                <div class="math-block">$$\text{Unity:}\quad \mathbf c\,(\mathbf n\cdot\mathbf l)\left(\mathbf k_d\,f_d + \pi\,D\,V\,F\right),\qquad \text{ours, before:}\quad \mathbf c\,(\mathbf n\cdot\mathbf l)\left(\mathbf k_d\,f_d + D\,V\,F\right)$$</div>
+                <p>
+                    Normal strength above 1 extrapolated the normal toward the surface. For a stored normal with height component
+                    \(n_z\), the old form tips the normal inside the surface whenever \(n_z \lt 1 - 1/k\). Scaling the slope instead is the
+                    normal of a surface \(k\) times taller, and never tips over:
+                </p>
+                <div class="math-block">$$\mathbf n_k^{\text{old}} = \operatorname{normalize}\big(\mathbf z + k(\mathbf n - \mathbf z)\big),\qquad \mathbf n_k = \begin{cases} \mathbf n_k^{\text{old}}, &amp; k \le 1 \\[4pt] \operatorname{normalize}\big(k n_x,\ k n_y,\ n_z\big), &amp; k \gt 1 \end{cases}$$</div>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 20.</strong> 20,000 normals tilted up to 45 degrees: share pushed inside the surface, and the median tilt.</caption>
+                        <thead><tr><th>Strength</th><th class="num">Inside, before</th><th class="num">Inside, after</th><th class="num">Median tilt before / after</th></tr></thead>
+                        <tbody>
+                            <tr><td>1.5</td><td class="num">0.0%</td><td class="num">0.0%</td><td class="num">33.2 / 32.1 degrees</td></tr>
+                            <tr><td>3</td><td class="num">0.0%</td><td class="num">0.0%</td><td class="num">56.4 / 51.4 degrees</td></tr>
+                            <tr><td>5</td><td class="num">18.4%</td><td class="num best">0.0%</td><td class="num">72.3 / 64.4 degrees</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
 
             <section class="glass-panel paper-section w-100 mb-5" id="built">
-                <h2 class="text-glow-cyan" style="margin-top: 0;">9. What we built</h2>
+                <h2 class="text-glow-cyan" style="margin-top: 0;">10. What we built</h2>
                 <div class="paper-table-wrap">
                     <table class="paper-table">
-                        <caption><strong>Table 17.</strong> Changes that came out of this research, and their state on 24 September 2026.</caption>
+                        <caption><strong>Table 21.</strong> Changes that came out of this research, and their state on 25 September 2026.</caption>
                         <thead><tr><th>Change</th><th>Where</th><th>State</th></tr></thead>
                         <tbody>
                             <tr><td>Rim as one lobe fed by every light, with Blur</td><td>All six shaders</td><td>On by default in the next release</td></tr>
@@ -1119,6 +1489,9 @@ a2 = 4 (1 + s) (3 c2 - 1 / (p + 1)),   c2 = (1 + s)^2 / (p + 3) - 2 s (1 + s) / 
                             <tr><td>Light units, falloff, bounce, spot cone and soft shadows matched to Unity; Rectangle and Disc area lights</td><td>Light Baker</td><td>Built, being tested</td></tr>
                             <tr><td>Exposure and bloom fitted to rendered views after each bake</td><td>Light Baker</td><td>Built, third version being tested</td></tr>
                             <tr><td>MonoSH ratio lightmaps</td><td>Light Baker and world shaders</td><td>Deferred</td></tr>
+                            <tr><td>Light Volume point, spot and area lights shaded one at a time, at their real size, with Light Volumes' energy</td><td>All six shaders</td><td>Behind the Unified Light switch, off by default</td></tr>
+                            <tr><td>Direct highlights at Unity's brightness</td><td>All six shaders</td><td>A defect fix, in the next release</td></tr>
+                            <tr><td>Normal strength above 1 as a taller surface</td><td>All six shaders</td><td>A defect fix, in the next release</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -1129,7 +1502,7 @@ a2 = 4 (1 + s) (3 c2 - 1 / (p + 1)),   c2 = (1 + s)^2 / (p + 3) - 2 s (1 + s) / 
             </section>
 
             <section class="glass-panel paper-section w-100 mb-5" id="limitations">
-                <h2 class="text-glow-cyan" style="margin-top: 0;">10. Limitations</h2>
+                <h2 class="text-glow-cyan" style="margin-top: 0;">11. Limitations</h2>
                 <ul class="key-findings">
                     <li>All results are numerical. The environments are analytic models, not captured scenes, <strong>and the shader and baker changes are confirmed in the Unity editor.</strong></li>
                     <li>Unity's spot light edge uses a lookup table that is not in any source we could read. The baker keeps a smooth ramp between the derived inner and outer cone.</li>
@@ -1138,7 +1511,2650 @@ a2 = 4 (1 + s) (3 c2 - 1 / (p + 1)),   c2 = (1 + s)^2 / (p + 3) - 2 s (1 + s) / 
                     <li>The darken-only leak correction trades accuracy in some corners for fewer bright leaks; per-texel reflection occlusion from the baker would be the complete answer and has no lightmap channel today.</li>
                     <li>Fitting exposure to each bake brightens a scene that is dark on purpose; that option should stay off for such scenes.</li>
                     <li>Estimating the L1 data MonoSH needs from the baker's cosine-weighted samples has unbounded variance at the horizon, which is why it is deferred.</li>
+                    <li>A long, thin area light is treated as a round cap for its diffuse light, which leaves 0.078 RMS on a 3 by 0.1 metre strip.</li>
+                    <li>Highlights from a panel closer than its own size keep up to 0.35 RMS. Linearly transformed cosines [4] would close that gap but need a lookup texture the shaders do not carry.</li>
+                    <li>With every Light Volume light in range counted, including lights behind a surface, a crowded spot can reach the world's overlap limit sooner than Light Volumes' own path.</li>
                 </ul>
+            </section>
+
+            <section class="glass-panel paper-section w-100 mb-5" id="run-it">
+                <h2 class="text-glow-cyan" style="margin-top: 0;">12. Run it yourself</h2>
+                <p>
+                    Every number in this report comes from a script, and here they all are, exactly as we ran them. You need Python 3.8 or
+                    newer and NumPy. Nothing else: no Unity, no graphics card and no data files.
+                </p>
+                <div class="run-steps">
+                    <p><strong>1. Install NumPy</strong> if you don't have it:</p>
+                    <code class="paper-cmd">python -m pip install numpy</code>
+                    <p>
+                        <strong>2. Get the scripts.</strong> Download the ones you want from the table below, or the whole
+                        <a href="https://github.com/VixenCreations/VixenToolBox/tree/main/Website/research-kit" target="_blank" rel="noopener noreferrer">research kit folder</a>,
+                        which keeps each experiment in its own folder with our logs in <code>expected/</code>. Every listing below also has
+                        a Copy button.
+                    </p>
+                    <p><strong>3. Run everything and compare it with our results:</strong></p>
+                    <code class="paper-cmd">python run_all.py</code>
+                    <p>
+                        It runs each experiment in order, saves what every script prints to <code>output/</code>, and checks it against our
+                        log. A rounding difference in the last digit still counts as a match. The whole run takes about 11 minutes on a
+                        desktop processor, and <code>route_match.py</code> is most of that. To run one experiment, name its folder:
+                    </p>
+                    <code class="paper-cmd">python run_all.py lv-lights</code>
+                    <p><strong>4. Or run one script on its own</strong> from inside its folder:</p>
+                    <code class="paper-cmd">cd rim-lobe
+python rim_lobe_research.py</code>
+                    <p>
+                        The scripts in <code>lv-lights</code> and <code>unified-light</code> import their neighbours, so keep each folder
+                        together. The Light Volumes scripts also save their report next to themselves.
+                    </p>
+                </div>
+                <p>
+                    We checked the kit on a second setup, Python 3.14.7 with NumPy 2.4.6, and all 22 scripts that have a log from the
+                    original experiment reproduced it.
+                </p>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 22.</strong> The scripts, what each one reproduces, and how long it took on our machine.</caption>
+                        <thead><tr><th>Script</th><th>Reproduces</th><th class="num">Time</th></tr></thead>
+                        <tbody>
+                            <tr><td><a href="research-kit/rim-lobe/rim_stack_check.py" download><code>rim-lobe/rim_stack_check.py</code></a></td><td>Section 4: the old Width curve and Follow Light mask</td><td class="num">&lt; 0.1 s</td></tr>
+                            <tr><td><a href="research-kit/rim-lobe/rim_shape_check2.py" download><code>rim-lobe/rim_shape_check2.py</code></a></td><td>Table 1: Wrap end points in 32-bit float, the smooth end of the falloff</td><td class="num">0.4 s</td></tr>
+                            <tr><td><a href="research-kit/rim-lobe/rim_lobe_research.py" download><code>rim-lobe/rim_lobe_research.py</code></a></td><td>Table 1: band weights on the lattice, SH against the exact integral over 300 skies</td><td class="num">6.5 s</td></tr>
+                            <tr><td><a href="research-kit/rim-lobe/rim_asbuilt_check.py" download><code>rim-lobe/rim_asbuilt_check.py</code></a></td><td>Tables 1 and 2: the rim as built, before and after</td><td class="num">0.1 s</td></tr>
+                            <tr><td><a href="research-kit/rim-lobe/verify_nonlinear_sh_2026-09-12.py" download><code>rim-lobe/verify_nonlinear_sh_2026-09-12.py</code></a></td><td>Section 5: the non-linear L1 reconstruction behind Sharper Probes</td><td class="num">0.3 s</td></tr>
+                            <tr><td><a href="research-kit/unified-light/route_mismatch.py" download><code>unified-light/route_mismatch.py</code></a></td><td>Table 3</td><td class="num">0.2 s</td></tr>
+                            <tr><td><a href="research-kit/unified-light/route_match.py" download><code>unified-light/route_match.py</code></a></td><td>Table 4 and the band weight closed forms</td><td class="num">6 min 47 s</td></tr>
+                            <tr><td><a href="research-kit/unified-light/l2_recovery.py" download><code>unified-light/l2_recovery.py</code></a></td><td>Table 5, the rebuilt L2 band on its own</td><td class="num">47 s</td></tr>
+                            <tr><td><a href="research-kit/unified-light/l2_recovery_confidence.py" download><code>unified-light/l2_recovery_confidence.py</code></a></td><td>Table 5, with the confidence term</td><td class="num">8.7 s</td></tr>
+                            <tr><td><a href="research-kit/camera-look/route_highlights.py" download><code>camera-look/route_highlights.py</code></a></td><td>Section 6: highlights on every route, and a light recovered from L1</td><td class="num">0.4 s</td></tr>
+                            <tr><td><a href="research-kit/camera-look/camera_chain.py" download><code>camera-look/camera_chain.py</code></a></td><td>Section 6: the AgX, ACES and PBR Neutral detail bands, clipped worlds</td><td class="num">0.2 s</td></tr>
+                            <tr><td><a href="research-kit/camera-look/light_size_highlight.py" download><code>camera-look/light_size_highlight.py</code></a></td><td>Table 6</td><td class="num">0.2 s</td></tr>
+                            <tr><td><a href="research-kit/baker-hd/baker_sampling.py" download><code>baker-hd/baker_sampling.py</code></a></td><td>Figure 1, Tables 7 to 9, and the emissive units ratio</td><td class="num">9.1 s</td></tr>
+                            <tr><td><a href="research-kit/nextgen-lighting/light_units.py" download><code>nextgen-lighting/light_units.py</code></a></td><td>Figures 2 and 3, Tables 11 and 12</td><td class="num">0.1 s</td></tr>
+                            <tr><td><a href="research-kit/nextgen-lighting/aniso_reflection.py" download><code>nextgen-lighting/aniso_reflection.py</code></a></td><td>Table 13</td><td class="num">35 s</td></tr>
+                            <tr><td><a href="research-kit/nextgen-lighting/probe_normalization.py" download><code>nextgen-lighting/probe_normalization.py</code></a></td><td>Table 14</td><td class="num">13 s</td></tr>
+                            <tr><td><a href="research-kit/nextgen-lighting/sh_band_fit.py" download><code>nextgen-lighting/sh_band_fit.py</code></a></td><td>Section 8: the fitted band weights</td><td class="num">1.9 s</td></tr>
+                            <tr><td><a href="research-kit/nextgen-lighting/sh_specular.py" download><code>nextgen-lighting/sh_specular.py</code></a></td><td>Figure 4 and Table 15</td><td class="num">8.6 s</td></tr>
+                            <tr><td><a href="research-kit/nextgen-lighting/lightmap_encoding.py" download><code>nextgen-lighting/lightmap_encoding.py</code></a></td><td>Table 16</td><td class="num">4.1 s</td></tr>
+                            <tr><td><a href="research-kit/lv-lights/lv_light_shapes.py" download><code>lv-lights/lv_light_shapes.py</code></a></td><td>Table 17</td><td class="num">45 s</td></tr>
+                            <tr><td><a href="research-kit/lv-lights/lv_light_shaping.py" download><code>lv-lights/lv_light_shaping.py</code></a></td><td>Tables 18 to 20</td><td class="num">83 s</td></tr>
+                            <tr><td><a href="research-kit/lv-lights/lv_asbuilt_check.py" download><code>lv-lights/lv_asbuilt_check.py</code></a></td><td>Section 9: the shader code as built, in 32-bit float</td><td class="num">0.3 s</td></tr>
+                            <tr><td><a href="research-kit/run_all.py" download><code>run_all.py</code></a></td><td>Runs every script above and compares each result with our log</td><td class="num">about 11 min</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>Full listings</h3>
+                <p class="mt-3 mb-1"><strong>Section 4, the rim as a light lobe</strong></p>
+                <details class="script-listing">
+                    <summary><code>rim-lobe/rim_stack_check.py</code><span class="script-meta">Section 4: the old Width curve and Follow Light mask &middot; 35 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/rim-lobe/rim_stack_check.py" download>Download rim_stack_check.py</a> &middot; run from the <code>rim-lobe</code> folder with <code>python rim_stack_check.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Numbers for the 2026-09-23 rim and light stack audit: rim width at the default, Follow Light masking, and the Sharper Probes L2 double count.&quot;&quot;&quot;
+import math
+
+def rim_exp(width):
+    return 30.0 + (0.1 - 30.0) * min(max(width / 10.0, 0.0), 1.0)
+
+print(&quot;Rim Width -&gt; exponent, rim value at NdotV, silhouette band where rim &gt; 0.1 (share of a cylinder&#x27;s radius)&quot;)
+for w in (2, 4, 6, 8, 9, 10):
+    e = rim_exp(w)
+    vals = [pow(1 - n, e) for n in (0.05, 0.1, 0.2, 0.3, 0.5)]
+    ndv = 1 - pow(0.1, 1 / e)
+    band = 1 - math.sqrt(max(0.0, 1 - ndv * ndv))
+    print(f&quot;  width {w:&gt;2}: exp {e:6.2f}  &quot; + &quot;  &quot;.join(f&quot;{v:.3f}&quot; for v in vals) + f&quot;   band {band*100:6.2f}%&quot;)
+
+def wrap_lit(ndl, wrap):
+    return min(max((ndl + wrap) / (1 + wrap), 0.0), 1.0)
+
+print(&quot;\nFollow Light at 1, Wrap 0.5. Edge normal faces a screen on the left; sun comes from the right.&quot;)
+N = (-1.0, 0.0, 0.0)
+sun = (1.0, 0.0, 0.0)
+dot = lambda a, b: sum(x * y for x, y in zip(a, b))
+old_mask = wrap_lit(dot(N, sun), 0.5)
+print(f&quot;  old: the LTCGI edge term was multiplied by {old_mask:.3f} (steered by the sun)&quot;)
+print(f&quot;  new: the LTCGI edge term is multiplied by 1.000; LTCGI&#x27;s own light at this normal decides it&quot;)
+N2 = (1.0, 0.0, 0.0)
+print(f&quot;  sun-facing edge: old {wrap_lit(dot(N2, sun), 0.5):.3f}, new {wrap_lit(dot(N2, sun), 0.5):.3f} (unchanged)&quot;)
+
+print(&quot;\nSharper Probes, one light in the probe (Unity irradiance bands: L0 0.25, L1 0.5 cos, L2 0.3125 P2(cos))&quot;)
+for deg in (0, 45, 70, 90, 120):
+    c = math.cos(math.radians(deg))
+    l0l1 = 0.25 + 0.5 * c
+    l2 = 0.3125 * (3 * c * c - 1) / 2
+    right = max(0.0, l0l1 + l2)
+    doubled = max(0.0, l0l1 + 2 * l2)
+    print(f&quot;  {deg:&gt;3} deg from the light: correct {right:.3f}  doubled L2 {doubled:.3f}  ({(doubled - right) / max(right, 1e-6) * 100:+.0f}%)&quot;)</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>rim-lobe/rim_shape_check2.py</code><span class="script-meta">Table 1: Wrap end points in 32-bit float, the smooth end of the falloff &middot; 46 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/rim-lobe/rim_shape_check2.py" download>Download rim_shape_check2.py</a> &middot; run from the <code>rim-lobe</code> folder with <code>python rim_shape_check2.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Second pass on the rim redesign: exact Wrap endpoints in float32, the kink of the old linear wrap, and the Width band profile.&quot;&quot;&quot;
+import math
+import numpy as np
+f = np.float32
+
+def cap_lit(c, wrap):
+    sig = f(min(max(wrap, 0.0), 1.0)) * f(math.pi * 0.5)
+    s2 = f(np.sin(sig)) ** 2
+    s2 = min(s2, f(0.999999))
+    c = f(min(max(c, -1.0), 1.0))
+    if c * c &gt;= s2 or s2 &lt; f(1e-6):
+        return float(max(c, f(0)))
+    sinT = f(np.sqrt(max(f(1) - c * c, f(1e-6))))
+    x = f(np.sqrt(f(1) / s2 - f(1)))
+    y = f(-x * c / sinT)
+    sy = f(sinT * np.sqrt(max(f(0), f(1) - y * y)))
+    e = (c * f(np.arccos(min(max(y, f(-1)), f(1)))) - x * sy) * s2 + f(np.arctan(sy / x))
+    return float(min(max(e / (f(math.pi) * s2), f(0)), f(1)))
+
+degs = np.arange(0, 180.01, 0.25)
+lam = max(abs(cap_lit(math.cos(math.radians(d)), 0.0) - max(math.cos(math.radians(d)), 0)) for d in degs)
+half = max(abs(cap_lit(math.cos(math.radians(d)), 1.0) - (1 + math.cos(math.radians(d))) / 2) for d in degs)
+print(f&quot;float32: wrap 0 vs Lambert max diff {lam:.2e}; wrap 1 vs half Lambert max diff {half:.2e}&quot;)
+nan = any(not math.isfinite(cap_lit(math.cos(math.radians(d)), w)) for d in degs for w in np.linspace(0, 1, 41))
+print(&quot;any non-finite over 41 wraps x 721 angles:&quot;, nan)
+
+def slopes(fn, deg, h=0.05):
+    l = (fn(deg) - fn(deg - h)) / h
+    r = (fn(deg + h) - fn(deg)) / h
+    return l, r
+old = lambda d: min(max((math.cos(math.radians(d)) + 0.5) / 1.5, 0), 1)
+new = lambda d: cap_lit(math.cos(math.radians(d)), 0.5)
+print(&quot;old wrap 0.5 slope either side of 120 deg: %.5f / %.5f per degree&quot; % slopes(old, 120.0))
+print(&quot;new wrap 0.5 slope either side of 135 deg: %.5f / %.5f per degree&quot; % slopes(new, 135.0))
+print(&quot;new wrap 0.5 slope either side of  45 deg: %.5f / %.5f per degree&quot; % slopes(new, 45.0))
+
+def band(u, width, blur):
+    if width &lt;= 0:
+        return 0.0
+    lo = width * (1 - blur)
+    t = min(max((u - lo) / max(width - lo, 1e-4), 0), 1)
+    return 1 - t * t * (3 - 2 * t)
+print(&quot;\nWidth 4 (outer 40%), rim value by distance in from the outline, as a share of the limb radius&quot;)
+print(&quot;  in:     &quot; + &quot;  &quot;.join(f&quot;{u:4.2f}&quot; for u in (0, .05, .1, .15, .2, .25, .3, .35, .4)))
+for blur in (0.0, 0.5, 1.0):
+    print(f&quot;  blur {blur}: &quot; + &quot;  &quot;.join(f&quot;{band(u, 0.4, blur):4.2f}&quot; for u in (0, .05, .1, .15, .2, .25, .3, .35, .4)))</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>rim-lobe/rim_lobe_research.py</code><span class="script-meta">Table 1: band weights on the lattice, SH against the exact integral over 300 skies &middot; 147 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/rim-lobe/rim_lobe_research.py" download>Download rim_lobe_research.py</a> &middot; run from the <code>rim-lobe</code> folder with <code>python rim_lobe_research.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Rim lobe research: Fibonacci lattice integration of the Wrap lobe (clamped cosine over a spherical cap), its SH band weights for probes and Light Volumes, backlight capture against the old normal-centred rim, and the non-linear SH checks.&quot;&quot;&quot;
+import math
+import numpy as np
+
+N_PTS = 200000
+
+
+def fib(n):
+    i = np.arange(n)
+    z = 1.0 - (2.0 * i + 1.0) / n
+    r = np.sqrt(np.maximum(0.0, 1.0 - z * z))
+    th = math.pi * (3.0 - math.sqrt(5.0)) * i
+    return np.stack([r * np.cos(th), r * np.sin(th), z], axis=1)
+
+
+P = fib(N_PTS)
+DW = 4.0 * math.pi / N_PTS
+
+
+def cap_lit(c, wrap):
+    c = np.clip(np.asarray(c, dtype=np.float64), -1.0, 1.0)
+    s2 = min(math.sin(min(max(wrap, 0.0), 1.0) * math.pi * 0.5) ** 2, 0.999999)
+    out = np.maximum(c, 0.0)
+    if s2 &lt; 1e-6:
+        return out
+    m = c * c &lt; s2
+    cc = c[m]
+    sinT = np.sqrt(np.maximum(1.0 - cc * cc, 1e-6))
+    x = math.sqrt(1.0 / s2 - 1.0)
+    y = -x * cc / sinT
+    sy = sinT * np.sqrt(np.maximum(0.0, 1.0 - y * y))
+    e = (cc * np.arccos(np.clip(y, -1, 1)) - x * sy) * s2 + np.arctan(sy / x)
+    out[m] = np.clip(e / (math.pi * s2), 0.0, 1.0)
+    return out
+
+
+def legendre(l, z):
+    return [np.ones_like(z), z, 0.5 * (3 * z * z - 1)][l]
+
+
+def zh(kernel_vals, l):
+    return np.sum(kernel_vals * legendre(l, P[:, 2])) * DW
+
+
+cos_k = np.maximum(P[:, 2], 0.0)
+base = [zh(cos_k, l) for l in range(3)]
+print(&quot;1. Wrap lobe band weights relative to the cosine lobe Unity stores, against the closed form&quot;)
+print(&quot;   wrap   a0 lattice  a0 closed   a1 lattice  a1 closed   a2 lattice  a2 closed&quot;)
+worst = 0.0
+for wrap in (0.0, 0.25, 0.5, 0.75, 1.0):
+    sig = wrap * math.pi / 2
+    k = cap_lit(P[:, 2], wrap)
+    a = [zh(k, l) / base[l] for l in range(3)]
+    closed = [2.0 / (1.0 + math.cos(sig)), 1.0, math.cos(sig)]
+    worst = max(worst, max(abs(a[i] - closed[i]) for i in range(3)))
+    print(&quot;   %.2f   %.4f      %.4f      %.4f      %.4f      %.4f      %.4f&quot; % (wrap, a[0], closed[0], a[1], closed[1], a[2], closed[2]))
+print(&quot;   worst difference: %.4f&quot; % worst)
+
+Y = lambda v: np.stack([np.full(len(v), 0.2820948),
+                        0.4886025 * v[:, 1], 0.4886025 * v[:, 2], 0.4886025 * v[:, 0],
+                        1.0925484 * v[:, 0] * v[:, 1], 1.0925484 * v[:, 1] * v[:, 2],
+                        0.3153916 * (3 * v[:, 2] ** 2 - 1), 1.0925484 * v[:, 0] * v[:, 2],
+                        0.5462742 * (v[:, 0] ** 2 - v[:, 1] ** 2)], axis=1)
+YP = Y(P)
+A_COS = np.array([math.pi] + [2 * math.pi / 3] * 3 + [math.pi / 4] * 5)
+BAND = np.array([0, 1, 1, 1, 2, 2, 2, 2, 2])
+
+
+def rim_true(radiance, d, wrap):
+    k = cap_lit(P @ d, wrap)
+    return np.sum(radiance * k) * DW / math.pi
+
+
+def rim_sh(radiance, d, wrap):
+    coeff = YP.T @ radiance * DW
+    sig = wrap * math.pi / 2
+    a = np.array([2 / (1 + math.cos(sig)), 1.0, math.cos(sig)])[BAND]
+    yd = Y(d[None, :])[0]
+    return max(0.0, float(np.sum(coeff * A_COS / math.pi * a * yd)))
+
+
+def sun(direction, radius_deg=3.0, power=1.0):
+    c = math.cos(math.radians(radius_deg))
+    lit = (P @ direction) &gt; c
+    return lit * power / (2 * math.pi * (1 - c))
+
+
+def norm(v):
+    v = np.asarray(v, dtype=float)
+    return v / np.linalg.norm(v)
+
+
+V = norm([0, 0, 1])
+N = norm([1, 0, 0])
+R = 2 * np.dot(N, V) * N - V
+d = norm(N + R)
+print(&quot;\n2. A silhouette pixel: normal to the side, camera in front. Rim direction d = normalize(N + reflect(-V, N)) = %s&quot; % np.round(d, 3))
+print(&quot;   light position            old rim (cosine at N)   new rim lobe, Wrap 0.5 (exact / from SH)&quot;)
+for name, ldir in ((&quot;behind you&quot;, -V), (&quot;beside the edge&quot;, N), (&quot;behind and beside&quot;, norm(N - V)),
+                   (&quot;above&quot;, norm([0, 1, 0])), (&quot;at the camera&quot;, V)):
+    rad = sun(ldir) + 0.02
+    old = rim_true(rad, N, 0.0)
+    new_t = rim_true(rad, d, 0.5)
+    new_s = rim_sh(rad, d, 0.5)
+    print(&quot;   %-24s  %.3f                   %.3f / %.3f&quot; % (name, old, new_t, new_s))
+
+print(&quot;\n3. SH truncation error of the new lobe on 300 random skies with a sun (L2 probe, Wrap 0.5)&quot;)
+rng = np.random.default_rng(7)
+errs = []
+for _ in range(300):
+    sdir = norm(rng.normal(size=3))
+    rad = sun(sdir, radius_deg=rng.uniform(2, 20), power=rng.uniform(0.5, 3)) + rng.uniform(0.05, 0.5) * (0.6 + 0.4 * P[:, 1])
+    dd = norm(rng.normal(size=3))
+    t = rim_true(rad, dd, 0.5)
+    s = rim_sh(rad, dd, 0.5)
+    peak = max(rim_true(rad, sdir, 0.5), 1e-6)
+    errs.append(abs(t - s) / peak)
+print(&quot;   mean error %.3f, 95th percentile %.3f, worst %.3f of each sky&#x27;s peak&quot; % (np.mean(errs), np.percentile(errs, 95), np.max(errs)))
+
+
+def nonlinear(L0, L1, n):
+    if L0 &lt;= 1e-8:
+        return np.zeros(len(n))
+    ln = np.linalg.norm(L1)
+    if ln &lt;= 1e-8:
+        return np.full(len(n), L0)
+    rr = min(ln / L0, 1.0)
+    q = np.clip(0.5 * (1 + n @ (L1 / ln)), 0, 1)
+    p = 1 + 2 * rr
+    a = (1 - rr) / (1 + rr)
+    return L0 * (a + (1 - a) * (p + 1) * q ** p)
+
+print(&quot;\n4. Non-linear reconstruction with the Wrap weight on L0: never negative, same energy as the linear lobe&quot;)
+ok = True
+for wrap in (0.0, 0.5, 1.0):
+    a0 = 2 / (1 + math.cos(wrap * math.pi / 2))
+    for rr in (0.2, 0.6, 1.0, 1.4):
+        L0 = 1.0
+        L1 = np.array([0, 0, rr])
+        nl = nonlinear(a0 * L0, L1, P)
+        lin = a0 * L0 + P @ L1
+        e = abs(nl.mean() - lin.mean())
+        neg = int(np.sum(nl &lt; -1e-9))
+        if e &gt; 2e-3 or neg:
+            ok = False
+    print(&quot;   wrap %.1f: checked 4 ratios&quot; % wrap)
+print(&quot;   PASS&quot; if ok else &quot;   FAIL&quot;)</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>rim-lobe/rim_asbuilt_check.py</code><span class="script-meta">Tables 1 and 2: the rim as built, before and after &middot; 129 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/rim-lobe/rim_asbuilt_check.py" download>Download rim_asbuilt_check.py</a> &middot; run from the <code>rim-lobe</code> folder with <code>python rim_asbuilt_check.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;As-built check of the 2026-09-23 rim: a line-for-line Python copy of the HLSL (band, vw_CapLit, vw_RimA0, vw_RimDir, vw_RimSH) run on real scenes against the old rim, plus agreement between a realtime light and the same light baked into SH.&quot;&quot;&quot;
+import math
+import numpy as np
+
+
+def cap_lit(c, wrap):
+    s2 = math.sin(min(max(wrap, 0.0), 1.0) * math.pi * 0.5) ** 2
+    s2 = min(s2, 0.999999)
+    c = min(max(c, -1.0), 1.0)
+    if c * c &gt;= s2 or s2 &lt; 1e-6:
+        return max(c, 0.0)
+    sinT = math.sqrt(max(1.0 - c * c, 1e-6))
+    x = math.sqrt(1.0 / s2 - 1.0)
+    y = -x * c / sinT
+    sy = sinT * math.sqrt(min(max(1.0 - y * y, 0.0), 1.0))
+    e = (c * math.acos(min(max(y, -1.0), 1.0)) - x * sy) * s2 + math.atan(sy / x)
+    return min(max(e / (math.pi * s2), 0.0), 1.0)
+
+
+def rim_a0(wrap):
+    return 2.0 / (1.0 + math.cos(min(max(wrap, 0.0), 1.0) * math.pi * 0.5))
+
+
+def norm(v):
+    v = np.asarray(v, dtype=float)
+    return v / max(np.linalg.norm(v), 1e-12)
+
+
+def rim_dir(N, V):
+    b = N - V
+    bb = float(np.dot(b, b))
+    return b / math.sqrt(bb) if bb &gt; 1e-4 else N
+
+
+def nonlinear(L0, L1, n):
+    if L0 &lt;= 1e-5:
+        return 0.0
+    ln = np.linalg.norm(L1)
+    if ln &lt;= 1e-5:
+        return L0
+    rr = min(ln / L0, 1.0)
+    q = min(max(0.5 * (1.0 + np.dot(L1 / ln, n)), 0.0), 1.0)
+    p = 1.0 + 2.0 * rr
+    a = (1.0 - rr) / (1.0 + rr)
+    return L0 * (a + (1.0 - a) * (p + 1.0) * q ** p)
+
+
+def rim_sh(L0, L1, d, a0, follow):
+    lobe = nonlinear(L0 * a0, L1, d)
+    return (1 - follow) * max(L0 * a0, 0.0) + follow * lobe
+
+
+def band(ndv, width, blur, fw=0.0):
+    u = 1.0 - math.sqrt(min(max(1.0 - ndv * ndv, 0.0), 1.0))
+    lo = width * (1.0 - blur) - fw
+    t = min(max((u - lo) / max(width + fw - lo, 1e-4), 0.0), 1.0)
+    return (1.0 - t * t * (3.0 - 2.0 * t)) if width &gt; 0 else 0.0
+
+
+def sh_of_light(direction, power=1.0):
+    return 0.25 * power, 0.5 * power * np.asarray(direction, dtype=float)
+
+
+V = np.array([0.0, 0.0, 1.0])
+WRAP, FOLLOW, WIDTH, BLUR = 0.5, 1.0, 0.4, 0.8
+
+
+def old_rim(ndv, n, amb_sh, sun_color):
+    k = 30.0 + (0.1 - 30.0) * 0.4
+    shape = (1.0 - ndv) ** k
+    amb = max(amb_sh[0] + np.dot(amb_sh[1], n), 0.0) if amb_sh else 0.0
+    return shape * (amb + sun_color * 0.5 + 0.1)
+
+
+def new_rim(ndv, n, amb_sh, sun_dir, sun_color):
+    d = rim_dir(n, V)
+    a0 = rim_a0(WRAP)
+    amb = rim_sh(amb_sh[0], amb_sh[1], d, a0, FOLLOW) if amb_sh else 0.0
+    flat = a0 * 0.25
+    lit = sun_color * ((1 - FOLLOW) * flat + FOLLOW * cap_lit(np.dot(d, sun_dir), WRAP)) if sun_color else 0.0
+    return band(ndv, WIDTH, BLUR) * (amb + lit)
+
+
+print(&quot;Rim at the default Width 4 (old: Follow 0; new: Blur 0.8, Follow 1, Wrap 0.5), Strength 1, white material.&quot;)
+print(&quot;A point on the right edge of a limb; &#x27;in&#x27; is how far in from the outline as a share of the limb radius.\n&quot;)
+scenes = [
+    (&quot;Light Volume, light behind you&quot;, sh_of_light(-V), None, 0.0),
+    (&quot;Light Volume, light beside the edge&quot;, sh_of_light([1, 0, 0]), None, 0.0),
+    (&quot;Light Volume, light at the camera&quot;, sh_of_light(V), None, 0.0),
+    (&quot;Realtime sun behind you&quot;, None, -V, 1.0),
+    (&quot;Realtime sun at the camera&quot;, None, V, 1.0),
+    (&quot;Dark room, no light&quot;, None, None, 0.0),
+]
+print(&quot;  %-38s %-22s %s&quot; % (&quot;scene&quot;, &quot;old  in 2% / 10% / 25%&quot;, &quot;new  in 2% / 10% / 25%&quot;))
+for name, sh, sdir, scol in scenes:
+    olds, news = [], []
+    for u in (0.02, 0.10, 0.25):
+        s = 1.0 - u
+        ndv = math.sqrt(max(0.0, 1.0 - s * s))
+        n = np.array([s, 0.0, ndv])
+        olds.append(old_rim(ndv, n, sh, scol))
+        news.append(new_rim(ndv, n, sh, sdir if sdir is not None else V, scol))
+    print(&quot;  %-38s %s   %s&quot; % (name, &quot; &quot;.join(&quot;%.3f&quot; % v for v in olds), &quot; &quot;.join(&quot;%.3f&quot; % v for v in news)))
+
+print(&quot;\nThe same light, realtime or baked into SH, at Wrap 0.5: rim lobe response by angle between the rim direction and the light&quot;)
+print(&quot;  angle   realtime (cap)   baked L1 SH (non-linear)&quot;)
+for deg in (0, 30, 60, 90, 120, 150):
+    c = math.cos(math.radians(deg))
+    L0, L1 = sh_of_light([0, 0, 1])
+    dvec = np.array([math.sin(math.radians(deg)), 0.0, c])
+    print(&quot;  %3d     %.3f            %.3f&quot; % (deg, cap_lit(c, WRAP), rim_sh(L0, L1, dvec, rim_a0(WRAP), 1.0)))
+
+flat_rt = rim_a0(WRAP) * 0.25
+L0, L1 = sh_of_light([0, 0, 1])
+print(&quot;\nFollow 0 (flat): realtime %.4f, baked %.4f&quot; % (flat_rt, rim_sh(L0, L1, np.array([1.0, 0, 0]), rim_a0(WRAP), 0.0)))
+
+bad = 0
+for w in np.linspace(0, 1, 11):
+    for deg in range(0, 181, 3):
+        v = cap_lit(math.cos(math.radians(deg)), w)
+        if not math.isfinite(v) or v &lt; 0 or v &gt; 1:
+            bad += 1
+for ndv in np.linspace(0, 1.00001, 200):
+    for wd in (0.0, 0.05, 0.4, 1.0):
+        for bl in (0.0, 0.5, 1.0):
+            v = band(ndv, wd, bl)
+            if not math.isfinite(v) or v &lt; 0 or v &gt; 1:
+                bad += 1
+print(&quot;out-of-range or non-finite values over the whole control range:&quot;, bad)</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>rim-lobe/verify_nonlinear_sh_2026-09-12.py</code><span class="script-meta">Section 5: the non-linear L1 reconstruction behind Sharper Probes &middot; 115 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/rim-lobe/verify_nonlinear_sh_2026-09-12.py" download>Download verify_nonlinear_sh_2026-09-12.py</a> &middot; run from the <code>rim-lobe</code> folder with <code>python verify_nonlinear_sh_2026-09-12.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Check the Geomerics non-linear L1 spherical harmonics reconstruction before it goes into HLSL: that it returns the ambient term when the probe is uniform, that it never goes negative, that it integrates over the sphere to the same energy as the linear reconstruction, and that it rises monotonically toward the dominant light direction.&quot;&quot;&quot;
+
+import math
+
+SAMPLES = 20000
+
+
+def sphere_points(n):
+    # Fibonacci sphere, an even distribution without pole clustering
+    pts = []
+    ga = math.pi * (3.0 - math.sqrt(5.0))
+    for i in range(n):
+        z = 1.0 - (2.0 * i + 1.0) / n
+        r = math.sqrt(max(0.0, 1.0 - z * z))
+        th = ga * i
+        pts.append((r * math.cos(th), r * math.sin(th), z))
+    return pts
+
+
+PTS = sphere_points(SAMPLES)
+
+
+def linear(L0, L1, N):
+    return L0 + (L1[0] * N[0] + L1[1] * N[1] + L1[2] * N[2])
+
+
+def nonlinear(L0, L1, N):
+    if L0 &lt;= 1e-8:
+        return 0.0
+    lenR1 = math.sqrt(L1[0] ** 2 + L1[1] ** 2 + L1[2] ** 2)
+    if lenR1 &lt;= 1e-8:
+        return L0
+    rr = min(lenR1 / L0, 1.0)
+    d = (L1[0] * N[0] + L1[1] * N[1] + L1[2] * N[2]) / lenR1
+    q = 0.5 * (1.0 + d)
+    q = max(q, 0.0)
+    p = 1.0 + 2.0 * rr
+    a = (1.0 - rr) / (1.0 + rr)
+    return L0 * (a + (1.0 - a) * (p + 1.0) * (q ** p))
+
+
+def integrate(fn, L0, L1):
+    return sum(fn(L0, L1, N) for N in PTS) / len(PTS)
+
+
+print(&quot;check 1: a uniform probe returns the ambient term&quot;)
+worst = 0.0
+for L0 in (0.05, 0.5, 1.0, 4.0):
+    for N in PTS[:200]:
+        worst = max(worst, abs(nonlinear(L0, (0.0, 0.0, 0.0), N) - L0))
+print(&quot;   largest error against L0: %.3e&quot; % worst)
+print(&quot;   PASS&quot; if worst &lt; 1e-9 else &quot;   FAIL&quot;)
+
+print()
+print(&quot;check 2: never negative, where the linear form does go negative&quot;)
+neg_nl = 0
+neg_lin = 0
+cases = []
+for rr in [0.0, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0]:
+    L0 = 1.0
+    L1 = (rr, 0.0, 0.0)
+    for N in PTS:
+        if nonlinear(L0, L1, N) &lt; -1e-9:
+            neg_nl += 1
+        if linear(L0, L1, N) &lt; -1e-9:
+            neg_lin += 1
+    cases.append(rr)
+print(&quot;   ratios tested: %s&quot; % cases)
+print(&quot;   negative samples, non-linear: %d&quot; % neg_nl)
+print(&quot;   negative samples, linear:     %d&quot; % neg_lin)
+print(&quot;   PASS&quot; if neg_nl == 0 else &quot;   FAIL&quot;)
+
+print()
+print(&quot;check 3: energy over the sphere matches the linear form&quot;)
+print(&quot;   %-8s %-14s %-14s %s&quot; % (&quot;ratio&quot;, &quot;linear mean&quot;, &quot;non-linear&quot;, &quot;error&quot;))
+ok = True
+for rr in (0.0, 0.2, 0.4, 0.6, 0.8, 1.0):
+    L0 = 1.0
+    L1 = (0.0, 0.0, rr)
+    a = integrate(linear, L0, L1)
+    b = integrate(nonlinear, L0, L1)
+    err = abs(a - b)
+    if err &gt; 2e-3:
+        ok = False
+    print(&quot;   %-8.2f %-14.6f %-14.6f %.2e&quot; % (rr, a, b, err))
+print(&quot;   PASS&quot; if ok else &quot;   FAIL&quot;)
+
+print()
+print(&quot;check 4: peak and shape against the linear form&quot;)
+print(&quot;   %-8s %-12s %-12s %-12s %s&quot; % (&quot;ratio&quot;, &quot;lin at peak&quot;, &quot;nl at peak&quot;, &quot;lin opposite&quot;, &quot;nl opposite&quot;))
+for rr in (0.0, 0.25, 0.5, 0.75, 1.0):
+    L0 = 1.0
+    L1 = (0.0, 0.0, rr)
+    up = (0.0, 0.0, 1.0)
+    dn = (0.0, 0.0, -1.0)
+    print(&quot;   %-8.2f %-12.4f %-12.4f %-12.4f %.4f&quot;
+          % (rr, linear(L0, L1, up), nonlinear(L0, L1, up),
+             linear(L0, L1, dn), nonlinear(L0, L1, dn)))
+
+print()
+print(&quot;check 5: monotonic from the dark side to the lit side&quot;)
+bad = 0
+for rr in (0.2, 0.5, 0.9):
+    L0 = 1.0
+    L1 = (0.0, 0.0, rr)
+    prev = None
+    for i in range(801):
+        c = -1.0 + 2.0 * i / 800.0
+        s = math.sqrt(max(0.0, 1.0 - c * c))
+        v = nonlinear(L0, L1, (s, 0.0, c))
+        if prev is not None and v &lt; prev - 1e-12:
+            bad += 1
+        prev = v
+print(&quot;   decreasing steps found: %d&quot; % bad)
+print(&quot;   PASS&quot; if bad == 0 else &quot;   FAIL&quot;)</code></pre></div>
+                </details>
+                <p class="mt-3 mb-1"><strong>Section 5, one light on every route</strong></p>
+                <details class="script-listing">
+                    <summary><code>unified-light/route_mismatch.py</code><span class="script-meta">Table 3 &middot; 74 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/unified-light/route_mismatch.py" download>Download route_mismatch.py</a> &middot; run from the <code>unified-light</code> folder with <code>python route_mismatch.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Experiment 2, part A: one directional light delivered through each route Unity or a VRChat system can use (per pixel, per vertex, Unity SH light or probe, Light Volume L1, Sharper Probes), measured on a Fibonacci lattice against the per-pixel look, with and without the Soften and Hardness terminator controls.&quot;&quot;&quot;
+import math
+import numpy as np
+
+N_PTS = 100000
+i = np.arange(N_PTS)
+z = 1.0 - (2.0 * i + 1.0) / N_PTS
+r = np.sqrt(np.maximum(0.0, 1.0 - z * z))
+th = math.pi * (3.0 - math.sqrt(5.0)) * i
+P = np.stack([r * np.cos(th), r * np.sin(th), z], axis=1)
+C = P[:, 2]
+
+
+def shaped(c, soften, hard):
+    x = np.clip((c + soften) / (1.0 + soften), 0.0, 1.0)
+    return x ** (1.0 + (0.15 - 1.0) * hard)
+
+
+def P2(c):
+    return 0.5 * (3.0 * c * c - 1.0)
+
+
+def sh_l2(c):
+    return np.maximum(0.25 + 0.5 * c + 0.3125 * P2(c), 0.0)
+
+
+def sh_l1(c):
+    return np.maximum(0.25 + 0.5 * c, 0.0)
+
+
+def sh_l1_nonlinear(c):
+    L0, rr = 0.25, 1.0
+    q = np.clip(0.5 * (1.0 + c), 0.0, 1.0)
+    p = 1.0 + 2.0 * rr
+    a = (1.0 - rr) / (1.0 + rr)
+    return L0 * (a + (1.0 - a) * (p + 1.0) * q ** p)
+
+
+def sh_l2_nonlinear(c):
+    return np.maximum(sh_l1_nonlinear(c) + 0.3125 * P2(c), 0.0)
+
+
+def stats(ref, got):
+    d = got - ref
+    rms = math.sqrt(np.mean(d * d))
+    face = got[np.argmax(C)]
+    back = float(np.interp(math.cos(math.radians(110)), C[::-1], got[::-1]))
+    term = float(np.degrees(np.arccos(np.clip(C[got &gt; 0.01 * got.max()].min(), -1, 1))))
+    return rms, face, back, term
+
+
+routes = [
+    (&quot;per pixel (the reference)&quot;, None),
+    (&quot;per vertex (Shade4PointLights)&quot;, lambda c: np.maximum(c, 0.0)),
+    (&quot;Unity SH light or probe, L2&quot;, sh_l2),
+    (&quot;Sharper Probes, L2&quot;, sh_l2_nonlinear),
+    (&quot;Light Volume, L1&quot;, sh_l1),
+    (&quot;Light Volume point light, L1&quot;, sh_l1),
+]
+
+for soften, hard in ((0.0, 0.0), (0.5, 0.0), (0.0, 0.5), (1.0, 0.0)):
+    ref = shaped(C, soften, hard)
+    print(&quot;Soften %.1f, Hardness %.1f: facing %.3f, at 110 deg %.3f, lit to %.0f deg&quot; %
+          (soften, hard, ref[np.argmax(C)], float(np.interp(math.cos(math.radians(110)), C[::-1], ref[::-1])),
+           float(np.degrees(np.arccos(np.clip(C[ref &gt; 0.01 * ref.max()].min(), -1, 1))))))
+    print(&quot;   %-32s %-8s %-8s %-10s %s&quot; % (&quot;route&quot;, &quot;rms&quot;, &quot;facing&quot;, &quot;at 110 deg&quot;, &quot;lit to&quot;))
+    for name, fn in routes[1:]:
+        rms, face, back, term = stats(ref, fn(C))
+        print(&quot;   %-32s %-8.3f %-8.3f %-10.3f %.0f deg&quot; % (name, rms, face, back, term))
+    print()
+
+print(&quot;Energy over the sphere (mean response, per pixel Lambert = %.4f):&quot; % np.mean(np.maximum(C, 0)))
+for name, fn in routes[1:]:
+    print(&quot;   %-32s %.4f&quot; % (name, np.mean(fn(C))))</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>unified-light/route_match.py</code><span class="script-meta">Table 4 and the band weight closed forms &middot; 144 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/unified-light/route_match.py" download>Download route_match.py</a> &middot; run from the <code>unified-light</code> folder with <code>python route_match.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Experiment 2, part B: closed-form SH band weights of the Soften/Hardness shaping kernel (checked on a Fibonacci lattice), and how close each SH route gets to the per-pixel look with them, for single lights and for random skies with a sun.&quot;&quot;&quot;
+import math
+import numpy as np
+
+N_PTS = 60000
+i = np.arange(N_PTS)
+z = 1.0 - (2.0 * i + 1.0) / N_PTS
+r = np.sqrt(np.maximum(0.0, 1.0 - z * z))
+th = math.pi * (3.0 - math.sqrt(5.0)) * i
+P = np.stack([r * np.cos(th), r * np.sin(th), z], axis=1)
+DW = 4.0 * math.pi / N_PTS
+
+
+def expo(hard):
+    return 1.0 + (0.15 - 1.0) * hard
+
+
+def kernel(c, s, h):
+    return np.clip((c + s) / (1.0 + s), 0.0, 1.0) ** expo(h)
+
+
+def k_closed(s, h):
+    p = expo(h)
+    k0 = 2 * math.pi * (1 + s) / (p + 1)
+    k1 = 2 * math.pi * (1 + s) * ((1 + s) / (p + 2) - s / (p + 1))
+    c2 = (1 + s) ** 2 / (p + 3) - 2 * s * (1 + s) / (p + 2) + s * s / (p + 1)
+    k2 = 2 * math.pi * (1 + s) * 0.5 * (3 * c2 - 1 / (p + 1))
+    return np.array([k0, k1, k2])
+
+
+K_COS = np.array([math.pi, 2 * math.pi / 3, math.pi / 4])
+
+
+def weights(s, h):
+    return k_closed(s, h) / K_COS
+
+
+def leg(l, c):
+    return [np.ones_like(c), c, 0.5 * (3 * c * c - 1)][l]
+
+
+print(&quot;1. Band weights a0 a1 a2 of the shaping kernel, closed form against the lattice&quot;)
+worst = 0.0
+for s in (0.0, 0.25, 0.5, 1.0):
+    for h in (0.0, 0.5, 1.0):
+        kl = np.array([np.sum(kernel(P[:, 2], s, h) * leg(l, P[:, 2])) * DW for l in range(3)])
+        a_lat = kl / K_COS
+        a_cf = weights(s, h)
+        worst = max(worst, float(np.max(np.abs(a_lat - a_cf))))
+        print(&quot;   Soften %.2f Hardness %.1f: closed %s  lattice %s&quot; % (s, h, np.round(a_cf, 4), np.round(a_lat, 4)))
+print(&quot;   worst difference: %.5f&quot; % worst)
+
+Y = lambda v: np.stack([np.full(len(v), 0.2820948), 0.4886025 * v[:, 1], 0.4886025 * v[:, 2], 0.4886025 * v[:, 0],
+                        1.0925484 * v[:, 0] * v[:, 1], 1.0925484 * v[:, 1] * v[:, 2], 0.3153916 * (3 * v[:, 2] ** 2 - 1),
+                        1.0925484 * v[:, 0] * v[:, 2], 0.5462742 * (v[:, 0] ** 2 - v[:, 1] ** 2)], axis=1)
+YP = Y(P)
+BAND = np.array([0, 1, 1, 1, 2, 2, 2, 2, 2])
+
+
+def unity_bands(rad):
+    coeff = YP.T @ rad * DW
+    L = coeff * np.array([math.pi, *(2 * math.pi / 3,) * 3, *(math.pi / 4,) * 5]) / math.pi
+    L0 = L[0] * 0.2820948
+    L1 = np.array([L[3], L[1], L[2]]) * 0.4886025
+    return L0, L1, L
+
+
+def eval_linear(L, a, n, order):
+    y = Y(n)
+    w = np.array([a[0]] + [a[1]] * 3 + [a[2]] * 5)
+    if order == 1:
+        w[4:] = 0
+    return np.maximum((y * (L * w)).sum(axis=1), 0.0)
+
+
+def eval_nonlinear(L0, L1, n, a, l2=None, a2w=0.0):
+    L0 = L0 * a[0]
+    L1 = L1 * a[1]
+    ln = np.linalg.norm(L1)
+    if L0 &lt;= 1e-8:
+        return np.zeros(len(n))
+    if ln &lt;= 1e-8:
+        out = np.full(len(n), L0)
+    else:
+        rr = min(ln / L0, 1.0)
+        q = np.clip(0.5 * (1 + n @ (L1 / ln)), 0, 1)
+        p = 1 + 2 * rr
+        aa = (1 - rr) / (1 + rr)
+        out = L0 * (aa + (1 - aa) * (p + 1) * q ** p)
+    if l2 is not None and a2w != 0.0:
+        y = Y(n)
+        out = out + a2w * (y[:, 4:] * l2[4:]).sum(axis=1)
+    return np.maximum(out, 0.0)
+
+
+def truth(rad, n, s, h):
+    out = np.empty(len(n))
+    for j in range(0, len(n), 400):
+        cc = n[j:j + 400] @ P.T
+        out[j:j + 400] = (kernel(cc, s, h) * rad[None, :]).sum(axis=1) * DW / math.pi
+    return out
+
+
+rng = np.random.default_rng(11)
+NS = rng.normal(size=(1500, 3))
+NS /= np.linalg.norm(NS, axis=1, keepdims=True)
+
+
+def sun_sky(sdir, sun_deg, sun_pow, sky):
+    c = math.cos(math.radians(sun_deg))
+    lit = (P @ sdir) &gt; c
+    return lit * sun_pow / (2 * math.pi * (1 - c)) + sky * (0.6 + 0.4 * P[:, 1])
+
+
+print(&quot;\n2. Route error against the shaped per-pixel look (rms as a share of the peak), 60 random scenes each&quot;)
+print(&quot;   scene type: sun of 1-6 degrees with sky 0.02-0.3 (L2 probe and L1 volume)&quot;)
+cases = [(0.0, 0.0), (0.5, 0.0), (1.0, 0.0), (0.0, 0.5), (0.5, 0.5)]
+methods = [
+    (&quot;probe L2 linear, today&quot;, lambda L0, L1, L, s, h: eval_linear(L, np.ones(3), NS, 2)),
+    (&quot;probe Sharper Probes, today&quot;, lambda L0, L1, L, s, h: eval_nonlinear(L0, L1, NS, np.ones(2), L, 1.0)),
+    (&quot;probe L2 linear + weights&quot;, lambda L0, L1, L, s, h: eval_linear(L, weights(s, h), NS, 2)),
+    (&quot;probe non-linear L1 + weights&quot;, lambda L0, L1, L, s, h: eval_nonlinear(L0, L1, NS, weights(s, h), None, 0.0)),
+    (&quot;probe non-linear + weights + a2/2 L2&quot;, lambda L0, L1, L, s, h: eval_nonlinear(L0, L1, NS, weights(s, h), L, 0.5 * weights(s, h)[2])),
+    (&quot;volume L1 linear, today&quot;, lambda L0, L1, L, s, h: eval_linear(L, np.ones(3), NS, 1)),
+    (&quot;volume L1 linear + weights&quot;, lambda L0, L1, L, s, h: eval_linear(L, weights(s, h), NS, 1)),
+    (&quot;volume non-linear L1 + weights&quot;, lambda L0, L1, L, s, h: eval_nonlinear(L0, L1, NS, weights(s, h), None, 0.0)),
+]
+res = {m[0]: [] for m in methods}
+for (s, h) in cases:
+    errs = {m[0]: [] for m in methods}
+    for k in range(60):
+        sd = rng.normal(size=3); sd /= np.linalg.norm(sd)
+        rad = sun_sky(sd, rng.uniform(1, 6), rng.uniform(0.5, 3.0), rng.uniform(0.02, 0.3))
+        L0, L1, L = unity_bands(rad)
+        t = truth(rad, NS, s, h)
+        pk = max(t.max(), 1e-6)
+        for name, fn in methods:
+            g = fn(L0, L1, L, s, h)
+            errs[name].append(math.sqrt(np.mean((g - t) ** 2)) / pk)
+    for name in errs:
+        res[name].append(np.mean(errs[name]))
+print(&quot;   %-40s&quot; % &quot;method&quot; + &quot;&quot;.join(&quot;  s%.1f h%.1f&quot; % c for c in cases))
+for name, _ in methods:
+    print(&quot;   %-40s&quot; % name + &quot;&quot;.join(&quot;   %7.3f &quot; % v for v in res[name]))</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>unified-light/l2_recovery.py</code><span class="script-meta">Table 5, the rebuilt L2 band on its own &middot; 107 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/unified-light/l2_recovery.py" download>Download l2_recovery.py</a> &middot; run from the <code>unified-light</code> folder with <code>python l2_recovery.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Experiment 2, part C: rebuild the missing L2 band of L1-only data (Light Volumes, their point lights, proxy volumes) from the L1 band itself, 0.625 * |L1| * P2(n . L1dir) per channel, and measure it against the true shaped response on one-sun, two-light and many-light scenes.&quot;&quot;&quot;
+import math
+import numpy as np
+
+N_PTS = 16000
+i = np.arange(N_PTS)
+z = 1.0 - (2.0 * i + 1.0) / N_PTS
+r = np.sqrt(np.maximum(0.0, 1.0 - z * z))
+th = math.pi * (3.0 - math.sqrt(5.0)) * i
+P = np.stack([r * np.cos(th), r * np.sin(th), z], axis=1)
+DW = 4.0 * math.pi / N_PTS
+
+
+def expo(h):
+    return 1.0 + (0.15 - 1.0) * h
+
+
+def kernel(c, s, h):
+    return np.clip((c + s) / (1.0 + s), 0.0, 1.0) ** expo(h)
+
+
+def weights(s, h):
+    p = expo(h)
+    k0 = 2 * math.pi * (1 + s) / (p + 1)
+    k1 = 2 * math.pi * (1 + s) * ((1 + s) / (p + 2) - s / (p + 1))
+    c2 = (1 + s) ** 2 / (p + 3) - 2 * s * (1 + s) / (p + 2) + s * s / (p + 1)
+    k2 = 2 * math.pi * (1 + s) * 0.5 * (3 * c2 - 1 / (p + 1))
+    return np.array([k0, k1, k2]) / np.array([math.pi, 2 * math.pi / 3, math.pi / 4])
+
+
+def bands(rad):
+    L0 = np.sum(rad) * DW / (4 * math.pi)
+    L1 = 3.0 / (4 * math.pi) * (P.T @ rad) * DW * (2.0 / 3.0)
+    return L0, L1
+
+
+def P2(c):
+    return 0.5 * (3 * c * c - 1)
+
+
+def recon(L0, L1, n, a, mode):
+    base = a[0] * L0 + a[1] * (n @ L1)
+    if mode == &quot;l1&quot;:
+        return np.maximum(base, 0.0)
+    ln = np.linalg.norm(L1)
+    if mode == &quot;l1+l2rec&quot; and ln &gt; 1e-8:
+        base = base + a[2] * 0.625 * ln * P2(n @ (L1 / ln))
+    return np.maximum(base, 0.0)
+
+
+def truth(rad, n, s, h):
+    out = np.empty(len(n))
+    for j in range(0, len(n), 500):
+        cc = n[j:j + 500] @ P.T
+        out[j:j + 500] = (kernel(cc, s, h) * rad[None, :]).sum(axis=1) * DW / math.pi
+    return out
+
+
+def sun(d, deg, powr):
+    c = math.cos(math.radians(deg))
+    return ((P @ d) &gt; c) * powr / (2 * math.pi * (1 - c))
+
+
+rng = np.random.default_rng(5)
+NS = rng.normal(size=(500, 3))
+NS /= np.linalg.norm(NS, axis=1, keepdims=True)
+
+
+def rnd_dir():
+    v = rng.normal(size=3)
+    return v / np.linalg.norm(v)
+
+
+def scene(kind):
+    sky = rng.uniform(0.02, 0.3) * (0.6 + 0.4 * P[:, 1])
+    if kind == &quot;one sun&quot;:
+        return sky + sun(rnd_dir(), rng.uniform(1, 8), rng.uniform(0.5, 3))
+    if kind == &quot;two lights&quot;:
+        return sky + sun(rnd_dir(), rng.uniform(1, 8), rng.uniform(0.5, 3)) + sun(rnd_dir(), rng.uniform(1, 8), rng.uniform(0.2, 2))
+    return sky + sum(sun(rnd_dir(), rng.uniform(2, 15), rng.uniform(0.1, 1.0)) for _ in range(6))
+
+
+if __name__ == &quot;__main__&quot;:
+    print(&quot;rms error as a share of each scene&#x27;s peak, mean of 25 scenes; L1 data only (a Light Volume)&quot;)
+    cases = [(0.0, 0.0), (0.5, 0.0), (1.0, 0.0), (0.0, 0.5), (0.5, 0.5)]
+    for kind in (&quot;one sun&quot;, &quot;two lights&quot;, &quot;six lights&quot;):
+        print(&quot;  %s&quot; % kind)
+        print(&quot;    %-24s&quot; % &quot;reconstruction&quot; + &quot;&quot;.join(&quot;  s%.1f h%.1f&quot; % c for c in cases))
+        rows = {&quot;L1 linear + weights&quot;: [], &quot;L1 + rebuilt L2 + weights&quot;: []}
+        for (s, h) in cases:
+            a = weights(s, h)
+            e1, e2 = [], []
+            for _ in range(25):
+                rad = scene(kind)
+                L0, L1 = bands(rad)
+                t = truth(rad, NS, s, h)
+                pk = max(t.max(), 1e-6)
+                e1.append(math.sqrt(np.mean((recon(L0, L1, NS, a, &quot;l1&quot;) - t) ** 2)) / pk)
+                e2.append(math.sqrt(np.mean((recon(L0, L1, NS, a, &quot;l1+l2rec&quot;) - t) ** 2)) / pk)
+            rows[&quot;L1 linear + weights&quot;].append(np.mean(e1))
+            rows[&quot;L1 + rebuilt L2 + weights&quot;].append(np.mean(e2))
+        for k, v in rows.items():
+            print(&quot;    %-24s&quot; % k + &quot;&quot;.join(&quot;   %7.3f &quot; % x for x in v))
+
+    L0, L1 = bands(sun(np.array([0, 0, 1.0]), 3.0, 1.0))
+    print(&quot;\none 3-degree light, L1 magnitude over L0: %.3f (2.0 for a point light); rebuilt L2 coefficient 0.625*|L1| = %.4f&quot;
+          % (np.linalg.norm(L1) / L0, 0.625 * np.linalg.norm(L1)))</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>unified-light/l2_recovery_confidence.py</code><span class="script-meta">Table 5, with the confidence term &middot; 31 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/unified-light/l2_recovery_confidence.py" download>Download l2_recovery_confidence.py</a> &middot; run from the <code>unified-light</code> folder with <code>python l2_recovery_confidence.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Experiment 2, part C2: scale the rebuilt L2 band by a confidence term d^k, where d = |L1| / (2 L0) is how directional the L1 data is (1 for a point light, 0 for a uniform sky), to keep the one-light gain without the many-light loss.&quot;&quot;&quot;
+import math
+import numpy as np
+import l2_recovery as base
+
+rng = np.random.default_rng(9)
+a = base.weights(0.0, 0.0)
+
+
+def recon_k(L0, L1, n, k):
+    out = L0 + n @ L1
+    ln = np.linalg.norm(L1)
+    if ln &gt; 1e-8 and L0 &gt; 1e-8:
+        d = min(ln / (2.0 * L0), 1.0)
+        out = out + 0.625 * ln * (d ** k) * base.P2(n @ (L1 / ln))
+    return np.maximum(out, 0.0)
+
+
+print(&quot;default shaping, rms error as a share of each scene&#x27;s peak, mean of 30 scenes&quot;)
+print(&quot;  %-12s %-10s %-10s %-10s %-10s %-10s&quot; % (&quot;scene&quot;, &quot;no L2&quot;, &quot;k=0&quot;, &quot;k=0.5&quot;, &quot;k=1&quot;, &quot;k=2&quot;))
+for kind in (&quot;one sun&quot;, &quot;two lights&quot;, &quot;six lights&quot;):
+    rows = [[], [], [], [], []]
+    for _ in range(30):
+        rad = base.scene(kind)
+        L0, L1 = base.bands(rad)
+        t = base.truth(rad, base.NS, 0.0, 0.0)
+        pk = max(t.max(), 1e-6)
+        g = [np.maximum(L0 + base.NS @ L1, 0.0)] + [recon_k(L0, L1, base.NS, k) for k in (0.0, 0.5, 1.0, 2.0)]
+        for j in range(5):
+            rows[j].append(math.sqrt(np.mean((g[j] - t) ** 2)) / pk)
+    print(&quot;  %-12s &quot; % kind + &quot; &quot;.join(&quot;%-10.3f&quot; % np.mean(r) for r in rows))</code></pre></div>
+                </details>
+                <p class="mt-3 mb-1"><strong>Section 6, what the camera keeps</strong></p>
+                <details class="script-listing">
+                    <summary><code>camera-look/route_highlights.py</code><span class="script-meta">Section 6: highlights on every route, and a light recovered from L1 &middot; 60 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/camera-look/route_highlights.py" download>Download route_highlights.py</a> &middot; run from the <code>camera-look</code> folder with <code>python route_highlights.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Experiment 3, part A: does a light get a highlight on every route? Per pixel and per vertex give GGX; probes give none (Unity: SH is diffuse only). Test a highlight from the probe&#x27;s own L1 (direction L1/|L1|, strength 2|L1| x d^k) against the true sun on random sun-and-sky probes, and how much of the sky it double counts.&quot;&quot;&quot;
+import math
+import numpy as np
+
+N_PTS = 20000
+i = np.arange(N_PTS)
+z = 1.0 - (2.0 * i + 1.0) / N_PTS
+r = np.sqrt(np.maximum(0.0, 1.0 - z * z))
+th = math.pi * (3.0 - math.sqrt(5.0)) * i
+P = np.stack([r * np.cos(th), r * np.sin(th), z], axis=1)
+DW = 4.0 * math.pi / N_PTS
+rng = np.random.default_rng(3)
+
+
+def bands(rad):
+    L0 = np.sum(rad) * DW / 4.0
+    L1 = (P.T @ rad) * DW / 2.0
+    return L0, L1
+
+
+def power(rad):
+    return float(np.sum(rad) * DW)
+
+
+def unit(v):
+    return v / np.linalg.norm(v)
+
+
+def sun(d, deg, powr):
+    c = math.cos(math.radians(deg))
+    return ((P @ d) &gt; c) * powr / (2 * math.pi * (1 - c))
+
+
+d = unit(np.array([0.3, 0.2, 1.0]))
+s1 = sun(d, 2.0, 1.0)
+L0, L1 = bands(s1)
+print(&quot;check: one small light, 2|L1| / its power on the lattice = %.4f, direction error %.2f deg&quot; %
+      (2 * np.linalg.norm(L1) / power(s1), math.degrees(math.acos(np.clip(np.dot(unit(L1), d), -1, 1)))))
+
+print(&quot;\nRandom probes: a sun (1-6 deg, irradiance 0.3-3) plus a sky (0.02-0.4, brighter above)&quot;)
+print(&quot;  k    strength error (median / 90%)   direction error (median / 90%)   fake light from a sky-only probe&quot;)
+for k in (0.0, 0.5, 1.0, 2.0):
+    se, de, skyonly = [], [], []
+    for _ in range(300):
+        sd = unit(rng.normal(size=3))
+        srad = sun(sd, rng.uniform(1, 6), rng.uniform(0.3, 3.0))
+        E = power(srad)
+        skyL = rng.uniform(0.02, 0.4)
+        sky = skyL * (0.6 + 0.4 * P[:, 1])
+        rad = srad + sky
+        L0, L1 = bands(rad)
+        dd = min(np.linalg.norm(L1) / (2 * L0), 1.0)
+        est = 2 * np.linalg.norm(L1) * dd ** k
+        se.append(abs(est - E) / E)
+        de.append(math.degrees(math.acos(np.clip(np.dot(unit(L1), sd), -1, 1))))
+        s0, s1 = bands(sky)
+        ds = min(np.linalg.norm(s1) / (2 * s0), 1.0)
+        skyonly.append(2 * np.linalg.norm(s1) * ds ** k / power(sky))
+    print(&quot;  %.1f  %.3f / %.3f                     %.1f / %.1f deg                    %.3f of the sky power&quot; %
+          (k, np.median(se), np.percentile(se, 90), np.median(de), np.percentile(de, 90), np.median(skyonly)))</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>camera-look/camera_chain.py</code><span class="script-meta">Section 6: the AgX, ACES and PBR Neutral detail bands, clipped worlds &middot; 81 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/camera-look/camera_chain.py" download>Download camera_chain.py</a> &middot; run from the <code>camera-look</code> folder with <code>python camera_chain.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Experiment 3, part B: run the shader&#x27;s output through Camera Pro&#x27;s own chain (exposure exp2(EV), then AgX, ACES or Khronos PBR Neutral, copied from VFCamColor.cginc) to see what the camera shows of Sharper Probes&#x27; contrast and of highlights and neon, in an HDR world and in one that clips at 1 before Camera Pro reads the frame.&quot;&quot;&quot;
+import numpy as np
+
+AGX_IN = np.array([[0.842479062253094, 0.0784335999999992, 0.0792237451477643],
+                   [0.0423282422610123, 0.878468636469772, 0.0791661274605434],
+                   [0.0423756549057051, 0.0784336, 0.879142973793104]])
+AGX_OUT = np.array([[1.19687900512017, -0.0980208811401368, -0.0990297440797205],
+                    [-0.0528968517574562, 1.15190312990417, -0.0989611768448433],
+                    [-0.0529716355144438, -0.0980434501171241, 1.15107367264116]])
+LUMA = np.array([0.2126, 0.7152, 0.0722])
+
+
+def agx(c):
+    c = AGX_IN @ np.maximum(c, 0.0)
+    c = np.clip(np.log2(np.maximum(c, 1e-10)), -12.47393, 4.026069)
+    x = (c + 12.47393) / (4.026069 + 12.47393)
+    x2 = x * x
+    x4 = x2 * x2
+    y = 15.5 * x4 * x2 - 40.14 * x4 * x + 31.96 * x4 - 6.868 * x2 * x + 0.4298 * x2 + 0.1191 * x - 0.00232
+    y = AGX_OUT @ y
+    return np.power(np.maximum(y, 0.0), 2.2)
+
+
+def aces(x):
+    x = x * 0.6
+    return np.clip((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0, 1)
+
+
+def neutral(c):
+    c = np.array(c, dtype=float)
+    x = c.min()
+    off = x - 6.25 * x * x if x &lt; 0.08 else 0.04
+    c = c - off
+    peak = c.max()
+    s = 0.8 - 0.04
+    if peak &lt; s:
+        return c
+    d = 1.0 - s
+    newpeak = 1.0 - d * d / (peak + d - s)
+    c = c * newpeak / max(peak, 1e-6)
+    g = 1.0 - 1.0 / (0.15 * (peak - newpeak) + 1.0)
+    return c + (newpeak - c) * g
+
+
+def to_srgb(v):
+    v = np.clip(v, 0, 1)
+    return np.where(v &lt; 0.0031308, v * 12.92, 1.055 * np.power(v, 1 / 2.4) - 0.055)
+
+
+def display(lin_grey, curve):
+    c = np.array([lin_grey] * 3)
+    out = {&quot;AgX&quot;: agx, &quot;ACES&quot;: aces, &quot;Neutral&quot;: neutral}[curve](c)
+    return float(to_srgb(LUMA @ out))
+
+
+print(&quot;1. Sharper Probes on camera: display (sRGB 0-1) of probe light v and of the same light 31% brighter&quot;)
+print(&quot;   (the Sharper Probes peak for one light), AgX, the Camera Pro default&quot;)
+print(&quot;   v      EV   Unity    Sharper   difference&quot;)
+for v in (0.05, 0.2, 0.5, 1.0, 2.0):
+    for ev in (-1, 0, 1):
+        a = display(v * 2 ** ev, &quot;AgX&quot;)
+        b = display(1.312 * v * 2 ** ev, &quot;AgX&quot;)
+        print(&quot;   %-6.2f %+d   %.3f    %.3f     %+.3f&quot; % (v, ev, a, b, b - a))
+
+print(&quot;\n2. A highlight or neon value, HDR world against a world that clips at 1 before Camera Pro reads it&quot;)
+print(&quot;   value   EV    HDR AgX   clipped AgX   HDR Neutral   clipped Neutral&quot;)
+for val in (1.0, 2.0, 4.0, 8.0, 16.0, 64.0):
+    for ev in (-2, -1, 0):
+        k = 2 ** ev
+        print(&quot;   %-6.0f  %+d    %.3f     %.3f         %.3f         %.3f&quot; %
+              (val, ev, display(val * k, &quot;AgX&quot;), display(min(val, 1.0) * k, &quot;AgX&quot;),
+               display(val * k, &quot;Neutral&quot;), display(min(val, 1.0) * k, &quot;Neutral&quot;)))
+
+print(&quot;\n3. Above mid grey, where each curve stops showing a 10% brighter highlight (display step below 1/255)&quot;)
+for curve in (&quot;AgX&quot;, &quot;ACES&quot;, &quot;Neutral&quot;):
+    flat = None
+    for lv in np.geomspace(0.18, 256, 400):
+        if display(lv * 1.1, curve) - display(lv, curve) &lt; 1 / 255:
+            flat = lv
+            break
+    print(&quot;   %-8s flat above linear %.2f (%.1f stops over mid grey)&quot; % (curve, flat, np.log2(flat / 0.18)))</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>camera-look/light_size_highlight.py</code><span class="script-meta">Table 6 &middot; 32 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/camera-look/light_size_highlight.py" download>Download light_size_highlight.py</a> &middot; run from the <code>camera-look</code> folder with <code>python light_size_highlight.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Experiment 3, part C: how much of a glossy highlight lands in AgX&#x27;s visible detail band (linear 1 to 7.2, part B) for a point light against lights with a size, using GGX widened by Karis&#x27; sphere-light roughness (alpha&#x27; = alpha + tan(r)/2); the widened NDF still integrates to 1, so no extra energy factor (Karis&#x27; (alpha/alpha&#x27;)^2 belongs to his representative-point method), on black latex (F0 0.04) with a light of 1.&quot;&quot;&quot;
+import math
+import numpy as np
+
+N = 400000
+u = (np.arange(N) + 0.5) / N
+ct = 1.0 - u * (1.0 - math.cos(math.radians(60)))
+DW = 2 * math.pi * (1 - math.cos(math.radians(60))) / N
+
+
+def ggx(nh, a):
+    a2 = a * a
+    d = nh * nh * (a2 - 1.0) + 1.0
+    return a2 / (math.pi * d * d)
+
+
+print(&quot;black latex, F0 0.04, light of 1 facing the surface, view along the reflection&quot;)
+print(&quot;smooth  light size   peak     solid angle of the highlight (sr x 1e-3)&quot;)
+print(&quot;                              above 1    in AgX detail band 1-7.2   above 7.2 (flat white)&quot;)
+for smooth in (0.9, 0.95, 0.97):
+    a = (1.0 - smooth) ** 2
+    for size_deg in (0.0, 5.0, 10.0, 20.0):
+        rr = math.radians(size_deg)
+        a2 = min(a + math.tan(rr) / 2.0, 1.0)
+        norm = 1.0
+        # nh sampled over the reflection lobe, highlight radiance ~ D * F0 / 4 at normal incidence
+        val = ggx(ct, a2) * norm * 0.04 * 0.25 * math.pi
+        s_above = np.sum(val &gt; 1.0) * DW * 4
+        s_band = np.sum((val &gt; 1.0) &amp; (val &lt;= 7.2)) * DW * 4
+        s_white = np.sum(val &gt; 7.2) * DW * 4
+        print(&quot;%-7.2f %5.0f deg   %8.1f   %7.3f    %7.3f                    %7.3f&quot; %
+              (smooth, size_deg, val.max(), s_above * 1e3, s_band * 1e3, s_white * 1e3))</code></pre></div>
+                </details>
+                <p class="mt-3 mb-1"><strong>Section 7, baking at high definition</strong></p>
+                <details class="script-listing">
+                    <summary><code>baker-hd/baker_sampling.py</code><span class="script-meta">Figure 1, Tables 7 to 9, and the emissive units ratio &middot; 189 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/baker-hd/baker_sampling.py" download>Download baker_sampling.py</a> &middot; run from the <code>baker-hd</code> folder with <code>python baker_sampling.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Baker HD experiment: the baker&#x27;s white-noise sampling against per-texel rotated low-discrepancy sets (Fibonacci lattice for the hemisphere, R4 Kronecker points for sub-texel jitter and the light disc), the square-versus-disc shadow sample shape, point-sampled texels against jittered ones, and the emissive direct estimator&#x27;s units against a path-traced reference.&quot;&quot;&quot;
+import math
+import numpy as np
+
+rng = np.random.default_rng(7)
+M32 = 1 &lt;&lt; 32
+
+
+def r_alphas(d):
+    x = 2.0
+    for _ in range(500):
+        x = (1.0 + x) ** (1.0 / (d + 1))
+    return [((1.0 / x) ** (i + 1)) % 1.0 for i in range(d)], x
+
+
+A4, PHI4 = r_alphas(4)
+GOLD = (math.sqrt(5.0) - 1.0) / 2.0
+FIX_GOLD = int(round(GOLD * M32)) % M32
+FIX_R4 = [int(round(a * M32)) % M32 for a in A4]
+
+
+def fixed(k, c, off):
+    v = (k.astype(np.uint64) * np.uint64(c) + off.astype(np.uint64)) % np.uint64(M32)
+    return (v &gt;&gt; np.uint64(8)).astype(np.float64) / 16777216.0
+
+
+def offsets(n):
+    return rng.integers(0, M32, size=(n, 1), dtype=np.uint64)
+
+
+def fib(n_tex, n):
+    k = np.arange(n, dtype=np.uint64)[None, :]
+    o1 = rng.random((n_tex, 1))
+    u1 = np.mod((k.astype(np.float64) + 0.5) / n + o1, 1.0)
+    u2 = fixed(k, FIX_GOLD, offsets(n_tex))
+    return u1, u2
+
+
+def r4(n_tex, n, dims):
+    k = np.arange(n, dtype=np.uint64)[None, :]
+    return [fixed(k, FIX_R4[d], offsets(n_tex)) for d in dims]
+
+
+def white(n_tex, n, count):
+    return [rng.random((n_tex, n)) for _ in range(count)]
+
+
+def report(name, est, ref):
+    err = est - ref
+    return &quot;%-34s rms %.5f   mean %+.5f&quot; % (name, math.sqrt(np.mean(err ** 2)), np.mean(err))
+
+
+print(&quot;constants&quot;)
+print(&quot;  R4 root phi_4 = %.16f (x^5 = x + 1)&quot; % PHI4)
+print(&quot;  golden 1/phi fixed 0.32: %du&quot; % FIX_GOLD)
+for i, (a, f) in enumerate(zip(A4, FIX_R4)):
+    print(&quot;  R4 alpha%d = %.16f  fixed %du&quot; % (i + 1, a, f))
+
+CONFIGS = 40
+ROTS = 100
+walls = [(rng.random() * 2 * math.pi, 0.3 + rng.random() * 2.0, rng.random() * 1.2) for _ in range(CONFIGS)]
+
+
+def sky_wall(u1, u2, cfg):
+    phi0, width, top = cfg
+    cz = np.sqrt(np.maximum(0.0, 1.0 - u1))
+    elev = np.arcsin(np.clip(cz, 0.0, 1.0))
+    phi = 2.0 * np.pi * u2
+    rel = np.mod(phi - phi0, 2.0 * np.pi)
+    blocked = (rel &lt; width) &amp; (elev &lt; top)
+    y = np.sqrt(u1) * np.sin(phi)
+    sky = 0.35 + 0.65 * np.clip(0.5 + 0.5 * y, 0.0, 1.0)
+    return np.where(blocked, 0.2, sky)
+
+
+def ref_sky_wall(cfg, g=1500):
+    u = (np.arange(g) + 0.5) / g
+    return float(np.mean(sky_wall(u[:, None], u[None, :], cfg)))
+
+
+refs = np.array([ref_sky_wall(c) for c in walls])
+
+print(&quot;\nA. irradiance under a sky with a wall (cosine-weighted, %d scenes x %d texels)&quot; % (CONFIGS, ROTS))
+print(&quot;   reference is a 1500 x 1500 midpoint grid per scene&quot;)
+for n in (16, 64, 256, 1024):
+    ests_w, ests_f = [], []
+    for c, cfg in enumerate(walls):
+        u1, u2 = white(ROTS, n, 2)
+        ests_w.append(np.mean(sky_wall(u1, u2, cfg), axis=1))
+        f1, f2 = fib(ROTS, n)
+        ests_f.append(np.mean(sky_wall(f1, f2, cfg), axis=1))
+    ref = np.repeat(refs, ROTS)
+    ew = np.concatenate(ests_w)
+    ef = np.concatenate(ests_f)
+    rw = math.sqrt(np.mean((ew - ref) ** 2))
+    rf = math.sqrt(np.mean((ef - ref) ** 2))
+    print(&quot;  N=%-5d white rms %.5f   Fibonacci rms %.5f   ratio %.1fx   mean err white %+.5f fib %+.5f&quot; %
+          (n, rw, rf, rw / rf, np.mean(ew - ref), np.mean(ef - ref)))
+
+
+def disc_true(d):
+    d = np.clip(d, -1.0, 1.0)
+    seg = np.arccos(d) - d * np.sqrt(1.0 - d * d)
+    return 1.0 - seg / np.pi
+
+
+print(&quot;\nB. soft shadow: visible share of a round light behind a straight edge, 16 samples, 20000 texels&quot;)
+T = 20000
+d = rng.uniform(-1.0, 1.0, size=(T, 1))
+ang = rng.uniform(0.0, 2 * np.pi, size=(T, 1))
+truth = disc_true(d[:, 0])
+
+
+def edge_vis(x, y):
+    xr = x * np.cos(ang) + y * np.sin(ang)
+    return np.mean(xr &lt; d, axis=1)
+
+
+sx, sy = white(T, 16, 2)
+print(&quot;  &quot; + report(&quot;square, white (ShadowMask today)&quot;, edge_vis(sx * 2 - 1, sy * 2 - 1), truth))
+w1, w2 = white(T, 16, 2)
+r = np.sqrt(w1)
+print(&quot;  &quot; + report(&quot;disc, white&quot;, edge_vis(r * np.cos(2 * np.pi * w2), r * np.sin(2 * np.pi * w2)), truth))
+q1, q2 = r4(T, 16, (2, 3))
+r = np.sqrt(q1)
+print(&quot;  &quot; + report(&quot;disc, R4 dims 3-4 rotated&quot;, edge_vis(r * np.cos(2 * np.pi * q2), r * np.sin(2 * np.pi * q2)), truth))
+
+
+def coverage_true(nx, ny, off, g=400):
+    u = (np.arange(g) + 0.5) / g - 0.5
+    X, Y = np.meshgrid(u, u)
+    return np.array([np.mean(X * a + Y * b &lt; o) for a, b, o in zip(nx, ny, off)])
+
+
+print(&quot;\nC. shadow edge through a texel: lit share of the texel, 4000 texels&quot;)
+T = 4000
+th = rng.uniform(0, 2 * np.pi, T)
+nx, ny = np.cos(th), np.sin(th)
+off = rng.uniform(-0.6, 0.6, T)
+truth = coverage_true(nx, ny, off)
+centre = (0.0 &lt; off).astype(np.float64)
+print(&quot;  &quot; + report(&quot;texel centre only (today)&quot;, centre, truth))
+for n in (16, 64, 256):
+    jx, jy = white(T, n, 2)
+    ew = np.mean((jx - 0.5) * nx[:, None] + (jy - 0.5) * ny[:, None] &lt; off[:, None], axis=1)
+    qx, qy = r4(T, n, (0, 1))
+    eq = np.mean((qx - 0.5) * nx[:, None] + (qy - 0.5) * ny[:, None] &lt; off[:, None], axis=1)
+    print(&quot;  N=%-4d %s | %s&quot; % (n, report(&quot;jitter white&quot;, ew, truth), report(&quot;jitter R4 dims 1-2&quot;, eq, truth)))
+
+print(&quot;\nD. jitter and direction sharing one sample index (texel edge x wall), 64 samples&quot;)
+T = 4000
+cfg_i = rng.integers(0, CONFIGS, T)
+th = rng.uniform(0, 2 * np.pi, T)
+nx, ny = np.cos(th), np.sin(th)
+off = rng.uniform(-0.6, 0.6, T)
+cov = coverage_true(nx, ny, off)
+truth = cov * refs[cfg_i]
+n = 64
+jx, jy, u1, u2 = white(T, n, 4)
+f_w = np.zeros(T)
+f_l = np.zeros(T)
+qx, qy = r4(T, n, (0, 1))
+f1, f2 = fib(T, n)
+for i in range(T):
+    cfg = walls[cfg_i[i]]
+    lw = (jx[i] - 0.5) * nx[i] + (jy[i] - 0.5) * ny[i] &lt; off[i]
+    f_w[i] = np.mean(lw * sky_wall(u1[i], u2[i], cfg))
+    ll = (qx[i] - 0.5) * nx[i] + (qy[i] - 0.5) * ny[i] &lt; off[i]
+    f_l[i] = np.mean(ll * sky_wall(f1[i], f2[i], cfg))
+print(&quot;  &quot; + report(&quot;white, independent&quot;, f_w, truth))
+print(&quot;  &quot; + report(&quot;R4 jitter + Fibonacci, same k&quot;, f_l, truth))
+
+print(&quot;\nE. emissive units: receiver facing up, square emitter of radiance 1 at height h&quot;)
+for h, s in ((0.5, 1.0), (1.0, 1.0), (2.0, 4.0)):
+    n = 400000
+    u1, u2 = rng.random(n), rng.random(n)
+    r = np.sqrt(u1)
+    dx, dy, dz = r * np.cos(2 * np.pi * u2), r * np.sin(2 * np.pi * u2), np.sqrt(1 - u1)
+    t = h / dz
+    hx, hy = dx * t, dy * t
+    hit = (np.abs(hx) &lt; s / 2) &amp; (np.abs(hy) &lt; s / 2)
+    path = np.mean(hit * 1.0)
+    px, py = rng.uniform(-s / 2, s / 2, n), rng.uniform(-s / 2, s / 2, n)
+    d2 = px * px + py * py + h * h
+    cosx = h / np.sqrt(d2)
+    cosl = h / np.sqrt(d2)
+    nee = np.mean(1.0 * cosx * cosl * (s * s) / d2)
+    print(&quot;  h=%.1f size=%.1f  path (bounce ray lands on it) %.5f   baker direct formula %.5f   ratio %.4f (pi = %.4f)&quot; %
+          (h, s, path, nee, nee / path, math.pi))</code></pre></div>
+                </details>
+                <p class="mt-3 mb-1"><strong>Section 8, toward the target look</strong></p>
+                <details class="script-listing">
+                    <summary><code>nextgen-lighting/light_units.py</code><span class="script-meta">Figures 2 and 3, Tables 11 and 12 &middot; 37 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/nextgen-lighting/light_units.py" download>Download light_units.py</a> &middot; run from the <code>nextgen-lighting</code> folder with <code>python light_units.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Experiment 5: the baker&#x27;s light conversion against Unity&#x27;s lightmapper in a Built-in project (Lightmapping.cs LightmapperUtils: LinearColor.Convert with lightsUseLinearIntensity off, FalloffType.Legacy): intensity, distance falloff and the bounce multiplier.&quot;&quot;&quot;
+import numpy as np
+
+
+def srgb_to_linear(c):
+    c = np.asarray(c, dtype=np.float64)
+    return np.where(c &lt;= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
+
+
+W = np.array([0.2126, 0.7152, 0.0722])
+print(&quot;1. Intensity. Unity (Built-in, lightsUseLinearIntensity off): (color * intensity).linear&quot;)
+print(&quot;   Baker today: color.linear * intensity&quot;)
+for name, col in ((&quot;white&quot;, (1.0, 1.0, 1.0)), (&quot;warm 1.0/0.8/0.6&quot;, (1.0, 0.8, 0.6))):
+    print(&quot;   %s&quot; % name)
+    for inten in (0.25, 0.5, 1.0, 1.5, 2.0, 4.0, 8.0):
+        unity = srgb_to_linear(np.array(col) * inten) @ W
+        ours = (srgb_to_linear(np.array(col)) * inten) @ W
+        print(&quot;     intensity %-5s Unity %8.3f   baker %8.3f   baker / Unity %.2f&quot; % (inten, unity, ours, ours / unity))
+
+print(&quot;\n2. Distance falloff, range 10 m, light of 1&quot;)
+print(&quot;   Unity Legacy (the Built-in default): 1 / (1 + 25 (d/r)^2), the vertex-light form of the attenuation texture&quot;)
+print(&quot;   (the texture also fades to 0 at the range; that fade is not reproduced here)&quot;)
+print(&quot;   Baker today: (1 - (d/r)^4)^2 / (d^2 + 1)&quot;)
+print(&quot;   Inverse square with Unity&#x27;s smooth window, for reference: (1 - (d/r)^4)^2 / d^2&quot;)
+r = 10.0
+for d in (0.25, 0.5, 1.0, 2.0, 3.0, 5.0, 7.0, 9.0):
+    x = d / r
+    legacy = 1.0 / (1.0 + 25.0 * x * x)
+    ours = (1.0 - x ** 4) ** 2 / (d * d + 1.0)
+    inv = (1.0 - x ** 4) ** 2 / (d * d)
+    print(&quot;   d %-5s Legacy %.4f   baker %.4f (%.2fx)   inverse square %.4f&quot; % (d, legacy, ours, ours / legacy, inv))
+
+print(&quot;\n3. Bounce. Unity: indirect colour = direct colour * Light.bounceIntensity (Indirect Multiplier).&quot;)
+print(&quot;   Baker today: every light bounces at 1. A light at Indirect Multiplier 0 still bounces fully; one at 2 bounces half as much as in Unity.&quot;)
+
+print(&quot;\n4. Soft shadows. Unity: sphereRadius = shadowRadius only when Shadow Type is Soft (angularDiameter the same for&quot;)
+print(&quot;   directional). Baker today: uses shadowRadius / shadowAngle for any shadowed light, so a Hard-shadow light bakes soft.&quot;)</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>nextgen-lighting/aniso_reflection.py</code><span class="script-meta">Table 13 &middot; 114 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/nextgen-lighting/aniso_reflection.py" download>Download aniso_reflection.py</a> &middot; run from the <code>nextgen-lighting</code> folder with <code>python aniso_reflection.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Experiment 5 (v2): anisotropic reflections of a studio environment (two softboxes and a neon band) through GGX, sampled with rotated Fibonacci lattices and with a measured noise floor (the reference computed twice). Reference: the anisotropic GGX lobe for the real view (Filament roughness at = a(1+k), ab = a(1-k)). Compared: the isotropic probe lookup the shaders use today, Filament getReflectedVector (bent normal), and the bent normal with the lookup roughness raised to the mean of at and ab.&quot;&quot;&quot;
+import math
+import numpy as np
+
+rng = np.random.default_rng(3)
+GOLD = (math.sqrt(5.0) - 1.0) / 2.0
+
+
+def norm(v):
+    return v / np.linalg.norm(v, axis=-1, keepdims=True)
+
+
+def lattice(count):
+    k = np.arange(count)
+    return np.mod((k + 0.5) / count + rng.random(), 1.0), np.mod(k * GOLD + rng.random(), 1.0)
+
+
+def box(center, up, hx_deg, hy_deg, lum):
+    c = norm(np.array(center, float))
+    u = norm(np.array(up, float) - np.dot(up, c) * c)
+    return c, u, np.cross(c, u), math.radians(hx_deg), math.radians(hy_deg), lum
+
+
+BOXES = [box((0.5, 0.4, 0.75), (0, 0, 1), 16, 9, 20.0), box((-0.7, 0.2, 0.3), (0, 0, 1), 10, 24, 12.0)]
+
+
+def env(d):
+    lum = np.full(d.shape[:-1], 0.02)
+    for c, u, w, hx, hy, l in BOXES:
+        cz = d @ c
+        x = np.arctan2(d @ u, cz)
+        y = np.arctan2(d @ w, cz)
+        lum = np.where((cz &gt; 0) &amp; (np.abs(x) &lt; hx) &amp; (np.abs(y) &lt; hy), l, lum)
+    band = (np.abs(d[..., 2]) &lt; math.sin(math.radians(2.0))) &amp; (np.arctan2(d[..., 1], d[..., 0]) &gt; 0)
+    return np.where(band, 6.0, lum)
+
+
+def aniso_halfvectors(ax, ay, u1, u2):
+    phi = np.arctan2(ay * np.sin(2 * np.pi * u2), ax * np.cos(2 * np.pi * u2))
+    cp, sp = np.cos(phi), np.sin(phi)
+    tan2 = u1 / np.maximum(1.0 - u1, 1e-9) / (cp * cp / (ax * ax) + sp * sp / (ay * ay))
+    ct = 1.0 / np.sqrt(1.0 + tan2)
+    st = np.sqrt(np.maximum(0.0, 1.0 - ct * ct))
+    return np.stack([st * cp, st * sp, ct], axis=-1)
+
+
+def lobe(v, t, b, n, ax, ay, count):
+    u1, u2 = lattice(count)
+    hl = aniso_halfvectors(ax, ay, u1, u2)
+    h = hl[:, :1] * t + hl[:, 1:2] * b + hl[:, 2:3] * n
+    l = 2.0 * (h @ v)[:, None] * h - v
+    w = np.maximum(l @ n, 0.0)
+    return float(np.sum(env(l) * w) / max(np.sum(w), 1e-12))
+
+
+def any_perp(r):
+    a = np.array([1.0, 0.0, 0.0]) if abs(r[0]) &lt; 0.9 else np.array([0.0, 1.0, 0.0])
+    t = norm(np.cross(r, a))
+    return t, np.cross(r, t)
+
+
+def probe_lookup(r, alpha, count):
+    t, b = any_perp(r)
+    return lobe(r, t, b, r, alpha, alpha, count)
+
+
+CONFIGS = 200
+COUNT = 4096
+print(&quot;anisotropic GGX reflections of a studio environment, %d random surfaces and views each, %d lattice samples&quot; % (CONFIGS, COUNT))
+print(&quot;each cell: relative RMS error (RMS / mean reference) | median relative error&quot;)
+print(&quot;noise = the reference against a second reference with another lattice rotation&quot;)
+print(&quot;tapN = N probe lookups at the real lobe&#x27;s half-vector median ring, each at roughness max(ab, 0.35 a), weighted by n.l&quot;)
+print(&quot;p.rough k    noise          isotropic today   Filament bent    bent + mean(at,ab)  4 taps          8 taps&quot;)
+for pr in (0.3, 0.5, 0.7):
+    alpha = pr * pr
+    for k in (0.0, 0.5, 0.9):
+        at = max(alpha * (1 + k), 1e-3)
+        ab = max(alpha * (1 - k), 1e-3)
+        cols = {&quot;ref&quot;: [], &quot;ref2&quot;: [], &quot;iso&quot;: [], &quot;bent&quot;: [], &quot;bent2&quot;: [], &quot;tap4&quot;: [], &quot;tap8&quot;: []}
+        for _ in range(CONFIGS):
+            n = norm(rng.normal(size=3))
+            t = norm(np.cross(n, rng.normal(size=3)))
+            b = np.cross(n, t)
+            while True:
+                v = norm(rng.normal(size=3))
+                if v @ n &gt; 0.2:
+                    break
+            cols[&quot;ref&quot;].append(lobe(v, t, b, n, at, ab, COUNT))
+            cols[&quot;ref2&quot;].append(lobe(v, t, b, n, at, ab, COUNT))
+            r = norm(2.0 * (n @ v) * n - v)
+            cols[&quot;iso&quot;].append(probe_lookup(r, alpha, COUNT))
+            direction = b if k &gt;= 0 else t
+            a_n = norm(np.cross(np.cross(direction, v), direction))
+            bend = abs(k) * min(1.0, max(0.0, 5.0 * pr))
+            bn = norm((1 - bend) * n + bend * a_n)
+            rb = norm(2.0 * (bn @ v) * bn - v)
+            cols[&quot;bent&quot;].append(probe_lookup(rb, alpha, COUNT))
+            cols[&quot;bent2&quot;].append(probe_lookup(rb, 0.5 * (at + ab), COUNT))
+            for taps in (4, 8):
+                ku = (np.arange(taps) + 0.5) / taps
+                hl = aniso_halfvectors(at, ab, np.full(taps, 0.5), ku)
+                h = hl[:, :1] * t + hl[:, 1:2] * b + hl[:, 2:3] * n
+                ls = 2.0 * (h @ v)[:, None] * h - v
+                ws = np.maximum(ls @ n, 0.0)
+                vals = [probe_lookup(norm(l), max(ab, 0.35 * alpha), COUNT // 4) for l in ls]
+                cols[&quot;tap%d&quot; % taps].append(float(np.sum(np.array(vals) * ws) / max(ws.sum(), 1e-9)))
+        ref = np.array(cols[&quot;ref&quot;])
+
+        def err(key):
+            e = np.array(cols[key]) - ref
+            return &quot;%.3f | %.3f&quot; % (math.sqrt(np.mean(e ** 2)) / ref.mean(), np.median(np.abs(e) / np.maximum(ref, 1e-3)))
+
+        print(&quot;%-7.1f %-4.1f %-14s %-17s %-16s %-19s %-15s %s&quot; % (pr, k, err(&quot;ref2&quot;), err(&quot;iso&quot;), err(&quot;bent&quot;), err(&quot;bent2&quot;),
+                                                              err(&quot;tap4&quot;), err(&quot;tap8&quot;)))</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>nextgen-lighting/probe_normalization.py</code><span class="script-meta">Table 14 &middot; 110 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/nextgen-lighting/probe_normalization.py" download>Download probe_normalization.py</a> &middot; run from the <code>nextgen-lighting</code> folder with <code>python probe_normalization.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Experiment 5 (v2): reflection probe light leaks in a room with a window and an alcove the window cannot see, sampled with rotated Fibonacci lattices and a measured noise floor. Reference: GGX lobe traced from the surface. Compared: the probe from the room centre raw and box projected, each also normalised by local over probe irradiance, and a normalisation that may only darken (clamped at 1).&quot;&quot;&quot;
+import math
+import numpy as np
+
+rng = np.random.default_rng(11)
+GOLD = (math.sqrt(5.0) - 1.0) / 2.0
+ROOM = np.array([8.0, 3.0, 6.0])
+PART_X, PART_Z = 3.0, 2.5
+PROBE = np.array([5.0, 1.5, 3.0])
+
+
+def norm(v):
+    return v / np.linalg.norm(v, axis=-1, keepdims=True)
+
+
+def lattice(count):
+    k = np.arange(count)
+    return np.mod((k + 0.5) / count + rng.random(), 1.0), np.mod(k * GOLD + rng.random(), 1.0)
+
+
+def basis(n):
+    a = np.array([1.0, 0.0, 0.0]) if abs(n[0]) &lt; 0.9 else np.array([0.0, 1.0, 0.0])
+    t = norm(np.cross(n, a))
+    return t, np.cross(n, t)
+
+
+def trace(p, d):
+    d = np.where(np.abs(d) &lt; 1e-9, 1e-9, d)
+    tp = np.where(d &gt; 0, (ROOM - p) / d, -p / d)
+    axis = np.argmin(tp, axis=-1)
+    t = np.take_along_axis(tp, axis[..., None], axis=-1)[..., 0]
+    hit = p + d * t[..., None]
+    sign = np.take_along_axis(d, axis[..., None], axis=-1)[..., 0] &gt; 0
+    lum = np.where(axis == 1, np.where(sign, 0.35, 0.15), 0.25)
+    window = (axis == 0) &amp; sign &amp; (hit[..., 1] &gt; 0.8) &amp; (hit[..., 1] &lt; 2.4) &amp; (hit[..., 2] &gt; 1.5) &amp; (hit[..., 2] &lt; 4.5)
+    lum = np.where(window, 12.0, lum)
+    tq = (PART_X - p[..., 0]) / d[..., 0]
+    q = p + d * tq[..., None]
+    blocked = (tq &gt; 1e-5) &amp; (tq &lt; t) &amp; (q[..., 2] &gt;= 0) &amp; (q[..., 2] &lt;= PART_Z)
+    return np.where(blocked, 0.2, lum), hit
+
+
+def lobe_from(p, v, n, alpha, count=4096):
+    u1, u2 = lattice(count)
+    phi = 2 * np.pi * u2
+    ct = np.sqrt((1 - u1) / (1 + (alpha * alpha - 1) * u1))
+    st = np.sqrt(1 - ct * ct)
+    t, b = basis(n)
+    h = (st * np.cos(phi))[:, None] * t + (st * np.sin(phi))[:, None] * b + ct[:, None] * n
+    l = 2 * (h @ v)[:, None] * h - v
+    w = np.maximum(l @ n, 0.0)
+    lum, _ = trace(np.broadcast_to(p, l.shape), l)
+    return float(np.sum(lum * w) / max(w.sum(), 1e-12))
+
+
+def irradiance(p, n, count=4096):
+    u1, u2 = lattice(count)
+    r, phi = np.sqrt(u1), 2 * np.pi * u2
+    t, b = basis(n)
+    d = (r * np.cos(phi))[:, None] * t + (r * np.sin(phi))[:, None] * b + np.sqrt(1 - u1)[:, None] * n
+    lum, _ = trace(np.broadcast_to(p, d.shape), d)
+    return float(lum.mean())
+
+
+def box_project(p, r):
+    _, hit = trace(p[None, :], r[None, :])
+    return norm(hit[0] - PROBE)
+
+
+n = np.array([0.0, 1.0, 0.0])
+e_probe = irradiance(PROBE, n, 16384)
+regions = {
+    &quot;alcove (window hidden)&quot;: lambda: np.array([rng.uniform(0.4, 2.6), 0.001, rng.uniform(0.3, 2.2)]),
+    &quot;open room (window seen)&quot;: lambda: np.array([rng.uniform(4.0, 7.5), 0.001, rng.uniform(1.0, 5.0)]),
+}
+keys = [&quot;noise&quot;, &quot;raw&quot;, &quot;box&quot;, &quot;raw+norm&quot;, &quot;box+norm&quot;, &quot;box+darken&quot;]
+print(&quot;floor points, views from above, 60 points x 3 views per region, 4096 lattice samples per lobe&quot;)
+print(&quot;each cell: relative RMS error | median relative error; probe floor irradiance %.3f&quot; % e_probe)
+print(&quot;region                   rough  &quot; + &quot;  &quot;.join(&quot;%-15s&quot; % k for k in keys) + &quot; mean ref&quot;)
+for name, pick in regions.items():
+    for pr in (0.2, 0.5, 0.8):
+        alpha = pr * pr
+        cols = {k: [] for k in keys}
+        ref = []
+        for _ in range(60):
+            p = pick()
+            scale = irradiance(p, n) / max(e_probe, 1e-6)
+            for _ in range(3):
+                while True:
+                    v = norm(rng.normal(size=3))
+                    if v @ n &gt; 0.3:
+                        break
+                r = norm(2 * (n @ v) * n - v)
+                ref.append(lobe_from(p, v, n, alpha))
+                cols[&quot;noise&quot;].append(lobe_from(p, v, n, alpha))
+                a = lobe_from(PROBE, r, r, alpha)
+                rb = box_project(p, r)
+                c = lobe_from(PROBE, rb, rb, alpha)
+                cols[&quot;raw&quot;].append(a)
+                cols[&quot;box&quot;].append(c)
+                cols[&quot;raw+norm&quot;].append(a * scale)
+                cols[&quot;box+norm&quot;].append(c * scale)
+                cols[&quot;box+darken&quot;].append(c * min(scale, 1.0))
+        ref = np.array(ref)
+
+        def err(key):
+            e = np.array(cols[key]) - ref
+            return &quot;%.3f | %.3f&quot; % (math.sqrt(np.mean(e ** 2)) / ref.mean(), np.median(np.abs(e) / np.maximum(ref, 1e-3)))
+
+        print(&quot;%-24s %-5.1f  &quot; % (name, pr) + &quot;  &quot;.join(&quot;%-15s&quot; % err(k) for k in keys) + &quot; %.3f&quot; % ref.mean())</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>nextgen-lighting/sh_band_fit.py</code><span class="script-meta">Section 8: the fitted band weights &middot; 33 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/nextgen-lighting/sh_band_fit.py" download>Download sh_band_fit.py</a> &middot; run from the <code>nextgen-lighting</code> folder with <code>python sh_band_fit.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Experiment 5: fit the GGX prefilter lobe&#x27;s zonal band weights k1, k2 against perceptual roughness 0.5 to 1.0 with quadratics, and print the shader multipliers on Unity&#x27;s cosine-convolved SH bands (1, 1.5 k1, 4 k2) with the worst fit error.&quot;&quot;&quot;
+import math
+import numpy as np
+
+GOLD = (math.sqrt(5.0) - 1.0) / 2.0
+
+
+def zh_weights(alpha, count=262144):
+    k = np.arange(count)
+    u1 = (k + 0.5) / count
+    u2 = np.mod(k * GOLD, 1.0)
+    phi = 2 * np.pi * u2
+    ct = np.sqrt((1 - u1) / (1 + (alpha * alpha - 1) * u1))
+    st = np.sqrt(1 - ct * ct)
+    h = np.stack([st * np.cos(phi), st * np.sin(phi), ct], axis=-1)
+    x = 2 * h[:, 2] * h[:, 2] - 1
+    w = np.maximum(x, 0.0)
+    return float(np.sum(x * w) / np.sum(w)), float(np.sum(0.5 * (3 * x * x - 1) * w) / np.sum(w))
+
+
+rough = np.linspace(0.5, 1.0, 11)
+k1, k2 = np.array([zh_weights(r * r) for r in rough]).T
+c1 = np.polyfit(rough, 1.5 * k1, 2)
+c2 = np.polyfit(rough, 4.0 * k2, 2)
+print(&quot;perceptual roughness, k1, k2, shader multipliers 1.5 k1 and 4 k2&quot;)
+for r, a, b in zip(rough, k1, k2):
+    print(&quot;  %.2f  %.4f  %.4f   %.4f  %.4f&quot; % (r, a, b, 1.5 * a, 4 * b))
+print(&quot;\nquadratic fits in perceptual roughness r (highest power first):&quot;)
+print(&quot;  1.5 k1 = %.5f r^2 + %.5f r + %.5f&quot; % tuple(c1))
+print(&quot;  4 k2   = %.5f r^2 + %.5f r + %.5f&quot; % tuple(c2))
+print(&quot;  worst fit error: %.5f and %.5f&quot; % (np.max(np.abs(np.polyval(c1, rough) - 1.5 * k1)),
+                                            np.max(np.abs(np.polyval(c2, rough) - 4.0 * k2))))
+print(&quot;  at r = 1: %.4f and %.4f (should be 1 and 1)&quot; % (np.polyval(c1, 1.0), np.polyval(c2, 1.0)))</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>nextgen-lighting/sh_specular.py</code><span class="script-meta">Figure 4 and Table 15 &middot; 96 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/nextgen-lighting/sh_specular.py" download>Download sh_specular.py</a> &middot; run from the <code>nextgen-lighting</code> folder with <code>python sh_specular.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Experiment 5: specular from light probe SH for rough surfaces, for a world without a useful reflection probe (only the skybox indoors). Reference: GGX prefiltered radiance (n = v = r) of three environments. Compared: L2 SH convolved with the GGX lobe&#x27;s own zonal harmonic weights (exact band-limited convolution on top of the SH evaluation the shaders already do), and L1 only.&quot;&quot;&quot;
+import math
+import numpy as np
+
+rng = np.random.default_rng(5)
+GOLD = (math.sqrt(5.0) - 1.0) / 2.0
+
+
+def norm(v):
+    return v / np.linalg.norm(v, axis=-1, keepdims=True)
+
+
+def fib_sphere(count):
+    k = np.arange(count) + 0.5
+    z = 1 - 2 * k / count
+    phi = 2 * np.pi * np.mod(k * GOLD, 1.0)
+    s = np.sqrt(1 - z * z)
+    return np.stack([s * np.cos(phi), s * np.sin(phi), z], axis=-1)
+
+
+def sh9(d):
+    x, y, z = d[..., 0], d[..., 1], d[..., 2]
+    return np.stack([np.full_like(x, 0.282095), 0.488603 * y, 0.488603 * z, 0.488603 * x,
+                     1.092548 * x * y, 1.092548 * y * z, 0.315392 * (3 * z * z - 1),
+                     1.092548 * x * z, 0.546274 * (x * x - y * y)], axis=-1)
+
+
+def room(d):
+    az = np.degrees(np.arctan2(d[..., 1], d[..., 0]))
+    el = np.degrees(np.arcsin(np.clip(d[..., 2], -1, 1)))
+    lum = np.where(d[..., 2] &gt; 0.95, 0.35, np.where(d[..., 2] &lt; -0.3, 0.15, 0.25))
+    return np.where((np.abs(az) &lt; 25) &amp; (el &gt; 0) &amp; (el &lt; 30), 12.0, lum)
+
+
+def sun_sky(d):
+    sun = norm(np.array([0.5, 0.2, 0.6]))
+    sky = np.where(d[..., 2] &gt; 0, 0.4 + 0.6 * d[..., 2], 0.1)
+    return np.where(d @ sun &gt; math.cos(math.radians(2.0)), 400.0, sky)
+
+
+def studio(d):
+    c1 = norm(np.array([0.5, 0.4, 0.75]))
+    c2 = norm(np.array([-0.7, 0.2, 0.3]))
+    lum = np.full(d.shape[:-1], 0.02)
+    lum = np.where(d @ c1 &gt; math.cos(math.radians(14)), 20.0, lum)
+    return np.where(d @ c2 &gt; math.cos(math.radians(15)), 12.0, lum)
+
+
+def lattice(count):
+    k = np.arange(count)
+    return np.mod((k + 0.5) / count + rng.random(), 1.0), np.mod(k * GOLD + rng.random(), 1.0)
+
+
+def lobe_dirs(r, alpha, count):
+    u1, u2 = lattice(count)
+    phi = 2 * np.pi * u2
+    ct = np.sqrt((1 - u1) / (1 + (alpha * alpha - 1) * u1))
+    st = np.sqrt(1 - ct * ct)
+    a = np.array([1.0, 0.0, 0.0]) if abs(r[0]) &lt; 0.9 else np.array([0.0, 1.0, 0.0])
+    t = norm(np.cross(r, a))
+    b = np.cross(r, t)
+    h = (st * np.cos(phi))[:, None] * t + (st * np.sin(phi))[:, None] * b + ct[:, None] * r
+    l = 2 * (h @ r)[:, None] * h - r
+    return l, np.maximum(l @ r, 0.0)
+
+
+def zh_weights(alpha):
+    l, w = lobe_dirs(np.array([0.0, 0.0, 1.0]), alpha, 65536)
+    x = l[:, 2]
+    p = [np.ones_like(x), x, 0.5 * (3 * x * x - 1)]
+    return [float(np.sum(pi * w) / np.sum(w)) for pi in p]
+
+
+dirs = fib_sphere(400000)
+receivers = fib_sphere(300)
+print(&quot;GGX prefiltered radiance against SH-convolved specular; 300 reflection directions; RMS / mean | median relative error&quot;)
+print(&quot;env       p.rough  L2 zonal convolution   L1 only          (band weights k1, k2)&quot;)
+for name, env in ((&quot;room&quot;, room), (&quot;sun+sky&quot;, sun_sky), (&quot;studio&quot;, studio)):
+    coef = (4 * np.pi / len(dirs)) * (env(dirs)[:, None] * sh9(dirs)).sum(axis=0)
+    for pr in (0.4, 0.6, 0.8, 1.0):
+        alpha = pr * pr
+        k = zh_weights(alpha)
+        ref, l2, l1 = [], [], []
+        for r in receivers:
+            ls, w = lobe_dirs(r, alpha, 4096)
+            ref.append(float(np.sum(env(ls) * w) / np.sum(w)))
+            y = sh9(r)
+            l2.append(float(k[0] * coef[0] * y[0] + k[1] * (coef[1:4] @ y[1:4]) + k[2] * (coef[4:9] @ y[4:9])))
+            l1.append(float(k[0] * coef[0] * y[0] + k[1] * (coef[1:4] @ y[1:4])))
+        ref = np.array(ref)
+
+        def err(a):
+            e = np.array(a) - ref
+            return &quot;%.3f | %.3f&quot; % (math.sqrt(np.mean(e ** 2)) / ref.mean(), np.median(np.abs(e) / np.maximum(ref, 1e-3)))
+
+        print(&quot;%-9s %-7.1f  %-21s  %-15s  (%.3f, %.3f)&quot; % (name, pr, err(l2), err(l1), k[1], k[2]))</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>nextgen-lighting/lightmap_encoding.py</code><span class="script-meta">Table 16 &middot; 91 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/nextgen-lighting/lightmap_encoding.py" download>Download lightmap_encoding.py</a> &middot; run from the <code>nextgen-lighting</code> folder with <code>python lightmap_encoding.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Experiment 5: what a lightmap texel should store for normal-mapped surfaces. Reference: irradiance (Unity convention, E/pi) for normals tilted up to 45 degrees, light from below the surface blocked. Compared: non-directional, Unity&#x27;s directional encoding as the baker writes it (dominant direction times directionality, Unity&#x27;s half-Lambert rebalance decode), MonoSH (L0 RGB plus L1 of luminance, fits Unity&#x27;s two lightmap slots) and full L1 SH (RGB, three more textures).&quot;&quot;&quot;
+import math
+import numpy as np
+
+GOLD = (math.sqrt(5.0) - 1.0) / 2.0
+W = np.array([0.2126, 0.7152, 0.0722])
+
+
+def norm(v):
+    return v / np.linalg.norm(v, axis=-1, keepdims=True)
+
+
+def hemi(count):
+    k = np.arange(count) + 0.5
+    z = 1 - k / count
+    phi = 2 * np.pi * np.mod(k * GOLD, 1.0)
+    s = np.sqrt(1 - z * z)
+    return np.stack([s * np.cos(phi), s * np.sin(phi), z], axis=-1)
+
+
+def rect(d, az0, az1, el0, el1):
+    az = np.degrees(np.arctan2(d[:, 1], d[:, 0]))
+    el = np.degrees(np.arcsin(np.clip(d[:, 2], -1, 1)))
+    return (az &gt; az0) &amp; (az &lt; az1) &amp; (el &gt; el0) &amp; (el &lt; el1)
+
+
+def screen_downlight(d):
+    L = np.tile(np.array([0.08, 0.07, 0.06]), (len(d), 1))
+    L[rect(d, -30, 30, 5, 35)] = np.array([0.2, 1.0, 0.25]) * 3.0
+    L[d[:, 2] &gt; math.cos(math.radians(6))] = np.array([1.0, 0.75, 0.45]) * 30.0
+    return L
+
+
+def sun_sky(d):
+    sun = norm(np.array([0.6, 0.1, 0.64]))
+    L = (0.3 + 0.5 * d[:, 2])[:, None] * np.array([0.55, 0.7, 1.0])
+    L[d @ sun &gt; math.cos(math.radians(3.0))] = np.array([1.0, 0.95, 0.85]) * 400.0
+    return L
+
+
+def two_lights(d):
+    L = np.tile(np.array([0.03, 0.03, 0.03]), (len(d), 1))
+    L[rect(d, -15, 15, 10, 30)] = np.array([1.0, 0.15, 0.1]) * 5.0
+    L[rect(d, 165, 180, 10, 30) | rect(d, -180, -165, 10, 30)] = np.array([0.1, 0.25, 1.0]) * 5.0
+    return L
+
+
+def normals(count, max_deg=45.0):
+    k = np.arange(count) + 0.5
+    c = 1 - (k / count) * (1 - math.cos(math.radians(max_deg)))
+    phi = 2 * np.pi * np.mod(k * GOLD, 1.0)
+    s = np.sqrt(1 - c * c)
+    return np.stack([s * np.cos(phi), s * np.sin(phi), c], axis=-1)
+
+
+D = hemi(200000)
+dw = 2 * np.pi / len(D)
+N = normals(400)
+n0 = np.array([0.0, 0.0, 1.0])
+Y0 = 0.282095
+Y1 = 0.488603
+print(&quot;irradiance (E/pi) for 400 normals within 45 degrees; errors are RMS / mean of luminance | mean chroma shift&quot;)
+print(&quot;MonoSH ratio = the lightmap colour at the surface normal times the L1 luminance ratio (same two textures as MonoSH)&quot;)
+print(&quot;scene              non-directional   Unity directional   MonoSH            MonoSH ratio      L1 SH RGB&quot;)
+for name, scene in ((&quot;screen+downlight&quot;, screen_downlight), (&quot;sun+sky&quot;, sun_sky), (&quot;two lights&quot;, two_lights)):
+    L = scene(D)
+    ref = np.maximum(N @ D.T, 0.0) @ L * dw / np.pi
+    cos0 = D[:, 2]
+    e0 = (L * cos0[:, None]).sum(axis=0) * dw / np.pi
+    lum = L @ W
+    dom = (D * (lum * cos0)[:, None]).sum(axis=0) / max((lum * cos0).sum(), 1e-12)
+    dprime = 0.5 * dom
+    unity = e0[None, :] * ((N @ dprime + 0.5) / max(dprime @ n0 + 0.5, 1e-4))[:, None]
+    c0 = (L * Y0).sum(axis=0) * dw
+    c1 = (D[:, :, None] * (L * Y1)[:, None, :]).sum(axis=0) * dw
+    irr_l0 = math.pi * c0 * Y0
+    l1rgb = np.maximum(irr_l0[None, :] + (2 * math.pi / 3) * Y1 * (N @ c1), 0.0) / math.pi
+    c1lum = c1 @ W
+    tint = c0 / max(c0 @ W, 1e-12)
+    mono = np.maximum((irr_l0 @ W) + (2 * math.pi / 3) * Y1 * (N @ c1lum), 0.0)[:, None] * tint[None, :] / math.pi
+    flat = np.tile(e0, (len(N), 1))
+    sh_lum = np.maximum((irr_l0 @ W) + (2 * math.pi / 3) * Y1 * (N @ c1lum), 0.0)
+    sh_lum0 = max((irr_l0 @ W) + (2 * math.pi / 3) * Y1 * (n0 @ c1lum), 1e-9)
+    mono_ratio = flat * (sh_lum / sh_lum0)[:, None]
+
+    def err(est):
+        rl, el = ref @ W, est @ W
+        chroma = np.abs(est / np.maximum(el, 1e-9)[:, None] - ref / np.maximum(rl, 1e-9)[:, None]).sum(axis=1).mean()
+        return &quot;%.3f | %.3f&quot; % (math.sqrt(np.mean((el - rl) ** 2)) / rl.mean(), chroma)
+
+    print(&quot;%-18s %-17s %-19s %-17s %-17s %s&quot; % (name, err(flat), err(unity), err(mono), err(mono_ratio), err(l1rgb)))</code></pre></div>
+                </details>
+                <p class="mt-3 mb-1"><strong>Section 9, Light Volume lights one at a time</strong></p>
+                <details class="script-listing">
+                    <summary><code>lv-lights/lv_light_shapes.py</code><span class="script-meta">Table 17 &middot; 278 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/lv-lights/lv_light_shapes.py" download>Download lv_light_shapes.py</a> &middot; run from the <code>lv-lights</code> folder with <code>python lv_light_shapes.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Experiment 6 part A: Light Volume point, spot and area lights - upstream SH result against the exact per-light result, the combined operator, and every difference.&quot;&quot;&quot;
+import os
+import numpy as np
+
+
+def log_path(script):
+    here = os.path.dirname(os.path.abspath(script))
+    res = os.path.join(os.path.dirname(here), &quot;results&quot;)
+    name = os.path.splitext(os.path.basename(script))[0] + &quot;.txt&quot;
+    return os.path.join(res if os.path.basename(here) == &quot;scripts&quot; and os.path.isdir(res) else here, name)
+
+PI = np.pi
+
+
+def fib_sphere(n):
+    i = np.arange(n) + 0.5
+    z = 1.0 - 2.0 * i / n
+    r = np.sqrt(np.maximum(0.0, 1.0 - z * z))
+    phi = i * PI * (3.0 - np.sqrt(5.0))
+    return np.stack([r * np.cos(phi), r * np.sin(phi), z], 1)
+
+
+def smooth01(x):
+    return x * x * (3.0 - 2.0 * x)
+
+
+def lv_mask(c, s):
+    if s &lt;= 0.0:
+        return np.ones_like(c)
+    b = 0.5 + 0.5 * np.clip(1.0 - s, 0.0, 1.0)
+    return smooth01(np.clip(c * s * 0.5 + b, 0.0, 1.0))
+
+
+def mask_moments(s):
+    if s &lt;= 0.0:
+        return 1.0, 0.0
+    b = 0.5 + 0.5 * min(max(1.0 - s, 0.0), 1.0)
+    h = 0.5 * s
+    lo, hi = b - h, b + h
+    def P(u):
+        return u ** 3 - 0.5 * u ** 4
+    def Q(u):
+        return 0.75 * u ** 4 - 0.4 * u ** 5
+    a0, a1 = max(lo, 0.0), min(hi, 1.0)
+    A = B = 0.0
+    if a1 &gt; a0:
+        A += P(a1) - P(a0)
+        B += (Q(a1) - Q(a0)) - b * (P(a1) - P(a0))
+    if hi &gt; 1.0:
+        u0 = max(lo, 1.0)
+        A += hi - u0
+        B += 0.5 * (hi * hi - u0 * u0) - b * (hi - u0)
+    return A / (2.0 * h), B / (2.0 * h * h)
+
+
+def cap_lit(c, s2):
+    c = np.clip(c, -1.0, 1.0)
+    s2 = min(s2, 0.999999)
+    out = np.clip(c, 0.0, None).astype(float)
+    if s2 &lt; 1e-6:
+        return out
+    m = c * c &lt; s2
+    cm = c[m]
+    sinT = np.sqrt(np.maximum(1.0 - cm * cm, 1e-6))
+    x = np.sqrt(1.0 / s2 - 1.0)
+    y = -x * cm / sinT
+    sy = sinT * np.sqrt(np.clip(1.0 - y * y, 0.0, 1.0))
+    e = (cm * np.arccos(np.clip(y, -1.0, 1.0)) - x * sy) * s2 + np.arctan(sy / x)
+    out[m] = np.clip(e / (PI * s2), 0.0, 1.0)
+    return out
+
+
+def cap_dirs(center, sin_s, n):
+    cos_s = np.sqrt(1.0 - sin_s ** 2)
+    i = np.arange(n) + 0.5
+    z = 1.0 - (1.0 - cos_s) * i / n
+    r = np.sqrt(np.maximum(0.0, 1.0 - z * z))
+    phi = i * PI * (3.0 - np.sqrt(5.0))
+    loc = np.stack([r * np.cos(phi), r * np.sin(phi), z], 1)
+    w = center / np.linalg.norm(center)
+    a = np.array([1.0, 0, 0]) if abs(w[0]) &lt; 0.9 else np.array([0, 1.0, 0])
+    u = np.cross(a, w); u /= np.linalg.norm(u)
+    v = np.cross(w, u)
+    return loc[:, :1] * u + loc[:, 1:2] * v + loc[:, 2:3] * w, 2 * PI * (1.0 - cos_s) / n
+
+
+def kernel(c, s, p):
+    return np.clip((c + s) / (1.0 + s), 0.0, 1.0) ** p
+
+
+def rect_samples(C, X, Y, w, h, n):
+    g = (np.arange(n) + 0.5) / n - 0.5
+    gx, gy = np.meshgrid(g * w, g * h)
+    pts = C + gx.reshape(-1, 1) * X + gy.reshape(-1, 1) * Y
+    return pts, (w * h) / (n * n)
+
+
+def rect_truth(P, C, X, Y, Z, w, h, normals, s=0.0, p=1.0, n=160):
+    pts, dA = rect_samples(C, X, Y, w, h, n)
+    d = pts - P
+    r2 = np.sum(d * d, 1)
+    om = d / np.sqrt(r2)[:, None]
+    cosL = np.clip(np.sum(-om * Z, 1), 0.0, None)
+    dw = cosL * dA / r2
+    E = np.zeros(len(normals))
+    for k in range(0, len(normals), 400):
+        cn = normals[k:k + 400] @ om.T
+        E[k:k + 400] = (kernel(cn, s, p) * dw).sum(1)
+    return E, dw.sum()
+
+
+def corners(C, X, Y, w, h):
+    hx, hy = 0.5 * w * X, 0.5 * h * Y
+    return [C - hx - hy, C + hx - hy, C + hx + hy, C - hx + hy]
+
+
+def edge_fit(v1, v2):
+    x = np.dot(v1, v2)
+    y = abs(x)
+    a = 0.8543985 + (0.4965155 + 0.0145206 * y) * y
+    b = 3.4175940 + (4.1616724 + y) * y
+    v = a / b
+    ts = v if x &gt; 0.0 else 0.5 / np.sqrt(max(1.0 - x * x, 1e-7)) - v
+    return np.cross(v1, v2) * ts
+
+
+def vector_ff(P, C, X, Y, w, h, fit=True):
+    vs = [q - P for q in corners(C, X, Y, w, h)]
+    vs = [q / np.linalg.norm(q) for q in vs]
+    F = np.zeros(3)
+    for i in range(4):
+        a, b = vs[i], vs[(i + 1) % 4]
+        if fit:
+            F += edge_fit(a, b)
+        else:
+            th = np.arccos(np.clip(np.dot(a, b), -1, 1))
+            cr = np.cross(a, b)
+            F += cr / max(np.linalg.norm(cr), 1e-12) * th
+    if not fit:
+        F /= 2.0 * PI
+    toC = C - P
+    if np.dot(F, toC) &lt; 0.0:
+        F = -F
+    return F
+
+
+def solid_angle_rect(P, C, X, Y, w, h):
+    vs = [q - P for q in corners(C, X, Y, w, h)]
+    def tri(a, b, c):
+        la, lb, lc = np.linalg.norm(a), np.linalg.norm(b), np.linalg.norm(c)
+        num = abs(np.dot(a, np.cross(b, c)))
+        den = la * lb * lc + np.dot(a, b) * lc + np.dot(a, c) * lb + np.dot(b, c) * la
+        return 2.0 * np.arctan2(num, den)
+    return tri(vs[0], vs[1], vs[2]) + tri(vs[0], vs[2], vs[3])
+
+
+def lv_fast_quad(P, C, X, Y, Z, w, h):
+    ltw = P - C
+    loc = np.array([ltw @ X, ltw @ Y, ltw @ Z])
+    half = np.array([w, h]) * 0.5
+    area = max(w * h, 1e-6)
+    ext = max(half @ half, 1e-6)
+    cxy = np.clip(loc[:2], -half, half)
+    rd = loc[:2] - cxy
+    prs = rd @ rd + loc[2] ** 2
+    csd = max(prs, 1e-6)
+    blend = prs / (prs + ext)
+    centerSq = max(ltw @ ltw, 1e-6)
+    ssd = csd + (centerSq - csd) * blend
+    isd = 1.0 / np.sqrt(ssd)
+    ied = 1.0 / np.sqrt(ssd + ext)
+    sa = np.arctan(area * loc[2] * isd * isd * ied * 0.25)
+    l0 = sa / PI
+    rep = cxy * (1.0 - blend)
+    d = X * rep[0] + Y * rep[1] - ltw
+    d /= np.linalg.norm(d)
+    return d, l0, sa
+
+
+def rms(a, b, peak):
+    return float(np.sqrt(np.mean((a - b) ** 2)) / peak)
+
+
+def main():
+    normals = fib_sphere(6000)
+    out = []
+    pr = out.append
+
+    pr(&quot;=== A1. Mask moments: closed form against the lattice (mean over normals of mask and c*mask) ===&quot;)
+    worst = 0.0
+    for s in [0.0, 0.25, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0, 8.0]:
+        A, B = mask_moments(s)
+        c = normals[:, 2]
+        m = lv_mask(c, s)
+        Al, Bl = m.mean(), (c * m).mean()
+        worst = max(worst, abs(A - Al), abs(B - Bl))
+        pr(f&quot;  PLS {s:4.2f}: A {A:.5f} (lattice {Al:.5f})  B {B:.5f} (lattice {Bl:.5f})  LV energy for kappa 1: {A + B:.4f} x l0&quot;)
+    pr(f&quot;  worst difference {worst:.2e}&quot;)
+
+    pr(&quot;&quot;)
+    pr(&quot;=== A2. Sphere cap closed form against lattice integration over the cap ===&quot;)
+    worst = 0.0
+    for sd in [2.0, 10.0, 30.0, 60.0, 85.0]:
+        ss = np.sin(np.radians(sd))
+        dirs, dw = cap_dirs(np.array([0, 0, 1.0]), ss, 20000)
+        E = np.clip(normals @ dirs.T, 0, None).sum(1) * dw / (PI * ss * ss)
+        cf = cap_lit(normals[:, 2], ss * ss)
+        worst = max(worst, np.abs(E - cf).max())
+    pr(f&quot;  worst difference over 6000 normals and 5 sizes: {worst:.4f} (of a peak of 1)&quot;)
+
+    pr(&quot;&quot;)
+    pr(&quot;=== A3. Point light: upstream SH against the exact shape with the same energy ===&quot;)
+    pr(&quot;  LV result = l0 * mask(PLS) * (1 + kappa c).  Combined = l0 * M(PLS,kappa) * 2(1+cos s) * capLit(c, s).&quot;)
+    pr(&quot;  Energy of both is l0 * M by construction. Columns: facing / 60 deg / 90 deg / 120 deg / RMS difference (share of the combined peak)&quot;)
+    for r, d in [(0.1, 3.0), (0.25, 2.0), (0.5, 1.0), (1.0, 1.0)]:
+        s2 = r * r / (d * d + r * r)
+        kap = d / np.sqrt(d * d + r * r)
+        cs = np.sqrt(1 - s2)
+        for s in [0.0, 3.0]:
+            A, B = mask_moments(s)
+            M = A + kap * B
+            c = normals[:, 2]
+            lv = lv_mask(c, s) * (1 + kap * c)
+            comb = M * 2 * (1 + cs) * cap_lit(c, s2)
+            at = lambda f, deg: float(f(np.array([np.cos(np.radians(deg))]))[0])
+            f_lv = lambda cc: lv_mask(cc, s) * (1 + kap * cc)
+            f_cb = lambda cc: M * 2 * (1 + cs) * cap_lit(cc, s2)
+            pr(f&quot;  r {r:4.2f} d {d:3.1f} (source {np.degrees(np.arcsin(np.sqrt(s2))):5.1f} deg) PLS {s:3.1f}: &quot;
+               f&quot;LV {at(f_lv,0):.3f}/{at(f_lv,60):.3f}/{at(f_lv,90):.3f}/{at(f_lv,120):.3f}  &quot;
+               f&quot;combined {at(f_cb,0):.3f}/{at(f_cb,60):.3f}/{at(f_cb,90):.3f}/{at(f_cb,120):.3f}  &quot;
+               f&quot;energy LV {lv.mean():.4f} combined {comb.mean():.4f}  RMS diff {rms(lv, comb, comb.max()):.3f}&quot;)
+
+    pr(&quot;&quot;)
+    pr(&quot;=== A4. Area light: upstream SH, exact irradiance (lattice over the panel), vector form factor + sphere horizon ===&quot;)
+    Z = np.array([0, 0, -1.0]); X = np.array([1.0, 0, 0]); Y = np.array([0, 1.0, 0])
+    scenes = [
+        (&quot;small panel, 3 m, face on&quot;, np.array([0, 0, 3.0]), 0.5, 0.5),
+        (&quot;1x1 m panel, 1 m, face on&quot;, np.array([0, 0, 1.0]), 1.0, 1.0),
+        (&quot;2x1 m panel, 0.5 m (close)&quot;, np.array([0, 0, 0.5]), 2.0, 1.0),
+        (&quot;strip 3x0.1 m, 1 m&quot;, np.array([0, 0, 1.0]), 3.0, 0.1),
+        (&quot;1x1 m panel, 1 m, 60 deg off axis&quot;, np.array([1.5, 0, 0.9]), 1.0, 1.0),
+        (&quot;4x4 m ceiling, 0.3 m (huge)&quot;, np.array([0, 0, 0.3]), 4.0, 4.0),
+        (&quot;1x1 m panel, receiver nearly in its plane&quot;, np.array([1.5, 0, 0.1]), 1.0, 1.0),
+    ]
+    for name, C, w, h in scenes:
+        P = np.zeros(3)
+        Et, _ = rect_truth(P, C, X, Y, Z, w, h, normals)
+        Om = solid_angle_rect(P, C, X, Y, w, h)
+        F = vector_ff(P, C, X, Y, w, h)
+        Fe = vector_ff(P, C, X, Y, w, h, fit=False)
+        fl = np.linalg.norm(F)
+        Fh = F / fl
+        ours = fl * cap_lit(normals @ Fh, fl)
+        dlv, l0lv, sa = lv_fast_quad(P, C, X, Y, Z, w, h)
+        for s in [0.0, 3.0]:
+            A, B = mask_moments(s)
+            kap = 1 - l0lv
+            M = A + kap * B
+            l0 = PI * l0lv
+            c_lv = normals @ dlv
+            lv = l0 * lv_mask(c_lv, s) * (1 + kap * c_lv)
+            cs = np.sqrt(1 - fl)
+            comb = l0 * M * 2 * (1 + cs) / fl * ours
+            truth = l0 * M * 4 * PI / Om * Et / PI
+            pk = truth.max()
+            if s == 0.0:
+                pr(f&quot;  {name}: solid angle exact {Om:.4f}, upstream 4 x atan {4 * sa:.4f} ({(4 * sa / Om - 1) * 100:+.1f}%), &quot;
+                   f&quot;|F| fit {fl:.4f} exact {np.linalg.norm(Fe):.4f} truth-normal {Et.max() / PI:.4f}&quot;)
+            pr(f&quot;     PLS {s:3.1f}: energy truth {truth.mean():.5f} LV {lv.mean():.5f} combined {comb.mean():.5f} | &quot;
+               f&quot;RMS vs truth (share of peak): LV {rms(lv, truth, pk):.3f}  combined {rms(comb, truth, pk):.3f} | &quot;
+               f&quot;peak LV {lv.max() / pk:.2f}x combined {comb.max() / pk:.2f}x | lit below horizon of the truth: LV {np.mean((lv &gt; 0.02 * pk) &amp; (truth &lt; 1e-6)) * 100:.1f}% of normals, combined {np.mean((comb &gt; 0.02 * pk) &amp; (truth &lt; 1e-6)) * 100:.1f}%&quot;)
+
+    open(log_path(__file__), &quot;w&quot;).write(&quot;\n&quot;.join(out) + &quot;\n&quot;)
+    print(&quot;\n&quot;.join(out))
+
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>lv-lights/lv_light_shaping.py</code><span class="script-meta">Tables 18 to 20 &middot; 261 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/lv-lights/lv_light_shaping.py" download>Download lv_light_shaping.py</a> &middot; run from the <code>lv-lights</code> folder with <code>python lv_light_shaping.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Experiment 6 parts B, C and E: terminator controls on sized lights, panel highlights, and the normal strength fix.&quot;&quot;&quot;
+import numpy as np
+from lv_light_shapes import fib_sphere, cap_lit, cap_dirs, kernel, rect_samples, vector_ff, solid_angle_rect, corners, PI, log_path
+
+out = []
+pr = out.append
+
+
+def l_signed(c, s2):
+    ss = np.sqrt(s2)
+    return np.where(c &gt;= -ss, cap_lit(c, s2), c + ss)
+
+
+def cand_size_ignored(c, s2, s, p):
+    return kernel(c, s, p)
+
+
+def cand_rep(c, s2, s, p):
+    th = np.arccos(np.clip(c, -1, 1))
+    return kernel(np.cos(np.maximum(0.0, th - np.arcsin(np.sqrt(s2)))), s, p)
+
+
+def cand_signed_cap(c, s2, s, p):
+    return kernel(l_signed(c, s2), s, p)
+
+
+def cand_add(c, s2, s, p):
+    return cap_lit(c, s2) + kernel(c, s, p) - np.clip(c, 0, 1)
+
+
+def cand_max(c, s2, s, p):
+    return np.maximum(cap_lit(c, s2), kernel(c, s, p))
+
+
+def cand_two_tap(c, s2, s, p):
+    d = 0.5 * np.arcsin(np.sqrt(s2))
+    sn = np.sqrt(np.clip(1 - c * c, 0, 1))
+    cm, cp = c * np.cos(d) + sn * np.sin(d), c * np.cos(d) - sn * np.sin(d)
+    cm = np.where(np.arccos(np.clip(c, -1, 1)) &lt; d, np.cos(d - np.arccos(np.clip(c, -1, 1))), cm)
+    kk = 0.5 * (kernel(cm, s, p) + kernel(cp, s, p))
+    ll = 0.5 * (np.clip(cm, 0, 1) + np.clip(cp, 0, 1))
+    return cap_lit(c, s2) + kk - ll
+
+
+def main():
+    normals = fib_sphere(4000)
+    c = normals[:, 2]
+    pr(&quot;=== B. Soften and Hardness on a sized light (sphere cap). Truth: each direction of the source shaded by the kernel, integrated ===&quot;)
+    pr(&quot;  Normalised so that Lambert facing the light square on is 1 (the capLit convention). RMS as a share of the truth peak.&quot;)
+    pr(&quot;  add = capLit + K(c) - sat(c); max = max(capLit, K(c)); two-tap = capLit + mean over c at theta -+ size/2 of (K - sat).&quot;)
+    cands = [(&quot;size ignored K(c)&quot;, cand_size_ignored), (&quot;representative cos&quot;, cand_rep), (&quot;signed cap K(L)&quot;, cand_signed_cap),
+             (&quot;add&quot;, cand_add), (&quot;max&quot;, cand_max), (&quot;two-tap&quot;, cand_two_tap)]
+    agg = {n: [] for n, _ in cands}
+    en = {n: [] for n, _ in cands}
+    for sd in [5.0, 15.0, 30.0, 45.0, 70.0]:
+        ss = np.sin(np.radians(sd))
+        dirs, dw = cap_dirs(np.array([0, 0, 1.0]), ss, 6000)
+        line = f&quot;  source {sd:4.1f} deg:&quot;
+        for s in [0.0, 0.25, 0.5, 1.0]:
+            for h in [0.0, 0.5, 1.0]:
+                p = 1.0 + (0.15 - 1.0) * h
+                T = kernel(normals @ dirs.T, s, p).sum(1) * dw / (PI * ss * ss)
+                for n, f in cands:
+                    v = f(c, ss * ss, s, p)
+                    agg[n].append(np.sqrt(np.mean((v - T) ** 2)) / T.max())
+                    en[n].append(v.mean() / T.mean())
+        pr(line)
+        for n, _ in cands:
+            pr(f&quot;      {n:20s} RMS mean {np.mean(agg[n][-12:]):.3f} worst {np.max(agg[n][-12:]):.3f} energy {np.min(en[n][-12:]):.2f}-{np.max(en[n][-12:]):.2f}&quot;)
+    pr(&quot;  all sizes: &quot; + &quot;  &quot;.join(f&quot;{n}: mean {np.mean(agg[n]):.3f} worst {np.max(agg[n]):.3f}&quot; for n, _ in cands))
+    for n, f in cands[2:]:
+        v0 = f(c, 1e-12, 0.5, 0.4)
+        v1 = f(c, np.sin(np.radians(30)) ** 2, 0.0, 1.0)
+        pr(f&quot;  {n}: zero size against the per-pixel kernel {np.abs(v0 - kernel(c, 0.5, 0.4)).max():.2e}, Soften 0 Hardness 0 against the exact cap {np.abs(v1 - cap_lit(c, np.sin(np.radians(30)) ** 2)).max():.2e} (both must be 0)&quot;)
+
+    pr(&quot;&quot;)
+    pr(&quot;=== C. Panel highlights: GGX integrated over the panel, against two sized-light approximations ===&quot;)
+    pr(&quot;  Shading point at the origin, normal +Z, views over the upper hemisphere. Light radiance 1, so the approximations get E0 = solid angle.&quot;)
+    pr(&quot;  centre+LV: direction to the panel centre, upstream widening with spread = half diagonal^2 / d^2 (what upstream does).&quot;)
+    pr(&quot;  rep+cap: closest point on the panel to the reflected ray, widening with spread = |F| (the equivalent cap), E0 = pi |F|.&quot;)
+
+
+    def ggx_d(nh, a2):
+        d = nh * nh * (a2 - 1.0) + 1.0
+        return a2 / (PI * d * d)
+
+
+    def smith(nl, nv, a2):
+        lv = nl * np.sqrt(nv * nv * (1 - a2) + a2)
+        ll = nv * np.sqrt(nl * nl * (1 - a2) + a2)
+        return 0.5 / np.maximum(lv + ll, 1e-7)
+
+
+    def sized_spec(N, V, L, E0, a, spread):
+        a2 = a ** 4
+        H = L + V
+        H /= np.linalg.norm(H, axis=-1, keepdims=True)
+        nh = np.clip(np.sum(N * H, -1), 0, 1)
+        lov = np.sum(L * V, -1)
+        w = np.maximum(2.0 + 2.0 * lov, 1e-4)
+        ae = (a2 * w + spread) / (w + spread)
+        ls = np.sqrt(np.clip(spread, 0, 1))
+        nl = np.clip((np.sum(N * L, -1) + ls) / (1 + ls), 0, 1)
+        nv = np.abs(np.sum(N * V, -1)) + 1e-5
+        return E0 * ggx_d(nh, ae) * smith(nl, nv, a2) * nl
+
+
+    CB = []
+    COMB = []
+    Nz = np.array([0, 0, 1.0])
+    views = fib_sphere(3000)
+    views = views[views[:, 2] &gt; 0.05]
+    Zp = np.array([0, 0, -1.0])
+    panels = [
+        (&quot;1x1 m, 1.5 m overhead, offset&quot;, np.array([0.8, 0.0, 1.5]), np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), 1.0, 1.0),
+        (&quot;strip 3x0.1 m, 1 m overhead&quot;, np.array([0.3, 0.0, 1.0]), np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), 3.0, 0.1),
+        (&quot;2x1 m, 0.6 m overhead (close)&quot;, np.array([0.2, 0.3, 0.6]), np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), 2.0, 1.0),
+    ]
+    for name, C, X, Y, w, h in panels:
+        pts, dA = rect_samples(C, X, Y, w, h, 140)
+        d = pts
+        r2 = np.sum(d * d, 1)
+        om = d / np.sqrt(r2)[:, None]
+        dw = np.clip(-(om @ Zp), 0, None) * dA / r2
+        Om = solid_angle_rect(np.zeros(3), C, X, Y, w, h)
+        F = vector_ff(np.zeros(3), C, X, Y, w, h)
+        fl = np.linalg.norm(F)
+        hd = (w * w + h * h) * 0.25 / (C @ C)
+        for rough in [0.1, 0.3, 0.6]:
+            a2 = rough ** 4
+            T = np.zeros(len(views))
+            for k in range(0, len(views), 200):
+                V = views[k:k + 200]
+                H = om[None, :, :] + V[:, None, :]
+                H /= np.linalg.norm(H, axis=-1, keepdims=True)
+                nh = np.clip(H[..., 2], 0, 1)
+                nl = np.clip(om[:, 2], 0, 1)[None, :]
+                nv = V[:, 2:3] + 1e-5
+                T[k:k + 200] = (ggx_d(nh, a2) * smith(nl, nv, a2) * nl * dw[None, :]).sum(1)
+            Lc = C / np.linalg.norm(C)
+            A1 = sized_spec(Nz, views, np.broadcast_to(Lc, views.shape), Om, rough, hd)
+            R = 2 * views[:, 2:3] * Nz - views
+            t = (C @ Zp) / np.minimum(R @ Zp, -1e-4)
+            hit = R * t[:, None]
+            loc = np.stack([(hit - C) @ X, (hit - C) @ Y], 1)
+            loc = np.clip(loc, [-w / 2, -h / 2], [w / 2, h / 2])
+            rep = C + loc[:, :1] * X + loc[:, 1:] * Y
+            Lr = rep / np.linalg.norm(rep, axis=1, keepdims=True)
+            dr = np.linalg.norm(rep, axis=1)
+            al = rough * rough
+            H = Lr + views
+            H /= np.linalg.norm(H, axis=1, keepdims=True)
+            nh = np.clip(H[:, 2], 0, 1)
+            nl = np.clip(Lr[:, 2], 0, 1)
+            nv = views[:, 2] + 1e-5
+            pk = T.max()
+            line = f&quot;  {name}, roughness {rough}: truth peak {pk:.3f} | centre+LV RMS {np.sqrt(np.mean((A1 - T) ** 2)) / pk:.3f} energy {A1.mean() / T.mean():.2f}x&quot;
+            for k in [0.35, 0.5, 0.7]:
+                ax = np.minimum(1.0, al + k * 0.5 * w / dr)
+                ay = np.minimum(1.0, al + k * 0.5 * h / dr)
+                A3 = Om * ggx_d(nh, al * al) * (al * al / (ax * ay)) * smith(nl, nv, al * al) * nl
+                pr_k = f&quot; | Karis k {k}: RMS {np.sqrt(np.mean((A3 - T) ** 2)) / pk:.3f} peak {A3.max() / pk:.2f}x energy {A3.mean() / T.mean():.2f}x&quot;
+                line += pr_k
+                if k == 0.5:
+                    A3k = A3
+            pr(line)
+            A4 = np.minimum(A3k, 1.0)
+            A5 = np.minimum(A1, 1.0)
+            A6 = 0.5 * (A4 + A5)
+            pr(f&quot;      capped at the panel radiance: Karis 0.5 RMS {np.sqrt(np.mean((A4 - T) ** 2)) / pk:.3f} energy {A4.mean() / T.mean():.2f}x&quot;
+               f&quot; | centre+LV RMS {np.sqrt(np.mean((A5 - T) ** 2)) / pk:.3f} energy {A5.mean() / T.mean():.2f}x&quot;
+               f&quot; | mean of both RMS {np.sqrt(np.mean((A6 - T) ** 2)) / pk:.3f} energy {A6.mean() / T.mean():.2f}x&quot;)
+            CB.append((np.sqrt(np.mean((A5 - T) ** 2)) / pk, np.sqrt(np.mean((A4 - T) ** 2)) / pk, np.sqrt(np.mean((A6 - T) ** 2)) / pk, np.sqrt(np.mean((A1 - T) ** 2)) / pk))
+            tb = np.clip(np.sqrt(fl) * 2.5, 0, 1)
+            A7 = A5 + (A4 - A5) * tb
+            COMB.append((name, rough, np.sqrt(np.mean((A7 - T) ** 2)) / pk, A7.mean() / T.mean(), tb))
+
+    CBa = np.array(CB)
+    pr(f&quot;  mean RMS over all nine cases: upstream centre {CBa[:, 3].mean():.3f}, centre capped {CBa[:, 0].mean():.3f}, Karis capped {CBa[:, 1].mean():.3f}, mean of both capped {CBa[:, 2].mean():.3f}&quot;)
+    pr(f&quot;  worst RMS: upstream centre {CBa[:, 3].max():.3f}, centre capped {CBa[:, 0].max():.3f}, Karis capped {CBa[:, 1].max():.3f}, mean of both capped {CBa[:, 2].max():.3f}&quot;)
+
+    pr(&quot;&quot;)
+    pr(&quot;=== C2. Sphere highlights (point and spot lights with a source size) ===&quot;)
+    SB = []
+    for r, C in [(0.1, np.array([0.6, 0.0, 1.5])), (0.3, np.array([0.5, 0.2, 1.0])), (0.6, np.array([0.3, 0.0, 0.8]))]:
+        d = np.linalg.norm(C)
+        ss = min(r / d, 0.999)
+        dirs, dwc = cap_dirs(C, ss, 12000)
+        for rough in [0.1, 0.3, 0.6]:
+            al = rough * rough
+            a2 = al * al
+            T = np.zeros(len(views))
+            for k in range(0, len(views), 200):
+                V = views[k:k + 200]
+                H = dirs[None, :, :] + V[:, None, :]
+                H /= np.linalg.norm(H, axis=-1, keepdims=True)
+                T[k:k + 200] = (ggx_d(np.clip(H[..., 2], 0, 1), a2) * smith(np.clip(dirs[:, 2], 0, 1)[None, :], V[:, 2:3] + 1e-5, a2)
+                                * np.clip(dirs[:, 2], 0, 1)[None, :]).sum(1) * dwc
+            Om = 2 * PI * (1 - np.sqrt(1 - ss * ss))
+            Lc = C / d
+            A1 = sized_spec(Nz, views, np.broadcast_to(Lc, views.shape), Om, rough, ss * ss)
+            R = 2 * views[:, 2:3] * Nz - views
+            cvec = (R @ C)[:, None] * R - C
+            cl = np.linalg.norm(cvec, axis=1, keepdims=True)
+            rep = C + cvec * np.clip(r / np.maximum(cl, 1e-9), 0, 1)
+            Lr = rep / np.linalg.norm(rep, axis=1, keepdims=True)
+            H = Lr + views
+            H /= np.linalg.norm(H, axis=1, keepdims=True)
+            ap = np.minimum(1.0, al + 0.5 * ss)
+            A3 = np.minimum(Om * ggx_d(np.clip(H[:, 2], 0, 1), a2) * (al / ap) ** 2 * smith(np.clip(Lr[:, 2], 0, 1), views[:, 2] + 1e-5, a2) * np.clip(Lr[:, 2], 0, 1), 1.0)
+            pk = T.max()
+            e1, e3 = np.sqrt(np.mean((A1 - T) ** 2)) / pk, np.sqrt(np.mean((A3 - T) ** 2)) / pk
+            SB.append((e1, e3))
+            tb = np.clip(ss * 2.5, 0, 1)
+            A7 = np.minimum(A1, 1.0) + (A3 - np.minimum(A1, 1.0)) * tb
+            COMB.append((f&#x27;sphere r {r}&#x27;, rough, np.sqrt(np.mean((A7 - T) ** 2)) / pk, A7.mean() / T.mean(), tb))
+            pr(f&quot;  sphere r {r} at {d:.2f} m ({np.degrees(np.arcsin(ss)):4.1f} deg), roughness {rough}: truth peak {pk:.3f} | upstream widening RMS {e1:.3f} energy {A1.mean() / T.mean():.2f}x&quot;
+               f&quot; | Karis sphere capped RMS {e3:.3f} energy {A3.mean() / T.mean():.2f}x&quot;)
+    SBa = np.array(SB)
+    pr(f&quot;  mean RMS: upstream widening {SBa[:, 0].mean():.3f}, Karis sphere capped {SBa[:, 1].mean():.3f}; worst {SBa[:, 0].max():.3f} against {SBa[:, 1].max():.3f}&quot;)
+
+    pr(&quot;&quot;)
+    pr(&quot;=== C3. Combined highlight: upstream widening (capped) blended into Karis (capped) by source size, t = saturate(2.5 sin(size)) ===&quot;)
+    for n_, r_, e_, en_, tb_ in COMB:
+        pr(f&quot;  {n_}, roughness {r_}: blend {tb_:.2f} RMS {e_:.3f} energy {en_:.2f}x&quot;)
+    CMa = np.array([[e for _, _, e, _, _ in COMB]])
+    pr(f&quot;  combined over all 18 cases: mean RMS {CMa.mean():.3f}, worst {CMa.max():.3f}&quot;)
+
+    pr(&quot;&quot;)
+    pr(&quot;=== E. Normal strength: old lerp form against the slope form above 1 ===&quot;)
+    rng = np.random.default_rng(7)
+    tilt = np.radians(rng.uniform(0, 45, 20000))
+    az = rng.uniform(0, 2 * PI, 20000)
+    n = np.stack([np.sin(tilt) * np.cos(az), np.sin(tilt) * np.sin(az), np.cos(tilt)], 1)
+
+
+    def old(n, k):
+        v = np.array([0, 0, 1.0]) + (n - np.array([0, 0, 1.0])) * k
+        return v / np.linalg.norm(v, axis=1, keepdims=True)
+
+
+    def new(n, k):
+        if k &gt; 1.0:
+            v = np.stack([n[:, 0] * k, n[:, 1] * k, np.maximum(n[:, 2], 1e-3)], 1)
+        else:
+            v = np.array([0, 0, 1.0]) + (n - np.array([0, 0, 1.0])) * k
+        return v / np.linalg.norm(v, axis=1, keepdims=True)
+
+
+    for k in [0.5, 1.0, 1.5, 2.0, 3.0, 5.0]:
+        o, w_ = old(n, k), new(n, k)
+        pr(f&quot;  strength {k}: below the surface old {np.mean(o[:, 2] &lt; 0) * 100:5.1f}% new {np.mean(w_[:, 2] &lt; 0) * 100:4.1f}% | &quot;
+           f&quot;median tilt old {np.degrees(np.median(np.arccos(np.clip(o[:, 2], -1, 1)))):5.1f} new {np.degrees(np.median(np.arccos(w_[:, 2]))):5.1f} deg | &quot;
+           f&quot;max difference {np.abs(o - w_).max():.2e} | tilt order kept (new) {np.all(np.diff(np.arccos(w_[np.argsort(tilt), 2])) &gt; -1e-9)}&quot;)
+
+    open(log_path(__file__), &quot;w&quot;).write(&quot;\n&quot;.join(out) + &quot;\n&quot;)
+    print(&quot;\n&quot;.join(out))
+
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>lv-lights/lv_asbuilt_check.py</code><span class="script-meta">Section 9: the shader code as built, in 32-bit float &middot; 137 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/lv-lights/lv_asbuilt_check.py" download>Download lv_asbuilt_check.py</a> &middot; run from the <code>lv-lights</code> folder with <code>python lv_asbuilt_check.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Experiment 6 part D: a line-for-line float32 copy of the as-built HLSL (vw_ULLVLight and helpers), checked against the research operators and on extreme inputs.&quot;&quot;&quot;
+import numpy as np
+from lv_light_shapes import fib_sphere, cap_lit, mask_moments, vector_ff, lv_mask, PI, log_path
+from lv_light_shaping import cand_two_tap, kernel
+
+f32 = np.float32
+out = []
+pr = out.append
+
+
+def sat(x):
+    return np.clip(x, 0.0, 1.0)
+
+
+def hl_caplit_s2(c, sin2):
+    s2 = np.clip(sin2, 0.0, 0.999999).astype(f32)
+    c = np.clip(c, -1.0, 1.0).astype(f32)
+    r = sat(c)
+    m = (c * c &lt; s2) &amp; (s2 &gt;= 1e-6)
+    sinT = np.sqrt(np.maximum(1.0 - c * c, 1e-6))
+    x = np.sqrt(1.0 / np.maximum(s2, 1e-12) - 1.0)
+    y = -x * c / sinT
+    sy = sinT * np.sqrt(sat(1.0 - y * y))
+    e = (c * np.arccos(np.clip(y, -1, 1)) - x * sy) * s2 + np.arctan(sy / np.maximum(x, 1e-12))
+    return np.where(m, sat(e / (PI * np.maximum(s2, 1e-12))), r).astype(f32)
+
+
+def hl_kernel(c, soft, hardP):
+    return np.power(sat((c + soft) / (1.0 + soft)), hardP).astype(f32)
+
+
+def hl_sized_shape(c, sin2, soft, hardP):
+    cs = np.sqrt(sat(1.0 - sin2))
+    cd = np.sqrt(0.5 + 0.5 * cs)
+    sd = np.sqrt(sat(0.5 - 0.5 * cs))
+    sn = np.sqrt(sat(1.0 - c * c))
+    cm = c * cd + sn * sd
+    cp = c * cd - sn * sd
+    k = 0.5 * (hl_kernel(cm, soft, hardP) + hl_kernel(cp, soft, hardP))
+    l = 0.5 * (sat(cm) + sat(cp))
+    return np.maximum(hl_caplit_s2(c, sin2) + k - l, 0.0).astype(f32)
+
+
+def hl_mask_moments(pls):
+    s = max(pls, 0.0)
+    b = 0.5 + 0.5 * min(max(1.0 - s, 0.0), 1.0)
+    h = max(0.5 * s, 1e-4)
+    lo, hi = b - h, b + h
+    a0, a1 = min(max(lo, 0), 1), min(max(hi, 0), 1)
+    p0 = a0 ** 3 * (1.0 - 0.5 * a0)
+    p1 = a1 ** 3 * (1.0 - 0.5 * a1)
+    q0 = a0 ** 4 * (0.75 - 0.4 * a0)
+    q1 = a1 ** 4 * (0.75 - 0.4 * a1)
+    u0 = max(lo, 1.0)
+    A = (p1 - p0) + max(hi - u0, 0.0)
+    B = (q1 - q0) - b * (p1 - p0) + (0.5 * (hi * hi - u0 * u0) - b * (hi - u0)) * (1.0 if hi &gt;= 1.0 else 0.0)
+    return (A / (2 * h), B / (2 * h * h)) if s &gt; 0 else (1.0, 0.0)
+
+
+def main():
+    pr(&quot;=== D1. vw_LVMaskMoments (as built) against the research closed form ===&quot;)
+    w = 0.0
+    for s in np.concatenate([[0.0], np.geomspace(0.01, 20.0, 60)]):
+        a, b = hl_mask_moments(float(s))
+        ra, rb = mask_moments(float(s))
+        w = max(w, abs(a - ra), abs(b - rb))
+    pr(f&quot;  61 values of Point Light Shading from 0 to 20: worst difference {w:.2e}&quot;)
+
+    pr(&quot;&quot;)
+    pr(&quot;=== D2. vw_ULSizedShape (as built, float32) against the research two-tap form (float64) ===&quot;)
+    normals = fib_sphere(4000)
+    c = normals[:, 2].astype(f32)
+    w = 0.0
+    for sd in [0.0, 1.0, 5.0, 15.0, 30.0, 45.0, 70.0, 89.0]:
+        s2 = f32(np.sin(np.radians(sd)) ** 2)
+        for soft in [0.0, 0.3, 1.0]:
+            for hp in [1.0, 0.575, 0.15]:
+                a = hl_sized_shape(c, s2, f32(soft), f32(hp))
+                r = cand_two_tap(normals[:, 2], max(float(s2), 1e-12), soft, hp)
+                w = max(w, np.abs(a - r).max())
+    pr(f&quot;  8 sizes x 3 Soften x 3 Hardness x 4000 normals: worst difference {w:.2e}&quot;)
+    a0 = hl_sized_shape(c, f32(0.0), f32(0.4), f32(0.3))
+    pr(f&quot;  zero size against the per-pixel terminator (same look as a Unity light): {np.abs(a0 - hl_kernel(c, f32(0.4), f32(0.3))).max():.2e}&quot;)
+
+    pr(&quot;&quot;)
+    pr(&quot;=== D3. One point light end to end: energy of the as-built diffuse against upstream&#x27;s SH (same l0) ===&quot;)
+    for r, d in [(0.1, 3.0), (0.5, 1.0), (1.0, 1.0)]:
+        spread = r * r / (d * d)
+        sin2 = spread / (1 + spread)
+        kap = d / np.sqrt(d * d + r * r)
+        for pls in [0.0, 3.0]:
+            A, B = hl_mask_moments(pls)
+            M = A + kap * B
+            cs = np.sqrt(1 - sin2)
+            W = M * 2 * (1 + cs)
+            ours = W * hl_sized_shape(c, f32(sin2), f32(0), f32(1))
+            lv = lv_mask(normals[:, 2], pls) * (1 + kap * normals[:, 2])
+            pr(f&quot;  r {r} d {d} PLS {pls}: energy as built {ours.mean():.4f} upstream {lv.mean():.4f} (ratio {ours.mean() / lv.mean():.4f}) | facing {ours.max():.3f} against {lv.max():.3f}&quot;)
+
+    pr(&quot;&quot;)
+    pr(&quot;=== D4. Extremes: every input at its limits, float32, looking for NaN, infinity or negatives ===&quot;)
+    bad = 0
+    tot = 0
+    cc = np.linspace(-1, 1, 41).astype(f32)
+    for s2 in [0.0, 1e-9, 1e-6, 1e-3, 0.5, 0.9999, 1.0]:
+        for soft in [0.0, 1.0]:
+            for hp in [0.15, 1.0]:
+                v = hl_sized_shape(cc, f32(s2), f32(soft), f32(hp))
+                tot += v.size
+                bad += int(np.sum(~np.isfinite(v) | (v &lt; 0) | (v &gt; 2.0)))
+    for s in [0.0, 1e-6, 0.5, 1.0, 1e3]:
+        a, b = hl_mask_moments(s)
+        tot += 2
+        bad += int(not (np.isfinite(a) and np.isfinite(b) and a &gt;= 0))
+    for sin2 in [0.0, 1e-6, 0.5, 0.9999]:
+        cs = np.sqrt(1 - sin2)
+        capF = (1 + cs) / (2 * PI * max(sin2, 1e-8))
+        tot += 1
+        bad += int(not np.isfinite(np.float32(capF)))
+    pr(f&quot;  {tot} values checked, {bad} bad&quot;)
+
+    pr(&quot;&quot;)
+    pr(&quot;=== D5. Area light path as built: F from four corners with the fitted edge integral, against the exact acos form ===&quot;)
+    X = np.array([1.0, 0, 0]); Y = np.array([0, 1.0, 0])
+    w = 0.0
+    for C, sz in [(np.array([0, 0, 3.0]), (0.5, 0.5)), (np.array([0.2, 0.1, 0.3]), (4.0, 4.0)), (np.array([1.5, 0, 0.1]), (1.0, 1.0)), (np.array([0.3, 0, 1.0]), (3.0, 0.1))]:
+        Ff = vector_ff(np.zeros(3), C, X, Y, sz[0], sz[1], fit=True)
+        Fe = vector_ff(np.zeros(3), C, X, Y, sz[0], sz[1], fit=False)
+        w = max(w, np.linalg.norm(Ff - Fe) / np.linalg.norm(Fe))
+    pr(f&quot;  worst relative difference of the fitted vector form factor: {w * 100:.2f}%&quot;)
+
+    open(log_path(__file__), &quot;w&quot;).write(&quot;\n&quot;.join(out) + &quot;\n&quot;)
+    print(&quot;\n&quot;.join(out))
+
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre></div>
+                </details>
+                <p class="eq-note mt-3">Table 10 measures our own reference screenshot, which is not ours to publish, so its script is not in the kit. The wrong first runs mentioned in the text are kept in our records and are not in the kit.</p>
+                <details class="script-listing">
+                    <summary><code>run_all.py</code><span class="script-meta">the runner &middot; 125 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/run_all.py" download>Download run_all.py</a> &middot; <a href="research-kit/README.md" download>README.md</a></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Run the One Light, Every Route research scripts and compare each result with the published log.
+
+Usage:
+    python run_all.py                 run every experiment
+    python run_all.py rim-lobe        run one experiment folder
+    python run_all.py --list          list the experiments and their scripts
+
+Needs Python 3.8 or newer and NumPy. Each script&#x27;s output is saved to &lt;experiment&gt;/output/&lt;script&gt;.txt and
+compared with &lt;experiment&gt;/expected/&lt;script&gt;.txt, allowing for rounding in the last printed digit.
+&quot;&quot;&quot;
+import os
+import re
+import subprocess
+import sys
+import time
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+EXPERIMENTS = [
+    (&quot;rim-lobe&quot;, &quot;Section 4, the rim as a light lobe&quot;, [
+        &quot;rim_stack_check.py&quot;, &quot;rim_shape_check2.py&quot;, &quot;rim_lobe_research.py&quot;, &quot;rim_asbuilt_check.py&quot;,
+        &quot;verify_nonlinear_sh_2026-09-12.py&quot;]),
+    (&quot;unified-light&quot;, &quot;Section 5, one light on every route&quot;, [
+        &quot;route_mismatch.py&quot;, &quot;route_match.py&quot;, &quot;l2_recovery.py&quot;, &quot;l2_recovery_confidence.py&quot;]),
+    (&quot;camera-look&quot;, &quot;Section 6, what the camera keeps&quot;, [
+        &quot;route_highlights.py&quot;, &quot;camera_chain.py&quot;, &quot;light_size_highlight.py&quot;]),
+    (&quot;baker-hd&quot;, &quot;Section 7, baking at high definition&quot;, [
+        &quot;baker_sampling.py&quot;]),
+    (&quot;nextgen-lighting&quot;, &quot;Section 8, toward the target look&quot;, [
+        &quot;light_units.py&quot;, &quot;aniso_reflection.py&quot;, &quot;probe_normalization.py&quot;, &quot;sh_band_fit.py&quot;, &quot;sh_specular.py&quot;,
+        &quot;lightmap_encoding.py&quot;]),
+    (&quot;lv-lights&quot;, &quot;Section 9, Light Volume lights one at a time&quot;, [
+        &quot;lv_light_shapes.py&quot;, &quot;lv_light_shaping.py&quot;, &quot;lv_asbuilt_check.py&quot;]),
+]
+
+NUM = re.compile(r&quot;[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?&quot;)
+
+
+def split_line(line):
+    nums = NUM.findall(line)
+    return NUM.sub(&quot;#&quot;, line).strip(), nums
+
+
+def close(a, b):
+    try:
+        x, y = float(a), float(b)
+    except ValueError:
+        return a == b
+    decimals = max(len(a.split(&quot;.&quot;)[1].split(&quot;e&quot;)[0].split(&quot;E&quot;)[0]) if &quot;.&quot; in a else 0,
+                   len(b.split(&quot;.&quot;)[1].split(&quot;e&quot;)[0].split(&quot;E&quot;)[0]) if &quot;.&quot; in b else 0)
+    step = 10.0 ** (-decimals) if &quot;e&quot; not in a.lower() and &quot;e&quot; not in b.lower() else 0.0
+    return abs(x - y) &lt;= max(1.5 * step, 0.005 * max(abs(x), abs(y)), 1e-9)
+
+
+def compare(got, want):
+    g = [l for l in got.splitlines() if l.strip()]
+    w = [l for l in want.splitlines() if l.strip()]
+    if len(g) != len(w):
+        return False, f&quot;{len(g)} lines, expected {len(w)}&quot;
+    for i, (a, b) in enumerate(zip(g, w)):
+        sa, na = split_line(a)
+        sb, nb = split_line(b)
+        if sa != sb or len(na) != len(nb) or not all(close(p, q) for p, q in zip(na, nb)):
+            return False, f&quot;line {i + 1} differs:\n      yours:    {a.strip()}\n      expected: {b.strip()}&quot;
+    return True, &quot;&quot;
+
+
+def run(folder, scripts, update):
+    base = os.path.join(HERE, folder)
+    os.makedirs(os.path.join(base, &quot;output&quot;), exist_ok=True)
+    results = []
+    for s in scripts:
+        t0 = time.time()
+        p = subprocess.run([sys.executable, s], cwd=base, capture_output=True, text=True)
+        dt = time.time() - t0
+        name = os.path.splitext(s)[0] + &quot;.txt&quot;
+        open(os.path.join(base, &quot;output&quot;, name), &quot;w&quot;, encoding=&quot;utf-8&quot;).write(p.stdout)
+        if p.returncode != 0:
+            results.append((s, &quot;ERROR&quot;, dt, p.stderr.strip().splitlines()[-1] if p.stderr.strip() else &quot;exit &quot; + str(p.returncode)))
+            continue
+        exp_path = os.path.join(base, &quot;expected&quot;, name)
+        if update:
+            os.makedirs(os.path.dirname(exp_path), exist_ok=True)
+            open(exp_path, &quot;w&quot;, encoding=&quot;utf-8&quot;).write(p.stdout)
+            results.append((s, &quot;SAVED&quot;, dt, &quot;&quot;))
+        elif not os.path.exists(exp_path):
+            results.append((s, &quot;NO LOG&quot;, dt, &quot;no expected/&quot; + name + &quot; to compare with&quot;))
+        else:
+            ok, why = compare(p.stdout, open(exp_path, encoding=&quot;utf-8&quot;).read())
+            results.append((s, &quot;MATCH&quot; if ok else &quot;DIFFERS&quot;, dt, why))
+    return results
+
+
+def main():
+    args = [a for a in sys.argv[1:] if not a.startswith(&quot;--&quot;)]
+    if &quot;--list&quot; in sys.argv:
+        for folder, title, scripts in EXPERIMENTS:
+            print(f&quot;{folder:18s} {title}&quot;)
+            for s in scripts:
+                print(f&quot;    {s}&quot;)
+        return 0
+    try:
+        import numpy
+    except ImportError:
+        print(&quot;These scripts need NumPy. Install it with:  python -m pip install numpy&quot;)
+        return 1
+    chosen = [e for e in EXPERIMENTS if not args or e[0] in args]
+    if not chosen:
+        print(&quot;Unknown experiment. Run with --list to see the names.&quot;)
+        return 1
+    print(f&quot;Python {sys.version.split()[0]}, NumPy {numpy.__version__}&quot;)
+    bad = 0
+    for folder, title, scripts in chosen:
+        print(f&quot;\n{title}  ({folder})&quot;)
+        for s, state, dt, why in run(folder, scripts, &quot;--update-expected&quot; in sys.argv):
+            print(f&quot;  {state:8s} {s:36s} {dt:6.1f} s&quot;)
+            if why:
+                print(&quot;      &quot; + why)
+            bad += state in (&quot;ERROR&quot;, &quot;DIFFERS&quot;)
+    print(&quot;\nAll results match the published logs.&quot; if not bad else f&quot;\n{bad} script(s) did not match. Their output is in the output folders.&quot;)
+    return 1 if bad else 0
+
+
+if __name__ == &quot;__main__&quot;:
+    sys.exit(main())</code></pre></div>
+                </details>
             </section>
 
             <section class="glass-panel paper-section w-100 mb-5" id="references">
@@ -1156,8 +4172,8 @@ a2 = 4 (1 + s) (3 c2 - 1 / (p + 1)),   c2 = (1 + s)^2 / (p + 3) - 2 s (1 + s) / 
                     <li><strong>R. Guy, M. Agopian.</strong> <a href="https://google.github.io/filament/Filament.md.html" target="_blank" rel="noopener noreferrer">Physically Based Rendering in Filament.</a> <em>Google.</em></li>
                     <li><strong>M. Roberts.</strong> <a href="https://math.stackexchange.com/a/2845473" target="_blank" rel="noopener noreferrer">Based on their Blog Post: The Unreasonable Effectiveness of Quasirandom Sequences. 2018.</a></li>
                     <li><strong>R. Cranley, T. N. L. Patterson.</strong> <a href="https://epubs.siam.org/doi/abs/10.1137/0713071" target="_blank" rel="noopener noreferrer">Randomization of Number Theoretic Methods for Multiple Integration.</a> <em>SIAM Journal on Numerical Analysis</em> 13(6), 1976.</li>
-                    <li><strong>J. Jimenez, X. Wu, A. Pesce, A. Jarabo.</strong> <a href="https://epubs.siam.org/doi/abs/10.1137/0713071" target="_blank" rel="noopener noreferrer">Practical Real-Time Strategies for Accurate Indirect Occlusion.</a> <em>SIGGRAPH 2016 course notes.</em></li>
-                    <li><strong>T. J. Sobotka.</strong> <a href="https://epubs.siam.org/doi/abs/10.1137/0713071" target="_blank" rel="noopener noreferrer">AgX view transform,</a> as shipped in Blender.</li>
+                    <li><strong>J. Jimenez, X. Wu, A. Pesce, A. Jarabo.</strong> <a href="https://research.activision.com/publications/archives/atvi-tr-16-01practical-realtime-strategies-for-accurate-indirect-occlusion" target="_blank" rel="noopener noreferrer">Practical Realtime Strategies for Accurate Indirect Occlusion.</a> <em>Activision technical memo ATVI-TR-16-01</em>, 2016.</li>
+                    <li><strong>T. J. Sobotka.</strong> <a href="https://github.com/sobotka/AgX" target="_blank" rel="noopener noreferrer">AgX view transform,</a> as shipped in Blender.</li>
                     <li><strong>RED_SIM.</strong> <a href="https://github.com/REDSIM/VRCLightVolumes" target="_blank" rel="noopener noreferrer">VRC Light Volumes.</a></li>
                     <li><strong>_pi_ (PiMaker).</strong> <a href="https://github.com/pimaker/ltcgi" target="_blank" rel="noopener noreferrer">LTCGI.</a></li>
                     <li><strong>AcChosen.</strong> <a href="https://github.com/AcChosen/VR-Stage-Lighting" target="_blank" rel="noopener noreferrer">VR Stage Lighting (VRSL).</a></li>
@@ -1271,6 +4287,38 @@ a2 = 4 (1 + s) (3 c2 - 1 / (p + 1)),   c2 = (1 + s)^2 / (p + 3) - 2 s (1 + s) / 
 
             document.querySelectorAll('.paper-chart').forEach(setup);
         })();
+    </script>
+    <script>
+        window.addEventListener('load', function () {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.querySelector('.docs-main') || document.body, {
+                    delimiters: [
+                        { left: '$$', right: '$$', display: true },
+                        { left: '\\(', right: '\\)', display: false }
+                    ],
+                    throwOnError: false
+                });
+            }
+            document.querySelectorAll('pre.paper-code').forEach(function (pre) {
+                var btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'code-copy';
+                btn.textContent = 'Copy';
+                btn.addEventListener('click', function () {
+                    var text = pre.textContent;
+                    var done = function () {
+                        btn.textContent = 'Copied';
+                        setTimeout(function () { btn.textContent = 'Copy'; }, 1500);
+                    };
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(text).then(done, function () { btn.textContent = 'Select and copy'; });
+                    } else {
+                        btn.textContent = 'Select and copy';
+                    }
+                });
+                pre.parentNode.appendChild(btn);
+            });
+        });
     </script>
     <script type="module" src="app.js"></script>
     <script src="docs-shell.js" defer></script>

@@ -1,0 +1,38 @@
+1. Intensity. Unity (Built-in, lightsUseLinearIntensity off): (color * intensity).linear
+   Baker today: color.linear * intensity
+   white
+     intensity 0.25  Unity    0.051   baker    0.250   baker / Unity 4.91
+     intensity 0.5   Unity    0.214   baker    0.500   baker / Unity 2.34
+     intensity 1.0   Unity    1.000   baker    1.000   baker / Unity 1.00
+     intensity 1.5   Unity    2.537   baker    1.500   baker / Unity 0.59
+     intensity 2.0   Unity    4.954   baker    2.000   baker / Unity 0.40
+     intensity 4.0   Unity   25.315   baker    4.000   baker / Unity 0.16
+     intensity 8.0   Unity  131.447   baker    8.000   baker / Unity 0.06
+   warm 1.0/0.8/0.6
+     intensity 0.25  Unity    0.036   baker    0.167   baker / Unity 4.65
+     intensity 0.5   Unity    0.146   baker    0.334   baker / Unity 2.29
+     intensity 1.0   Unity    0.667   baker    0.667   baker / Unity 1.00
+     intensity 1.5   Unity    1.681   baker    1.001   baker / Unity 0.60
+     intensity 2.0   Unity    3.270   baker    1.335   baker / Unity 0.41
+     intensity 4.0   Unity   16.614   baker    2.670   baker / Unity 0.16
+     intensity 8.0   Unity   86.017   baker    5.340   baker / Unity 0.06
+
+2. Distance falloff, range 10 m, light of 1
+   Unity Legacy (the Built-in default): 1 / (1 + 25 (d/r)^2), the vertex-light form of the attenuation texture
+   (the texture also fades to 0 at the range; that fade is not reproduced here)
+   Baker today: (1 - (d/r)^4)^2 / (d^2 + 1)
+   Inverse square with Unity's smooth window, for reference: (1 - (d/r)^4)^2 / d^2
+   d 0.25  Legacy 0.9846   baker 0.9412 (0.96x)   inverse square 16.0000
+   d 0.5   Legacy 0.9412   baker 0.8000 (0.85x)   inverse square 4.0000
+   d 1.0   Legacy 0.8000   baker 0.4999 (0.62x)   inverse square 0.9998
+   d 2.0   Legacy 0.5000   baker 0.1994 (0.40x)   inverse square 0.2492
+   d 3.0   Legacy 0.3077   baker 0.0984 (0.32x)   inverse square 0.1093
+   d 5.0   Legacy 0.1379   baker 0.0338 (0.25x)   inverse square 0.0352
+   d 7.0   Legacy 0.0755   baker 0.0115 (0.15x)   inverse square 0.0118
+   d 9.0   Legacy 0.0471   baker 0.0014 (0.03x)   inverse square 0.0015
+
+3. Bounce. Unity: indirect colour = direct colour * Light.bounceIntensity (Indirect Multiplier).
+   Baker today: every light bounces at 1. A light at Indirect Multiplier 0 still bounces fully; one at 2 bounces half as much as in Unity.
+
+4. Soft shadows. Unity: sphereRadius = shadowRadius only when Shadow Type is Soft (angularDiameter the same for
+   directional). Baker today: uses shadowRadius / shadowAngle for any shadowed light, so a Hard-shadow light bakes soft.

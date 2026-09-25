@@ -1,0 +1,109 @@
+=== B. Soften and Hardness on a sized light (sphere cap). Truth: each direction of the source shaded by the kernel, integrated ===
+  Normalised so that Lambert facing the light square on is 1 (the capLit convention). RMS as a share of the truth peak.
+  add = capLit + K(c) - sat(c); max = max(capLit, K(c)); two-tap = capLit + mean over c at theta -+ size/2 of (K - sat).
+  source  5.0 deg:
+      size ignored K(c)    RMS mean 0.012 worst 0.039 energy 1.00-1.00
+      representative cos   RMS mean 0.059 worst 0.116 energy 1.01-1.14
+      signed cap K(L)      RMS mean 0.045 worst 0.112 energy 1.00-1.06
+      add                  RMS mean 0.012 worst 0.038 energy 1.00-1.00
+      max                  RMS mean 0.011 worst 0.038 energy 1.00-1.00
+      two-tap              RMS mean 0.006 worst 0.020 energy 1.00-1.00
+  source 15.0 deg:
+      size ignored K(c)    RMS mean 0.029 worst 0.078 energy 0.98-0.98
+      representative cos   RMS mean 0.140 worst 0.229 energy 1.03-1.42
+      signed cap K(L)      RMS mean 0.096 worst 0.218 energy 1.00-1.17
+      add                  RMS mean 0.030 worst 0.076 energy 0.99-1.00
+      max                  RMS mean 0.027 worst 0.074 energy 0.98-1.00
+      two-tap              RMS mean 0.015 worst 0.040 energy 0.98-1.00
+  source 30.0 deg:
+      size ignored K(c)    RMS mean 0.060 worst 0.117 energy 0.93-0.93
+      representative cos   RMS mean 0.224 worst 0.325 energy 1.00-1.79
+      signed cap K(L)      RMS mean 0.138 worst 0.306 energy 0.99-1.28
+      add                  RMS mean 0.057 worst 0.127 energy 0.95-1.00
+      max                  RMS mean 0.053 worst 0.111 energy 0.93-1.00
+      two-tap              RMS mean 0.036 worst 0.068 energy 0.94-1.00
+  source 45.0 deg:
+      size ignored K(c)    RMS mean 0.101 worst 0.149 energy 0.85-0.85
+      representative cos   RMS mean 0.272 worst 0.366 energy 0.94-2.05
+      signed cap K(L)      RMS mean 0.151 worst 0.315 energy 0.91-1.31
+      add                  RMS mean 0.084 worst 0.161 energy 0.90-1.00
+      max                  RMS mean 0.085 worst 0.148 energy 0.85-1.00
+      two-tap              RMS mean 0.063 worst 0.123 energy 0.87-1.00
+  source 70.0 deg:
+      size ignored K(c)    RMS mean 0.201 worst 0.295 energy 0.67-0.67
+      representative cos   RMS mean 0.280 worst 0.455 energy 0.76-2.10
+      signed cap K(L)      RMS mean 0.147 worst 0.250 energy 0.73-1.21
+      add                  RMS mean 0.129 worst 0.226 energy 0.77-1.00
+      max                  RMS mean 0.160 worst 0.295 energy 0.67-1.00
+      two-tap              RMS mean 0.122 worst 0.260 energy 0.71-1.00
+  all sizes: size ignored K(c): mean 0.080 worst 0.295  representative cos: mean 0.195 worst 0.455  signed cap K(L): mean 0.115 worst 0.315  add: mean 0.062 worst 0.226  max: mean 0.067 worst 0.295  two-tap: mean 0.048 worst 0.260
+  signed cap K(L): zero size against the per-pixel kernel 4.92e-05, Soften 0 Hardness 0 against the exact cap 0.00e+00 (both must be 0)
+  add: zero size against the per-pixel kernel 1.11e-16, Soften 0 Hardness 0 against the exact cap 5.55e-17 (both must be 0)
+  max: zero size against the per-pixel kernel 0.00e+00, Soften 0 Hardness 0 against the exact cap 0.00e+00 (both must be 0)
+  two-tap: zero size against the per-pixel kernel 1.11e-08, Soften 0 Hardness 0 against the exact cap 1.11e-16 (both must be 0)
+
+=== C. Panel highlights: GGX integrated over the panel, against two sized-light approximations ===
+  Shading point at the origin, normal +Z, views over the upper hemisphere. Light radiance 1, so the approximations get E0 = solid angle.
+  centre+LV: direction to the panel centre, upstream widening with spread = half diagonal^2 / d^2 (what upstream does).
+  rep+cap: closest point on the panel to the reflected ray, widening with spread = |F| (the equivalent cap), E0 = pi |F|.
+  1x1 m, 1.5 m overhead, offset, roughness 0.1: truth peak 0.996 | centre+LV RMS 0.157 energy 1.46x | Karis k 0.35: RMS 0.313 peak 3.23x energy 2.41x | Karis k 0.5: RMS 0.090 peak 1.69x energy 1.25x | Karis k 0.7: RMS 0.089 peak 0.90x energy 0.66x
+      capped at the panel radiance: Karis 0.5 RMS 0.049 energy 1.08x | centre+LV RMS 0.157 energy 1.46x | mean of both RMS 0.081 energy 1.27x
+  1x1 m, 1.5 m overhead, offset, roughness 0.3: truth peak 0.754 | centre+LV RMS 0.107 energy 1.31x | Karis k 0.35: RMS 0.143 peak 1.35x energy 1.63x | Karis k 0.5: RMS 0.082 peak 0.92x energy 1.09x | Karis k 0.7: RMS 0.091 peak 0.61x energy 0.70x
+      capped at the panel radiance: Karis 0.5 RMS 0.082 energy 1.09x | centre+LV RMS 0.107 energy 1.31x | mean of both RMS 0.076 energy 1.20x
+  1x1 m, 1.5 m overhead, offset, roughness 0.6: truth peak 0.168 | centre+LV RMS 0.058 energy 1.02x | Karis k 0.35: RMS 0.112 peak 0.97x energy 1.13x | Karis k 0.5: RMS 0.093 peak 0.83x energy 0.95x | Karis k 0.7: RMS 0.127 peak 0.68x energy 0.77x
+      capped at the panel radiance: Karis 0.5 RMS 0.093 energy 0.95x | centre+LV RMS 0.058 energy 1.02x | mean of both RMS 0.065 energy 0.99x
+  strip 3x0.1 m, 1 m overhead, roughness 0.1: truth peak 0.941 | centre+LV RMS 0.156 energy 1.73x | Karis k 0.35: RMS 0.212 peak 5.04x energy 1.95x | Karis k 0.5: RMS 0.100 peak 2.96x energy 1.10x | Karis k 0.7: RMS 0.084 peak 1.74x energy 0.63x
+      capped at the panel radiance: Karis 0.5 RMS 0.059 energy 0.96x | centre+LV RMS 0.156 energy 1.73x | mean of both RMS 0.091 energy 1.34x
+  strip 3x0.1 m, 1 m overhead, roughness 0.3: truth peak 0.265 | centre+LV RMS 0.260 energy 1.50x | Karis k 0.35: RMS 0.208 peak 2.88x energy 1.31x | Karis k 0.5: RMS 0.148 peak 2.11x energy 0.92x | Karis k 0.7: RMS 0.135 peak 1.53x energy 0.66x
+      capped at the panel radiance: Karis 0.5 RMS 0.148 energy 0.92x | centre+LV RMS 0.260 energy 1.50x | mean of both RMS 0.159 energy 1.21x
+  strip 3x0.1 m, 1 m overhead, roughness 0.6: truth peak 0.060 | centre+LV RMS 0.290 energy 1.02x | Karis k 0.35: RMS 0.293 peak 2.46x energy 0.93x | Karis k 0.5: RMS 0.265 peak 2.07x energy 0.77x | Karis k 0.7: RMS 0.246 peak 1.70x energy 0.68x
+      capped at the panel radiance: Karis 0.5 RMS 0.265 energy 0.77x | centre+LV RMS 0.290 energy 1.02x | mean of both RMS 0.195 energy 0.90x
+  2x1 m, 0.6 m overhead (close), roughness 0.1: truth peak 1.031 | centre+LV RMS 0.725 energy 1.57x | Karis k 0.35: RMS 1.335 peak 10.84x energy 2.52x | Karis k 0.5: RMS 0.556 peak 5.50x energy 1.26x | Karis k 0.7: RMS 0.344 peak 2.87x energy 0.67x
+      capped at the panel radiance: Karis 0.5 RMS 0.175 energy 0.84x | centre+LV RMS 0.586 energy 1.39x | mean of both RMS 0.336 energy 1.12x
+  2x1 m, 0.6 m overhead (close), roughness 0.3: truth peak 0.955 | centre+LV RMS 0.597 energy 1.36x | Karis k 0.35: RMS 0.948 peak 6.29x energy 2.05x | Karis k 0.5: RMS 0.513 peak 3.89x energy 1.19x | Karis k 0.7: RMS 0.364 peak 2.36x energy 0.70x
+      capped at the panel radiance: Karis 0.5 RMS 0.290 energy 0.97x | centre+LV RMS 0.517 energy 1.27x | mean of both RMS 0.329 energy 1.12x
+  2x1 m, 0.6 m overhead (close), roughness 0.6: truth peak 0.579 | centre+LV RMS 0.289 energy 0.99x | Karis k 0.35: RMS 0.465 peak 3.15x energy 1.17x | Karis k 0.5: RMS 0.357 peak 2.45x energy 0.87x | Karis k 0.7: RMS 0.342 peak 1.84x energy 0.66x
+      capped at the panel radiance: Karis 0.5 RMS 0.350 energy 0.86x | centre+LV RMS 0.289 energy 0.99x | mean of both RMS 0.258 energy 0.93x
+  mean RMS over all nine cases: upstream centre 0.293, centre capped 0.269, Karis capped 0.168, mean of both capped 0.176
+  worst RMS: upstream centre 0.725, centre capped 0.586, Karis capped 0.350, mean of both capped 0.336
+
+=== C2. Sphere highlights (point and spot lights with a source size) ===
+  sphere r 0.1 at 1.62 m ( 3.5 deg), roughness 0.1: truth peak 0.901 | upstream widening RMS 0.013 energy 1.07x | Karis sphere capped RMS 0.010 energy 1.00x
+  sphere r 0.1 at 1.62 m ( 3.5 deg), roughness 0.3: truth peak 0.112 | upstream widening RMS 0.003 energy 1.02x | Karis sphere capped RMS 0.015 energy 0.90x
+  sphere r 0.1 at 1.62 m ( 3.5 deg), roughness 0.6: truth peak 0.008 | upstream widening RMS 0.001 energy 1.00x | Karis sphere capped RMS 0.029 energy 0.92x
+  sphere r 0.3 at 1.14 m (15.3 deg), roughness 0.1: truth peak 0.995 | upstream widening RMS 0.102 energy 1.30x | Karis sphere capped RMS 0.043 energy 1.11x
+  sphere r 0.3 at 1.14 m (15.3 deg), roughness 0.3: truth peak 0.715 | upstream widening RMS 0.051 energy 1.20x | Karis sphere capped RMS 0.056 energy 0.94x
+  sphere r 0.3 at 1.14 m (15.3 deg), roughness 0.6: truth peak 0.137 | upstream widening RMS 0.021 energy 1.02x | Karis sphere capped RMS 0.085 energy 0.80x
+  sphere r 0.6 at 0.85 m (44.6 deg), roughness 0.1: truth peak 1.006 | upstream widening RMS 0.501 energy 1.67x | Karis sphere capped RMS 0.084 energy 1.05x
+  sphere r 0.6 at 0.85 m (44.6 deg), roughness 0.3: truth peak 0.957 | upstream widening RMS 0.372 energy 1.48x | Karis sphere capped RMS 0.204 energy 1.19x
+  sphere r 0.6 at 0.85 m (44.6 deg), roughness 0.6: truth peak 0.576 | upstream widening RMS 0.136 energy 1.14x | Karis sphere capped RMS 0.215 energy 0.83x
+  mean RMS: upstream widening 0.133, Karis sphere capped 0.082; worst 0.501 against 0.215
+
+=== C3. Combined highlight: upstream widening (capped) blended into Karis (capped) by source size, t = saturate(2.5 sin(size)) ===
+  1x1 m, 1.5 m overhead, offset, roughness 0.1: blend 0.75 RMS 0.052 energy 1.18x
+  1x1 m, 1.5 m overhead, offset, roughness 0.3: blend 0.75 RMS 0.073 energy 1.14x
+  1x1 m, 1.5 m overhead, offset, roughness 0.6: blend 0.75 RMS 0.078 energy 0.97x
+  strip 3x0.1 m, 1 m overhead, roughness 0.1: blend 0.53 RMS 0.087 energy 1.32x
+  strip 3x0.1 m, 1 m overhead, roughness 0.3: blend 0.53 RMS 0.154 energy 1.19x
+  strip 3x0.1 m, 1 m overhead, roughness 0.6: blend 0.53 RMS 0.194 energy 0.89x
+  2x1 m, 0.6 m overhead (close), roughness 0.1: blend 1.00 RMS 0.175 energy 0.84x
+  2x1 m, 0.6 m overhead (close), roughness 0.3: blend 1.00 RMS 0.290 energy 0.97x
+  2x1 m, 0.6 m overhead (close), roughness 0.6: blend 1.00 RMS 0.350 energy 0.86x
+  sphere r 0.1, roughness 0.1: blend 0.15 RMS 0.012 energy 1.06x
+  sphere r 0.1, roughness 0.3: blend 0.15 RMS 0.004 energy 1.00x
+  sphere r 0.1, roughness 0.6: blend 0.15 RMS 0.004 energy 0.99x
+  sphere r 0.3, roughness 0.1: blend 0.66 RMS 0.040 energy 1.18x
+  sphere r 0.3, roughness 0.3: blend 0.66 RMS 0.044 energy 1.03x
+  sphere r 0.3, roughness 0.6: blend 0.66 RMS 0.054 energy 0.88x
+  sphere r 0.6, roughness 0.1: blend 1.00 RMS 0.084 energy 1.05x
+  sphere r 0.6, roughness 0.3: blend 1.00 RMS 0.204 energy 1.19x
+  sphere r 0.6, roughness 0.6: blend 1.00 RMS 0.215 energy 0.83x
+  combined over all 18 cases: mean RMS 0.117, worst 0.350
+
+=== E. Normal strength: old lerp form against the slope form above 1 ===
+  strength 0.5: below the surface old   0.0% new  0.0% | median tilt old  11.3 new  11.3 deg | max difference 0.00e+00 | tilt order kept (new) True
+  strength 1.0: below the surface old   0.0% new  0.0% | median tilt old  22.7 new  22.7 deg | max difference 0.00e+00 | tilt order kept (new) True
+  strength 1.5: below the surface old   0.0% new  0.0% | median tilt old  33.2 new  32.1 deg | max difference 8.74e-02 | tilt order kept (new) True
+  strength 2.0: below the surface old   0.0% new  0.0% | median tilt old  42.4 new  39.9 deg | max difference 1.66e-01 | tilt order kept (new) True
+  strength 3.0: below the surface old   0.0% new  0.0% | median tilt old  56.4 new  51.4 deg | max difference 2.59e-01 | tilt order kept (new) True
+  strength 5.0: below the surface old  18.4% new  0.0% | median tilt old  72.3 new  64.4 deg | max difference 3.26e-01 | tilt order kept (new) True
