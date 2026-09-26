@@ -460,9 +460,9 @@
                     <li class="mb-2"><strong>Blend</strong> - Layered adds the second map's bumps on top of the first. Replace swaps the first map out for the second wherever the mask allows.
                         <span class="opt-values">Options: <code>Layered</code>, <code>Replace</code></span></li>
                     <li class="mb-2"><strong>Flip Green</strong> - Turn this on if the bumps look pushed in instead of raised. Maps made for DirectX need it.</li>
-                    <li class="mb-2"><strong>Placement</strong> - Where the map sits on the material, how big it is, and how far it is turned. Rotation is in degrees.</li>
+                    <li class="mb-2"><strong>Placement</strong> - Where the map sits on the material, how big it is, and how far it is turned. Rotation is in degrees. <em>Pos X</em>: Moves the map left or right. <em>Pos Y</em>: Moves the map up or down. <em>Scale</em>: How big the map is. Above 1 makes it bigger. <em>Rot</em>: How far the map is turned, in degrees.</li>
                     <li class="mb-2"><strong>Tiling</strong> - How many times the map repeats across and down. A negative value mirrors it.</li>
-                    <li class="mb-2"><strong>Movement</strong> - Drift slides the map across the material. Spin turns it, in degrees per second.</li>
+                    <li class="mb-2"><strong>Movement</strong> - Drift slides the map across the material. Spin turns it, in degrees per second. <em>Drift X</em>: Slides the map sideways on its own, forever. 0 holds it still. <em>Drift Y</em>: Slides the map up or down on its own, forever. 0 holds it still. <em>Spin</em>: Turns the map on its own, in degrees per second.</li>
                     <li class="mb-2"><strong>Mask Source</strong> - Borrows another layer's map so the second normal map only shows where that layer does. Pick an Emission layer or a Matcap, then the channel your mask sits in. That layer has to be switched on. Leave it on None to cover the whole material.
                         <span class="opt-values">Options: <code>None</code>, <code>Emission 1</code>, <code>Emission 2</code>, <code>Emission 3</code>, <code>Emission 4</code>, <code>Emission 5</code>, <code>Matcap 1</code>, <code>Matcap 2</code>, <code>Matcap 3</code>, <code>Matcap 4</code>, <code>Matcap 5</code></span></li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of that layer's map holds your mask.</li>
@@ -914,8 +914,8 @@
                     <li class="mb-2"><strong>Position</strong> - Where the decal sits, across and up the surface.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns the decal, in degrees.</li>
                     <li class="mb-2"><strong>Rotation Speed</strong> - Spins the decal on forever. 0 holds it still.</li>
-                    <li class="mb-2"><strong>Scale</strong> - How big the decal is.</li>
-                    <li class="mb-2"><strong>Side Offset</strong> - Shifts the mirrored copy, for when the two sides are not quite laid out the same.</li>
+                    <li class="mb-2"><strong>Scale</strong> - How big the decal is. <em>X</em>: How wide the decal is. <em>Y</em>: How tall the decal is.</li>
+                    <li class="mb-2"><strong>Side Offset</strong> - Shifts the mirrored copy, for when the two sides are not quite laid out the same. <em>L</em>: Pushes the left edge out. Below 0 pulls it in. <em>R</em>: Pushes the right edge out. Below 0 pulls it in. <em>D</em>: Pushes the bottom edge out. Below 0 pulls it in. <em>U</em>: Pushes the top edge out. Below 0 pulls it in.</li>
                     <li class="mb-2"><strong>UV Source</strong> - Which set of texture coordinates places it. Change this if the decal lands somewhere unexpected.
                         <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the decal texture says where it is solid.</li>
@@ -939,8 +939,8 @@
                     <li class="mb-2"><strong>Position</strong> - Where the decal sits, across and up the surface.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns the decal, in degrees.</li>
                     <li class="mb-2"><strong>Rotation Speed</strong> - Spins the decal on forever. 0 holds it still.</li>
-                    <li class="mb-2"><strong>Scale</strong> - How big the decal is.</li>
-                    <li class="mb-2"><strong>Side Offset</strong> - Shifts the mirrored copy, for when the two sides are not quite laid out the same.</li>
+                    <li class="mb-2"><strong>Scale</strong> - How big the decal is. <em>X</em>: How wide the decal is. <em>Y</em>: How tall the decal is.</li>
+                    <li class="mb-2"><strong>Side Offset</strong> - Shifts the mirrored copy, for when the two sides are not quite laid out the same. <em>L</em>: Pushes the left edge out. Below 0 pulls it in. <em>R</em>: Pushes the right edge out. Below 0 pulls it in. <em>D</em>: Pushes the bottom edge out. Below 0 pulls it in. <em>U</em>: Pushes the top edge out. Below 0 pulls it in.</li>
                     <li class="mb-2"><strong>UV Source</strong> - Which set of texture coordinates places it. Change this if the decal lands somewhere unexpected.
                         <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the decal texture says where it is solid.</li>
@@ -964,8 +964,8 @@
                     <li class="mb-2"><strong>Position</strong> - Where the decal sits, across and up the surface.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns the decal, in degrees.</li>
                     <li class="mb-2"><strong>Rotation Speed</strong> - Spins the decal on forever. 0 holds it still.</li>
-                    <li class="mb-2"><strong>Scale</strong> - How big the decal is.</li>
-                    <li class="mb-2"><strong>Side Offset</strong> - Shifts the mirrored copy, for when the two sides are not quite laid out the same.</li>
+                    <li class="mb-2"><strong>Scale</strong> - How big the decal is. <em>X</em>: How wide the decal is. <em>Y</em>: How tall the decal is.</li>
+                    <li class="mb-2"><strong>Side Offset</strong> - Shifts the mirrored copy, for when the two sides are not quite laid out the same. <em>L</em>: Pushes the left edge out. Below 0 pulls it in. <em>R</em>: Pushes the right edge out. Below 0 pulls it in. <em>D</em>: Pushes the bottom edge out. Below 0 pulls it in. <em>U</em>: Pushes the top edge out. Below 0 pulls it in.</li>
                     <li class="mb-2"><strong>UV Source</strong> - Which set of texture coordinates places it. Change this if the decal lands somewhere unexpected.
                         <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the decal texture says where it is solid.</li>
@@ -989,8 +989,8 @@
                     <li class="mb-2"><strong>Position</strong> - Where the decal sits, across and up the surface.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns the decal, in degrees.</li>
                     <li class="mb-2"><strong>Rotation Speed</strong> - Spins the decal on forever. 0 holds it still.</li>
-                    <li class="mb-2"><strong>Scale</strong> - How big the decal is.</li>
-                    <li class="mb-2"><strong>Side Offset</strong> - Shifts the mirrored copy, for when the two sides are not quite laid out the same.</li>
+                    <li class="mb-2"><strong>Scale</strong> - How big the decal is. <em>X</em>: How wide the decal is. <em>Y</em>: How tall the decal is.</li>
+                    <li class="mb-2"><strong>Side Offset</strong> - Shifts the mirrored copy, for when the two sides are not quite laid out the same. <em>L</em>: Pushes the left edge out. Below 0 pulls it in. <em>R</em>: Pushes the right edge out. Below 0 pulls it in. <em>D</em>: Pushes the bottom edge out. Below 0 pulls it in. <em>U</em>: Pushes the top edge out. Below 0 pulls it in.</li>
                     <li class="mb-2"><strong>UV Source</strong> - Which set of texture coordinates places it. Change this if the decal lands somewhere unexpected.
                         <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the decal texture says where it is solid.</li>
@@ -1022,18 +1022,19 @@
                     <li class="mb-2"><strong>Mask</strong> - Reflectivity is how mirror-like the clear coat is when you look straight at it. The default suits latex and most plastics. Push it up for glass or a wetter, harder shine.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the shine layer applies.</li>
                     <li class="mb-2"><strong>Clearcoat Strength</strong> - How present the clear coat is. Think of it as a layer of lacquer sitting over the material, with its own reflection.</li>
-                    <li class="mb-2"><strong>Band</strong> - Which part of the music the coat shatters on.</li>
-                    <li class="mb-2"><strong>Expansion</strong> - How far the beat pushes the rainbow through the spectrum.</li>
-                    <li class="mb-2"><strong>Thin Film Thickness</strong> - How thick that film is, which decides where the rainbow lands in the spectrum. Sweep it to move the colours around.</li>
-                    <li class="mb-2"><strong>Cavity Gloss Blur</strong> - Uses the Cavity surface detail to break up the clearcoat reflection. Blur roughens the mirror in the creases; Occlusion dims it there. Needs Cavity turned on in the Surface section.</li>
-                    <li class="mb-2"><strong>Cavity Gloss Occlusion</strong> - How much the cavity detail dims the coat's reflection in the creases.</li>
-                    <li class="mb-2"><strong>Amount</strong> - How far the beat cracks the coat's reflection apart.</li>
+                    <li class="mb-2"><strong>Coat Band</strong> - Which part of the music the coat shatters on.</li>
+                    <li class="mb-2"><strong>Shatter</strong> - How far the beat cracks the coat's reflection apart.</li>
                     <li class="mb-2"><strong>Clearcoat Smoothness</strong> - How sharp the coat's reflection is. High is wet and mirror-like, low is a soft sheen.</li>
                     <li class="mb-2"><strong>Specular Anti-Aliasing</strong> - Stops the highlight sparkling and crawling on tight detail when you move. Leave it on unless you want the sparkle.</li>
                     <li class="mb-2"><strong>Clearcoat Flattening</strong> - Flattens the coat against the surface underneath, so the shine ignores the fine bumps in your normal map and reads as a smooth layer laid over them.</li>
                     <li class="mb-2"><strong>Clearcoat Tint</strong> - Colours the coat's reflection, for tinted lacquer or coloured varnish.</li>
                     <li class="mb-2"><strong>Clearcoat Reflectivity</strong> - How reflective the coat is when you look straight at it. The default suits latex and most paints; raise it for liquid glass or a wet resin finish.</li>
                     <li class="mb-2"><strong>Thin Film Strength</strong> - How much oil-slick colour separation sits in the coat. This is the rainbow you see on a soap bubble or a petrol puddle.</li>
+                    <li class="mb-2"><strong>Film Band</strong> - Which part of the music the film thickness moves with.</li>
+                    <li class="mb-2"><strong>Expansion</strong> - How far the beat pushes the rainbow through the spectrum.</li>
+                    <li class="mb-2"><strong>Thin Film Thickness</strong> - How thick that film is, which decides where the rainbow lands in the spectrum. Sweep it to move the colours around.</li>
+                    <li class="mb-2"><strong>Cavity Gloss Blur</strong> - Uses the Cavity surface detail to break up the clearcoat reflection. Blur roughens the mirror in the creases; Occlusion dims it there. Needs Cavity turned on in the Surface section.</li>
+                    <li class="mb-2"><strong>Cavity Gloss Occlusion</strong> - How much the cavity detail dims the coat's reflection in the creases.</li>
                 </ul>
             </div>
             <!-- ========================= -->
@@ -1187,7 +1188,7 @@
                     <li class="mb-2"><strong>Normal Flatten</strong> - How much the water smooths out the detail underneath it.</li>
                     <li class="mb-2"><strong>Gravity Pooling</strong> - Lets the water follow gravity: it gathers on the parts of you facing up, clings under the parts facing down, and thins on the steep sides it runs off.</li>
                     <li class="mb-2"><strong>Touch Wipe</strong> - A touch pushes the water aside, so the spot under a hand dries and the water gathers round its edge. Uses the Touch section below.</li>
-                    <li class="mb-2"><strong>Glints</strong> - Tiny sparkles in the water film and on the drops, where the light catches them. Density is how many, Size is how big each one is, and Twinkle makes them flicker.</li>
+                    <li class="mb-2"><strong>Glints</strong> - Tiny sparkles in the water film and on the drops, where the light catches them. <em>Amount</em>: How bright the sparkles are. <em>Density</em>: How many there are. <em>Size</em>: How big each one is. <em>Twinkle</em>: Makes them flicker.</li>
                     <li class="mb-2"><strong>Music Colour</strong> - Tints the water, and the drops, with the colour of the music. It follows the Color Source in the AudioLink section.</li>
                     </ul>
                 </div>
@@ -1203,7 +1204,7 @@
                     <li class="mb-2"><strong>Beat Wetness</strong> - The beat wets the material down.</li>
                     <li class="mb-2"><strong>Beat Flow</strong> - The beat makes the runs pour faster.</li>
                     <li class="mb-2"><strong>Beat Twist</strong> - The beat swings the run direction round. In degrees.</li>
-                    <li class="mb-2"><strong>Travelling Beats</strong> - Runs each hit down the streaks from the top instead of swelling them all at once. Amount is how much of the streak the beat takes over, Length is how long it takes to run down, Sharpness tightens it, and Glow flares it. Volume or Peak Hold fall back to Bass.</li>
+                    <li class="mb-2"><strong>Travelling Beats</strong> - Runs each hit down the streaks from the top instead of swelling them all at once. Volume or Peak Hold fall back to Bass. <em>Amount</em>: How much of the streak the beat takes over. <em>Length</em>: How long the beat takes to run down. <em>Sharpness</em>: Tightens the beat into a thin pulse. <em>Glow</em>: Flares the beat at its crest.</li>
                     <li class="mb-2"><strong>Flow Speed</strong> - How fast they run.</li>
                     <li class="mb-2"><strong>Strength</strong> - How pronounced the drips are.</li>
                     <li class="mb-2"><strong>Bump</strong> - How much each drip stands out from the surface.</li>
@@ -1224,7 +1225,7 @@
                     <li class="mb-2"><strong>From Writhe</strong> - Makes drops fall from wherever the writhing has drawn the material out, instead of at an even rate all over. The reaching places shed first and most, so a drop looks like it came off the tip of a tendril rather than appearing beside it. Needs Writhe under Goo Effects to be doing something. Leave at 0 and the droplets behave exactly as they always have.</li>
                     <li class="mb-2"><strong>Pooling</strong> - How much the drops build up where they land. At 0 each one spreads and fades on the spot, so the floor stays clear. Turn it up and the splats stay wider for longer and overlap, so the ground reads as goo gathering under you rather than drops blinking out one at a time.</li>
                     <li class="mb-2"><strong>Room Lighting</strong> - Lights the drops with the room, the same way as the rest of you, so they sit in a dark club instead of glowing. At 0 they look the way they did before this option existed. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
-                    <li class="mb-2"><strong>Beat Shake-off</strong> - A big peak in the music shakes a shower of extra drops loose, water and goo, and throws the falling ones outward. Amount is how many, Threshold is how big the peak has to be, Hold is how long the shower lasts, and Softness fades it in and out. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
+                    <li class="mb-2"><strong>Beat Shake-off</strong> - A big peak in the music shakes a shower of extra drops loose, water and goo, and throws the falling ones outward. <em>Amount</em>: How many extra drops shake loose. <em>Threshold</em>: How big the peak has to be. <em>Hold</em>: How long the shower lasts. <em>Softness</em>: Fades the shower in and out. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     <li class="mb-2"><strong>Custom Particle</strong> - Use your own image for each drop instead of the built-in bead, so the same physics can throw sweat, bubbles, sparks, petals or anything else off you. The alpha decides the shape, so give it a transparent background. Everything above still applies: they swell, pinch off, fall and dry out exactly as before.</li>
                     </ul>
 
@@ -1323,7 +1324,7 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Oobleck Dance</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Fingers</strong> - Height is how tall the fingers stand, in metres. Scale is how tightly they are packed. Sharpness turns broad bumps into thin spikes, and Figure picks the pattern they rise in.</li>
+                    <li class="mb-2"><strong>Fingers</strong> - Shapes the fingers that rise out of the goo. <em>Height</em>: How tall the fingers stand, in metres. <em>Scale</em>: How tightly they are packed. <em>Sharpness</em>: Turns broad bumps into thin spikes. <em>Figure</em>: Picks the pattern they rise in.</li>
                     </ul>
                 </div>
 
@@ -1403,8 +1404,8 @@
                     <li class="mb-2"><strong>Scale</strong> - Veins running through the goo: their colour, how bright they glow, how fast they pulse and how fine they are.</li>
                     <li class="mb-2"><strong>Thinness</strong> - Veins running through the goo: their colour, how bright they glow, how fast they pulse and how fine they are.</li>
                     <li class="mb-2"><strong>Beat Thinness</strong> - The beat draws the veins finer, so they tighten as the music hits.</li>
-                    <li class="mb-2"><strong>Flow Direction</strong> - Which way the slime runs. Down is 0, -1, 0. Point it sideways and it crawls across instead.</li>
-                    <li class="mb-2"><strong>Travelling Beats</strong> - Runs each hit along the veins in the way they flow, instead of every vein flashing at once. Amount is how much of the vein glow the beat takes over, Length is how long it takes to cross you, Sharpness tightens it, and Glow flares it. Volume or Peak Hold fall back to Bass.</li>
+                    <li class="mb-2"><strong>Flow Direction</strong> - Which way the slime runs. Down is 0, -1, 0. Point it sideways and it crawls across instead. <em>Dir X</em>: How much the slime runs sideways. <em>Dir Y</em>: How much it runs up or down. Down is -1. <em>Dir Z</em>: How much it runs forward or back.</li>
+                    <li class="mb-2"><strong>Travelling Beats</strong> - Runs each hit along the veins in the way they flow, instead of every vein flashing at once. Volume or Peak Hold fall back to Bass. <em>Amount</em>: How much of the vein glow the beat takes over. <em>Length</em>: How long the beat takes to cross you. <em>Sharpness</em>: Tightens the beat into a thin pulse. <em>Glow</em>: Flares the beat at its crest.</li>
                     <li class="mb-2"><strong>Flow</strong> - Veins running through the goo: their colour, how bright they glow, how fast they pulse and how fine they are.</li>
                     <li class="mb-2"><strong>Beat Flow</strong> - The beat drives the slime along its flow direction.</li>
                     <li class="mb-2"><strong>Pulse Speed</strong> - Veins running through the goo: their colour, how bright they glow, how fast they pulse and how fine they are.</li>
@@ -1483,7 +1484,7 @@
                     <p class="opt-note mt-2 mb-2"><strong>Touch Settings</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Native Touch</strong> - Finds hands, and anything else close to you, from what the camera already sees, so no contacts or animator are needed. Each person sees only their own hands, only up close, and never in a mirror. The world has to draw a depth texture, which most worlds with realtime shadows do.</li>
-                    <li class="mb-2"><strong>Sensing</strong> - Strength is how hard a hand presses. Reach is how far in front of you, in centimetres, a hand still counts. Radius is how wide an area each point feels around it. Max Distance is how close the viewer has to be, in metres, before it switches on, which keeps the cost down.</li>
+                    <li class="mb-2"><strong>Sensing</strong> - How hands are felt on you. <em>Strength</em>: How hard a hand presses. <em>Reach cm</em>: How far in front of you a hand still counts, in centimetres. <em>Radius cm</em>: How wide an area each point feels around it, in centimetres. <em>Max Distance</em>: How close the viewer has to be, in metres, before it switches on. Keeps the cost down.</li>
                     <li class="mb-2"><strong>Zones</strong> - Four touchable areas, one per colour channel: red, green, blue and alpha. Paint soft edges rather than hard ones, since the material pushes in across the whole shape you paint.</li>
                     <li class="mb-2"><strong>Press Red</strong> - Animate this from a contact receiver. 0 is untouched, 1 is pressed all the way in. Give it a curve that overshoots and settles back rather than a straight ramp and the material springs like real slime.</li>
                     <li class="mb-2"><strong>Press Green</strong> - How hard a press at this contact point pushes into the goo. Driven by the contacts on your avatar, so it reacts to being touched.</li>
@@ -1503,8 +1504,8 @@
                 <h3 class="text-glow-pink opt-group">Movement</h3>
                 <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">World Surface</span></div>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Velocity</strong> - How fast you are moving, in metres per second: X to your right, Y up, Z forward. Drive each from the matching VRChat Velocity parameter.</li>
-                    <li class="mb-2"><strong>Reactions</strong> - Slosh leaves the goo behind as you move. Sweep bends the wet streaks back. Splash wobbles the goo and shakes drops loose when you land. Fling makes falling drops trail behind you.</li>
+                    <li class="mb-2"><strong>Velocity</strong> - How fast you are moving, in metres per second: X to your right, Y up, Z forward. Drive each from the matching VRChat Velocity parameter. <em>X</em>: How fast you move to your right, in metres per second. <em>Y</em>: How fast you move up. <em>Z</em>: How fast you move forward.</li>
+                    <li class="mb-2"><strong>Reactions</strong> - How the goo and the wet react to you moving. <em>Slosh</em>: Leaves the goo behind as you move. <em>Sweep</em>: Bends the wet streaks back. <em>Splash</em>: Wobbles the goo and shakes drops loose when you land. <em>Fling</em>: Makes falling drops trail behind you.</li>
                     <li class="mb-2"><strong>Landing</strong> - Set this to 1 the moment you land and let it fade back to 0 over about half a second. Splash reads it.</li>
                 </ul>
 
@@ -1826,8 +1827,8 @@
                     <li class="mb-2"><strong>Position</strong> - Where the sequence sits on the surface.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns it, in degrees.</li>
                     <li class="mb-2"><strong>Rotation Speed</strong> - Spins it on forever. 0 holds it still.</li>
-                    <li class="mb-2"><strong>Scale</strong> - How big it is.</li>
-                    <li class="mb-2"><strong>Side Offset</strong> - Shifts that mirrored copy, for when the two sides differ.</li>
+                    <li class="mb-2"><strong>Scale</strong> - How big it is. <em>X</em>: How wide it is. <em>Y</em>: How tall it is.</li>
+                    <li class="mb-2"><strong>Side Offset</strong> - Shifts that mirrored copy, for when the two sides differ. <em>L</em>: Pushes the left edge out. Below 0 pulls it in. <em>R</em>: Pushes the right edge out. Below 0 pulls it in. <em>D</em>: Pushes the bottom edge out. Below 0 pulls it in. <em>U</em>: Pushes the top edge out. Below 0 pulls it in.</li>
                     <li class="mb-2"><strong>UV Source</strong> - Which set of texture coordinates places it.
                         <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
                     <li class="mb-2"><strong>Coverage From</strong> - What decides where it shows: its own alpha, or a channel you pick.
@@ -1855,7 +1856,7 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Pattern</strong> - What is reflected: a ring of lights, a grid of dots, or your own texture.
                         <span class="opt-values">Options: <code>Ring of Lights</code>, <code>Dot Grid</code>, <code>Texture</code></span></li>
-                    <li class="mb-2"><strong>Ring Shape</strong> - Size and Width set the ring itself. Lights breaks it into that many separate lamps instead of one solid band, and Glow gives each lamp a halo.</li>
+                    <li class="mb-2"><strong>Ring Shape</strong> - Sets up the ring of light itself. <em>Size</em>: How big the ring is. <em>Width</em>: How thick the ring is. <em>Lights</em>: Breaks the ring into this many separate lamps instead of one solid band. <em>Glow</em>: Gives each lamp a soft halo.</li>
                     <li class="mb-2"><strong>Pattern Texture</strong> - The shape repeated down the tunnel. It is read only when Pattern is set to Texture.</li>
                     <li class="mb-2"><strong>Glow Colour</strong> - The colour of the lights inside the mirror.</li>
                     <li class="mb-2"><strong>Reflections</strong> - How many reflections deep the mirror goes. More is deeper and costs more to draw.</li>
@@ -1864,7 +1865,7 @@
                     <li class="mb-2"><strong>Recession</strong> - How quickly each reflection shrinks into the distance.</li>
                     <li class="mb-2"><strong>Vanishing Point</strong> - Where the tunnel recedes to on the surface.</li>
                     <li class="mb-2"><strong>Depth Reach</strong> - How far down the tunnel you can still see. Turn it down and the far reflections fade out, so the portal reads as shallow.</li>
-                    <li class="mb-2"><strong>Motion</strong> - Sets the whole stack moving. Drift slides it, and every layer deeper slides further, so it falls away from you. Spin turns it into a vortex. Flow falls the whole tunnel inward and never ends, so it keeps dropping into itself. Spin is in degrees per second, Flow in layers per second.</li>
+                    <li class="mb-2"><strong>Motion</strong> - Sets the whole stack moving. Drift slides it, and every layer deeper slides further, so it falls away from you. Spin turns it into a vortex. Flow falls the whole tunnel inward and never ends, so it keeps dropping into itself. Spin is in degrees per second, Flow in layers per second. <em>Drift X</em>: Slides the stack sideways. Each deeper layer slides further, so it falls away from you. <em>Drift Y</em>: Slides the stack up or down. Each deeper layer slides further. <em>Spin</em>: Turns the stack into a vortex, in degrees per second. <em>Flow</em>: Falls the whole tunnel inward forever, in layers per second.</li>
                     <li class="mb-2"><strong>Opens Up Close</strong> - Makes the portal flat from across the room and deep once someone walks up to it.</li>
                     <li class="mb-2"><strong>Full Depth Distance</strong> - How close someone has to be, in metres, before the portal is at full depth.</li>
                     <li class="mb-2"><strong>Approach Curve</strong> - Low opens it gradually across the room. High keeps it flat until they are almost touching it.</li>
@@ -1874,7 +1875,7 @@
                     <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>Beat Depth</strong> - The beat pushes the tunnel in and out instead of only brightening it. Negative pulls it the other way.</li>
                     <li class="mb-2"><strong>Beat Twist</strong> - The beat kicks the vortex round.</li>
-                    <li class="mb-2"><strong>Beat Vortex</strong> - Travel sends each beat down the tunnel one ring at a time, so a hit lands at the mouth and falls inward. Spacing sets how far apart the rings hear it. Pull lets the music drag the whole tunnel in. Punch flares each ring as the beat goes past.</li>
+                    <li class="mb-2"><strong>Beat Vortex</strong> - How the music moves through the tunnel. <em>Travel</em>: Sends each beat down the tunnel one ring at a time, so a hit lands at the mouth and falls inward. <em>Spacing</em>: How far apart the rings hear the beat. <em>Pull</em>: Lets the music drag the whole tunnel in. <em>Punch</em>: Flares each ring as the beat goes past.</li>
                     <li class="mb-2"><strong>AudioLink Amount</strong> - How far the beat pushes this.</li>
                     </ul>
                 </div>
@@ -1896,7 +1897,7 @@
                     <li class="mb-2"><strong>Note Spacing</strong> - Space between neighbouring notes, so twelve zones read as twelve.</li>
                     <li class="mb-2"><strong>Offset</strong> - Turns the whole set round, so you choose which note sits where.</li>
                     <li class="mb-2"><strong>Repeat</strong> - How many times it repeats across the surface.</li>
-                    <li class="mb-2"><strong>Placement</strong> - Where that arrangement is centred on the surface.</li>
+                    <li class="mb-2"><strong>Placement</strong> - Where that arrangement is centred on the surface. <em>Pos X</em>: Moves it left or right. <em>Pos Y</em>: Moves it up or down. <em>Scale</em>: How big it is. Above 1 makes it bigger. <em>Rot</em>: How far it is turned, in degrees.</li>
                     <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
@@ -1919,7 +1920,7 @@
                     <li class="mb-2"><strong>Softness</strong> - Low is a soft glow. High is a tight dot.</li>
                     <li class="mb-2"><strong>Drift Speed</strong> - How much they wander.</li>
                     <li class="mb-2"><strong>Wander</strong> - How far each blob strays from its home.</li>
-                    <li class="mb-2"><strong>Placement</strong> - Where they are centred on the surface.</li>
+                    <li class="mb-2"><strong>Placement</strong> - Where they are centred on the surface. <em>Pos X</em>: Moves it left or right. <em>Pos Y</em>: Moves it up or down. <em>Scale</em>: How big it is. Above 1 makes it bigger. <em>Rot</em>: How far it is turned, in degrees.</li>
                     <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
@@ -1946,7 +1947,7 @@
                     <li class="mb-2"><strong>Range</strong> - How far away the speakers can be, in metres, before the wave stops reaching you.</li>
                     <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>AudioLink Amount</strong> - How much the music drives it rather than it running on its own.</li>
-                    <li class="mb-2"><strong>Speaker Glow</strong> - The side of you facing the speakers glows with the beat. Glow lights that side, Rim lights your edges, Rim Width sets how thin that edge is, and Focus narrows the glow toward the speakers.</li>
+                    <li class="mb-2"><strong>Speaker Glow</strong> - The side of you facing the speakers glows with the beat. <em>Glow</em>: How brightly the side facing the speakers lights up. <em>Rim</em>: Lights your edges too. <em>Rim Width</em>: How thin that edge light is. <em>Focus</em>: Narrows the glow toward the speakers.</li>
                     <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
@@ -1973,7 +1974,7 @@
                     <li class="mb-2"><strong>Flip Direction</strong> - Run it the other way across the surface.</li>
                     <li class="mb-2"><strong>Height</strong> - How tall it stands.</li>
                     <li class="mb-2"><strong>Trail Fade</strong> - Fades the oldest end out so the ribbon trails away instead of stopping dead.</li>
-                    <li class="mb-2"><strong>Placement</strong> - Where it sits on the surface.</li>
+                    <li class="mb-2"><strong>Placement</strong> - Where it sits on the surface. <em>Pos X</em>: Moves it left or right. <em>Pos Y</em>: Moves it up or down. <em>Scale</em>: How big it is. Above 1 makes it bigger. <em>Rot</em>: How far it is turned, in degrees.</li>
                     <li class="mb-2"><strong>AudioLink Band</strong> - History is only kept for the four bands, so Volume is not offered here.
                         <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code></span></li>
                     <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
@@ -2065,14 +2066,14 @@
                         <span class="opt-values">Options: <code>Square Plate</code>, <code>Round Plate</code>, <code>Ripple Tank</code></span></li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the figure.</li>
                     <li class="mb-2"><strong>Brightness</strong> - How brightly the figure glows.</li>
-                    <li class="mb-2"><strong>Placement</strong> - Where the plate sits on the material, how big it is, and how far it is turned. Rotation is in degrees.</li>
-                    <li class="mb-2"><strong>Figure</strong> - Mode is how busy the figure is. Range is how far the music and the drift can move it from there. Snap holds it on clean figures and moves quickly between them, and Wander is how fast it drifts on its own.</li>
-                    <li class="mb-2"><strong>Lines</strong> - Sharpness is how fine the lines are. Sand dusts the plate between them. Grain roughens the lines, and Line Glow is how bright they are.</li>
-                    <li class="mb-2"><strong>Depth</strong> - Stacks more plates down into the surface, so the figure has depth and swings as you move around it. Depth is how far apart they sit, Layer Shift changes the figure from one plate to the next, and Fade dims the deeper ones. Each extra layer costs framerate.</li>
-                    <li class="mb-2"><strong>Motion</strong> - Warp ripples the figure and Detail adds finer ripples on top. Twist winds it into a vortex. Speed is how fast it all moves.</li>
-                    <li class="mb-2"><strong>Colour</strong> - Colour turns the figure round the colour wheel. Spread shifts it from the middle out and from one plate to the next. Music Colour hands it over to the colour of the music, from the Color Source in the AudioLink section.</li>
+                    <li class="mb-2"><strong>Placement</strong> - Where the plate sits on the material, how big it is, and how far it is turned. Rotation is in degrees. <em>Pos X</em>: Moves the plate left or right. <em>Pos Y</em>: Moves the plate up or down. <em>Scale</em>: How big the plate is. <em>Rot</em>: How far the plate is turned, in degrees.</li>
+                    <li class="mb-2"><strong>Figure</strong> - Which figure the sand forms, and how it moves between figures. <em>Mode</em>: How busy the figure is. <em>Range</em>: How far the music and the drift can move it from there. <em>Snap</em>: Holds it on clean figures and moves quickly between them. <em>Wander</em>: How fast it drifts on its own.</li>
+                    <li class="mb-2"><strong>Lines</strong> - How the lines of sand look. <em>Sharpness</em>: How fine the lines are. <em>Sand</em>: Dusts the plate between the lines. <em>Grain</em>: Roughens the lines. <em>Line Glow</em>: How bright the lines are.</li>
+                    <li class="mb-2"><strong>Depth</strong> - Stacks more plates down into the surface, so the figure has depth and swings as you move around it. Each extra layer costs framerate. <em>Layers</em>: How many plates are stacked. Each extra one costs framerate. <em>Spacing</em>: How far apart the plates sit. <em>Layer Shift</em>: Changes the figure from one plate to the next. <em>Fade</em>: Dims the deeper plates.</li>
+                    <li class="mb-2"><strong>Motion</strong> - How the figure moves. <em>Warp</em>: Ripples the figure. <em>Detail</em>: Adds finer ripples on top. <em>Twist</em>: Winds it into a vortex. <em>Speed</em>: How fast it all moves.</li>
+                    <li class="mb-2"><strong>Colour</strong> - The colours of the figure. <em>Hue</em>: Turns the figure round the colour wheel. <em>Spread</em>: Shifts the colour from the middle out, and from one plate to the next. <em>Saturation</em>: How rich the colour is. <em>Music Colour</em>: Hands the colour over to the colour of the music, from the Color Source in the AudioLink section.</li>
                     <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music this reacts to.</li>
-                    <li class="mb-2"><strong>Music</strong> - Shake is how hard the beat throws the sand about. Steer is how far the music changes the figure. Pulse brightens it on the beat, and Beat Clock lets the motion run with the track.</li>
+                    <li class="mb-2"><strong>Music</strong> - How the music drives the figure. <em>Shake</em>: How hard the beat throws the sand about. <em>Steer</em>: How far the music changes the figure. <em>Pulse</em>: Brightens it on the beat. <em>Beat Clock</em>: Lets the motion run with the track.</li>
                     <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer Map so this only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
@@ -2123,7 +2124,7 @@
                     <li class="mb-2"><strong>Style</strong> - Which way that meter is drawn.
                         <span class="opt-values">Options: <code>Console</code>, <code>Bar</code></span></li>
                     <li class="mb-2"><strong>Intensity</strong> - How strongly this shows.</li>
-                    <li class="mb-2"><strong>VU Transform</strong> - Where this readout sits and how big it is on the surface.</li>
+                    <li class="mb-2"><strong>VU Transform</strong> - Where this readout sits and how big it is on the surface. <em>Pos X</em>: Moves the readout left or right. <em>Pos Y</em>: Moves the readout up or down. <em>Scale</em>: How big the readout is. <em>Rot</em>: How far the readout is turned.</li>
                     <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this meter only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
@@ -2143,7 +2144,7 @@
                     <li class="mb-2"><strong>Spectrum Primary Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>Spectrum Strip Intensity</strong> - How strongly this shows.</li>
                     <li class="mb-2"><strong>Spectrum Bar Count</strong> - How many bars the spectrum is drawn with.</li>
-                    <li class="mb-2"><strong>Spectrum Transform</strong> - Where this readout sits and how big it is on the surface.</li>
+                    <li class="mb-2"><strong>Spectrum Transform</strong> - Where this readout sits and how big it is on the surface. <em>Pos X</em>: Moves the readout left or right. <em>Pos Y</em>: Moves the readout up or down. <em>Scale</em>: How big the readout is. <em>Rot</em>: How far the readout is turned.</li>
                     <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this meter only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
@@ -2162,7 +2163,7 @@
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>Intensity</strong> - How strongly this shows.</li>
-                    <li class="mb-2"><strong>Transform</strong> - Where this readout sits and how big it is on the surface.</li>
+                    <li class="mb-2"><strong>Transform</strong> - Where this readout sits and how big it is on the surface. <em>Pos X</em>: Moves the readout left or right. <em>Pos Y</em>: Moves the readout up or down. <em>Scale</em>: How big the readout is. <em>Rot</em>: How far the readout is turned.</li>
                     <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this meter only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
@@ -2181,7 +2182,7 @@
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>Intensity</strong> - How strongly this shows.</li>
-                    <li class="mb-2"><strong>Transform</strong> - Where this readout sits and how big it is on the surface.</li>
+                    <li class="mb-2"><strong>Transform</strong> - Where this readout sits and how big it is on the surface. <em>Pos X</em>: Moves the readout left or right. <em>Pos Y</em>: Moves the readout up or down. <em>Scale</em>: How big the readout is. <em>Rot</em>: How far the readout is turned.</li>
                     <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this meter only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
@@ -2200,7 +2201,7 @@
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>Intensity</strong> - How strongly that readout shows.</li>
-                    <li class="mb-2"><strong>Transform</strong> - Where this readout sits and how big it is on the surface.</li>
+                    <li class="mb-2"><strong>Transform</strong> - Where this readout sits and how big it is on the surface. <em>Pos X</em>: Moves the readout left or right. <em>Pos Y</em>: Moves the readout up or down. <em>Scale</em>: How big the readout is. <em>Rot</em>: How far the readout is turned.</li>
                     <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this meter only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
@@ -2270,7 +2271,7 @@
                     <li class="mb-2"><strong>Light Volumes</strong> - Lets the line take its room light from the world's Light Volumes, like the rest of the material, instead of only the light probes. At 1 it matches you. 0 lights it from the light probes only.</li>
                     <li class="mb-2"><strong>Opacity</strong> - How solid the line is. Lower lets the background through it.</li>
                     <li class="mb-2"><strong>Texture</strong> - Colours the outline from an image instead of a flat colour.</li>
-                    <li class="mb-2"><strong>Texture Scroll</strong> - Slides the outline texture along the line, forever.</li>
+                    <li class="mb-2"><strong>Texture Scroll</strong> - Slides the outline texture along the line, forever. <em>Scroll X</em>: Slides the outline texture sideways, forever. <em>Scroll Y</em>: Slides the outline texture up or down, forever.</li>
                     <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music the line glows with.</li>
                     <li class="mb-2"><strong>AudioLink Emission Boost</strong> - How far the beat pushes that glow up.</li>
                     <li class="mb-2"><strong>AudioLink Width</strong> - The beat pushes the outline wider.</li>
@@ -2279,9 +2280,9 @@
                     <li class="mb-2"><strong>Music Colour</strong> - How much the colour of the music takes over the line. It follows the Color Source in the AudioLink section.</li>
                     <li class="mb-2"><strong>Pulse Direction</strong> - Which way each beat runs along the line, following your UV layout. Outward and Inward travel from the middle, and Around sweeps in a circle.
                         <span class="opt-values">Options: <code>Up</code>, <code>Down</code>, <code>Left</code>, <code>Right</code>, <code>Outward</code>, <code>Inward</code>, <code>Around</code></span></li>
-                    <li class="mb-2"><strong>Travelling Pulse</strong> - Runs each beat along the line instead of flashing all of it at once. Amount is how much of the line the pulse takes over, Length is how long it takes to cross, Sharpness tightens it into a thin pulse, and Glow flares its crest. Volume or Peak Hold fall back to Bass.</li>
+                    <li class="mb-2"><strong>Travelling Pulse</strong> - Runs each beat along the line instead of flashing all of it at once. Volume or Peak Hold fall back to Bass. <em>Amount</em>: How much of the line the pulse takes over. <em>Length</em>: How long the pulse takes to cross. <em>Sharpness</em>: Tightens the beat into a thin pulse. <em>Glow</em>: Flares the beat at its crest.</li>
                     <li class="mb-2"><strong>Beat Reveal</strong> - Keeps the line tucked away until a beat pushes it out, so the outline appears with the music. At 1 it is gone completely between beats.</li>
-                    <li class="mb-2"><strong>Equaliser Silhouette</strong> - Turns the line into an equaliser drawn up your body, bass at your feet and treble at Height. Width is how far each part of the music pushes the line out, and Glow is how much it brightens. Height is in metres from your feet. Low Octave skips the deepest rumble.</li>
+                    <li class="mb-2"><strong>Equaliser Silhouette</strong> - Turns the line into an equaliser drawn up your body, bass at your feet and treble at Height. <em>Width</em>: How far each part of the music pushes the line out. <em>Glow</em>: How much each part of the music brightens the line. <em>Height</em>: Where the treble sits, in metres from your feet. <em>Low Octave</em>: Skips the deepest rumble.</li>
                     </ul>
                 </div>
 
@@ -2309,7 +2310,7 @@
                     <li class="mb-2"><strong>Light Volumes</strong> - Lets the line take its room light from the world's Light Volumes, like the rest of the material, instead of only the light probes. At 1 it matches you. 0 lights it from the light probes only.</li>
                     <li class="mb-2"><strong>Opacity</strong> - How solid the second line is.</li>
                     <li class="mb-2"><strong>Texture</strong> - Colours this outline from an image instead of a flat colour.</li>
-                    <li class="mb-2"><strong>Texture Scroll</strong> - Slides the second line's texture along it, forever.</li>
+                    <li class="mb-2"><strong>Texture Scroll</strong> - Slides the second line's texture along it, forever. <em>Scroll X</em>: Slides the second line's texture sideways, forever. <em>Scroll Y</em>: Slides the second line's texture up or down, forever.</li>
                     <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music the second line glows with.</li>
                     <li class="mb-2"><strong>AudioLink Emission Boost</strong> - How far the beat pushes that glow up.</li>
                     <li class="mb-2"><strong>AudioLink Width</strong> - The beat pushes the outline wider.</li>
@@ -2318,9 +2319,9 @@
                     <li class="mb-2"><strong>Music Colour</strong> - How much the colour of the music takes over the line. It follows the Color Source in the AudioLink section.</li>
                     <li class="mb-2"><strong>Pulse Direction</strong> - Which way each beat runs along the line, following your UV layout. Outward and Inward travel from the middle, and Around sweeps in a circle.
                         <span class="opt-values">Options: <code>Up</code>, <code>Down</code>, <code>Left</code>, <code>Right</code>, <code>Outward</code>, <code>Inward</code>, <code>Around</code></span></li>
-                    <li class="mb-2"><strong>Travelling Pulse</strong> - Runs each beat along the line instead of flashing all of it at once. Amount is how much of the line the pulse takes over, Length is how long it takes to cross, Sharpness tightens it into a thin pulse, and Glow flares its crest. Volume or Peak Hold fall back to Bass.</li>
+                    <li class="mb-2"><strong>Travelling Pulse</strong> - Runs each beat along the line instead of flashing all of it at once. Volume or Peak Hold fall back to Bass. <em>Amount</em>: How much of the line the pulse takes over. <em>Length</em>: How long the pulse takes to cross. <em>Sharpness</em>: Tightens the beat into a thin pulse. <em>Glow</em>: Flares the beat at its crest.</li>
                     <li class="mb-2"><strong>Beat Reveal</strong> - Keeps the line tucked away until a beat pushes it out, so the outline appears with the music. At 1 it is gone completely between beats.</li>
-                    <li class="mb-2"><strong>Equaliser Silhouette</strong> - Turns the line into an equaliser drawn up your body, bass at your feet and treble at Height. Width is how far each part of the music pushes the line out, and Glow is how much it brightens. Height is in metres from your feet. Low Octave skips the deepest rumble.</li>
+                    <li class="mb-2"><strong>Equaliser Silhouette</strong> - Turns the line into an equaliser drawn up your body, bass at your feet and treble at Height. <em>Width</em>: How far each part of the music pushes the line out. <em>Glow</em>: How much each part of the music brightens the line. <em>Height</em>: Where the treble sits, in metres from your feet. <em>Low Octave</em>: Skips the deepest rumble.</li>
                     </ul>
                 </div>
             </div>
@@ -2348,15 +2349,15 @@
                     <li class="mb-2"><strong>Strength</strong> - How brightly this layer glows.</li>
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts this layer's colour round the colour wheel, without touching your texture.</li>
                     <li class="mb-2"><strong>Hue Cycle Speed</strong> - Cycles that colour shift on forever. 0 holds it where you left it.</li>
-                    <li class="mb-2"><strong>Color Cycle</strong> - Range keeps the colour inside a slice of the wheel instead of running the whole rainbow. At 0 it runs the whole wheel. Beat Speed drives the cycle from the music, so the colour only moves while the track does. Beat Range lets the beat widen that slice. Rainbow spreads the colour along the Beat Travel direction.</li>
+                    <li class="mb-2"><strong>Color Cycle</strong> - Shapes how this layer's colour moves round the wheel. <em>Range</em>: Keeps the colour inside a slice of the wheel instead of running the whole rainbow. At 0 it runs the whole wheel. <em>Beat Speed</em>: Drives the cycle from the music, so the colour only moves while the track does. <em>Beat Range</em>: Lets the beat widen that slice. <em>Rainbow</em>: Spreads the colour along the Beat Travel direction.</li>
                 </ul>
 
                 <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Placement</strong></p>
+                    <p class="opt-note mt-2 mb-2"><strong>Placement &amp; Motion</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Placement</strong> - Where the map sits on the material, how big it is, and how far it is turned. Rotation is in degrees.</li>
-                    <li class="mb-2"><strong>Movement</strong> - Drift slides the map across the material. Spin turns it, in degrees per second. Set Drift X and Drift Y together to pick any direction you like.</li>
-                    <li class="mb-2"><strong>On The Beat</strong> - How the layer moves when a beat lands: a pulse in place, or a wave that runs across you.</li>
+                    <li class="mb-2"><strong>Placement</strong> - Where the map sits on the material, how big it is, and how far it is turned. Rotation is in degrees. <em>Pos X</em>: Moves the map left or right. <em>Pos Y</em>: Moves the map up or down. <em>Scale</em>: How big the map is. Above 1 makes it bigger. <em>Rot</em>: How far the map is turned, in degrees.</li>
+                    <li class="mb-2"><strong>Movement</strong> - Drift slides the map across the material. Spin turns it, in degrees per second. Set Drift X and Drift Y together to pick any direction you like. <em>Drift X</em>: Slides the map sideways on its own, forever. 0 holds it still. <em>Drift Y</em>: Slides the map up or down on its own, forever. 0 holds it still. <em>Spin</em>: Turns the map on its own, in degrees per second.</li>
+                    <li class="mb-2"><strong>On The Beat</strong> - How the layer moves when a beat lands: a pulse in place, or a wave that runs across you. <em>Push X</em>: How far a beat pushes the layer sideways. <em>Push Y</em>: How far a beat pushes the layer up or down. <em>Twist</em>: How far a beat turns the layer, in degrees. <em>Hue</em>: How far a beat shifts the layer's colour round the wheel.</li>
                     </ul>
                 </div>
 
@@ -2366,7 +2367,7 @@
                     <li class="mb-2"><strong>Direction</strong> - Which way a beat runs across the layer. Outward and Inward travel from the middle, and Around sweeps it in a circle.
                         <span class="opt-values">Options: <code>Up</code>, <code>Down</code>, <code>Left</code>, <code>Right</code>, <code>Outward</code>, <code>Inward</code>, <code>Around</code>, <code>Custom Angle</code></span></li>
                     <li class="mb-2"><strong>Angle</strong> - Which way a beat travels across the surface, in degrees.</li>
-                    <li class="mb-2"><strong>Travel</strong> - Amount is how much of the layer the moving beat takes over. Length is how long one beat takes to cross it. Sharpness tightens the beat from a smear into a pulse, and Glow flares its crest. It listens to this layer's AudioLink Band, and Volume or Peak Hold fall back to Bass.</li>
+                    <li class="mb-2"><strong>Travel</strong> - Runs each beat across the layer in the Direction above. It listens to this layer's AudioLink Band, and Volume or Peak Hold fall back to Bass. <em>Amount</em>: How much of the layer the moving beat takes over. <em>Length</em>: How long one beat takes to cross the layer. <em>Sharpness</em>: Tightens the beat from a smear into a pulse. <em>Glow</em>: Flares the beat at its crest.</li>
                     </ul>
                 </div>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -2380,9 +2381,9 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Note</strong> - Which note Note Trigger listens for.
                         <span class="opt-values">Options: <code>C</code>, <code>Db</code>, <code>D</code>, <code>Eb</code>, <code>E</code>, <code>F</code>, <code>Gb</code>, <code>G</code>, <code>Ab</code>, <code>A</code>, <code>Bb</code>, <code>B</code></span></li>
-                    <li class="mb-2"><strong>Note Trigger</strong> - The layer lights up only while its note is playing. Amount is how dark it goes the rest of the time. Octave picks how high the note sits, Gain is how easily it triggers, and All Octaves listens for the note at every height at once.</li>
-                    <li class="mb-2"><strong>Beat Strobe</strong> - The layer flashes on each hit and goes dark in between. Threshold is how hard a hit has to be, Hold is how long each flash lingers, and Softness rounds off its edges. It listens to this layer's AudioLink Band.</li>
-                    <li class="mb-2"><strong>Waveform Warp</strong> - The live sound wave bends the layer's pattern, like the trace on an oscilloscope. Length is how much of the wave spans the layer, Angle is which way it runs, and Glow brightens the peaks.</li>
+                    <li class="mb-2"><strong>Note Trigger</strong> - The layer lights up only while its note is playing. Pick the note with Note above. <em>Amount</em>: How dark the layer goes while its note is not playing. <em>Octave</em>: How high the note sits. <em>Gain</em>: How easily it triggers. <em>All Octaves</em>: Listens for the note at every height at once.</li>
+                    <li class="mb-2"><strong>Beat Strobe</strong> - The layer flashes on each hit and goes dark in between. It listens to this layer's AudioLink Band. <em>Amount</em>: How much the strobe takes over. At 1 the layer goes fully dark between hits. <em>Threshold</em>: How hard a hit has to be. <em>Hold</em>: How long each flash lingers. <em>Softness</em>: Rounds off the edges of each flash.</li>
+                    <li class="mb-2"><strong>Waveform Warp</strong> - The live sound wave bends the layer's pattern, like the trace on an oscilloscope. <em>Amount</em>: How far the wave bends the pattern. <em>Length</em>: How much of the wave spans the layer. <em>Angle</em>: Which way the wave runs, in degrees. <em>Glow</em>: Brightens the peaks of the wave.</li>
                     </ul>
                 </div>
 
@@ -2395,15 +2396,15 @@
                     <li class="mb-2"><strong>Strength</strong> - How brightly this layer glows.</li>
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts this layer's colour round the colour wheel, without touching your texture.</li>
                     <li class="mb-2"><strong>Hue Cycle Speed</strong> - Cycles that colour shift on forever. 0 holds it where you left it.</li>
-                    <li class="mb-2"><strong>Color Cycle</strong> - Range keeps the colour inside a slice of the wheel instead of running the whole rainbow. At 0 it runs the whole wheel. Beat Speed drives the cycle from the music, so the colour only moves while the track does. Beat Range lets the beat widen that slice. Rainbow spreads the colour along the Beat Travel direction.</li>
+                    <li class="mb-2"><strong>Color Cycle</strong> - Shapes how this layer's colour moves round the wheel. <em>Range</em>: Keeps the colour inside a slice of the wheel instead of running the whole rainbow. At 0 it runs the whole wheel. <em>Beat Speed</em>: Drives the cycle from the music, so the colour only moves while the track does. <em>Beat Range</em>: Lets the beat widen that slice. <em>Rainbow</em>: Spreads the colour along the Beat Travel direction.</li>
                 </ul>
 
                 <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Placement</strong></p>
+                    <p class="opt-note mt-2 mb-2"><strong>Placement &amp; Motion</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Placement</strong> - Where the map sits on the material, how big it is, and how far it is turned. Rotation is in degrees.</li>
-                    <li class="mb-2"><strong>Movement</strong> - Drift slides the map across the material. Spin turns it, in degrees per second. Set Drift X and Drift Y together to pick any direction you like.</li>
-                    <li class="mb-2"><strong>On The Beat</strong> - How the layer moves when a beat lands: a pulse in place, or a wave that runs across you.</li>
+                    <li class="mb-2"><strong>Placement</strong> - Where the map sits on the material, how big it is, and how far it is turned. Rotation is in degrees. <em>Pos X</em>: Moves the map left or right. <em>Pos Y</em>: Moves the map up or down. <em>Scale</em>: How big the map is. Above 1 makes it bigger. <em>Rot</em>: How far the map is turned, in degrees.</li>
+                    <li class="mb-2"><strong>Movement</strong> - Drift slides the map across the material. Spin turns it, in degrees per second. Set Drift X and Drift Y together to pick any direction you like. <em>Drift X</em>: Slides the map sideways on its own, forever. 0 holds it still. <em>Drift Y</em>: Slides the map up or down on its own, forever. 0 holds it still. <em>Spin</em>: Turns the map on its own, in degrees per second.</li>
+                    <li class="mb-2"><strong>On The Beat</strong> - How the layer moves when a beat lands: a pulse in place, or a wave that runs across you. <em>Push X</em>: How far a beat pushes the layer sideways. <em>Push Y</em>: How far a beat pushes the layer up or down. <em>Twist</em>: How far a beat turns the layer, in degrees. <em>Hue</em>: How far a beat shifts the layer's colour round the wheel.</li>
                     </ul>
                 </div>
 
@@ -2413,7 +2414,7 @@
                     <li class="mb-2"><strong>Direction</strong> - Which way a beat runs across the layer. Outward and Inward travel from the middle, and Around sweeps it in a circle.
                         <span class="opt-values">Options: <code>Up</code>, <code>Down</code>, <code>Left</code>, <code>Right</code>, <code>Outward</code>, <code>Inward</code>, <code>Around</code>, <code>Custom Angle</code></span></li>
                     <li class="mb-2"><strong>Angle</strong> - Which way a beat travels across the surface, in degrees.</li>
-                    <li class="mb-2"><strong>Travel</strong> - Amount is how much of the layer the moving beat takes over. Length is how long one beat takes to cross it. Sharpness tightens the beat from a smear into a pulse, and Glow flares its crest. It listens to this layer's AudioLink Band, and Volume or Peak Hold fall back to Bass.</li>
+                    <li class="mb-2"><strong>Travel</strong> - Runs each beat across the layer in the Direction above. It listens to this layer's AudioLink Band, and Volume or Peak Hold fall back to Bass. <em>Amount</em>: How much of the layer the moving beat takes over. <em>Length</em>: How long one beat takes to cross the layer. <em>Sharpness</em>: Tightens the beat from a smear into a pulse. <em>Glow</em>: Flares the beat at its crest.</li>
                     </ul>
                 </div>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -2427,9 +2428,9 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Note</strong> - Which note Note Trigger listens for.
                         <span class="opt-values">Options: <code>C</code>, <code>Db</code>, <code>D</code>, <code>Eb</code>, <code>E</code>, <code>F</code>, <code>Gb</code>, <code>G</code>, <code>Ab</code>, <code>A</code>, <code>Bb</code>, <code>B</code></span></li>
-                    <li class="mb-2"><strong>Note Trigger</strong> - The layer lights up only while its note is playing. Amount is how dark it goes the rest of the time. Octave picks how high the note sits, Gain is how easily it triggers, and All Octaves listens for the note at every height at once.</li>
-                    <li class="mb-2"><strong>Beat Strobe</strong> - The layer flashes on each hit and goes dark in between. Threshold is how hard a hit has to be, Hold is how long each flash lingers, and Softness rounds off its edges. It listens to this layer's AudioLink Band.</li>
-                    <li class="mb-2"><strong>Waveform Warp</strong> - The live sound wave bends the layer's pattern, like the trace on an oscilloscope. Length is how much of the wave spans the layer, Angle is which way it runs, and Glow brightens the peaks.</li>
+                    <li class="mb-2"><strong>Note Trigger</strong> - The layer lights up only while its note is playing. Pick the note with Note above. <em>Amount</em>: How dark the layer goes while its note is not playing. <em>Octave</em>: How high the note sits. <em>Gain</em>: How easily it triggers. <em>All Octaves</em>: Listens for the note at every height at once.</li>
+                    <li class="mb-2"><strong>Beat Strobe</strong> - The layer flashes on each hit and goes dark in between. It listens to this layer's AudioLink Band. <em>Amount</em>: How much the strobe takes over. At 1 the layer goes fully dark between hits. <em>Threshold</em>: How hard a hit has to be. <em>Hold</em>: How long each flash lingers. <em>Softness</em>: Rounds off the edges of each flash.</li>
+                    <li class="mb-2"><strong>Waveform Warp</strong> - The live sound wave bends the layer's pattern, like the trace on an oscilloscope. <em>Amount</em>: How far the wave bends the pattern. <em>Length</em>: How much of the wave spans the layer. <em>Angle</em>: Which way the wave runs, in degrees. <em>Glow</em>: Brightens the peaks of the wave.</li>
                     </ul>
                 </div>
 
@@ -2442,15 +2443,15 @@
                     <li class="mb-2"><strong>Strength</strong> - How brightly this layer glows.</li>
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts this layer's colour round the colour wheel, without touching your texture.</li>
                     <li class="mb-2"><strong>Hue Cycle Speed</strong> - Cycles that colour shift on forever. 0 holds it where you left it.</li>
-                    <li class="mb-2"><strong>Color Cycle</strong> - Range keeps the colour inside a slice of the wheel instead of running the whole rainbow. At 0 it runs the whole wheel. Beat Speed drives the cycle from the music, so the colour only moves while the track does. Beat Range lets the beat widen that slice. Rainbow spreads the colour along the Beat Travel direction.</li>
+                    <li class="mb-2"><strong>Color Cycle</strong> - Shapes how this layer's colour moves round the wheel. <em>Range</em>: Keeps the colour inside a slice of the wheel instead of running the whole rainbow. At 0 it runs the whole wheel. <em>Beat Speed</em>: Drives the cycle from the music, so the colour only moves while the track does. <em>Beat Range</em>: Lets the beat widen that slice. <em>Rainbow</em>: Spreads the colour along the Beat Travel direction.</li>
                 </ul>
 
                 <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Placement</strong></p>
+                    <p class="opt-note mt-2 mb-2"><strong>Placement &amp; Motion</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Placement</strong> - Where the map sits on the material, how big it is, and how far it is turned. Rotation is in degrees.</li>
-                    <li class="mb-2"><strong>Movement</strong> - Drift slides the map across the material. Spin turns it, in degrees per second. Set Drift X and Drift Y together to pick any direction you like.</li>
-                    <li class="mb-2"><strong>On The Beat</strong> - How the layer moves when a beat lands: a pulse in place, or a wave that runs across you.</li>
+                    <li class="mb-2"><strong>Placement</strong> - Where the map sits on the material, how big it is, and how far it is turned. Rotation is in degrees. <em>Pos X</em>: Moves the map left or right. <em>Pos Y</em>: Moves the map up or down. <em>Scale</em>: How big the map is. Above 1 makes it bigger. <em>Rot</em>: How far the map is turned, in degrees.</li>
+                    <li class="mb-2"><strong>Movement</strong> - Drift slides the map across the material. Spin turns it, in degrees per second. Set Drift X and Drift Y together to pick any direction you like. <em>Drift X</em>: Slides the map sideways on its own, forever. 0 holds it still. <em>Drift Y</em>: Slides the map up or down on its own, forever. 0 holds it still. <em>Spin</em>: Turns the map on its own, in degrees per second.</li>
+                    <li class="mb-2"><strong>On The Beat</strong> - How the layer moves when a beat lands: a pulse in place, or a wave that runs across you. <em>Push X</em>: How far a beat pushes the layer sideways. <em>Push Y</em>: How far a beat pushes the layer up or down. <em>Twist</em>: How far a beat turns the layer, in degrees. <em>Hue</em>: How far a beat shifts the layer's colour round the wheel.</li>
                     </ul>
                 </div>
 
@@ -2460,7 +2461,7 @@
                     <li class="mb-2"><strong>Direction</strong> - Which way a beat runs across the layer. Outward and Inward travel from the middle, and Around sweeps it in a circle.
                         <span class="opt-values">Options: <code>Up</code>, <code>Down</code>, <code>Left</code>, <code>Right</code>, <code>Outward</code>, <code>Inward</code>, <code>Around</code>, <code>Custom Angle</code></span></li>
                     <li class="mb-2"><strong>Angle</strong> - Which way a beat travels across the surface, in degrees.</li>
-                    <li class="mb-2"><strong>Travel</strong> - Amount is how much of the layer the moving beat takes over. Length is how long one beat takes to cross it. Sharpness tightens the beat from a smear into a pulse, and Glow flares its crest. It listens to this layer's AudioLink Band, and Volume or Peak Hold fall back to Bass.</li>
+                    <li class="mb-2"><strong>Travel</strong> - Runs each beat across the layer in the Direction above. It listens to this layer's AudioLink Band, and Volume or Peak Hold fall back to Bass. <em>Amount</em>: How much of the layer the moving beat takes over. <em>Length</em>: How long one beat takes to cross the layer. <em>Sharpness</em>: Tightens the beat from a smear into a pulse. <em>Glow</em>: Flares the beat at its crest.</li>
                     </ul>
                 </div>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -2474,9 +2475,9 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Note</strong> - Which note Note Trigger listens for.
                         <span class="opt-values">Options: <code>C</code>, <code>Db</code>, <code>D</code>, <code>Eb</code>, <code>E</code>, <code>F</code>, <code>Gb</code>, <code>G</code>, <code>Ab</code>, <code>A</code>, <code>Bb</code>, <code>B</code></span></li>
-                    <li class="mb-2"><strong>Note Trigger</strong> - The layer lights up only while its note is playing. Amount is how dark it goes the rest of the time. Octave picks how high the note sits, Gain is how easily it triggers, and All Octaves listens for the note at every height at once.</li>
-                    <li class="mb-2"><strong>Beat Strobe</strong> - The layer flashes on each hit and goes dark in between. Threshold is how hard a hit has to be, Hold is how long each flash lingers, and Softness rounds off its edges. It listens to this layer's AudioLink Band.</li>
-                    <li class="mb-2"><strong>Waveform Warp</strong> - The live sound wave bends the layer's pattern, like the trace on an oscilloscope. Length is how much of the wave spans the layer, Angle is which way it runs, and Glow brightens the peaks.</li>
+                    <li class="mb-2"><strong>Note Trigger</strong> - The layer lights up only while its note is playing. Pick the note with Note above. <em>Amount</em>: How dark the layer goes while its note is not playing. <em>Octave</em>: How high the note sits. <em>Gain</em>: How easily it triggers. <em>All Octaves</em>: Listens for the note at every height at once.</li>
+                    <li class="mb-2"><strong>Beat Strobe</strong> - The layer flashes on each hit and goes dark in between. It listens to this layer's AudioLink Band. <em>Amount</em>: How much the strobe takes over. At 1 the layer goes fully dark between hits. <em>Threshold</em>: How hard a hit has to be. <em>Hold</em>: How long each flash lingers. <em>Softness</em>: Rounds off the edges of each flash.</li>
+                    <li class="mb-2"><strong>Waveform Warp</strong> - The live sound wave bends the layer's pattern, like the trace on an oscilloscope. <em>Amount</em>: How far the wave bends the pattern. <em>Length</em>: How much of the wave spans the layer. <em>Angle</em>: Which way the wave runs, in degrees. <em>Glow</em>: Brightens the peaks of the wave.</li>
                     </ul>
                 </div>
 
@@ -2489,15 +2490,15 @@
                     <li class="mb-2"><strong>Strength</strong> - How brightly this layer glows.</li>
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts this layer's colour round the colour wheel, without touching your texture.</li>
                     <li class="mb-2"><strong>Hue Cycle Speed</strong> - Cycles that colour shift on forever. 0 holds it where you left it.</li>
-                    <li class="mb-2"><strong>Color Cycle</strong> - Range keeps the colour inside a slice of the wheel instead of running the whole rainbow. At 0 it runs the whole wheel. Beat Speed drives the cycle from the music, so the colour only moves while the track does. Beat Range lets the beat widen that slice. Rainbow spreads the colour along the Beat Travel direction.</li>
+                    <li class="mb-2"><strong>Color Cycle</strong> - Shapes how this layer's colour moves round the wheel. <em>Range</em>: Keeps the colour inside a slice of the wheel instead of running the whole rainbow. At 0 it runs the whole wheel. <em>Beat Speed</em>: Drives the cycle from the music, so the colour only moves while the track does. <em>Beat Range</em>: Lets the beat widen that slice. <em>Rainbow</em>: Spreads the colour along the Beat Travel direction.</li>
                 </ul>
 
                 <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Placement</strong></p>
+                    <p class="opt-note mt-2 mb-2"><strong>Placement &amp; Motion</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Placement</strong> - Where the map sits on the material, how big it is, and how far it is turned. Rotation is in degrees.</li>
-                    <li class="mb-2"><strong>Movement</strong> - Drift slides the map across the material. Spin turns it, in degrees per second. Set Drift X and Drift Y together to pick any direction you like.</li>
-                    <li class="mb-2"><strong>On The Beat</strong> - How the layer moves when a beat lands: a pulse in place, or a wave that runs across you.</li>
+                    <li class="mb-2"><strong>Placement</strong> - Where the map sits on the material, how big it is, and how far it is turned. Rotation is in degrees. <em>Pos X</em>: Moves the map left or right. <em>Pos Y</em>: Moves the map up or down. <em>Scale</em>: How big the map is. Above 1 makes it bigger. <em>Rot</em>: How far the map is turned, in degrees.</li>
+                    <li class="mb-2"><strong>Movement</strong> - Drift slides the map across the material. Spin turns it, in degrees per second. Set Drift X and Drift Y together to pick any direction you like. <em>Drift X</em>: Slides the map sideways on its own, forever. 0 holds it still. <em>Drift Y</em>: Slides the map up or down on its own, forever. 0 holds it still. <em>Spin</em>: Turns the map on its own, in degrees per second.</li>
+                    <li class="mb-2"><strong>On The Beat</strong> - How the layer moves when a beat lands: a pulse in place, or a wave that runs across you. <em>Push X</em>: How far a beat pushes the layer sideways. <em>Push Y</em>: How far a beat pushes the layer up or down. <em>Twist</em>: How far a beat turns the layer, in degrees. <em>Hue</em>: How far a beat shifts the layer's colour round the wheel.</li>
                     </ul>
                 </div>
 
@@ -2507,7 +2508,7 @@
                     <li class="mb-2"><strong>Direction</strong> - Which way a beat runs across the layer. Outward and Inward travel from the middle, and Around sweeps it in a circle.
                         <span class="opt-values">Options: <code>Up</code>, <code>Down</code>, <code>Left</code>, <code>Right</code>, <code>Outward</code>, <code>Inward</code>, <code>Around</code>, <code>Custom Angle</code></span></li>
                     <li class="mb-2"><strong>Angle</strong> - Which way a beat travels across the surface, in degrees.</li>
-                    <li class="mb-2"><strong>Travel</strong> - Amount is how much of the layer the moving beat takes over. Length is how long one beat takes to cross it. Sharpness tightens the beat from a smear into a pulse, and Glow flares its crest. It listens to this layer's AudioLink Band, and Volume or Peak Hold fall back to Bass.</li>
+                    <li class="mb-2"><strong>Travel</strong> - Runs each beat across the layer in the Direction above. It listens to this layer's AudioLink Band, and Volume or Peak Hold fall back to Bass. <em>Amount</em>: How much of the layer the moving beat takes over. <em>Length</em>: How long one beat takes to cross the layer. <em>Sharpness</em>: Tightens the beat from a smear into a pulse. <em>Glow</em>: Flares the beat at its crest.</li>
                     </ul>
                 </div>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -2521,9 +2522,9 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Note</strong> - Which note Note Trigger listens for.
                         <span class="opt-values">Options: <code>C</code>, <code>Db</code>, <code>D</code>, <code>Eb</code>, <code>E</code>, <code>F</code>, <code>Gb</code>, <code>G</code>, <code>Ab</code>, <code>A</code>, <code>Bb</code>, <code>B</code></span></li>
-                    <li class="mb-2"><strong>Note Trigger</strong> - The layer lights up only while its note is playing. Amount is how dark it goes the rest of the time. Octave picks how high the note sits, Gain is how easily it triggers, and All Octaves listens for the note at every height at once.</li>
-                    <li class="mb-2"><strong>Beat Strobe</strong> - The layer flashes on each hit and goes dark in between. Threshold is how hard a hit has to be, Hold is how long each flash lingers, and Softness rounds off its edges. It listens to this layer's AudioLink Band.</li>
-                    <li class="mb-2"><strong>Waveform Warp</strong> - The live sound wave bends the layer's pattern, like the trace on an oscilloscope. Length is how much of the wave spans the layer, Angle is which way it runs, and Glow brightens the peaks.</li>
+                    <li class="mb-2"><strong>Note Trigger</strong> - The layer lights up only while its note is playing. Pick the note with Note above. <em>Amount</em>: How dark the layer goes while its note is not playing. <em>Octave</em>: How high the note sits. <em>Gain</em>: How easily it triggers. <em>All Octaves</em>: Listens for the note at every height at once.</li>
+                    <li class="mb-2"><strong>Beat Strobe</strong> - The layer flashes on each hit and goes dark in between. It listens to this layer's AudioLink Band. <em>Amount</em>: How much the strobe takes over. At 1 the layer goes fully dark between hits. <em>Threshold</em>: How hard a hit has to be. <em>Hold</em>: How long each flash lingers. <em>Softness</em>: Rounds off the edges of each flash.</li>
+                    <li class="mb-2"><strong>Waveform Warp</strong> - The live sound wave bends the layer's pattern, like the trace on an oscilloscope. <em>Amount</em>: How far the wave bends the pattern. <em>Length</em>: How much of the wave spans the layer. <em>Angle</em>: Which way the wave runs, in degrees. <em>Glow</em>: Brightens the peaks of the wave.</li>
                     </ul>
                 </div>
 
@@ -2536,15 +2537,15 @@
                     <li class="mb-2"><strong>Strength</strong> - How brightly this layer glows.</li>
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts this layer's colour round the colour wheel, without touching your texture.</li>
                     <li class="mb-2"><strong>Hue Cycle Speed</strong> - Cycles that colour shift on forever. 0 holds it where you left it.</li>
-                    <li class="mb-2"><strong>Color Cycle</strong> - Range keeps the colour inside a slice of the wheel instead of running the whole rainbow. At 0 it runs the whole wheel. Beat Speed drives the cycle from the music, so the colour only moves while the track does. Beat Range lets the beat widen that slice. Rainbow spreads the colour along the Beat Travel direction.</li>
+                    <li class="mb-2"><strong>Color Cycle</strong> - Shapes how this layer's colour moves round the wheel. <em>Range</em>: Keeps the colour inside a slice of the wheel instead of running the whole rainbow. At 0 it runs the whole wheel. <em>Beat Speed</em>: Drives the cycle from the music, so the colour only moves while the track does. <em>Beat Range</em>: Lets the beat widen that slice. <em>Rainbow</em>: Spreads the colour along the Beat Travel direction.</li>
                 </ul>
 
                 <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Placement</strong></p>
+                    <p class="opt-note mt-2 mb-2"><strong>Placement &amp; Motion</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Placement</strong> - Where the map sits on the material, how big it is, and how far it is turned. Rotation is in degrees.</li>
-                    <li class="mb-2"><strong>Movement</strong> - Drift slides the map across the material. Spin turns it, in degrees per second. Set Drift X and Drift Y together to pick any direction you like.</li>
-                    <li class="mb-2"><strong>On The Beat</strong> - How the layer moves when a beat lands: a pulse in place, or a wave that runs across you.</li>
+                    <li class="mb-2"><strong>Placement</strong> - Where the map sits on the material, how big it is, and how far it is turned. Rotation is in degrees. <em>Pos X</em>: Moves the map left or right. <em>Pos Y</em>: Moves the map up or down. <em>Scale</em>: How big the map is. Above 1 makes it bigger. <em>Rot</em>: How far the map is turned, in degrees.</li>
+                    <li class="mb-2"><strong>Movement</strong> - Drift slides the map across the material. Spin turns it, in degrees per second. Set Drift X and Drift Y together to pick any direction you like. <em>Drift X</em>: Slides the map sideways on its own, forever. 0 holds it still. <em>Drift Y</em>: Slides the map up or down on its own, forever. 0 holds it still. <em>Spin</em>: Turns the map on its own, in degrees per second.</li>
+                    <li class="mb-2"><strong>On The Beat</strong> - How the layer moves when a beat lands: a pulse in place, or a wave that runs across you. <em>Push X</em>: How far a beat pushes the layer sideways. <em>Push Y</em>: How far a beat pushes the layer up or down. <em>Twist</em>: How far a beat turns the layer, in degrees. <em>Hue</em>: How far a beat shifts the layer's colour round the wheel.</li>
                     </ul>
                 </div>
 
@@ -2554,7 +2555,7 @@
                     <li class="mb-2"><strong>Direction</strong> - Which way a beat runs across the layer. Outward and Inward travel from the middle, and Around sweeps it in a circle.
                         <span class="opt-values">Options: <code>Up</code>, <code>Down</code>, <code>Left</code>, <code>Right</code>, <code>Outward</code>, <code>Inward</code>, <code>Around</code>, <code>Custom Angle</code></span></li>
                     <li class="mb-2"><strong>Angle</strong> - Which way a beat travels across the surface, in degrees.</li>
-                    <li class="mb-2"><strong>Travel</strong> - Amount is how much of the layer the moving beat takes over. Length is how long one beat takes to cross it. Sharpness tightens the beat from a smear into a pulse, and Glow flares its crest. It listens to this layer's AudioLink Band, and Volume or Peak Hold fall back to Bass.</li>
+                    <li class="mb-2"><strong>Travel</strong> - Runs each beat across the layer in the Direction above. It listens to this layer's AudioLink Band, and Volume or Peak Hold fall back to Bass. <em>Amount</em>: How much of the layer the moving beat takes over. <em>Length</em>: How long one beat takes to cross the layer. <em>Sharpness</em>: Tightens the beat from a smear into a pulse. <em>Glow</em>: Flares the beat at its crest.</li>
                     </ul>
                 </div>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -2568,9 +2569,9 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Note</strong> - Which note Note Trigger listens for.
                         <span class="opt-values">Options: <code>C</code>, <code>Db</code>, <code>D</code>, <code>Eb</code>, <code>E</code>, <code>F</code>, <code>Gb</code>, <code>G</code>, <code>Ab</code>, <code>A</code>, <code>Bb</code>, <code>B</code></span></li>
-                    <li class="mb-2"><strong>Note Trigger</strong> - The layer lights up only while its note is playing. Amount is how dark it goes the rest of the time. Octave picks how high the note sits, Gain is how easily it triggers, and All Octaves listens for the note at every height at once.</li>
-                    <li class="mb-2"><strong>Beat Strobe</strong> - The layer flashes on each hit and goes dark in between. Threshold is how hard a hit has to be, Hold is how long each flash lingers, and Softness rounds off its edges. It listens to this layer's AudioLink Band.</li>
-                    <li class="mb-2"><strong>Waveform Warp</strong> - The live sound wave bends the layer's pattern, like the trace on an oscilloscope. Length is how much of the wave spans the layer, Angle is which way it runs, and Glow brightens the peaks.</li>
+                    <li class="mb-2"><strong>Note Trigger</strong> - The layer lights up only while its note is playing. Pick the note with Note above. <em>Amount</em>: How dark the layer goes while its note is not playing. <em>Octave</em>: How high the note sits. <em>Gain</em>: How easily it triggers. <em>All Octaves</em>: Listens for the note at every height at once.</li>
+                    <li class="mb-2"><strong>Beat Strobe</strong> - The layer flashes on each hit and goes dark in between. It listens to this layer's AudioLink Band. <em>Amount</em>: How much the strobe takes over. At 1 the layer goes fully dark between hits. <em>Threshold</em>: How hard a hit has to be. <em>Hold</em>: How long each flash lingers. <em>Softness</em>: Rounds off the edges of each flash.</li>
+                    <li class="mb-2"><strong>Waveform Warp</strong> - The live sound wave bends the layer's pattern, like the trace on an oscilloscope. <em>Amount</em>: How far the wave bends the pattern. <em>Length</em>: How much of the wave spans the layer. <em>Angle</em>: Which way the wave runs, in degrees. <em>Glow</em>: Brightens the peaks of the wave.</li>
                     </ul>
                 </div>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -2580,7 +2581,7 @@
                 <h3 class="text-glow-pink opt-group">Pathing</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Path Gradient</strong> - A gradient telling the glow which way to travel. Dark is the start of the path and bright is the end.</li>
-                    <li class="mb-2"><strong>Panning</strong> - Slides the whole path along the surface, forever.</li>
+                    <li class="mb-2"><strong>Panning</strong> - Slides the whole path along the surface, forever. <em>X</em>: Slides the path sideways, forever. <em>Y</em>: Slides the path up or down, forever.</li>
                     <li class="mb-2"><strong>Source</strong> - Which texture holds the path the lights run along.
                         <span class="opt-values">Options: <code>Gradient Texture</code>, <code>UV X</code>, <code>UV Y</code></span></li>
                     <li class="mb-2"><strong>Blend</strong> - How the running lights sit over the emission underneath them.
@@ -2696,21 +2697,21 @@
                 <h3 class="text-glow-pink opt-group">Atlas Sections</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Section 1 Tint</strong> - Tints that slot on its own, so one atlas can serve several looks.</li>
-                    <li class="mb-2"><strong>Section 1</strong> - Which packed matcap this slot uses.</li>
+                    <li class="mb-2"><strong>Section 1</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
                     <li class="mb-2"><strong>Section 2 Tint</strong> - Tints that slot on its own, so one atlas can serve several looks.</li>
-                    <li class="mb-2"><strong>Section 2</strong> - Which packed matcap this slot uses.</li>
+                    <li class="mb-2"><strong>Section 2</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
                     <li class="mb-2"><strong>Section 3 Tint</strong> - Tints that slot on its own, so one atlas can serve several looks.</li>
-                    <li class="mb-2"><strong>Section 3</strong> - Which packed matcap this slot uses.</li>
+                    <li class="mb-2"><strong>Section 3</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
                     <li class="mb-2"><strong>Section 4 Tint</strong> - Tints that slot on its own, so one atlas can serve several looks.</li>
-                    <li class="mb-2"><strong>Section 4</strong> - Which packed matcap this slot uses.</li>
+                    <li class="mb-2"><strong>Section 4</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
                     <li class="mb-2"><strong>Section 5 Tint</strong> - Tints that slot on its own, so one atlas can serve several looks.</li>
-                    <li class="mb-2"><strong>Section 5</strong> - Which packed matcap this slot uses.</li>
+                    <li class="mb-2"><strong>Section 5</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
                     <li class="mb-2"><strong>Section 6 Tint</strong> - Tints that slot on its own, so one atlas can serve several looks.</li>
-                    <li class="mb-2"><strong>Section 6</strong> - Which packed matcap this slot uses.</li>
+                    <li class="mb-2"><strong>Section 6</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
                     <li class="mb-2"><strong>Section 7 Tint</strong> - Tints that slot on its own, so one atlas can serve several looks.</li>
-                    <li class="mb-2"><strong>Section 7</strong> - Which packed matcap this slot uses.</li>
+                    <li class="mb-2"><strong>Section 7</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
                     <li class="mb-2"><strong>Section 8 Tint</strong> - Tints that slot on its own, so one atlas can serve several looks.</li>
-                    <li class="mb-2"><strong>Section 8</strong> - Which packed matcap this slot uses.</li>
+                    <li class="mb-2"><strong>Section 8</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Car Paint</h3>
@@ -2777,21 +2778,21 @@
                     <li class="mb-2"><strong>Depth</strong> - Sinks the layer below the surface so it slides against you as you move your head, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.</li>
                     <li class="mb-2"><strong>Mirror Flip</strong> - Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do.</li>
                     <li class="mb-2"><strong>Freeze</strong> - Locks the matcap to you instead of to the camera, so it stops sliding as you turn. Tiling repeats the image, Scroll pans it, and the Offsets group below sets where it starts.</li>
-                    <li class="mb-2"><strong>Tiling</strong> - Repeats the matcap across the sphere. Above 1 gives a kaleidoscope.</li>
+                    <li class="mb-2"><strong>Tiling</strong> - Repeats the matcap across the sphere. Above 1 gives a kaleidoscope. <em>Tile X</em>: How many times the matcap repeats across. <em>Tile Y</em>: How many times it repeats down.</li>
                         </ul>
                     </div>
 
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Movement</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Scroll / Animate</strong> - Slides it on forever. 0 holds it still.</li>
+                    <li class="mb-2"><strong>Scroll / Animate</strong> - Slides it on forever. 0 holds it still. <em>Pan X</em>: Slides the matcap sideways, forever. 0 holds it still. <em>Pan Y</em>: Slides it up or down, forever. 0 holds it still. <em>Spin</em>: Turns it, in degrees per second. <em>Speed</em>: Speeds all of that motion up. 0 is normal speed, and -1 stops it.</li>
                         </ul>
                     </div>
 
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Offsets</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Position Offset</strong> - Slides the matcap across the sphere, which moves where its highlight sits.</li>
+                    <li class="mb-2"><strong>Position Offset</strong> - Slides the matcap across the sphere, which moves where its highlight sits. <em>Offset X</em>: Slides the matcap sideways across the sphere. <em>Offset Y</em>: Slides it up or down the sphere.</li>
                         </ul>
                     </div>
 
@@ -2842,7 +2843,7 @@
                         <p class="opt-note mt-2 mb-2"><strong>Packed Atlas</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Build Atlas In Unity</strong> - Build the packed atlas here in Unity rather than supplying one you made outside it.</li>
-                    <li class="mb-2"><strong>Grid</strong> - How the atlas is laid out, across and down.</li>
+                    <li class="mb-2"><strong>Grid</strong> - How the atlas is laid out, across and down. <em>Columns</em>: How many matcaps sit across the atlas. <em>Rows</em>: How many sit down the atlas.</li>
                     <li class="mb-2"><strong>Sections</strong> - How many separate matcaps are packed into that atlas.</li>
                     <li class="mb-2"><strong>Section Source</strong> - Where the section number is read from. None reads the Mask above. Anything else borrows that layer Map, so the atlas needs no map of its own.
                         <span class="opt-values">Options: <code>None</code>, <code>Emission 1</code>, <code>Emission 2</code>, <code>Emission 3</code>, <code>Emission 4</code>, <code>Emission 5</code>, <code>Matcap 1</code>, <code>Matcap 2</code>, <code>Matcap 3</code>, <code>Matcap 4</code>, <code>Matcap 5</code></span></li>
@@ -2910,21 +2911,21 @@
                     <li class="mb-2"><strong>Depth</strong> - Sinks the layer below the surface so it slides against you as you move your head, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.</li>
                     <li class="mb-2"><strong>Mirror Flip</strong> - Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do.</li>
                     <li class="mb-2"><strong>Freeze</strong> - Locks the matcap to the surface so it stops sliding as you turn your head. Reach for it when a matcap is meant to read as paint rather than as a reflection.</li>
-                    <li class="mb-2"><strong>Tiling</strong> - Repeats the matcap across the sphere. Above 1 gives a kaleidoscope.</li>
+                    <li class="mb-2"><strong>Tiling</strong> - Repeats the matcap across the sphere. Above 1 gives a kaleidoscope. <em>Tile X</em>: How many times the matcap repeats across. <em>Tile Y</em>: How many times it repeats down.</li>
                         </ul>
                     </div>
 
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Movement</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Scroll / Animate</strong> - Slides it on forever. 0 holds it still.</li>
+                    <li class="mb-2"><strong>Scroll / Animate</strong> - Slides it on forever. 0 holds it still. <em>Pan X</em>: Slides the matcap sideways, forever. 0 holds it still. <em>Pan Y</em>: Slides it up or down, forever. 0 holds it still. <em>Spin</em>: Turns it, in degrees per second. <em>Speed</em>: Speeds all of that motion up. 0 is normal speed, and -1 stops it.</li>
                         </ul>
                     </div>
 
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Offsets</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Position Offset</strong> - Slides the matcap across the sphere, which moves where its highlight sits.</li>
+                    <li class="mb-2"><strong>Position Offset</strong> - Slides the matcap across the sphere, which moves where its highlight sits. <em>Offset X</em>: Slides the matcap sideways across the sphere. <em>Offset Y</em>: Slides it up or down the sphere.</li>
                         </ul>
                     </div>
 
@@ -2975,7 +2976,7 @@
                         <p class="opt-note mt-2 mb-2"><strong>Packed Atlas</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Build Atlas In Unity</strong> - Build the packed atlas here in Unity rather than supplying one you made outside it.</li>
-                    <li class="mb-2"><strong>Grid</strong> - How the atlas is laid out, across and down.</li>
+                    <li class="mb-2"><strong>Grid</strong> - How the atlas is laid out, across and down. <em>Columns</em>: How many matcaps sit across the atlas. <em>Rows</em>: How many sit down the atlas.</li>
                     <li class="mb-2"><strong>Sections</strong> - How many separate matcaps are packed into that atlas.</li>
                     <li class="mb-2"><strong>Section Source</strong> - Where the section number is read from. None reads the Mask above. Anything else borrows that layer Map, so the atlas needs no map of its own.
                         <span class="opt-values">Options: <code>None</code>, <code>Emission 1</code>, <code>Emission 2</code>, <code>Emission 3</code>, <code>Emission 4</code>, <code>Emission 5</code>, <code>Matcap 1</code>, <code>Matcap 2</code>, <code>Matcap 3</code>, <code>Matcap 4</code>, <code>Matcap 5</code></span></li>
@@ -3043,21 +3044,21 @@
                     <li class="mb-2"><strong>Depth</strong> - Sinks the layer below the surface so it slides against you as you move your head, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.</li>
                     <li class="mb-2"><strong>Mirror Flip</strong> - Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do.</li>
                     <li class="mb-2"><strong>Freeze</strong> - Locks the matcap to the surface so it stops sliding as you turn your head. Reach for it when a matcap is meant to read as paint rather than as a reflection.</li>
-                    <li class="mb-2"><strong>Tiling</strong> - Repeats the matcap across the sphere. Above 1 gives a kaleidoscope.</li>
+                    <li class="mb-2"><strong>Tiling</strong> - Repeats the matcap across the sphere. Above 1 gives a kaleidoscope. <em>Tile X</em>: How many times the matcap repeats across. <em>Tile Y</em>: How many times it repeats down.</li>
                         </ul>
                     </div>
 
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Movement</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Scroll / Animate</strong> - Slides it on forever. 0 holds it still.</li>
+                    <li class="mb-2"><strong>Scroll / Animate</strong> - Slides it on forever. 0 holds it still. <em>Pan X</em>: Slides the matcap sideways, forever. 0 holds it still. <em>Pan Y</em>: Slides it up or down, forever. 0 holds it still. <em>Spin</em>: Turns it, in degrees per second. <em>Speed</em>: Speeds all of that motion up. 0 is normal speed, and -1 stops it.</li>
                         </ul>
                     </div>
 
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Offsets</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Position Offset</strong> - Slides the matcap across the sphere, which moves where its highlight sits.</li>
+                    <li class="mb-2"><strong>Position Offset</strong> - Slides the matcap across the sphere, which moves where its highlight sits. <em>Offset X</em>: Slides the matcap sideways across the sphere. <em>Offset Y</em>: Slides it up or down the sphere.</li>
                         </ul>
                     </div>
 
@@ -3108,7 +3109,7 @@
                         <p class="opt-note mt-2 mb-2"><strong>Packed Atlas</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Build Atlas In Unity</strong> - Build the packed atlas here in Unity rather than supplying one you made outside it.</li>
-                    <li class="mb-2"><strong>Grid</strong> - How the atlas is laid out, across and down.</li>
+                    <li class="mb-2"><strong>Grid</strong> - How the atlas is laid out, across and down. <em>Columns</em>: How many matcaps sit across the atlas. <em>Rows</em>: How many sit down the atlas.</li>
                     <li class="mb-2"><strong>Sections</strong> - How many separate matcaps are packed into that atlas.</li>
                     <li class="mb-2"><strong>Section Source</strong> - Where the section number is read from. None reads the Mask above. Anything else borrows that layer Map, so the atlas needs no map of its own.
                         <span class="opt-values">Options: <code>None</code>, <code>Emission 1</code>, <code>Emission 2</code>, <code>Emission 3</code>, <code>Emission 4</code>, <code>Emission 5</code>, <code>Matcap 1</code>, <code>Matcap 2</code>, <code>Matcap 3</code>, <code>Matcap 4</code>, <code>Matcap 5</code></span></li>
@@ -3176,21 +3177,21 @@
                     <li class="mb-2"><strong>Depth</strong> - Sinks the layer below the surface so it slides against you as you move your head, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.</li>
                     <li class="mb-2"><strong>Mirror Flip</strong> - Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do.</li>
                     <li class="mb-2"><strong>Freeze</strong> - Locks the matcap to the surface so it stops sliding as you turn your head. Reach for it when a matcap is meant to read as paint rather than as a reflection.</li>
-                    <li class="mb-2"><strong>Tiling</strong> - Repeats the matcap across the sphere. Above 1 gives a kaleidoscope.</li>
+                    <li class="mb-2"><strong>Tiling</strong> - Repeats the matcap across the sphere. Above 1 gives a kaleidoscope. <em>Tile X</em>: How many times the matcap repeats across. <em>Tile Y</em>: How many times it repeats down.</li>
                         </ul>
                     </div>
 
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Movement</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Scroll / Animate</strong> - Slides it on forever. 0 holds it still.</li>
+                    <li class="mb-2"><strong>Scroll / Animate</strong> - Slides it on forever. 0 holds it still. <em>Pan X</em>: Slides the matcap sideways, forever. 0 holds it still. <em>Pan Y</em>: Slides it up or down, forever. 0 holds it still. <em>Spin</em>: Turns it, in degrees per second. <em>Speed</em>: Speeds all of that motion up. 0 is normal speed, and -1 stops it.</li>
                         </ul>
                     </div>
 
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Offsets</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Position Offset</strong> - Slides the matcap across the sphere, which moves where its highlight sits.</li>
+                    <li class="mb-2"><strong>Position Offset</strong> - Slides the matcap across the sphere, which moves where its highlight sits. <em>Offset X</em>: Slides the matcap sideways across the sphere. <em>Offset Y</em>: Slides it up or down the sphere.</li>
                         </ul>
                     </div>
 
@@ -3241,7 +3242,7 @@
                         <p class="opt-note mt-2 mb-2"><strong>Packed Atlas</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Build Atlas In Unity</strong> - Build the packed atlas here in Unity rather than supplying one you made outside it.</li>
-                    <li class="mb-2"><strong>Grid</strong> - How the atlas is laid out, across and down.</li>
+                    <li class="mb-2"><strong>Grid</strong> - How the atlas is laid out, across and down. <em>Columns</em>: How many matcaps sit across the atlas. <em>Rows</em>: How many sit down the atlas.</li>
                     <li class="mb-2"><strong>Sections</strong> - How many separate matcaps are packed into that atlas.</li>
                     <li class="mb-2"><strong>Section Source</strong> - Where the section number is read from. None reads the Mask above. Anything else borrows that layer Map, so the atlas needs no map of its own.
                         <span class="opt-values">Options: <code>None</code>, <code>Emission 1</code>, <code>Emission 2</code>, <code>Emission 3</code>, <code>Emission 4</code>, <code>Emission 5</code>, <code>Matcap 1</code>, <code>Matcap 2</code>, <code>Matcap 3</code>, <code>Matcap 4</code>, <code>Matcap 5</code></span></li>
@@ -3309,21 +3310,21 @@
                     <li class="mb-2"><strong>Depth</strong> - Sinks the layer below the surface so it slides against you as you move your head, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.</li>
                     <li class="mb-2"><strong>Mirror Flip</strong> - Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do.</li>
                     <li class="mb-2"><strong>Freeze</strong> - Locks the matcap to the surface so it stops sliding as you turn your head. Reach for it when a matcap is meant to read as paint rather than as a reflection.</li>
-                    <li class="mb-2"><strong>Tiling</strong> - Repeats the matcap across the sphere. Above 1 gives a kaleidoscope.</li>
+                    <li class="mb-2"><strong>Tiling</strong> - Repeats the matcap across the sphere. Above 1 gives a kaleidoscope. <em>Tile X</em>: How many times the matcap repeats across. <em>Tile Y</em>: How many times it repeats down.</li>
                         </ul>
                     </div>
 
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Movement</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Scroll / Animate</strong> - Slides it on forever. 0 holds it still.</li>
+                    <li class="mb-2"><strong>Scroll / Animate</strong> - Slides it on forever. 0 holds it still. <em>Pan X</em>: Slides the matcap sideways, forever. 0 holds it still. <em>Pan Y</em>: Slides it up or down, forever. 0 holds it still. <em>Spin</em>: Turns it, in degrees per second. <em>Speed</em>: Speeds all of that motion up. 0 is normal speed, and -1 stops it.</li>
                         </ul>
                     </div>
 
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Offsets</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Position Offset</strong> - Slides the matcap across the sphere, which moves where its highlight sits.</li>
+                    <li class="mb-2"><strong>Position Offset</strong> - Slides the matcap across the sphere, which moves where its highlight sits. <em>Offset X</em>: Slides the matcap sideways across the sphere. <em>Offset Y</em>: Slides it up or down the sphere.</li>
                         </ul>
                     </div>
 
@@ -3374,7 +3375,7 @@
                         <p class="opt-note mt-2 mb-2"><strong>Packed Atlas</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Build Atlas In Unity</strong> - Build the packed atlas here in Unity rather than supplying one you made outside it.</li>
-                    <li class="mb-2"><strong>Grid</strong> - How the atlas is laid out, across and down.</li>
+                    <li class="mb-2"><strong>Grid</strong> - How the atlas is laid out, across and down. <em>Columns</em>: How many matcaps sit across the atlas. <em>Rows</em>: How many sit down the atlas.</li>
                     <li class="mb-2"><strong>Sections</strong> - How many separate matcaps are packed into that atlas.</li>
                     <li class="mb-2"><strong>Section Source</strong> - Where the section number is read from. None reads the Mask above. Anything else borrows that layer Map, so the atlas needs no map of its own.
                         <span class="opt-values">Options: <code>None</code>, <code>Emission 1</code>, <code>Emission 2</code>, <code>Emission 3</code>, <code>Emission 4</code>, <code>Emission 5</code>, <code>Matcap 1</code>, <code>Matcap 2</code>, <code>Matcap 3</code>, <code>Matcap 4</code>, <code>Matcap 5</code></span></li>
@@ -3451,7 +3452,7 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Smoothing</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Bands</strong> - Eases each band in and out instead of letting it snap. 0 is instant. Turn it up for a slow pulse, leave it down for a sharp one.</li>
+                    <li class="mb-2"><strong>Bands</strong> - Eases each band in and out instead of letting it snap. 0 is instant. Turn it up for a slow pulse, leave it down for a sharp one. <em>Bass</em>: How slowly the bass eases in and out. <em>Low Mid</em>: How slowly the low mids ease in and out. <em>High Mid</em>: How slowly the high mids ease in and out. <em>Treble</em>: How slowly the treble eases in and out.</li>
                     <li class="mb-2"><strong>Volume &amp; Peak</strong> - The same easing for the Volume and Peak Hold bands.</li>
                     </ul>
                 </div>
@@ -3459,7 +3460,7 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Manual Levels</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Levels</strong> - Drives the bands by hand instead of from the music. Animate these and you get audio-style motion in a world that has no AudioLink.</li>
+                    <li class="mb-2"><strong>Levels</strong> - Drives the bands by hand instead of from the music. Animate these and you get audio-style motion in a world that has no AudioLink. <em>Bass</em>: The bass level to use. <em>Low Mid</em>: The low mid level to use. <em>High Mid</em>: The high mid level to use. <em>Treble</em>: The treble level to use.</li>
                     </ul>
                 </div>
 
@@ -3506,8 +3507,8 @@
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>Distance</strong> - How far the model swells on the beat.</li>
-                    <li class="mb-2"><strong>Height Equaliser</strong> - Lays the music up the object, bass at Bottom and treble at Top, so each height swells with its own slice of the sound. Heights are in metres above the object's origin, or above world zero once it is static batched. Setting Bottom above Top flips it. Gain is how easily it moves. <span class="tag-inline"><span class="avail-tag">World Surface</span><span class="avail-tag">World Fur</span></span></li>
-                    <li class="mb-2"><strong>Body Equaliser</strong> - Lays the music up your body, bass at Bottom and treble at Top, so each part of you swells with its own slice of the sound. Heights are in metres from your feet, and setting Bottom above Top flips it. Gain is how easily it moves. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span><span class="avail-tag">Toon</span><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span></span></li>
+                    <li class="mb-2"><strong>Height Equaliser</strong> - Lays the music up the object, bass at Bottom and treble at Top, so each height swells with its own slice of the sound. <em>Amount</em>: How far each height swells. <em>Bottom</em>: Where the bass sits, in metres above the object's origin, or above world zero once it is static batched. Set it above Top to flip it. <em>Top</em>: Where the treble sits, in metres above the object's origin, or above world zero once it is static batched. <em>Gain</em>: How easily it moves. <span class="tag-inline"><span class="avail-tag">World Surface</span><span class="avail-tag">World Fur</span></span></li>
+                    <li class="mb-2"><strong>Body Equaliser</strong> - Lays the music up your body, bass at Bottom and treble at Top, so each part of you swells with its own slice of the sound. <em>Amount</em>: How far each part of you swells. <em>Bottom</em>: Where the bass sits, in metres from your feet. Set it above Top to flip it. <em>Top</em>: Where the treble sits, in metres from your feet. <em>Gain</em>: How easily it moves. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span><span class="avail-tag">Toon</span><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span></span></li>
                         </ul>
                     </div>
 
@@ -3523,7 +3524,7 @@
                     <li class="mb-2"><strong>Lift (Up/Down, Animate)</strong> - How much the shards rise as they go.</li>
                     <li class="mb-2"><strong>Float Drift</strong> - How much the shards hang in the air rather than snapping back.</li>
                     <li class="mb-2"><strong>Trail Length</strong> - How much of a streak each shard leaves behind it.</li>
-                    <li class="mb-2"><strong>Drop Burst</strong> - When the track hits a big peak, you burst into shards and pull back together as it passes. Amount is how far you burst, Threshold is how big the peak has to be, Hold is how long you stay apart, and Softness eases it in and out.</li>
+                    <li class="mb-2"><strong>Drop Burst</strong> - When the track hits a big peak, you burst into shards and pull back together as it passes. <em>Amount</em>: How far you burst. <em>Threshold</em>: How big the peak has to be. <em>Hold</em>: How long you stay apart. <em>Softness</em>: Eases the burst in and out.</li>
                     <li class="mb-2"><strong>Shard Hue Shift</strong> - Shifts the shard colours round the colour wheel.</li>
                     <li class="mb-2"><strong>Shard Hue Cycle Speed</strong> - Cycles that shift on forever. 0 holds it still.</li>
                     <li class="mb-2"><strong>Shard Light Volumes</strong> - Lets the shards take their room light from the world's Light Volumes, like the rest of the material, instead of only the light probes. At 1 they match you. 0 lights them from the light probes only.</li>
@@ -3559,7 +3560,7 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>Strength</strong> - How strongly this shows.</li>
-                    <li class="mb-2"><strong>Transform</strong> - Which point it twists around.</li>
+                    <li class="mb-2"><strong>Transform</strong> - Which point it twists around. <em>Pos X</em>: Moves that point left or right. <em>Pos Y</em>: Moves that point up or down. <em>Scale</em>: Scales the effect around that point. Above 1 makes it bigger. <em>Rot</em>: Turns the effect around that point, in degrees.</li>
                     <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
@@ -3576,7 +3577,7 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>Bounce</strong> - How strongly this shows.</li>
-                    <li class="mb-2"><strong>Transform</strong> - Which point it pushes out from, across and up the surface.</li>
+                    <li class="mb-2"><strong>Transform</strong> - Which point it pushes out from, across and up the surface. <em>Pos X</em>: Moves that point left or right. <em>Pos Y</em>: Moves that point up or down. <em>Scale</em>: Scales the effect around that point. Above 1 makes it bigger. <em>Rot</em>: Turns the effect around that point, in degrees.</li>
                     <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
@@ -3593,7 +3594,7 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Band</strong> - Which part of the music this reacts to.</li>
                     <li class="mb-2"><strong>Strength</strong> - How strongly this shows.</li>
-                    <li class="mb-2"><strong>Transform</strong> - Which point the pieces break away from.</li>
+                    <li class="mb-2"><strong>Transform</strong> - Which point the pieces break away from. <em>Pos X</em>: Moves that point left or right. <em>Pos Y</em>: Moves that point up or down. <em>Scale</em>: Scales the effect around that point. Above 1 makes it bigger. <em>Rot</em>: Turns the effect around that point, in degrees.</li>
                     <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>

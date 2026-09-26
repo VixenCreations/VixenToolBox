@@ -411,7 +411,7 @@
             <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-09-18-latex-ultra-toon-clothing-pro-fur-pro-wo">
                 <div class="news-body">
                     <div class="news-meta">
-                        <span class="news-tag">Dev Notes</span>
+                        <span class="news-tag">Release Notes</span>
                         <span class="news-tag">Latex Ultra</span>
                         <span class="news-tag">Toon</span>
                         <span class="news-tag">Clothing Pro</span>
@@ -538,6 +538,11 @@
                         <li>On World Surface and World Fur, lightmapped surfaces no longer take highlights from a world's base Light Volumes. If a lightmapped floor looks less glossy, raise <strong>Specular Mix</strong> under <strong>Light Volumes V3</strong>.</li>
                         <li>If you turned <strong>Depth</strong> under <strong>Touch</strong> right down to make up for a scaled mesh, turn it back up.</li>
                         <li>Borrowed masks hold again, so an effect that was quietly covering your whole material will snap back to its map. Go through <strong>Mask Source</strong> and <strong>Invert Mask</strong> on each effect you have masked, and set <strong>Mask Source</strong> to None on anything you meant to leave unmasked.</li>
+                        <li>Highlights from the lights around you are tighter and about three times brighter (Part Seven). If a glossy material looks too hot, lower <strong>Smoothness</strong> a little or lower <strong>Highlight Clamp</strong>.</li>
+                        <li>The rim is rebuilt, so a material with the rim on will look different. Lower <strong>Width</strong> or raise <strong>Blur</strong> if it's too heavy now.</li>
+                        <li><strong>LTCGI</strong> and <strong>VRSL</strong> under <strong>Rim Light</strong> start at 1 on new materials. Materials you already have keep 0.</li>
+                        <li><strong>Strength</strong> under <strong>Micro Detail</strong> above 1 now does something. Set it to 1 for the old look.</li>
+                        <li>Clothing Pro, Fur Pro and World Fur: unlock and lock your fur materials again.</li>
                     </ul>
                     <h3 class="text-glow-cyan">The melt moves now</h3>
                     <p class="forge-where">Under <strong>Goo Effects &gt; Melt</strong>.</p>
@@ -582,11 +587,57 @@
                         <li>There is a <strong>Thickness</strong> slider and a <strong>Thickness Map</strong> for it now, and <strong>Subsurface</strong> under <strong>Biofeedback</strong> decides how far the pulse moves it on top.</li>
                         <li>Left at 0 it looks exactly as it does today.</li>
                     </ul>
+                    <h3 class="text-glow-cyan">A real rim light</h3>
+                    <p class="forge-where">Under <strong>Lighting &gt; Rim Light</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Lights behind and beside you light your edge, and a light in front of you barely reaches it.</li>
+                        <li>Every light counts: the main light, point and spot lights, light probes, Light Volumes and their lights, LTCGI screens and a VRSL stage rig.</li>
+                        <li><strong>Width</strong> reaches in from your outline, <strong>Blur</strong> softens its inner side, and <strong>Wrap</strong> softens it the way a round light that size would.</li>
+                        <li><strong>Scene Lights</strong>, <strong>Ambient</strong>, <strong>Light Volumes</strong>, <strong>LTCGI</strong> and <strong>VRSL</strong> set how much each kind of light feeds it.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Highlights that match Unity</h3>
+                    <ul class="pledge-list">
+                        <li>The lights around you now light your highlight as brightly as Unity's own shaders do, and it's as tight as your reflections at the same <strong>Smoothness</strong>.</li>
+                        <li>The Light Volumes and LTCGI highlights on the same material agree with them now.</li>
+                        <li><strong>Normal Strength</strong> above 1 makes the bumps deeper instead of skewing the light across you.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Light that reaches every part of you</h3>
+                    <ul class="pledge-list">
+                        <li>Outlines, fracture shards, <strong>Cling</strong> strands and drips take the light of an LTCGI screen or a VRSL stage rig now, like the rest of you.</li>
+                        <li>Matcaps and car paint look the same under a club spotlight as under the main light.</li>
+                        <li>Nearby lights no longer vanish in Light Volumes worlds, and LTCGI no longer goes dark in worlds that bake their screens into Light Volumes.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Unified Light</h3>
+                    <p class="forge-where">Under <strong>Lighting</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>An experiment to compare against the lighting you have now: every light reaches you the same way, whatever route it takes.</li>
+                        <li>Each point, spot and area light in a world's Light Volumes lights you on its own, with its own highlight, rim and subsurface glow, and the same total brightness as before. A big panel wraps softly around you and a small light stays crisp.</li>
+                        <li><strong>Soften Terminator</strong> and <strong>Shadow Hardness</strong> reach every light, and reflections line up with the room.</li>
+                        <li>It's off by default. Tick it and compare.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Light Edge</h3>
+                    <p class="forge-where">Under <strong>Light Volumes V3</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>A light behind or beside you puts a bright edge on a glossy material. That edge is the light reflecting in your gloss, not the rim, so the <strong>Rim Light</strong> sliders can't reach it.</li>
+                        <li><strong>Light Edge</strong> turns it down and leaves the highlight from a light in front of you alone. It starts at 1.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Light Volume lights take your whole material</h3>
+                    <ul class="pledge-list">
+                        <li>With <strong>Per-Light Specular</strong> on, each light's highlight streaks with <strong>Anisotropy</strong>, shows on your clear coat and follows <strong>Highlight Clamp</strong>.</li>
+                        <li>The bundled VRC Light Volumes is updated to its newest 3.0 build.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">A tidier inspector</h3>
+                    <ul class="pledge-list">
+                        <li>Sliders that work together, like <strong>On The Beat</strong> or <strong>Note Trigger</strong>, sit under their own name now, and every slider has its own tooltip.</li>
+                        <li>Right-click a section, like <strong>Emission Layer 1</strong> or <strong>Beat Travel</strong>, to reset it, copy it, or paste it onto another material or another layer.</li>
+                        <li>A material with toggles marked <strong>Animated (when locked)</strong> no longer drags the frame rate down while it's selected, in play mode most of all.</li>
+                        <li>Each emission layer's <strong>Placement &amp; Motion</strong> shows without AudioLink now, since it moves the map either way.</li>
+                    </ul>
                     <h3 class="text-glow-cyan">Where this is at</h3>
                     <ul class="pledge-list">
-                        <li>All six shaders build clean: no errors, no warnings.</li>
-                        <li>Everything across these six parts is going through testing on avatars now. None of it is out yet.</li>
-                        <li>Next: the test pass, then the release for all six shaders.</li>
+                        <li>Out now: Latex Ultra 5.3.0, Toon 2.3.0, Clothing Pro 2.3.0, Fur Pro 2.3.0, World Surface 1.1.0 and World Fur 1.1.0, each with VixForge Editor 2.4.0.</li>
+                        <li>Read the Before you update list in Part Four first. Glossy materials and rims will look different.</li>
+                        <li>The full notes are on the website's changelog page.</li>
                     </ul>
                 </div>
             </article>
@@ -601,8 +652,8 @@
                     </div>
 
                     <h2 class="text-glow-cyan" style="margin-top: 0;">World Surface and World Fur are out: the avatar shaders, built for the room around you.</h2>
+                    <p class="forge-intro"><em>Every shader we've made so far was for the avatar. Walk that avatar into a world and it stands on a floor, next to a wall, under a screen, and none of those know about the lighting it uses. World Surface and World Fur put the same lighting, the same effects and the same inspector on everything else in the scene.</em></p>
                     <h3 class="text-glow-cyan">World Surface</h3>
-                    <p class="forge-where"><em>Every shader we've made so far was for the avatar. Walk that avatar into a world and it stands on a floor, next to a wall, under a screen, and none of those know about the lighting it uses. World Surface and World Fur put the same lighting, the same effects and the same inspector on everything else in the scene.</em></p>
                     <ul class="pledge-list">
                         <li>For the things a world is made of: tile, glass, a bath tub, painted walls, polished floors, a sofa.</li>
                         <li>It's the Toon shader with <strong>Wet Effects</strong> and <strong>Goo Effects</strong> from Latex Ultra and the cloth sheen from Clothing Pro. Water beads and runs down tile, and goo pools on the floor.</li>
@@ -1079,8 +1130,8 @@
                     </div>
 
                     <h2 class="text-glow-cyan" style="margin-top: 0;">Latex Ultra 5.0, VixForge Toon 2.0, Clothing Pro 2.0 and Fur Pro 2.0</h2>
+                    <p class="forge-intro"><em>Your material used to carry every feature we have ever written, whether you switched them on or not. All of it compiled, all of it loaded, all of it sitting right against the limit your graphics card allows. We had run out of room to add anything at all. So this release takes it apart: your material is now built from the features you actually turned on, and nothing else.</em></p>
                     <h3 class="text-glow-cyan">Built from what you turn on</h3>
-                    <p class="forge-where"><em>Your material used to carry every feature we have ever written, whether you switched them on or not. All of it compiled, all of it loaded, all of it sitting right against the limit your graphics card allows. We had run out of room to add anything at all. So this release takes it apart: your material is now built from the features you actually turned on, and nothing else.</em></p>
                     <ul class="pledge-list">
                         <li>A material with a handful of features on used to carry all of them anyway. It now carries the ones you ticked.</li>
                         <li>A default material went from sixty five textures down to five. Sixty five was one over the ceiling where Unity refuses to load a shader at all.</li>
@@ -1402,8 +1453,8 @@
                     </div>
 
                     <h2 class="text-glow-cyan" style="margin-top: 0;">Your material stops carrying what you never switched on</h2>
+                    <p class="forge-intro"><em>Turn a feature off in these shaders and, until now, it was still in there. The textures it reserves, the code it needs and the build time it costs all went onto your avatar whether you used it or not. On a busy material that is what finally pushed you past Unity's texture limit and refused to compile. This release takes it back out.</em></p>
                     <h3 class="text-glow-cyan">Switched off now means gone</h3>
-                    <p class="forge-where"><em>Turn a feature off in these shaders and, until now, it was still in there. The textures it reserves, the code it needs and the build time it costs all went onto your avatar whether you used it or not. On a busy material that is what finally pushed you past Unity's texture limit and refused to compile. This release takes it back out.</em></p>
                     <ul class="pledge-list">
                         <li><strong>Light Volumes</strong> and <strong>LTCGI</strong> are the big two. A material with one turned off no longer carries it at all, which hands back 16 of the 64 texture slots Unity allows.</li>
                         <li><strong>Micro Detail</strong>, the Shine layer's mask, the <strong>Toon</strong> ramp, bent normals, the AudioLink vertex effects and the region masks go the same way.</li>
@@ -1625,8 +1676,8 @@
                     </div>
 
                     <h2 class="text-glow-cyan" style="margin-top: 0;">Four releases today, and two of them are shaders you have not seen before</h2>
+                    <p class="forge-intro"><em>Latex Ultra 4.4.0 finishes the goo work: it moves under its own power now, reaches off you onto whatever is behind, and finally touches the floor. Toon 1.3.0 picks up the masks and the outline fix alongside it. And Clothing Pro and Fur Pro land as 1.0.0, which means real fabric and real grown fur, both of them brushable right in the scene view.</em></p>
                     <h3 class="text-glow-cyan">Heads up: invert your Alpha Map</h3>
-                    <p class="forge-where"><em>Latex Ultra 4.4.0 finishes the goo work: it moves under its own power now, reaches off you onto whatever is behind, and finally touches the floor. Toon 1.3.0 picks up the masks and the outline fix alongside it. And Clothing Pro and Fur Pro land as 1.0.0, which means real fabric and real grown fur, both of them brushable right in the scene view.</em></p>
                     <ul class="pledge-list">
                         <li>The Alpha Map reads the other way round now. Black keeps the pixel, white takes it away, the way a body-hiding mask is painted.</li>
                         <li><strong>If you already use one, invert it</strong>, or the material comes out inside out. An empty slot now shows everything.</li>
@@ -2040,8 +2091,8 @@
                     </div>
 
                     <h2 class="text-glow-cyan" style="margin-top: 0;">Locking works with VRCFury SPS again, and the toolbox stops wasting your time</h2>
+                    <p class="forge-intro"><em>Locking is the step between a material you are happy with and an avatar you can actually upload, so when it breaks it breaks at the worst possible moment. One way it broke was quiet and hard to pin on anything. That is fixed, and while we were in there we went after everything else in the toolbox that makes you wait.</em></p>
                     <h3 class="text-glow-cyan">Locking and VRCFury SPS</h3>
-                    <p class="forge-where"><em>Locking is the step between a material you are happy with and an avatar you can actually upload, so when it breaks it breaks at the worst possible moment. One way it broke was quiet and hard to pin on anything. That is fixed, and while we were in there we went after everything else in the toolbox that makes you wait.</em></p>
                     <ul class="pledge-list">
                         <li>Locking wrote its include paths relative to the folder the locked shader sat in. SPS copies that shader somewhere else while it builds your avatar, so the paths stopped pointing at anything and the material broke.</li>
                         <li>They are full project paths now, so it no longer matters where the file ends up.</li>
