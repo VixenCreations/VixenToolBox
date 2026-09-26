@@ -2740,6 +2740,7 @@
                         <li class="mb-2"><strong>The decal gizmo and Texture Packer preview shaders have pass names.</strong> Their one pass showed as <code>&lt;Unnamed Pass 0&gt;</code> in the compile progress bar and the shader compiler logs. They now show as <code>DECAL_GIZMOS</code> and <code>CHANNEL_PREVIEW</code>.</li>
                         <li class="mb-2"><strong>Selecting a material with animated toggles slowed the editor down, most of all in play mode.</strong> While a toggle marked <strong>Animated (when locked)</strong> sat at 0, the inspector switched that feature off and back on and redrew itself without stopping, so the frame rate dropped for as long as the material was selected. It settles the setting once now, so the inspector stops redrawing on its own.</li>
                         <li class="mb-2"><strong>A tooltip could show over the wrong row.</strong> Hovering one slider in a group showed the group's tooltip above the whole group, over the rows before it. Each tooltip sits on its own row now.</li>
+                        <li class="mb-2"><strong>Value boxes stay readable in a narrow inspector.</strong> A row of values such as <strong>Scroll / Animate</strong>, <strong>Tiling</strong> or <strong>Position Offset</strong> moves to two fields a line, then one, instead of squeezing the boxes until the numbers vanish. Each field keeps its own tooltip.</li>
                     </ul>
                 </div>
 
