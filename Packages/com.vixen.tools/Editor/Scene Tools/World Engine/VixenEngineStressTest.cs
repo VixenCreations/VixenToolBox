@@ -643,24 +643,42 @@ namespace VixenTools.Editor.QA
             System.Type lvMgrType = GetTypeSafe("VRCLightVolumes.LightVolumeManager");
             if (lvMgrType != null)
             {
+                Component firstManager = null;
                 for (int i = 0; i < 2; i++)
                 {
                     GameObject lvMgr = new GameObject($"LV Manager {i}");
                     lvMgr.transform.SetParent(parent);
-                    lvMgr.AddComponent(lvMgrType);
+                    Component added = lvMgr.AddComponent(lvMgrType);
+                    if (firstManager == null) firstManager = added;
                 }
 
-                System.Type lvSetupType = GetTypeSafe("VRCLightVolumes.LightVolumeSetup");
-                GameObject setupObj = new GameObject("LV Setup Cutoff Nuke");
-                setupObj.transform.SetParent(parent);
-                var setup = setupObj.AddComponent(lvSetupType);
-                SetField(setup, "LightsBrightnessCutoff", 0.05f);
+                System.Type plv3Type = GetTypeSafe("VRCLightVolumes.PointLightVolumeInstance");
+                if (plv3Type != null && lvMgrType.GetField("FroxelDensity") != null)
+                {
+                    SetField(firstManager, "LightsBrightnessCutoff", 0.05f);
+                    SetField(firstManager, "Clustering", false);
+                    SetField(firstManager, "ClusteringMinLights", 1);
 
-                System.Type plvType = GetTypeSafe("VRCLightVolumes.PointLightVolume");
-                GameObject plvObj = new GameObject("Area Light Volume");
-                plvObj.transform.SetParent(parent);
-                var plv = plvObj.AddComponent(plvType);
-                SetField(plv, "Type", 2);
+                    GameObject plvObj = new GameObject("Area Light Volume");
+                    plvObj.transform.SetParent(parent);
+                    var plv = plvObj.AddComponent(plv3Type);
+                    SetField(plv, "LightType", 2);
+                    SetField(plv, "AutoUpdateShadowMap", true);
+                }
+                else
+                {
+                    System.Type lvSetupType = GetTypeSafe("VRCLightVolumes.LightVolumeSetup");
+                    GameObject setupObj = new GameObject("LV Setup Cutoff Nuke");
+                    setupObj.transform.SetParent(parent);
+                    var setup = setupObj.AddComponent(lvSetupType);
+                    SetField(setup, "LightsBrightnessCutoff", 0.05f);
+
+                    System.Type plvType = GetTypeSafe("VRCLightVolumes.PointLightVolume");
+                    GameObject plvObj = new GameObject("Area Light Volume");
+                    plvObj.transform.SetParent(parent);
+                    var plv = plvObj.AddComponent(plvType);
+                    SetField(plv, "Type", 2);
+                }
 
                 System.Type tvgiType = GetTypeSafe("VRCLightVolumes.LightVolumeTVGI");
                 GameObject tvgiObj = new GameObject("TVGI Seizure Risk");

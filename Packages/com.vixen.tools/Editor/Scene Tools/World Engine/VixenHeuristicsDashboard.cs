@@ -314,8 +314,8 @@ namespace VixenTools.Editor
             int terrains = GetCachedObjects<Terrain>(false).Count(t => t != null && t.enabled && t.gameObject.activeInHierarchy);
             int lightmapCount = LightmapSettings.lightmaps != null ? LightmapSettings.lightmaps.Length : 0;
 
-            Type lvType = GetTypeSafe("VRCLightVolumes.LightVolume");
-            Type pointLvType = GetTypeSafe("VRCLightVolumes.PointLightVolume");
+            Type lvType = GetTypeSafe("VRCLightVolumes.LightVolumeInstance") ?? GetTypeSafe("VRCLightVolumes.LightVolume");
+            Type pointLvType = GetTypeSafe("VRCLightVolumes.PointLightVolumeInstance") ?? GetTypeSafe("VRCLightVolumes.PointLightVolume");
 
             int staticLightVolumes = lvType != null ? GetCachedObjects(lvType, false).Cast<Behaviour>().Count(b => b != null && b.enabled && b.gameObject.activeInHierarchy) : 0;
             int pointLightVolumes = pointLvType != null ? GetCachedObjects(pointLvType, false).Cast<Behaviour>().Count(b => b != null && b.enabled && b.gameObject.activeInHierarchy) : 0;

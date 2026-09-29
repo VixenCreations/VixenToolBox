@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
 using ImageMagick;
 #endif
 using UnityEditor;
@@ -23,8 +23,15 @@ namespace VixenTools.Editor
         private const string DesktopPlatform = "Standalone";
         private static readonly string[] OverridePlatforms = { "Standalone", "Android", "iPhone" };
         private static readonly string[] LooseSourceExtensions = { ".tif", ".tiff", ".tga", ".bmp" };
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
         private static readonly string[] PngExcludedChunks = { "bKGD", "cHRM", "EXIF", "gAMA", "iCCP", "iTXt", "sRGB", "tEXt", "zCCP", "zTXt", "date" };
+#endif
+#if VRC_SDK_VRCSDK3 && (UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET)
+        private static bool MagickReady => VixenMagickKit.IsReady;
+#elif UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
+        private static bool MagickReady => true;
+#else
+        private static bool MagickReady => false;
 #endif
 
         public enum Issue { ReadWrite, Uncompressed, Oversize, LowFrequency, NormalFormat, NormalType, NoMipmaps, ColorSpace, Conflict, SourceFormat }
@@ -54,11 +61,7 @@ namespace VixenTools.Editor
             public string Property;
             public List<Slot> Slots;
 
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
-            public bool CanApply => Kind != Issue.Uncompressed && Kind != Issue.Conflict;
-#else
-            public bool CanApply => Kind != Issue.Uncompressed && Kind != Issue.Conflict && Kind != Issue.SourceFormat;
-#endif
+            public bool CanApply => Kind != Issue.Uncompressed && Kind != Issue.Conflict && (Kind != Issue.SourceFormat || MagickReady);
             public bool KeepOutOfBatch => MemoryEffect == Effect.Costs;
         }
 
@@ -247,9 +250,7 @@ namespace VixenTools.Editor
                 description = $"'{tex.name}' is a {Megabytes(fileBytes)} {ext.TrimStart('.').ToUpperInvariant()} file. Convert saves a PNG copy with the same pixels to {folder}/ and points your materials at it. The original stays where it is.";
             else
                 return null;
-#if !(UNITY_EDITOR_WIN || VIXEN_MAGICK_NET)
-            description += " Converting needs ImageMagick, which the toolbox only includes for Windows.";
-#endif
+            if (!MagickReady) description += " Converting needs ImageMagick, which is not available in this editor.";
 
             return new Finding
             {
@@ -420,7 +421,7 @@ namespace VixenTools.Editor
 
         private static bool ConvertToPng(Finding f)
         {
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
             var source = AssetImporter.GetAtPath(f.Path) as TextureImporter;
             if (source == null || f.Slots == null || f.Slots.Count == 0) return false;
 

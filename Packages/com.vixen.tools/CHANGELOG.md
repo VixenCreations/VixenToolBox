@@ -5,6 +5,28 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.19.0] - 2026-09-27
+*The World Engine understands VRC Light Volumes 3, converting a material leaves the original alone, and ImageMagick runs on Linux.*
+
+### Added
+
+* **ImageMagick works in the Linux editor.** Badge Studio's badge and template creation, texture resizing in the Avatar Validator and the Quest converter, and the World Engine's **Convert To PNG** all run on Linux now. macOS still goes without.
+
+### Changed
+
+* **ImageMagick is updated to 7.1.2-32** (Magick.NET 14.17.2), which fixes six security problems in how some image files are read.
+* **Converting a material keeps the original.** **Fix** on a finding in **SHADERS & REPLACER** now saves a copy under `Assets/VixenTools/Converted/Materials/`, converts the copy, and moves everything in the open scenes that used the original onto it, inside prefabs and nested prefabs too: renderers, particle trails, terrain, UI, projectors, Udon variables and script fields. Skyboxes are left alone. With VixForge in the project, the copy goes through VixForge's own translation, so the colour, maps, metal, smoothness, occlusion, glow and cutout of a Unity Standard or REDSIM Light Volume PBR material come across. Ctrl+Z puts everything back on the original.
+* **The Light Volumes checks follow Light Volumes 3.** They read the Light Volume Manager, where Light Volumes 3 keeps its settings, and its volume and point light components. New checks cover more than 32 active volumes or 128 active point lights (Light Volumes 3 leaves the rest out), volumes with no baked lighting, **Clustering** off with many point lights, volume tracking or texture refreshing with nothing to follow, a light that redraws its shadow without moving, and Light Volumes 2 components still in the scene. **Brightness Cutoff** is checked on the manager, where it lives now.
+* **The performance score counts Light Volumes 3.** It looked for the Light Volumes 2 components, so a Light Volumes 3 world scored as if it had none.
+* **Light Volumes fixes also update the Udon behaviour behind each component**, the way the Light Volumes editor does.
+
+### Fixed
+
+* **The World Engine no longer changes files inside packages.** A fix for a mesh, texture, audio clip or material under `Packages/` is left out, and the finding says why. Before, a fix could change the import settings of another creator's package or switch the shader on a material inside it.
+* **Scanning again picks up changes to the scene.** The World Engine kept the objects from its first scan until you closed the window, so objects you added afterwards, or a scene you opened later, were missing from later scans and fixes.
+* **TextMesh Pro font materials are no longer offered for shader conversion.** Converting one breaks the text it draws.
+
+***
 ## [2.18.1] - 2026-09-24
 *Linux and macOS editors can load the toolbox.*
 

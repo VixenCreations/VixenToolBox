@@ -306,6 +306,107 @@
                 </div>
             </div>
             <!-- FORGE:START -->
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-09-27-latex-ultra-toon-clothing-pro-fur-pro-wo">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">Toon</span>
+                        <span class="news-tag">Clothing Pro</span>
+                        <span class="news-tag">Fur Pro</span>
+                        <span class="news-tag">World Surface</span>
+                        <span class="news-tag">World Fur</span>
+                        <span class="news-tag">VixForge Editor</span>
+                        <span class="news-date">September 27, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Latex Ultra, Toon, Clothing Pro, Fur Pro, World Surface and World Fur: take parts off by UV tile, and Cutout that reaches everything.</h2>
+                    <p class="forge-intro"><em>Taking off a jacket or a hat in game used to mean a separate mesh and a toggle for it. Now one material can do it by UV tile, the same way Poiyomi does, and Cutout finally reaches the fur, the shards and the goo.</em></p>
+                    <h3 class="text-glow-cyan">UV Tile Discard</h3>
+                    <p class="forge-where">Under <strong>BASE</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>In your 3D program, move a part's UVs whole squares right or up into a tile of its own. Turn on <strong>UV Tile Discard</strong> and click that tile to hide the part. Animate the tile to take it off in game.</li>
+                        <li>One button per tile. Right-click a tile to give it a name, like Jacket or Hat, so you can tell them apart.</li>
+                        <li><strong>Mode</strong> starts on <strong>Vertex (Faster)</strong>. Pick <strong>Pixel (Slower)</strong> for a part whose triangles cross a tile edge.</li>
+                        <li><strong>Face Discard</strong> hides only the front or only the back.</li>
+                        <li>It uses Poiyomi's property names, so tile toggles you already animated for Poiyomi drive it too.</li>
+                        <li>A hidden part takes its shadow and outline with it, and on Latex Ultra its goo strands and drips too.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Cutout reaches everything</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Alpha To Coverage</strong> did nothing in Cutout, so the cut edge stayed jagged. It comes out smooth now.</li>
+                        <li><strong>Real Fur</strong> on Clothing Pro, Fur Pro and World Fur grew on the parts Cutout had cut away. Hairs now grow, and cast shadows, only where the surface is kept.</li>
+                        <li><strong>Vertex Fracture</strong> shards follow Cutout and its mask.</li>
+                        <li>On Latex Ultra, <strong>Cling</strong> strands and drips start only where the surface is kept.</li>
+                        <li>Holes cut by Cutout no longer smear in a world with motion blur.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Patterns keep their place</h3>
+                    <ul class="pledge-list">
+                        <li>Changing a speed used to throw a moving pattern forward or back, and dragging a value sent it racing. Every scroll, drift, spin, flow, hue cycle and flipbook now carries on from where it is at the new speed.</li>
+                        <li>Drag the small label in front of a scroll, drift, pan or spin value and it moves at a fine, even step. Hold Shift for ten times finer.</li>
+                        <li><strong>AudioLink Scroll</strong> on the outline texture, and <strong>Beat Flow</strong> on the wet streaks and the goo veins, shook harder the longer the world was open. The beat now runs them ahead instead, so they surge on the beat and stay smooth.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Simple mode</h3>
+                    <p class="forge-where">At the top of the inspector.</p>
+                    <ul class="pledge-list">
+                        <li>Press <strong>Simple</strong> for a short list of what most people change: colour and textures, cutout, UV Tile Discard, normals, shine, rim, decals, glitter, glow, matcaps, outlines, music, wet, goo, fabric and fur. <strong>Full</strong> brings every control back.</li>
+                        <li>Switching changes nothing on your material, and the search box always looks through everything.</li>
+                        <li>Right-click any control or section header and pick <strong>Show in Simple Mode</strong> or <strong>Hide in Simple Mode</strong>.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Simple Mode tab</h3>
+                    <p class="forge-where">Under <strong>Tools &gt; Editor</strong> in the Shader Hub.</p>
+                    <ul class="pledge-list">
+                        <li>Every control and section of a shader, each with a switch for whether Simple shows it. A section's switch covers everything in it.</li>
+                        <li><strong>Reset Simple Mode</strong> puts the list back, and Unity remembers your list in every project.</li>
+                        <li><strong>Settings</strong> can hide the Simple / Full switch from the inspector.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Switchboard</h3>
+                    <p class="forge-where">Under <strong>Tools &gt; Materials</strong> in the Shader Hub.</p>
+                    <ul class="pledge-list">
+                        <li>Every setting on every VixForge material, one row each: toggles, sliders, dropdowns, colours, vectors and textures.</li>
+                        <li>Change a value in the <strong>Value</strong> column to set it on every unlocked material in the row. Open a row to edit or select one material at a time.</li>
+                        <li><strong>Look at</strong> now has <strong>Whole Project</strong>. <strong>Show</strong> narrows the list to one kind of setting, and <strong>Only where materials differ</strong> finds what isn't the same everywhere.</li>
+                        <li>Settings sit in a folder for each section and group, and every folder starts closed so the list opens quickly. <strong>Find</strong> opens the ones that hold a match.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Every tool is a tab</h3>
+                    <ul class="pledge-list">
+                        <li>Press <strong>Tools</strong> in the Shader Hub, pick a group, then the tool. The Switchboard, Texture Packer, Cross Shader Editor and the rest draw right there instead of in windows of their own.</li>
+                        <li><strong>Translate Materials</strong> works on worlds too, and each material uses the translation that fits its own shader.</li>
+                        <li>Pick a VixForge shader on a Unity Standard or REDSIM Light Volume PBR material and its colour, maps, metal, smoothness, glow, cutout and culling come with it.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Presets</h3>
+                    <p class="forge-where">At the top of the inspector.</p>
+                    <ul class="pledge-list">
+                        <li>World Surface gets five: <strong>Matte</strong>, <strong>Satin</strong>, <strong>Gloss</strong>, <strong>Brushed Metal</strong> and <strong>Polished Metal</strong>. They set how metal and how shiny the surface is and leave your colours and textures alone.</li>
+                        <li>World Fur gets four. <strong>Short Pile</strong>, <strong>Shag Rug</strong> and <strong>Moss</strong> set up Real Fur for a carpet, a rug and ground cover, with no wind. <strong>Velvet</strong> turns on <strong>Surface Fur</strong> for a soft strand highlight.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">A rim that stays off your floors</h3>
+                    <p class="forge-where">Under <strong>Rim Light</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>The rim lit most of a floor or wall and slid across it as you moved. It now shows only where a surface curves.</li>
+                        <li>Rounded shapes keep all of it up to about 2 m across, and it fades on wider curves.</li>
+                        <li><strong>Shading Options</strong> also started switched on for a new World Surface material, so it lit in steps. It starts off now, and materials you already have keep their setting.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Unified Light Lightmaps</h3>
+                    <p class="forge-where">Under <strong>Baked Lighting</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Reads the direction baked light came from the way the VixForge Light Baker writes it, so your normal maps catch baked lamps more like real-time light.</li>
+                        <li>It reads Unity's own directional lightmaps a little better too. It starts off, so your materials look as they did.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Before you update</h3>
+                    <ul class="pledge-list">
+                        <li>World Surface and World Fur: floors, walls and ceilings with <strong>Rim Light</strong> on lose their rim, and a large dome or arch shows less of it than before.</li>
+                        <li><strong>Alpha To Coverage</strong> now smooths Cutout edges. If you liked the hard edge, turn it off.</li>
+                        <li>If a material still uses the old Latex Ultra SPS shader, pick Latex Ultra as its shader. The menu that moved it for you is gone.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Out now: Latex Ultra 5.4.0, Toon 2.4.0, Clothing Pro 2.4.0, Fur Pro 2.4.0, World Surface 1.2.0 and World Fur 1.2.0, each with VixForge Editor 2.5.0.</li>
+                        <li>The full notes are on the website's changelog page.</li>
+                    </ul>
+                </div>
+            </article>
+
             <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-09-24-vixens-toolbox-2-18-1-now-it-loads-on-li">
                 <div class="news-body">
                     <div class="news-meta">

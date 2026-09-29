@@ -401,6 +401,38 @@
                     <li class="mb-2"><strong>UV Speed Y</strong> - Slides your texture up or down, forever. 0 holds it still.</li>
                 </ul>
 
+                <h3 class="text-glow-pink opt-group">UV Tile Discard</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>UV Tile Discard Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>UV Set</strong> - The UV set that holds your tile layout.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code>, <code>UV2</code>, <code>UV3</code></span></li>
+                    <li class="mb-2"><strong>Mode</strong> - Vertex drops whole triangles before they draw, which is faster. Pixel checks every pixel, for a part whose triangles cross a tile edge.
+                        <span class="opt-values">Options: <code>Vertex (Faster)</code>, <code>Pixel (Slower)</code></span></li>
+                    <li class="mb-2"><strong>Tiles</strong> - One button per tile. The column is how many squares right and the row is how many squares up, so 0, 0 is the normal UV square.</li>
+                    <li class="mb-2"><strong>Row 3</strong> - Click a tile to hide every part whose UVs sit in it. Right-click a tile to rename it.</li>
+                    <li class="mb-2"><strong>Row 2</strong> - Click a tile to hide every part whose UVs sit in it. Right-click a tile to rename it.</li>
+                    <li class="mb-2"><strong>Row 1</strong> - Click a tile to hide every part whose UVs sit in it. Right-click a tile to rename it.</li>
+                    <li class="mb-2"><strong>Row 0</strong> - Click a tile to hide every part whose UVs sit in it. Right-click a tile to rename it.</li>
+                    </ul>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Face Discard</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>UV Set</strong> - The UV set that holds your tile layout for this.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code>, <code>UV2</code>, <code>UV3</code></span></li>
+                    <li class="mb-2"><strong>Face</strong> - Which side to hide in the tiles you pick. Needs Cull set to Off to show both sides at all.
+                        <span class="opt-values">Options: <code>Back</code>, <code>Front</code></span></li>
+                    <li class="mb-2"><strong>Tiles</strong> - One button per tile. The column is how many squares right and the row is how many squares up, so 0, 0 is the normal UV square.</li>
+                    <li class="mb-2"><strong>Row 3</strong> - Click a tile to hide that side of every part whose UVs sit in it. Right-click a tile to rename it.</li>
+                    <li class="mb-2"><strong>Row 2</strong> - Click a tile to hide that side of every part whose UVs sit in it. Right-click a tile to rename it.</li>
+                    <li class="mb-2"><strong>Row 1</strong> - Click a tile to hide that side of every part whose UVs sit in it. Right-click a tile to rename it.</li>
+                    <li class="mb-2"><strong>Row 0</strong> - Click a tile to hide that side of every part whose UVs sit in it. Right-click a tile to rename it.</li>
+                        </ul>
+                    </div>
+                </div>
+
                 <h3 class="text-glow-pink opt-group">Triplanar Projection</h3>
                 <div class="tag-row"><span class="shader-tag">World Surface</span><span class="shader-tag">World Fur</span></div>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -814,6 +846,7 @@
                     <li class="mb-2"><strong>Smooth Filter</strong> - Reads the baked lightmap with a smoother filter so a low resolution bake stops looking blocky. Costs a few extra reads and no extra memory.</li>
                     <li class="mb-2"><strong>Highlight</strong> - Lets baked light throw a specular highlight, so a polished floor is not flat under a bake. Set Directional Mode to Directional in your Lighting settings or this does nothing.</li>
                     <li class="mb-2"><strong>Highlight Softness</strong> - Caps how sharp the baked highlight can get. Lower is softer and hides the resolution of the lightmap.</li>
+                    <li class="mb-2"><strong>Unified Light Lightmaps</strong> - Reads which way the baked light arrived the way the VixForge Light Baker writes it in Unified Light mode, so normal maps catch your baked lamps more like real-time light. It reads Unity's own directional lightmaps a little better too. The baker turns it on for you when it bakes in that mode.</li>
                     <li class="mb-2"><strong>Realtime Global Illumination</strong> - Matches the Realtime Global Illumination tick in your Lighting window, and keeps itself in step with it, so you should not need to touch it. On, the material reads the realtime lightmap. Off, locking strips that out and the material locks faster.</li>
                 </ul>
 

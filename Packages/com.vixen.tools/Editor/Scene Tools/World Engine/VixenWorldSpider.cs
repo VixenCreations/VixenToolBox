@@ -595,6 +595,7 @@ namespace VixenTools.Editor
             EnsureDictionariesExist();
             RefreshCustomDropdown();
 
+            _sceneObjectCache.Clear();
             _diagnosticsDb.Clear();
             _detectedTextures.Clear();
             _textureSlots.Clear();
@@ -762,8 +763,14 @@ namespace VixenTools.Editor
             }
         }
 
-        private EngineDiagnostic LogDiagnostic(string category, string type, string desc, string hex, UnityEngine.Object context, Action fixPayload = null)
+        private EngineDiagnostic LogDiagnostic(string category, string type, string desc, string hex, UnityEngine.Object context, Action fixPayload = null, bool leavesOriginal = false)
         {
+            if (fixPayload != null && !leavesOriginal && IsPackageAsset(context))
+            {
+                fixPayload = null;
+                desc += " It sits in a package, so the World Engine leaves it alone.";
+            }
+
             var diagnostic = new EngineDiagnostic {
                 Category = category,
                 IssueType = type,
@@ -774,6 +781,165 @@ namespace VixenTools.Editor
             };
             _diagnosticsDb.Add(diagnostic);
             return diagnostic;
+        }
+
+        private static bool IsPackageAsset(UnityEngine.Object asset)
+        {
+            if (asset == null || !EditorUtility.IsPersistent(asset)) return false;
+            string path = AssetDatabase.GetAssetPath(asset);
+            return !string.IsNullOrEmpty(path) && path.StartsWith("Packages/", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private const string ConvertedMaterialsFolder = "Assets/VixenTools/Converted/Materials";
+        private readonly Dictionary<Material, Material> _convertedMaterials = new Dictionary<Material, Material>();
+        private static System.Reflection.MethodInfo s_translateTo;
+        private static bool s_translateSearched;
+
+        private void ConvertMaterialInScene(Material original, string undoName)
+        {
+            if (original == null || _targetReplacementShader == null) return;
+
+            Material copy;
+            if (!_convertedMaterials.TryGetValue(original, out copy) || copy == null)
+            {
+                copy = CopyMaterial(original);
+                if (copy == null) return;
+                _convertedMaterials[original] = copy;
+                TranslateMaterial(copy, _targetReplacementShader);
+                EditorUtility.SetDirty(copy);
+                AssetDatabase.SaveAssetIfDirty(copy);
+            }
+
+            if (_pendingMaterialSwaps != null)
+            {
+                _pendingMaterialSwaps[original] = copy;
+                return;
+            }
+
+            SwapMaterialsInLoadedScenes(new Dictionary<Material, Material> { { original, copy } }, undoName);
+        }
+
+        private Dictionary<Material, Material> _pendingMaterialSwaps;
+
+        private static readonly HashSet<string> s_valueArrayElementTypes = new HashSet<string>
+        {
+            "bool", "char", "int", "float", "double", "string", "UInt8", "SInt8", "UInt16", "SInt16", "UInt32", "SInt32", "UInt64", "SInt64",
+            "Vector2f", "Vector3f", "Vector4f", "Quaternionf", "ColorRGBA", "Keyframe", "Matrix4x4f"
+        };
+
+        private static int SwapMaterialsInLoadedScenes(Dictionary<Material, Material> swaps, string undoName)
+        {
+            Undo.IncrementCurrentGroup();
+            int undoGroup = Undo.GetCurrentGroup();
+            Undo.SetCurrentGroupName(undoName);
+
+            var roots = new List<GameObject>();
+            for (int s = 0; s < UnityEngine.SceneManagement.SceneManager.sceneCount; s++)
+            {
+                var scene = UnityEngine.SceneManagement.SceneManager.GetSceneAt(s);
+                if (scene.isLoaded) roots.AddRange(scene.GetRootGameObjects());
+            }
+
+            int changed = 0;
+            try
+            {
+                for (int i = 0; i < roots.Count; i++)
+                {
+                    EditorUtility.DisplayProgressBar("Moving The Scene Onto Converted Materials", roots[i].name, (float)i / roots.Count);
+                    foreach (Component component in roots[i].GetComponentsInChildren<Component>(true))
+                    {
+                        if (component == null || component is Transform || component is ParticleSystem || component is Skybox) continue;
+                        if (SwapMaterialReferences(component, swaps)) changed++;
+                    }
+                }
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
+                Undo.CollapseUndoOperations(undoGroup);
+            }
+
+            Debug.Log($"[Vixen System] {swaps.Count} converted material(s) now used by {changed} component(s) in the open scenes.");
+            return changed;
+        }
+
+        private static bool SwapMaterialReferences(Component component, Dictionary<Material, Material> swaps)
+        {
+            using (var so = new SerializedObject(component))
+            {
+                SerializedProperty prop = so.GetIterator();
+                bool enterChildren = true;
+                bool changed = false;
+                while (prop.Next(enterChildren))
+                {
+                    if (prop.propertyType == SerializedPropertyType.ObjectReference)
+                    {
+                        enterChildren = false;
+                        if (prop.objectReferenceValue is Material mat && swaps.TryGetValue(mat, out Material copy))
+                        {
+                            prop.objectReferenceValue = copy;
+                            changed = true;
+                        }
+                        continue;
+                    }
+
+                    enterChildren = prop.hasChildren && !(prop.isArray && s_valueArrayElementTypes.Contains(prop.arrayElementType));
+                }
+
+                if (changed) so.ApplyModifiedProperties();
+                return changed;
+            }
+        }
+
+        private static Material CopyMaterial(Material original)
+        {
+            if (!AssetDatabase.IsValidFolder(ConvertedMaterialsFolder))
+            {
+                string parent = "Assets";
+                foreach (string part in ConvertedMaterialsFolder.Substring("Assets/".Length).Split('/'))
+                {
+                    string next = parent + "/" + part;
+                    if (!AssetDatabase.IsValidFolder(next)) AssetDatabase.CreateFolder(parent, part);
+                    parent = next;
+                }
+            }
+
+            string safeName = string.Join("_", original.name.Split(System.IO.Path.GetInvalidFileNameChars()));
+            string target = AssetDatabase.GenerateUniqueAssetPath(ConvertedMaterialsFolder + "/" + safeName + ".mat");
+            string source = AssetDatabase.GetAssetPath(original);
+
+            if (!string.IsNullOrEmpty(source) && source.EndsWith(".mat", StringComparison.OrdinalIgnoreCase))
+            {
+                if (!AssetDatabase.CopyAsset(source, target)) return null;
+            }
+            else
+            {
+                Material clone = UnityEngine.Object.Instantiate(original);
+                clone.name = original.name;
+                AssetDatabase.CreateAsset(clone, target);
+            }
+
+            return AssetDatabase.LoadAssetAtPath<Material>(target);
+        }
+
+        private void TranslateMaterial(Material material, Shader target)
+        {
+            if (!s_translateSearched)
+            {
+                s_translateSearched = true;
+                Type translator = GetTypeSafe("VixForgeEditor.ShaderTranslations.ShaderTranslator");
+                if (translator != null)
+                    s_translateTo = translator.GetMethod("TranslateTo", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static,
+                        null, new[] { typeof(Material), typeof(Shader) }, null);
+            }
+
+            if (s_translateTo != null)
+            {
+                s_translateTo.Invoke(null, new object[] { material, target });
+                return;
+            }
+
+            material.shader = target;
         }
 
         private static string ParentPath(UnityEngine.Object context)
@@ -3491,6 +3657,165 @@ namespace VixenTools.Editor
             }
         }
 
+        private void AuditLightVolumes3(System.Reflection.BindingFlags flags)
+        {
+            Type managerType = GetTypeSafe("VRCLightVolumes.LightVolumeManager");
+            Type volumeType = GetTypeSafe("VRCLightVolumes.LightVolumeInstance");
+            Type pointType = GetTypeSafe("VRCLightVolumes.PointLightVolumeInstance");
+            bool lv3 = managerType != null && managerType.GetField("FroxelDensity", flags) != null;
+
+            foreach (string legacyName in new[] { "VRCLightVolumes.LightVolumeSetup", "VRCLightVolumes.LightVolume", "VRCLightVolumes.PointLightVolume" })
+            {
+                Type legacy = GetTypeSafe(legacyName);
+                if (legacy == null) continue;
+                var found = GetCachedObjects(legacy, true);
+                if (found.Length == 0) continue;
+                LogDiagnostic("LIGHT VOLUMES ECOSYSTEM", lv3 ? "Light Volumes 2 Setup Not Moved Across" : "Light Volumes 2",
+                    lv3
+                        ? $"{found.Length} {legacy.Name} component(s) from Light Volumes 2 are still in the scene. Light Volumes 3 moves them to its own components when the scene opens, so reopen the scene, and check the Console if they stay."
+                        : $"This scene uses Light Volumes 2 ({legacy.Name}). Update VRC Light Volumes to 3 for clustered point lights, shadows and more. It moves your setup across when the scene opens.",
+                    "#ffaa00", (Component)found[0]);
+            }
+
+            if (managerType == null) return;
+
+            var managers = GetCachedObjects(managerType, true);
+            if (managers.Length > 1)
+            {
+                LogDiagnostic("LIGHT VOLUMES ECOSYSTEM", "Multiple Managers Detected",
+                    $"Found {managers.Length} Light Volume Managers. A scene uses one, and the others fight it over the same shader data. Remove the extras.",
+                    "#ff00aa", (Component)managers[1]);
+            }
+
+            if (!lv3 || managers.Length == 0) return;
+
+            var manager = (Component)managers[0];
+            var volumes = volumeType != null ? GetCachedObjects(volumeType, true) : new UnityEngine.Object[0];
+            var points = pointType != null ? GetCachedObjects(pointType, true) : new UnityEngine.Object[0];
+
+            var dynamicVolumeField = volumeType?.GetField("IsDynamic", flags);
+            var dynamicPointField = pointType?.GetField("IsDynamic", flags);
+            var lightTypeField = pointType?.GetField("LightType", flags);
+            var autoShadowField = pointType?.GetField("AutoUpdateShadowMap", flags);
+            var autoTextureField = pointType?.GetField("AutoUpdateCustomTexture", flags);
+
+            int activeVolumes = 0, dynamicVolumes = 0, activePoints = 0, autoSources = 0;
+            foreach (var v in volumes)
+            {
+                var c = (Component)v;
+                if (!c.gameObject.activeInHierarchy) continue;
+                activeVolumes++;
+                if (dynamicVolumeField != null && Convert.ToBoolean(dynamicVolumeField.GetValue(v))) dynamicVolumes++;
+            }
+
+            foreach (var p in points)
+            {
+                var c = (Component)p;
+                if (!c.gameObject.activeInHierarchy) continue;
+                activePoints++;
+                bool autoShadow = autoShadowField != null && Convert.ToBoolean(autoShadowField.GetValue(p));
+                bool autoTexture = autoTextureField != null && Convert.ToBoolean(autoTextureField.GetValue(p));
+                if (autoShadow || autoTexture) autoSources++;
+
+                if (lightTypeField != null && Convert.ToInt32(lightTypeField.GetValue(p)) == 2)
+                {
+                    LogDiagnostic("LIGHT VOLUMES COMPUTE", "Area Light Detected",
+                        $"'{c.gameObject.name}' is an Area light, the most expensive Point Light Volume shape. Unless it is a moving panel, bake it into a Light Volume instead.",
+                        "#ffaa00", c);
+                }
+
+                bool isDynamic = dynamicPointField != null && Convert.ToBoolean(dynamicPointField.GetValue(p));
+                if (autoShadow && !isDynamic)
+                {
+                    LogDiagnostic("LIGHT VOLUMES COMPUTE", "Shadow Redrawn For A Still Light",
+                        $"'{c.gameObject.name}' updates its shadow automatically but is not marked Dynamic. A light that does not move only needs its shadow drawn once.",
+                        "#ffaa00", c, () => SetUdonField(c, autoShadowField, false, "Stop Automatic Shadow Updates"));
+                }
+            }
+
+            if (activeVolumes > 32)
+            {
+                LogDiagnostic("LIGHT VOLUMES ECOSYSTEM", "Too Many Light Volumes",
+                    $"{activeVolumes} Light Volumes are active. Light Volumes 3 uses the 32 that weigh the most and leaves the rest out, so some areas will light wrongly. Merge small volumes, or switch off the ones far from each other.",
+                    "#ff00aa", manager);
+            }
+
+            if (activePoints > 128)
+            {
+                LogDiagnostic("LIGHT VOLUMES ECOSYSTEM", "Too Many Point Light Volumes",
+                    $"{activePoints} Point Light Volumes are active. Light Volumes 3 uses the first 128 and leaves the rest dark. Switch off the ones a player cannot see.",
+                    "#ff00aa", manager);
+            }
+
+            var atlasField = managerType.GetField("LightVolumeAtlas", flags);
+            if (activeVolumes > 0 && atlasField != null && atlasField.GetValue(manager) == null)
+            {
+                LogDiagnostic("LIGHT VOLUMES ECOSYSTEM", "Light Volumes Not Baked",
+                    $"The scene has {activeVolumes} Light Volume(s), but '{manager.gameObject.name}' has no baked atlas, so they light nothing. Bake the lighting.",
+                    "#ff00aa", manager);
+            }
+
+            var cutoffField = managerType.GetField("LightsBrightnessCutoff", flags);
+            if (cutoffField != null && activePoints > 0)
+            {
+                float cutoff = Convert.ToSingle(cutoffField.GetValue(manager));
+                if (cutoff < 0.15f)
+                {
+                    LogDiagnostic("LIGHT VOLUMES ECOSYSTEM", "Point Light Ranges Very Wide",
+                        $"Brightness Cutoff on '{manager.gameObject.name}' is {cutoff}. A Point Light Volume reaches until its light falls below this, so a low value makes every light reach much further and more of them overlap on each pixel. 0.35 is the default.",
+                        "#ffaa00", manager, () => SetUdonField(manager, cutoffField, 0.35f, "Restore Brightness Cutoff"));
+                }
+            }
+
+            var clusteringField = managerType.GetField("Clustering", flags);
+            var clusterMinField = managerType.GetField("ClusteringMinLights", flags);
+            if (clusteringField != null && !Convert.ToBoolean(clusteringField.GetValue(manager)))
+            {
+                int min = clusterMinField != null ? Convert.ToInt32(clusterMinField.GetValue(manager)) : 8;
+                if (activePoints >= min)
+                {
+                    LogDiagnostic("LIGHT VOLUMES COMPUTE", "Clustering Off",
+                        $"'{manager.gameObject.name}' has Clustering off with {activePoints} Point Light Volumes, so every pixel checks every light. Clustering sorts the lights into a grid so each pixel checks only the ones near it.",
+                        "#ffaa00", manager, () => SetUdonField(manager, clusteringField, true, "Turn On Light Clustering"));
+                }
+            }
+
+            var autoVolumesField = managerType.GetField("AutoUpdateVolumes", flags);
+            if (autoVolumesField != null && Convert.ToBoolean(autoVolumesField.GetValue(manager)) && activeVolumes > 0 && dynamicVolumes == 0)
+            {
+                LogDiagnostic("LIGHT VOLUMES COMPUTE", "Volume Tracking With Nothing To Track",
+                    $"'{manager.gameObject.name}' follows moving volumes, but no Light Volume is marked Dynamic. Turn Auto Update Volumes off unless a script moves a volume in game.",
+                    "#00e5ff", manager, () => SetUdonField(manager, autoVolumesField, false, "Stop Volume Tracking"));
+            }
+
+            var autoTexturesField = managerType.GetField("AutoUpdateTextures", flags);
+            if (autoTexturesField != null && Convert.ToBoolean(autoTexturesField.GetValue(manager)) && activePoints > 0 && autoSources == 0)
+            {
+                LogDiagnostic("LIGHT VOLUMES COMPUTE", "Texture Refresh With Nothing To Refresh",
+                    $"'{manager.gameObject.name}' refreshes cookies and shadows marked for automatic updates, but no Point Light Volume asks for that. Turn Auto Update Textures off.",
+                    "#00e5ff", manager, () => SetUdonField(manager, autoTexturesField, false, "Stop Texture Refresh"));
+            }
+        }
+
+        private void SetUdonField(Component comp, System.Reflection.FieldInfo field, object value, string undoName)
+        {
+            Undo.RecordObject(comp, undoName);
+            field.SetValue(comp, value);
+            EditorUtility.SetDirty(comp);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(comp);
+
+            Type util = GetTypeSafe("UdonSharpEditor.UdonSharpEditorUtility");
+            if (util == null) return;
+            foreach (var m in util.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static))
+            {
+                if (m.Name != "CopyProxyToUdon") continue;
+                var ps = m.GetParameters();
+                if (ps.Length != 1 || !ps[0].ParameterType.IsInstanceOfType(comp)) continue;
+                m.Invoke(null, new object[] { comp });
+                return;
+            }
+        }
+
         private void AuditLightVolumesEcosystem()
         {
             var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
@@ -3521,61 +3846,7 @@ namespace VixenTools.Editor
                 }
             }
 
-            Type managerType = GetTypeSafe("VRCLightVolumes.LightVolumeManager");
-            if (managerType != null)
-            {
-                var managers = GetCachedObjects(managerType, true);
-                if (managers.Length > 1)
-                {
-                    LogDiagnostic("LIGHT VOLUMES ECOSYSTEM", "Multiple Managers Detected",
-                        "Found more than one LightVolumeManager in the scene. There should strictly be only one to avoid global shader variable tearing.",
-                        "#ff00aa", (Component)managers[1]);
-                }
-            }
-
-            Type setupType = GetTypeSafe("VRCLightVolumes.LightVolumeSetup");
-            if (setupType != null)
-            {
-                foreach (var setup in GetCachedObjects(setupType, true))
-                {
-                    var comp = (Component)setup;
-                    var cutoffField = setupType.GetField("LightsBrightnessCutoff", flags);
-                    if (cutoffField != null)
-                    {
-                        float cutoff = Convert.ToSingle(cutoffField.GetValue(setup));
-                        if (cutoff < 0.15f)
-                        {
-                            LogDiagnostic("LIGHT VOLUMES ECOSYSTEM", "Aggressive Brightness Cutoff",
-                                $"'{comp.gameObject.name}' has a LightsBrightnessCutoff of {cutoff}. Extremely low values cause point lights to generate massive bounding spheres, drastically increasing GPU overlap calculations.",
-                                "#ffaa00", comp, () => {
-                                    Undo.RecordObject(comp, "Optimize Brightness Cutoff");
-                                    cutoffField.SetValue(setup, 0.35f);
-                                    PrefabUtility.RecordPrefabInstancePropertyModifications(comp);
-                                });
-                        }
-                    }
-                }
-            }
-
-            Type plvType = GetTypeSafe("VRCLightVolumes.PointLightVolume");
-            if (plvType != null)
-            {
-                foreach (var plv in GetCachedObjects(plvType, true))
-                {
-                    var comp = (Component)plv;
-                    var typeField = plvType.GetField("Type", flags);
-                    if (typeField != null)
-                    {
-                        int typeVal = Convert.ToInt32(typeField.GetValue(plv));
-                        if (typeVal == 2)
-                        {
-                            LogDiagnostic("LIGHT VOLUMES COMPUTE", "Area Light Detected",
-                                $"'{comp.gameObject.name}' is set to Area Light. This is the heaviest mathematical light shape. Unless it is a dynamic moving panel, consider baking a standard Light Volume instead.",
-                                "#ffaa00", comp);
-                        }
-                    }
-                }
-            }
+            AuditLightVolumes3(flags);
 
             Type tvgiType = GetTypeSafe("VRCLightVolumes.LightVolumeTVGI");
             if (tvgiType != null)
@@ -3596,11 +3867,7 @@ namespace VixenTools.Editor
                     {
                         LogDiagnostic("LIGHT VOLUMES TVGI", "Anti-Flicker Disabled",
                             $"'{comp.gameObject.name}' has Anti-Flickering disabled. Rapidly changing video pixels will cause seizure-inducing strobe lighting across the room.",
-                            "#ff00aa", comp, () => {
-                                Undo.RecordObject(comp, "Enable Anti-Flicker");
-                                flickerField.SetValue(tvgi, true);
-                                PrefabUtility.RecordPrefabInstancePropertyModifications(comp);
-                            });
+                            "#ff00aa", comp, () => SetUdonField(comp, flickerField, true, "Enable Anti-Flicker"));
                     }
                 }
             }
@@ -3616,11 +3883,7 @@ namespace VixenTools.Editor
                     {
                         LogDiagnostic("LIGHT VOLUMES AUDIOLINK", "Smoothing Disabled",
                             $"'{comp.gameObject.name}' has smoothing disabled. Unfiltered AudioLink raw data can cause rapid visual flickering.",
-                            "#ffaa00", comp, () => {
-                                Undo.RecordObject(comp, "Enable AudioLink Smoothing");
-                                smoothField.SetValue(al, true);
-                                PrefabUtility.RecordPrefabInstancePropertyModifications(comp);
-                            });
+                            "#ffaa00", comp, () => SetUdonField(comp, smoothField, true, "Enable AudioLink Smoothing"));
                     }
                 }
             }
@@ -4617,14 +4880,8 @@ namespace VixenTools.Editor
 
                 if (isMissingOrInvalid)
                 {
-                    LogDiagnostic("SHADERS & REPLACER", "Invalid/Missing Shader (Magenta)", $"'{mat.name}' is broken. Ready to swap to target.", "#ff00aa", mat, () => {
-                        if (_targetReplacementShader != null)
-                        {
-                            Undo.RecordObject(mat, "Replace Invalid Shader");
-                            mat.shader = _targetReplacementShader;
-                            EditorUtility.SetDirty(mat);
-                        }
-                    });
+                    LogDiagnostic("SHADERS & REPLACER", "Invalid/Missing Shader (Magenta)", $"'{mat.name}' is broken. Fix makes a copy on the target shader and uses it in the scene; the original stays as it is.", "#ff00aa", mat,
+                        () => ConvertMaterialInScene(mat, "Replace Invalid Shader"), true);
                 }
                 else
                 {
@@ -4659,17 +4916,11 @@ namespace VixenTools.Editor
                                 string findingName = isRetired ? "Retired VixForge Shader" : "Non-Whitelisted Shader";
                                 string findingDesc = isRetired
                                     ? $"'{mat.name}' still uses '{shaderName}', which we replaced in a later release. Click Fix to move it to {_targetReplacementShader.name}."
-                                    : $"'{mat.name}' uses '{shaderName}'. Ready to convert.";
+                                    : $"'{mat.name}' uses '{shaderName}'. Fix makes a copy on {_targetReplacementShader.name}, carries its settings across, and uses the copy in the scene; the original stays as it is.";
                                 string findingColour = isRetired ? "#ff00aa" : "#ffaa00";
 
-                                LogDiagnostic("SHADERS & REPLACER", findingName, findingDesc, findingColour, mat, () => {
-                                    if (_targetReplacementShader != null)
-                                    {
-                                        Undo.RecordObject(mat, "Replace Shader");
-                                        mat.shader = _targetReplacementShader;
-                                        EditorUtility.SetDirty(mat);
-                                    }
-                                });
+                                LogDiagnostic("SHADERS & REPLACER", findingName, findingDesc, findingColour, mat,
+                                    () => ConvertMaterialInScene(mat, "Replace Shader"), true);
                             }
                         }
                     }
@@ -4684,14 +4935,7 @@ namespace VixenTools.Editor
 
                         LogDiagnostic("SHADERS & REPLACER", "Poiyomi Missing From Project",
                             detail + " Install Poiyomi, or convert this material to one of your own shaders.",
-                            "#ff00aa", mat, () => {
-                                if (_targetReplacementShader != null)
-                                {
-                                    Undo.RecordObject(mat, "Replace Orphaned Poiyomi Shader");
-                                    mat.shader = _targetReplacementShader;
-                                    EditorUtility.SetDirty(mat);
-                                }
-                            });
+                            "#ff00aa", mat, () => ConvertMaterialInScene(mat, "Replace Orphaned Poiyomi Shader"), true);
                     }
                     else if (shaderName.IndexOf("Poiyomi", StringComparison.OrdinalIgnoreCase) >= 0 ||
                         shaderName.IndexOf("lilToon", StringComparison.OrdinalIgnoreCase) >= 0)
@@ -5048,6 +5292,7 @@ namespace VixenTools.Editor
             }
             else if (!EditorUtility.DisplayDialog("Apply Fixes?", $"Applying {actionableDiagnostics.Count} specific fixes. This may take a moment to reimport assets.\n\nGo ahead?", "APPLY", "CANCEL")) return;
 
+            _pendingMaterialSwaps = new Dictionary<Material, Material>();
             try
             {
                 foreach (var diag in actionableDiagnostics)
@@ -5068,6 +5313,20 @@ namespace VixenTools.Editor
             }
             finally
             {
+                var swaps = _pendingMaterialSwaps;
+                _pendingMaterialSwaps = null;
+                if (swaps != null && swaps.Count > 0)
+                {
+                    try
+                    {
+                        SwapMaterialsInLoadedScenes(swaps, "Replace Shaders");
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"[Vixen System] Moving the scene onto the converted materials failed: {ex.Message}");
+                    }
+                }
+
                 AssetDatabase.SaveAssets();
 
                 if (_workQueue.Count > 0)

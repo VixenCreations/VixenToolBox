@@ -194,6 +194,32 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
+                <div class="changelog-entry" data-version="v2.19.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.19.0 - 2026-09-27</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>The World Engine understands VRC Light Volumes 3, converting a material leaves the original alone, and ImageMagick runs on Linux.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-3" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>ImageMagick works in the Linux editor.</strong> Badge Studio's badge and template creation, texture resizing in the Avatar Validator and the Quest converter, and the World Engine's <strong>Convert To PNG</strong> all run on Linux now. macOS still goes without.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-3" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>ImageMagick is updated to 7.1.2-32</strong> (Magick.NET 14.17.2), which fixes six security problems in how some image files are read.</li>
+                        <li class="mb-2"><strong>Converting a material keeps the original.</strong> <strong>Fix</strong> on a finding in <strong>SHADERS & REPLACER</strong> now saves a copy under <code>Assets/VixenTools/Converted/Materials/</code>, converts the copy, and moves everything in the open scenes that used the original onto it, inside prefabs and nested prefabs too: renderers, particle trails, terrain, UI, projectors, Udon variables and script fields. Skyboxes are left alone. With VixForge in the project, the copy goes through VixForge's own translation, so the colour, maps, metal, smoothness, occlusion, glow and cutout of a Unity Standard or REDSIM Light Volume PBR material come across. Ctrl+Z puts everything back on the original.</li>
+                        <li class="mb-2"><strong>The Light Volumes checks follow Light Volumes 3.</strong> They read the Light Volume Manager, where Light Volumes 3 keeps its settings, and its volume and point light components. New checks cover more than 32 active volumes or 128 active point lights (Light Volumes 3 leaves the rest out), volumes with no baked lighting, <strong>Clustering</strong> off with many point lights, volume tracking or texture refreshing with nothing to follow, a light that redraws its shadow without moving, and Light Volumes 2 components still in the scene. <strong>Brightness Cutoff</strong> is checked on the manager, where it lives now.</li>
+                        <li class="mb-2"><strong>The performance score counts Light Volumes 3.</strong> It looked for the Light Volumes 2 components, so a Light Volumes 3 world scored as if it had none.</li>
+                        <li class="mb-2"><strong>Light Volumes fixes also update the Udon behaviour behind each component</strong>, the way the Light Volumes editor does.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-3" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The World Engine no longer changes files inside packages.</strong> A fix for a mesh, texture, audio clip or material under <code>Packages/</code> is left out, and the finding says why. Before, a fix could change the import settings of another creator's package or switch the shader on a material inside it.</li>
+                        <li class="mb-2"><strong>Scanning again picks up changes to the scene.</strong> The World Engine kept the objects from its first scan until you closed the window, so objects you added afterwards, or a scene you opened later, were missing from later scans and fixes.</li>
+                        <li class="mb-2"><strong>TextMesh Pro font materials are no longer offered for shader conversion.</strong> Converting one breaks the text it draws.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="v2.18.1">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.18.1 - 2026-09-24</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Linux and macOS editors can load the toolbox.</em></p>

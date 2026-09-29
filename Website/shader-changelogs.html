@@ -195,6 +195,35 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
+                <div class="changelog-entry" data-version="worldsurface-1.2.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / World Surface 1.2.0 - 2026-09-27</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Presets of its own, UV Tile Discard, Cutout fixes, a rim that stays off flat floors and walls, moving patterns that keep their place when you change a speed, and the music no longer shakes the outline scroll, the wet streaks or the goo veins.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The rim no longer lights flat surfaces.</strong> Floors, walls and ceilings with <strong>Rim Light</strong> on lose their rim. Rounded shapes keep all of it up to about 2 m across, and it fades on wider curves, so a large dome or arch shows less of it than before.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>UV Tile Discard</strong>, under <strong>BASE</strong>. Hides parts of your mesh by UV tile, so an animation can take off a jacket or a hat without a separate mesh. In your 3D program, move a part's UVs whole squares right or up into a tile of its own, turn on <strong>UV Tile Discard</strong> and click that tile to hide it. <strong>Vertex</strong> is the faster mode; <strong>Pixel</strong> checks every pixel, for a part whose triangles cross a tile edge. <strong>Face Discard</strong> hides only the front or only the back. It uses the same property names as Poiyomi's, so tile toggles you already animated for Poiyomi drive it too. A hidden part takes its shadow and outline with it.</li>
+                        <li class="mb-2"><strong>Unified Light Lightmaps</strong>, under <strong>Baked Lighting</strong>. Reads which way the baked light arrived the way the VixForge Light Baker writes it in its Unified Light mode, so your normal maps catch baked lamps more like real-time light. It reads Unity's own directional lightmaps a little better too. It starts off, so your materials look as they did, and the baker turns it on for you when it bakes in that mode.</li>
+                        <li class="mb-2"><strong>Five presets for World Surface: Matte, Satin, Gloss, Brushed Metal and Polished Metal.</strong> Open <strong>Presets</strong> at the top of the inspector. Each one sets how metal and how shiny the surface is and leaves your colours and textures alone.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The rim lit most of a floor or wall and slid across it as you moved.</strong> The rim finds your edge from the angle you see a surface at, and a floor seen from standing height passes that test almost everywhere, so the light and shadow in it swung round with the camera. It now only appears where a surface curves.</li>
+                        <li class="mb-2"><strong>Shading Options started switched on.</strong> A new World Surface material, or one moved over from a shader without it, began with the stylised toon shading on, so it lit in steps instead of smoothly. It now starts off. Materials you already have keep their setting.</li>
+                        <li class="mb-2"><strong>Changing a speed no longer throws a moving pattern forward or back.</strong> Every scroll, drift, spin, flow, hue cycle and flipbook worked out where it was from its speed times the time since Unity started, so any change jumped the pattern by the change times that time, and dragging a value sent it racing. The pattern now carries on from where it is at the new speed. This covers changes you make in the material inspector. A speed you animate in game still jumps the way it always did.</li>
+                        <li class="mb-2"><strong>AudioLink Scroll on the outline texture shook harder the longer the world was open.</strong> It multiplied the time since the world loaded by the music level. The beat now runs the scroll ahead instead, so it surges on the beat and stays smooth however long you have been in the world.</li>
+                        <li class="mb-2"><strong>Beat Flow on the wet streaks and on the goo veins shook harder the longer the world was open.</strong> Both multiplied the time since the world loaded by the music level. The beat now runs the flow ahead instead, so the streaks and veins pour faster on the beat and stay smooth however long you have been in the world.</li>
+                        <li class="mb-2"><strong>Alpha To Coverage did nothing in Cutout.</strong> The cut edge stayed as jagged as with it off. It now comes out smooth, the way the setting says.</li>
+                        <li class="mb-2"><strong>Vertex Fracture shards ignored Cutout.</strong> Pieces broke off the parts Cutout had cut away, and a Cutout mask did nothing to them. They now follow Cutout and its mask.</li>
+                        <li class="mb-2"><strong>Holes cut by Cutout no longer smear in a world with motion blur.</strong> The part Cutout removed still told the world's motion blur that it was moving with you.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="worldsurface-1.1.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / World Surface 1.1.0 - 2026-09-25</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A big update for the music, the wet and the goo, and the lighting. The music now reaches every emission layer, your outlines and every goo slider, and the wet and the goo feel hands and movement. The rim is rebuilt as a real rim light that every light in the room feeds, highlights match Unity's own, lightmapped surfaces take Light Volumes the way the Light Volumes documentation asks, and Unified Light is here to try. Read Heads up before you update: glossy surfaces and rims will look different.</em></p>
@@ -343,6 +372,34 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="worldfur-1.2.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / World Fur 1.2.0 - 2026-09-27</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Presets of its own, UV Tile Discard, Cutout fixes that reach the fur, a rim that stays off flat floors and walls, moving patterns that keep their place when you change a speed, and the outline's AudioLink Scroll no longer shakes.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The rim no longer lights flat surfaces.</strong> Floors, walls and ceilings with <strong>Rim Light</strong> on lose their rim. Rounded shapes keep all of it up to about 2 m across, and it fades on wider curves, so a large dome or arch shows less of it than before.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>UV Tile Discard</strong>, under <strong>BASE</strong>. Hides parts of your mesh by UV tile, so an animation can take off a jacket or a hat without a separate mesh. In your 3D program, move a part's UVs whole squares right or up into a tile of its own, turn on <strong>UV Tile Discard</strong> and click that tile to hide it. <strong>Vertex</strong> is the faster mode; <strong>Pixel</strong> checks every pixel, for a part whose triangles cross a tile edge. <strong>Face Discard</strong> hides only the front or only the back. It uses the same property names as Poiyomi's, so tile toggles you already animated for Poiyomi drive it too. A hidden part takes its shadow, outline and fur with it.</li>
+                        <li class="mb-2"><strong>Unified Light Lightmaps</strong>, under <strong>Baked Lighting</strong>. Reads which way the baked light arrived the way the VixForge Light Baker writes it in its Unified Light mode, so your normal maps catch baked lamps more like real-time light. It reads Unity's own directional lightmaps a little better too. It starts off, so your materials look as they did, and the baker turns it on for you when it bakes in that mode.</li>
+                        <li class="mb-2"><strong>Four presets for World Fur: Short Pile, Shag Rug, Moss and Velvet.</strong> Open <strong>Presets</strong> at the top of the inspector. The first three set up Real Fur for a carpet, a rug and a mossy ground cover, with no wind. Velvet turns on <strong>Surface Fur</strong> instead, for a soft strand highlight without Real Fur.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The rim lit most of a floor or wall and slid across it as you moved.</strong> The rim finds your edge from the angle you see a surface at, and a floor seen from standing height passes that test almost everywhere, so the light and shadow in it swung round with the camera. It now only appears where a surface curves.</li>
+                        <li class="mb-2"><strong>Changing a speed no longer throws a moving pattern forward or back.</strong> Every scroll, drift, spin, flow, hue cycle and flipbook worked out where it was from its speed times the time since Unity started, so any change jumped the pattern by the change times that time, and dragging a value sent it racing. The pattern now carries on from where it is at the new speed. This covers changes you make in the material inspector. A speed you animate in game still jumps the way it always did.</li>
+                        <li class="mb-2"><strong>AudioLink Scroll on the outline texture shook harder the longer the world was open.</strong> It multiplied the time since the world loaded by the music level. The beat now runs the scroll ahead instead, so it surges on the beat and stays smooth however long you have been in the world.</li>
+                        <li class="mb-2"><strong>Alpha To Coverage did nothing in Cutout.</strong> The cut edge stayed as jagged as with it off. It now comes out smooth, the way the setting says.</li>
+                        <li class="mb-2"><strong>Vertex Fracture shards ignored Cutout.</strong> Pieces broke off the parts Cutout had cut away, and a Cutout mask did nothing to them. They now follow Cutout and its mask.</li>
+                        <li class="mb-2"><strong>Holes cut by Cutout no longer smear in a world with motion blur.</strong> The part Cutout removed still told the world's motion blur that it was moving with you.</li>
+                        <li class="mb-2"><strong>Real Fur grew on the parts Cutout had cut away.</strong> Hairs now grow, and cast shadows, only where the surface is kept.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="worldfur-1.1.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / World Fur 1.1.0 - 2026-09-25</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A big update for the music and the lighting. The music now reaches every emission layer and your outlines, the rim is rebuilt as a real rim light that every light in the room feeds, highlights match Unity's own, lightmapped surfaces take Light Volumes the way the Light Volumes documentation asks, and Real Fur follows your Light Volumes V3 settings. Unified Light is here to try. Read Heads up before you update: glossy surfaces and rims will look different, and fur materials need unlocking and locking again.</em></p>
@@ -481,6 +538,25 @@
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>The first lock after a bake takes a while.</strong> Supporting lightmaps, shadowmask and soft shadows means more shader variants to build. It is working, not stuck, so let it finish.</li>
                         <li class="mb-2"><strong>No Wet or Goo here, on purpose.</strong> A carpet has no use for them and the textures are not free, so they are left out to keep the shader lighter. World Surface has both if you want a wet floor next to the rug.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="toon-2.4.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Toon 2.4.0 - 2026-09-27</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>UV Tile Discard, Cutout fixes, moving patterns that keep their place when you change a speed, and the outline's AudioLink Scroll no longer shakes.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>UV Tile Discard</strong>, under <strong>BASE</strong>. Hides parts of your mesh by UV tile, so an animation can take off a jacket or a hat without a separate mesh. In your 3D program, move a part's UVs whole squares right or up into a tile of its own, turn on <strong>UV Tile Discard</strong> and click that tile to hide it. <strong>Vertex</strong> is the faster mode; <strong>Pixel</strong> checks every pixel, for a part whose triangles cross a tile edge. <strong>Face Discard</strong> hides only the front or only the back. It uses the same property names as Poiyomi's, so tile toggles you already animated for Poiyomi drive it too. A hidden part takes its shadow and outline with it.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Changing a speed no longer throws a moving pattern forward or back.</strong> Every scroll, drift, spin, flow, hue cycle and flipbook worked out where it was from its speed times the time since Unity started, so any change jumped the pattern by the change times that time, and dragging a value sent it racing. The pattern now carries on from where it is at the new speed. This covers changes you make in the material inspector. A speed you animate in game still jumps the way it always did.</li>
+                        <li class="mb-2"><strong>AudioLink Scroll on the outline texture shook harder the longer the world was open.</strong> It multiplied the time since the world loaded by the music level. The beat now runs the scroll ahead instead, so it surges on the beat and stays smooth however long you have been in the world.</li>
+                        <li class="mb-2"><strong>Alpha To Coverage did nothing in Cutout.</strong> The cut edge stayed as jagged as with it off. It now comes out smooth, the way the setting says.</li>
+                        <li class="mb-2"><strong>Vertex Fracture shards ignored Cutout.</strong> Pieces broke off the parts Cutout had cut away, and a Cutout mask did nothing to them. They now follow Cutout and its mask.</li>
+                        <li class="mb-2"><strong>Holes cut by Cutout no longer smear in a world with motion blur.</strong> The part Cutout removed still told the world's motion blur that it was moving with you.</li>
                     </ul>
                 </div>
 
@@ -980,6 +1056,27 @@
                         <li class="mb-2"><strong>Lock your materials before uploading</strong>, the same three ways as Latex Ultra. The SDK Build button does it for you.</li>
                         <li class="mb-2"><strong>Toon needs triangle meshes.</strong> If a model looks torn or shredded, turn off <strong>Keep Quads</strong> in its import settings, or run <strong>VixenTools &gt; VixForge Mesh Fixes &gt; Scan for Quad Meshes</strong>.</li>
                         <li class="mb-2"><strong>Light Volumes and LTCGI start off</strong>, because they make Unity builds much slower. Turn them on only if your world uses them.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-5.4.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 5.4.0 - 2026-09-27</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>UV Tile Discard, Cutout fixes, moving patterns that keep their place when you change a speed, and the music no longer shakes the outline scroll, the wet streaks or the goo veins.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>UV Tile Discard</strong>, under <strong>BASE</strong>. Hides parts of your mesh by UV tile, so an animation can take off a jacket or a hat without a separate mesh. In your 3D program, move a part's UVs whole squares right or up into a tile of its own, turn on <strong>UV Tile Discard</strong> and click that tile to hide it. <strong>Vertex</strong> is the faster mode; <strong>Pixel</strong> checks every pixel, for a part whose triangles cross a tile edge. <strong>Face Discard</strong> hides only the front or only the back. It uses the same property names as Poiyomi's, so tile toggles you already animated for Poiyomi drive it too. A hidden part takes its shadow, outline, goo strands and drips with it.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Changing a speed no longer throws a moving pattern forward or back.</strong> Every scroll, drift, spin, flow, hue cycle and flipbook worked out where it was from its speed times the time since Unity started, so any change jumped the pattern by the change times that time, and dragging a value sent it racing. The pattern now carries on from where it is at the new speed. This covers changes you make in the material inspector. A speed you animate in game still jumps the way it always did.</li>
+                        <li class="mb-2"><strong>AudioLink Scroll on the outline texture shook harder the longer the world was open.</strong> It multiplied the time since the world loaded by the music level. The beat now runs the scroll ahead instead, so it surges on the beat and stays smooth however long you have been in the world.</li>
+                        <li class="mb-2"><strong>Beat Flow on the wet streaks and on the goo veins shook harder the longer the world was open.</strong> Both multiplied the time since the world loaded by the music level. The beat now runs the flow ahead instead, so the streaks and veins pour faster on the beat and stay smooth however long you have been in the world.</li>
+                        <li class="mb-2"><strong>Alpha To Coverage did nothing in Cutout.</strong> The cut edge stayed as jagged as with it off. It now comes out smooth, the way the setting says.</li>
+                        <li class="mb-2"><strong>Vertex Fracture shards ignored Cutout.</strong> Pieces broke off the parts Cutout had cut away, and a Cutout mask did nothing to them. They now follow Cutout and its mask.</li>
+                        <li class="mb-2"><strong>Holes cut by Cutout no longer smear in a world with motion blur.</strong> The part Cutout removed still told the world's motion blur that it was moving with you.</li>
+                        <li class="mb-2"><strong>Goo Cling strands and drips came off the parts Cutout had cut away.</strong> They now start only where the surface is kept.</li>
                     </ul>
                 </div>
 
@@ -1899,6 +1996,26 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="clothingpro-2.4.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Clothing Pro 2.4.0 - 2026-09-27</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>UV Tile Discard, Cutout fixes that reach the fur, moving patterns that keep their place when you change a speed, and the outline's AudioLink Scroll no longer shakes.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>UV Tile Discard</strong>, under <strong>BASE</strong>. Hides parts of your mesh by UV tile, so an animation can take off a jacket or a hat without a separate mesh. In your 3D program, move a part's UVs whole squares right or up into a tile of its own, turn on <strong>UV Tile Discard</strong> and click that tile to hide it. <strong>Vertex</strong> is the faster mode; <strong>Pixel</strong> checks every pixel, for a part whose triangles cross a tile edge. <strong>Face Discard</strong> hides only the front or only the back. It uses the same property names as Poiyomi's, so tile toggles you already animated for Poiyomi drive it too. A hidden part takes its shadow, outline and fur with it.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Changing a speed no longer throws a moving pattern forward or back.</strong> Every scroll, drift, spin, flow, hue cycle and flipbook worked out where it was from its speed times the time since Unity started, so any change jumped the pattern by the change times that time, and dragging a value sent it racing. The pattern now carries on from where it is at the new speed. This covers changes you make in the material inspector. A speed you animate in game still jumps the way it always did.</li>
+                        <li class="mb-2"><strong>AudioLink Scroll on the outline texture shook harder the longer the world was open.</strong> It multiplied the time since the world loaded by the music level. The beat now runs the scroll ahead instead, so it surges on the beat and stays smooth however long you have been in the world.</li>
+                        <li class="mb-2"><strong>Alpha To Coverage did nothing in Cutout.</strong> The cut edge stayed as jagged as with it off. It now comes out smooth, the way the setting says.</li>
+                        <li class="mb-2"><strong>Vertex Fracture shards ignored Cutout.</strong> Pieces broke off the parts Cutout had cut away, and a Cutout mask did nothing to them. They now follow Cutout and its mask.</li>
+                        <li class="mb-2"><strong>Holes cut by Cutout no longer smear in a world with motion blur.</strong> The part Cutout removed still told the world's motion blur that it was moving with you.</li>
+                        <li class="mb-2"><strong>Real Fur grew on the parts Cutout had cut away.</strong> Hairs now grow, and cast shadows, only where the surface is kept.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="clothingpro-2.3.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Clothing Pro 2.3.0 - 2026-09-25</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A big update for the music and the lighting. The music now reaches every emission layer and your outlines, the rim is rebuilt as a real rim light that every light in the room feeds, highlights match Unity's own, Real Fur follows your Light Volumes V3 settings, and Unified Light is here to try. Read Heads up before you update: glossy materials and rims will look different, and fur materials need unlocking and locking again.</em></p>
@@ -2300,6 +2417,26 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="furpro-2.4.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Fur Pro 2.4.0 - 2026-09-27</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>UV Tile Discard, Cutout fixes that reach the fur, moving patterns that keep their place when you change a speed, and the outline's AudioLink Scroll no longer shakes.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>UV Tile Discard</strong>, under <strong>BASE</strong>. Hides parts of your mesh by UV tile, so an animation can take off a jacket or a hat without a separate mesh. In your 3D program, move a part's UVs whole squares right or up into a tile of its own, turn on <strong>UV Tile Discard</strong> and click that tile to hide it. <strong>Vertex</strong> is the faster mode; <strong>Pixel</strong> checks every pixel, for a part whose triangles cross a tile edge. <strong>Face Discard</strong> hides only the front or only the back. It uses the same property names as Poiyomi's, so tile toggles you already animated for Poiyomi drive it too. A hidden part takes its shadow, outline and fur with it.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Changing a speed no longer throws a moving pattern forward or back.</strong> Every scroll, drift, spin, flow, hue cycle and flipbook worked out where it was from its speed times the time since Unity started, so any change jumped the pattern by the change times that time, and dragging a value sent it racing. The pattern now carries on from where it is at the new speed. This covers changes you make in the material inspector. A speed you animate in game still jumps the way it always did.</li>
+                        <li class="mb-2"><strong>AudioLink Scroll on the outline texture shook harder the longer the world was open.</strong> It multiplied the time since the world loaded by the music level. The beat now runs the scroll ahead instead, so it surges on the beat and stays smooth however long you have been in the world.</li>
+                        <li class="mb-2"><strong>Alpha To Coverage did nothing in Cutout.</strong> The cut edge stayed as jagged as with it off. It now comes out smooth, the way the setting says.</li>
+                        <li class="mb-2"><strong>Vertex Fracture shards ignored Cutout.</strong> Pieces broke off the parts Cutout had cut away, and a Cutout mask did nothing to them. They now follow Cutout and its mask.</li>
+                        <li class="mb-2"><strong>Holes cut by Cutout no longer smear in a world with motion blur.</strong> The part Cutout removed still told the world's motion blur that it was moving with you.</li>
+                        <li class="mb-2"><strong>Real Fur grew on the parts Cutout had cut away.</strong> Hairs now grow, and cast shadows, only where the surface is kept.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="furpro-2.3.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Fur Pro 2.3.0 - 2026-09-25</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A big update for the music and the lighting. The music now reaches every emission layer and your outlines, the rim is rebuilt as a real rim light that every light in the room feeds, highlights match Unity's own, Real Fur follows your Light Volumes V3 settings, and Unified Light is here to try. Read Heads up before you update: glossy materials and rims will look different, and fur materials need unlocking and locking again.</em></p>
@@ -2695,6 +2832,47 @@
                         <li class="mb-2"><strong>Lock your materials before uploading.</strong> The SDK Build button does it for you.</li>
                         <li class="mb-2"><strong>Fur Pro needs triangle meshes.</strong> Like the others it tessellates, so if a model looks torn, turn off <strong>Keep Quads</strong> in its import settings, or run <strong>VixenTools &gt; VixForge Mesh Fixes &gt; Scan for Quad Meshes</strong>.</li>
                         <li class="mb-2"><strong>Light Volumes and LTCGI start off</strong>, because they make Unity builds much slower. Turn them on only if your world uses them.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="editor-2.5.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Editor 2.5.0 - 2026-09-27</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A Simple mode for the inspector that you can add your own controls to, a tile grid for UV Tile Discard, a Switchboard that edits every setting on every material, every tool as a tab in the Shader Hub, materials that come across from Unity Standard and REDSIM's Light Volume PBR by themselves, movement values that drag at a fine, even step, and speeds you can edit without throwing the pattern.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Materials come across from Unity Standard and REDSIM's Light Volume PBR.</strong> Pick a VixForge shader in a material's <strong>Shader</strong> menu and its colour, maps, metal, smoothness, occlusion, height, detail normal, glow, cutout and culling come with it. <strong>Standard (Specular setup)</strong> comes across as closely as a metallic material allows. The Console lists anything with no match here, such as a detail albedo map.</li>
+                        <li class="mb-2"><strong>Simple mode for the inspector.</strong> Press <strong>Simple</strong> at the top of the inspector for a short list of the things most people change: colour and textures, cutout, UV Tile Discard, the normal map and micro detail, shine, each Toon style's own settings, rim, the first decal, Polish, glitter, the first two glow layers and matcaps, both outlines, music, wet, goo, fabric and fur. <strong>Full</strong> brings every control back. Switching changes nothing on your material, the search box always looks through everything, and Unity remembers your choice. Full is where you start.</li>
+                        <li class="mb-2"><strong>Pick your own controls for Simple mode.</strong> The new <strong>Simple Mode</strong> tab under <strong>Tools &gt; Editor</strong> lists every control and section of a shader with a switch for whether Simple shows it. A section's switch shows or hides everything in it. You can also right-click any control or section header in the inspector and choose <strong>Show in Simple Mode</strong> or <strong>Hide in Simple Mode</strong>. <strong>Reset Simple Mode</strong> puts the list back, and Unity remembers your list in every project. <strong>Settings</strong> can hide the Simple / Full switch from the inspector.</li>
+                        <li class="mb-2"><strong>A tile grid for UV Tile Discard.</strong> One button per UV tile. Right-click a tile to give it a name, such as Jacket or Hat, so you can tell them apart.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Every tool is a tab in the Shader Hub.</strong> Press <strong>Tools</strong> in the Hub, pick a group (Materials, Textures, Lighting, Avatar or Editor), then the tool. The Switchboard, Texture Check, Texture Packer, Cross Shader Editor and the rest draw right there instead of in windows of their own, and the old menu entries open the same tab. The Hub grows while the Texture Packer or the Cross Shader Editor is open, so they have room.</li>
+                        <li class="mb-2"><strong>Small jobs sit next to the tool they belong to.</strong> <strong>Turn Off Power Down Everywhere</strong> is on the Switchboard tab, <strong>Sync Realtime GI Toggle</strong> on World Lighting Check, and <strong>Lock Selected Folder</strong>, <strong>Fix Missing Texture Maps</strong> and <strong>Fix Keywords On Every Material</strong> on Locking. <strong>Edit Materials From Selection</strong> is on the Cross Shader Editor tab, and <strong>Ctrl + Shift + M</strong> still works.</li>
+                        <li class="mb-2"><strong>Translate Avatar is now Translate Materials, and works on worlds too.</strong> Pick an avatar or the root object of a world and the shader to move to. Each material uses the translation that fits its own shader, so one pass covers a world that mixes Standard, REDSIM and VixForge materials. Locked materials and ones it has no translation for stay as they were, and the Console lists them. A material from a package or inside a model is copied into <strong>Assets/VixenTools/Converted</strong>.</li>
+                        <li class="mb-2"><strong>Movement values drag at a fine, even step.</strong> Drag the small label in front of a scroll, drift, pan or spin value and it moves 0.001 a pixel, or 1 degree a pixel for a spin. Hold Shift for ten times finer. Unity's own drag sped up the further the value got from 0, which made a slow scroll hard to set.</li>
+                        <li class="mb-2"><strong>The Switchboard edits every setting, not only toggles.</strong> Sliders, numbers, dropdowns, colours, vectors and textures each get a row. Change a value in the <strong>Value</strong> column to set it on every unlocked material in the row; a dash means the materials differ. <strong>Look at</strong> now has <strong>Whole Project</strong>, <strong>Show</strong> narrows the list to one kind of setting, and <strong>Only where materials differ</strong> finds what is not the same everywhere. Changing a speed keeps moving patterns in place, the same as in the inspector.</li>
+                        <li class="mb-2"><strong>The Switchboard is a table.</strong> Columns for the section, group and control, the value, the state, how many materials have it and how many are locked, and which shaders use it. Click a column to sort and drag its edge to resize. Settings sit in a folder for each section and group, UV Tile Discard included, and every folder starts closed so the list opens quickly. Typing in <strong>Find</strong> opens the folders that hold a match. Unity remembers your widths, your sort and the folders you open.</li>
+                        <li class="mb-2"><strong>Switchboard Select picks one material.</strong> <strong>Select</strong> on a row opens a list of the materials that have the setting, with each one's value, so you can pick one of them or all. Open a row to see each material with its own value to edit and its own <strong>Select</strong>. Double-click a material to select it.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Removed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Upgraded Animated Properties and Migrate Preset Tags.</strong> Both were one-time moves for older materials. The animated property upgrade still runs by itself when a project needs it.</li>
+                        <li class="mb-2"><strong>Migrate SPS Materials to Base Shader, and the button that cleared VRCFury's SPS shader copies by hand.</strong> If a material still uses the old Latex Ultra SPS shader, pick Latex Ultra as its shader. VRCFury's leftover copies are still removed after each successful upload.</li>
+                        <li class="mb-2"><strong>The developer menus</strong> (locale files, Ifex Indenting, New Translator Definition, Copy GUID and Rebuild Presets Cache) moved to the Settings tab, and show only with <strong>Developer Mode</strong> on.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Editing a speed keeps a moving pattern in place.</strong> Each speed has a hidden partner that the inspector adjusts as you edit, so the pattern picks up from where it is instead of jumping. Undo puts both back together. It does nothing while you record an animation or on a locked material.</li>
+                        <li class="mb-2"><strong>Opening the AudioLink section could set the shader compiling.</strong> With <strong>Enable</strong> marked Animated and switched off, the inspector turned the AudioLink feature off and on again while the section was open, so Unity kept building versions of the shader. It now stays on, the way the rest of the inspector keeps an animated feature. Texture slots also leave a locked material's settings alone.</li>
+                        <li class="mb-2"><strong>The Director works in a VRChat world project.</strong> UdonSharp could not compile it there and said it did not belong to a U# assembly, so the Director did nothing in a world. The package now creates the missing U# Assembly Definition next to the Director the first time it loads in a world project, and the Console says when it does. Avatar projects are not affected.</li>
+                        <li class="mb-2"><strong>Baked lighting only starts on for a world material that glows.</strong> A new World Surface or World Fur material was set to add its glow to the bake even with every emission layer off. <strong>Global Illumination</strong> now stays unset until you turn an emission layer on, and then switches to <strong>Baked</strong>. A setting you pick yourself is never changed.</li>
+                        <li class="mb-2"><strong>Trying a preset no longer changes the preset.</strong> The preset's own material was switched to your shader for a moment and back, which marked it as changed and could leave it on your shader. Presets are now read without being touched. A material in one of the <strong>VixForge/Presets</strong> folders also goes back to that folder's shader by itself, including a preset that lost its shader in a copy of the package.</li>
+                        <li class="mb-2"><strong>Translate Materials finds every shader its translations cover.</strong> It matched only the exact shader name, so lilToon's Cutout and Transparent versions got no translation. It also ran the chosen translation on every material in the list, whatever shader each was on, and stopped with an error when you translated the same object twice.</li>
                     </ul>
                 </div>
 

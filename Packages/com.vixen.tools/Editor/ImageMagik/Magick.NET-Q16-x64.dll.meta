@@ -23,7 +23,7 @@ PluginImporter:
       settings:
         CPU: x86_64
         DefaultValueInitialized: true
-        OS: Windows
+        OS: AnyOS
   - first:
       Windows Store Apps: WindowsStoreApps
     second:

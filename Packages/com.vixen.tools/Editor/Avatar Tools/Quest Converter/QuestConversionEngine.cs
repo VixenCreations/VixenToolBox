@@ -9,7 +9,7 @@ using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Animations;
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
 using ImageMagick;
 #endif
 
@@ -1157,9 +1157,10 @@ namespace VixenTools.Editor
             string newPath = AssetDatabase.GenerateUniqueAssetPath($"{_activeTexturesDir}/{texName}_Quest{extension}");
             int targetSize = _textureSizeOptions[_selectedTextureSizeIndex];
 
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
             try
             {
+                if (!VixenMagickKit.IsReady) throw new InvalidOperationException(VixenMagickKit.UnavailableMessage);
                 using (MagickImage img = new MagickImage(File.ReadAllBytes(sourcePath), VixenMagickKit.DownscaleReadSettings((uint)targetSize)))
                 {
                     if (img.Width > targetSize || img.Height > targetSize)

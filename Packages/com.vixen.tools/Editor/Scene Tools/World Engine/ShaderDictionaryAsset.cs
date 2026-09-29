@@ -177,6 +177,7 @@ namespace VixenTools.Editor
                 name.StartsWith("GUI/", System.StringComparison.OrdinalIgnoreCase) ||
                 name.StartsWith("Particles/", System.StringComparison.OrdinalIgnoreCase) ||
                 name.StartsWith("Sprites/", System.StringComparison.OrdinalIgnoreCase) ||
+                name.StartsWith("TextMeshPro/", System.StringComparison.OrdinalIgnoreCase) ||
                 name.StartsWith("FX/", System.StringComparison.OrdinalIgnoreCase) ||
                 name.StartsWith("VR/", System.StringComparison.OrdinalIgnoreCase) ||
                 name.StartsWith("VRChat/UI/", System.StringComparison.OrdinalIgnoreCase) ||

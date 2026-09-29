@@ -13,7 +13,7 @@ using VRC.SDK3.Validation;
 using VRC.Dynamics;
 using VRC.SDK3.Dynamics.Contact.Components;
 using UnityEngine.Profiling;
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
 using ImageMagick;
 #endif
 using VRC.SDK3.Avatars;
@@ -1101,7 +1101,7 @@ namespace VixenTools.Editor
 
         public static void ProcessTexturesWithMagick(IEnumerable<Texture> textures, int targetSize, ResizeMode mode)
         {
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
             bool downscale = mode == ResizeMode.Downscale;
             string activeVerb = downscale ? "Downscaling" : "Upscaling";
 
@@ -1628,12 +1628,13 @@ namespace VixenTools.Editor
                 executeTexBtn.AddToClassList("cyber-action-btn");
                 executeTexBtn.AddToClassList("cyan-btn");
                 texPanel.Add(executeTexBtn);
-#if !(UNITY_EDITOR_WIN || VIXEN_MAGICK_NET)
-                executeTexBtn.SetEnabled(false);
-                var magickNote = new Label(VixenMagickKit.UnavailableMessage);
-                magickNote.AddToClassList("md-p");
-                texPanel.Add(magickNote);
-#endif
+                if (!VixenMagickKit.IsReady)
+                {
+                    executeTexBtn.SetEnabled(false);
+                    var magickNote = new Label(VixenMagickKit.UnavailableMessage);
+                    magickNote.AddToClassList("md-p");
+                    texPanel.Add(magickNote);
+                }
 
                 _resultsContainer.Add(texPanel);
             }

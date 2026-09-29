@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
 using ImageMagick;
 #endif
 using UnityEditor;
@@ -389,12 +389,13 @@ namespace VixenTools.Editor
             execBtn.AddToClassList("cyber-action-btn");
             execBtn.AddToClassList("cyan-btn");
             container.Add(execBtn);
-#if !(UNITY_EDITOR_WIN || VIXEN_MAGICK_NET)
-            execBtn.SetEnabled(false);
-            var magickNote = new Label(VixenMagickKit.UnavailableMessage);
-            magickNote.AddToClassList("info-box-styled");
-            container.Add(magickNote);
-#endif
+            if (!VixenMagickKit.IsReady)
+            {
+                execBtn.SetEnabled(false);
+                var magickNote = new Label(VixenMagickKit.UnavailableMessage);
+                magickNote.AddToClassList("info-box-styled");
+                container.Add(magickNote);
+            }
         }
 
         private void BuildTemplateUI(VisualElement container)
@@ -458,12 +459,13 @@ namespace VixenTools.Editor
             execBtn.AddToClassList("cyber-action-btn");
             execBtn.AddToClassList("pink-btn");
             container.Add(execBtn);
-#if !(UNITY_EDITOR_WIN || VIXEN_MAGICK_NET)
-            execBtn.SetEnabled(false);
-            var magickNote = new Label(VixenMagickKit.UnavailableMessage);
-            magickNote.AddToClassList("info-box-styled");
-            container.Add(magickNote);
-#endif
+            if (!VixenMagickKit.IsReady)
+            {
+                execBtn.SetEnabled(false);
+                var magickNote = new Label(VixenMagickKit.UnavailableMessage);
+                magickNote.AddToClassList("info-box-styled");
+                container.Add(magickNote);
+            }
 
             var devPanel = CreateCyberPanel("Furality Master Layouts", "#00e5ff");
 
@@ -851,7 +853,7 @@ namespace VixenTools.Editor
 
         private void GenerateBadgeEndToEnd()
         {
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
             string tierFolder = "", outDir = "", outPrefix = "", tierName = "", conventionName = "";
 
             if (_activeEcosystem == Ecosystem.VixenTools)
@@ -933,7 +935,7 @@ namespace VixenTools.Editor
 #endif
         }
 
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
         private MagickImage GenerateTextPlate(string fontPath, string text, int w, int h, MagickColor color, float rotation)
         {
             if (string.IsNullOrEmpty(text)) text = " ";
@@ -1063,7 +1065,7 @@ namespace VixenTools.Editor
 
         private void ExecuteTemplateAuthoring()
         {
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
             string safeName = Regex.Replace(_newTemplateName, @"[<>:""/\\|?* ]", "_");
             string templateDir = Path.Combine(VixenRootPath, safeName);
             if (Directory.Exists(templateDir)) { Debug.LogError($"[VixForge] Template {safeName} already exists!"); return; }

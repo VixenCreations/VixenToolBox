@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
 using ImageMagick;
 using ImageMagick.Configuration;
 #endif
@@ -12,9 +12,48 @@ namespace VixenTools.Editor
     [InitializeOnLoad]
     public static class VixenMagickKit
     {
-        public const string UnavailableMessage = "This needs ImageMagick, which the toolbox only includes for Windows.";
+#if UNITY_EDITOR_LINUX
+        public const string UnavailableMessage = "ImageMagick did not load in this editor, so this is turned off. The Console says why.";
+#else
+        public const string UnavailableMessage = "This needs ImageMagick, which the toolbox includes for Windows and Linux.";
+#endif
 
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+        public static bool IsReady { get; private set; }
+
+#if UNITY_EDITOR_LINUX
+        const string LinuxNativeLibrary = "Magick.Native-Q16-x64.dll.so";
+        const int RtldLazy = 0x1;
+        const int RtldDeepBind = 0x8;
+
+        [System.Runtime.InteropServices.DllImport("libdl.so.2")]
+        static extern System.IntPtr dlopen(string file, int mode);
+
+        [System.Runtime.InteropServices.DllImport("libdl.so.2")]
+        static extern System.IntPtr dlerror();
+
+        static bool LoadLinuxNativeLibrary()
+        {
+            var folders = new System.Collections.Generic.List<string>();
+            try { folders.Add(Path.GetDirectoryName(typeof(MagickNET).Assembly.Location)); } catch { }
+            var package = UnityEditor.PackageManager.PackageInfo.FindForAssembly(typeof(VixenMagickKit).Assembly);
+            if (package != null) folders.Add(Path.Combine(package.resolvedPath, "Editor", "ImageMagik"));
+
+            foreach (string folder in folders)
+            {
+                if (string.IsNullOrEmpty(folder)) continue;
+                string file = Path.Combine(folder, LinuxNativeLibrary);
+                if (!File.Exists(file)) continue;
+                if (dlopen(file, RtldLazy | RtldDeepBind) != System.IntPtr.Zero) return true;
+                Debug.LogWarning($"[VixForge] ImageMagick could not load, so the tools that need it are turned off. {System.Runtime.InteropServices.Marshal.PtrToStringAnsi(dlerror())}");
+                return false;
+            }
+
+            Debug.LogWarning($"[VixForge] ImageMagick could not load, so the tools that need it are turned off. {LinuxNativeLibrary} is missing from the toolbox's Editor/ImageMagik folder.");
+            return false;
+        }
+#endif
+
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
         const string SecurityPolicy =
             "<policymap>\n" +
             "  <policy domain=\"delegate\" rights=\"none\" pattern=\"*\"/>\n" +
@@ -28,6 +67,35 @@ namespace VixenTools.Editor
 
         static VixenMagickKit()
         {
+#if UNITY_EDITOR_LINUX
+            if (AssetDatabase.IsAssetImportWorkerProcess()) return;
+
+            string marker = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Library", "VixenTools", "ImageMagick", "linux-load.pending"));
+            if (File.Exists(marker))
+            {
+                Debug.LogWarning($"[VixForge] ImageMagick closed the editor the last time it loaded, so the tools that need it are turned off. Delete '{marker}' to try again.");
+                return;
+            }
+
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(marker));
+                File.WriteAllText(marker, string.Empty);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning("[VixForge] ImageMagick stays off, because its load marker could not be written: " + e.Message);
+                return;
+            }
+
+            if (!LoadLinuxNativeLibrary())
+            {
+                try { File.Delete(marker); } catch { }
+                return;
+            }
+#endif
+            IsReady = true;
+
             try
             {
                 IConfigurationFiles config = ConfigurationFiles.Default;
@@ -48,6 +116,9 @@ namespace VixenTools.Editor
                 ResourceLimits.Thread = (ulong)System.Math.Max(1, System.Environment.ProcessorCount);
             }
             catch { }
+#if UNITY_EDITOR_LINUX
+            try { File.Delete(marker); } catch { }
+#endif
         }
 #endif
 
@@ -89,7 +160,8 @@ namespace VixenTools.Editor
         {
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return false;
             if (IsProtectedAsset(path)) return false;
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
+            if (!IsReady) return false;
             try
             {
                 long fileBytes = new FileInfo(path).Length;
@@ -124,7 +196,7 @@ namespace VixenTools.Editor
             return false;
         }
 
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
         public static bool TryGetDimensions(byte[] bytes, out uint width, out uint height)
         {
             width = 0;
@@ -160,7 +232,7 @@ namespace VixenTools.Editor
             return !importer.sRGBTexture;
         }
 
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
         public static void HighQualityResize(MagickImage img, uint targetW, uint targetH, bool linearData, FilterType filter, bool onlyShrink, double sharpenSigma)
         {
             if (img == null) return;
@@ -197,7 +269,8 @@ namespace VixenTools.Editor
         {
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return false;
             bool resized = false;
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
+            if (!IsReady) return false;
             try
             {
                 byte[] bytes = File.ReadAllBytes(path);

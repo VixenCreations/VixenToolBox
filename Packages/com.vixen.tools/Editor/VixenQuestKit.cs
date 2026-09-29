@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
 using ImageMagick;
 #endif
 
@@ -236,9 +236,10 @@ namespace VixenTools.Editor
 
             string newPath = AssetDatabase.GenerateUniqueAssetPath($"{outputDir}/{texName}_Quest{extension}");
 
-#if UNITY_EDITOR_WIN || VIXEN_MAGICK_NET
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
             try
             {
+                if (!VixenMagickKit.IsReady) throw new InvalidOperationException(VixenMagickKit.UnavailableMessage);
                 using (MagickImage img = new MagickImage(File.ReadAllBytes(sourcePath), VixenMagickKit.DownscaleReadSettings((uint)targetSize)))
                 {
                     if (img.Width > targetSize || img.Height > targetSize)
