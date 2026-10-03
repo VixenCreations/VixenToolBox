@@ -2,6 +2,16 @@
 # intent, so a later change to the wildcard does not silently shut out the AI
 # assistants people use to find these tools.
 
+User-agent: *
+Allow: /
+
+# Force Googlebot to process Fluent UI components and the FOUC guard
+User-agent: Googlebot
+Allow: /
+Allow: /*.js$
+Allow: /*.css$
+
+# AI and RAG Search Indexers
 User-agent: xAI-Bot
 Allow: /
 
@@ -27,9 +37,6 @@ User-agent: Google-Extended
 Allow: /
 
 User-agent: Applebot-Extended
-Allow: /
-
-User-agent: *
 Allow: /
 
 Sitemap: https://vixencreations.github.io/VixenToolBox/sitemap.xml

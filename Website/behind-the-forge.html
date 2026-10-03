@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Primary SEO -->
-    <title>VixForge Interactive | Behind The Forge</title>
-    <meta name="title" content="VixForge Interactive | Behind The Forge">
+    <title>Behind The Forge</title>
     <meta name="description" content="Behind The Forge: the development notes VixForge Interactive posts on Discord, covering every update to the VixForge shaders and the Vixens Toolbox.">
     <meta name="keywords" content="VixForge Interactive, Behind The Forge, dev notes, VRChat shaders, Latex Ultra, VixForge Toon, Clothing Pro, Fur Pro, World Surface, World Fur">
-    <meta name="author" content="Vixenlicous | VixForge Interactive">
+    <meta name="author" content="VixForge Interactive">
     <meta name="theme-color" content="#ff00aa">
 
     <!-- Canonical URL -->
@@ -31,25 +30,96 @@
     <meta name="twitter:image" content="https://vixencreations.github.io/VixenToolBox/promos/PromoBanner3.png">
     <meta name="twitter:site" content="@VixForge">
 
-    <!-- Brand entity: ties every store front and channel to one identity -->
+    <!-- Structured Data for Google Rich Results -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "TechArticle",
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://vixencreations.github.io/VixenToolBox/behind-the-forge.html"
+          },
+          "headline": "Behind The Forge Notes",
+          "description": "A complete breakdown of the on-going work behind the scenes, including feature updates, bug fixes, performance improvements, and changes for VRChat creators.",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "datePublished": "2026-10-02T00:00:00+00:00",
+          "dateModified": "2026-10-02T00:00:00+00:00",
+          "author": {
+            "@type": "Organization",
+            "name": "VixForge Interactive",
+            "url": "https://vixencreations.github.io/VixenToolBox/"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "VixForge Interactive",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://vixencreations.github.io/VixenToolBox/banner.png"
+            }
+          },
+          "about": {
+            "@type": "SoftwareApplication",
+            "name": "Vixens Toolbox",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Windows 10/11",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          },
+          "keywords": "Vixens Toolbox Behind The Forge, VRChat tools updates, Unity 2022.3 editor tools release notes, PhysBones automation updates, VRChat creator tools version history, Behind The Forge"
+        }
+    </script>
+
+    <!-- Brand entity: ties every storefront and channel to one identity -->
     <script type="application/ld+json">
         {
           "@context": "https://schema.org",
           "@type": "Organization",
           "@id": "https://vixencreations.github.io/VixenToolBox/#organization",
           "name": "VixForge Interactive",
-          "alternateName": ["Vixenlicous", "Vixenlicious", "Vixen Creations", "Vixens Toolbox"],
+          "alternateName": ["VixenCreations"],
           "url": "https://vixencreations.github.io/VixenToolBox/",
-          "logo": "https://vixencreations.github.io/VixenToolBox/banner.png",
-          "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
-          "description": "VixForge Interactive builds avatar shaders and Unity editor tooling for VRChat, for Unity 2022.3 on the Built-in Render Pipeline.",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "description": "VixForge Interactive builds avatar and world shaders with Unity editor tooling for VRChat, for Unity 2022.3 on the Built-in Render Pipeline.",
           "founder": {
             "@type": "Person",
+            "@id": "https://vixencreations.github.io/VixenToolBox/#founder",
             "name": "Vixenlicious",
-            "alternateName": "Vixenlicous",
-            "jobTitle": "Lead Developer"
+            "alternateName": ["Vixenlicous"],
+            "jobTitle": "Lead Developer & Creative Director",
+            "url": "https://github.com/VixenCreations"
           },
-          "knowsAbout": ["VRChat avatar shaders", "Unity 2022.3", "Built-in Render Pipeline", "AudioLink", "VRC Light Volumes", "LTCGI", "VRSL", "VRCFury", "Modular Avatar"],
+          "knowsAbout": [
+            "VRChat avatar shaders",
+            "Unity 2022.3",
+            "Built-in Render Pipeline",
+            "AudioLink",
+            "VRC Light Volumes",
+            "LTCGI",
+            "VRSL",
+            "VRCFury",
+            "Modular Avatar",
+            "UdonSharp",
+            "HLSL"
+          ],
           "sameAs": [
             "https://x.com/VixForge",
             "https://www.youtube.com/@vixenlicous",
@@ -57,8 +127,7 @@
             "https://jinxxy.com/Vixenlicious",
             "https://github.com/VixenCreations",
             "https://www.patreon.com/cw/Vixenlicious",
-            "https://ko-fi.com/vixenlicous",
-            "https://discord.gg/3vbJCKcPtJ"
+            "https://ko-fi.com/vixenlicous"
           ]
         }
     </script>
@@ -85,14 +154,14 @@
             border-bottom: 1px solid rgba(255, 0, 170, 0.3);
         }
 
-        .news-hero-art img {
-            display: block;
-            width: 100%;
-            max-width: 880px;
-            height: auto;
-            margin: 0 auto;
-            border-radius: 8px;
-        }
+            .news-hero-art img {
+                display: block;
+                width: 100%;
+                max-width: 880px;
+                height: auto;
+                margin: 0 auto;
+                border-radius: 8px;
+            }
 
         .sr-only {
             position: absolute;
@@ -110,11 +179,11 @@
             padding: 2rem;
         }
 
-        .news-body p {
-            color: #bfa8d2;
-            line-height: 1.75;
-            margin-bottom: 1.1rem;
-        }
+            .news-body p {
+                color: #bfa8d2;
+                line-height: 1.75;
+                margin-bottom: 1.1rem;
+            }
 
         .news-meta {
             display: flex;
@@ -144,27 +213,25 @@
             margin: 0.5rem 0 1.25rem;
         }
 
-        .pledge-list li {
-            color: #e0d5eb;
-            line-height: 1.9;
-            padding-left: 1.5rem;
-            position: relative;
-        }
+            .pledge-list li {
+                color: #e0d5eb;
+                line-height: 1.9;
+                padding-left: 1.5rem;
+                position: relative;
+            }
 
-        .pledge-list li::before {
-            content: "\25B8";
-            color: var(--neon-pink);
-            position: absolute;
-            left: 0;
-        }
+                .pledge-list li::before {
+                    content: "\25B8";
+                    color: var(--neon-pink);
+                    position: absolute;
+                    left: 0;
+                }
 
         .news-milestone-hero {
             padding: 2.75rem 1.5rem;
             text-align: center;
             border-bottom: 1px solid rgba(255, 0, 170, 0.3);
-            background:
-                radial-gradient(120% 140% at 50% 0%, rgba(255, 0, 85, 0.16), transparent 60%),
-                radial-gradient(120% 140% at 50% 100%, rgba(0, 229, 255, 0.10), transparent 60%);
+            background: radial-gradient(120% 140% at 50% 0%, rgba(255, 0, 85, 0.16), transparent 60%), radial-gradient(120% 140% at 50% 100%, rgba(0, 229, 255, 0.10), transparent 60%);
         }
 
         .milestone-number {
@@ -224,6 +291,11 @@
             <fluent-anchor href="products.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                 Our Products
+            </fluent-anchor>
+
+            <fluent-anchor href="planned-features.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                Planned Features
             </fluent-anchor>
 
             <fluent-anchor href="news.html" class="nav-item">
@@ -306,6 +378,123 @@
                 </div>
             </div>
             <!-- FORGE:START -->
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-10-02-latex-ultra-toon-clothing-pro-fur-pro-wo">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Dev Notes</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">Toon</span>
+                        <span class="news-tag">Clothing Pro</span>
+                        <span class="news-tag">Fur Pro</span>
+                        <span class="news-tag">World Surface</span>
+                        <span class="news-tag">World Fur</span>
+                        <span class="news-date">October 2, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Latex Ultra, Toon, Clothing Pro, Fur Pro, World Surface and World Fur: slow speeds you can set, cheaper reflections, and World joins the supporter shaders.</h2>
+                    <p class="forge-status"><strong>Status:</strong> In testing. Not out yet.</p>
+                    <p class="forge-intro"><em>A slow drift was hard to hit: the smallest nudge on a speed sent glitter racing across the body. Speeds now spend most of their travel at the slow end, reflections cost less in mirrors, and World Surface and World Fur move to the supporter tier.</em></p>
+                    <h3 class="text-glow-cyan">Slow speeds you can set</h3>
+                    <p class="forge-where">On every scroll, drift, spin, flow and speed control.</p>
+                    <ul class="pledge-list">
+                        <li>Speed sliders give most of their length to slow values, so a small nudge makes a small change. The far end still reaches the fastest setting.</li>
+                        <li>Dragging a speed's name works the same way. Hold Shift for finer steps.</li>
+                        <li>Glitter <strong>Scroll</strong> drags this way too, and the Cymatics <strong>Speed</strong> and <strong>Wander</strong> sliders follow the same curve.</li>
+                        <li>Your materials keep the speeds they have.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Cheaper reflections</h3>
+                    <ul class="pledge-list">
+                        <li>With <strong>Polish</strong> off, the clear coat stops reading the room's reflection and its LTCGI and Light Volumes highlights, so reflections cost less, most of all in mirrors.</li>
+                        <li><strong>Unified Light</strong> brushed reflections read the room once instead of eight to sixteen times.</li>
+                        <li><strong>Enable GPU Instancing</strong> works: every copy of a mesh gets its own place, lighting and shadow.</li>
+                        <li>World Surface and World Fur read the lightmap once instead of twice.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Switchboard: see and set what's animated</h3>
+                    <p class="forge-where">Under <strong>Tools &gt; Materials</strong> in the Shader Hub.</p>
+                    <ul class="pledge-list">
+                        <li>The <strong>Animated</strong> column shows how many materials mark each setting <strong>Animated (when locked)</strong>.</li>
+                        <li>Tick its box to mark every unlocked material in the row, or open the row and tick one at a time.</li>
+                        <li><strong>Only animated</strong> lists just those settings.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">World joins the supporter shaders</h3>
+                    <ul class="pledge-list">
+                        <li>World Surface and World Fur now come with a Patreon membership at $15 a month, the same as Clothing Pro and Fur Pro. Their terms are in the new <strong>World License</strong> tab in the Shader Hub. Versions 1.0.0 to 1.2.0 you already have stay free.</li>
+                        <li>Clothing Pro's license asked for $35. It now matches the website: $15, Pipeline Architect or above. $35 still covers everything.</li>
+                        <li>Latex Ultra and Toon stay free. <strong>License</strong> in the Shader Hub is now called <strong>Latex Ultra License</strong>.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">AI tools</h3>
+                    <ul class="pledge-list">
+                        <li>Latex Ultra, Toon and the editor: you're welcome to use AI tools to help you with them, with credit to VixForge Interactive wherever you share the result. Their licenses now say so, and an AI assistant will ask you to agree first.</li>
+                        <li>Clothing Pro, Fur Pro, World Surface and World Fur are human only. Their licenses now say an AI tool may not read, change, summarize or train on their files without our written permission. Using them in Unity isn't affected.</li>
+                        <li><code>AGENTS.md</code> and <code>CLAUDE-INSTRUCTIONS.md</code> in <code>Assets/VixForge/Editor/</code> tell an AI assistant the same thing, and ask it to tell you when it finds them.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Unified Light controls</h3>
+                    <p class="forge-where">In <strong>Lighting</strong> on every shader, with <strong>Unified Light</strong> on.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Light Size</strong> gives lights a size, so gloss gets the wide, soft highlight of a studio light instead of a pinpoint. About 5 is a softbox across the room.</li>
+                        <li><strong>Probe Highlights</strong> gives the light probes a highlight, so a glossy material shows the lamps of a baked room.</li>
+                        <li><strong>Brushed Reflection Start</strong> sets how much <strong>Strength</strong> a brushed surface needs before its reflection stretches. 0.3 keeps the old start.</li>
+                        <li><strong>Dark Corner Dimming</strong> sets how much reflections dim in dark corners. At 0 the material draws a little faster.</li>
+                        <li>Every control starts where Unified Light already was, so nothing changes until you move one.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Streaks that look like water</h3>
+                    <p class="forge-where">In <strong>Streaks</strong> under <strong>Wet Effects</strong> on Latex Ultra and World Surface.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Water Look</strong> turns each streak into clear running water with its own colour, depth and highlight. Set <strong>Water Colour</strong> and <strong>Water Depth</strong> to taste.</li>
+                        <li>Streaks stay put when you turn. With <strong>Gravity Flow</strong> or <strong>Beat Twist</strong> on, they used to slide sideways and swap places.</li>
+                        <li>The streak bump stands out of the surface instead of being pressed in, and it leans across the run whatever <strong>Run Direction</strong> says.</li>
+                        <li><strong>Film Sheen</strong>, the goo's <strong>Coat Strength</strong> and Touch <strong>Wetness</strong> now lay their clear film with <strong>Polish</strong> off too. Before, the film only showed with Polish on.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Matcaps that sit right</h3>
+                    <p class="forge-where">In <strong>Matcaps</strong> on every shader.</p>
+                    <ul class="pledge-list">
+                        <li>Each layer shows the whole sphere once. The image was spread twice as wide, so most of a surface showed its corners and its repeat. For the old size, halve <strong>Zoom</strong>.</li>
+                        <li><strong>Projection</strong> in <strong>Global Settings</strong> no longer breaks the matcap at UV seams. It now turns the matcap with the model, the way <strong>Freeze</strong> does.</li>
+                        <li><strong>Bent</strong> darkens the matcap in creases, <strong>Light Colour Mix</strong> stops going dark in baked worlds, and <strong>Depth</strong>, <strong>Blur</strong>, <strong>Mirror Flip</strong>, <strong>Angle End</strong> and <strong>Fade End</strong> do what their tooltips say.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Credits for every source</h3>
+                    <p class="forge-where">In the inspector, and in <code>Assets/VixForge/Licenses/CREDITS.md</code>.</p>
+                    <ul class="pledge-list">
+                        <li>Sections built on someone else's work now say whose, with a link where there is one. UV Tile Discard, Real Fur, Infinity Mirror and Smooth Filter join AudioLink, LTCGI, Light Volumes, VRSL and Hyperspace.</li>
+                        <li><code>CREDITS.md</code> lists every source we use: the code that ships with its license, the tools we work with, the ideas we built on and the papers behind the lighting.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Things that look different</h3>
+                    <p class="forge-where">Across every section, so check these on materials you already have.</p>
+                    <ul class="pledge-list">
+                        <li><strong>View</strong> matcaps read the right way round. They were mirrored left to right. For the old look on an asymmetric matcap, set its <strong>Tiling</strong> X to -1.</li>
+                        <li><strong>Screen</strong>, <strong>Overlay</strong>, <strong>Soft Light</strong> and the other photo blends now blend with the material, so a layer on one of them shows on its own.</li>
+                        <li><strong>Thickness</strong> is now <strong>Thinness</strong>: 0 is fully thick and higher lets more light through. If you had set it, use 1 minus your old value.</li>
+                        <li>The Polish mask no longer cuts <strong>Rim Light</strong>, <strong>Subsurface</strong> and <strong>Transmission</strong>. Bent Normals has its own <strong>Sharpen</strong>, and <strong>Specular Anti-Aliasing</strong> moved to <strong>Lighting</strong>.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Fixed</h3>
+                    <ul class="pledge-list">
+                        <li>94 fixes in all, out of 116 things we checked. The ones you are most likely to notice:</li>
+                        <li>Normal maps turn with <strong>UV Rotation</strong>, and displacement lines up with the shading under tiling and UV animation.</li>
+                        <li>Goo drips, cling strands and Vertex Fracture shards hold still while you walk, and goo veins stay on your body.</li>
+                        <li>Glints, drips, cling, shards and grown fur shine in baked and Light Volumes worlds, and the fur's shadow matches in both eyes in VR.</li>
+                        <li><strong>Manual Levels</strong> work in a world with no AudioLink, the Flipbook's <strong>Rush</strong> hurries the frames instead of jumping, and fast scrolls stay sharp in long sessions.</li>
+                        <li><strong>Ramp Texture</strong> can light the shadow side, and dozens of tooltips now say what their control really does.</li>
+                        <li>An animated decal <strong>Enable</strong> or UV Tile Discard <strong>Enable</strong> now turns its feature on, even on a material saved with it off.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Dissolve</h3>
+                    <p class="forge-where">New group under <strong>SPECIAL EFFECTS</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Pick a <strong>Shape</strong>: <strong>Gradient Texture</strong>, <strong>Point to Point</strong>, <strong>Spherical</strong> or <strong>Center Out</strong>, then animate <strong>Amount</strong> from 0 to 1.</li>
+                        <li>Leave <strong>Color</strong> alpha at 0 and the dissolved part vanishes. Raise it and that part turns into a colour or a <strong>Texture</strong>, with its own <strong>Emission</strong>.</li>
+                        <li><strong>Edge Line</strong> puts a glowing band on the front, in one colour or a three colour gradient, and <strong>Gradient Noise</strong> breaks the line up like burning paper.</li>
+                        <li><strong>Wave Mode</strong> sends a band across you that closes up behind it, <strong>Continuous Dissolve</strong> loops by itself, and <strong>Vertex Height</strong> lifts the dissolving part away.</li>
+                        <li>With AudioLink on, the music can push <strong>Amount</strong>, the noise and the edge, and <strong>Beat Run</strong> sweeps it in time.</li>
+                        <li><strong>Real Fur</strong>, <strong>Cybernetic Overlays</strong>, <strong>Vertex Fracture</strong> shards and the goo dissolve with the body.</li>
+                        <li>It works like Dissolve in Poiyomi Toon and keeps the same property names, so dissolve animations made for Poiyomi drive this one.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Coming in Latex Ultra 5.4.1, Toon 2.4.1, Clothing Pro 2.4.1, Fur Pro 2.4.1, World Surface 1.2.1 and World Fur 1.2.1, with VixForge Editor 2.5.1.</li>
+                        <li>Questions about the licenses or permission: vixenlicious@outlook.com, or ask here.</li>
+                    </ul>
+                </div>
+            </article>
+
             <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-09-27-latex-ultra-toon-clothing-pro-fur-pro-wo">
                 <div class="news-body">
                     <div class="news-meta">

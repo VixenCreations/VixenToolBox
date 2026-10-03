@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Primary SEO -->
-    <title>Vixens Toolbox | Shader Changelogs &amp; Version History</title>
-    <meta name="title" content="Vixens Toolbox | Shader Changelogs &amp; Version History">
+    <title>Shader Changelogs</title>
     <meta name="description" content="Release notes for the VixForge VRChat avatar shaders - VixenWear Latex Ultra, VixForge Toon, Clothing Pro and Fur Pro. Every version, what changed, and what you need to do after updating.">
     <meta name="keywords" content="VixenWear changelog, Latex Ultra changelog, Toon shader changelog, Clothing Pro changelog, Fur Pro changelog, VRChat shader release notes, VixForge Interactive, VRChat avatar shader updates, Unity 2022.3 shader version history">
-    <meta name="author" content="Vixenlicous | VixForge Interactive">
+    <meta name="author" content="VixForge Interactive">
     <meta name="theme-color" content="#ff00aa">
 
     <!-- Canonical URL -->
@@ -52,25 +51,49 @@
         }
     </script>
 
-    <!-- Brand entity: ties every store front and channel to one identity -->
+    <!-- Brand entity: ties every storefront and channel to one identity -->
     <script type="application/ld+json">
         {
           "@context": "https://schema.org",
           "@type": "Organization",
           "@id": "https://vixencreations.github.io/VixenToolBox/#organization",
           "name": "VixForge Interactive",
-          "alternateName": ["Vixenlicous", "Vixenlicious", "Vixen Creations", "Vixens Toolbox"],
+          "alternateName": ["VixenCreations"],
           "url": "https://vixencreations.github.io/VixenToolBox/",
-          "logo": "https://vixencreations.github.io/VixenToolBox/banner.png",
-          "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
-          "description": "VixForge Interactive builds avatar shaders and Unity editor tooling for VRChat, for Unity 2022.3 on the Built-in Render Pipeline.",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "description": "VixForge Interactive builds avatar and world shaders with Unity editor tooling for VRChat, for Unity 2022.3 on the Built-in Render Pipeline.",
           "founder": {
             "@type": "Person",
+            "@id": "https://vixencreations.github.io/VixenToolBox/#founder",
             "name": "Vixenlicious",
-            "alternateName": "Vixenlicous",
-            "jobTitle": "Lead Developer"
+            "alternateName": ["Vixenlicous"],
+            "jobTitle": "Lead Developer & Creative Director",
+            "url": "https://github.com/VixenCreations"
           },
-          "knowsAbout": ["VRChat avatar shaders", "Unity 2022.3", "Built-in Render Pipeline", "AudioLink", "VRC Light Volumes", "LTCGI", "VRSL", "VRCFury", "Modular Avatar"],
+          "knowsAbout": [
+            "VRChat avatar shaders",
+            "Unity 2022.3",
+            "Built-in Render Pipeline",
+            "AudioLink",
+            "VRC Light Volumes",
+            "LTCGI",
+            "VRSL",
+            "VRCFury",
+            "Modular Avatar",
+            "UdonSharp",
+            "HLSL"
+          ],
           "sameAs": [
             "https://x.com/VixForge",
             "https://www.youtube.com/@vixenlicous",
@@ -78,8 +101,7 @@
             "https://jinxxy.com/Vixenlicious",
             "https://github.com/VixenCreations",
             "https://www.patreon.com/cw/Vixenlicious",
-            "https://ko-fi.com/vixenlicous",
-            "https://discord.gg/3vbJCKcPtJ"
+            "https://ko-fi.com/vixenlicous"
           ]
         }
     </script>
@@ -118,6 +140,11 @@
             <fluent-anchor href="products.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                 Our Products
+            </fluent-anchor>
+
+            <fluent-anchor href="planned-features.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                Planned Features
             </fluent-anchor>
 
             <fluent-anchor href="news.html" class="nav-item">
@@ -1631,7 +1658,9 @@
                         <li class="mb-2"><strong>Clean Latex Material Keywords</strong> is gone: keywords apply themselves now. <strong>VixenTools &gt; VixForge Editor &gt; Fix Keywords for All Materials (Slow)</strong> covers a project-wide repair if you ever want one.</li>
                     </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Notes</strong></p>
-                    <p class="caption1 m-0 mb-2 mt-2">Your existing materials look identical and keep every setting, including Light Volumes and LTCGI if you had them on. Only <strong>new</strong> materials start with those two off. Re-lock and spot-check your materials after updating.</p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2">Your existing materials look identical and keep every setting, including Light Volumes and LTCGI if you had them on. Only <strong>new</strong> materials start with those two off. Re-lock and spot-check your materials after updating.</li>
+                    </ul>
                 </div>
 
                 <div class="changelog-entry" data-version="latex-3.0.0">
@@ -1733,7 +1762,7 @@
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>VRC Light Volumes 3.x API (Both Shaders):</strong> Updated the vendored <code>Editor/cginc/LightVolumes.cginc</code> to the upstream 3.x release and adapted the <code>surf</code> call sites. The new <code>LV_LightVolumeRegularSH</code> <strong>excludes</strong> additive volumes (they are sampled separately now), so the non-additive-only path calls Regular <strong>then</strong> Additive; <code>LV_PointLightVolumeSH</code>/<code>LV_LightVolumeSH</code> were renamed to <code>LV_LightVolumePointSH</code>/<code>LV_LightVolumeRegularSH</code>. All <code>_LV_*</code> controls, the specular path, and the stable-normal wiring are unchanged.</li>
-                        <li class="mb-2"><strong>Matcap blend modes now composite against the lit surface (Both Shaders):</strong> The three matcap layers were reworked from a single additive accumulator to a surface-relative model carried by <code>MatcapMul</code> / <code>MatcapAdd</code> (<code>finalColor = finalColor <em> MatcapMul + MatcapAdd </em> lighting</code>). <strong>Add</strong> still adds a lit sheen exactly as before (existing materials unchanged), but <strong>Multiply</strong> now tints/darkens the surface and <strong>Replace</strong> overwrites it inside the layer's mask - the way the blend-mode names imply. Layers composite in order, so layer 2/3 blend over layer 1.</li>
+                        <li class="mb-2"><strong>Matcap blend modes now composite against the lit surface (Both Shaders):</strong> The three matcap layers were reworked from a single additive accumulator to a surface-relative model carried by <code>MatcapMul</code> / <code>MatcapAdd</code> (<code>finalColor = finalColor * MatcapMul + MatcapAdd * lighting</code>). <strong>Add</strong> still adds a lit sheen exactly as before (existing materials unchanged), but <strong>Multiply</strong> now tints/darkens the surface and <strong>Replace</strong> overwrites it inside the layer's mask - the way the blend-mode names imply. Layers composite in order, so layer 2/3 blend over layer 1.</li>
                         <li class="mb-2"><strong>sampler2D → Texture2D sampler-budget pass (Both Shaders):</strong> The five fragment-only maps (<code>_BumpMap</code>, <code>_DetailNormalMap</code>, <code>_EmissionMap</code>, <code>_EmissionMap2</code>, <code>_RegionMask</code>) now use <code>UNITY_DECLARE_TEX2D_NOSAMPLER</code> and borrow <code>_MainTex</code>'s sampler, freeing up to five sampler registers against the 16-sampler DX11 cap. <code>_MetallicGlossMap</code> and <code>_GooMask</code> deliberately keep their own samplers because they are read in the vertex/displacement stage, where a borrowed <code>_MainTex</code> sampler does not resolve.</li>
                         <li class="mb-2"><strong>Rendering Mode dropdown restored in the inspector (Both Shaders):</strong> <code>_Mode</code> now uses Thry's <code>[ThryWideEnum]</code> drawer instead of Unity's built-in <code>[Enum]</code>, so the <strong>Opaque / Cutout / Fade / Transparent</strong> dropdown actually renders in the ThryEditor inspector again. The C# blend / render-queue / tag setup callback is unchanged.</li>
                     </ul>
@@ -1774,7 +1803,7 @@
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>Material Lock / Optimizer (Both Shaders):</strong> The inspector now has Thry's lock/unlock button and the VixForge footer (website / Discord / X / GitHub / Ko-fi), matching VixenWorld. As with VixenWorld and Poiyomi, <strong>lock your materials before building</strong> - unlocked Thry materials are stripped from builds (they render pink otherwise). Use Thry's right-click "Lock All" on your avatar to lock everything at once.</li>
                     </ul>
-                    <p class="caption1 m-0 mb-2 mt-2"><strong>Requirements</strong></p>
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Notes</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>ThryEditor is required and is NOT bundled.</strong> The inspector is built on Thry's shader editor (<code>Thry.ShaderEditor</code>); install ThryEditor (<code>de.thryrallo.thryeditor</code>) - if you use Poiyomi you already have it. It is intentionally not bundled so it never conflicts with other Thry-based shaders in your project. Existing materials keep their values and keywords; no data migration is needed.</li>
                     </ul>
@@ -1819,7 +1848,7 @@
                     </ul>
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
-                        <li class="mb-2"><strong>Tessellation control inverted &amp; uncapped (base shader):</strong> The old <code>Tessellation Edge Length</code> slider (<code>_Tess_Edge</code>, Range 1–50) was backwards and unbounded - its value is the <em>target edge length</em> fed to <code>UnityEdgeLengthBasedTess</code>, which sits in the <strong>denominator</strong> of the tessellation factor, so a <strong>lower</strong> number meant denser subdivision and the GPU's 64× per-edge cap was hit on dense displaced meshes → severe lag. Replaced with <code>Tessellation Detail</code> (<code>_Tess_Detail</code>, Range 0–1) where <strong>higher = more detail/cost, lower = cheaper</strong>, mapped via <code>edgeLen = lerp(40, 2, detail)</code>. The distance/screen-adaptive LOD is preserved (far/small-on-screen surfaces stay cheap) and the per-edge factor is now clamped to <code>VW_TESS_MAX</code> (32) so the close-up worst case can't melt the GPU. The SPS variant has no tessellation, so it's unaffected. <strong>Migration:</strong> the property was renamed, so existing materials reset to the new <code>0.5</code> default and the tessellation amount should be re-set once (the previous default of edge-length 10 ≈ detail 0.79).</li>
+                        <li class="mb-2"><strong>Tessellation control inverted &amp; uncapped (base shader):</strong> The old <code>Tessellation Edge Length</code> slider (<code>_Tess_Edge</code>, Range 1-50) was backwards and unbounded - its value is the <em>target edge length</em> fed to <code>UnityEdgeLengthBasedTess</code>, which sits in the <strong>denominator</strong> of the tessellation factor, so a <strong>lower</strong> number meant denser subdivision and the GPU's 64× per-edge cap was hit on dense displaced meshes → severe lag. Replaced with <code>Tessellation Detail</code> (<code>_Tess_Detail</code>, Range 0-1) where <strong>higher = more detail/cost, lower = cheaper</strong>, mapped via <code>edgeLen = lerp(40, 2, detail)</code>. The distance/screen-adaptive LOD is preserved (far/small-on-screen surfaces stay cheap) and the per-edge factor is now clamped to <code>VW_TESS_MAX</code> (32) so the close-up worst case can't melt the GPU. The SPS variant has no tessellation, so it's unaffected. <strong>Migration:</strong> the property was renamed, so existing materials reset to the new <code>0.5</code> default and the tessellation amount should be re-set once (the previous default of edge-length 10 ≈ detail 0.79).</li>
                         <li class="mb-2"><strong>Shader compiler warning (POM, both shaders):</strong> Eliminated the "gradient instruction used in a loop with varying iteration, attempting to unroll the loop" warning on the ForwardBase pass. The parallax-occlusion height march now samples <code>_MetallicGlossMap</code> with <code>tex2Dlod</code> (explicit LOD 0) instead of <code>tex2Dgrad</code>, so the dynamic <code>[loop]</code> no longer carries a gradient instruction - the runtime early-out <code>break</code> (and its performance) is preserved. The heightfield is now marched at mip 0 (standard for POM).</li>
                     </ul>
                 </div>

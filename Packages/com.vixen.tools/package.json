@@ -1,34 +1,27 @@
 {
   "name": "com.vixencreations.vixens-toolbox",
-  "version": "2.19.0",
+  "version": "2.19.1",
   "displayName": "Vixen Tool Box",
-  "description": "A suite of Unity Editor tools for VRChat creators, hand-built by VixForge Interactive. Four flagship tools lead it: a non-destructive Quest Conversion Engine, a full Avatar Optimization Suite with real QEM mesh decimation, a multi-ecosystem World Engine auditor (ProTV, AudioLink, LTCGI, VRSL, Light Volumes and more), and Animation Workbench Pro. Also includes Animator Forge, PhysBone blueprints, an Accessory Mounting Engine and a convention Badge Studio. Engineered to eliminate human error, enforce project consistency, and push Unity 2022.3 to its limits.",
+  "description": "A Feature-rich suite of Unity Editor tools for VRChat creators, hand-built by VixForge Interactive supporting both Avatars and Worlds with over 4,500 Downloads!",
   "unity": "2022.3",
   "unityRelease": "22f1",
   "vpmDependencies": {
     "com.vrchat.base": "^3.10.3"
   },
-  "keywords": [
-    "vrchat",
-    "editor",
-    "avatar",
-    "physbones",
-    "utility",
-    "automation",
-    "shader",
-    "quest",
-    "optimization",
-    "world",
-    "vixforge",
-    "vixenwear"
-  ],
   "author": {
-    "name": "Vixenlicous",
+    "name": "VixenCreations",
     "email": "Vixenlicious@outlook.com",
-    "url": "https://x.com/VixForge"
+    "url": "https://github.com/VixenCreations"
   },
+  "keywords": [
+    "shaders",
+    "tools",
+    "quest tools",
+    "quest conversion"
+  ],
   "url": "https://github.com/VixenCreations/VixenToolBox",
-  "documentationUrl": "https://vixencreations.github.io/VixenToolBox/",
+  "changelogUrl": "https://vixencreations.github.io/VixenToolBox/changelog.html",
+  "documentationUrl": "https://vixencreations.github.io/VixenToolBox/tools.html",
   "license": "MIT",
   "legacyFolders": {
   },

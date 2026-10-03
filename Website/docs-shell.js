@@ -677,7 +677,8 @@
         latex: 'Latex Ultra', toon: 'Toon', clothingpro: 'Clothing Pro',
         furpro: 'Fur Pro', editor: 'Editor', worldsurface: 'World Surface',
         worldfur: 'World Fur', toolbox: 'Toolbox', shaders: 'Shaders',
-        v2: 'Toolbox 2.x', v1: 'Toolbox 1.x'
+        v2: 'Toolbox 2.x', v1: 'Toolbox 1.x',
+        active: 'In progress', next: 'Next', planned: 'Later'
     };
 
     function initChipBar() {

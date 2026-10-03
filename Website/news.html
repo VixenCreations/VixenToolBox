@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Primary SEO -->
-    <title>VixForge Interactive | News &amp; Announcements</title>
-    <meta name="title" content="VixForge Interactive | News &amp; Announcements">
+    <title>News &amp; Announcements</title>
     <meta name="description" content="News and announcements from VixForge Interactive, including studio updates, partnerships, and releases for the Vixens Toolbox VRChat creator suite.">
     <meta name="keywords" content="VixForge Interactive, Vixens Toolbox, news, announcements, VRChat, updates">
-    <meta name="author" content="Vixenlicous | VixForge Interactive">
+    <meta name="author" content="VixForge Interactive">
     <meta name="theme-color" content="#ff00aa">
 
     <!-- Canonical URL -->
@@ -31,25 +30,96 @@
     <meta name="twitter:image" content="https://vixencreations.github.io/VixenToolBox/promos/PromoBanner3.png">
     <meta name="twitter:site" content="@VixForge">
 
-    <!-- Brand entity: ties every store front and channel to one identity -->
+    <!-- Structured Data for Google Rich Results -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "TechArticle",
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://vixencreations.github.io/VixenToolBox/news.html"
+          },
+          "headline": "News & Announcements",
+          "description": "Announcements for Vixens Toolbox, the shaders and other works including feature updates, bug fixes, performance improvements, and changes for VRChat creators.",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "datePublished": "2026-10-02T00:00:00+00:00",
+          "dateModified": "2026-10-02T00:00:00+00:00",
+          "author": {
+            "@type": "Organization",
+            "name": "VixForge Interactive",
+            "url": "https://vixencreations.github.io/VixenToolBox/"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "VixForge Interactive",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://vixencreations.github.io/VixenToolBox/banner.png"
+            }
+          },
+          "about": {
+            "@type": "SoftwareApplication",
+            "name": "Vixens Toolbox",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Windows 10/11",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          },
+          "keywords": "Vixens Toolbox News, Latex Ultra News, VixForge News, VixForge, VixForge Interactive, VixForge Toolbox, VixForge Announcements, VixForge Toon News"
+        }
+    </script>
+
+    <!-- Brand entity: ties every storefront and channel to one identity -->
     <script type="application/ld+json">
         {
           "@context": "https://schema.org",
           "@type": "Organization",
           "@id": "https://vixencreations.github.io/VixenToolBox/#organization",
           "name": "VixForge Interactive",
-          "alternateName": ["Vixenlicous", "Vixenlicious", "Vixen Creations", "Vixens Toolbox"],
+          "alternateName": ["VixenCreations"],
           "url": "https://vixencreations.github.io/VixenToolBox/",
-          "logo": "https://vixencreations.github.io/VixenToolBox/banner.png",
-          "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
-          "description": "VixForge Interactive builds avatar shaders and Unity editor tooling for VRChat, for Unity 2022.3 on the Built-in Render Pipeline.",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "description": "VixForge Interactive builds avatar and world shaders with Unity editor tooling for VRChat, for Unity 2022.3 on the Built-in Render Pipeline.",
           "founder": {
             "@type": "Person",
+            "@id": "https://vixencreations.github.io/VixenToolBox/#founder",
             "name": "Vixenlicious",
-            "alternateName": "Vixenlicous",
-            "jobTitle": "Lead Developer"
+            "alternateName": ["Vixenlicous"],
+            "jobTitle": "Lead Developer & Creative Director",
+            "url": "https://github.com/VixenCreations"
           },
-          "knowsAbout": ["VRChat avatar shaders", "Unity 2022.3", "Built-in Render Pipeline", "AudioLink", "VRC Light Volumes", "LTCGI", "VRSL", "VRCFury", "Modular Avatar"],
+          "knowsAbout": [
+            "VRChat avatar shaders",
+            "Unity 2022.3",
+            "Built-in Render Pipeline",
+            "AudioLink",
+            "VRC Light Volumes",
+            "LTCGI",
+            "VRSL",
+            "VRCFury",
+            "Modular Avatar",
+            "UdonSharp",
+            "HLSL"
+          ],
           "sameAs": [
             "https://x.com/VixForge",
             "https://www.youtube.com/@vixenlicous",
@@ -57,8 +127,7 @@
             "https://jinxxy.com/Vixenlicious",
             "https://github.com/VixenCreations",
             "https://www.patreon.com/cw/Vixenlicious",
-            "https://ko-fi.com/vixenlicous",
-            "https://discord.gg/3vbJCKcPtJ"
+            "https://ko-fi.com/vixenlicous"
           ]
         }
     </script>
@@ -85,14 +154,14 @@
             border-bottom: 1px solid rgba(255, 0, 170, 0.3);
         }
 
-        .news-hero-art img {
-            display: block;
-            width: 100%;
-            max-width: 880px;
-            height: auto;
-            margin: 0 auto;
-            border-radius: 8px;
-        }
+            .news-hero-art img {
+                display: block;
+                width: 100%;
+                max-width: 880px;
+                height: auto;
+                margin: 0 auto;
+                border-radius: 8px;
+            }
 
         .sr-only {
             position: absolute;
@@ -110,11 +179,11 @@
             padding: 2rem;
         }
 
-        .news-body p {
-            color: #bfa8d2;
-            line-height: 1.75;
-            margin-bottom: 1.1rem;
-        }
+            .news-body p {
+                color: #bfa8d2;
+                line-height: 1.75;
+                margin-bottom: 1.1rem;
+            }
 
         .news-meta {
             display: flex;
@@ -144,27 +213,25 @@
             margin: 0.5rem 0 1.25rem;
         }
 
-        .pledge-list li {
-            color: #e0d5eb;
-            line-height: 1.9;
-            padding-left: 1.5rem;
-            position: relative;
-        }
+            .pledge-list li {
+                color: #e0d5eb;
+                line-height: 1.9;
+                padding-left: 1.5rem;
+                position: relative;
+            }
 
-        .pledge-list li::before {
-            content: "\25B8";
-            color: var(--neon-pink);
-            position: absolute;
-            left: 0;
-        }
+                .pledge-list li::before {
+                    content: "\25B8";
+                    color: var(--neon-pink);
+                    position: absolute;
+                    left: 0;
+                }
 
         .news-milestone-hero {
             padding: 2.75rem 1.5rem;
             text-align: center;
             border-bottom: 1px solid rgba(255, 0, 170, 0.3);
-            background:
-                radial-gradient(120% 140% at 50% 0%, rgba(255, 0, 85, 0.16), transparent 60%),
-                radial-gradient(120% 140% at 50% 100%, rgba(0, 229, 255, 0.10), transparent 60%);
+            background: radial-gradient(120% 140% at 50% 0%, rgba(255, 0, 85, 0.16), transparent 60%), radial-gradient(120% 140% at 50% 100%, rgba(0, 229, 255, 0.10), transparent 60%);
         }
 
         .milestone-number {
@@ -210,6 +277,11 @@
             <fluent-anchor href="products.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                 Our Products
+            </fluent-anchor>
+
+            <fluent-anchor href="planned-features.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                Planned Features
             </fluent-anchor>
 
             <fluent-anchor href="news.html" class="nav-item active">

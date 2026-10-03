@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary SEO -->
+    <title>Planned Features</title>
+    <meta name="description" content="What VixForge Interactive is building next for its VRChat avatar and world shaders, the Light Baker and the tools that come with them. No dates, just the plan, with what is in progress, next and later.">
+    <meta name="keywords" content="VixForge roadmap, VixForge planned features, VRChat shader roadmap, VixenWear Latex Ultra, VixForge Toon, Clothing Pro, Fur Pro, World Surface, World Fur, Light Baker, VixForge Interactive">
+    <meta name="author" content="VixForge Interactive">
+    <meta name="theme-color" content="#ff00aa">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://vixencreations.github.io/VixenToolBox/planned-features.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/planned-features.html">
+    <meta property="og:title" content="Vixens Toolbox | Planned Features">
+    <meta property="og:description" content="What VixForge Interactive is building next for its VRChat shaders and tools: in progress, next and later.">
+    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <meta property="og:site_name" content="VixForge Interactive | Vixens Toolbox">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://vixencreations.github.io/VixenToolBox/planned-features.html">
+    <meta name="twitter:title" content="Vixens Toolbox | Planned Features">
+    <meta name="twitter:description" content="What VixForge Interactive is building next for its VRChat shaders and tools: in progress, next and later.">
+    <meta name="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <meta name="twitter:site" content="@VixForge">
+
+    <!-- Structured Data for Google Rich Results -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "TechArticle",
+          "headline": "VixForge Planned Features",
+          "description": "What VixForge Interactive is building next for its VRChat avatar and world shaders, the Light Baker and the tools that come with them. No dates, just the plan, with what is in progress, next and later.",
+          "author": {
+            "@type": "Organization",
+            "name": "VixForge Interactive"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "VixForge Interactive"
+          },
+          "url": "https://vixencreations.github.io/VixenToolBox/planned-features.html",
+          "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
+          "keywords": "VixForge roadmap, VixForge planned features, VRChat shader roadmap, Latex Ultra, VixForge Toon, Clothing Pro, Fur Pro, World Surface, World Fur, Light Baker"
+        }
+    </script>
+
+    <!-- Brand entity: ties every storefront and channel to one identity -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://vixencreations.github.io/VixenToolBox/#organization",
+          "name": "VixForge Interactive",
+          "alternateName": ["VixenCreations"],
+          "url": "https://vixencreations.github.io/VixenToolBox/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "description": "VixForge Interactive builds avatar and world shaders with Unity editor tooling for VRChat, for Unity 2022.3 on the Built-in Render Pipeline.",
+          "founder": {
+            "@type": "Person",
+            "@id": "https://vixencreations.github.io/VixenToolBox/#founder",
+            "name": "Vixenlicious",
+            "alternateName": ["Vixenlicous"],
+            "jobTitle": "Lead Developer & Creative Director",
+            "url": "https://github.com/VixenCreations"
+          },
+          "knowsAbout": [
+            "VRChat avatar shaders",
+            "Unity 2022.3",
+            "Built-in Render Pipeline",
+            "AudioLink",
+            "VRC Light Volumes",
+            "LTCGI",
+            "VRSL",
+            "VRCFury",
+            "Modular Avatar",
+            "UdonSharp",
+            "HLSL"
+          ],
+          "sameAs": [
+            "https://x.com/VixForge",
+            "https://www.youtube.com/@vixenlicous",
+            "https://vixenlicous.gumroad.com",
+            "https://jinxxy.com/Vixenlicious",
+            "https://github.com/VixenCreations",
+            "https://www.patreon.com/cw/Vixenlicious",
+            "https://ko-fi.com/vixenlicous"
+          ]
+        }
+    </script>
+
+    <!-- Icons -->
+    <link rel="icon" href="./favicon.ico">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+
+    <!-- UI Framework -->
+    <script type="module" src="web-components.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="docs-shell.css">
+
+    <!-- Page-Specific Styling -->
+    <style>
+        .planned-intro {
+            color: #9ca3af;
+            max-width: 70ch;
+        }
+
+        .planned-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 24px;
+            margin: 0 0 1.5rem;
+            color: #bfa8d2;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        .planned-category {
+            width: 100%;
+            margin: 2rem 0 1rem;
+            font-size: 1.4rem;
+        }
+
+        .planned-item {
+            padding: 1.5rem 2rem;
+        }
+
+            .planned-item p {
+                color: #bfa8d2;
+                line-height: 1.7;
+                margin: 0.4rem 0 0;
+            }
+
+            .planned-item li {
+                color: #bfa8d2;
+            }
+
+        .planned-title {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .planned-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .planned-status {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            border: 1px solid;
+            white-space: nowrap;
+        }
+
+        .planned-progress {
+            color: #39ff14;
+            border-color: rgba(57, 255, 20, 0.45);
+            background: rgba(57, 255, 20, 0.08);
+        }
+
+        .planned-next {
+            color: #ff9d00;
+            border-color: rgba(255, 157, 0, 0.45);
+            background: rgba(255, 157, 0, 0.08);
+        }
+
+        .planned-later {
+            color: #c4b5fd;
+            border-color: rgba(196, 181, 253, 0.45);
+            background: rgba(196, 181, 253, 0.08);
+        }
+
+        .news-tag {
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            color: var(--neon-cyan);
+        }
+
+        .planned-footer {
+            color: #9ca3af;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 900px) {
+            .planned-item {
+                padding: 1.25rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="docs-shell">
+    <div class="background-art"></div>
+
+<nav class="sidebar">
+        <div class="sidebar-brand">
+            <a href="index.html" class="brand-logo-link"><img src="banner.png" class="sidebar-brand-logo" width="1536" height="665" alt="VixForge Interactive - Shaders, Worlds, Haptics" /></a>
+            <h2 class="text-glow-cyan">VIXENS TOOLBOX</h2>
+            <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">by VixForge Interactive</div>
+        </div>
+
+        <div class="nav-links">
+            <fluent-anchor href="index.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2.5L2 8.5H4V16.5H8V11.5H12V16.5H16V8.5H18L10 2.5Z" /></svg>
+                VPM Registry
+            </fluent-anchor>
+
+            <fluent-anchor href="about.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                About Us
+            </fluent-anchor>
+
+            <fluent-anchor href="products.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                Our Products
+            </fluent-anchor>
+
+            <fluent-anchor href="planned-features.html" class="nav-item active">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                Planned Features
+            </fluent-anchor>
+
+            <fluent-anchor href="news.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v13H4a2 2 0 0 0-2 2 2 2 0 0 0 2 2z"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8z"></path></svg>
+                News
+            </fluent-anchor>
+
+            <fluent-anchor href="behind-the-forge.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+                Behind The Forge
+            </fluent-anchor>
+
+            <fluent-anchor href="research.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"></path><path d="M8.5 2h7"></path><path d="M7 16h10"></path></svg>
+                Research
+            </fluent-anchor>
+
+            <fluent-anchor href="why-choose-us.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                Why Choose Us?
+            </fluent-anchor>
+
+            <fluent-anchor href="tools.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2ZM11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14V10C9 9.44772 9.44772 9 10 9C10.5523 9 11 9.44772 11 10V14ZM10 8C9.44772 8 9 7.55228 9 7C9 6.44772 9.44772 6 10 6C10.5523 6 11 6.44772 11 7C11 7.55228 10.5523 8 10 8Z" /></svg>
+                List of Tools
+            </fluent-anchor>
+
+            <fluent-anchor href="shaderdocs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M7 9.5a5.5 5.5 0 0 1 5-3"></path><circle cx="9.5" cy="9.5" r="1.2" fill="currentColor" stroke="none"></circle></svg>
+                Shader Docs
+            </fluent-anchor>
+
+            <fluent-anchor href="changelog.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Toolbox Changes
+            </fluent-anchor>
+
+            <fluent-anchor href="shader-changelogs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                Shader Changelogs
+            </fluent-anchor>
+
+            <fluent-anchor href="upcoming-changes.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Upcoming Changes
+            </fluent-anchor>
+
+            <fluent-anchor href="support.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                Support the Projects
+            </fluent-anchor>
+
+            <fluent-anchor href="social.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                Get Help Here
+            </fluent-anchor>
+
+            <fluent-anchor href="ai-transparency.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                AI Transparency
+            </fluent-anchor>
+
+            </div>
+    </nav>
+    <main class="main-wrapper">
+        <div class="docs-layout">
+        <div class="docs-main" data-chip-label="Status" data-chip-attr="data-chips" data-chip-mode="prefix" data-shell-sections=".planned-item" data-shell-heading="h3" data-search-label="Filter planned features&hellip;">
+        <div class="col align-items-center content">
+
+            <div class="row align-items-center w-100 justify-content-between mb-4">
+                <h2 class="m-0 text-glow-pink">Planned Features</h2>
+            </div>
+
+            <!-- PLANNED:START -->
+            <p class="caption1 m-0 mb-3 planned-intro">What we're building next for the VixForge shaders, the Light Baker and the tools that come with them. Nothing here has a date, and plans can change as we build. What's already finished and waiting for the next update is on the <a href="upcoming-changes.html">Upcoming Changes</a> page.</p>
+            <div class="planned-legend">
+                <span><span class="planned-status planned-progress">In progress</span> being built or tested right now.</span>
+                <span><span class="planned-status planned-next">Next</span> starts as soon as the work in progress is done.</span>
+                <span><span class="planned-status planned-later">Later</span> planned, not started yet.</span>
+            </div>
+
+            <h2 class="planned-category text-glow-cyan">Editor And Tools</h2>
+            <article class="glass-panel planned-item w-100 mb-4" data-chips="planned">
+                <div class="planned-meta"><span class="planned-status planned-later">Later</span><span class="news-tag">Editor And Tools</span></div>
+                <h3 class="text-glow-pink planned-title">Poiyomi materials, handled properly</h3>
+                <p>The inspector and the locker recognise a Poiyomi material, locked or not, and switching one over keeps every setting.</p>
+            </article>
+            <article class="glass-panel planned-item w-100 mb-4" data-chips="planned">
+                <div class="planned-meta"><span class="planned-status planned-later">Later</span><span class="news-tag">Editor And Tools</span></div>
+                <h3 class="text-glow-pink planned-title">Update check</h3>
+                <p>The inspector tells you when a newer version of your shader is out, with a link to get it.</p>
+            </article>
+
+            <h2 class="planned-category text-glow-cyan">Shader Features</h2>
+            <article class="glass-panel planned-item w-100 mb-4" data-chips="active">
+                <div class="planned-meta"><span class="planned-status planned-progress">In progress</span><span class="news-tag">Shader Features</span></div>
+                <h3 class="text-glow-pink planned-title">Dissolve</h3>
+                <p>The dissolve itself is done and on the <a href="upcoming-changes.html">Upcoming Changes</a> page: your material can fade, burn or break away, with its own shape, edge line and glow, and the shadow, the outline and fur go with it. Now we're going further than the usual dissolve:</p>
+                <ul class="custom-list m-0 ps-4 mt-2" style="line-height: 1.6;">
+                    <li class="mb-1">the edge can shatter into flying shards;</li>
+                    <li class="mb-1">the dissolved area can open onto Hyperspace or Inner Cosmos, so your body becomes a window;</li>
+                    <li class="mb-1">the beat can run the dissolve across your body, and Cymatics patterns can shape it;</li>
+                    <li class="mb-1">your material can melt away with the goo as it goes;</li>
+                    <li class="mb-1">it can look different in mirrors, on camera and to other players;</li>
+                    <li class="mb-1">getting close can open a window into the body;</li>
+                    <li class="mb-1">the cut can show a solid inside instead of a hollow shell;</li>
+                    <li class="mb-1">glitter can spark along the edge.</li>
+                </ul>
+            </article>
+            <article class="glass-panel planned-item w-100 mb-4" data-chips="next">
+                <div class="planned-meta"><span class="planned-status planned-next">Next</span><span class="news-tag">Shader Features</span></div>
+                <h3 class="text-glow-pink planned-title">Baked self-shadowing for Micro Shading</h3>
+                <p>A one-click bake that records how each part of your avatar shades the details around it, so creases and seams catch shadow from every light in the room.</p>
+            </article>
+            <article class="glass-panel planned-item w-100 mb-4" data-chips="planned">
+                <div class="planned-meta"><span class="planned-status planned-later">Later</span><span class="news-tag">Shader Features</span></div>
+                <h3 class="text-glow-pink planned-title">New looks we're exploring</h3>
+                <p>A see-through hologram that pulses with the beat, with scanlines and colour ramps, and a pearly root-to-tip gradient for hair.</p>
+            </article>
+
+            <h2 class="planned-category text-glow-cyan">Lighting</h2>
+            <article class="glass-panel planned-item w-100 mb-4" data-chips="active">
+                <div class="planned-meta"><span class="planned-status planned-progress">In progress</span><span class="news-tag">Lighting</span></div>
+                <h3 class="text-glow-pink planned-title">VRC Light Volumes 3.0</h3>
+                <p>Full support for Light Volumes 3.0 as soon as it's released.</p>
+            </article>
+
+            <h2 class="planned-category text-glow-cyan">Worlds And The Light Baker</h2>
+            <article class="glass-panel planned-item w-100 mb-4" data-chips="planned">
+                <div class="planned-meta"><span class="planned-status planned-later">Later</span><span class="news-tag">Worlds And The Light Baker</span></div>
+                <h3 class="text-glow-pink planned-title">Light Baker 1.0</h3>
+                <p>The first release of the Light Baker as its own product: bake a world's lighting on your graphics card, in one step, into Unity's own lightmaps, light probes and Light Volumes.</p>
+            </article>
+            <article class="glass-panel planned-item w-100 mb-4" data-chips="planned">
+                <div class="planned-meta"><span class="planned-status planned-later">Later</span><span class="news-tag">Worlds And The Light Baker</span></div>
+                <h3 class="text-glow-pink planned-title">Light probes straight from the baker</h3>
+                <p>Place and bake light probes with the Light Baker alone, with no trip through Unity's lightmapper first.</p>
+            </article>
+            <article class="glass-panel planned-item w-100 mb-4" data-chips="planned">
+                <div class="planned-meta"><span class="planned-status planned-later">Later</span><span class="news-tag">Worlds And The Light Baker</span></div>
+                <h3 class="text-glow-pink planned-title">More of your Lighting settings</h3>
+                <p>The baker will follow more of the settings in Unity's Lighting window, such as sample counts and lightmap compression, so a scene set up for Unity's lightmapper bakes the same way here.</p>
+            </article>
+            <article class="glass-panel planned-item w-100 mb-4" data-chips="planned">
+                <div class="planned-meta"><span class="planned-status planned-later">Later</span><span class="news-tag">Worlds And The Light Baker</span></div>
+                <h3 class="text-glow-pink planned-title">Sharper baked lighting on normal maps</h3>
+                <p>A new lightmap option for scenes lit with the VixForge world shaders that keeps normal map detail in baked light at a smaller file size.</p>
+            </article>
+            <article class="glass-panel planned-item w-100 mb-4" data-chips="planned">
+                <div class="planned-meta"><span class="planned-status planned-later">Later</span><span class="news-tag">Worlds And The Light Baker</span></div>
+                <h3 class="text-glow-pink planned-title">Height-blended layers for World Surface</h3>
+                <p>Paint where materials meet with vertex colour, and let them blend by height, so moss settles into the gaps between stones instead of fading over them.</p>
+            </article>
+            <article class="glass-panel planned-item w-100 mb-4" data-chips="planned">
+                <div class="planned-meta"><span class="planned-status planned-later">Later</span><span class="news-tag">Worlds And The Light Baker</span></div>
+                <h3 class="text-glow-pink planned-title">Windows with rooms behind them</h3>
+                <p>Interior mapping for World Surface: a flat window shows a room with depth that shifts as you walk past.</p>
+            </article>
+
+            <h2 class="planned-category text-glow-cyan">Music And Stage</h2>
+            <article class="glass-panel planned-item w-100 mb-4" data-chips="planned">
+                <div class="planned-meta"><span class="planned-status planned-later">Later</span><span class="news-tag">Music And Stage</span></div>
+                <h3 class="text-glow-pink planned-title">More from AudioLink</h3>
+                <p>Your rim light in the colour of the music, a rim that works as a spectrum display around your silhouette and spins with the energy of the track, and effects that stay in step for every player in the instance.</p>
+            </article>
+            <article class="glass-panel planned-item w-100 mb-4" data-chips="planned">
+                <div class="planned-meta"><span class="planned-status planned-later">Later</span><span class="news-tag">Music And Stage</span></div>
+                <h3 class="text-glow-pink planned-title">VixForge Director improvements</h3>
+                <p>The Director listens to AudioLink directly, so it works in any world with AudioLink, not only one with a ProTV player.</p>
+            </article>
+            <article class="glass-panel planned-item w-100 mb-4" data-chips="planned">
+                <div class="planned-meta"><span class="planned-status planned-later">Later</span><span class="news-tag">Music And Stage</span></div>
+                <h3 class="text-glow-pink planned-title">Stage lighting that follows along</h3>
+                <p>In a world, pick a stage light in the inspector and have your material follow it, and let the Director drive the world's DMX lights from the music, so the lights and your materials move together.</p>
+            </article>
+
+            <p class="caption1 planned-footer">Got something you'd love to see? Tell us in the <a href="https://discord.gg/3vbJCKcPtJ" target="_blank" rel="noopener noreferrer">VixForge Discord</a>.</p>
+            <!-- PLANNED:END -->
+
+        </div>
+
+        </div>
+      </div>
+
+        <button id="jumpToTopBtn" class="jump-to-top" title="Back to top">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+            </svg>
+        </button>
+
+    </main>
+
+    <script type="module" src="app.js"></script>
+    <script src="docs-shell.js" defer></script>
+</body>
+</html>

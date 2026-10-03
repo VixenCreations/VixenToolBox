@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Primary SEO -->
-    <title>VixForge Interactive | Lighting Research</title>
-    <meta name="title" content="VixForge Interactive | Lighting Research">
+    <title>Lighting Research</title>
     <meta name="description" content="One Light, Every Route: a research report from VixForge Interactive on lighting for VRChat avatars and worlds. Rim light, unified light routes, camera exposure, light baking and reflections, with every number from a reproducible measurement.">
     <meta name="keywords" content="VixForge Interactive, VRChat lighting, spherical harmonics, light probes, VRC Light Volumes, LTCGI, lightmapping, GGX, anisotropic reflections, AgX, Unity 2022.3, Built-in Render Pipeline">
-    <meta name="author" content="Vixenlicous | VixForge Interactive">
+    <meta name="author" content="VixForge Interactive">
     <meta name="theme-color" content="#ff00aa">
 
     <!-- Canonical URL -->
@@ -31,6 +30,7 @@
     <meta name="twitter:image" content="https://vixencreations.github.io/VixenToolBox/promos/PromoBanner3.png">
     <meta name="twitter:site" content="@VixForge">
 
+    <!-- Structured Data for Google Rich Results -->
     <script type="application/ld+json">
         {
           "@context": "https://schema.org",
@@ -47,6 +47,61 @@
           },
           "about": ["VRChat avatar shaders", "Unity 2022.3", "Built-in Render Pipeline", "Spherical harmonics lighting", "Lightmapping", "Reflection probes"],
           "url": "https://vixencreations.github.io/VixenToolBox/research.html"
+        }
+    </script>
+
+    <!-- Brand entity: ties every storefront and channel to one identity -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://vixencreations.github.io/VixenToolBox/#organization",
+          "name": "VixForge Interactive",
+          "alternateName": ["VixenCreations"],
+          "url": "https://vixencreations.github.io/VixenToolBox/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "description": "VixForge Interactive builds avatar and world shaders with Unity editor tooling for VRChat, for Unity 2022.3 on the Built-in Render Pipeline.",
+          "founder": {
+            "@type": "Person",
+            "@id": "https://vixencreations.github.io/VixenToolBox/#founder",
+            "name": "Vixenlicious",
+            "alternateName": ["Vixenlicous"],
+            "jobTitle": "Lead Developer & Creative Director",
+            "url": "https://github.com/VixenCreations"
+          },
+          "knowsAbout": [
+            "VRChat avatar shaders",
+            "Unity 2022.3",
+            "Built-in Render Pipeline",
+            "AudioLink",
+            "VRC Light Volumes",
+            "LTCGI",
+            "VRSL",
+            "VRCFury",
+            "Modular Avatar",
+            "UdonSharp",
+            "HLSL"
+          ],
+          "sameAs": [
+            "https://x.com/VixForge",
+            "https://www.youtube.com/@vixenlicous",
+            "https://vixenlicous.gumroad.com",
+            "https://jinxxy.com/Vixenlicious",
+            "https://github.com/VixenCreations",
+            "https://www.patreon.com/cw/Vixenlicious",
+            "https://ko-fi.com/vixenlicous"
+          ]
         }
     </script>
 
@@ -68,24 +123,24 @@
             padding: 2rem;
         }
 
-        .paper-section p,
-        .paper-section li {
-            color: #bfa8d2;
-            line-height: 1.75;
-        }
+            .paper-section p,
+            .paper-section li {
+                color: #bfa8d2;
+                line-height: 1.75;
+            }
 
-        .paper-section p {
-            margin-bottom: 1.1rem;
-        }
+            .paper-section p {
+                margin-bottom: 1.1rem;
+            }
 
-        .paper-section h3 {
-            margin-top: 1.8rem;
-            color: #e0d5eb;
-        }
+            .paper-section h3 {
+                margin-top: 1.8rem;
+                color: #e0d5eb;
+            }
 
-        .paper-section strong {
-            color: #e0d5eb;
-        }
+            .paper-section strong {
+                color: #e0d5eb;
+            }
 
         .paper-meta {
             color: #bfa8d2;
@@ -116,9 +171,9 @@
             padding-left: 1.2rem;
         }
 
-        .key-findings li {
-            margin-bottom: 0.45rem;
-        }
+            .key-findings li {
+                margin-bottom: 0.45rem;
+            }
 
         .formula {
             font-family: 'Consolas', monospace;
@@ -201,47 +256,47 @@
             touch-action: pan-y;
         }
 
-        .paper-chart-svg .grid {
-            stroke: rgba(255, 255, 255, 0.08);
-            stroke-width: 1;
-        }
+            .paper-chart-svg .grid {
+                stroke: rgba(255, 255, 255, 0.08);
+                stroke-width: 1;
+            }
 
-        .paper-chart-svg .tick {
-            fill: #9d91a9;
-            font-size: 12px;
-            font-variant-numeric: tabular-nums;
-        }
+            .paper-chart-svg .tick {
+                fill: #9d91a9;
+                font-size: 12px;
+                font-variant-numeric: tabular-nums;
+            }
 
-        .paper-chart-svg .axis-label {
-            fill: #bfa8d2;
-            font-size: 12px;
-        }
+            .paper-chart-svg .axis-label {
+                fill: #bfa8d2;
+                font-size: 12px;
+            }
 
-        .paper-chart-svg .direct-label {
-            fill: #e0d5eb;
-            font-size: 12px;
-        }
+            .paper-chart-svg .direct-label {
+                fill: #e0d5eb;
+                font-size: 12px;
+            }
 
-        .paper-chart-svg .ref {
-            stroke: rgba(255, 255, 255, 0.35);
-            stroke-width: 1;
-        }
+            .paper-chart-svg .ref {
+                stroke: rgba(255, 255, 255, 0.35);
+                stroke-width: 1;
+            }
 
-        .paper-chart-svg .ref-label {
-            fill: #9d91a9;
-            font-size: 11px;
-        }
+            .paper-chart-svg .ref-label {
+                fill: #9d91a9;
+                font-size: 11px;
+            }
 
-        .paper-chart-svg .crosshair {
-            stroke: rgba(255, 255, 255, 0.55);
-            stroke-width: 1;
-            pointer-events: none;
-        }
+            .paper-chart-svg .crosshair {
+                stroke: rgba(255, 255, 255, 0.55);
+                stroke-width: 1;
+                pointer-events: none;
+            }
 
-        .paper-chart-svg:focus {
-            outline: 1px solid var(--neon-cyan);
-            outline-offset: 4px;
-        }
+            .paper-chart-svg:focus {
+                outline: 1px solid var(--neon-cyan);
+                outline-offset: 4px;
+            }
 
         .chart-legend {
             display: flex;
@@ -273,9 +328,9 @@
             z-index: 2;
         }
 
-        .chart-tip.on {
-            opacity: 1;
-        }
+            .chart-tip.on {
+                opacity: 1;
+            }
 
         .tip-head {
             color: #bfa8d2;
@@ -289,11 +344,11 @@
             line-height: 1.6;
         }
 
-        .tip-row strong {
-            color: #ffffff;
-            font-variant-numeric: tabular-nums;
-            min-width: 3.4rem;
-        }
+            .tip-row strong {
+                color: #ffffff;
+                font-variant-numeric: tabular-nums;
+                min-width: 3.4rem;
+            }
 
         .paper-figure figcaption {
             color: #bfa8d2;
@@ -323,9 +378,9 @@
             color: #efe4f8;
         }
 
-        .math-block .katex-display {
-            margin: 0.45rem 0;
-        }
+            .math-block .katex-display {
+                margin: 0.45rem 0;
+            }
 
         .paper-section .katex {
             font-size: 1.05em;
@@ -363,18 +418,18 @@
             background: rgba(0, 0, 0, 0.2);
         }
 
-        details.script-listing summary {
-            cursor: pointer;
-            padding: 0.6rem 0.9rem;
-            color: #00e5ff;
-            list-style-position: inside;
-        }
+            details.script-listing summary {
+                cursor: pointer;
+                padding: 0.6rem 0.9rem;
+                color: #00e5ff;
+                list-style-position: inside;
+            }
 
-        details.script-listing summary .script-meta {
-            color: #bfa8d2;
-            font-size: 0.88rem;
-            margin-left: 0.5rem;
-        }
+                details.script-listing summary .script-meta {
+                    color: #bfa8d2;
+                    font-size: 0.88rem;
+                    margin-left: 0.5rem;
+                }
 
         .code-wrap {
             position: relative;
@@ -409,9 +464,9 @@
             cursor: pointer;
         }
 
-        .code-copy:hover {
-            background: rgba(255, 0, 170, 0.45);
-        }
+            .code-copy:hover {
+                background: rgba(255, 0, 170, 0.45);
+            }
     </style>
 </head>
 
@@ -439,6 +494,11 @@
             <fluent-anchor href="products.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                 Our Products
+            </fluent-anchor>
+
+            <fluent-anchor href="planned-features.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                Planned Features
             </fluent-anchor>
 
             <fluent-anchor href="news.html" class="nav-item">

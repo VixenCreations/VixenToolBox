@@ -89,25 +89,49 @@
         }
     </script>
 
-    <!-- Brand entity: ties every store front and channel to one identity -->
+    <!-- Brand entity: ties every storefront and channel to one identity -->
     <script type="application/ld+json">
         {
           "@context": "https://schema.org",
           "@type": "Organization",
           "@id": "https://vixencreations.github.io/VixenToolBox/#organization",
           "name": "VixForge Interactive",
-          "alternateName": ["Vixenlicous", "Vixenlicious", "Vixen Creations", "Vixens Toolbox"],
+          "alternateName": ["VixenCreations"],
           "url": "https://vixencreations.github.io/VixenToolBox/",
-          "logo": "https://vixencreations.github.io/VixenToolBox/banner.png",
-          "image": "https://vixencreations.github.io/VixenToolBox/banner.png",
-          "description": "VixForge Interactive builds avatar shaders and Unity editor tooling for VRChat, for Unity 2022.3 on the Built-in Render Pipeline.",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "description": "VixForge Interactive builds avatar and world shaders with Unity editor tooling for VRChat, for Unity 2022.3 on the Built-in Render Pipeline.",
           "founder": {
             "@type": "Person",
+            "@id": "https://vixencreations.github.io/VixenToolBox/#founder",
             "name": "Vixenlicious",
-            "alternateName": "Vixenlicous",
-            "jobTitle": "Lead Developer"
+            "alternateName": ["Vixenlicous"],
+            "jobTitle": "Lead Developer & Creative Director",
+            "url": "https://github.com/VixenCreations"
           },
-          "knowsAbout": ["VRChat avatar shaders", "Unity 2022.3", "Built-in Render Pipeline", "AudioLink", "VRC Light Volumes", "LTCGI", "VRSL", "VRCFury", "Modular Avatar"],
+          "knowsAbout": [
+            "VRChat avatar shaders",
+            "Unity 2022.3",
+            "Built-in Render Pipeline",
+            "AudioLink",
+            "VRC Light Volumes",
+            "LTCGI",
+            "VRSL",
+            "VRCFury",
+            "Modular Avatar",
+            "UdonSharp",
+            "HLSL"
+          ],
           "sameAs": [
             "https://x.com/VixForge",
             "https://www.youtube.com/@vixenlicous",
@@ -115,8 +139,7 @@
             "https://jinxxy.com/Vixenlicious",
             "https://github.com/VixenCreations",
             "https://www.patreon.com/cw/Vixenlicious",
-            "https://ko-fi.com/vixenlicous",
-            "https://discord.gg/3vbJCKcPtJ"
+            "https://ko-fi.com/vixenlicous"
           ]
         }
     </script>
@@ -141,25 +164,25 @@
             max-width: 820px;
         }
 
-        .shader-toc a {
-            text-decoration: none;
-            font-family: 'Consolas', monospace;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            color: var(--neon-cyan);
-            padding: 0.45rem 1rem;
-            border: 1px solid rgba(0, 229, 255, 0.35);
-            border-radius: 2px;
-            background: rgba(0, 229, 255, 0.05);
-            transition: all 0.2s ease;
-        }
+            .shader-toc a {
+                text-decoration: none;
+                font-family: 'Consolas', monospace;
+                font-size: 0.85rem;
+                letter-spacing: 1px;
+                color: var(--neon-cyan);
+                padding: 0.45rem 1rem;
+                border: 1px solid rgba(0, 229, 255, 0.35);
+                border-radius: 2px;
+                background: rgba(0, 229, 255, 0.05);
+                transition: all 0.2s ease;
+            }
 
-        .shader-toc a:hover {
-            color: #fff;
-            border-color: var(--forge-fire);
-            background: rgba(255, 69, 0, 0.12);
-            box-shadow: 0 0 12px var(--forge-fire-glow);
-        }
+                .shader-toc a:hover {
+                    color: #fff;
+                    border-color: var(--forge-fire);
+                    background: rgba(255, 69, 0, 0.12);
+                    box-shadow: 0 0 12px var(--forge-fire-glow);
+                }
 
         .shader-section {
             scroll-margin-top: 1.5rem;
@@ -260,6 +283,11 @@
             <fluent-anchor href="products.html" class="nav-item">
                 <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                 Our Products
+            </fluent-anchor>
+
+            <fluent-anchor href="planned-features.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                Planned Features
             </fluent-anchor>
 
             <fluent-anchor href="news.html" class="nav-item">
@@ -382,13 +410,13 @@
                         <span class="opt-values">Options: <code>Opaque</code>, <code>Cutout</code>, <code>Fade</code>, <code>Transparent</code></span></li>
                     <li class="mb-2"><strong>CutOff</strong> - Anything in your texture more see-through than this is cut away completely. Only does anything in the Cutout rendering modes.</li>
                     <li class="mb-2"><strong>Use Mask Texture</strong> - Cut the see-through part from its own texture instead of from the alpha of your main one, so you can keep the two separate.</li>
-                    <li class="mb-2"><strong>Cutout Mask</strong> - Cuts holes in the material. Black is cut away. It needs a render mode that supports it, such as Cutout or Fade.</li>
+                    <li class="mb-2"><strong>Cutout Mask</strong> - Cuts holes in the material. Black is cut away. It works in Cutout.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask holds the part to cut away.</li>
                     <li class="mb-2"><strong>Color</strong> - Albedo holds your colour in RGB. In Cutout its alpha is the cutout; in Fade and Transparent it multiplies the Color's opacity. Leave it empty to set opacity from the Color alpha alone.</li>
                     <li class="mb-2"><strong>Albedo</strong> - The main colour map. Everything else layers on top of this.</li>
                     <li class="mb-2"><strong>Minimum Brightness</strong> - A floor under how dark the material is allowed to get, so you never vanish completely in an unlit room. 0 lets the dark be dark.</li>
                     <li class="mb-2"><strong>Use Alpha Map</strong> - Drives opacity from a texture instead of the Albedo's alpha, handy when your Albedo has no alpha channel. Black keeps the pixel, white takes it away, so you paint over the parts you want gone. Pick the channel that holds the mask below, or turn on Invert for the usual opacity map.</li>
-                    <li class="mb-2"><strong>Alpha Map</strong> - A separate map for transparency, for when the alpha in your albedo is doing something else. White is solid, black is clear.</li>
+                    <li class="mb-2"><strong>Alpha Map</strong> - A separate map for transparency, for when the alpha in your albedo is doing something else. Black is solid and white is clear. Turn on Invert to flip that.</li>
                     <li class="mb-2"><strong>Map Channel</strong> - Which channel of the alpha map holds the see-through part.</li>
                     <li class="mb-2"><strong>Invert</strong> - Off is our default: black keeps the pixel and white takes it away, so you paint over what you want gone. Turn it on for the usual opacity map that most other shaders use, where white keeps and black takes away.</li>
                     <li class="mb-2"><strong>Transparency</strong> - Fades the whole material out. 0 is solid, 1 is invisible. Only works in the Fade and Transparent modes; Opaque and Cutout ignore it.</li>
@@ -420,6 +448,7 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Face Discard</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Hides only the front or only the back of the tiles you pick, so one side of a double sided part can vanish while the other side stays.</li>
                     <li class="mb-2"><strong>UV Set</strong> - The UV set that holds your tile layout for this.
                         <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code>, <code>UV2</code>, <code>UV3</code></span></li>
                     <li class="mb-2"><strong>Face</strong> - Which side to hide in the tiles you pick. Needs Cull set to Off to show both sides at all.
@@ -436,7 +465,7 @@
                 <h3 class="text-glow-pink opt-group">Triplanar Projection</h3>
                 <div class="tag-row"><span class="shader-tag">World Surface</span><span class="shader-tag">World Fur</span></div>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - Projects your maps from three directions in world space instead of reading the mesh UVs. A wall, a floor or a rock with no usable unwrap looks right with no unwrapping work, and two pieces that meet share one continuous surface across the join.</li>
+                    <li class="mb-2"><strong>Enable</strong> - Projects the Albedo, Packed PBR Mask, Metallic, Smoothness, AO and Normal maps from three directions in world space instead of reading the mesh UVs. A wall, a floor or a rock with no usable unwrap looks right with no unwrapping work, and two pieces that meet share one continuous surface across the join. Other maps and masks still follow the mesh UVs.</li>
                 </ul>
 
                 <div class="opt-subgroup">
@@ -513,6 +542,7 @@
                     <li class="mb-2"><strong>Map</strong> - A bent normal map, which leans away from nearby geometry so creases and folds catch light the way they should.</li>
                     <li class="mb-2"><strong>Ambient Shaping</strong> - How much the bent normal map steers the ambient light. It knows which way each part of the surface is open to the room, so creases take less sky and exposed areas take more.</li>
                     <li class="mb-2"><strong>Reflection Shaping</strong> - The same idea for reflections: how much the bent normal map dims what a crease is allowed to reflect. Creases reflect less of the room than a flat area does.</li>
+                    <li class="mb-2"><strong>Sharpen</strong> - Sharpens your normal map against the bent one, so fine detail stands out more in the creases. 0 is off.</li>
                     </ul>
                 </div>
 
@@ -543,7 +573,7 @@
                 <p class="tab-desc">The packed PBR map, its channel routing, reflection / specular masks, and surface shaping.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Packed PBR Mask</strong> - Poiyomi/Substance/Marmoset compatibility: one texture packs metallic, smoothness, AO and height. Match the channels under Channel Mapping. Defaults are VixenWear native (R:Met G:AO B:Disp A:Smooth).</li>
+                    <li class="mb-2"><strong>Packed PBR Mask</strong> - Poiyomi/Substance/Marmoset compatibility: one texture packs metallic, smoothness, AO and height. Match the channels under Channel Mapping. Defaults are VixenWear native (R:Met G:AO B:Disp A:Smooth). Its metal only shows once Global Metallic is raised.</li>
                     <li class="mb-2"><strong>Global Metallic</strong> - Scales the metallic your packed map gives, so you can dial the whole material toward or away from metal without repainting anything.</li>
                     <li class="mb-2"><strong>Global Smoothness</strong> - Scales the smoothness your packed map gives. Higher is glossier, lower is more matte.</li>
                 </ul>
@@ -628,7 +658,7 @@
                     <li class="mb-2"><strong>Cavity Gloss</strong> - How much the cavity detail dulls the highlight in the creases as well as darkening them.</li>
                     <li class="mb-2"><strong>Cavity Reflection Blur</strong> - Uses the same cavity detail to break up the reflection. Blur roughens the reflection in the creases so it is not a clean mirror; Occlusion dims the reflection there. Both leave the raised areas sharp.</li>
                     <li class="mb-2"><strong>Cavity Reflection Occlusion</strong> - How much the cavity detail dims the reflection in the creases. Raised areas keep reflecting normally.</li>
-                    <li class="mb-2"><strong>Parallax Depth</strong> - Higher gives smoother displacement but costs more framerate. It eases off automatically at a distance. Leave at 0 if you do not use Displacement.</li>
+                    <li class="mb-2"><strong>Parallax Depth</strong> - How deep the height map looks. Higher digs deeper but costs more framerate. It eases off automatically at a distance.</li>
                     <li class="mb-2"><strong>Band</strong> - Which part of the music the depth moves with.</li>
                     <li class="mb-2"><strong>Thump</strong> - How far the beat pushes the depth.</li>
                     <li class="mb-2"><strong>Displacement Strength</strong> - Pushes the surface out along its normals using your height source, so folds and seams become real geometry instead of shading. It needs a height source above. Tessellation Detail sets how finely the mesh is split to carry it.</li>
@@ -656,14 +686,14 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Shading Options Settings</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Style</strong> - Which stylised look: stepped bands, or your own ramp texture.
+                    <li class="mb-2"><strong>Style</strong> - Which stylised look. Ramp Texture reads your Gradient, Cel Steps posterises into flat bands, Soft stays smooth, Hard gives one crisp edge, and Realistic leaves the physical light alone.
                         <span class="opt-values">Options: <code>Ramp Texture</code>, <code>Cel Steps</code>, <code>Soft</code>, <code>Hard</code>, <code>Realistic</code></span></li>
                     </ul>
 
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Ramp</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Gradient</strong> - Edit the gradient inline, or drop a texture. It reads left (unlit) to right (lit). Leave it white for a clean two-tone.</li>
+                    <li class="mb-2"><strong>Gradient</strong> - Edit the gradient inline, or drop a texture. It reads left (unlit) to right (lit). Leave it empty for a clean two-tone. Only its brightness is used.</li>
                     <li class="mb-2"><strong>Offset</strong> - Slides your ramp texture along, which moves where light turns into shade.</li>
                         </ul>
                     </div>
@@ -682,7 +712,7 @@
                         </ul>
                     </div>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Edge Softness</strong> - Style picks how light falls off. Ramp Texture reads a gradient you supply, Cel Steps posterises into flat bands, Soft stays smooth, Hard gives one crisp terminator, and Realistic leaves the physical response alone.</li>
+                    <li class="mb-2"><strong>Edge Softness</strong> - How soft the edge between light and shadow is.</li>
                     <li class="mb-2"><strong>Light Wrap</strong> - How far the light carries past the point it would normally stop. Higher softens the whole look and lifts the shaded side.</li>
                     </ul>
                 </div>
@@ -691,8 +721,18 @@
                 <p class="opt-note">Rim light, subsurface, transmission, anisotropy and how highlights respond to the lights around you.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Sharper Probes</strong> - Adds contrast to the light from light probes, so the side facing the light reads brighter and the far side darker. It is a look rather than a closer match: one strong light comes out up to a third brighter than Unity draws it. With Unified Light on it keeps that contrast and follows Soften and Hardness.</li>
-                    <li class="mb-2"><strong>Unified Light</strong> - Experimental, so you can compare it with the lighting you have now. It lights you the same way whichever route a light takes to reach you: realtime, the cheaper per-vertex lights, light probes or Light Volumes. Soften and Hardness then reach every light, Light Volumes look less flat, and the per-vertex lights pick up your normal map and highlights. Each Light Volume point, spot and area light lights you on its own, at its real size and with its own highlight. Reflections change too: they line up with the room even where box projection is switched off in the project settings, dim in corners the light does not reach, stretch along anisotropic surfaces, and come from the light probes on rough surfaces.</li>
                 </ul>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Unified Light</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Experimental, so you can compare it with the lighting you have now. It lights you the same way whichever route a light takes to reach you: realtime, the cheaper per-vertex lights, light probes or Light Volumes. Soften and Hardness then reach every light, Light Volumes look less flat, and the per-vertex lights pick up your normal map and highlights. Each Light Volume point, spot and area light lights you on its own, at its real size and with its own highlight. Reflections change too: they line up with the room even where box projection is switched off in the project settings, dim in corners the light does not reach, stretch along anisotropic surfaces, and come from the light probes on rough surfaces.</li>
+                    <li class="mb-2"><strong>Light Size</strong> - How big the lights look from the material, in degrees. 0 treats every light as a point, the way Unity draws them. Raise it for the wide, soft highlight a studio light gives gloss: about 5 for a softbox across the room. The highlight spreads and dims together, so it carries the same light. Light Volume lights keep their own size.</li>
+                    <li class="mb-2"><strong>Probe Highlights</strong> - Gives the light probes a highlight. Probes only carry soft light, so in a room lit by baked lamps a glossy material shows no highlight from them. This finds where the probe light comes from and lights you from there like a real lamp. 0 is off. The reflection probe may already show that lamp, so raise it until it looks right. Light Volumes and lightmaps have their own highlight, so it stays off there.</li>
+                    <li class="mb-2"><strong>Brushed Reflection Start</strong> - How far Anisotropy Strength has to go before the reflection stretches with the highlight. At the default it stretches as soon as the highlight does. Raise it to keep a round reflection on lightly brushed surfaces.</li>
+                    <li class="mb-2"><strong>Dark Corner Dimming</strong> - How much reflections dim where the room light does not reach, so a dark corner does not mirror a bright sky. 1 is full, 0 turns it off and the material draws a little faster.</li>
+                    </ul>
+                </div>
 
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Rim Light</strong></p>
@@ -718,8 +758,8 @@
                     <li class="mb-2"><strong>Strength</strong> - How much light soaks in. 0 turns it off.</li>
                     <li class="mb-2"><strong>Distance</strong> - How far the light spreads once it is inside. Small keeps the glow tight to the lit edge, large carries it round onto the shaded side.</li>
                     <li class="mb-2"><strong>Power</strong> - How much extra you get looking towards the light, the way a hand held up to a lamp glows at the edges. Low shows it across a wide range of angles, high only when the light is nearly behind.</li>
-                    <li class="mb-2"><strong>Thickness</strong> - How thick the material is where light soaks through. Thin parts pass more light and glow at the edges. Leave it at 0 to keep the fully thick look every material has had until now.</li>
-                    <li class="mb-2"><strong>Thickness Map</strong> - Paints the thickness across the mesh instead of one value for the whole material. White is thick, black is thin. It scales the slider above, so raise that first.</li>
+                    <li class="mb-2"><strong>Thinness</strong> - How thin the material is where light soaks through. Higher lets more light through and makes the edges glow. 0 keeps the fully thick look.</li>
+                    <li class="mb-2"><strong>Thickness Map</strong> - Paints the thickness across the mesh instead of one value for the whole material. White is thick, black is thin. It scales Thinness above, so raise that first.</li>
                     <li class="mb-2"><strong>Thickness Channel</strong> - Which channel of the map holds the thickness. Auto reads a plain greyscale map.</li>
                     </ul>
                 </div>
@@ -751,6 +791,7 @@
                     <li class="mb-2"><strong>Multi-Scatter Compensation</strong> - Puts back the light that a rough surface bounces around inside itself before it escapes. Without it rough metal comes out darker than it should. Leave it on unless you want the older, darker look.</li>
                     <li class="mb-2"><strong>Horizon Occlusion</strong> - Stops reflections leaking through the surface when you look at it edge-on. 1 is full, 0 is off.</li>
                     <li class="mb-2"><strong>Highlight Clamp</strong> - Tames the hotspot on very glossy material so it stops sparkling. 1 leaves it alone, lower softens the highlight, and the bottom of the slider takes it out. Scene lights only, so reflections are not affected.</li>
+                    <li class="mb-2"><strong>Specular Anti-Aliasing</strong> - Stops highlights sparkling and crawling on tight detail when you move, on the material and its clear coat. Leave it on unless you want the sparkle.</li>
                     </ul>
                 </div>
 
@@ -794,7 +835,7 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>World Post Processing Settings</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Brightness Limit</strong> - Keeps highlights from going brighter than this, so the world's bloom can't turn a small glint into a huge glow. It starts easing off at half this value, so nothing clips flat.</li>
+                    <li class="mb-2"><strong>Brightness Limit</strong> - Keeps highlights from going brighter than this, so the world's bloom can't turn a small glint into a huge glow. It starts easing off at half this value, so nothing clips flat. Each realtime light is limited on its own, so several lights on one spot can add up past it.</li>
                     </ul>
                 </div>
 
@@ -828,7 +869,7 @@
                     <li class="mb-2"><strong>Normal Bias Mode</strong> - Relative adds to the Normal Bias set on the light, so it keeps up with your shadow quality, and at 1 it adds three times what the light uses. Fixed moves a set distance instead, up to 2 cm at 1. Both need the light to have some bias of its own.
                         <span class="opt-values">Options: <code>Relative</code>, <code>Fixed</code></span></li>
                     <li class="mb-2"><strong>Enable Baked Shadow Map</strong> - Paint shadows on permanently from a texture, for detail no light in the room would ever give you.</li>
-                    <li class="mb-2"><strong>Baked Shadow Map</strong> - A baked shadow painted into the surface. Black is in shadow.</li>
+                    <li class="mb-2"><strong>Baked Shadow Map</strong> - A baked shadow painted into the surface. White is in shadow, black is left alone.</li>
                     <li class="mb-2"><strong>Shadow Channel</strong> - Which channel of that texture holds the painted shadow.</li>
                     <li class="mb-2"><strong>Shadow Strength</strong> - How dark those painted shadows go.</li>
                     <li class="mb-2"><strong>Band</strong> - Which part of the music the painted shadows deepen with.</li>
@@ -951,7 +992,7 @@
                     <li class="mb-2"><strong>Side Offset</strong> - Shifts the mirrored copy, for when the two sides are not quite laid out the same. <em>L</em>: Pushes the left edge out. Below 0 pulls it in. <em>R</em>: Pushes the right edge out. Below 0 pulls it in. <em>D</em>: Pushes the bottom edge out. Below 0 pulls it in. <em>U</em>: Pushes the top edge out. Below 0 pulls it in.</li>
                     <li class="mb-2"><strong>UV Source</strong> - Which set of texture coordinates places it. Change this if the decal lands somewhere unexpected.
                         <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
-                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the decal texture says where it is solid.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the Decal Masks image says where this decal shows.</li>
                     <li class="mb-2"><strong>Coverage From</strong> - What decides where the decal shows: its own alpha, or a channel you pick.
                         <span class="opt-values">Options: <code>Texture Alpha</code>, <code>Luminance</code>, <code>Luminance Inverted</code>, <code>Ignore Alpha</code></span></li>
                     <li class="mb-2"><strong>Color Blend</strong> - How the decal sits on the material underneath: laid over it, added as light, or multiplied into it.
@@ -976,7 +1017,7 @@
                     <li class="mb-2"><strong>Side Offset</strong> - Shifts the mirrored copy, for when the two sides are not quite laid out the same. <em>L</em>: Pushes the left edge out. Below 0 pulls it in. <em>R</em>: Pushes the right edge out. Below 0 pulls it in. <em>D</em>: Pushes the bottom edge out. Below 0 pulls it in. <em>U</em>: Pushes the top edge out. Below 0 pulls it in.</li>
                     <li class="mb-2"><strong>UV Source</strong> - Which set of texture coordinates places it. Change this if the decal lands somewhere unexpected.
                         <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
-                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the decal texture says where it is solid.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the Decal Masks image says where this decal shows.</li>
                     <li class="mb-2"><strong>Coverage From</strong> - What decides where the decal shows: its own alpha, or a channel you pick.
                         <span class="opt-values">Options: <code>Texture Alpha</code>, <code>Luminance</code>, <code>Luminance Inverted</code>, <code>Ignore Alpha</code></span></li>
                     <li class="mb-2"><strong>Color Blend</strong> - How the decal sits on the material underneath: laid over it, added as light, or multiplied into it.
@@ -1001,7 +1042,7 @@
                     <li class="mb-2"><strong>Side Offset</strong> - Shifts the mirrored copy, for when the two sides are not quite laid out the same. <em>L</em>: Pushes the left edge out. Below 0 pulls it in. <em>R</em>: Pushes the right edge out. Below 0 pulls it in. <em>D</em>: Pushes the bottom edge out. Below 0 pulls it in. <em>U</em>: Pushes the top edge out. Below 0 pulls it in.</li>
                     <li class="mb-2"><strong>UV Source</strong> - Which set of texture coordinates places it. Change this if the decal lands somewhere unexpected.
                         <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
-                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the decal texture says where it is solid.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the Decal Masks image says where this decal shows.</li>
                     <li class="mb-2"><strong>Coverage From</strong> - What decides where the decal shows: its own alpha, or a channel you pick.
                         <span class="opt-values">Options: <code>Texture Alpha</code>, <code>Luminance</code>, <code>Luminance Inverted</code>, <code>Ignore Alpha</code></span></li>
                     <li class="mb-2"><strong>Color Blend</strong> - How the decal sits on the material underneath: laid over it, added as light, or multiplied into it.
@@ -1026,7 +1067,7 @@
                     <li class="mb-2"><strong>Side Offset</strong> - Shifts the mirrored copy, for when the two sides are not quite laid out the same. <em>L</em>: Pushes the left edge out. Below 0 pulls it in. <em>R</em>: Pushes the right edge out. Below 0 pulls it in. <em>D</em>: Pushes the bottom edge out. Below 0 pulls it in. <em>U</em>: Pushes the top edge out. Below 0 pulls it in.</li>
                     <li class="mb-2"><strong>UV Source</strong> - Which set of texture coordinates places it. Change this if the decal lands somewhere unexpected.
                         <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
-                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the decal texture says where it is solid.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the Decal Masks image says where this decal shows.</li>
                     <li class="mb-2"><strong>Coverage From</strong> - What decides where the decal shows: its own alpha, or a channel you pick.
                         <span class="opt-values">Options: <code>Texture Alpha</code>, <code>Luminance</code>, <code>Luminance Inverted</code>, <code>Ignore Alpha</code></span></li>
                     <li class="mb-2"><strong>Color Blend</strong> - How the decal sits on the material underneath: laid over it, added as light, or multiplied into it.
@@ -1051,14 +1092,13 @@
                 <p class="tab-desc">The polish master gate, clearcoat, and thin film.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Enable</strong> - Turns on the whole shine layer: clearcoat, thin film, glow-through, brushed highlights and rim. Off leaves a plain, flat surface.</li>
-                    <li class="mb-2"><strong>Mask</strong> - Reflectivity is how mirror-like the clear coat is when you look straight at it. The default suits latex and most plastics. Push it up for glass or a wetter, harder shine.</li>
+                    <li class="mb-2"><strong>Enable</strong> - Turns on the shine layer: clearcoat, thin film and brushed highlights. Off leaves a plain, flat surface.</li>
+                    <li class="mb-2"><strong>Mask</strong> - Where the shine layer goes. White gets it, black does not.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the shine layer applies.</li>
                     <li class="mb-2"><strong>Clearcoat Strength</strong> - How present the clear coat is. Think of it as a layer of lacquer sitting over the material, with its own reflection.</li>
-                    <li class="mb-2"><strong>Coat Band</strong> - Which part of the music the coat shatters on.</li>
-                    <li class="mb-2"><strong>Shatter</strong> - How far the beat cracks the coat's reflection apart.</li>
+                    <li class="mb-2"><strong>Coat Band</strong> - Which part of the music the coat flashes with.</li>
+                    <li class="mb-2"><strong>Shatter</strong> - How far the beat brightens the coat's reflection.</li>
                     <li class="mb-2"><strong>Clearcoat Smoothness</strong> - How sharp the coat's reflection is. High is wet and mirror-like, low is a soft sheen.</li>
-                    <li class="mb-2"><strong>Specular Anti-Aliasing</strong> - Stops the highlight sparkling and crawling on tight detail when you move. Leave it on unless you want the sparkle.</li>
                     <li class="mb-2"><strong>Clearcoat Flattening</strong> - Flattens the coat against the surface underneath, so the shine ignores the fine bumps in your normal map and reads as a smooth layer laid over them.</li>
                     <li class="mb-2"><strong>Clearcoat Tint</strong> - Colours the coat's reflection, for tinted lacquer or coloured varnish.</li>
                     <li class="mb-2"><strong>Clearcoat Reflectivity</strong> - How reflective the coat is when you look straight at it. The default suits latex and most paints; raise it for liquid glass or a wet resin finish.</li>
@@ -1112,7 +1152,7 @@
                     <li class="mb-2"><strong>Bloom</strong> - How far the beat pushes this.</li>
                     <li class="mb-2"><strong>Tint</strong> - The colour the fabric catches at its edges, which on real cloth is rarely the same as its body colour.</li>
                     <li class="mb-2"><strong>Roughness (soft to velvet)</strong> - How soft the fabric is. Low is a crisp satin, high is a deep velvet that glows all round its edge.</li>
-                    <li class="mb-2"><strong>Root Darkening</strong> - How much the sheen fades down inside the weave, so only the raised threads catch the light.</li>
+                    <li class="mb-2"><strong>Root Darkening</strong> - How much the sheen fades down inside the weave, so only the raised threads catch the light. It follows your AO map, so it needs one.</li>
                     <li class="mb-2"><strong>Fabric Mask (B&amp;W)</strong> - Scopes the sheen and the fur to part of the material, so you can put velvet on the collar and leave the rest plain. Leave empty to apply everywhere.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the fabric sheen applies.</li>
                     </ul>
@@ -1141,7 +1181,7 @@
                     <li class="mb-2"><strong>Ambient Response</strong> - Keeps the fur lit in soft, even light where a plain strand highlight would go dead. Turn it down for hard studio lighting.</li>
                     <li class="mb-2"><strong>Strand Break-up</strong> - Scatters the highlight so it is not one clean band, the way real strands sit at slightly different angles.</li>
                     <li class="mb-2"><strong>Light Scatter</strong> - How much light passes through the coat and comes back out, which is what makes fur glow at its edges when it is backlit.</li>
-                    <li class="mb-2"><strong>Root Darkening</strong> - How much darker the fur is at its roots, which is what gives a coat depth.</li>
+                    <li class="mb-2"><strong>Root Darkening</strong> - How much darker the fur is at its roots, which is what gives a coat depth. It follows your AO map, so it needs one.</li>
                     <li class="mb-2"><strong>Mask (B&amp;W)</strong> - Narrows the fur to part of what the Fabric Mask already covers, so the sheen can run over the whole garment while the strands stay on the collar and cuffs. White keeps the fur, black drops it. Leave empty for fur everywhere the Fabric Mask allows.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the surface fur shows.</li>
                     </ul>
@@ -1241,6 +1281,9 @@
                     <li class="mb-2"><strong>Flow Speed</strong> - How fast they run.</li>
                     <li class="mb-2"><strong>Strength</strong> - How pronounced the drips are.</li>
                     <li class="mb-2"><strong>Bump</strong> - How much each drip stands out from the surface.</li>
+                    <li class="mb-2"><strong>Water Look</strong> - Turns each streak from a darker, glossier patch of the material into clear running water with its own colour, depth and highlight. 0 keeps the classic look.</li>
+                    <li class="mb-2"><strong>Water Colour</strong> - The colour of the water. It shows most where a streak runs deep.</li>
+                    <li class="mb-2"><strong>Water Depth</strong> - How deep the water looks. Deeper water holds more of its colour and bulges more, so it catches a rounder highlight.</li>
                     <li class="mb-2"><strong>Gravity Flow</strong> - At 0 the streaks run down the texture. Turn it up and they run down in the world instead, so they stay vertical however the UVs are laid out and however you tilt.</li>
                     </ul>
                 </div>
@@ -1542,6 +1585,213 @@
                     <li class="mb-2"><strong>Landing</strong> - Set this to 1 the moment you land and let it fade back to 0 over about half a second. Splash reads it.</li>
                 </ul>
 
+                <h3 class="text-glow-pink opt-group">Dissolve</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Dissolve Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Shape</strong> - Where the dissolve starts and which way it runs. Gradient Texture follows a black and white image, Point to Point runs from one point to another, Spherical grows out from a point, and Center Out goes by the angle of the surface.
+                        <span class="opt-values">Options: <code>Gradient Texture</code>, <code>Point to Point</code>, <code>Spherical</code>, <code>Center Out</code></span></li>
+                    <li class="mb-2"><strong>Amount</strong> - How far it has dissolved. 0 is all there and 1 is all gone. Animate this to play the effect.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music moves the Amount.</li>
+                    <li class="mb-2"><strong>Beat Amount</strong> - Added to Amount. Min when the music is quiet, Max at its loudest.</li>
+                    <li class="mb-2"><strong>Beat Run</strong> - Sweeps the dissolve through again and again in time with the music, in place of Amount. 0 is off.</li>
+                    <li class="mb-2"><strong>Beat Run Band</strong> - Which part of the music drives Beat Run.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code></span></li>
+                    <li class="mb-2"><strong>Beat Run Style</strong> - How the music drives Beat Run. Speeds Up goes faster the louder it is, Rocks swings back and forth with the level, Runs In Quiet moves between beats and holds on them, and Reverses On Beat runs back on each beat.
+                        <span class="opt-values">Options: <code>Speeds Up</code>, <code>Speeds Up Smooth</code>, <code>Rocks</code>, <code>Rocks Smooth</code>, <code>Runs In Quiet</code>, <code>Runs In Quiet Smooth</code>, <code>Reverses On Beat</code>, <code>Reverses On Beat Smooth</code></span></li>
+                    <li class="mb-2"><strong>Softness</strong> - How soft the line between what is left and what is gone is.</li>
+                    <li class="mb-2"><strong>Show Gradient</strong> - Paints the shape on the material so you can see how it runs. Black goes first and white last, red and green are past either end, and yellow is where Amount sits. Turn it off before you upload.</li>
+                    </ul>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Gradient Texture</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Gradient</strong> - A black and white image of the order things go in. Black goes first and white goes last.</li>
+                    <li class="mb-2"><strong>Panning</strong> - Slides the gradient across the material over time.</li>
+                    <li class="mb-2"><strong>UV Set</strong> - Which UV set the gradient follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code>, <code>UV2</code>, <code>UV3</code></span></li>
+                    <li class="mb-2"><strong>Invert</strong> - Flips the order, so white goes first.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Point to Point</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Space</strong> - What the two points are measured in. Local moves with the model, World stays put in the world, Vertex Colors reads the mesh colours as positions, and UV runs across the texture layout.
+                        <span class="opt-values">Options: <code>Local</code>, <code>World</code>, <code>Vertex Colors</code>, <code>UV</code></span></li>
+                    <li class="mb-2"><strong>UV Set</strong> - Which UV set the line runs across.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code>, <code>UV2</code>, <code>UV3</code></span></li>
+                    <li class="mb-2"><strong>Start Point</strong> - Where the dissolve begins.</li>
+                    <li class="mb-2"><strong>End Point</strong> - Where the dissolve ends.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Spherical</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Center Point</strong> - The middle of the sphere, in the model's own space.</li>
+                    <li class="mb-2"><strong>Radius</strong> - How far the sphere reaches. The middle goes first and the parts out at this distance go last.</li>
+                    <li class="mb-2"><strong>Invert</strong> - Dissolves from the outside in instead.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Center Out</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Mode</strong> - What the surface is measured against. View Direction takes the parts facing you first and the edges last, Custom Direction uses the direction below, and Light Direction follows the main light in the room's light probes.
+                        <span class="opt-values">Options: <code>View Direction</code>, <code>Custom Direction</code>, <code>Light Direction</code></span></li>
+                    <li class="mb-2"><strong>Direction</strong> - The direction to measure against, in world space. Parts facing it go first.</li>
+                    <li class="mb-2"><strong>Invert</strong> - Flips the order, so the parts facing away go first.</li>
+                    <li class="mb-2"><strong>Linear</strong> - Spreads the dissolve evenly over the angle. Off bunches it up toward the edges.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Dissolved Area</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Alpha Only</strong> - Fades the material out by the ramp below, instead of turning it into the colour and texture.</li>
+                    <li class="mb-2"><strong>Alpha Ramp</strong> - How solid it is before and after it dissolves. The default goes from fully there to fully gone.</li>
+                    <li class="mb-2"><strong>Color</strong> - The colour the dissolved part turns. Its alpha is how solid that part stays: 0 makes it vanish, 1 keeps it fully there.</li>
+                    <li class="mb-2"><strong>Color Source</strong> - Takes the colour from the music instead. It keeps your own colour in a world without AudioLink.
+                        <span class="opt-values">Options: <code>Own Color</code>, <code>ColorChord 1</code>, <code>ColorChord 2</code>, <code>ColorChord 3</code>, <code>ColorChord 4</code>, <code>AudioLink Theme 1</code>, <code>AudioLink Theme 2</code>, <code>AudioLink Theme 3</code>, <code>AudioLink Theme 4</code></span></li>
+                    <li class="mb-2"><strong>Texture</strong> - A texture the dissolved part turns into, tinted by Color. Its alpha multiplies the alpha of Color.</li>
+                    <li class="mb-2"><strong>Panning</strong> - Slides the texture across the material over time.</li>
+                    <li class="mb-2"><strong>UV Set</strong> - Which UV set the texture follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code>, <code>UV2</code>, <code>UV3</code></span></li>
+                    <li class="mb-2"><strong>Emission</strong> - Makes the dissolved part glow in its colour.</li>
+                    <li class="mb-2"><strong>Hue Shift</strong> - Turns the colour of the dissolved part round the colour wheel.</li>
+                    <li class="mb-2"><strong>Color Space</strong> - OKLab keeps the brightness even as the hue turns. HSV is the classic colour wheel.
+                        <span class="opt-values">Options: <code>OKLab</code>, <code>HSV</code></span></li>
+                    <li class="mb-2"><strong>Mode</strong> - Hue Shift turns the colour by Shift. Hue Select sets the hue to Shift outright.
+                        <span class="opt-values">Options: <code>Hue Select</code>, <code>Hue Shift</code></span></li>
+                    <li class="mb-2"><strong>Shift</strong> - How far round the wheel. 1 is a full turn.</li>
+                    <li class="mb-2"><strong>Speed</strong> - Keeps the hue turning over time.</li>
+                    <li class="mb-2"><strong>Beat Hue Run</strong> - Turns the hue in time with the music, here and on the Edge Line. 0 is off.</li>
+                    <li class="mb-2"><strong>Beat Hue Band</strong> - Which part of the music turns the hue.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code></span></li>
+                    <li class="mb-2"><strong>Beat Hue Style</strong> - How the music turns the hue. The styles work the same as Beat Run Style.
+                        <span class="opt-values">Options: <code>Speeds Up</code>, <code>Speeds Up Smooth</code>, <code>Rocks</code>, <code>Rocks Smooth</code>, <code>Runs In Quiet</code>, <code>Runs In Quiet Smooth</code>, <code>Reverses On Beat</code>, <code>Reverses On Beat Smooth</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Gradient Noise</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns the noise on.</li>
+                    <li class="mb-2"><strong>Mode</strong> - Texture uses your own noise image. 3D Dot Noise makes its own noise in the space around the model, so it needs no texture and has no seams.
+                        <span class="opt-values">Options: <code>Texture</code>, <code>3D Dot Noise</code></span></li>
+                    <li class="mb-2"><strong>Texture</strong> - A noise image. Mid grey leaves the line where it is, lighter pushes it one way and darker the other.</li>
+                    <li class="mb-2"><strong>Panning</strong> - Slides the noise across the material over time.</li>
+                    <li class="mb-2"><strong>UV Set</strong> - Which UV set the noise follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code>, <code>UV2</code>, <code>UV3</code></span></li>
+                    <li class="mb-2"><strong>Invert</strong> - Flips the noise.</li>
+                    <li class="mb-2"><strong>Strength</strong> - How far the noise pushes the line about.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music moves the Strength.</li>
+                    <li class="mb-2"><strong>Beat Strength</strong> - Added to Strength. Min when the music is quiet, Max at its loudest.</li>
+                    <li class="mb-2"><strong>Edge Only</strong> - Keeps the noise to the part already dissolving, so the line roughens without running ahead.</li>
+                    <li class="mb-2"><strong>Scale</strong> - How fine the noise is along each axis. Higher is finer.</li>
+                    <li class="mb-2"><strong>Offset</strong> - Moves the noise pattern.</li>
+                    <li class="mb-2"><strong>Speed</strong> - Drifts the noise over time.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Edge Line</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns the edge line on.</li>
+                    <li class="mb-2"><strong>Color</strong> - The colour of the line.</li>
+                    <li class="mb-2"><strong>Color Source</strong> - Takes the colour from the music instead. It keeps your own colour in a world without AudioLink.
+                        <span class="opt-values">Options: <code>Own Color</code>, <code>ColorChord 1</code>, <code>ColorChord 2</code>, <code>ColorChord 3</code>, <code>ColorChord 4</code>, <code>AudioLink Theme 1</code>, <code>AudioLink Theme 2</code>, <code>AudioLink Theme 3</code>, <code>AudioLink Theme 4</code></span></li>
+                    <li class="mb-2"><strong>Beat Color</strong> - Swaps the line to another colour as the music gets louder.</li>
+                    <li class="mb-2"><strong>Beat Color Source</strong> - Takes the beat colour from the music instead.
+                        <span class="opt-values">Options: <code>Own Color</code>, <code>ColorChord 1</code>, <code>ColorChord 2</code>, <code>ColorChord 3</code>, <code>ColorChord 4</code>, <code>AudioLink Theme 1</code>, <code>AudioLink Theme 2</code>, <code>AudioLink Theme 3</code>, <code>AudioLink Theme 4</code></span></li>
+                    <li class="mb-2"><strong>Beat Color Band</strong> - Which part of the music brings the beat colour in.</li>
+                    <li class="mb-2"><strong>Beat Color Ramp</strong> - How much of the beat colour shows from quiet to loud.</li>
+                    <li class="mb-2"><strong>Gradient</strong> - Blends the line through three colours across its width.</li>
+                    <li class="mb-2"><strong>Color 2</strong> - The middle colour of the line.</li>
+                    <li class="mb-2"><strong>Color 2 Source</strong> - Takes Color 2 from the music instead.
+                        <span class="opt-values">Options: <code>Own Color</code>, <code>ColorChord 1</code>, <code>ColorChord 2</code>, <code>ColorChord 3</code>, <code>ColorChord 4</code>, <code>AudioLink Theme 1</code>, <code>AudioLink Theme 2</code>, <code>AudioLink Theme 3</code>, <code>AudioLink Theme 4</code></span></li>
+                    <li class="mb-2"><strong>Color 3</strong> - The colour on the far side of the line.</li>
+                    <li class="mb-2"><strong>Color 3 Source</strong> - Takes Color 3 from the music instead.
+                        <span class="opt-values">Options: <code>Own Color</code>, <code>ColorChord 1</code>, <code>ColorChord 2</code>, <code>ColorChord 3</code>, <code>ColorChord 4</code>, <code>AudioLink Theme 1</code>, <code>AudioLink Theme 2</code>, <code>AudioLink Theme 3</code>, <code>AudioLink Theme 4</code></span></li>
+                    <li class="mb-2"><strong>Border 1</strong> - Where across the line Color 2 takes over.</li>
+                    <li class="mb-2"><strong>Border 2</strong> - Where across the line Color 3 takes over.</li>
+                    <li class="mb-2"><strong>Blur 1</strong> - How soft the change to Color 2 is.</li>
+                    <li class="mb-2"><strong>Blur 2</strong> - How soft the change to Color 3 is.</li>
+                    <li class="mb-2"><strong>Width</strong> - How wide the line is.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music moves the Width.</li>
+                    <li class="mb-2"><strong>Beat Width</strong> - Added to Width. Min when the music is quiet, Max at its loudest.</li>
+                    <li class="mb-2"><strong>Emission</strong> - How brightly the line glows.</li>
+                    <li class="mb-2"><strong>Emission Band</strong> - Which part of the music moves the Emission.</li>
+                    <li class="mb-2"><strong>Beat Emission</strong> - Added to Emission. Min when the music is quiet, Max at its loudest.</li>
+                    <li class="mb-2"><strong>Flip Side</strong> - Puts the line on the dissolved side of the front instead of on what is left.</li>
+                    <li class="mb-2"><strong>Hue Shift</strong> - Turns the colour of the line round the colour wheel.</li>
+                    <li class="mb-2"><strong>Color Space</strong> - OKLab keeps the brightness even as the hue turns. HSV is the classic colour wheel.
+                        <span class="opt-values">Options: <code>OKLab</code>, <code>HSV</code></span></li>
+                    <li class="mb-2"><strong>Mode</strong> - Hue Shift turns the colour by Shift. Hue Select sets the hue to Shift outright.
+                        <span class="opt-values">Options: <code>Hue Select</code>, <code>Hue Shift</code></span></li>
+                    <li class="mb-2"><strong>Shift</strong> - How far round the wheel. 1 is a full turn.</li>
+                    <li class="mb-2"><strong>Speed</strong> - Keeps the hue turning over time.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Wave Mode</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns Wave Mode on.</li>
+                    <li class="mb-2"><strong>Width</strong> - How wide the travelling band is.</li>
+                    <li class="mb-2"><strong>Bounds</strong> - Edge starts the band just off one end and ends it just off the other. Center starts it halfway on. Loop wraps it round for an endless sweep.
+                        <span class="opt-values">Options: <code>Edge</code>, <code>Center</code>, <code>Loop</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Continuous Dissolve</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns the loop on.</li>
+                    <li class="mb-2"><strong>Wave Shape</strong> - How it moves through the loop.
+                        <span class="opt-values">Options: <code>Sine</code>, <code>Triangle</code>, <code>Sawtooth</code>, <code>Square</code></span></li>
+                    <li class="mb-2"><strong>Speed</strong> - Loops per second.</li>
+                    <li class="mb-2"><strong>Range</strong> - The lowest and highest Amount the loop reaches.</li>
+                    <li class="mb-2"><strong>Phase</strong> - Where in the loop it starts. Give two materials different phases to put them out of step.</li>
+                    <li class="mb-2"><strong>Blend</strong> - How the loop works with Amount: in place of it, added to it, or scaling it.
+                        <span class="opt-values">Options: <code>Replace</code>, <code>Add</code>, <code>Multiply</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Vertex Height</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns Vertex Height on.</li>
+                    <li class="mb-2"><strong>Height</strong> - How far it moves, in the model's own units.</li>
+                    <li class="mb-2"><strong>Offset</strong> - Starts the lift ahead of the dissolve line or behind it.</li>
+                    <li class="mb-2"><strong>Easing</strong> - How the lift speeds up as the line passes.
+                        <span class="opt-values">Options: <code>Smoothstep</code>, <code>Linear</code>, <code>Ease Out</code>, <code>Ease In</code></span></li>
+                    <li class="mb-2"><strong>Noise</strong> - How much Gradient Noise roughens the lift.</li>
+                    <li class="mb-2"><strong>Direction</strong> - Which way the dissolving part moves.</li>
+                    <li class="mb-2"><strong>Direction Space</strong> - Local turns with the model. World always points the same way, so World up makes it rise.
+                        <span class="opt-values">Options: <code>Local</code>, <code>World</code></span></li>
+                    <li class="mb-2"><strong>Direction Blend</strong> - 0 pushes straight out from the surface and 1 uses Direction.</li>
+                    <li class="mb-2"><strong>Dot Mask</strong> - Lifts less where the surface faces away from the way it moves.</li>
+                    <li class="mb-2"><strong>Continue Past Peak</strong> - Keeps the dissolved part moving away instead of stopping at Height.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Masking</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Mask</strong> - White can dissolve and black stays. It reads the red channel.</li>
+                    <li class="mb-2"><strong>Panning</strong> - Slides the mask across the material over time.</li>
+                    <li class="mb-2"><strong>UV Set</strong> - Which UV set the mask follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code>, <code>UV2</code>, <code>UV3</code></span></li>
+                    <li class="mb-2"><strong>Invert</strong> - Flips the mask, so black can dissolve.</li>
+                    <li class="mb-2"><strong>Vertex Color</strong> - Uses one channel of the mesh's vertex colours as the mask instead of the texture.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Red</code>, <code>Green</code>, <code>Blue</code>, <code>Alpha</code></span></li>
+                        </ul>
+                    </div>
+                </div>
+
                 <h3 class="text-glow-pink opt-group">Glitter</h3>
                 <p class="opt-note">Tiny flakes scattered across the material, each tilted its own way, so they catch the light one at a time and twinkle as you or the light moves. They are generated in the shader, so there is no texture to make and no resolution to run out of. Once flakes get too small on screen to draw individually they settle into a smooth sheen, so glitter never turns into crawling noise at a distance.</p>
 
@@ -1816,21 +2066,21 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Viewer Context Settings</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Show</strong> - Which situation changes the material: being looked at, being close, being hidden.
+                    <li class="mb-2"><strong>Show</strong> - Where the change shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
                         <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
-                    <li class="mb-2"><strong>Seen By</strong> - Reacts to someone actually looking at you.
+                    <li class="mb-2"><strong>Seen By</strong> - Which eye sees the change in VR. Pick one eye to show it to that eye only.
                         <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
                     <li class="mb-2"><strong>Distance</strong> - Whether it reacts to them coming closer or moving away.
                         <span class="opt-values">Options: <code>Off</code>, <code>Closer is Stronger</code>, <code>Further is Stronger</code></span></li>
                     <li class="mb-2"><strong>Near Distance</strong> - The distance it has fully reacted by.</li>
                     <li class="mb-2"><strong>Far Distance</strong> - The distance it has stopped reacting by.</li>
                     <li class="mb-2"><strong>Face-On Only</strong> - How square on they have to be looking before it counts.</li>
-                    <li class="mb-2"><strong>Hidden Level</strong> - Reacts to being out of sight rather than in it.</li>
+                    <li class="mb-2"><strong>Hidden Level</strong> - How much of the effect stays where these rules hide it. 0 removes it there.</li>
                     <li class="mb-2"><strong>Affects</strong> - What changes when that happens.
                         <span class="opt-values">Options: <code>Emission</code>, <code>Decals</code>, <code>Emission and Decals</code></span></li>
                     <li class="mb-2"><strong>Also Hide Outlines</strong> - Applies the same rules above to the outline passes, so a line stops showing up alone once what it traces is hidden.</li>
                     <li class="mb-2"><strong>Also Apply To Wet And Goo</strong> - Applies the same rules above to the wet look and the goo, their drops and strands included, so they can show only in a mirror, only in photos, or only up close. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span><span class="avail-tag">World Surface</span></span></li>
-                    <li class="mb-2"><strong>Reaction Glow</strong> - How far it changes.</li>
+                    <li class="mb-2"><strong>Reaction Glow</strong> - A glow added wherever these rules let the effect show.</li>
                     <li class="mb-2"><strong>Mask</strong> - Keeps the whole effect to part of the material. White is where it applies, black is left completely alone, so one patch can vanish in mirrors while the rest stays normal. The Reaction Glow follows the mask too.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says which parts react.</li>
                     </ul>
@@ -1855,7 +2105,7 @@
                     <li class="mb-2"><strong>Frame Count (0 = all cells)</strong> - How many frames are on that sheet.</li>
                     <li class="mb-2"><strong>Speed (FPS)</strong> - How many frames play a second.</li>
                     <li class="mb-2"><strong>Band</strong> - Which part of the music this reacts to.</li>
-                    <li class="mb-2"><strong>Rush</strong> - How far the beat pushes this.</li>
+                    <li class="mb-2"><strong>Rush</strong> - How far the beat hurries the frames along.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the frames. White leaves them alone.</li>
                     <li class="mb-2"><strong>Position</strong> - Where the sequence sits on the surface.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns it, in degrees.</li>
@@ -1866,7 +2116,7 @@
                         <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
                     <li class="mb-2"><strong>Coverage From</strong> - What decides where it shows: its own alpha, or a channel you pick.
                         <span class="opt-values">Options: <code>Texture Alpha</code>, <code>Luminance</code>, <code>Luminance Inverted</code>, <code>Ignore Alpha</code></span></li>
-                    <li class="mb-2"><strong>Blend</strong> - Fade between frames instead of cutting, which smooths a slow sequence.
+                    <li class="mb-2"><strong>Blend</strong> - How the frames mix with the material under them. Normal covers it, and the others blend like the layer modes in a paint program.
                         <span class="opt-values">Options: <code>Normal</code>, <code>Darken</code>, <code>Multiply</code>, <code>Lighten</code>, <code>Screen</code>, <code>Add</code>, <code>Subtract</code>, <code>Overlay</code></span></li>
                     <li class="mb-2"><strong>Opacity</strong> - How solid the sequence is over the material.</li>
                     <li class="mb-2"><strong>Mirror UV</strong> - Flip it, for when it faces the wrong way on one side.
@@ -2048,7 +2298,7 @@
                     <li class="mb-2"><strong>Arm Whip</strong> - How far the music moves this part of the field.</li>
                     <li class="mb-2"><strong>Cosmic Breath</strong> - How far the music moves this part of the field.</li>
                     <li class="mb-2"><strong>Depth Spectrum</strong> - How far the music moves this part of the field.</li>
-                    <li class="mb-2"><strong>Flare Colour</strong> - How far the music moves this part of the field.</li>
+                    <li class="mb-2"><strong>Flare Colour</strong> - The colour of the flares the music sets off.</li>
                     </ul>
                 </div>
 
@@ -2123,7 +2373,7 @@
                     <li class="mb-2"><strong>Spike</strong> - How much comes from the treble. This is the quick flick on a hat or a snare.</li>
                     <li class="mb-2"><strong>Layer 1 Band Mix</strong> - How much the band you picked for Emission layer 1 feeds the heartbeat, against the bass. 0 is all bass.</li>
                     <li class="mb-2"><strong>Breath</strong> - A slow rise and fall laid over the pulse so it never sits perfectly still.</li>
-                    <li class="mb-2"><strong>Subsurface</strong> - How much the pulse thickens the light soaking through you. Raise Strength under Subsurface for this to show.</li>
+                    <li class="mb-2"><strong>Subsurface</strong> - How much the pulse thins you, so more light soaks through. Raise Strength under Subsurface for this to show.</li>
                     <li class="mb-2"><strong>Transmission</strong> - How much the pulse pushes light through the thin parts of you.</li>
                     <li class="mb-2"><strong>Colour Drift</strong> - How far the pulse drags the AudioLink Color Blend hue as it beats.</li>
                     <li class="mb-2"><strong>Emission Pulse</strong> - How hard the pulse swells Emission layer 1. That layer AudioLink Amplitude scales this, so both have to be up for it to show.</li>
@@ -2293,7 +2543,7 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Color</strong> - The colour of the line.</li>
                     <li class="mb-2"><strong>Emission</strong> - How much the line glows on its own, so it stays visible in a dark room.</li>
-                    <li class="mb-2"><strong>Width</strong> - How thick the line is. It is a real thickness, so it stays the same on screen whether you are close or far.</li>
+                    <li class="mb-2"><strong>Width</strong> - How thick the line is. It is a real thickness, so it gets thinner on screen as you move away, like a real object.</li>
                     <li class="mb-2"><strong>Mask</strong> - Where the outline draws. Black leaves that part of the model without one.</li>
                     <li class="mb-2"><strong>Width Channel</strong> - Which channel of the mask sets the thickness per area, so you can thin the line on the face and keep it heavy elsewhere.
                         <span class="opt-values">Options: <code>None</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
@@ -2724,7 +2974,7 @@
 
                 <h3 class="text-glow-pink opt-group">Global Settings</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Projection</strong> - How the matcaps sit on the surface. 0 slides with your view like a reflection; 1 sticks them to the mesh like paint. Each layer's own Freeze does the same for just that layer. Each layer's Opacity fades it in and out over the base. To cover the skin underneath and read as latex, set that layer's Blend Mode to Multiply or Replace; Add only lays highlights on top.</li>
+                    <li class="mb-2"><strong>Projection</strong> - How the matcaps sit on the surface. 0 slides with your view like a reflection; 1 locks them to the model, so they turn with it instead of sliding with your view. Each layer's own Freeze does the same for just that layer. It moves View and Skew Free layers. The other modes keep their own anchor. Each layer's Opacity fades it in and out over the base. To cover the skin underneath and read as latex, set that layer's Blend Mode to Multiply or Replace; Add only lays highlights on top.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Atlas Sections</h3>
@@ -2792,7 +3042,7 @@
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this matcap shows.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the matcap. White keeps its own colours.</li>
                     <li class="mb-2"><strong>Intensity</strong> - How strong this matcap is.</li>
-                    <li class="mb-2"><strong>Blend Mode</strong> - How this layer sits on what is under it. Add lays highlights on top. Multiply and Replace cover the skin underneath, which is what reads as latex. Base Colour paints the matcap on as the material itself and then lets the light fall on it, so the Surface sliders below do something. Screen, Overlay and Soft Light are the photo blends. Boost brightens what is already there instead of adding its own colour.
+                    <li class="mb-2"><strong>Blend Mode</strong> - How this layer sits on what is under it. Add lays highlights on top. Multiply and Replace cover the skin underneath, which is what reads as latex. Base Colour paints the matcap on as the material itself and then lets the light fall on it, so the Surface sliders below do something. Screen, Overlay, Soft Light, Subtract, Lighten and Darken blend with the material under the layer, like a paint program. Boost brightens what is already there instead of adding its own colour. Car Paint feeds the Car Paint section above, so it needs Car Paint on.
                         <span class="opt-values">Options: <code>Add</code>, <code>Replace</code>, <code>Multiply</code>, <code>Car Paint</code>, <code>Screen</code>, <code>Overlay</code>, <code>Soft Light</code>, <code>Subtract</code>, <code>Lighten</code>, <code>Darken</code>, <code>Boost</code>, <code>Base Colour</code></span></li>
                     <li class="mb-2"><strong>Opacity</strong> - How much of the material underneath still shows through it.</li>
                     <li class="mb-2"><strong>Lighting Mix</strong> - At 0 the layer glows the same in a dark room as a bright one. At 1 it dims with the light on you, so it sits in shadow with the rest of the material.</li>
@@ -2806,10 +3056,10 @@
                     <li class="mb-2"><strong>Zoom</strong> - Higher shows less of the sphere, so the middle of the image fills more of you.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns the matcap, in degrees.</li>
                     <li class="mb-2"><strong>Normal Follow</strong> - At 0 the matcap ignores your normal map and reads as paint over the detail. Turn it up and it follows every bump, which is what makes it look like the surface is really that material. Left at 0 so nothing you already set changes.</li>
-                    <li class="mb-2"><strong>Normal</strong> - Which normal Normal Follow leans on. Surface is your normal map and detail. Bent leans into the crevices, so the matcap darkens where the shape closes in. Flat is the raw mesh.
+                    <li class="mb-2"><strong>Normal</strong> - Which normal Normal Follow leans on. Surface is your normal map and detail. Bent follows the Bent Normals map and darkens the matcap where the shape closes in, as far as Reflection Shaping dims reflections. It needs Bent Normals on. Flat is the raw mesh.
                         <span class="opt-values">Options: <code>Surface</code>, <code>Bent</code>, <code>Flat</code></span></li>
-                    <li class="mb-2"><strong>Depth</strong> - Sinks the layer below the surface so it slides against you as you move your head, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.</li>
-                    <li class="mb-2"><strong>Mirror Flip</strong> - Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do.</li>
+                    <li class="mb-2"><strong>Depth</strong> - Sinks the layer below the surface so it slides against you as you move around it, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.</li>
+                    <li class="mb-2"><strong>Mirror Flip</strong> - Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do. Works in View and Skew Free. Reflection is already right in a mirror.</li>
                     <li class="mb-2"><strong>Freeze</strong> - Locks the matcap to you instead of to the camera, so it stops sliding as you turn. Tiling repeats the image, Scroll pans it, and the Offsets group below sets where it starts.</li>
                     <li class="mb-2"><strong>Tiling</strong> - Repeats the matcap across the sphere. Above 1 gives a kaleidoscope. <em>Tile X</em>: How many times the matcap repeats across. <em>Tile Y</em>: How many times it repeats down.</li>
                         </ul>
@@ -2840,7 +3090,7 @@
                     <li class="mb-2"><strong>Circle Radius</strong> - Keeps the matcap inside a circle in the middle of the sphere, which is how you get a single round highlight rather than a full cover.</li>
                     <li class="mb-2"><strong>Circle Softness</strong> - How soft the edge of that circle is.</li>
                     <li class="mb-2"><strong>Angle Start</strong> - Fades the layer in over a range of viewing angles. 0 is straight at you and 1 is edge on, so Start 0.5 with End 1 gives you a rim that only lights up at glancing angles.</li>
-                    <li class="mb-2"><strong>Angle End</strong> - The angle the matcap has faded out by, so it can sit only on the edges of your shape or only on the parts facing you.</li>
+                    <li class="mb-2"><strong>Angle End</strong> - The angle the matcap is fully in by. Set it below Angle Start and the layer sits on the parts facing you instead, fading out toward the edges.</li>
                     <li class="mb-2"><strong>Fade Start</strong> - Fades the layer out with distance, in metres. Leave Fade End at 0 and it never fades. Handy for a strong chrome up close that calms down across a room.</li>
                     <li class="mb-2"><strong>Fade End</strong> - The distance the matcap has faded out by, so it stops costing anything to look at from across a room.</li>
                         </ul>
@@ -2855,7 +3105,7 @@
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts the matcap's colours round the colour wheel.</li>
                     <li class="mb-2"><strong>Hue Speed</strong> - Drifts the hue on its own. Leave at 0 to hold the colour still.</li>
                     <li class="mb-2"><strong>Albedo Mix</strong> - Tints the matcap by whatever is painted underneath, so it picks up your texture instead of sitting on top of it as one flat colour.</li>
-                    <li class="mb-2"><strong>Light Colour Mix</strong> - Tints the matcap by the colour of the light on you, so it belongs to the room it is standing in.</li>
+                    <li class="mb-2"><strong>Light Colour Mix</strong> - Tints the matcap by the colour of the light on you, so it belongs to the room it is standing in. It changes the colour only. Lighting Mix sets how it dims in the dark.</li>
                     <li class="mb-2"><strong>Emission</strong> - Feeds the matcap into the glow, so it blooms in a world that has bloom.</li>
                     <li class="mb-2"><strong>Blur</strong> - Softens the image. Costs nothing: it reads a smaller copy the texture already carries.</li>
                     <li class="mb-2"><strong>Blur Channel</strong> - Reads a channel of the Mask above to blur some places more than others.
@@ -2868,7 +3118,7 @@
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Smoothness Push</strong> - The matcap sets how polished the material is where it lands, not only what colour it is. Paint a mask and one part of you goes wet-looking while the rest stays matte.</li>
                     <li class="mb-2"><strong>Metallic Push</strong> - Pushes the surface under this matcap toward metal, so one control can change the look and the material together.</li>
-                    <li class="mb-2"><strong>Clearcoat Push</strong> - Pushes the surface under this matcap toward a glossier clear coat.</li>
+                    <li class="mb-2"><strong>Clearcoat Push</strong> - Pushes the surface under this matcap toward a glossier clear coat. That coat is Polish, so it needs Polish on and follows the Polish mask.</li>
                         </ul>
                     </div>
 
@@ -2905,7 +3155,7 @@
                     <li class="mb-2"><strong>Intensity</strong> - How much the beat brightens this matcap.</li>
                     <li class="mb-2"><strong>Emission</strong> - How much the beat pushes this matcap into the glow.</li>
                     <li class="mb-2"><strong>Hue</strong> - How far the beat swings the colour.</li>
-                    <li class="mb-2"><strong>Scroll</strong> - Drives Scroll from the track, so the image slides on the beat.</li>
+                    <li class="mb-2"><strong>Scroll</strong> - Drives Scroll from the track, so the image slides on the beat. On a Procedural layer it also pushes the pattern forward on the beat.</li>
                         </ul>
                     </div>
                 </div>
@@ -2925,7 +3175,7 @@
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this matcap shows.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the matcap. White keeps its own colours.</li>
                     <li class="mb-2"><strong>Intensity</strong> - How strong this matcap is.</li>
-                    <li class="mb-2"><strong>Blend Mode</strong> - How this layer sits on what is under it. Add lays highlights on top. Multiply and Replace cover the skin underneath, which is what reads as latex. Base Colour paints the matcap on as the material itself and then lets the light fall on it, so the Surface sliders below do something. Screen, Overlay and Soft Light are the photo blends. Boost brightens what is already there instead of adding its own colour.
+                    <li class="mb-2"><strong>Blend Mode</strong> - How this layer sits on what is under it. Add lays highlights on top. Multiply and Replace cover the skin underneath, which is what reads as latex. Base Colour paints the matcap on as the material itself and then lets the light fall on it, so the Surface sliders below do something. Screen, Overlay, Soft Light, Subtract, Lighten and Darken blend with the material under the layer, like a paint program. Boost brightens what is already there instead of adding its own colour. Car Paint feeds the Car Paint section above, so it needs Car Paint on.
                         <span class="opt-values">Options: <code>Add</code>, <code>Replace</code>, <code>Multiply</code>, <code>Car Paint</code>, <code>Screen</code>, <code>Overlay</code>, <code>Soft Light</code>, <code>Subtract</code>, <code>Lighten</code>, <code>Darken</code>, <code>Boost</code>, <code>Base Colour</code></span></li>
                     <li class="mb-2"><strong>Opacity</strong> - How much of the material underneath still shows through it.</li>
                     <li class="mb-2"><strong>Lighting Mix</strong> - At 0 the layer glows the same in a dark room as a bright one. At 1 it dims with the light on you, so it sits in shadow with the rest of the material.</li>
@@ -2939,10 +3189,10 @@
                     <li class="mb-2"><strong>Zoom</strong> - Higher shows less of the sphere, so the middle of the image fills more of you.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns the matcap, in degrees.</li>
                     <li class="mb-2"><strong>Normal Follow</strong> - At 0 the matcap ignores your normal map and reads as paint over the detail. Turn it up and it follows every bump, which is what makes it look like the surface is really that material. Left at 0 so nothing you already set changes.</li>
-                    <li class="mb-2"><strong>Normal</strong> - Which normal Normal Follow leans on. Surface is your normal map and detail. Bent leans into the crevices, so the matcap darkens where the shape closes in. Flat is the raw mesh.
+                    <li class="mb-2"><strong>Normal</strong> - Which normal Normal Follow leans on. Surface is your normal map and detail. Bent follows the Bent Normals map and darkens the matcap where the shape closes in, as far as Reflection Shaping dims reflections. It needs Bent Normals on. Flat is the raw mesh.
                         <span class="opt-values">Options: <code>Surface</code>, <code>Bent</code>, <code>Flat</code></span></li>
-                    <li class="mb-2"><strong>Depth</strong> - Sinks the layer below the surface so it slides against you as you move your head, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.</li>
-                    <li class="mb-2"><strong>Mirror Flip</strong> - Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do.</li>
+                    <li class="mb-2"><strong>Depth</strong> - Sinks the layer below the surface so it slides against you as you move around it, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.</li>
+                    <li class="mb-2"><strong>Mirror Flip</strong> - Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do. Works in View and Skew Free. Reflection is already right in a mirror.</li>
                     <li class="mb-2"><strong>Freeze</strong> - Locks the matcap to the surface so it stops sliding as you turn your head. Reach for it when a matcap is meant to read as paint rather than as a reflection.</li>
                     <li class="mb-2"><strong>Tiling</strong> - Repeats the matcap across the sphere. Above 1 gives a kaleidoscope. <em>Tile X</em>: How many times the matcap repeats across. <em>Tile Y</em>: How many times it repeats down.</li>
                         </ul>
@@ -2973,7 +3223,7 @@
                     <li class="mb-2"><strong>Circle Radius</strong> - Keeps the matcap inside a circle in the middle of the sphere, which is how you get a single round highlight rather than a full cover.</li>
                     <li class="mb-2"><strong>Circle Softness</strong> - How soft the edge of that circle is.</li>
                     <li class="mb-2"><strong>Angle Start</strong> - Fades the layer in over a range of viewing angles. 0 is straight at you and 1 is edge on, so Start 0.5 with End 1 gives you a rim that only lights up at glancing angles.</li>
-                    <li class="mb-2"><strong>Angle End</strong> - The angle the matcap has faded out by, so it can sit only on the edges of your shape or only on the parts facing you.</li>
+                    <li class="mb-2"><strong>Angle End</strong> - The angle the matcap is fully in by. Set it below Angle Start and the layer sits on the parts facing you instead, fading out toward the edges.</li>
                     <li class="mb-2"><strong>Fade Start</strong> - Fades the layer out with distance, in metres. Leave Fade End at 0 and it never fades. Handy for a strong chrome up close that calms down across a room.</li>
                     <li class="mb-2"><strong>Fade End</strong> - The distance the matcap has faded out by, so it stops costing anything to look at from across a room.</li>
                         </ul>
@@ -2988,7 +3238,7 @@
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts the matcap's colours round the colour wheel.</li>
                     <li class="mb-2"><strong>Hue Speed</strong> - Drifts the hue on its own. Leave at 0 to hold the colour still.</li>
                     <li class="mb-2"><strong>Albedo Mix</strong> - Tints the matcap by whatever is painted underneath, so it picks up your texture instead of sitting on top of it as one flat colour.</li>
-                    <li class="mb-2"><strong>Light Colour Mix</strong> - Tints the matcap by the colour of the light on you, so it belongs to the room it is standing in.</li>
+                    <li class="mb-2"><strong>Light Colour Mix</strong> - Tints the matcap by the colour of the light on you, so it belongs to the room it is standing in. It changes the colour only. Lighting Mix sets how it dims in the dark.</li>
                     <li class="mb-2"><strong>Emission</strong> - Feeds the matcap into the glow, so it blooms in a world that has bloom.</li>
                     <li class="mb-2"><strong>Blur</strong> - Softens the image. Costs nothing: it reads a smaller copy the texture already carries.</li>
                     <li class="mb-2"><strong>Blur Channel</strong> - Reads a channel of the Mask above to blur some places more than others.
@@ -3001,7 +3251,7 @@
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Smoothness Push</strong> - The matcap sets how polished the material is where it lands, not only what colour it is. Paint a mask and one part of you goes wet-looking while the rest stays matte.</li>
                     <li class="mb-2"><strong>Metallic Push</strong> - Pushes the surface under this matcap toward metal, so one control can change the look and the material together.</li>
-                    <li class="mb-2"><strong>Clearcoat Push</strong> - Pushes the surface under this matcap toward a glossier clear coat.</li>
+                    <li class="mb-2"><strong>Clearcoat Push</strong> - Pushes the surface under this matcap toward a glossier clear coat. That coat is Polish, so it needs Polish on and follows the Polish mask.</li>
                         </ul>
                     </div>
 
@@ -3038,7 +3288,7 @@
                     <li class="mb-2"><strong>Intensity</strong> - How much the beat brightens this matcap.</li>
                     <li class="mb-2"><strong>Emission</strong> - How much the beat pushes this matcap into the glow.</li>
                     <li class="mb-2"><strong>Hue</strong> - How far the beat swings the colour.</li>
-                    <li class="mb-2"><strong>Scroll</strong> - Drives Scroll from the track, so the image slides on the beat.</li>
+                    <li class="mb-2"><strong>Scroll</strong> - Drives Scroll from the track, so the image slides on the beat. On a Procedural layer it also pushes the pattern forward on the beat.</li>
                         </ul>
                     </div>
                 </div>
@@ -3058,7 +3308,7 @@
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this matcap shows.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the matcap. White keeps its own colours.</li>
                     <li class="mb-2"><strong>Intensity</strong> - How strong this matcap is.</li>
-                    <li class="mb-2"><strong>Blend Mode</strong> - How this layer sits on what is under it. Add lays highlights on top. Multiply and Replace cover the skin underneath, which is what reads as latex. Base Colour paints the matcap on as the material itself and then lets the light fall on it, so the Surface sliders below do something. Screen, Overlay and Soft Light are the photo blends. Boost brightens what is already there instead of adding its own colour.
+                    <li class="mb-2"><strong>Blend Mode</strong> - How this layer sits on what is under it. Add lays highlights on top. Multiply and Replace cover the skin underneath, which is what reads as latex. Base Colour paints the matcap on as the material itself and then lets the light fall on it, so the Surface sliders below do something. Screen, Overlay, Soft Light, Subtract, Lighten and Darken blend with the material under the layer, like a paint program. Boost brightens what is already there instead of adding its own colour. Car Paint feeds the Car Paint section above, so it needs Car Paint on.
                         <span class="opt-values">Options: <code>Add</code>, <code>Replace</code>, <code>Multiply</code>, <code>Car Paint</code>, <code>Screen</code>, <code>Overlay</code>, <code>Soft Light</code>, <code>Subtract</code>, <code>Lighten</code>, <code>Darken</code>, <code>Boost</code>, <code>Base Colour</code></span></li>
                     <li class="mb-2"><strong>Opacity</strong> - How much of the material underneath still shows through it.</li>
                     <li class="mb-2"><strong>Lighting Mix</strong> - At 0 the layer glows the same in a dark room as a bright one. At 1 it dims with the light on you, so it sits in shadow with the rest of the material.</li>
@@ -3072,10 +3322,10 @@
                     <li class="mb-2"><strong>Zoom</strong> - Higher shows less of the sphere, so the middle of the image fills more of you.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns the matcap, in degrees.</li>
                     <li class="mb-2"><strong>Normal Follow</strong> - At 0 the matcap ignores your normal map and reads as paint over the detail. Turn it up and it follows every bump, which is what makes it look like the surface is really that material. Left at 0 so nothing you already set changes.</li>
-                    <li class="mb-2"><strong>Normal</strong> - Which normal Normal Follow leans on. Surface is your normal map and detail. Bent leans into the crevices, so the matcap darkens where the shape closes in. Flat is the raw mesh.
+                    <li class="mb-2"><strong>Normal</strong> - Which normal Normal Follow leans on. Surface is your normal map and detail. Bent follows the Bent Normals map and darkens the matcap where the shape closes in, as far as Reflection Shaping dims reflections. It needs Bent Normals on. Flat is the raw mesh.
                         <span class="opt-values">Options: <code>Surface</code>, <code>Bent</code>, <code>Flat</code></span></li>
-                    <li class="mb-2"><strong>Depth</strong> - Sinks the layer below the surface so it slides against you as you move your head, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.</li>
-                    <li class="mb-2"><strong>Mirror Flip</strong> - Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do.</li>
+                    <li class="mb-2"><strong>Depth</strong> - Sinks the layer below the surface so it slides against you as you move around it, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.</li>
+                    <li class="mb-2"><strong>Mirror Flip</strong> - Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do. Works in View and Skew Free. Reflection is already right in a mirror.</li>
                     <li class="mb-2"><strong>Freeze</strong> - Locks the matcap to the surface so it stops sliding as you turn your head. Reach for it when a matcap is meant to read as paint rather than as a reflection.</li>
                     <li class="mb-2"><strong>Tiling</strong> - Repeats the matcap across the sphere. Above 1 gives a kaleidoscope. <em>Tile X</em>: How many times the matcap repeats across. <em>Tile Y</em>: How many times it repeats down.</li>
                         </ul>
@@ -3106,7 +3356,7 @@
                     <li class="mb-2"><strong>Circle Radius</strong> - Keeps the matcap inside a circle in the middle of the sphere, which is how you get a single round highlight rather than a full cover.</li>
                     <li class="mb-2"><strong>Circle Softness</strong> - How soft the edge of that circle is.</li>
                     <li class="mb-2"><strong>Angle Start</strong> - Fades the layer in over a range of viewing angles. 0 is straight at you and 1 is edge on, so Start 0.5 with End 1 gives you a rim that only lights up at glancing angles.</li>
-                    <li class="mb-2"><strong>Angle End</strong> - The angle the matcap has faded out by, so it can sit only on the edges of your shape or only on the parts facing you.</li>
+                    <li class="mb-2"><strong>Angle End</strong> - The angle the matcap is fully in by. Set it below Angle Start and the layer sits on the parts facing you instead, fading out toward the edges.</li>
                     <li class="mb-2"><strong>Fade Start</strong> - Fades the layer out with distance, in metres. Leave Fade End at 0 and it never fades. Handy for a strong chrome up close that calms down across a room.</li>
                     <li class="mb-2"><strong>Fade End</strong> - The distance the matcap has faded out by, so it stops costing anything to look at from across a room.</li>
                         </ul>
@@ -3121,7 +3371,7 @@
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts the matcap's colours round the colour wheel.</li>
                     <li class="mb-2"><strong>Hue Speed</strong> - Drifts the hue on its own. Leave at 0 to hold the colour still.</li>
                     <li class="mb-2"><strong>Albedo Mix</strong> - Tints the matcap by whatever is painted underneath, so it picks up your texture instead of sitting on top of it as one flat colour.</li>
-                    <li class="mb-2"><strong>Light Colour Mix</strong> - Tints the matcap by the colour of the light on you, so it belongs to the room it is standing in.</li>
+                    <li class="mb-2"><strong>Light Colour Mix</strong> - Tints the matcap by the colour of the light on you, so it belongs to the room it is standing in. It changes the colour only. Lighting Mix sets how it dims in the dark.</li>
                     <li class="mb-2"><strong>Emission</strong> - Feeds the matcap into the glow, so it blooms in a world that has bloom.</li>
                     <li class="mb-2"><strong>Blur</strong> - Softens the image. Costs nothing: it reads a smaller copy the texture already carries.</li>
                     <li class="mb-2"><strong>Blur Channel</strong> - Reads a channel of the Mask above to blur some places more than others.
@@ -3134,7 +3384,7 @@
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Smoothness Push</strong> - The matcap sets how polished the material is where it lands, not only what colour it is. Paint a mask and one part of you goes wet-looking while the rest stays matte.</li>
                     <li class="mb-2"><strong>Metallic Push</strong> - Pushes the surface under this matcap toward metal, so one control can change the look and the material together.</li>
-                    <li class="mb-2"><strong>Clearcoat Push</strong> - Pushes the surface under this matcap toward a glossier clear coat.</li>
+                    <li class="mb-2"><strong>Clearcoat Push</strong> - Pushes the surface under this matcap toward a glossier clear coat. That coat is Polish, so it needs Polish on and follows the Polish mask.</li>
                         </ul>
                     </div>
 
@@ -3171,7 +3421,7 @@
                     <li class="mb-2"><strong>Intensity</strong> - How much the beat brightens this matcap.</li>
                     <li class="mb-2"><strong>Emission</strong> - How much the beat pushes this matcap into the glow.</li>
                     <li class="mb-2"><strong>Hue</strong> - How far the beat swings the colour.</li>
-                    <li class="mb-2"><strong>Scroll</strong> - Drives Scroll from the track, so the image slides on the beat.</li>
+                    <li class="mb-2"><strong>Scroll</strong> - Drives Scroll from the track, so the image slides on the beat. On a Procedural layer it also pushes the pattern forward on the beat.</li>
                         </ul>
                     </div>
                 </div>
@@ -3191,7 +3441,7 @@
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this matcap shows.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the matcap. White keeps its own colours.</li>
                     <li class="mb-2"><strong>Intensity</strong> - How strong this matcap is.</li>
-                    <li class="mb-2"><strong>Blend Mode</strong> - How this layer sits on what is under it. Add lays highlights on top. Multiply and Replace cover the skin underneath, which is what reads as latex. Base Colour paints the matcap on as the material itself and then lets the light fall on it, so the Surface sliders below do something. Screen, Overlay and Soft Light are the photo blends. Boost brightens what is already there instead of adding its own colour.
+                    <li class="mb-2"><strong>Blend Mode</strong> - How this layer sits on what is under it. Add lays highlights on top. Multiply and Replace cover the skin underneath, which is what reads as latex. Base Colour paints the matcap on as the material itself and then lets the light fall on it, so the Surface sliders below do something. Screen, Overlay, Soft Light, Subtract, Lighten and Darken blend with the material under the layer, like a paint program. Boost brightens what is already there instead of adding its own colour. Car Paint feeds the Car Paint section above, so it needs Car Paint on.
                         <span class="opt-values">Options: <code>Add</code>, <code>Replace</code>, <code>Multiply</code>, <code>Car Paint</code>, <code>Screen</code>, <code>Overlay</code>, <code>Soft Light</code>, <code>Subtract</code>, <code>Lighten</code>, <code>Darken</code>, <code>Boost</code>, <code>Base Colour</code></span></li>
                     <li class="mb-2"><strong>Opacity</strong> - How much of the material underneath still shows through it.</li>
                     <li class="mb-2"><strong>Lighting Mix</strong> - At 0 the layer glows the same in a dark room as a bright one. At 1 it dims with the light on you, so it sits in shadow with the rest of the material.</li>
@@ -3205,10 +3455,10 @@
                     <li class="mb-2"><strong>Zoom</strong> - Higher shows less of the sphere, so the middle of the image fills more of you.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns the matcap, in degrees.</li>
                     <li class="mb-2"><strong>Normal Follow</strong> - At 0 the matcap ignores your normal map and reads as paint over the detail. Turn it up and it follows every bump, which is what makes it look like the surface is really that material. Left at 0 so nothing you already set changes.</li>
-                    <li class="mb-2"><strong>Normal</strong> - Which normal Normal Follow leans on. Surface is your normal map and detail. Bent leans into the crevices, so the matcap darkens where the shape closes in. Flat is the raw mesh.
+                    <li class="mb-2"><strong>Normal</strong> - Which normal Normal Follow leans on. Surface is your normal map and detail. Bent follows the Bent Normals map and darkens the matcap where the shape closes in, as far as Reflection Shaping dims reflections. It needs Bent Normals on. Flat is the raw mesh.
                         <span class="opt-values">Options: <code>Surface</code>, <code>Bent</code>, <code>Flat</code></span></li>
-                    <li class="mb-2"><strong>Depth</strong> - Sinks the layer below the surface so it slides against you as you move your head, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.</li>
-                    <li class="mb-2"><strong>Mirror Flip</strong> - Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do.</li>
+                    <li class="mb-2"><strong>Depth</strong> - Sinks the layer below the surface so it slides against you as you move around it, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.</li>
+                    <li class="mb-2"><strong>Mirror Flip</strong> - Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do. Works in View and Skew Free. Reflection is already right in a mirror.</li>
                     <li class="mb-2"><strong>Freeze</strong> - Locks the matcap to the surface so it stops sliding as you turn your head. Reach for it when a matcap is meant to read as paint rather than as a reflection.</li>
                     <li class="mb-2"><strong>Tiling</strong> - Repeats the matcap across the sphere. Above 1 gives a kaleidoscope. <em>Tile X</em>: How many times the matcap repeats across. <em>Tile Y</em>: How many times it repeats down.</li>
                         </ul>
@@ -3239,7 +3489,7 @@
                     <li class="mb-2"><strong>Circle Radius</strong> - Keeps the matcap inside a circle in the middle of the sphere, which is how you get a single round highlight rather than a full cover.</li>
                     <li class="mb-2"><strong>Circle Softness</strong> - How soft the edge of that circle is.</li>
                     <li class="mb-2"><strong>Angle Start</strong> - Fades the layer in over a range of viewing angles. 0 is straight at you and 1 is edge on, so Start 0.5 with End 1 gives you a rim that only lights up at glancing angles.</li>
-                    <li class="mb-2"><strong>Angle End</strong> - The angle the matcap has faded out by, so it can sit only on the edges of your shape or only on the parts facing you.</li>
+                    <li class="mb-2"><strong>Angle End</strong> - The angle the matcap is fully in by. Set it below Angle Start and the layer sits on the parts facing you instead, fading out toward the edges.</li>
                     <li class="mb-2"><strong>Fade Start</strong> - Fades the layer out with distance, in metres. Leave Fade End at 0 and it never fades. Handy for a strong chrome up close that calms down across a room.</li>
                     <li class="mb-2"><strong>Fade End</strong> - The distance the matcap has faded out by, so it stops costing anything to look at from across a room.</li>
                         </ul>
@@ -3254,7 +3504,7 @@
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts the matcap's colours round the colour wheel.</li>
                     <li class="mb-2"><strong>Hue Speed</strong> - Drifts the hue on its own. Leave at 0 to hold the colour still.</li>
                     <li class="mb-2"><strong>Albedo Mix</strong> - Tints the matcap by whatever is painted underneath, so it picks up your texture instead of sitting on top of it as one flat colour.</li>
-                    <li class="mb-2"><strong>Light Colour Mix</strong> - Tints the matcap by the colour of the light on you, so it belongs to the room it is standing in.</li>
+                    <li class="mb-2"><strong>Light Colour Mix</strong> - Tints the matcap by the colour of the light on you, so it belongs to the room it is standing in. It changes the colour only. Lighting Mix sets how it dims in the dark.</li>
                     <li class="mb-2"><strong>Emission</strong> - Feeds the matcap into the glow, so it blooms in a world that has bloom.</li>
                     <li class="mb-2"><strong>Blur</strong> - Softens the image. Costs nothing: it reads a smaller copy the texture already carries.</li>
                     <li class="mb-2"><strong>Blur Channel</strong> - Reads a channel of the Mask above to blur some places more than others.
@@ -3267,7 +3517,7 @@
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Smoothness Push</strong> - The matcap sets how polished the material is where it lands, not only what colour it is. Paint a mask and one part of you goes wet-looking while the rest stays matte.</li>
                     <li class="mb-2"><strong>Metallic Push</strong> - Pushes the surface under this matcap toward metal, so one control can change the look and the material together.</li>
-                    <li class="mb-2"><strong>Clearcoat Push</strong> - Pushes the surface under this matcap toward a glossier clear coat.</li>
+                    <li class="mb-2"><strong>Clearcoat Push</strong> - Pushes the surface under this matcap toward a glossier clear coat. That coat is Polish, so it needs Polish on and follows the Polish mask.</li>
                         </ul>
                     </div>
 
@@ -3304,7 +3554,7 @@
                     <li class="mb-2"><strong>Intensity</strong> - How much the beat brightens this matcap.</li>
                     <li class="mb-2"><strong>Emission</strong> - How much the beat pushes this matcap into the glow.</li>
                     <li class="mb-2"><strong>Hue</strong> - How far the beat swings the colour.</li>
-                    <li class="mb-2"><strong>Scroll</strong> - Drives Scroll from the track, so the image slides on the beat.</li>
+                    <li class="mb-2"><strong>Scroll</strong> - Drives Scroll from the track, so the image slides on the beat. On a Procedural layer it also pushes the pattern forward on the beat.</li>
                         </ul>
                     </div>
                 </div>
@@ -3324,7 +3574,7 @@
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this matcap shows.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the matcap. White keeps its own colours.</li>
                     <li class="mb-2"><strong>Intensity</strong> - How strong this matcap is.</li>
-                    <li class="mb-2"><strong>Blend Mode</strong> - How this layer sits on what is under it. Add lays highlights on top. Multiply and Replace cover the skin underneath, which is what reads as latex. Base Colour paints the matcap on as the material itself and then lets the light fall on it, so the Surface sliders below do something. Screen, Overlay and Soft Light are the photo blends. Boost brightens what is already there instead of adding its own colour.
+                    <li class="mb-2"><strong>Blend Mode</strong> - How this layer sits on what is under it. Add lays highlights on top. Multiply and Replace cover the skin underneath, which is what reads as latex. Base Colour paints the matcap on as the material itself and then lets the light fall on it, so the Surface sliders below do something. Screen, Overlay, Soft Light, Subtract, Lighten and Darken blend with the material under the layer, like a paint program. Boost brightens what is already there instead of adding its own colour. Car Paint feeds the Car Paint section above, so it needs Car Paint on.
                         <span class="opt-values">Options: <code>Add</code>, <code>Replace</code>, <code>Multiply</code>, <code>Car Paint</code>, <code>Screen</code>, <code>Overlay</code>, <code>Soft Light</code>, <code>Subtract</code>, <code>Lighten</code>, <code>Darken</code>, <code>Boost</code>, <code>Base Colour</code></span></li>
                     <li class="mb-2"><strong>Opacity</strong> - How much of the material underneath still shows through it.</li>
                     <li class="mb-2"><strong>Lighting Mix</strong> - At 0 the layer glows the same in a dark room as a bright one. At 1 it dims with the light on you, so it sits in shadow with the rest of the material.</li>
@@ -3338,10 +3588,10 @@
                     <li class="mb-2"><strong>Zoom</strong> - Higher shows less of the sphere, so the middle of the image fills more of you.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns the matcap, in degrees.</li>
                     <li class="mb-2"><strong>Normal Follow</strong> - At 0 the matcap ignores your normal map and reads as paint over the detail. Turn it up and it follows every bump, which is what makes it look like the surface is really that material. Left at 0 so nothing you already set changes.</li>
-                    <li class="mb-2"><strong>Normal</strong> - Which normal Normal Follow leans on. Surface is your normal map and detail. Bent leans into the crevices, so the matcap darkens where the shape closes in. Flat is the raw mesh.
+                    <li class="mb-2"><strong>Normal</strong> - Which normal Normal Follow leans on. Surface is your normal map and detail. Bent follows the Bent Normals map and darkens the matcap where the shape closes in, as far as Reflection Shaping dims reflections. It needs Bent Normals on. Flat is the raw mesh.
                         <span class="opt-values">Options: <code>Surface</code>, <code>Bent</code>, <code>Flat</code></span></li>
-                    <li class="mb-2"><strong>Depth</strong> - Sinks the layer below the surface so it slides against you as you move your head, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.</li>
-                    <li class="mb-2"><strong>Mirror Flip</strong> - Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do.</li>
+                    <li class="mb-2"><strong>Depth</strong> - Sinks the layer below the surface so it slides against you as you move around it, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.</li>
+                    <li class="mb-2"><strong>Mirror Flip</strong> - Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do. Works in View and Skew Free. Reflection is already right in a mirror.</li>
                     <li class="mb-2"><strong>Freeze</strong> - Locks the matcap to the surface so it stops sliding as you turn your head. Reach for it when a matcap is meant to read as paint rather than as a reflection.</li>
                     <li class="mb-2"><strong>Tiling</strong> - Repeats the matcap across the sphere. Above 1 gives a kaleidoscope. <em>Tile X</em>: How many times the matcap repeats across. <em>Tile Y</em>: How many times it repeats down.</li>
                         </ul>
@@ -3372,7 +3622,7 @@
                     <li class="mb-2"><strong>Circle Radius</strong> - Keeps the matcap inside a circle in the middle of the sphere, which is how you get a single round highlight rather than a full cover.</li>
                     <li class="mb-2"><strong>Circle Softness</strong> - How soft the edge of that circle is.</li>
                     <li class="mb-2"><strong>Angle Start</strong> - Fades the layer in over a range of viewing angles. 0 is straight at you and 1 is edge on, so Start 0.5 with End 1 gives you a rim that only lights up at glancing angles.</li>
-                    <li class="mb-2"><strong>Angle End</strong> - The angle the matcap has faded out by, so it can sit only on the edges of your shape or only on the parts facing you.</li>
+                    <li class="mb-2"><strong>Angle End</strong> - The angle the matcap is fully in by. Set it below Angle Start and the layer sits on the parts facing you instead, fading out toward the edges.</li>
                     <li class="mb-2"><strong>Fade Start</strong> - Fades the layer out with distance, in metres. Leave Fade End at 0 and it never fades. Handy for a strong chrome up close that calms down across a room.</li>
                     <li class="mb-2"><strong>Fade End</strong> - The distance the matcap has faded out by, so it stops costing anything to look at from across a room.</li>
                         </ul>
@@ -3387,7 +3637,7 @@
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts the matcap's colours round the colour wheel.</li>
                     <li class="mb-2"><strong>Hue Speed</strong> - Drifts the hue on its own. Leave at 0 to hold the colour still.</li>
                     <li class="mb-2"><strong>Albedo Mix</strong> - Tints the matcap by whatever is painted underneath, so it picks up your texture instead of sitting on top of it as one flat colour.</li>
-                    <li class="mb-2"><strong>Light Colour Mix</strong> - Tints the matcap by the colour of the light on you, so it belongs to the room it is standing in.</li>
+                    <li class="mb-2"><strong>Light Colour Mix</strong> - Tints the matcap by the colour of the light on you, so it belongs to the room it is standing in. It changes the colour only. Lighting Mix sets how it dims in the dark.</li>
                     <li class="mb-2"><strong>Emission</strong> - Feeds the matcap into the glow, so it blooms in a world that has bloom.</li>
                     <li class="mb-2"><strong>Blur</strong> - Softens the image. Costs nothing: it reads a smaller copy the texture already carries.</li>
                     <li class="mb-2"><strong>Blur Channel</strong> - Reads a channel of the Mask above to blur some places more than others.
@@ -3400,7 +3650,7 @@
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Smoothness Push</strong> - The matcap sets how polished the material is where it lands, not only what colour it is. Paint a mask and one part of you goes wet-looking while the rest stays matte.</li>
                     <li class="mb-2"><strong>Metallic Push</strong> - Pushes the surface under this matcap toward metal, so one control can change the look and the material together.</li>
-                    <li class="mb-2"><strong>Clearcoat Push</strong> - Pushes the surface under this matcap toward a glossier clear coat.</li>
+                    <li class="mb-2"><strong>Clearcoat Push</strong> - Pushes the surface under this matcap toward a glossier clear coat. That coat is Polish, so it needs Polish on and follows the Polish mask.</li>
                         </ul>
                     </div>
 
@@ -3437,7 +3687,7 @@
                     <li class="mb-2"><strong>Intensity</strong> - How much the beat brightens this matcap.</li>
                     <li class="mb-2"><strong>Emission</strong> - How much the beat pushes this matcap into the glow.</li>
                     <li class="mb-2"><strong>Hue</strong> - How far the beat swings the colour.</li>
-                    <li class="mb-2"><strong>Scroll</strong> - Drives Scroll from the track, so the image slides on the beat.</li>
+                    <li class="mb-2"><strong>Scroll</strong> - Drives Scroll from the track, so the image slides on the beat. On a Procedural layer it also pushes the pattern forward on the beat.</li>
                         </ul>
                     </div>
                 </div>
@@ -3493,13 +3743,13 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Manual Levels</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Levels</strong> - Drives the bands by hand instead of from the music. Animate these and you get audio-style motion in a world that has no AudioLink. <em>Bass</em>: The bass level to use. <em>Low Mid</em>: The low mid level to use. <em>High Mid</em>: The high mid level to use. <em>Treble</em>: The treble level to use.</li>
+                    <li class="mb-2"><strong>Levels</strong> - Drives the bands by hand instead of from the music. Animate these and you get audio-style motion in a world that has no AudioLink. Anything set to Volume follows the average of the four, and Peak Hold the loudest. <em>Bass</em>: The bass level to use. <em>Low Mid</em>: The low mid level to use. <em>High Mid</em>: The high mid level to use. <em>Treble</em>: The treble level to use.</li>
                     </ul>
                 </div>
 
                 <h3 class="text-glow-pink opt-group">Environment &amp; Media</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Color Source</strong> - Where the reactive colours come from: your own settings, or the colours AudioLink works out from the music itself.
+                    <li class="mb-2"><strong>Color Source</strong> - Where the reactive colours come from: your own settings, or the colours AudioLink works out from the music itself. ColorChord picks its colour by the Band of Emission layer 1.
                         <span class="opt-values">Options: <code>Manual</code>, <code>ColorChord</code>, <code>Theme 0</code>, <code>Theme 1</code>, <code>Theme 2</code>, <code>Theme 3</code>, <code>ColorChord Strip</code></span></li>
                     <li class="mb-2"><strong>ColorChord Strip Position</strong> - Which part of AudioLink's own strip this reads, if you want to sit on a particular part of the display rather than the bands.</li>
                     <li class="mb-2"><strong>Power Down on Pause/Stop</strong> - Go quiet when the world's video player is paused or stopped, instead of carrying on reacting to silence.</li>
@@ -3508,7 +3758,7 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Environment &amp; Media Settings</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Reaction Mask</strong> - Keeps the audio reactions to part of the material. Audio Scanlines and the four Physical Lobe Thump effects only show where this is white. Leave it empty and they cover everything.</li>
+                    <li class="mb-2"><strong>Reaction Mask</strong> - Keeps the audio reactions to part of the material. The Thin Film, Parallax, Coat and Digital Glitch reactions, Audio Scanlines, Chromatic Bloom, Note Swarm, Sonar and Spectrum Ribbon only show where this is white. Leave it empty and they cover everything.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the reactive effects are allowed.</li>
                     </ul>
                 </div>
@@ -3640,7 +3890,7 @@
                     <p class="opt-note mt-2 mb-2"><strong>Surface Ripples</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Surface Waveform Ripple</strong> - How much the raw waveform moves the material.</li>
-                    <li class="mb-2"><strong>Autocorrelator Ripple (Surface)</strong> - How much the shape of the waveform itself moves the material, which reads as texture in the sound rather than volume.</li>
+                    <li class="mb-2"><strong>Autocorrelator Ripple (Surface)</strong> - How much the shape of the sound moves your emission, which reads as texture in the sound rather than volume.</li>
                     </ul>
                 </div>
 
@@ -3648,7 +3898,7 @@
                     <p class="opt-note mt-2 mb-2"><strong>DFT Note Tracking</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>DFT Note Mod (0-11)</strong> - Which musical note this listens for. AudioLink picks the twelve notes out of the track, so this reacts to a note rather than to loudness.</li>
-                    <li class="mb-2"><strong>DFT Note Emission Amount</strong> - How far that note pushes the material when it sounds.</li>
+                    <li class="mb-2"><strong>DFT Note Emission Amount</strong> - How far that note brightens Emission layer 1 when it sounds.</li>
                     <li class="mb-2"><strong>Mask Source</strong> - Borrows an Emission layer's Map so this only shows where that layer does. Pick the layer, then the channel your mask sits in. That layer has to be switched on.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where this applies.</li>
                     <li class="mb-2"><strong>Invert Mask</strong> - Swap which side of the mask this shows on.</li>
@@ -3658,7 +3908,7 @@
                 <h3 class="text-glow-pink opt-group">Audio Scanlines</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Scanline Band</strong> - Which part of the music this reacts to.</li>
-                    <li class="mb-2"><strong>Scanline Visibility Blend</strong> - Runs bright lines across the surface in time with the music.</li>
+                    <li class="mb-2"><strong>Scanline Visibility Blend</strong> - Runs lines through your emission in time with the music, so it needs Emission to show.</li>
                     <li class="mb-2"><strong>Scanline Density</strong> - How many lines there are at once.</li>
                     <li class="mb-2"><strong>Base Scan Speed</strong> - How fast those lines travel. Negative sends them the other way.</li>
                     <li class="mb-2"><strong>Scanline Reaction</strong> - How much the music moves the lines, rather than them just running.</li>
@@ -3751,7 +4001,7 @@
                     <li class="mb-2"><strong>Offset Units</strong> - The fixed part of that same push. Small numbers go a long way.</li>
                 </ul>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Flip Backface Normals</strong> - Cull decides which side of each face gets drawn. Back suits most models. Switch to Off for flat single-sided pieces like hair cards, skirts or wings that need to be visible from both sides.</li>
+                    <li class="mb-2"><strong>Flip Backface Normals</strong> - Lights the back of each face as its own side, so single-sided pieces like hair cards, skirts or wings shade right from behind. Use it with Cull set to Off.</li>
                     <li class="mb-2"><strong>Ignore Fog</strong> - Keep your own colour in a foggy world instead of fading into the fog with everything else.</li>
                 </ul>
             </div>

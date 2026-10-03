@@ -175,7 +175,7 @@ namespace Vixforge.Toolkit.Diagnostics
 
                         var valFoldout = new Foldout
                         {
-                            text = $"Value [{valLabel}] — ({matsWithVal.Count} {(matsWithVal.Count == 1 ? "Material" : "Materials")})",
+                            text = $"Value [{valLabel}] - ({matsWithVal.Count} {(matsWithVal.Count == 1 ? "Material" : "Materials")})",
                             value = false
                         };
 
