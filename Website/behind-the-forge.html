@@ -378,6 +378,106 @@
                 </div>
             </div>
             <!-- FORGE:START -->
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-10-04-latex-ultra-toon-clothing-pro-fur-pro-wo">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Dev Notes</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">Toon</span>
+                        <span class="news-tag">Clothing Pro</span>
+                        <span class="news-tag">Fur Pro</span>
+                        <span class="news-tag">World Surface</span>
+                        <span class="news-tag">World Fur</span>
+                        <span class="news-date">October 4, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Latex Ultra, Toon, Clothing Pro, Fur Pro, World Surface and World Fur: Halloween effects, a skeleton you can see through, and dissolves that burn and melt.</h2>
+                    <p class="forge-status"><strong>Status:</strong> In testing. Not out yet.</p>
+                    <p class="forge-intro"><em>Halloween is close, so the shaders got ready for it: glitter in spooky shapes, glows that flicker like a jack-o'-lantern, a ghost, an X-ray skeleton, and dissolves that burn like paper or melt away.</em></p>
+                    <h3 class="text-glow-cyan">Halloween glitter shapes</h3>
+                    <p class="forge-where">On every glitter layer.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Shape</strong> now offers <strong>Bat</strong>, <strong>Pumpkin</strong>, <strong>Skull</strong>, <strong>Moon</strong> and <strong>Ghost</strong>.</li>
+                        <li>They stand upright instead of spinning, and the pumpkin, skull and ghost have their faces cut out.</li>
+                        <li>Lower <strong>Density</strong> to make them bigger, and turn <strong>Angle</strong> if they lean.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Flame Flicker</h3>
+                    <p class="forge-where">On every emission layer.</p>
+                    <ul class="pledge-list">
+                        <li>Makes the layer flicker like a candle or the glow inside a jack-o'-lantern, and it keeps the same brightness on average.</li>
+                        <li><strong>Flame Look</strong> sets the <strong>Speed</strong>, how far the colour sinks to orange as the flame dims (<strong>Ember</strong>), and how far the flicker climbs up you (<strong>Rise</strong>).</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Ember Edge and Melt</h3>
+                    <p class="forge-where">Under <strong>Dissolve</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Ember Edge</strong> burns the material away like paper: a charred band behind the front, with embers glowing and flickering in it. <strong>Embers</strong> sets how wide the band is, how many embers there are, how dark it chars and how fast they flicker.</li>
+                        <li><strong>Melt</strong> melts the material as it goes, with a wet band along the front and drips hanging below it. Give it a <strong>Color</strong> and some <strong>Glow</strong> for slime or lava, and <strong>Sag</strong> to let the edge droop.</li>
+                        <li>Melt looks best when the dissolve runs from the top down.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Ghost</h3>
+                    <p class="forge-where">New group under <strong>SPECIAL EFFECTS</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Turns the material into a spirit: see-through in the middle, glowing at the edges, with <strong>Smoke</strong> drifting up through it.</li>
+                        <li>Add <strong>Scanlines</strong> with a signal glitch, and AudioLink can flare the glow on the beat.</li>
+                        <li>Set <strong>Rendering Mode</strong> to Fade or Transparent to see through it.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Skeleton X-Ray</h3>
+                    <p class="forge-where">New group under <strong>SPECIAL EFFECTS</strong>, with a new tool in the Shader Hub.</p>
+                    <ul class="pledge-list">
+                        <li>Shows your skeleton through the body like an X-ray: the bones glow and the body around them turns to dark, see-through film.</li>
+                        <li>The bones sit at a <strong>Depth</strong> under the skin, so they slide as you move.</li>
+                        <li><strong>Reveal</strong> picks where it shows: everywhere, a <strong>Scanner</strong> band sweeping over you, <strong>On The Beat</strong>, or toward your <strong>Edges</strong>.</li>
+                        <li><strong>Skeleton Mask</strong>, under <strong>Tools</strong> in the Shader Hub, reads your avatar's own bones, bakes a skeleton for each material and switches <strong>Skeleton X-Ray</strong> on for you. It needs a Humanoid rig.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Outlines that hug the mesh</h3>
+                    <p class="forge-where">Under <strong>OUTLINES</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Where hair tufts, fur or clothing sat close in front of something else, the line could float off the edge or break into pieces. It now sits right on the edge, and the outer line stacks cleanly outside the inner one.</li>
+                        <li><strong>Outward Direction</strong> has a <strong>Baked</strong> option. <strong>Bake Outline Normals</strong> sets it, and the line stays even when bones turn.</li>
+                        <li>The bake leaves your vertex colours and UV4 alone now. Used it before? Press <strong>Restore Original Meshes</strong> on the Hub's <strong>Mesh Fixes</strong>, then bake again.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Lighter on your framerate</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Goo Effects</strong> on Latex Ultra and World Surface only splits the mesh up while the goo is moving the surface. It used to do it with nothing moving, and with a mirror open that could take the whole frame down.</li>
+                        <li><strong>Tessellation Detail</strong> tops out much lower, so tessellation is far lighter, most of all on AMD cards.</li>
+                        <li>A locked material leaves out what you can't see: outlines while they're off, <strong>Cling</strong> and the goo <strong>Drips</strong> with the goo off, <strong>UV Fracture</strong> while it rests, and fur at <strong>Length</strong> 0 on Clothing Pro, Fur Pro and World Fur.</li>
+                        <li>Infinity Mirror, Inner Cosmos, Hyperspace, Cymatics and the other special effects skip the parts their masks hide, instead of working them out first.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Switchboard for every shader</h3>
+                    <p class="forge-where">Under <strong>Tools &gt; Materials</strong> in the Shader Hub.</p>
+                    <ul class="pledge-list">
+                        <li>Poiyomi, lilToon, VRChat Mobile, Unity Standard and other well-known shaders list beside VixForge ones. Settings that mean the same thing in each, such as <strong>Main Color</strong>, sit together under <strong>Shared</strong>, so one change reaches all of them.</li>
+                        <li><strong>Undo</strong> takes back the last change, however many materials it reached, and <strong>Save</strong> writes the changed materials to disk.</li>
+                        <li><strong>Shader</strong> lists just one shader's materials, with their own values and counts.</li>
+                        <li>It finds the materials a material swap animation or a VRCFury toggle puts on, not only the ones on your renderers.</li>
+                        <li><strong>Edit Materials From Selection</strong> lives here now. The old Cross Shader Editor is gone, since the Switchboard does its job.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Locking for every shader</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Lock All Materials</strong>, the <strong>Locking</strong> tab, the right-click <strong>Lock</strong> and <strong>Unlock</strong> items and the Switchboard hand Poiyomi materials to Poiyomi's own locker and ours to ours. Shaders that don't lock, like lilToon, are left as they are.</li>
+                        <li>Locking also catches a material that a VRCFury toggle swaps in through an animation.</li>
+                        <li>Locking no longer saves your whole project, which could hold Unity up for many seconds. <strong>Save Materials After Lock</strong> on the <strong>Locking</strong> tab saves just those materials, if you want that back.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">A Hub that gets out of your way</h3>
+                    <p class="forge-where">In the Shader Hub.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Hide Bars</strong> folds the header and the bars above a tool away, so the tool gets the room.</li>
+                        <li><strong>Minimize</strong> shrinks the Hub to one bar, and <strong>Move</strong> docks it at the bottom of the editor, floats it along the bottom edge, or opens it in its own window.</li>
+                        <li>The header, tabs and buttons shrink with the window instead of wrapping into extra rows.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Fixed</h3>
+                    <ul class="pledge-list">
+                        <li>Right-click a section header to <strong>Reset</strong>, <strong>Copy</strong> or <strong>Paste</strong>, the same as the dots button.</li>
+                        <li>The decal positioning tool zooms and pans, <strong>Frame Decal</strong> jumps to the decal, and dragging an edge or a corner shrinks a decal as small as you need.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Coming in Latex Ultra 5.4.1, Toon 2.4.1, Clothing Pro 2.4.1, Fur Pro 2.4.1, World Surface 1.2.1 and World Fur 1.2.1, with VixForge Editor 2.5.1, together with everything from the last post.</li>
+                        <li>Next on the Planned Features page: matcaps you can build yourself, with Cymatics, Hyperspace and starfield looks, palettes, symmetry and AudioLink on everything.</li>
+                    </ul>
+                </div>
+            </article>
+
             <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-10-02-latex-ultra-toon-clothing-pro-fur-pro-wo">
                 <div class="news-body">
                     <div class="news-meta">
@@ -392,7 +492,6 @@
                     </div>
 
                     <h2 class="text-glow-cyan" style="margin-top: 0;">Latex Ultra, Toon, Clothing Pro, Fur Pro, World Surface and World Fur: slow speeds you can set, cheaper reflections, and World joins the supporter shaders.</h2>
-                    <p class="forge-status"><strong>Status:</strong> In testing. Not out yet.</p>
                     <p class="forge-intro"><em>A slow drift was hard to hit: the smallest nudge on a speed sent glitter racing across the body. Speeds now spend most of their travel at the slow end, reflections cost less in mirrors, and World Surface and World Fur move to the supporter tier.</em></p>
                     <h3 class="text-glow-cyan">Slow speeds you can set</h3>
                     <p class="forge-where">On every scroll, drift, spin, flow and speed control.</p>

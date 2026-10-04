@@ -1737,6 +1737,26 @@
                     </div>
 
                     <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Ember Edge</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns Ember Edge on.</li>
+                    <li class="mb-2"><strong>Color</strong> - The colour of the hottest embers. Cooler ones further back fade toward deep red.</li>
+                    <li class="mb-2"><strong>Embers</strong> - How the burning band looks. <em>Width</em>: How far behind the front the embers glow. <em>Density</em>: How many embers there are. Higher packs in more, smaller ones. <em>Char</em>: How dark the burnt band behind the front goes. <em>Flicker</em>: How fast the embers flicker. 0 holds them steady.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Melt</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns Melt on.</li>
+                    <li class="mb-2"><strong>Color</strong> - The colour of the melt. Its alpha sets how much it takes over, so at 0 the material melts in its own colour.</li>
+                    <li class="mb-2"><strong>Drips</strong> - How the melt runs. <em>Length</em>: How far the drips run past the front. <em>Drips</em>: How many drips there are across a metre. <em>Sag</em>: How far the melting edge sags down, in metres. Needs a model with enough vertices to bend. <em>Gloss</em>: How wet and shiny the melt looks.</li>
+                    <li class="mb-2"><strong>Glow</strong> - Makes the melt glow in its own colour, for slime or lava.</li>
+                    <li class="mb-2"><strong>Drip Speed</strong> - How fast the drips creep longer and shorter. 0 holds them still.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Wave Mode</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Enable</strong> - Turns Wave Mode on.</li>
@@ -1792,6 +1812,48 @@
                     </div>
                 </div>
 
+                <h3 class="text-glow-pink opt-group">Ghost</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Ghost Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Glow Colour</strong> - The colour the spirit glows.</li>
+                    <li class="mb-2"><strong>See-Through</strong> - How clear the middle of the body is. 1 is fully clear and 0 is solid. Needs Rendering Mode on Fade or Transparent.</li>
+                    <li class="mb-2"><strong>Edge Width</strong> - How far the glow reaches in from the outline. Low hugs the silhouette, high fills more of the body.</li>
+                    <li class="mb-2"><strong>Glow</strong> - How brightly the edges glow.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music this reacts to.</li>
+                    <li class="mb-2"><strong>AudioLink Amount</strong> - How far the beat flares the glow and pushes it in from the edges.</li>
+                    <li class="mb-2"><strong>Body Tint</strong> - How much the body takes on the glow colour in place of its own.</li>
+                    <li class="mb-2"><strong>Smoke</strong> - Smoke that drifts up through the body and thins it out. <em>Amount</em>: How much the smoke thins the body. <em>Size</em>: How big the smoke is, in metres. <em>Speed</em>: How fast it rises. 0 holds it still. <em>Detail</em>: How crisp the edges of the smoke are.</li>
+                    <li class="mb-2"><strong>Scanlines</strong> - Bands that roll up the body like an old recording. <em>Amount</em>: How strong the bands are. 0 turns them off. <em>Lines</em>: How many bands there are in a metre. <em>Speed</em>: How fast they roll. Negative rolls them down. <em>Glitch</em>: How often the signal drops out for a moment.</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Skeleton X-Ray</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Skeleton X-Ray Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Skeleton Mask</strong> - The bones, white on black, in the layout of this mesh. Bake one for your avatar with Tools &gt; Skeleton Mask in the Hub.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask holds the bones. The Skeleton Mask tool writes them into every colour channel, so R is right for it.</li>
+                    <li class="mb-2"><strong>Amount</strong> - How much of the X-ray shows. Animate it to switch the X-ray on and off.</li>
+                    <li class="mb-2"><strong>Depth</strong> - How deep under the skin the bones sit, in metres. They slide against the skin as you move, the way real bones would. 0 lays them on the surface.</li>
+                    <li class="mb-2"><strong>Reveal</strong> - Where the X-ray shows. Always covers the whole body. Scanner sweeps a band up the body. On The Beat shows it with the music. Edges shows it toward your outline.
+                        <span class="opt-values">Options: <code>Always</code>, <code>Scanner</code>, <code>On The Beat</code>, <code>Edges</code></span></li>
+                    <li class="mb-2"><strong>Scanner</strong> - The band that sweeps over the body. <em>Width</em>: How tall the band is, in metres. <em>Speed</em>: How many sweeps a second. Negative sweeps down. <em>Softness</em>: How soft the edges of the band are. <em>Line</em>: How brightly the edges of the band glow.</li>
+                    <li class="mb-2"><strong>Scanner Range</strong> - The heights the band sweeps between, in metres above the model's origin. Widen it if the band misses your head or your feet.</li>
+                    <li class="mb-2"><strong>Bone Colour</strong> - The colour the bones glow.</li>
+                    <li class="mb-2"><strong>Glow</strong> - How brightly the bones glow.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music this reacts to. On The Beat reveals the X-ray with it too.</li>
+                    <li class="mb-2"><strong>AudioLink Amount</strong> - How far the beat flashes the bones.</li>
+                    <li class="mb-2"><strong>Halo</strong> - A soft glow around each bone.</li>
+                    <li class="mb-2"><strong>X-Ray Body</strong> - How far the body around the bones turns into X-ray film: dark, with a faint glow along its edges.</li>
+                    <li class="mb-2"><strong>Film Colour</strong> - The colour of the X-ray film.</li>
+                    <li class="mb-2"><strong>See-Through</strong> - How clear the body gets around the bones. Needs Rendering Mode on Fade or Transparent.</li>
+                    <li class="mb-2"><strong>Flicker</strong> - Makes the X-ray flicker like an old screen.</li>
+                    </ul>
+                </div>
+
                 <h3 class="text-glow-pink opt-group">Glitter</h3>
                 <p class="opt-note">Tiny flakes scattered across the material, each tilted its own way, so they catch the light one at a time and twinkle as you or the light moves. They are generated in the shader, so there is no texture to make and no resolution to run out of. Once flakes get too small on screen to draw individually they settle into a smooth sheen, so glitter never turns into crawling noise at a distance.</p>
 
@@ -1817,8 +1879,8 @@
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Density</strong> - How many flakes there are. Higher packs them in finer.</li>
                     <li class="mb-2"><strong>Flake Size</strong> - How big each flake is. Above 1 a flake grows past its own spot and overlaps its neighbours, which costs more to draw.</li>
-                    <li class="mb-2"><strong>Shape</strong> - The outline of every flake. Round is the classic sparkle. Star and Cross throw a sharp glint, Shard reads as broken foil and Ring as tiny bubbles. Texture reads your own sprite from the Shape Sprite slot below, so you can draw your own.
-                        <span class="opt-values">Options: <code>Round</code>, <code>Hexagon</code>, <code>Diamond</code>, <code>Star</code>, <code>Cross</code>, <code>Shard</code>, <code>Ring</code>, <code>Texture</code></span></li>
+                    <li class="mb-2"><strong>Shape</strong> - The outline of every flake. Round is the classic sparkle. Star and Cross throw a sharp glint, Shard reads as broken foil and Ring as tiny bubbles. Texture reads your own sprite from the Shape Sprite slot below, so you can draw your own. Bat, Pumpkin, Skull, Moon and Ghost stay upright, so use Angle if they lean. Lower Density so their faces show.
+                        <span class="opt-values">Options: <code>Round</code>, <code>Hexagon</code>, <code>Diamond</code>, <code>Star</code>, <code>Cross</code>, <code>Shard</code>, <code>Ring</code>, <code>Texture</code>, <code>Bat</code>, <code>Pumpkin</code>, <code>Skull</code>, <code>Moon</code>, <code>Ghost</code></span></li>
                     <li class="mb-2"><strong>Shape Sprite</strong> - Your own flake shape, drawn as a white blob on black. Pick the channel it lives in below.</li>
                     <li class="mb-2"><strong>Shape Channel</strong> - Which channel of the Shape Sprite holds your flake. Most sprites use Red.</li>
                     <li class="mb-2"><strong>Coverage</strong> - How much of the surface carries glitter at all.</li>
@@ -1865,8 +1927,8 @@
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Density</strong> - How many flakes there are. Higher packs them in finer.</li>
                     <li class="mb-2"><strong>Flake Size</strong> - How big each flake is. Above 1 a flake grows past its own spot and overlaps its neighbours, which costs more to draw.</li>
-                    <li class="mb-2"><strong>Shape</strong> - The outline of every flake. Round is the classic sparkle. Star and Cross throw a sharp glint, Shard reads as broken foil and Ring as tiny bubbles. Texture reads your own sprite from the Shape Sprite slot below, so you can draw your own.
-                        <span class="opt-values">Options: <code>Round</code>, <code>Hexagon</code>, <code>Diamond</code>, <code>Star</code>, <code>Cross</code>, <code>Shard</code>, <code>Ring</code>, <code>Texture</code></span></li>
+                    <li class="mb-2"><strong>Shape</strong> - The outline of every flake. Round is the classic sparkle. Star and Cross throw a sharp glint, Shard reads as broken foil and Ring as tiny bubbles. Texture reads your own sprite from the Shape Sprite slot below, so you can draw your own. Bat, Pumpkin, Skull, Moon and Ghost stay upright, so use Angle if they lean. Lower Density so their faces show.
+                        <span class="opt-values">Options: <code>Round</code>, <code>Hexagon</code>, <code>Diamond</code>, <code>Star</code>, <code>Cross</code>, <code>Shard</code>, <code>Ring</code>, <code>Texture</code>, <code>Bat</code>, <code>Pumpkin</code>, <code>Skull</code>, <code>Moon</code>, <code>Ghost</code></span></li>
                     <li class="mb-2"><strong>Shape Channel</strong> - Which channel of the Shape Sprite holds your flake. Most sprites use Red.</li>
                     <li class="mb-2"><strong>Coverage</strong> - How much of the surface carries glitter at all.</li>
                     <li class="mb-2"><strong>Scatter</strong> - How far each flake tilts away from the surface. Low keeps them facing out together, so they flash as one sheet. High tilts them every which way, so they catch the light one at a time.</li>
@@ -1912,8 +1974,8 @@
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Density</strong> - How many flakes there are. Higher packs them in finer.</li>
                     <li class="mb-2"><strong>Flake Size</strong> - How big each flake is. Above 1 a flake grows past its own spot and overlaps its neighbours, which costs more to draw.</li>
-                    <li class="mb-2"><strong>Shape</strong> - The outline of every flake. Round is the classic sparkle. Star and Cross throw a sharp glint, Shard reads as broken foil and Ring as tiny bubbles. Texture reads your own sprite from the Shape Sprite slot below, so you can draw your own.
-                        <span class="opt-values">Options: <code>Round</code>, <code>Hexagon</code>, <code>Diamond</code>, <code>Star</code>, <code>Cross</code>, <code>Shard</code>, <code>Ring</code>, <code>Texture</code></span></li>
+                    <li class="mb-2"><strong>Shape</strong> - The outline of every flake. Round is the classic sparkle. Star and Cross throw a sharp glint, Shard reads as broken foil and Ring as tiny bubbles. Texture reads your own sprite from the Shape Sprite slot below, so you can draw your own. Bat, Pumpkin, Skull, Moon and Ghost stay upright, so use Angle if they lean. Lower Density so their faces show.
+                        <span class="opt-values">Options: <code>Round</code>, <code>Hexagon</code>, <code>Diamond</code>, <code>Star</code>, <code>Cross</code>, <code>Shard</code>, <code>Ring</code>, <code>Texture</code>, <code>Bat</code>, <code>Pumpkin</code>, <code>Skull</code>, <code>Moon</code>, <code>Ghost</code></span></li>
                     <li class="mb-2"><strong>Shape Channel</strong> - Which channel of the Shape Sprite holds your flake. Most sprites use Red.</li>
                     <li class="mb-2"><strong>Coverage</strong> - How much of the surface carries glitter at all.</li>
                     <li class="mb-2"><strong>Scatter</strong> - How far each flake tilts away from the surface. Low keeps them facing out together, so they flash as one sheet. High tilts them every which way, so they catch the light one at a time.</li>
@@ -1959,8 +2021,8 @@
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Density</strong> - How many flakes there are. Higher packs them in finer.</li>
                     <li class="mb-2"><strong>Flake Size</strong> - How big each flake is. Above 1 a flake grows past its own spot and overlaps its neighbours, which costs more to draw.</li>
-                    <li class="mb-2"><strong>Shape</strong> - The outline of every flake. Round is the classic sparkle. Star and Cross throw a sharp glint, Shard reads as broken foil and Ring as tiny bubbles. Texture reads your own sprite from the Shape Sprite slot below, so you can draw your own.
-                        <span class="opt-values">Options: <code>Round</code>, <code>Hexagon</code>, <code>Diamond</code>, <code>Star</code>, <code>Cross</code>, <code>Shard</code>, <code>Ring</code>, <code>Texture</code></span></li>
+                    <li class="mb-2"><strong>Shape</strong> - The outline of every flake. Round is the classic sparkle. Star and Cross throw a sharp glint, Shard reads as broken foil and Ring as tiny bubbles. Texture reads your own sprite from the Shape Sprite slot below, so you can draw your own. Bat, Pumpkin, Skull, Moon and Ghost stay upright, so use Angle if they lean. Lower Density so their faces show.
+                        <span class="opt-values">Options: <code>Round</code>, <code>Hexagon</code>, <code>Diamond</code>, <code>Star</code>, <code>Cross</code>, <code>Shard</code>, <code>Ring</code>, <code>Texture</code>, <code>Bat</code>, <code>Pumpkin</code>, <code>Skull</code>, <code>Moon</code>, <code>Ghost</code></span></li>
                     <li class="mb-2"><strong>Shape Channel</strong> - Which channel of the Shape Sprite holds your flake. Most sprites use Red.</li>
                     <li class="mb-2"><strong>Coverage</strong> - How much of the surface carries glitter at all.</li>
                     <li class="mb-2"><strong>Scatter</strong> - How far each flake tilts away from the surface. Low keeps them facing out together, so they flash as one sheet. High tilts them every which way, so they catch the light one at a time.</li>
@@ -2006,8 +2068,8 @@
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Density</strong> - How many flakes there are. Higher packs them in finer.</li>
                     <li class="mb-2"><strong>Flake Size</strong> - How big each flake is. Above 1 a flake grows past its own spot and overlaps its neighbours, which costs more to draw.</li>
-                    <li class="mb-2"><strong>Shape</strong> - The outline of every flake. Round is the classic sparkle. Star and Cross throw a sharp glint, Shard reads as broken foil and Ring as tiny bubbles. Texture reads your own sprite from the Shape Sprite slot below, so you can draw your own.
-                        <span class="opt-values">Options: <code>Round</code>, <code>Hexagon</code>, <code>Diamond</code>, <code>Star</code>, <code>Cross</code>, <code>Shard</code>, <code>Ring</code>, <code>Texture</code></span></li>
+                    <li class="mb-2"><strong>Shape</strong> - The outline of every flake. Round is the classic sparkle. Star and Cross throw a sharp glint, Shard reads as broken foil and Ring as tiny bubbles. Texture reads your own sprite from the Shape Sprite slot below, so you can draw your own. Bat, Pumpkin, Skull, Moon and Ghost stay upright, so use Angle if they lean. Lower Density so their faces show.
+                        <span class="opt-values">Options: <code>Round</code>, <code>Hexagon</code>, <code>Diamond</code>, <code>Star</code>, <code>Cross</code>, <code>Shard</code>, <code>Ring</code>, <code>Texture</code>, <code>Bat</code>, <code>Pumpkin</code>, <code>Skull</code>, <code>Moon</code>, <code>Ghost</code></span></li>
                     <li class="mb-2"><strong>Shape Channel</strong> - Which channel of the Shape Sprite holds your flake. Most sprites use Red.</li>
                     <li class="mb-2"><strong>Coverage</strong> - How much of the surface carries glitter at all.</li>
                     <li class="mb-2"><strong>Scatter</strong> - How far each flake tilts away from the surface. Low keeps them facing out together, so they flash as one sheet. High tilts them every which way, so they catch the light one at a time.</li>
@@ -2633,6 +2695,8 @@
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts this layer's colour round the colour wheel, without touching your texture.</li>
                     <li class="mb-2"><strong>Hue Cycle Speed</strong> - Cycles that colour shift on forever. 0 holds it where you left it.</li>
                     <li class="mb-2"><strong>Color Cycle</strong> - Shapes how this layer's colour moves round the wheel. <em>Range</em>: Keeps the colour inside a slice of the wheel instead of running the whole rainbow. At 0 it runs the whole wheel. <em>Beat Speed</em>: Drives the cycle from the music, so the colour only moves while the track does. <em>Beat Range</em>: Lets the beat widen that slice. <em>Rainbow</em>: Spreads the colour along the Beat Travel direction.</li>
+                    <li class="mb-2"><strong>Flame Flicker</strong> - Makes this layer flicker like a candle, or the glow inside a jack-o'-lantern. Higher flickers harder, and the layer keeps the same brightness on average.</li>
+                    <li class="mb-2"><strong>Flame Look</strong> - How the flame moves and colours as it flickers. <em>Speed</em>: How fast the flame dances. 1 is a candle in still air. <em>Ember</em>: How far the colour sinks toward deep orange each time the flame burns low. <em>Rise</em>: Delays the flicker with height, so the glow climbs up you instead of every part flickering at once.</li>
                 </ul>
 
                 <div class="opt-subgroup">
@@ -2680,6 +2744,8 @@
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts this layer's colour round the colour wheel, without touching your texture.</li>
                     <li class="mb-2"><strong>Hue Cycle Speed</strong> - Cycles that colour shift on forever. 0 holds it where you left it.</li>
                     <li class="mb-2"><strong>Color Cycle</strong> - Shapes how this layer's colour moves round the wheel. <em>Range</em>: Keeps the colour inside a slice of the wheel instead of running the whole rainbow. At 0 it runs the whole wheel. <em>Beat Speed</em>: Drives the cycle from the music, so the colour only moves while the track does. <em>Beat Range</em>: Lets the beat widen that slice. <em>Rainbow</em>: Spreads the colour along the Beat Travel direction.</li>
+                    <li class="mb-2"><strong>Flame Flicker</strong> - Makes this layer flicker like a candle, or the glow inside a jack-o'-lantern. Higher flickers harder, and the layer keeps the same brightness on average.</li>
+                    <li class="mb-2"><strong>Flame Look</strong> - How the flame moves and colours as it flickers. <em>Speed</em>: How fast the flame dances. 1 is a candle in still air. <em>Ember</em>: How far the colour sinks toward deep orange each time the flame burns low. <em>Rise</em>: Delays the flicker with height, so the glow climbs up you instead of every part flickering at once.</li>
                 </ul>
 
                 <div class="opt-subgroup">
@@ -2727,6 +2793,8 @@
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts this layer's colour round the colour wheel, without touching your texture.</li>
                     <li class="mb-2"><strong>Hue Cycle Speed</strong> - Cycles that colour shift on forever. 0 holds it where you left it.</li>
                     <li class="mb-2"><strong>Color Cycle</strong> - Shapes how this layer's colour moves round the wheel. <em>Range</em>: Keeps the colour inside a slice of the wheel instead of running the whole rainbow. At 0 it runs the whole wheel. <em>Beat Speed</em>: Drives the cycle from the music, so the colour only moves while the track does. <em>Beat Range</em>: Lets the beat widen that slice. <em>Rainbow</em>: Spreads the colour along the Beat Travel direction.</li>
+                    <li class="mb-2"><strong>Flame Flicker</strong> - Makes this layer flicker like a candle, or the glow inside a jack-o'-lantern. Higher flickers harder, and the layer keeps the same brightness on average.</li>
+                    <li class="mb-2"><strong>Flame Look</strong> - How the flame moves and colours as it flickers. <em>Speed</em>: How fast the flame dances. 1 is a candle in still air. <em>Ember</em>: How far the colour sinks toward deep orange each time the flame burns low. <em>Rise</em>: Delays the flicker with height, so the glow climbs up you instead of every part flickering at once.</li>
                 </ul>
 
                 <div class="opt-subgroup">
@@ -2774,6 +2842,8 @@
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts this layer's colour round the colour wheel, without touching your texture.</li>
                     <li class="mb-2"><strong>Hue Cycle Speed</strong> - Cycles that colour shift on forever. 0 holds it where you left it.</li>
                     <li class="mb-2"><strong>Color Cycle</strong> - Shapes how this layer's colour moves round the wheel. <em>Range</em>: Keeps the colour inside a slice of the wheel instead of running the whole rainbow. At 0 it runs the whole wheel. <em>Beat Speed</em>: Drives the cycle from the music, so the colour only moves while the track does. <em>Beat Range</em>: Lets the beat widen that slice. <em>Rainbow</em>: Spreads the colour along the Beat Travel direction.</li>
+                    <li class="mb-2"><strong>Flame Flicker</strong> - Makes this layer flicker like a candle, or the glow inside a jack-o'-lantern. Higher flickers harder, and the layer keeps the same brightness on average.</li>
+                    <li class="mb-2"><strong>Flame Look</strong> - How the flame moves and colours as it flickers. <em>Speed</em>: How fast the flame dances. 1 is a candle in still air. <em>Ember</em>: How far the colour sinks toward deep orange each time the flame burns low. <em>Rise</em>: Delays the flicker with height, so the glow climbs up you instead of every part flickering at once.</li>
                 </ul>
 
                 <div class="opt-subgroup">
@@ -2821,6 +2891,8 @@
                     <li class="mb-2"><strong>Hue Shift</strong> - Shifts this layer's colour round the colour wheel, without touching your texture.</li>
                     <li class="mb-2"><strong>Hue Cycle Speed</strong> - Cycles that colour shift on forever. 0 holds it where you left it.</li>
                     <li class="mb-2"><strong>Color Cycle</strong> - Shapes how this layer's colour moves round the wheel. <em>Range</em>: Keeps the colour inside a slice of the wheel instead of running the whole rainbow. At 0 it runs the whole wheel. <em>Beat Speed</em>: Drives the cycle from the music, so the colour only moves while the track does. <em>Beat Range</em>: Lets the beat widen that slice. <em>Rainbow</em>: Spreads the colour along the Beat Travel direction.</li>
+                    <li class="mb-2"><strong>Flame Flicker</strong> - Makes this layer flicker like a candle, or the glow inside a jack-o'-lantern. Higher flickers harder, and the layer keeps the same brightness on average.</li>
+                    <li class="mb-2"><strong>Flame Look</strong> - How the flame moves and colours as it flickers. <em>Speed</em>: How fast the flame dances. 1 is a candle in still air. <em>Ember</em>: How far the colour sinks toward deep orange each time the flame burns low. <em>Rise</em>: Delays the flicker with height, so the glow climbs up you instead of every part flickering at once.</li>
                 </ul>
 
                 <div class="opt-subgroup">
