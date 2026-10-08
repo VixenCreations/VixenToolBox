@@ -18,7 +18,7 @@ This repository acts as the **first-class VPM package source**, powering the ent
 * **Package:** `com.vixencreations.vixens-toolbox` (v2.16.0)
 * **Target:** Unity 2022.3.22f1 / VRChat SDK 3.10.3
 * **Storefront & Docs:** [vixencreations.github.io/VixenToolBox](https://vixencreations.github.io/VixenToolBox/)
-* **Community:** Trusted by 1,500+ creators and counting.
+* **Community:** 4,500+ downloads and counting!!
 
 ---
 
