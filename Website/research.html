@@ -574,12 +574,12 @@
                 <p class="caption1 mt-2" style="font-size: 1.15rem; max-width: 780px; margin: 0 auto;">
                     Measured lighting for VRChat avatars and worlds: rim light, light routes, camera exposure, light baking and reflections
                 </p>
-                <p class="paper-meta">Vixenlicious, VixForge Interactive &middot; Research report, 25 September 2026</p>
-                <p class="paper-meta">Six experiments across 23rd to 25th of September 2026 based on our original Fibonacci lattice script from August 31st 2026.</p>
+                <p class="paper-meta">Vixenlicious, VixForge Interactive &middot; Research report, 25 September 2026, updated 9 October 2026</p>
+                <p class="paper-meta">Eight experiments across 23rd to 26th of September 2026 based on our original Fibonacci lattice script from August 31st 2026.</p>
                 <div class="paper-status">
-                    <strong>Status:</strong> Every result below has been verified against the Unity Engine and <a href="https://x.com/VixForge/status/2103512757110976617?s=20" target="_blank" rel="noopener noreferrer">works in game in VRChat.</a> The shader and baker changes that came out of it
-                    are built and are listed on <a href="upcoming-changes.html">Upcoming Changes</a>; testing them in the Unity editor and in
-                    VRChat is under way, so treat the in-engine behaviour as unconfirmed until those changes are released.
+                    <strong>Status:</strong> Every result below has been verified against the Unity Engine and <a href="https://x.com/VixForge/status/2103512757110976617?s=20" target="_blank" rel="noopener noreferrer">works in game in VRChat.</a> The shader changes that came out of it shipped in
+                    the 25 and 27 September releases. The Light Baker changes are built and checked in the Unity editor, and come out with
+                    Light Baker 1.0; see <a href="planned-features.html">Planned Features</a>.
                 </div>
                 <div class="row mt-3" style="gap: 10px; flex-wrap: wrap; justify-content: center;">
                     <fluent-anchor href="upcoming-changes.html" class="custom-stealth-btn">Upcoming Changes</fluent-anchor>
@@ -593,7 +593,7 @@
                         An avatar in VRChat receives light through at least seven routes: per-pixel lights, per-vertex lights, spherical
                         harmonic (SH) light probes, VRC Light Volumes, LTCGI area lights, the VRSL light wash and, in worlds, baked lightmaps.
                         Each route delivers its own approximation of the same light, so a material can change its look depending on how a light
-                        happens to reach it. We report six numerical experiments that measure these differences and derive corrections,
+                        happens to reach it. We report eight numerical experiments that measure these differences and derive corrections,
                         anchored to Unity's manual, Unity's C# source and Unity's open-source GPU lightmapper.
                     </p>
                     <p>
@@ -609,6 +609,13 @@
                         true size with the energy Light Volumes gives it matches brute-force integration within 0.021 RMS where the packed
                         form is off by up to 0.203, and it roughly halves the highlight error.
                     </p>
+                    <p>
+                        Two later experiments cover the light baker itself. Estimating directional lightmap data from the baker's
+                        cosine-weighted rays has unbounded variance at the horizon; a defensive mixture distribution removes it without bias,
+                        and the resulting MonoSH ratio lightmaps beat Unity's directional encoding in five scenes of five while staying readable
+                        by shaders that decode the Unity way. A compile bisect of the baker's path tracer traced a 600 second compiler timeout
+                        to a light evaluated inside the branch that selected it.
+                    </p>
                 </div>
                 <h3>Key findings</h3>
                 <ul class="key-findings">
@@ -619,6 +626,8 @@
                     <li>Unity's lightmapper applies light intensity before the conversion to linear and uses its Legacy falloff; matching both is required before any baked scene can be compared with Unity's.</li>
                     <li>Light Volumes packs its point and area lights in two different conventions. Keeping each light's energy and giving it its true shape lights facing surfaces 1.5 to 2 times brighter and leaves surfaces that face away from a panel dark, where the packed form lit up to 41% of them.</li>
                     <li>Our direct highlights were a third of Unity's, because Unity's Standard BRDF multiplies the specular term by pi, and normal strength above 1 pushed up to 18% of normals inside the surface. Both are fixed.</li>
+                    <li>Baking directional data from cosine-weighted rays divides by the cosine, so its noise has no upper bound at the horizon. Mixing 40% uniform hemisphere sampling into the ray distribution removes that tail with no bias. On exact data, MonoSH ratio lightmaps beat Unity's directional encoding in all five test scenes.</li>
+                    <li>The baker's path tracer went from 0.7 seconds to a 600 second compiler timeout because a light was evaluated inside the branch that picked it. Evaluating it unconditionally brought every kernel back under 2.5 seconds.</li>
                 </ul>
             </section>
 
@@ -880,7 +889,7 @@ $$c_2 = \int_0^1 u^{p}\big((1+s)u - s\big)^2 du = \frac{(1+s)^2}{p+3} - \frac{2s
             <section class="glass-panel paper-section w-100 mb-5" id="camera">
                 <h2 class="text-glow-cyan" style="margin-top: 0;">6. What the camera keeps</h2>
                 <p>
-                    Camera Pro <strong>(Our Experimental In Development Grab Pass Shader)</strong> reads the frame the world has already drawn, applies depth of field, exposure as
+                    <a href="https://vixenlicous.gumroad.com/l/vixforge-camera-pro" target="_blank" rel="noopener noreferrer">Camera Pro</a>, our camera for avatars, reads the frame the world has already drawn, applies depth of field, exposure as
                     <span class="formula">2^EV</span>, halation, local tone, white balance and grading, and ends in a response curve: AgX by
                     default [14], with ACES and Khronos PBR Neutral as options. We ran shader values through the same curves, copied from the
                     camera's source.
@@ -1534,24 +1543,136 @@ $$\text{highlight} = \pi\,E_s\,f\,F(\mathbf l_{\text{rep}}\cdot\mathbf h_{\text{
                 </div>
             </section>
 
-            <section class="glass-panel paper-section w-100 mb-5" id="built">
-                <h2 class="text-glow-cyan" style="margin-top: 0;">10. What we built</h2>
+            <section class="glass-panel paper-section w-100 mb-5" id="monosh">
+                <h2 class="text-glow-cyan" style="margin-top: 0;">10. Directional lightmaps from the baker</h2>
+                <p>
+                    Section 8 found that MonoSH ratio data beats Unity's directional encoding, and left two questions open. The baker needs
+                    a per-texel estimate of the luminance SH, its integral \(A\) and its first moment \(\mathbf B\) over the upper hemisphere,
+                    and it draws cosine-weighted rays. Estimating \(A\) and \(\mathbf B\) from those rays divides by the cosine, which has
+                    infinite variance at the horizon. And every other shader reads the directional texture as Unity's encoding.
+                </p>
+                <p>
+                    We answered both with the baker's own sampling: a stratified first coordinate and a golden-ratio second coordinate, at
+                    64 and 256 samples per texel, in five scenes on a surface facing up: a screen and a downlight, sun and sky, two opposed
+                    lights, a lamp 8 degrees above the horizon, and a bright wall with no lights. Direct light reaches the estimate the way
+                    the baker's next-event estimation delivers it, with its exact direction and contribution. Error is the RMS of luminance
+                    over 400 normals within 45 degrees of the surface normal, as a share of the mean, against a 200,000-point Fibonacci
+                    reference. Direction noise measures an estimate against the same decode with exact \(A\) and \(\mathbf B\), so it
+                    separates the estimator's noise from the model's own error.
+                </p>
                 <div class="paper-table-wrap">
                     <table class="paper-table">
-                        <caption><strong>Table 21.</strong> Changes that came out of this research, and their state on 25 September 2026.</caption>
+                        <caption><strong>Table 21.</strong> Direction noise of the per-texel estimators at 256 samples per texel: mean / 95th percentile over 100 texels.</caption>
+                        <thead><tr><th>Scene</th><th class="num">Cosine, divide by cos</th><th class="num">Cosine floor 0.1</th><th class="num">Mixture a = 0.8</th><th class="num">Mixture a = 0.6</th><th class="num">Mixture a = 0.4</th></tr></thead>
+                        <tbody>
+                            <tr><td>Screen and downlight</td><td class="num">0.0066 / 0.0155</td><td class="num">0.0071 / 0.0143</td><td class="num">0.0045 / 0.0102</td><td class="num">0.0039 / 0.0080</td><td class="num best">0.0034 / 0.0067</td></tr>
+                            <tr><td>Sun and sky</td><td class="num">0.0048 / 0.0129</td><td class="num">0.0016 / 0.0033</td><td class="num">0.0016 / 0.0028</td><td class="num best">0.0011 / 0.0020</td><td class="num best">0.0011 / 0.0019</td></tr>
+                            <tr><td>Bright wall</td><td class="num">0.0391 / 0.0937</td><td class="num">0.0232 / 0.0435</td><td class="num">0.0180 / 0.0328</td><td class="num">0.0108 / 0.0211</td><td class="num best">0.0080 / 0.0157</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    Dividing by the cosine gives the heaviest tail. A floor on the cosine cuts the noise but adds bias: with a floor of 0.2,
+                    the bright wall's error is 0.316 against 0.288 for exact data. A defensive mixture of the cosine distribution and a
+                    uniform one [19] removes the tail with no bias. It also makes the colour lightmap less noisy where light arrives low
+                    (screen and downlight at 64 samples: 0.0119 against 0.0198; bright wall: 0.0886 against 0.1053), and is slightly
+                    noisier under an open sky (0.0021 against 0.0010), which is small in absolute terms. We chose \(a = 0.6\). Storing the
+                    direction in 8 bits costs nothing measurable.
+                </p>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 22.</strong> Five decoders on exact data, 8-bit storage: RMS error of luminance over 400 tilted normals as a share of the mean.</caption>
+                        <thead><tr><th>Scene</th><th class="num">No direction</th><th class="num">Unity directional</th><th class="num">MonoSH ratio</th><th class="num">Our data, Unity's decode</th><th class="num">Unity's data, MonoSH decode</th></tr></thead>
+                        <tbody>
+                            <tr><td>Screen and downlight</td><td class="num">0.1700</td><td class="num">0.0801</td><td class="num">0.0593</td><td class="num">0.0897</td><td class="num best">0.0553</td></tr>
+                            <tr><td>Sun and sky</td><td class="num">0.3874</td><td class="num">0.2419</td><td class="num best">0.1711</td><td class="num">0.2393</td><td class="num">0.1779</td></tr>
+                            <tr><td>Two opposed lights</td><td class="num">0.1581</td><td class="num">0.0972</td><td class="num">0.0718</td><td class="num">0.0986</td><td class="num best">0.0705</td></tr>
+                            <tr><td>Grazing lamp</td><td class="num">0.9890</td><td class="num">0.8638</td><td class="num best">0.7067</td><td class="num">0.8209</td><td class="num">0.7877</td></tr>
+                            <tr><td>Bright wall</td><td class="num">0.5515</td><td class="num">0.4279</td><td class="num best">0.2862</td><td class="num">0.3804</td><td class="num">0.3704</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    MonoSH ratio beats Unity's encoding in all five scenes, where section 8 found two of three. A shader that decodes our
+                    data the Unity way stays within about 12% of Unity's own directional data and does better in three scenes, because the
+                    alpha channel holds Unity's rebalance term for the stored direction. Using an alpha of 0 as a format flag was rejected:
+                    Unity's directional decode divides by alpha, so every other lightmapped material would come out about 10,000 times too
+                    bright. Read the other way, Unity's own directional data through the MonoSH decode beats Unity's decode in all five
+                    scenes. Neither mismatch is a hazard, so the decode stays a per-material option. The grazing lamp is poor for every
+                    encoding: one light 8 degrees above the surface changes faster than an L1 model can follow.
+                </p>
+                <h3>The equations</h3>
+                <p>
+                    The luminance moments, the stored direction and the decode at a normal \(\mathbf N\), for a texel baked at normal
+                    \(\mathbf n_0\):
+                </p>
+                <div class="math-block">$$A = \frac{1}{\pi}\int_{\Omega^+} L\,d\omega,\qquad \mathbf B = \frac{1}{\pi}\int_{\Omega^+} L\,\boldsymbol\omega\,d\omega,\qquad \mathbf V = \frac{2\mathbf B}{A}$$
+$$\mathbf E(\mathbf N) = \mathbf E(\mathbf n_0)\,\frac{\max(1 + \mathbf N\cdot\mathbf V,\ 0)}{\max(1 + \mathbf n_0\cdot\mathbf V,\ 10^{-3})},\qquad \text{rgb} = \frac{\mathbf V}{4} + 0.5,\qquad a = 0.5 + \mathbf n_0\cdot\frac{\mathbf V}{4}$$</div>
+                <p>
+                    Each indirect ray is drawn from the mixture and weighted for irradiance and for the moments. Direct and emitter
+                    samples, whose contribution \(c\) already holds the cosine, add \(c/\cos\theta\) to \(A\) and \(c\,\boldsymbol\omega/\cos\theta\) to \(\mathbf B\):
+                </p>
+                <div class="math-block">$$p(\boldsymbol\omega) = a\,\frac{\cos\theta}{\pi} + \frac{1 - a}{2\pi},\qquad w_E = \frac{\cos\theta}{\pi\,p},\qquad w_{A,\mathbf B} = \frac{1}{\pi\,p},\qquad a = 0.6$$</div>
+            </section>
+
+            <section class="glass-panel paper-section w-100 mb-5" id="compile">
+                <h2 class="text-glow-cyan" style="margin-top: 0;">11. A compute shader that compiles</h2>
+                <p>
+                    The baker's path tracer is one compute shader. After a rebuild for speed on 26 September, Unity's shader compiler gave
+                    up on the trace kernel at its 600 second limit, and the probe kernel failed with errors X3511 and X3531, both about
+                    unrolling loops. We bisected it with Microsoft's fxc, the compiler Unity uses for Direct3D 11, at <code>cs_5_0 /O3</code>,
+                    one process per kernel, changing one thing per copy of the shader.
+                </p>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 23.</strong> Compile time and result for the trace kernel and the probe kernel.</caption>
+                        <thead><tr><th>Variant</th><th class="num">Trace kernel</th><th class="num">Probe kernel</th></tr></thead>
+                        <tbody>
+                            <tr><td>Before the speed rebuild</td><td class="num">0.7 s, ok</td><td class="num">0.9 s, ok</td></tr>
+                            <tr><td>After the speed rebuild</td><td class="num">43.3 s, X3511</td><td class="num">4.7 s, X3531</td></tr>
+                            <tr><td>Direct light function stubbed out</td><td class="num">1.1 s, ok</td><td class="num">not run</td></tr>
+                            <tr><td>Bounce trace stubbed out</td><td class="num">0.8 s, ok</td><td class="num">not run</td></tr>
+                            <tr><td>Any one part inside them stubbed out</td><td class="num">26 to 60 s, X3511</td><td class="num">not run</td></tr>
+                            <tr><td>Light evaluated unconditionally</td><td class="num">1.5 s, ok</td><td class="num">not run</td></tr>
+                            <tr><td>Single exit, light evaluated inside the branch</td><td class="num">44.7 s, X3511</td><td class="num">5.3 s, X3531</td></tr>
+                            <tr><td>The same, with every loop and branch marked</td><td class="num">0.1 s, X3531</td><td class="num">0.1 s, X3531</td></tr>
+                            <tr><td>Light evaluated unconditionally, four layouts</td><td class="num">1.7 to 1.9 s, ok</td><td class="num">2.7 to 2.8 s, ok</td></tr>
+                            <tr><td>Shipped layout, every loop marked</td><td class="num best">1.7 s, ok</td><td class="num best">2.4 s, ok</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    Stubbing out the direct light function or the bounce trace brought the time back under 2 seconds, and stubbing any one
+                    part inside them did not. The cause was the light being evaluated inside the branch that had picked it: with that
+                    evaluation made unconditional, the trace kernel compiled in 1.5 seconds. Restructuring the function to a single exit
+                    while keeping the conditional evaluation did not help, and marking every loop and branch on top turned the timeout into
+                    an immediate error. The layout we ship evaluates the chosen light unconditionally and marks every loop, at 1.7 seconds
+                    for the trace kernel and 2.4 for the probe kernel. The other kernels compile in 0.3 seconds or less in every version.
+                </p>
+                <p>
+                    This experiment needs fxc and the baker's own compute shader, which is not public yet, so it is not in the kit.
+                </p>
+            </section>
+
+            <section class="glass-panel paper-section w-100 mb-5" id="built">
+                <h2 class="text-glow-cyan" style="margin-top: 0;">12. What we built</h2>
+                <div class="paper-table-wrap">
+                    <table class="paper-table">
+                        <caption><strong>Table 24.</strong> Changes that came out of this research, and their state on 9 October 2026.</caption>
                         <thead><tr><th>Change</th><th>Where</th><th>State</th></tr></thead>
                         <tbody>
-                            <tr><td>Rim as one lobe fed by every light, with Blur</td><td>All six shaders</td><td>On by default in the next release</td></tr>
-                            <tr><td>Band weights, the rebuilt L2 band, per-vertex lights through the per-pixel code</td><td>All six shaders</td><td>Behind the Unified Light switch, off by default</td></tr>
-                            <tr><td>Box projection without the tier setting, darken-only leak correction, probe reflections for rough surfaces, eight-lookup anisotropic reflections</td><td>All six shaders</td><td>Behind the Unified Light switch, off by default</td></tr>
+                            <tr><td>Rim as one lobe fed by every light, with Blur</td><td>All six shaders</td><td>Shipped 25 September, on by default</td></tr>
+                            <tr><td>Band weights, the rebuilt L2 band, per-vertex lights through the per-pixel code</td><td>All six shaders</td><td>Shipped 25 September, behind the Unified Light switch, off by default</td></tr>
+                            <tr><td>Box projection without the tier setting, darken-only leak correction, probe reflections for rough surfaces, eight-lookup anisotropic reflections</td><td>All six shaders</td><td>Shipped 25 September, behind the Unified Light switch, off by default</td></tr>
                             <tr><td>Sharper Probes</td><td>All six shaders</td><td>Kept as an artistic option</td></tr>
-                            <tr><td>Lattice sampling, texel jitter, soft baked shadows, direct light in the directional map, emissive units</td><td>Light Baker</td><td>Built, being tested</td></tr>
-                            <tr><td>Light units, falloff, bounce, spot cone and soft shadows matched to Unity; Rectangle and Disc area lights</td><td>Light Baker</td><td>Built, being tested</td></tr>
-                            <tr><td>Exposure and bloom fitted to rendered views after each bake</td><td>Light Baker</td><td>Built, third version being tested</td></tr>
-                            <tr><td>MonoSH ratio lightmaps</td><td>Light Baker and world shaders</td><td>Deferred</td></tr>
-                            <tr><td>Light Volume point, spot and area lights shaded one at a time, at their real size, with Light Volumes' energy</td><td>All six shaders</td><td>Behind the Unified Light switch, off by default</td></tr>
-                            <tr><td>Direct highlights at Unity's brightness</td><td>All six shaders</td><td>A defect fix, in the next release</td></tr>
-                            <tr><td>Normal strength above 1 as a taller surface</td><td>All six shaders</td><td>A defect fix, in the next release</td></tr>
+                            <tr><td>Lattice sampling, texel jitter, soft baked shadows, direct light in the directional map, emissive units</td><td>Light Baker</td><td>Built and checked in the editor, ships with Light Baker 1.0</td></tr>
+                            <tr><td>Light units, falloff, bounce, spot cone and soft shadows matched to Unity; Rectangle and Disc area lights</td><td>Light Baker</td><td>Built and checked in the editor, ships with Light Baker 1.0</td></tr>
+                            <tr><td>Exposure and bloom fitted to rendered views after each bake</td><td>Light Baker</td><td>Built and checked in the editor, ships with Light Baker 1.0</td></tr>
+                            <tr><td>MonoSH ratio lightmaps (section 10)</td><td>World shaders and Light Baker</td><td>World shaders: shipped 27 September as Unified Light Lightmaps, off by default. Light Baker: the Unified Light directional mode, ships with 1.0</td></tr>
+                            <tr><td>Trace and probe kernels that compile in under 2.5 seconds (section 11)</td><td>Light Baker</td><td>Built, ships with Light Baker 1.0</td></tr>
+                            <tr><td>Light Volume point, spot and area lights shaded one at a time, at their real size, with Light Volumes' energy</td><td>All six shaders</td><td>Shipped 25 September, behind the Unified Light switch, off by default</td></tr>
+                            <tr><td>Direct highlights at Unity's brightness</td><td>All six shaders</td><td>A defect fix, shipped 25 September</td></tr>
+                            <tr><td>Normal strength above 1 as a taller surface</td><td>All six shaders</td><td>A defect fix, shipped 25 September</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -1562,7 +1683,7 @@ $$\text{highlight} = \pi\,E_s\,f\,F(\mathbf l_{\text{rep}}\cdot\mathbf h_{\text{
             </section>
 
             <section class="glass-panel paper-section w-100 mb-5" id="limitations">
-                <h2 class="text-glow-cyan" style="margin-top: 0;">11. Limitations</h2>
+                <h2 class="text-glow-cyan" style="margin-top: 0;">13. Limitations</h2>
                 <ul class="key-findings">
                     <li>All results are confirmed in Engine and in game in VRChat!<strong>(Total Confirmation as of 8:00AM US Central Standard on September 25th 2026)</strong></li>
                     <li>Unity's spot light edge uses a lookup table that is not in any source we could read. The baker keeps a smooth ramp between the derived inner and outer cone.</li>
@@ -1570,7 +1691,8 @@ $$\text{highlight} = \pi\,E_s\,f\,F(\mathbf l_{\text{rep}}\cdot\mathbf h_{\text{
                     <li>Keyword-free box projection relies on Unity uploading a probe's box data when the tier setting is off. Where it does not, the probe is left unprojected, as before.</li>
                     <li>The darken-only leak correction trades accuracy in some corners for fewer bright leaks; per-texel reflection occlusion from the baker would be the complete answer and has no lightmap channel today.</li>
                     <li>Fitting exposure to each bake brightens a scene that is dark on purpose; that option should stay off for such scenes.</li>
-                    <li>Estimating the L1 data MonoSH needs from the baker's cosine-weighted samples has unbounded variance at the horizon, which is why it is deferred.</li>
+                    <li>The mixture estimator of section 10 is slightly noisier than pure cosine sampling under an open sky, and a lamp just above a surface is poor for every encoding we tried, ours included.</li>
+                    <li>The compile bisect of section 11 ran fxc outside Unity. The shipped shader compiles and bakes in the Unity editor, which is the check that counts.</li>
                     <li>A long, thin area light is treated as a round cap for its diffuse light, which leaves 0.078 RMS on a 3 by 0.1 metre strip.</li>
                     <li>Highlights from a panel closer than its own size keep up to 0.35 RMS. Linearly transformed cosines [4] would close that gap but need a lookup texture the shaders do not carry.</li>
                     <li>With every Light Volume light in range counted, including lights behind a surface, a crowded spot can reach the world's overlap limit sooner than Light Volumes' own path.</li>
@@ -1578,7 +1700,7 @@ $$\text{highlight} = \pi\,E_s\,f\,F(\mathbf l_{\text{rep}}\cdot\mathbf h_{\text{
             </section>
 
             <section class="glass-panel paper-section w-100 mb-5" id="run-it">
-                <h2 class="text-glow-cyan" style="margin-top: 0;">12. Run it yourself</h2>
+                <h2 class="text-glow-cyan" style="margin-top: 0;">14. Run it yourself</h2>
                 <p>
                     Every number in this report comes from a script, and here they all are, exactly as we ran them. You need Python 3.8 or
                     newer and NumPy. Nothing else: no Unity, no graphics card and no data files.
@@ -1596,25 +1718,25 @@ $$\text{highlight} = \pi\,E_s\,f\,F(\mathbf l_{\text{rep}}\cdot\mathbf h_{\text{
                     <code class="paper-cmd">python run_all.py</code>
                     <p>
                         It runs each experiment in order, saves what every script prints to <code>output/</code>, and checks it against our
-                        log. A rounding difference in the last digit still counts as a match. The whole run takes about 11 minutes on a
-                        desktop processor, and <code>route_match.py</code> is most of that. To run one experiment, name its folder:
+                        log. A rounding difference in the last digit still counts as a match. The whole run takes about 16 minutes on a
+                        desktop processor, and <code>route_match.py</code> and the two MonoSH estimator runs are most of that. To run one experiment, name its folder:
                     </p>
                     <code class="paper-cmd">python run_all.py lv-lights</code>
                     <p><strong>4. Or run one script on its own</strong> from inside its folder:</p>
                     <code class="paper-cmd">cd rim-lobe
 python rim_lobe_research.py</code>
                     <p>
-                        The scripts in <code>lv-lights</code> and <code>unified-light</code> import their neighbours, so keep each folder
-                        together. The Light Volumes scripts also save their report next to themselves.
+                        The scripts in <code>lv-lights</code>, <code>unified-light</code> and <code>monosh-lightmaps</code> import their
+                        neighbours, so keep each folder together. The Light Volumes scripts also save their report next to themselves.
                     </p>
                 </div>
                 <p>
-                    We checked the kit on a second setup, Python 3.14.7 with NumPy 2.4.6, and all 22 scripts that have a log from the
+                    We checked the kit on a second setup, Python 3.14.7 with NumPy 2.4.6, and all 26 scripts that have a log from the
                     original experiment reproduced it.
                 </p>
                 <div class="paper-table-wrap">
                     <table class="paper-table">
-                        <caption><strong>Table 22.</strong> The scripts, what each one reproduces, and how long it took on our machine.</caption>
+                        <caption><strong>Table 25.</strong> The scripts, what each one reproduces, and how long it took on our machine.</caption>
                         <thead><tr><th>Script</th><th>Reproduces</th><th class="num">Time</th></tr></thead>
                         <tbody>
                             <tr><td><a href="research-kit/rim-lobe/rim_stack_check.py" download><code>rim-lobe/rim_stack_check.py</code></a></td><td>Section 4: the old Width curve and Follow Light mask</td><td class="num">&lt; 0.1 s</td></tr>
@@ -1639,7 +1761,11 @@ python rim_lobe_research.py</code>
                             <tr><td><a href="research-kit/lv-lights/lv_light_shapes.py" download><code>lv-lights/lv_light_shapes.py</code></a></td><td>Table 17</td><td class="num">45 s</td></tr>
                             <tr><td><a href="research-kit/lv-lights/lv_light_shaping.py" download><code>lv-lights/lv_light_shaping.py</code></a></td><td>Tables 18 to 20</td><td class="num">83 s</td></tr>
                             <tr><td><a href="research-kit/lv-lights/lv_asbuilt_check.py" download><code>lv-lights/lv_asbuilt_check.py</code></a></td><td>Section 9: the shader code as built, in 32-bit float</td><td class="num">0.3 s</td></tr>
-                            <tr><td><a href="research-kit/run_all.py" download><code>run_all.py</code></a></td><td>Runs every script above and compares each result with our log</td><td class="num">about 11 min</td></tr>
+                            <tr><td><a href="research-kit/monosh-lightmaps/monosh_estimators_s64.py" download><code>monosh-lightmaps/monosh_estimators_s64.py</code></a></td><td>Section 10: the estimators at 64 samples, and the colour lightmap noise</td><td class="num">2 min 54 s</td></tr>
+                            <tr><td><a href="research-kit/monosh-lightmaps/monosh_estimators_s256.py" download><code>monosh-lightmaps/monosh_estimators_s256.py</code></a></td><td>Table 21</td><td class="num">1 min 57 s</td></tr>
+                            <tr><td><a href="research-kit/monosh-lightmaps/monosh_unity_reader.py" download><code>monosh-lightmaps/monosh_unity_reader.py</code></a></td><td>Table 22: our data read the Unity way</td><td class="num">1.8 s</td></tr>
+                            <tr><td><a href="research-kit/monosh-lightmaps/monosh_reverse_mismatch.py" download><code>monosh-lightmaps/monosh_reverse_mismatch.py</code></a></td><td>Table 22: Unity's data read as MonoSH</td><td class="num">1.8 s</td></tr>
+                            <tr><td><a href="research-kit/run_all.py" download><code>run_all.py</code></a></td><td>Runs every script above and compares each result with our log</td><td class="num">about 16 min</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -4085,9 +4211,305 @@ def main():
 if __name__ == &quot;__main__&quot;:
     main()</code></pre></div>
                 </details>
-                <p class="eq-note mt-3">Table 10 measures our own reference screenshot, which is not ours to publish, so its script is not in the kit. The wrong first runs mentioned in the text are kept in our records and are not in the kit.</p>
+                <p class="mt-3 mb-1"><strong>Section 10, directional lightmaps from the baker</strong></p>
                 <details class="script-listing">
-                    <summary><code>run_all.py</code><span class="script-meta">the runner &middot; 125 lines</span></summary>
+                    <summary><code>monosh-lightmaps/monosh_estimators.py</code><span class="script-meta">Section 10: the scenes, the estimators and the decode &middot; 196 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/monosh-lightmaps/monosh_estimators.py" download>Download monosh_estimators.py</a> &middot; imported by the other scripts in <code>monosh-lightmaps</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;MonoSH ratio lightmaps: compare per-texel estimators of the luminance SH (A, B) from the baker&#x27;s lattice samples, against exact irradiance at tilted normals.&quot;&quot;&quot;
+import math
+import numpy as np
+
+W = np.array([0.2126, 0.7152, 0.0722])
+GOLD = 0.6180339887498949
+
+
+def norm(v):
+    return v / np.linalg.norm(v, axis=-1, keepdims=True)
+
+
+def sph(el_deg, az_deg):
+    el, az = math.radians(el_deg), math.radians(az_deg)
+    return np.array([math.cos(el) * math.cos(az), math.cos(el) * math.sin(az), math.sin(el)])
+
+
+def fine_hemi(n):
+    k = np.arange(n) + 0.5
+    z = k / n
+    r = np.sqrt(1 - z * z)
+    phi = 2 * math.pi * ((np.arange(n) * GOLD) % 1.0)
+    return np.stack([r * np.cos(phi), r * np.sin(phi), z], -1), 2 * math.pi / n
+
+
+def region(d, az0, az1, el0, el1):
+    el = np.degrees(np.arcsin(np.clip(d[..., 2], -1, 1)))
+    az = np.degrees(np.arctan2(d[..., 1], d[..., 0])) % 360
+    return (el &gt;= el0) &amp; (el &lt;= el1) &amp; (az &gt;= az0) &amp; (az &lt;= az1)
+
+
+SCENES = {
+    &quot;screen + downlight&quot;: dict(
+        direct=[(sph(70, 200), np.array([1.0, 0.85, 0.6]) * 3.0)],
+        field=lambda d: 0.05 + region(d, 0, 50, 5, 40)[:, None] * np.array([0.3, 0.5, 1.2]) * 4.0),
+    &quot;sun + sky&quot;: dict(
+        direct=[(sph(35, 40), np.array([1.0, 0.9, 0.75]) * 4.0)],
+        field=lambda d: np.array([0.35, 0.5, 0.8]) * (0.4 + 0.6 * d[..., 2:3])),
+    &quot;two opposed lights&quot;: dict(
+        direct=[(sph(30, 0), np.array([1.0, 0.2, 0.1]) * 2.0), (sph(30, 180), np.array([0.1, 0.3, 1.0]) * 2.0)],
+        field=lambda d: 0.03 + 0 * d),
+    &quot;grazing lamp&quot;: dict(
+        direct=[(sph(8, 90), np.array([1.0, 0.95, 0.9]) * 6.0)],
+        field=lambda d: 0.08 + 0 * d),
+    &quot;bright wall, no lights&quot;: dict(
+        direct=[],
+        field=lambda d: 0.04 + region(d, 300, 360, 0, 35)[:, None] * np.array([1.0, 0.9, 0.8]) * 1.5),
+}
+
+
+def tilted_normals(count, max_deg=45.0, seed=1):
+    rng = np.random.default_rng(seed)
+    out = []
+    while len(out) &lt; count:
+        v = rng.normal(size=3)
+        v /= np.linalg.norm(v)
+        if v[2] &gt;= math.cos(math.radians(max_deg)):
+            out.append(v)
+    return np.array(out)
+
+
+N = tilted_normals(400)
+DF, DW = fine_hemi(200000)
+
+
+def exact(scene):
+    f = scene[&quot;field&quot;](DF)
+    ref = np.maximum(N @ DF.T, 0.0) @ f * DW / math.pi
+    for w, phi in scene[&quot;direct&quot;]:
+        ref += np.maximum(N @ w, 0.0)[:, None] * phi[None, :] / math.pi
+    return ref
+
+
+def mixture_mu(u, alpha):
+    if alpha &gt;= 1.0:
+        return np.sqrt(np.clip(u, 0, 1))
+    b = 1.0 - alpha
+    return (-b + np.sqrt(b * b + 4 * alpha * u)) / (2 * alpha)
+
+
+def directions(S, shift, turn, alpha):
+    k = np.arange(S)
+    u1 = ((k + 0.5) / S + shift) % 1.0
+    u2 = (k * GOLD + turn) % 1.0
+    mu = mixture_mu(u1, alpha)
+    s = np.sqrt(np.clip(1 - mu * mu, 0, 1))
+    phi = 2 * math.pi * u2
+    d = np.stack([s * np.cos(phi), s * np.sin(phi), mu], -1)
+    pdf = alpha * mu / math.pi + (1 - alpha) / (2 * math.pi)
+    return d, pdf
+
+
+def estimate(scene, S, rng, method, alpha=1.0, clamp=0.0, quant=True):
+    d, pdf = directions(S, rng.random(), rng.random(), alpha)
+    L = scene[&quot;field&quot;](d)
+    lum = L @ W
+    mu = d[:, 2]
+    e0 = (L * (mu / pdf)[:, None]).mean(0) / math.pi
+    if method == &quot;moment&quot;:
+        wA = 1.0 / pdf
+        M = (d * (lum * mu / pdf)[:, None]).mean(0)
+        A = (lum * wA).mean()
+        cdom = max(M[2] / max(np.linalg.norm(M), 1e-9), 0.2)
+        B = np.array([M[0] / cdom, M[1] / cdom, M[2]])
+    else:
+        wA = 1.0 / np.maximum(pdf, clamp / math.pi) if clamp &gt; 0 else 1.0 / pdf
+        A = (lum * wA).mean()
+        B = (d * (lum * wA)[:, None]).mean(0)
+    dirAcc = (d * (lum * mu / pdf / math.pi * math.pi)[:, None]).mean(0)
+    dirW = (lum * mu / pdf).mean()
+    for w, phi in scene[&quot;direct&quot;]:
+        c = phi * max(w[2], 0.0)
+        e0 = e0 + c / math.pi
+        pl = phi @ W
+        A += pl
+        B = B + pl * w
+        dirAcc = dirAcc + w * (c @ W)
+        dirW += c @ W
+    V = 2 * B / max(A, 1e-9)
+    if quant:
+        V = (np.round(np.clip(V / 4 + 0.5, 0, 1) * 255) / 255 - 0.5) * 4
+    ratio = np.maximum(1 + N @ V, 0.0) / max(1 + V[2], 1e-3)
+    mono = e0[None, :] * ratio[:, None]
+    dom = dirAcc / max(dirW, 1e-9)
+    directionality = min(np.linalg.norm(dom), 1.0)
+    D = 0.5 * dom / max(np.linalg.norm(dom), 1e-9) * directionality
+    unity = e0[None, :] * ((N @ D + 0.5) / max(D[2] + 0.5, 1e-4))[:, None]
+    flat = np.tile(e0, (len(N), 1))
+    return flat, unity, mono
+
+
+def rel_rms(est, ref):
+    el, rl = est @ W, ref @ W
+    return math.sqrt(np.mean((el - rl) ** 2)) / rl.mean()
+
+
+def run(S=256, trials=200):
+    rng = np.random.default_rng(11)
+    configs = [
+        (&quot;cosine, 1/cos&quot;, dict(method=&quot;plain&quot;, alpha=1.0)),
+        (&quot;cosine, cos floor 0.1&quot;, dict(method=&quot;plain&quot;, alpha=1.0, clamp=0.1)),
+        (&quot;cosine, cos floor 0.2&quot;, dict(method=&quot;plain&quot;, alpha=1.0, clamp=0.2)),
+        (&quot;mixture a=0.8&quot;, dict(method=&quot;plain&quot;, alpha=0.8)),
+        (&quot;mixture a=0.6&quot;, dict(method=&quot;plain&quot;, alpha=0.6)),
+        (&quot;mixture a=0.4&quot;, dict(method=&quot;plain&quot;, alpha=0.4)),
+        (&quot;cosine, 1/cos, no 8-bit&quot;, dict(method=&quot;plain&quot;, alpha=1.0, quant=False)),
+    ]
+    print(f&quot;S = {S} indirect samples per texel, {trials} texels per cell, 400 normals within 45 degrees&quot;)
+    print(&quot;error = RMS of luminance over the normals / mean, averaged over the texels (noise and bias together)&quot;)
+    for name, scene in SCENES.items():
+        ref = exact(scene)
+        print(f&quot;\n{name}&quot;)
+        res_flat, res_unity = [], []
+        _, _, mono_ex = estimate_exact(scene)
+        for cname, cfg in configs:
+            errs, e0err, noise = [], [], []
+            for t in range(trials):
+                flat, unity, mono = estimate(scene, S, rng, **cfg)
+                errs.append(rel_rms(mono, ref))
+                noise.append(rel_rms(mono / (flat[0] @ W) * (exact_e0(scene) @ W), mono_ex))
+                e0err.append(abs((flat[0] @ W) - (exact_e0(scene) @ W)) / (exact_e0(scene) @ W))
+                if cname == &quot;cosine, 1/cos&quot;:
+                    res_flat.append(rel_rms(flat, ref))
+                    res_unity.append(rel_rms(unity, ref))
+            print(f&quot;  MonoSH ratio, {cname:24s} error mean {np.mean(errs):.4f} p95 {np.percentile(errs, 95):.4f} | direction noise mean {np.mean(noise):.4f} p95 {np.percentile(noise, 95):.4f} | colour noise {np.mean(e0err):.4f}&quot;)
+        print(f&quot;  non-directional                         mean {np.mean(res_flat):.4f}&quot;)
+        print(f&quot;  Unity directional (as the baker bakes)  mean {np.mean(res_unity):.4f}&quot;)
+        _, _, mono_exact = estimate_exact(scene)
+        print(f&quot;  MonoSH ratio, exact A and B             mean {rel_rms(mono_exact, ref):.4f}&quot;)
+
+
+def exact_e0(scene):
+    f = scene[&quot;field&quot;](DF)
+    e0 = (f * DF[:, 2:3]).sum(0) * DW / math.pi
+    for w, phi in scene[&quot;direct&quot;]:
+        e0 = e0 + phi * max(w[2], 0) / math.pi
+    return e0
+
+
+def estimate_exact(scene):
+    f = scene[&quot;field&quot;](DF)
+    lum = f @ W
+    A = lum.sum() * DW
+    B = (DF * lum[:, None]).sum(0) * DW
+    for w, phi in scene[&quot;direct&quot;]:
+        A += phi @ W
+        B = B + (phi @ W) * w
+    V = 2 * B / A
+    e0 = exact_e0(scene)
+    ratio = np.maximum(1 + N @ V, 0) / max(1 + V[2], 1e-3)
+    return None, None, e0[None, :] * ratio[:, None]
+
+
+if __name__ == &quot;__main__&quot;:
+    import sys
+    run(S=int(sys.argv[1]) if len(sys.argv) &gt; 1 else 256, trials=int(sys.argv[2]) if len(sys.argv) &gt; 2 else 200)</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>monosh-lightmaps/monosh_estimators_s64.py</code><span class="script-meta">Section 10: the estimators at 64 samples &middot; 5 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/monosh-lightmaps/monosh_estimators_s64.py" download>Download monosh_estimators_s64.py</a> &middot; run from the <code>monosh-lightmaps</code> folder with <code>python monosh_estimators_s64.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;MonoSH ratio lightmaps: the per-texel estimators at 64 samples per texel and 150 texels per scene (Table 21, S = 64).&quot;&quot;&quot;
+from monosh_estimators import run
+
+if __name__ == &quot;__main__&quot;:
+    run(S=64, trials=150)</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>monosh-lightmaps/monosh_estimators_s256.py</code><span class="script-meta">Table 21 &middot; 5 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/monosh-lightmaps/monosh_estimators_s256.py" download>Download monosh_estimators_s256.py</a> &middot; run from the <code>monosh-lightmaps</code> folder with <code>python monosh_estimators_s256.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;MonoSH ratio lightmaps: the per-texel estimators at 256 samples per texel and 100 texels per scene (Table 21, S = 256).&quot;&quot;&quot;
+from monosh_estimators import run
+
+if __name__ == &quot;__main__&quot;:
+    run(S=256, trials=100)</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>monosh-lightmaps/monosh_unity_reader.py</code><span class="script-meta">Table 22: our data read the Unity way &middot; 50 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/monosh-lightmaps/monosh_unity_reader.py" download>Download monosh_unity_reader.py</a> &middot; run from the <code>monosh-lightmaps</code> folder with <code>python monosh_unity_reader.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;What a shader that decodes lightmapDir the Unity way sees when the baker writes MonoSH ratio data as rgb = V/4 + 0.5, a = 0.5 + dot(n0, V/4).&quot;&quot;&quot;
+import math
+import numpy as np
+from monosh_estimators import SCENES, N, W, exact, exact_e0, rel_rms, DF, DW
+
+
+def exact_v(scene):
+    f = scene[&quot;field&quot;](DF)
+    lum = f @ W
+    A = lum.sum() * DW
+    B = (DF * lum[:, None]).sum(0) * DW
+    for w, phi in scene[&quot;direct&quot;]:
+        A += phi @ W
+        B = B + (phi @ W) * w
+    return 2 * B / A
+
+
+def unity_dir(scene):
+    f = scene[&quot;field&quot;](DF)
+    lum = f @ W
+    cosw = lum * DF[:, 2]
+    acc = (DF * cosw[:, None]).sum(0) * DW
+    wsum = cosw.sum() * DW
+    for w, phi in scene[&quot;direct&quot;]:
+        c = (phi @ W) * max(w[2], 0)
+        acc = acc + w * c
+        wsum += c
+    dom = acc / wsum
+    return 0.5 * dom / max(np.linalg.norm(dom), 1e-9) * min(np.linalg.norm(dom), 1.0)
+
+
+if __name__ == &quot;__main__&quot;:
+    print(&quot;error = RMS of luminance over 400 normals within 45 degrees / mean; exact data, 8-bit storage&quot;)
+    print(&quot;%-24s %-10s %-12s %-16s %-18s&quot; % (&quot;scene&quot;, &quot;flat&quot;, &quot;Unity dir&quot;, &quot;MonoSH (ours)&quot;, &quot;MonoSH, Unity read&quot;))
+    for name, scene in SCENES.items():
+        ref = exact(scene)
+        e0 = exact_e0(scene)
+        V = exact_v(scene)
+        q = lambda x: np.round(np.clip(x, 0, 1) * 255) / 255
+        rgb = q(V / 4 + 0.5)
+        a = q(np.array([0.5 + V[2] / 4]))[0]
+        Vq = (rgb - 0.5) * 4
+        ours = e0[None, :] * (np.maximum(1 + N @ Vq, 0) / max(1 + Vq[2], 1e-3))[:, None]
+        unity_read = e0[None, :] * ((N @ (rgb - 0.5) + 0.5) / max(a, 1e-4))[:, None]
+        D = unity_dir(scene)
+        Dq = q(D + 0.5) - 0.5
+        aq = q(np.array([D[2] + 0.5]))[0]
+        unity = e0[None, :] * ((N @ Dq + 0.5) / max(aq, 1e-4))[:, None]
+        flat = np.tile(e0, (len(N), 1))
+        print(&quot;%-24s %-10.4f %-12.4f %-16.4f %-18.4f&quot; % (name, rel_rms(flat, ref), rel_rms(unity, ref), rel_rms(ours, ref), rel_rms(unity_read, ref)))</code></pre></div>
+                </details>
+                <details class="script-listing">
+                    <summary><code>monosh-lightmaps/monosh_reverse_mismatch.py</code><span class="script-meta">Table 22: Unity's data read as MonoSH &middot; 19 lines</span></summary>
+                    <p class="eq-note mx-3 mb-2"><a href="research-kit/monosh-lightmaps/monosh_reverse_mismatch.py" download>Download monosh_reverse_mismatch.py</a> &middot; run from the <code>monosh-lightmaps</code> folder with <code>python monosh_reverse_mismatch.py</code></p>
+                    <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Reverse mismatch: a material set to read MonoSH lightmaps given a Unity-format directional map (V = 4 D).&quot;&quot;&quot;
+import numpy as np
+from monosh_estimators import SCENES, N, exact, exact_e0, rel_rms
+from monosh_unity_reader import unity_dir
+
+if __name__ == &quot;__main__&quot;:
+    print(&quot;error = RMS of luminance over 400 normals within 45 degrees / mean; exact data, 8-bit storage&quot;)
+    print(&quot;%-24s %-14s %-22s&quot; % (&quot;scene&quot;, &quot;Unity read&quot;, &quot;read as MonoSH (4 D)&quot;))
+    for name, scene in SCENES.items():
+        ref = exact(scene)
+        e0 = exact_e0(scene)
+        q = lambda x: np.round(np.clip(x, 0, 1) * 255) / 255
+        D = unity_dir(scene)
+        Dq = q(D + 0.5) - 0.5
+        aq = q(np.array([D[2] + 0.5]))[0]
+        unity = e0[None, :] * ((N @ Dq + 0.5) / max(aq, 1e-4))[:, None]
+        V = 4 * Dq
+        mis = e0[None, :] * (np.maximum(1 + N @ V, 0) / max(1 + V[2], 1e-3))[:, None]
+        print(&quot;%-24s %-14.4f %-22.4f&quot; % (name, rel_rms(unity, ref), rel_rms(mis, ref)))</code></pre></div>
+                </details>
+                <p class="eq-note mt-3">Table 10 measures our own reference screenshot, which is not ours to publish, so its script is not in the kit. The compile bisect of section 11 needs fxc and the baker's own compute shader, so it is not in the kit either. The wrong first runs mentioned in the text are kept in our records and are not in the kit.</p>
+                <details class="script-listing">
+                    <summary><code>run_all.py</code><span class="script-meta">the runner &middot; 127 lines</span></summary>
                     <p class="eq-note mx-3 mb-2"><a href="research-kit/run_all.py" download>Download run_all.py</a> &middot; <a href="research-kit/README.md" download>README.md</a></p>
                     <div class="code-wrap"><pre class="paper-code"><code>&quot;&quot;&quot;Run the One Light, Every Route research scripts and compare each result with the published log.
 
@@ -4122,6 +4544,8 @@ EXPERIMENTS = [
         &quot;lightmap_encoding.py&quot;]),
     (&quot;lv-lights&quot;, &quot;Section 9, Light Volume lights one at a time&quot;, [
         &quot;lv_light_shapes.py&quot;, &quot;lv_light_shaping.py&quot;, &quot;lv_asbuilt_check.py&quot;]),
+    (&quot;monosh-lightmaps&quot;, &quot;Section 10, directional lightmaps from the baker&quot;, [
+        &quot;monosh_estimators_s64.py&quot;, &quot;monosh_estimators_s256.py&quot;, &quot;monosh_unity_reader.py&quot;, &quot;monosh_reverse_mismatch.py&quot;]),
 ]
 
 NUM = re.compile(r&quot;[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?&quot;)
@@ -4238,6 +4662,7 @@ if __name__ == &quot;__main__&quot;:
                     <li><strong>_pi_ (PiMaker).</strong> <a href="https://github.com/pimaker/ltcgi" target="_blank" rel="noopener noreferrer">LTCGI.</a></li>
                     <li><strong>AcChosen.</strong> <a href="https://github.com/AcChosen/VR-Stage-Lighting" target="_blank" rel="noopener noreferrer">VR Stage Lighting (VRSL).</a></li>
                     <li><strong>Poiyomi.</strong> <a href="https://github.com/poiyomi/PoiyomiToonShader" target="_blank" rel="noopener noreferrer">Poiyomi Toon Shader.</a></li>
+                    <li><strong>T. Hesterberg.</strong> Weighted Average Importance Sampling and Defensive Mixture Distributions. <em>Technometrics</em> 37(2), 1995.</li>
                 </ol>
             </section>
 

@@ -31,6 +31,8 @@ EXPERIMENTS = [
         "lightmap_encoding.py"]),
     ("lv-lights", "Section 9, Light Volume lights one at a time", [
         "lv_light_shapes.py", "lv_light_shaping.py", "lv_asbuilt_check.py"]),
+    ("monosh-lightmaps", "Section 10, directional lightmaps from the baker", [
+        "monosh_estimators_s64.py", "monosh_estimators_s256.py", "monosh_unity_reader.py", "monosh_reverse_mismatch.py"]),
 ]
 
 NUM = re.compile(r"[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?")

@@ -1,0 +1,7 @@
+error = RMS of luminance over 400 normals within 45 degrees / mean; exact data, 8-bit storage
+scene                    flat       Unity dir    MonoSH (ours)    MonoSH, Unity read
+screen + downlight       0.1700     0.0801       0.0593           0.0897            
+sun + sky                0.3874     0.2419       0.1711           0.2393            
+two opposed lights       0.1581     0.0972       0.0718           0.0986            
+grazing lamp             0.9890     0.8638       0.7067           0.8209            
+bright wall, no lights   0.5515     0.4279       0.2862           0.3804            

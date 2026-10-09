@@ -15,7 +15,7 @@ Nothing else. No Unity, no GPU, no data files.
 python run_all.py
 ```
 
-It runs each experiment's scripts in order, saves what they print to `<experiment>/output/`, and compares it with our logs in `<experiment>/expected/`. A small rounding difference in the last digit still counts as a match. The full run takes about 11 minutes on a desktop CPU; `unified-light/route_match.py` is most of that.
+It runs each experiment's scripts in order, saves what they print to `<experiment>/output/`, and compares it with our logs in `<experiment>/expected/`. A small rounding difference in the last digit still counts as a match. The full run takes about 16 minutes on a desktop CPU; `unified-light/route_match.py` and the two MonoSH estimator runs are most of that.
 
 Run one experiment: `python run_all.py lv-lights`. See the names: `python run_all.py --list`.
 
@@ -26,7 +26,7 @@ cd rim-lobe
 python rim_lobe_research.py
 ```
 
-Each script prints a report. The scripts in `lv-lights` import each other, so run them from inside that folder, and they also save their report next to themselves.
+Each script prints a report. The scripts in `lv-lights` and `monosh-lightmaps` import each other, so run them from inside their folder. The `lv-lights` scripts also save their report next to themselves.
 
 ## The folders
 
@@ -38,3 +38,4 @@ Each script prints a report. The scripts in `lv-lights` import each other, so ru
 | `baker-hd` | 7. Baking at high definition |
 | `nextgen-lighting` | 8. Toward the target look |
 | `lv-lights` | 9. Light Volume lights, one at a time |
+| `monosh-lightmaps` | 10. Directional lightmaps from the baker |
