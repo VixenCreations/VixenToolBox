@@ -10,112 +10,64 @@
 
 # Vixens Toolbox
 
-**The home of the Vixens Toolbox, by VixForge Interactive: its source, its releases and its VPM listing.**
+A free set of Unity editor tools for VRChat avatars and worlds, by VixForge Interactive. It checks your work against VRChat's limits, fixes what it can in one click, and takes the repetitive setup off your hands.
 
-The Vixens Toolbox is a free, VPM-native set of Unity editor tools for VRChat avatars and worlds. It checks your work against VRChat's limits, fixes what it can in one click, and takes the repetitive setup off your hands. Its flagship tools are the **Quest Conversion Engine**, the **Avatar Optimization Suite**, the **Vixen World Engine**, and **Animation Workbench Pro**.
-
-This repository acts as the **first-class VPM package source**, powering the entire ecosystem with automated updates, documentation, and infrastructure.
-
-* **Package:** `com.vixencreations.vixens-toolbox` (v2.19.1)
-* **Target:** Unity 2022.3.22f1 / VRChat SDK 3.10.3
-* **Storefront & Docs:** [vixencreations.github.io/VixenToolBox](https://vixencreations.github.io/VixenToolBox/)
-* **Community:** 4,500+ downloads and counting!!
+* **Needs:** Unity 2022.3.22f1 and VRChat SDK 3.10.3 or newer
+* **Package:** `com.vixencreations.vixens-toolbox`
+* **Website:** [vixencreations.github.io/VixenToolBox](https://vixencreations.github.io/VixenToolBox/)
 
 ---
 
-## The Toolset
+## Install
 
-### 1. Vixen Hub - Core Infrastructure
+1. Open the **[Vixens Toolbox website](https://vixencreations.github.io/VixenToolBox/)** and click **Add to VCC**.
+2. In the VRChat Creator Companion, open your project and add the **Vixens Toolbox** package.
+3. In Unity, open **VixenTools > Hub Dashboard**.
 
-The command center of the ecosystem: a fully UI Toolkit-driven dashboard that launches every tool with consistent styling.
-
-* **Dynamic Version Extraction:** Reads `package.json` directly to display live package + SDK versions without hardcoded strings.
-* **Changelog Pagination Engine:** Parses `CHANGELOG.md` into isolated, version-indexed entries with a native dropdown selector.
-* **Autonomous Scene HUD Notifier:** Injects a neon cyber badge into the Scene View when a new version is detected, routing directly to the Hub's changelog tab.
-* **Context-Aware Dual-SDK Bridge:** Reads active compiler directives and hot-swaps the UI to match the Avatar SDK (`VRC_SDK_VRCSDK3`) or World SDK (`UDON`) environment.
-* **Reactive Scene State Routing:** Tools launched from the Hub instantly reflect their UI state via synchronous layout flushing - no domain reloads required.
-* **In-Engine Documentation:** A Markdown-to-UIElements parser renders the in-depth guides and the changelog inside Unity.
-* **News Tab & Partnerships:** The Hub now opens on a front-and-centre News tab that renders a package-local `NEWS.md`, currently headlining the **Enigma Industries x VixForge Interactive** partnership (the next chapter of Club Enigma), with dynamic buttons that jump to the full write-up, Enigma's Discord, and Enigma's VRChat group.
-
-### 2. Vixen World Engine
-
-A full-spectrum, multi-ecosystem world auditor built for VRChat creators who need **real-time diagnostics, scene audits and one-click fixes**.
-
-* **Omni-Ecosystem Audits:** Explicitly mapped to **ProTV**, **TXL**, **VizVid**, **IwaSync3**, **AudioLink**, **LTCGI**, **Rinvo**, and **Light Volumes**.
-* **ProTV Auditor:** Detects GSV conflicts, screens feeding realtime GI, HDR video and playlist thumbnails eating VRAM, realtime GI cost on mobile, queue spam, and UI canvas rebuild cascades.
-* **VizVid / IwaSync3 / TXL Auditors:** Catch AVPro fallback failures, RateLimitResolver absences, 1080p+ video blowouts, unbounded playlists, polling that runs far too often, orphaned Udon behaviours, and GC-heavy event invokers.
-* **LTCGI & AudioLink Integrity:** Resolves `BakeInProgress` NRE deadlocks, detects fragmented memory arrays (ghost screens), flags Quest GPU readback stalls, and auto-links missing video output textures.
-* **Raw UASM Code Validation:** Intercepts the `UdonSharpEditorCache` to detect `PlayerData.Set` calls inside `Update()` loops, catching network rate-limit bombs before they detonate.
-* **World Profiler Dashboard:** Aggregates VRAM, mesh, audio, and UI memory via `Profiler.GetRuntimeMemorySizeLong()` and computes an `OPTIMAL / MODERATE / SEVERE` threat score.
-* **Shader Replacement:** Uses dictionary assets + a protective whitelist to bulk-replace unsafe desktop shaders with mobile-safe targets.
-
-### 3. Avatar Tools
-
-A connected set of utilities for building, optimizing, and porting high-fidelity avatars.
-
-* **Avatar Optimization Suite:** Changes the avatar in place, resizes textures on every CPU core, and is built around a real **QEM mesh decimator** (Garland-Heckbert edge-collapse, the same class of algorithm as Blender's Decimate modifier) that drives each heavy mesh toward a triangle target while preventing face flips, rejecting sliver triangles, and preserving UV/normal seams, submesh boundaries, blendshapes, and bone weights. A *Decimation Target* slider (2k-70k tris) controls silhouette aggression; Dual-Shielding keeps the face and the humanoid hand bones out of the collapse; a deep material scan finds hidden materials inside Animator controllers and VRCFury toggles; a **Selective Texture Targeting** panel replaces blanket downscaling with per-texture checkboxes; a per-avatar JSON state flag clears applied tasks so they stop re-listing forever; and a VRAM estimate covers every texture the avatar uses. Auto-Fit Bounds fits each renderer's bounds to Unity's own posed `localBounds`, so meshes no longer vanish up close.
-* **Quest Conversion Engine:** Makes a Quest copy of the avatar in its own prefab and leaves the original alone. It removes PC face tracking (adjerry91's VRCFT templates, VF_UE_VRCFT and VRCFury branches), which Quest cannot use; Magick.NET shrinks textures with a Lanczos resize and a light sharpen before ASTC; and an interactive component list caps PhysBones, colliders, contacts, constraints, particles, and more per target rank. It also auto-remaps **animated material swaps** - scanning standard Animators and `VRCAvatarDescriptor` custom layers, cloning affected controllers and `.anim` clips, and rewiring object-reference curves to the Quest-optimized materials, so material toggles and effects keep working with zero manual controller editing.
-* **PhysBone Blueprints:** Snapshots a PhysBone setup into reusable blueprints. **Save Blueprint** walks the source avatar via `AnimationUtility.CalculateTransformPath`, serializes each `VRCPhysBone` into a `Preset`, and writes a master `ScriptableObject` mapping `bonePath` to `Preset`. **Apply Blueprint** traverses a target by relative path, auto-adds missing components, and re-applies the presets - perfect for restoring physics removed during Quest conversion or optimization. Degrades gracefully when the VRChat SDK is absent.
-* **Material Conflict Finder:** Finds materials on an avatar that have drifted out of sync with each other. Collects materials from every renderer, then reads the animator side through `baseAnimationLayers`, `specialAnimationLayers` and any clips VRCFury carries. Reports toggle properties holding different values across materials (with **Sync All to 0.0 (OFF)**, **Sync All to 1.0 (ON)** and **Align Majority** batch fixes), toggles left at 0 whose `Toggle(KEYWORD)` keyword is still enabled (**Fix** / **Fix All Keywords**), and clips driving a toggle that the material's keyword statically disables. Reads locked materials through their `OriginalKeywords` tag so a locked avatar does not report a false conflict per animated toggle.
-* **Accessory Mounting Engine:** Clones a clean armature from a source rig and mounts accessories onto it. `FullGeneration` clones a fresh clean armature (recursive `CloneHierarchy` preserving local TRS); `AppendToExisting` reuses an existing rig by relative path. A destructive auto-rig bakes meshes with a per-child bone offset and fully preserves blendshapes, while rigid props use a locked `ParentConstraint`. PhysBone-safe root locking, bounds that keep meshes visible, GUID-suffixed asset persistence, and single-undo-group rollback round it out.
-* **Animation Workbench Pro:** A custom curve-graph animation environment. A Material Property Discovery engine scans renderers and exposes categorized, Poiyomi-aware shader properties (with color/vector channel splitting) as animatable bindings; an easing library and `CurveGraphView` drive staged, non-destructive curve editing; and a real-time `PreviewEngine` plays staged clips directly on a scene object via `AnimationMode.SampleAnimationClip`.
-* **Pipeline Preset Manager:** A dual-mode import-automation engine. Authoring Mode creates a phantom asset to rip importer rules into reusable Presets; Extraction Mode rips Presets from existing component hierarchies. Generated presets can be registered globally via `Preset.SetDefaultPresetsForType()` with glob filters, enforcing project-wide texture, audio, renderer, and PhysBone consistency.
-
-### 4. Scene, Convention & QA Tools
-
-* **Vixen Badge Studio:** Procedural badge generation for VRChat conventions. Auto-detects Furality SDK assets, targets Poiyomi / lilToon / VRChat Mobile / legacy badge shaders, generates directory structures, materials, and emissive maps, and snaps text bounds and neon accents to each year's badge mesh.
-* **Live Scene UV Mapper:** Hijacks the Scene View camera to raycast badge coordinates directly onto curved 3D meshes, inverting barycentric UVs into ImageMagick pixel space with one-click clipboard copy. Non-destructive (temporary MeshCollider) and ideal for curved or 3D-printed badge surfaces where 2D layout tools fail.
-* **Precision Click-to-Place Raycaster:** A sniper-grade Scene View raycaster with a cyan/magenta UV projection disc and VRChat-aware layer masking, plus Live Surface Snapping (`Transform.hasChanged`) and disjointed-pivot floor alignment.
-* **Omni-Chaos Generator (QA):** Builds a dedicated `Stress Test.unity` scene with deliberately broken "Nightmare Pods" that simulate catastrophic performance issues across physics, UI voids, VRAM overloads, network persistence sinks, and the third-party ecosystems the World Engine audits.
+The Hub shows the tools your project can use: avatar projects get the avatar tools, world projects get the world tools, and both get the Unity tools.
 
 ---
 
-## How It Is Built
+## What's inside
 
-### 1. Strict Compiler Safeguards
+### Worlds and scenes
 
-All editor-only scripts are isolated via `.asmdef` and `#if UNITY_EDITOR` directives, preventing runtime bleed-over and catastrophic build failures.
+* **Vixen World Engine:** runs more than 160 checks on your world and fixes the ones you tick.
+* **Quest World Converter:** makes Quest copies of your world's materials and leaves the originals alone.
+* **Live Surface Snapping** and **Precision Click-to-Place:** drop objects onto the surface below them, or click where you want them.
+* **Omni-Chaos Generator:** builds a test scene full of deliberate problems for the World Engine to catch.
 
-### 2. Automated Builds and Releases
+### Avatars
 
-Powered by GitHub Actions:
+* **Optimization Suite:** checks your avatar against VRChat's limits, then shrinks meshes and textures to fit.
+* **Quest Conversion Engine:** makes a Quest copy of your avatar and leaves the original alone.
+* **Animator Forge:** finds problems in your animator, and builds toggles, sliders and swaps for you.
+* **Material Conflict Finder:** finds materials whose toggles disagree and settles them.
+* **PhysBone Blueprints:** saves an avatar's PhysBones and puts them back on another one.
+* **Accessory Mounting Engine:** mounts accessories onto a clean copy of your armature.
+* **Badge Studio:** builds VRChat convention badges, Furality included.
 
-* **Build Release:** Compiles the package, generates `.zip` + `.unitypackage`, constructs `package.json`, and publishes to Releases.
-* **Build Repo Listing:** Reconstructs the VPM repository listing and deploys the cyberpunk storefront to GitHub Pages.
-* **Downloads Badge:** A daily job that tallies real `.zip` + `.unitypackage` installs across every release and publishes live download / version endpoints to an orphan `badge-data` branch, powering the badges above and the storefront's live counters.
-* **VixenGitWatch Telemetry:** A Python SSE bot that monitors releases, PRs, issues, and workflow runs, routing formatted telemetry to Discord.
+### Unity editor
 
-### 3. Unified Distribution Platform
+* **Scene View Enhancer:** lowers the editor's frame rate while it's idle, and shows how often the Scene view redraws.
+* **Memory Diagnostics:** shows which textures, materials and meshes a tool made and never freed.
+* **Animation Workbench Pro:** build and ease animation curves with a live preview.
+* **Pipeline Preset Manager:** turns import settings into presets and makes them the default.
+* **Fix Scene Data:** reattaches a scene's lighting data when it goes missing.
 
-Built on the official VRChat VPM template - add the repo to VCC and receive instant updates.
-
----
-
-## Installation (VRChat Creator Companion)
-
-1. Visit the **[Vixens Toolbox Storefront](https://vixencreations.github.io/VixenToolBox/)**
-2. Click **Add to VCC**
-3. Open VCC, select your project, and add the Vixens Toolbox package
-
----
-
-## Documentation
-
-* **Storefront & VPM Listing:** [vixencreations.github.io/VixenToolBox](https://vixencreations.github.io/VixenToolBox/)
-* **List of Tools:** [tools.html](https://vixencreations.github.io/VixenToolBox/tools.html)
-* **Deep-Dive Docs:** [docs.html](https://vixencreations.github.io/VixenToolBox/docs.html)
-* **Shader Docs (VixenWear Latex Ultra inspector reference):** [shaderdocs.html](https://vixencreations.github.io/VixenToolBox/shaderdocs.html)
-* **Changelog:** [changelog.html](https://vixencreations.github.io/VixenToolBox/changelog.html)
-* **AI Transparency & Development Ethics:** [ai-transparency.html](https://vixencreations.github.io/VixenToolBox/ai-transparency.html)
+Want the full picture? **[Details.md](Details.md)** covers every tool in depth, plus how the toolbox is built and released.
 
 ---
 
-## Development & Contribution
+## Links
 
-* **Language:** C# (Unity Editor Scripting)
-* **Target Environment:** Unity 2022.3.22f1 / VRChat SDK 3.10.3
+* **[Details](Details.md):** every tool in depth, and how the toolbox is built
+* **[Tools](https://vixencreations.github.io/VixenToolBox/tools.html)**
+* **[Changelog](https://vixencreations.github.io/VixenToolBox/changelog.html)**
+* **[Support](https://vixencreations.github.io/VixenToolBox/support.html)**
+* **[AI Transparency](https://vixencreations.github.io/VixenToolBox/ai-transparency.html)**
 
-Open an Issue for mesh edge cases, world diagnostic problems, or feature requests.
+Found a bug or want a feature? [Open an issue](https://github.com/VixenCreations/VixenToolBox/issues).
 
 ---
 
@@ -125,10 +77,10 @@ The Vixens Toolbox is open source under the [MIT License](LICENSE), and the same
 
 ---
 
-## Acknowledgements
+## Thanks
 
-* **[Map1en](https://github.com/Map1en) and the [VRCX-0](https://github.com/Map1en/VRCX-0) project** - our live downloads and version badge workflow is adapted from their `badge-downloads` workflow. We would not have known we had crossed 1,500+ downloads without reading their source. Thank you.
-* **The VRChat community** - for building with our tools and pushing them to their limits.
+* **[Map1en](https://github.com/Map1en) and the [VRCX-0](https://github.com/Map1en/VRCX-0) project:** our downloads and version badges are adapted from their `badge-downloads` workflow. We would not have known we had crossed 1,500 downloads without reading their source. Thank you.
+* **The VRChat community:** for building with our tools and pushing them to their limits.
 
 ---
 
