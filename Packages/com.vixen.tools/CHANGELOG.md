@@ -6,7 +6,7 @@ All notable changes to the VixForge project will be documented in this file.
 
 ***
 ## [2.19.2] - Unreleased
-*The toolbox uses Unity's own font.*
+*ImageMagick only runs with the toolbox's security policy in force, and the toolbox uses Unity's own font.*
 
 ### Added
 
@@ -17,6 +17,10 @@ All notable changes to the VixForge project will be documented in this file.
 * **Tool windows use Unity's default font.** The toolbox no longer includes a font of its own, so window titles and headings now match the rest of the editor.
 * **Badge Studio writes badge text in LiberationSans**, the font TextMesh Pro comes with, when your project has it. Without it, the text uses ImageMagick's default font. Badges you already made are not changed.
 * **Plainer wording across the tools.** Dialogs, progress bars, Console messages and a few labels now say what is happening in everyday words.
+
+### Fixed
+
+* **ImageMagick could run without the toolbox's security policy.** When Unity started several import workers at once, each one set up ImageMagick, and they collided over the policy file. A process that lost logged "Could not apply the ImageMagick security policy", or sometimes nothing, and kept using ImageMagick with no policy. The main editor could lose too. Import workers now leave ImageMagick off, because no toolbox tool runs in them. The editor rewrites the policy file only when it has changed, tries again if another process is using it, and then checks that ImageMagick refuses a format the policy blocks. If the policy is not in force, the tools that need ImageMagick are turned off and the Console says why.
 
 ***
 ## [2.19.0] - 2026-09-27
