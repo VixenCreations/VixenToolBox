@@ -30,8 +30,11 @@
 - [AI transparency](https://vixencreations.github.io/VixenToolBox/ai-transparency.html): where AI was and was not used in building these tools.
 - [Support](https://vixencreations.github.io/VixenToolBox/support.html): help, and how to support the work.
 - [Community and links](https://vixencreations.github.io/VixenToolBox/social.html): Discord, X, YouTube and the store fronts.
+- [Privacy Policy](https://vixencreations.github.io/VixenToolBox/privacy.html): what the website, tools, shaders, Discord server and bot do with your information.
+- [Terms of Service](https://vixencreations.github.io/VixenToolBox/terms.html): the rules for using the website, products, Discord server, bot and memberships.
 
 ## Licensing
 
+- The Vixens Toolbox is under the MIT License.
 - VixenWear Latex Ultra and VixForge Toon are free and open. Personal and commercial use is allowed, including shipping them inside a paid avatar base, as long as the copyright headers stay in the files and the package is not resold on its own.
 - VixenWear Clothing Pro and VixForge Fur Pro are supporter-only and may not be redistributed.
