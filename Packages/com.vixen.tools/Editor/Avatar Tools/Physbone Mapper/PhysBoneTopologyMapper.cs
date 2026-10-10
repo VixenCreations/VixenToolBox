@@ -15,10 +15,7 @@ namespace VixenTools.Editor
 {
     public class PhysBoneTopologyMapper : EditorWindow
     {
-        private const string FontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/PhysBoneTopologyMapperStyles.uss";
-
-        private Font _cyberFont;
 
 #if VRC_SDK_VRCSDK3
         private GameObject _sourceAvatar;
@@ -35,11 +32,6 @@ namespace VixenTools.Editor
             window.Show();
         }
 
-        private void OnEnable()
-        {
-            _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
-        }
-
         private void CreateGUI()
         {
             VisualElement root = rootVisualElement;
@@ -51,7 +43,6 @@ namespace VixenTools.Editor
 
             var headerRect = new VisualElement { name = "tool-header" };
             var titleLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> PHYSBONE BLUEPRINTS") { enableRichText = true };
-            if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             headerRect.Add(titleLabel);
             root.Add(headerRect);
 
@@ -209,7 +200,7 @@ namespace VixenTools.Editor
             warningLabel.AddToClassList("warning-box-styled");
             panel.Add(warningLabel);
 
-            var extractBtn = new Button() { text = "Extract Master Copy (SDK Required)" };
+            var extractBtn = new Button() { text = "Save Blueprint (SDK Required)" };
             extractBtn.AddToClassList("cyber-action-btn");
             extractBtn.AddToClassList("disabled-btn");
             extractBtn.SetEnabled(false);

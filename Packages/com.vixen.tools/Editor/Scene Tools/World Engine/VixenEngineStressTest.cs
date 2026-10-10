@@ -53,7 +53,7 @@ namespace VixenTools.Editor.QA
             CreateUIAndCanvasIssues(root.transform, "2. UI Void & Rebuild Cascades", 1, 0);
             CreateVramNightmare(root.transform, "5. VRAM Nightmare", 4, 0);
             CreatePersistenceAndNetworkIssues(root.transform, "7. Network & Persistence Void", 1, 1);
-            CreateVideoPipelineIssues(root.transform, "8. Video Pipeline Collapse", 2, 1);
+            CreateVideoPipelineIssues(root.transform, "8. Broken Video Players", 2, 1);
 
             CreateProTVIssues(root.transform, "3. ProTV Logic Sink", 2, 0);
             CreateTXLIssues(root.transform, "4. TXL Death-Trap", 3, 0);
@@ -62,7 +62,7 @@ namespace VixenTools.Editor.QA
             CreateExtrasIssues(root.transform, "10. Extras Proxy Desyncs", 4, 1);
 
             CreateGeometryAndMaterialNightmare(root.transform, "11. Geometry & Material Hell", 0, 2);
-            CreateLightingAndEnvironmentApocalypse(root.transform, "12. Lighting & Environment Nuke", 1, 2);
+            CreateLightingAndEnvironmentApocalypse(root.transform, "12. Broken Lighting & Environment", 1, 2);
             CreateVizVidIssues(root.transform, "13. VizVid (VVMW) Ecosystem Collapse", 2, 2);
             CreateAudioLinkAndLightVolumeIssues(root.transform, "14. AL & Light Volumes Mayhem", 3, 2);
             CreateRinvoIssues(root.transform, "15. Rinvo Search Bounds Failure", 4, 2);
@@ -244,7 +244,7 @@ namespace VixenTools.Editor.QA
                 AssetDatabase.CreateAsset(td, TestTerrainPath);
             }
 
-            GameObject terrainObj = new GameObject("Nuke Terrain");
+            GameObject terrainObj = new GameObject("Heavy Terrain");
             terrainObj.transform.SetParent(parent);
             var terrain = terrainObj.AddComponent<Terrain>();
             terrain.terrainData = AssetDatabase.LoadAssetAtPath<TerrainData>(TestTerrainPath);
@@ -432,7 +432,7 @@ namespace VixenTools.Editor.QA
             orphan.transform.SetParent(parent);
             orphan.AddComponent<UdonBehaviour>();
 
-            GameObject tztObj = new GameObject("Starvation Polling");
+            GameObject tztObj = new GameObject("Constant Polling");
             tztObj.transform.SetParent(parent);
             var tzt = tztObj.AddComponent(tztType);
             SetField(tzt, "monitorTriggerInterval", 0.01f);
@@ -668,7 +668,7 @@ namespace VixenTools.Editor.QA
                 else
                 {
                     System.Type lvSetupType = GetTypeSafe("VRCLightVolumes.LightVolumeSetup");
-                    GameObject setupObj = new GameObject("LV Setup Cutoff Nuke");
+                    GameObject setupObj = new GameObject("LV Setup Cutoff");
                     setupObj.transform.SetParent(parent);
                     var setup = setupObj.AddComponent(lvSetupType);
                     SetField(setup, "LightsBrightnessCutoff", 0.05f);
@@ -757,7 +757,7 @@ namespace VixenTools.Editor.QA
             System.Type vpmType = GetTypeSafe("ArchiTech.ProTV.VPManager");
             if (proTvType != null && vpmType != null)
             {
-                GameObject tvObj = new GameObject("ProTV VRAM Nuke & GSV Desync");
+                GameObject tvObj = new GameObject("ProTV VRAM Overload & GSV Desync");
                 tvObj.transform.SetParent(parent);
                 var tv = tvObj.AddComponent(proTvType);
                 SetField(tv, "enableGSV", true);

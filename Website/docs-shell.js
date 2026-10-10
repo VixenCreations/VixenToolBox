@@ -1,20 +1,18 @@
-/* ============================================================================
-   VIXFORGE DOCS SHELL
-   Sticky section rail, live filter, shader chips and collapsible sub-groups
-   for the long reference pages. Pairs with docs-shell.css.
-
-   A page opts in with:
-       <body class="docs-shell">
-   and a layout of
-       <div class="docs-layout">
-           <div class="docs-main"> ...sections... </div>
-       </div>
-   Sections are elements carrying .shader-section with an id and an <h2>.
-   Sub-groups are <h3 class="opt-group"> inside a section.
-
-   Everything below degrades to a plain scrolling page if JS never runs, so the
-   markup must remain readable on its own.
-   ============================================================================ */
+// VIXFORGE DOCS SHELL
+// Sticky section rail, live filter, shader chips and collapsible sub-groups
+// for the long reference pages. Pairs with docs-shell.css.
+//
+// A page opts in with:
+//     <body class="docs-shell">
+// and a layout of
+//     <div class="docs-layout">
+//         <div class="docs-main"> ...sections... </div>
+//     </div>
+// Sections are elements carrying .shader-section with an id and an <h2>.
+// Sub-groups are <h3 class="opt-group"> inside a section.
+//
+// Everything below degrades to a plain scrolling page if JS never runs, so the
+// markup must remain readable on its own.
 
 (function () {
     'use strict';
@@ -660,18 +658,16 @@
         return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
     }
 
-    /* =======================================================================
-       CHIP BAR
-       A lighter mode for pages that are a flat list rather than sections: the
-       changelogs and the news. Declare it with
-
-         <div class="docs-chipbar"
-              data-chip-items=".changelog-entry"
-              data-chip-attr="data-version"></div>
-
-       Keys come from the item attribute, cut at the first "-", so an entry
-       already marked data-version="latex-4.8.0" needs no new markup.
-       ======================================================================= */
+    // CHIP BAR
+    // A lighter mode for pages that are a flat list rather than sections: the
+    // changelogs and the news. Declare it with
+    //
+    //   <div class="docs-chipbar"
+    //        data-chip-items=".changelog-entry"
+    //        data-chip-attr="data-version"></div>
+    //
+    // Keys come from the item attribute, cut at the first "-", so an entry
+    // already marked data-version="latex-4.8.0" needs no new markup.
 
     var CHIP_LABELS = {
         latex: 'Latex Ultra', toon: 'Toon', clothingpro: 'Clothing Pro',

@@ -11,10 +11,7 @@ namespace VixenTools.Editor
     public class VixenAccessoryEngine : EditorWindow
     {
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/VixenAvatarValidatorStyles.uss";
-        private const string FontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
         private const string GENERATED_ASSET_PATH = "Assets/VixenTools/Meshes/BakedAccessories/";
-
-        private Font _cyberFont;
 
         public enum PipelineMode { FullGeneration, AppendToExisting }
         public enum MountStrategy { DestructiveAutoRig, KinematicConstraint }
@@ -44,7 +41,6 @@ namespace VixenTools.Editor
 
         private void OnEnable()
         {
-            _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
             _serializedObject = new SerializedObject(this);
         }
 
@@ -59,14 +55,13 @@ namespace VixenTools.Editor
             var header = new VisualElement { name = "hub-header", style = { minHeight = 80, justifyContent = Justify.Center, alignItems = Align.Center } };
             var titleLabel = new Label("<color=#00e5ff>ACCESSORY</color> <color=#ff00aa>MOUNTING</color> ENGINE") { enableRichText = true };
             titleLabel.AddToClassList("hub-header-title");
-            if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             header.Add(titleLabel);
             root.Add(header);
 
             var scroll = new ScrollView() { style = { flexGrow = 1, paddingLeft = 15, paddingRight = 15, paddingTop = 15 } };
 
             var modePanel = CreateCyberPanel("1. Mode", "#ffaa00");
-            var pipelineField = new PropertyField(_serializedObject.FindProperty("activePipeline"), "Execution Mode");
+            var pipelineField = new PropertyField(_serializedObject.FindProperty("activePipeline"), "Armature Setup");
             pipelineField.Bind(_serializedObject);
             modePanel.Add(pipelineField);
 
@@ -130,7 +125,6 @@ namespace VixenTools.Editor
             panel.AddToClassList("cyber-panel");
             var header = new Label($"<color={hex}>{title}</color>") { enableRichText = true };
             header.AddToClassList("panel-header");
-            if (_cyberFont != null) header.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             panel.Add(header);
 
             var sep = new VisualElement();
@@ -146,7 +140,7 @@ namespace VixenTools.Editor
         {
             if (sourceArmatureRoot == null || targetAccessoryRoot == null)
             {
-                Debug.LogWarning("[VixForge] Execution halted: Missing Armature or Target Root.");
+                Debug.LogWarning("[VixForge] Nothing was mounted: the Armature or the Target Root is missing.");
                 return;
             }
 
@@ -158,12 +152,12 @@ namespace VixenTools.Editor
             if (activePipeline == PipelineMode.FullGeneration)
             {
                 CloneHierarchy(sourceArmatureRoot, targetAccessoryRoot, boneMap);
-                Debug.Log("<b>[VixForge]</b> Pipeline: Generated new sterile hierarchy.");
+                Debug.Log("<b>[VixForge]</b> Made a new clean armature.");
             }
             else
             {
                 MapExistingHierarchy(sourceArmatureRoot, targetAccessoryRoot, boneMap);
-                Debug.Log("<b>[VixForge]</b> Pipeline: Mapped to existing sterile hierarchy.");
+                Debug.Log("<b>[VixForge]</b> Using the existing clean armature.");
             }
 
             if (strategy == MountStrategy.DestructiveAutoRig)
@@ -195,7 +189,7 @@ namespace VixenTools.Editor
 
             Undo.CollapseUndoOperations(undoGroup);
             AssetDatabase.SaveAssets();
-            Debug.Log($"<b>[VixForge]</b> Pipeline complete. Processed {accessoryMappings.Count} accessories into {targetAccessoryRoot.name}.");
+            Debug.Log($"<b>[VixForge]</b> Done. Mounted {accessoryMappings.Count} accessories onto {targetAccessoryRoot.name}.");
             EditorGUIUtility.PingObject(targetAccessoryRoot);
         }
 

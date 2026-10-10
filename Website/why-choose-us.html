@@ -321,7 +321,7 @@
                     </div>
                     <div class="comp-section comp-vixen">
                         <h4>Vixens Toolbox</h4>
-                        <p class="comp-text">Airtight compiler sandboxing between Avatars and Worlds. Dynamically hot-swaps UI and mathematically strips incompatible scripts based on active project SDKs.</p>
+                        <p class="comp-text">Avatar and world code are kept apart when Unity compiles: a project only builds the scripts its VRChat SDK can use, and the Hub shows the tools that match.</p>
                     </div>
                     <div class="comp-section comp-standard">
                         <h4>Industry Standard</h4>
@@ -336,11 +336,11 @@
                     </div>
                     <div class="comp-section comp-vixen">
                         <h4>Vixens Toolbox Ecosystem</h4>
-                        <p class="comp-text">All-in-one workflow: Integrates Quest conversion, PhysBones, animations, presets, optimization, and badges. Best for creators wanting a streamlined, pro pipeline with a strong Quest focus.</p>
+                        <p class="comp-text">All-in-one workflow: Integrates Quest conversion, PhysBones, animations, presets, optimization, and badges. Best for creators wanting a streamlined, pro workflow with a strong Quest focus.</p>
                     </div>
                     <div class="comp-section comp-standard">
                         <h4>Fragmented Standards</h4>
-                        <p class="comp-text">Each tool is excellent within its own lane, and you assemble the pipeline yourself. VRCFury handles everyday avatar building (non-destructive toggles and clothing). VRCQuestTools is a deep platform-targeting suite built on NDMF. Pumkin's handles utilities, stats and quick setups.</p>
+                        <p class="comp-text">Each tool is excellent within its own lane, and you assemble the workflow yourself. VRCFury handles everyday avatar building (non-destructive toggles and clothing). VRCQuestTools is a deep platform-targeting suite built on NDMF. Pumkin's handles utilities, stats and quick setups.</p>
                     </div>
                 </div>
 
@@ -377,10 +377,10 @@
                 <div class="comp-card">
                     <div class="comp-header">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
-                        <h3>Optimization Pipeline</h3>
+                        <h3>Optimization Workflow</h3>
                     </div>
                     <div class="comp-section comp-vixen">
-                        <h4>Reviewable Culling</h4>
+                        <h4>Reviewable Cleanup</h4>
                         <p class="comp-text">One scan reports unused empty objects, disabled components, oversized bounds, unused end bones and heavy meshes as a ranked task list. Nothing runs until you tick it. Textures still sitting on Uncompressed are raised first, above the resize panel, because moving to high-quality block compression cuts VRAM 4x without touching a single pixel of resolution.</p>
                     </div>
                     <div class="comp-section comp-standard">
@@ -452,15 +452,15 @@
                 <div class="comp-card">
                     <div class="comp-header">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"></path><path d="M18 22V8a2 2 0 0 0-2-2H2"></path></svg>
-                        <h3>Auto-Fit Culling Bounds</h3>
+                        <h3>Auto-Fit Bounds</h3>
                     </div>
                     <div class="comp-section comp-vixen">
                         <h4>Posed-Bounds Auto-Fit</h4>
-                        <p class="comp-text">Fits each renderer's culling box to Unity's own posed bounds in the correct root-bone space, then adds a small margin for animation range. Works on any rig, humanoid or not, and handles Blender import scales that trip up hand-built matrices. Runs as one reviewable task inside the same scan that reports the rest of the avatar.</p>
+                        <p class="comp-text">Fits each renderer's bounds to Unity's own posed bounds in the correct root-bone space, then adds a small margin for animation range. Works on any rig, humanoid or not, and handles Blender import scales that trip up hand-built matrices. Runs as one reviewable task inside the same scan that reports the rest of the avatar.</p>
                     </div>
                     <div class="comp-section comp-standard">
                         <h4>Pumkin's / Manual</h4>
-                        <p class="comp-text">Pumkin's samples a set of pose clips and unions the result, which captures animation range well, but requires a Humanoid rig. Hand-rolled approaches usually settle for one blunt box or a flat multiplier: over-sized wastes culling budget, under-sized makes meshes vanish the moment a viewer gets close.</p>
+                        <p class="comp-text">Pumkin's samples a set of pose clips and unions the result, which captures animation range well, but requires a Humanoid rig. Hand-rolled approaches usually settle for one blunt box or a flat multiplier: over-sized keeps meshes drawn when they are out of view, under-sized makes meshes vanish the moment a viewer gets close.</p>
                     </div>
                 </div>
 
@@ -475,7 +475,7 @@
                     </div>
                     <div class="comp-section comp-standard">
                         <h4>Mixed Ecosystem</h4>
-                        <p class="comp-text">Free, and individually excellent.<br><span style="color: #ff4d4d; font-size: 0.85rem; margin-top: 4px; display: inline-block;">Drawback: No single tool covers the whole pipeline, so you assemble and maintain the chain yourself.</span></p>
+                        <p class="comp-text">Free, and individually excellent.<br><span style="color: #ff4d4d; font-size: 0.85rem; margin-top: 4px; display: inline-block;">Drawback: No single tool covers the whole workflow, so you assemble and maintain the chain yourself.</span></p>
                     </div>
                 </div>
 

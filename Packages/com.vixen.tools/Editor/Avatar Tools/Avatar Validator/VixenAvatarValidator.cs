@@ -240,7 +240,7 @@ namespace VixenTools.Editor
                     Execute = () => {
                         int culled = 0;
                         foreach (var b in disabledComponents) { if (b != null) { Undo.DestroyObjectImmediate(b); culled++; } }
-                        Debug.Log($"[VixForge] System Cleaned: {culled} dead components stripped.");
+                        Debug.Log($"[VixForge] Removed {culled} disabled components.");
                     }
                 });
             }
@@ -249,7 +249,7 @@ namespace VixenTools.Editor
             {
                 ID = "OPTIMIZE_BOUNDS",
                 Label = $"<color=#00e5ff>Auto-Fit Mesh Bounds</color>",
-                Description = "Vixen Core Fix: Fits each renderer's culling bounds to its real skinned geometry in root-bone space (Unity's own posed AABB, so meshes driven by many bones or a scaled armature measure their true size, not the authored mesh AABB). Adds a small skinning margin for animation range. Uses a scale-aware world-space floor so meshes authored at odd scales aren't over-inflated, and sets Update When Offscreen off since VRChat culls on the static bounds.",
+                Description = "Vixen Core Fix: Fits each renderer's bounds to its real skinned geometry in root-bone space (Unity's own posed AABB, so meshes driven by many bones or a scaled armature measure their true size, not the authored mesh AABB). Adds a small skinning margin for animation range. Uses a scale-aware world-space floor so meshes authored at odd scales aren't over-inflated, and sets Update When Offscreen off since VRChat uses these bounds to decide when the mesh is drawn.",
                 ComputeSignature = () => {
                     var sb = new System.Text.StringBuilder("bounds:");
                     foreach (var s in skinnedRenderers)
@@ -320,7 +320,7 @@ namespace VixenTools.Editor
                         smr.localBounds = fitted;
                         meshesProcessed++;
                     }
-                    Debug.Log($"[VixForge] Geometry Culling System updated: {meshesProcessed} renderers fitted (true skinned AABB in root-bone space with a small static margin).");
+                    Debug.Log($"[VixForge] Bounds updated: {meshesProcessed} renderers fitted (true skinned AABB in root-bone space with a small static margin).");
                 }
             });
 
@@ -1261,9 +1261,7 @@ namespace VixenTools.Editor
     public class VixenAvatarValidator : EditorWindow
     {
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/VixenAvatarValidatorStyles.uss";
-        private const string FontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
 
-        private Font _cyberFont;
         private VisualElement _resultsContainer;
         private ObjectField _targetField;
         private PopupField<int> _sizePopup;
@@ -1283,8 +1281,6 @@ namespace VixenTools.Editor
             window.minSize = new Vector2(480, 650);
             window.Show();
         }
-
-        private void OnEnable() => _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
 
         private double _nextScanTime = 0;
         private bool _scanQueued = false;
@@ -1336,7 +1332,6 @@ namespace VixenTools.Editor
             var header = new VisualElement { name = "hub-header", style = { minHeight = 80, justifyContent = Justify.Center, alignItems = Align.Center } };
             var titleLabel = new Label("<color=#00e5ff>AVATAR</color> <color=#ff00aa>OPTIMIZATION</color> SUITE") { enableRichText = true };
             titleLabel.AddToClassList("hub-header-title");
-            if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             header.Add(titleLabel);
             root.Add(header);
 
@@ -1513,7 +1508,7 @@ namespace VixenTools.Editor
                             culled++;
                         }
                     }
-                    Debug.Log($"[VixForge] System Culler: Eradicated {culled} physics nodes.");
+                    Debug.Log($"[VixForge] Removed {culled} physics components.");
                     ExecuteDeepScan();
                 }) { text = "REMOVE SELECTED" };
                 executePhysBtn.AddToClassList("cyber-action-btn");
@@ -1657,11 +1652,10 @@ namespace VixenTools.Editor
         private void BuildPlatformResult(string title, bool ready, List<AvatarSDKValidator.Anomaly> errors, List<AvatarSDKValidator.Anomaly> warnings)
         {
             var p = CreateCyberPanel(title, ready ? "#00e5ff" : "#ff00aa");
-            string status = ready ? "SYSTEM GREEN: VALIDATED" : "SYSTEM RED: BLOCKED";
+            string status = ready ? "READY" : "BLOCKED";
 
             var headLabel = new Label($"<color={(ready ? "#00e5ff" : "#ff00aa")}>{title}</color> - {status}") { enableRichText = true };
             headLabel.AddToClassList("md-h1");
-            if (_cyberFont != null) headLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             p.Insert(0, headLabel);
 
             bool hasErrors = !ready && errors.Count > 0;
@@ -1725,7 +1719,6 @@ namespace VixenTools.Editor
             {
                 var header = new Label($"<color={hex}>{title}</color>") { enableRichText = true };
                 header.AddToClassList("panel-header");
-                if (_cyberFont != null) header.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
                 panel.Add(header);
 
                 var sep = new VisualElement();

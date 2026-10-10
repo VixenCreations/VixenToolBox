@@ -13,7 +13,6 @@ namespace VixenTools.Editor
     public class VixenHub : EditorWindow
     {
         private const string PackageRoot = "Packages/com.vixencreations.vixens-toolbox/";
-        private const string FontPath = PackageRoot + "Editor/UiStyles/Cyberpunk-Regular.ttf";
         private const string UssPath = PackageRoot + "Editor/UiStyles/VixenHubStyles.uss";
         private const string ChangelogFile = "CHANGELOG.md";
 
@@ -60,7 +59,6 @@ namespace VixenTools.Editor
         private List<ChangelogEntry> _changelogEntries = new List<ChangelogEntry>();
         private int _selectedChangelogIndex = 0;
 
-        private Font _cyberFont;
         private string _packageVersion = "Unknown";
         private string _sdkVersion = "Unknown";
 
@@ -106,7 +104,6 @@ namespace VixenTools.Editor
 
         private void OnEnable()
         {
-            _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
             LoadVersionData();
             BuildTabs();
         }
@@ -162,7 +159,7 @@ namespace VixenTools.Editor
                 RenderCoreModules);
 
             AddTab(TabSupportedModules, "Supported Modules", CatTools,
-                "The third-party systems the toolbox knows about and checks for you.",
+                "The third-party packages the toolbox knows about and checks for you.",
                 RenderSupportedModules);
 
 #if UDON
@@ -223,10 +220,9 @@ namespace VixenTools.Editor
 
             var titleLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> HUB") { enableRichText = true };
             titleLabel.AddToClassList("hub-header-title");
-            if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
 
             string sdkText = _sdkVersion != "Unknown" ? $" • VRCSDK {_sdkVersion}" : "";
-            var versionLabel = new Label($"v{_packageVersion}{sdkText} • System Online") { style = { color = new Color(0.6f, 0.6f, 0.6f) } };
+            var versionLabel = new Label($"v{_packageVersion}{sdkText}") { style = { color = new Color(0.6f, 0.6f, 0.6f) } };
 
             textContainer.Add(titleLabel);
             textContainer.Add(versionLabel);
@@ -391,7 +387,6 @@ namespace VixenTools.Editor
             var controlRow = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 15, marginTop = 10, paddingLeft = 5, paddingRight = 5 } };
 
             var dropLabel = new Label("Target Release:") { style = { color = new Color(0.67f, 0.67f, 0.67f), marginRight = 10, fontSize = 14 } };
-            if (_cyberFont != null) dropLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             controlRow.Add(dropLabel);
 
             List<string> versionNames = new List<string>();
@@ -597,7 +592,6 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
         {
             var header = new Label($"<color={accentHex}>{headerText}</color>") { enableRichText = true };
             header.AddToClassList("md-h1");
-            if (_cyberFont != null) header.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             container.Add(header);
 
             var sep = new VisualElement();
@@ -694,7 +688,6 @@ If my code has ever saved your scene from completely bricking, optimized your Qu
                     else if (hashes == 2) lbl.AddToClassList("md-h2");
                     else lbl.AddToClassList("md-h3");
 
-                    if (_cyberFont != null) lbl.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
                     container.Add(lbl);
 
                     if (hashes <= 2)

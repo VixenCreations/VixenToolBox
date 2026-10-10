@@ -67,7 +67,7 @@ namespace VixenTools.Editor
                     EditorUtility.SetDirty(dict);
                     AssetDatabase.SaveAssets();
 
-                    Debug.Log($"[Vixen System] Dictionary '{dict.name}' has been factory reset.");
+                    Debug.Log($"[VixForge] Dictionary '{dict.name}' has been factory reset.");
                 }
             }
 
