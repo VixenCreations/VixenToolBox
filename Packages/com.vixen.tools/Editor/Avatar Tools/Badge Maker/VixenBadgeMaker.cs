@@ -49,10 +49,7 @@ namespace VixenTools.Editor
 
         private const string VixenRootPath = "Assets/VixenTools/Badges/Template Files";
         private const string FuralityRootPath = "Assets/Furality";
-        private const string PackageFontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
         private const string USS_PATH = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/VixenBadgeMakerStyles.uss";
-
-        private Font _cyberFont;
 
         private string _badgeName = "";
         private string _title = "";
@@ -146,7 +143,6 @@ namespace VixenTools.Editor
 
         private void OnEnable()
         {
-            _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(PackageFontPath);
             ValidateInstalledShaders();
             RefreshEcosystems();
             SceneView.duringSceneGui += OnSceneGUI;
@@ -173,7 +169,6 @@ namespace VixenTools.Editor
 
             var headerRect = new VisualElement { name = "tool-header" };
             var titleLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> BADGE STUDIO") { enableRichText = true };
-            if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             headerRect.Add(titleLabel);
             root.Add(headerRect);
 
@@ -904,7 +899,7 @@ namespace VixenTools.Editor
                 emiIn = FindTextureMatch(files, tierName, new[] { "_EMI", "_Empty_EMI" }, "MASK", "DIF");
             }
 
-            string fontAbsolutePath = Path.GetFullPath(PackageFontPath).Replace("\\", "/");
+            string fontAbsolutePath = FindBadgeFontPath();
 
             MagickColor mMainText = new MagickColor((ushort)(_mainTextColor.r * 65535), (ushort)(_mainTextColor.g * 65535), (ushort)(_mainTextColor.b * 65535), 65535);
             MagickColor mEmiText = new MagickColor((ushort)(_emiMaskColor.r * 65535), (ushort)(_emiMaskColor.g * 65535), (ushort)(_emiMaskColor.b * 65535), 65535);
@@ -936,10 +931,21 @@ namespace VixenTools.Editor
         }
 
 #if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
+        private static string FindBadgeFontPath()
+        {
+            foreach (string guid in AssetDatabase.FindAssets("LiberationSans t:Font"))
+            {
+                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                if (Path.GetFileName(assetPath) == "LiberationSans.ttf") return Path.GetFullPath(assetPath).Replace("\\", "/");
+            }
+            return null;
+        }
+
         private MagickImage GenerateTextPlate(string fontPath, string text, int w, int h, MagickColor color, float rotation)
         {
             if (string.IsNullOrEmpty(text)) text = " ";
-            var settings = new MagickReadSettings { BackgroundColor = MagickColors.Transparent, FillColor = color, Font = "@" + fontPath, Width = (uint)w, Height = (uint)h };
+            var settings = new MagickReadSettings { BackgroundColor = MagickColors.Transparent, FillColor = color, Width = (uint)w, Height = (uint)h };
+            if (!string.IsNullOrEmpty(fontPath)) settings.Font = "@" + fontPath;
 
             string tempFile = Path.Combine(Path.GetTempPath(), $"vixen_label_{Guid.NewGuid():N}.txt").Replace("\\", "/");
             MagickImage image;

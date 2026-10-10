@@ -1,9 +1,7 @@
-/* ============================================================================
-   VIXFORGE DOCS SHELL
-   Navigation, filtering and reading styles for the long reference pages.
-   Loaded only by pages that opt in with <body class="docs-shell">.
-   Pairs with initDocsShell() in app.js.
-   ============================================================================ */
+/* VIXFORGE DOCS SHELL */
+/* Navigation, filtering and reading styles for the long reference pages. */
+/* Loaded only by pages that opt in with <body class="docs-shell">. */
+/* Pairs with initDocsShell() in app.js. */
 
 :root {
     --docs-rail-width: 250px;
@@ -22,8 +20,8 @@
     padding: 2rem 2rem 4rem;
 }
 
-/* The header lives inside the content column, as shaderdocs has it, so it
-   lines up with the toolbar and the sections instead of spanning the rail. */
+/* The header lives inside the content column, as shaderdocs has it, so it */
+/* lines up with the toolbar and the sections instead of spanning the rail. */
 .docs-shell .page-header {
     max-width: none !important;
     width: 100%;
@@ -31,9 +29,9 @@
     padding: 2rem 2.25rem !important;
 }
 
-/* Centred banner, matching shaderdocs: the measure does the readability work,
-   not the alignment. Left-aligning it against the full panel width was the
-   thing that made it hard to read. */
+/* Centred banner, matching shaderdocs: the measure does the readability work, */
+/* not the alignment. Left-aligning it against the full panel width was the */
+/* thing that made it hard to read. */
 .docs-shell .page-header .page-subtitle,
 .docs-shell .page-header p {
     text-align: center;
@@ -47,8 +45,8 @@
     text-align: center;
 }
 
-/* Tags belong on their own line. Inline at the head of a sentence they read as
-   part of it: "Any ProjectOne window inside the Unity Editor". */
+/* Tags belong on their own line. Inline at the head of a sentence they read as */
+/* part of it: "Any ProjectOne window inside the Unity Editor". */
 .tag-row {
     display: flex;
     flex-wrap: wrap;
@@ -413,8 +411,8 @@
         transform: scale(1.015);
     }
 
-    /* Molten wash along the bottom edge, so the shot sits in the panel rather
-       than on top of it. */
+    /* Molten wash along the bottom edge, so the shot sits in the panel rather */
+    /* than on top of it. */
     .tool-shot::after {
         content: '';
         position: absolute;
@@ -428,9 +426,9 @@
 
 /* ------------------------------------------------------------------ news -- */
 
-/* The hero art shipped at its native 1536x657, so one article filled the whole
-   viewport and the page read as a slideshow. Cap it and crop, so the headline
-   and the first paragraph are on screen with the image. */
+/* The hero art shipped at its native 1536x657, so one article filled the whole */
+/* viewport and the page read as a slideshow. Cap it and crop, so the headline */
+/* and the first paragraph are on screen with the image. */
 .docs-shell .news-hero-art {
     max-height: 260px;
     overflow: hidden;
@@ -523,8 +521,8 @@
 
 /* ------------------------------------------------------------ responsive -- */
 
-/* The rail replaces the top jump strip wherever there is room for it. Below
-   1200px the rail goes and the strip comes back, so navigation never vanishes. */
+/* The rail replaces the top jump strip wherever there is room for it. Below */
+/* 1200px the rail goes and the strip comes back, so navigation never vanishes. */
 @media (min-width: 1201px) {
     .docs-shell .shader-toc {
         display: none;

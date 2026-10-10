@@ -324,7 +324,7 @@
 
                         <li class="mb-2">
                             <strong>Zero-Latency UI:</strong>
-                            The Hub uses flex-driven UIToolkit layouts and async-safe initialization, with parsed
+                            The Hub uses flex-driven UIToolkit layouts and async-safe startup, with parsed
                             changelog versions held in memory, so tab switching stays instant even in large Unity projects.
                         </li>
 
@@ -391,10 +391,10 @@
 
                         <li class="mb-2">
                             <strong>Tight-Fit Bounds Rebuilder:</strong>
-                            Fits each renderer's culling bounds to its real posed geometry in root-bone space, so meshes
+                            Fits each renderer's bounds to its real posed geometry in root-bone space, so meshes
                             driven by many bones or a scaled armature measure their true size rather than the authored mesh
                             box. Adds a small margin for animation range and turns Update When Offscreen off, since VRChat
-                            culls on the static bounds anyway.
+                            decides what to draw from the static bounds anyway.
                         </li>
 
                         <li class="mb-2">
@@ -643,7 +643,7 @@
 
                         <li class="mb-2">
                             <strong>Cyberpunk UI Toolkit Interface:</strong>
-                            Styled with neon-accented USS files and custom fonts, the mapper provides:
+                            Styled with neon-accented USS files, the mapper provides:
                             <ul class="custom-list ps-4 mt-2">
                                 <li>Two-phase workflow panels</li>
                                 <li>Live object fields</li>
@@ -957,8 +957,8 @@
 
                         <li class="mb-2">
                             <strong>High-Fidelity Text Rendering:</strong>
-                            Uses Unity's dynamic font rasterizer with your cyberpunk font to produce crisp,
-                            bloom-safe text at any resolution - including 4096×4096 convention-grade badges.
+                            Draws your name and title with ImageMagick, so the text stays crisp at any
+                            resolution, including 4096×4096 convention-grade badges.
                         </li>
 
                         <li class="mb-2">
@@ -1589,7 +1589,7 @@
                                 <li class="mb-2"><strong>UI & Font Hunter:</strong> Finds TMP and legacy text components whose font does not match the one you nominate in the window, then swaps them all in one pass. Also catches missing TMP shader channels, canvases with no event camera, missing VRC UI Shape, and nested GraphicRaycasters.</li>
                                 <li class="mb-2"><strong>Shader protection:</strong> Keeps core SDK shaders, IwaSync internals, ProTV internals, and VRC Billiards materials away from the shader replacer, so materials driven by scripts keep working.</li>
                                 <li class="mb-2"><strong>Memory estimate:</strong> Uses Unity's own memory numbers to count 4K render textures, TMP atlases and UI masks that project scanners miss.</li>
-                                <li class="mb-2"><strong>Canvas Rebuild Tracker:</strong> Maps layout-modifying UI elements on root canvases to prevent rebuild storms across playlist UIs, queue systems, and dynamic world-space interfaces.</li>
+                                <li class="mb-2"><strong>Canvas Rebuild Tracker:</strong> Maps layout-modifying UI elements on root canvases to prevent rebuild storms across playlist UIs, queue lists, and dynamic world-space interfaces.</li>
                                 <li class="mb-2"><strong>Texture and audio audit:</strong> Scans all textures, UI atlases, meshes, and audio clips to build the memory breakdown and compute score on the Performance Map tab.</li>
                                 <li class="mb-2"><strong>Network & Persistence Auditor:</strong> Detects continuous sync storms, hollow player objects, unsafe persistence calls, and Udon behaviours configured for uncontrolled network replication.</li>
                             </ul>
@@ -1630,9 +1630,9 @@
                         </p>
                     </div>
                                 <h3 class="text-glow-pink opt-group" data-collapsed>Under the hood</h3>
-                <p class="opt-note">Scans a world for the things that break it once people are actually in it: memory, network load, broken shaders and heavy scripts. Most findings come with a one-click fix, and it reads third-party systems as well as Unity's own.</p>
+                <p class="opt-note">Scans a world for the things that break it once people are actually in it: memory, network load, broken shaders and heavy scripts. Most findings come with a one-click fix, and it reads third-party packages as well as Unity's own.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>It knows the video systems</strong> - ProTV, IwaSync, TXL, VizVid and Rinvo are each checked on their own terms, so a finding points at the setting in that package rather than at a generic Unity component.</li>
+                    <li class="mb-2"><strong>It knows the video players</strong> - ProTV, IwaSync, TXL, VizVid and Rinvo are each checked on their own terms, so a finding points at the setting in that package rather than at a generic Unity component.</li>
                     <li class="mb-2"><strong>Meshes and geometry</strong> - Flags the heavy meshes, missing detail levels and awkward colliders that cost the most frame time in a busy instance.</li>
                     <li class="mb-2"><strong>Memory other scanners miss</strong> - Render textures, font atlases and UI masks are counted from Unity's own memory numbers instead of being left out.</li>
                     <li class="mb-2"><strong>Reads your Udon before it ships</strong> - Compiled Udon is checked for the patterns that get a world rate-limited or desynced, such as network calls made every frame.</li>

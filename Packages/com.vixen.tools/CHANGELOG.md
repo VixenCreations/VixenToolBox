@@ -5,6 +5,20 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.19.2] - Unreleased
+*The toolbox uses Unity's own font.*
+
+### Added
+
+* **Licences for ImageMagick come with the toolbox.** **Third Party Notices.md** lists Magick.NET, ImageMagick and the libraries built into them, and their full licence texts sit next to them in `Editor/ImageMagik/`.
+
+### Changed
+
+* **Tool windows use Unity's default font.** The toolbox no longer includes a font of its own, so window titles and headings now match the rest of the editor.
+* **Badge Studio writes badge text in LiberationSans**, the font TextMesh Pro comes with, when your project has it. Without it, the text uses ImageMagick's default font. Badges you already made are not changed.
+* **Plainer wording across the tools.** Dialogs, progress bars, Console messages and a few labels now say what is happening in everyday words.
+
+***
 ## [2.19.0] - 2026-09-27
 *The World Engine understands VRC Light Volumes 3, converting a material leaves the original alone, and ImageMagick runs on Linux.*
 
@@ -70,7 +84,7 @@ All notable changes to the VixForge project will be documented in this file.
 
 ### Added
 * **Quest World Converter**, a new tool at `VixenTools/Scene/Quest World Converter`. Worlds never had a Quest conversion path, only avatars did. Press **Scan Open Scenes** and it collects every material on your renderers, terrains and skybox, then **Convert Selected Materials** writes Quest-ready copies into `Assets/VixenTools/Quest World/<Scene>/`. Your originals are never touched. Materials already using a Quest shader are detected and left alone. **Point the scene at the new materials** is off by default, and asks before it swaps anything.
-* **Collision layers, not just collider shapes.** The World Engine now reports what your colliders actually are, and reads your project's real collision matrix to find geometry players will walk straight through. It also catches a concave mesh collider under a physics Rigidbody, which Unity cannot simulate at all.
+* **Collision layers as well as collider shapes.** The World Engine now reports what your colliders actually are, and reads your project's real collision matrix to find geometry players will walk straight through. It also catches a concave mesh collider under a physics Rigidbody, which Unity cannot simulate at all.
 * **Baked lighting checks.** New findings for objects set to Contribute GI that sit under a Rigidbody, so their baked lighting stays behind when they move; for moving objects with Light Probes switched off in a baked scene; for a baked scene with no probes and no Light Volumes; and for a probe group that was never baked. If Light Volumes is in your scene, the probe findings stay quiet, because Light Volumes already covers that job.
 * **Post processing checks.** Missing Reference Camera, a reference camera with no Post Process Layer, a volume layer set to Nothing, volumes sitting on a layer the camera is not watching, volumes with no profile, and Temporal Anti-Aliasing, which VRChat does not accept.
 * **GPU Particle Volumes** support, covering a manager with no mesh assigned, volumes recalculating every frame, and empty include or exclude slots.
@@ -250,7 +264,7 @@ All notable changes to the VixForge project will be documented in this file.
 
 ### Fixed
 
-* **Tessellation control inverted & uncapped (base shader):** The old `Tessellation Edge Length` slider (`_Tess_Edge`, Range 1–50) was backwards and unbounded - its value is the *target edge length* fed to `UnityEdgeLengthBasedTess`, which sits in the **denominator** of the tessellation factor, so a **lower** number meant denser subdivision and the GPU's 64× per-edge cap was hit on dense displaced meshes → severe lag. Replaced with `Tessellation Detail` (`_Tess_Detail`, Range 0–1) where **higher = more detail/cost, lower = cheaper**, mapped via `edgeLen = lerp(40, 2, detail)`. The distance/screen-adaptive LOD is preserved (far/small-on-screen surfaces stay cheap) and the per-edge factor is now clamped to `VW_TESS_MAX` (32) so the close-up worst case can't melt the GPU. The SPS variant has no tessellation, so it's unaffected. **Migration:** the property was renamed, so existing materials reset to the new `0.5` default and the tessellation amount should be re-set once (the previous default of edge-length 10 ≈ detail 0.79).
+* **Tessellation control inverted & uncapped (base shader):** The old `Tessellation Edge Length` slider (`_Tess_Edge`, Range 1-50) was backwards and unbounded - its value is the *target edge length* fed to `UnityEdgeLengthBasedTess`, which sits in the **denominator** of the tessellation factor, so a **lower** number meant denser subdivision and the GPU's 64× per-edge cap was hit on dense displaced meshes → severe lag. Replaced with `Tessellation Detail` (`_Tess_Detail`, Range 0-1) where **higher = more detail/cost, lower = cheaper**, mapped via `edgeLen = lerp(40, 2, detail)`. The distance/screen-adaptive LOD is preserved (far/small-on-screen surfaces stay cheap) and the per-edge factor is now clamped to `VW_TESS_MAX` (32) so the close-up worst case can't melt the GPU. The SPS variant has no tessellation, so it's unaffected. **Migration:** the property was renamed, so existing materials reset to the new `0.5` default and the tessellation amount should be re-set once (the previous default of edge-length 10 ≈ detail 0.79).
 * **Shader compiler warning (POM, both shaders):** Eliminated the "gradient instruction used in a loop with varying iteration, attempting to unroll the loop" warning on the ForwardBase pass. The parallax-occlusion height march now samples `_MetallicGlossMap` with `tex2Dlod` (explicit LOD 0) instead of `tex2Dgrad`, so the dynamic `[loop]` no longer carries a gradient instruction - the runtime early-out `break` (and its performance) is preserved. The heightfield is now marched at mip 0 (standard for POM).
 
 ***
@@ -311,7 +325,7 @@ All notable changes to the VixForge project will be documented in this file.
 
 ### Added
 
-* **Accessory Mounting Engine:** New avatar pipeline tool (`VixenTools/Avatars/Accessory Engine`) that clones sterile armatures from a source rig and surgically mounts accessories onto the resulting hierarchy. Ships with two pipeline modes — `FullGeneration` clones a fresh sterile armature while `AppendToExisting` reuses an existing one — and two mount strategies. `DestructiveAutoRig` recursively bakes child meshes onto the target bone with full blendshape, normal, and tangent preservation, then locks the accessory root via a ParentConstraint to keep PhysBones intact. `KinematicConstraint` skips baking entirely and applies a parent-constraint mount, intended for rigid prefabs, particles, and audio sources. Baked meshes serialize to `Assets/VixenTools/Meshes/BakedAccessories/` with a step-through folder bootstrap so the path resolves cleanly on fresh installs.
+* **Accessory Mounting Engine:** New avatar pipeline tool (`VixenTools/Avatars/Accessory Engine`) that clones sterile armatures from a source rig and surgically mounts accessories onto the resulting hierarchy. Ships with two pipeline modes (`FullGeneration` clones a fresh sterile armature, while `AppendToExisting` reuses an existing one) and two mount strategies. `DestructiveAutoRig` recursively bakes child meshes onto the target bone with full blendshape, normal, and tangent preservation, then locks the accessory root via a ParentConstraint to keep PhysBones intact. `KinematicConstraint` skips baking entirely and applies a parent-constraint mount, intended for rigid prefabs, particles, and audio sources. Baked meshes serialize to `Assets/VixenTools/Meshes/BakedAccessories/` with a step-through folder bootstrap so the path resolves cleanly on fresh installs.
 * **Vixforge Interactive Umbrella Branding:** Reframed the entire public portal under the new Vixforge Interactive studio name. Every page's sidebar caption flipped from `Ecosystem Matrix` (and the truncated `Ecosystem` variant carried by three pages) to `by Vixforge Interactive`, surfacing the parent-studio relationship at first glance without retiring the `VIXENTOOLS` wordmark or its underlying VPM identifier.
 * **JSON-LD Organization Schema Promotion:** Every public page's structured-data block now declares `Vixforge Interactive` as an `Organization` with explicit `author` and `publisher` roles, replacing the legacy `Person` schema (`Vixenlicious`) so Google Rich Results, LinkedIn org cards, and Slack/Discord/Twitter embeds align with the new studio identity rather than the original creator handle.
 * **Product / Studio Naming Convention:** Locked in the two-tier naming split - `Vixforge Toolkit` for the package/product line, `Vixforge Interactive` for the parent studio. Product pages (`index`, `tools`, `docs`, `changelog`, `support`, `why-choose-us`) now lead with the Toolkit name; architecture/network pages (`social`, `extended-projects`, `ai-transparency`) lead with the Interactive name.
@@ -465,7 +479,7 @@ All notable changes to the VixForge project will be documented in this file.
 ### Added
 
 * **Natural MatCap Reflection Model:** Introduced a physically‑inspired matcap blending system using Fresnel weighting, roughness‑driven clarity falloff, and energy‑normalized contribution curves. Matcaps now behave like a stylized reflection lobe rather than an additive light source, producing smoother, more realistic latex highlights.
-* **MatCap–Reflection Harmony Layer (Patch 4):** Added a new cross‑fade stage that blends matcaps into the clearcoat reflection based on surface smoothness. High‑polish surfaces now transition seamlessly into probe reflections, eliminating the “double highlight” artifact common in older matcap pipelines.
+* **MatCap-Reflection Harmony Layer (Patch 4):** Added a new cross‑fade stage that blends matcaps into the clearcoat reflection based on surface smoothness. High‑polish surfaces now transition seamlessly into probe reflections, eliminating the "double highlight" artifact common in older matcap pipelines.
 
 ### Changed
 
@@ -484,14 +498,14 @@ All notable changes to the VixForge project will be documented in this file.
 ### Added
 
 * **Semantic Ecosystem Layout (Ecosystem Architecture Page):** Wrapped the entire suite overview in a semantic `<main class="main-wrapper">` container with a dedicated `.page-header`, `.comparison-section`, and `.tools-grid` structure. This creates a clean document outline for crawlers while preserving the cyberpunk glass-panel aesthetic.
-* **World Engine Omni‑Matrix Card (Expanded Matrix Variant):** Introduced the `expanded-matrix-card` variant of `tool-card` with a dedicated `.matrix-grid` and `.matrix-column` flex layout. The Spider’s dual-column feature matrix is now fully responsive, readable, and structurally isolated for both users and search engines.
+* **World Engine Omni‑Matrix Card (Expanded Matrix Variant):** Introduced the `expanded-matrix-card` variant of `tool-card` with a dedicated `.matrix-grid` and `.matrix-column` flex layout. The Spider's dual-column feature matrix is now fully responsive, readable, and structurally isolated for both users and search engines.
 
 ### Changed
 
 * **SEO‑Optimized Content Hierarchy:** Normalized heading levels (`h1` page title, `h3` tool names, `h4` matrix section headers) and grouped related copy into clearly scoped sections. This improves snippet extraction, rich result eligibility, and ensures search engines can correctly infer feature groupings (Hub, Optimization Suite, Quest Conversion, PhysBone Mapper, Badge Studio, World Engine).
 * **Crawl‑Friendly Tool Cards:** Refactored each tool into a consistent `tool-card` pattern with a single image, a descriptive `h3`, and a tightly scoped feature list. Alt text and card titles now read as human‑legible summaries instead of internal labels, boosting relevance for avatar, Quest, and VRChat‑tooling queries.
 * **Preview & Media SEO Pass:** Converted the Quest vs PC comparison into a `.comparison-banner` with a single, descriptive `<img>` and caption block. The preview trigger is now attached to the container instead of inline styles, reducing DOM noise and making the hero comparison image a clear, high‑value media target for search indexing.
-* **Matrix Grid Flexbox Refactor:** Replaced the ad‑hoc grid styles with a dedicated `.matrix-grid` flexbox system and responsive `.matrix-column` rules. On narrow viewports, the Spider’s ecosystem and UI/security columns collapse into a vertical stack without breaking readability or keyword density.
+* **Matrix Grid Flexbox Refactor:** Replaced the ad‑hoc grid styles with a dedicated `.matrix-grid` flexbox system and responsive `.matrix-column` rules. On narrow viewports, the Spider's ecosystem and UI/security columns collapse into a vertical stack without breaking readability or keyword density.
 
 ### Fixed
 
@@ -578,7 +592,7 @@ All notable changes to the VixForge project will be documented in this file.
 
 ### Fixed
 - **Serialization Deadlock & CS0246 (Architecture):** Radically decoupled the `ShaderDictionaryAsset` and its `[CustomEditor]` class from the primary `VixenWorldEngine` window space into distinct scripts. This forces Unity's AssetDatabase to index the custom inspector immediately upon compilation, obliterating the deferred-loading bug and resolving the `CS0246` namespace missing errors.
-- **Infinite Replacement Loop (Shader Pipeline):** Injected an $O(1)$ circuit breaker into the Geometry & Materials auditor. The heuristic scanner now explicitly recognizes the active `_targetReplacementShader` as inherently compliant, preventing the engine from falsely flagging—and attempting to recursively convert—materials that have already achieved their optimized target state.
+- **Infinite Replacement Loop (Shader Pipeline):** Injected an $O(1)$ circuit breaker into the Geometry & Materials auditor. The heuristic scanner now explicitly recognizes the active `_targetReplacementShader` as inherently compliant, preventing the engine from falsely flagging (and attempting to recursively convert) materials that have already achieved their optimized target state.
 
 ## [1.6.0] - 2026-05-04
 
@@ -586,15 +600,15 @@ All notable changes to the VixForge project will be documented in this file.
 - **Full Website & Documentation Expansion:** Rebuilt the entire documentation portal with a unified neon‑cyber aesthetic, expanded technical breakdowns, and a fully rewritten Core Documentation page covering every subsystem in the VixenTools ecosystem.
 - **Tool‑Specific Deep‑Dive Pages:** Authored complete documentation for Quest Conversion Engine, Badge Studio, Animation Workbench Pro, PhysBone Topology Mapper, Preset Manager, Scene Utilities, and the World Engine auditors.
 - **Interactive DOM‑Driven Layout System:** Implemented a modular HTML layout grid with glass‑panel containers, badge headers, multi‑column matrices, and stable UIToolkit‑inspired spacing rules.
-- **Expanded Workflow Guides:** Added step‑by‑step “In Practice” workflow sections for every major tool, including real‑world usage patterns, optimization strategies, and cross‑tool integration notes.
+- **Expanded Workflow Guides:** Added step‑by‑step "In Practice" workflow sections for every major tool, including real‑world usage patterns, optimization strategies, and cross‑tool integration notes.
 - **New Visual Identity System:** Introduced standardized glow headers, badge markers, preview cards, and consistent typography across all documentation pages.
 - **Changelog Archive Overhaul:** Rebuilt the changelog index with improved readability, version‑indexed navigation, and expanded historical entries.
 - **Developer‑Facing Architecture Notes:** Added internal logic explanations for heuristics, math libraries, reflection systems, VRAM analyzers, and topology forensics used across the ecosystem.
 - **Mobile‑Optimized Documentation Layout:** Rewrote responsive CSS rules to ensure all panels, matrices, and code blocks render cleanly on mobile and tablet devices.
-- **New “Under the Hood” Section:** Added a full technical deep‑dive into DOM bridging, shader injection, VRAM heuristics, and the internal architecture powering VixenTools.
+- **New "Under the Hood" Section:** Added a full technical deep‑dive into DOM bridging, shader injection, VRAM heuristics, and the internal architecture powering VixenTools.
 - **Omni-Matrix Diagnostic Spider (World Engine):** Deployed a lethal, 4D-chess-level heuristic auditing matrix explicitly mapped to VRChat's most dominant third-party ecosystems (ProTV, TXL, and IwaSync3). The engine now autonomously hunts down 25+ specific architectural anti-patterns, including GSV texture conflicts, Realtime GI emission blowouts, aggressive polling starvations, and unbounded UI Canvas rebuild cascades.
 - **Native Video Pipeline Catchers (World Engine):** Integrated dedicated heuristics for base `VRCAVProVideoPlayer` and `VRCUnityVideoPlayer` components. The engine now detects and offers auto-fixes for "Unlimited (0)" resolution bandwidth nukes and low-latency configurations that destabilize mobile instances.
-- **Raw UASM Code Scraper (Udon Persistence):** Bypassed standard Unity component checks by directly intercepting the `UdonSharpEditorCache`. The engine now parses raw Udon Assembly (UASM) instructions to detect `PlayerData.Set` calls trapped inside Update loops—autonomously catching network rate-limit nukes before they can cause cloud data loss.
+- **Raw UASM Code Scraper (Udon Persistence):** Bypassed standard Unity component checks by directly intercepting the `UdonSharpEditorCache`. The engine now parses raw Udon Assembly (UASM) instructions to detect `PlayerData.Set` calls trapped inside Update loops, autonomously catching network rate-limit nukes before they can cause cloud data loss.
 - **Autonomous Omni-Chaos Generator (QA Protocol):** Upgraded the engine stress tester from a basic script into an isolated environment constructor. It now autonomously quarantines execution into a dedicated `Stress Test.unity` scene, builds the foundational VRChat world architecture (VRCSceneDescriptor, Spawn points, Floor), and uses Reflection to dynamically spawn 8 discrete "Nightmare Pods" (only if target SDK addons are detected) to validate heuristic catch-rates.
 - **Precision Click-to-Place Raycaster (Topology Tools):** Engineered a sniper-rifle camera raycaster for the Scene View. Enables creators to visually paint/teleport objects onto complex shelf polygons using click-or-drag mechanics, guided by a real-time, cyber-aesthetic (Cyan/Magenta) UV projection disc that adheres to surface normals.
 - **Dynamic Action Grid Polling (Vixen Hub):** Engineered real-time state polling for Scene View tools. The dashboard now autonomously reads `EditorPrefs` to inject rich-text hex formatting (`<color=#00e5ff>[ ACTIVE ]</color>`) directly into Hub buttons, providing instant visual feedback on tool toggles.
@@ -608,7 +622,7 @@ All notable changes to the VixForge project will be documented in this file.
 
 ### Fixed
 - **Full Website Comb Over:** Fixed multiple outstanding issues with missing documentation, buttons, etc.
-- **Missing “Jump to Top” Button (Documentation):** Restored the global scroll-to-top control across all documentation pages after a regression removed it from several layouts.
+- **Missing "Jump to Top" Button (Documentation):** Restored the global scroll-to-top control across all documentation pages after a regression removed it from several layouts.
 - **Discord Bot Embed Truncation:** Patched the VixenGitWatch telemetry bot to prevent aggressive truncation of release notes and commit bodies. Updated the embed engine to use safer limits and improved formatting for long-form content.
 - **Biometric Matrix Purge (Quest Conversion):** Eradicated compilation blockages caused by unsupported PC-VR Face Tracking parameters. The Conversion Engine now deploys a targeted heuristic sweep to aggressively strip out localized OSC/Blendshape-driven eye and jaw tracking components before initiating the Android build pipeline.
 - **VRCFury Face-Tracking "Hunter-Killer" Expansion:** Hardened the hierarchy purge logic to completely eradicate specialized face-tracking branches including `VRCFury - Face Tracking Prefabs`, `VRCFury - Face Tracking - Ears`, and `VF_UE_VRCFT` internal nodes.
@@ -656,7 +670,7 @@ All notable changes to the VixForge project will be documented in this file.
 - **Base-Class Physics Targeting:** Upgraded the deep matrix scanners from strict `<VRCPhysBone>` wrappers to their foundational `<VRCPhysBoneBase>` and `<VRCPhysBoneColliderBase>` classes. The engine now successfully captures 100% of internal physics variations, including VRCFury auto-conversions, script-generated endpoints, and legacy dynamic bone migrations.
 
 ### UI/UX & Cyber-Noir Standardization
-- **Universal Cyber-Noir Topology (UI Ecosystem):** Extended the native UI Toolkit `.uss` architecture universally across the entire VixenTools ecosystem. Every utility—from the `AnimationWorkbenchWindow` to the `QuestConversionEngine`—now perfectly inherits the signature dark-panel aesthetics, neon-cyan borders, and hyper-responsive interactive hover states (`.cyber-panel`, `.cyan-btn`, `.danger-btn`, `.data-tag-destructive`) via centralized stylesheet injections.
+- **Universal Cyber-Noir Topology (UI Ecosystem):** Extended the native UI Toolkit `.uss` architecture universally across the entire VixenTools ecosystem. Every utility, from the `AnimationWorkbenchWindow` to the `QuestConversionEngine`, now perfectly inherits the signature dark-panel aesthetics, neon-cyan borders, and hyper-responsive interactive hover states (`.cyber-panel`, `.cyan-btn`, `.danger-btn`, `.data-tag-destructive`) via centralized stylesheet injections.
 - **Native Class Hijacking:** Overhauled the core `.uss` stylesheets to natively target and hijack Unity's internal UI classes, specifically `.unity-enum-field`, `.unity-popup-field`, and `.unity-slider-int`. Optimization sliders now render as sleek, flat cyberpunk tracks with glowing cyan draggers (`.unity-slider-int .unity-base-slider__dragger`), while dropdowns feature tinted glass backgrounds and neon borders.
 - **Macro Topology Overrides:** Injected global "Keep All", "Cull All", "Select All", and "Deselect All" macro execution buttons into the interactive UI panels of both the Quest Engine and PC Validator via UI Toolkit button callbacks. This establishes a highly streamlined triage workflow when parsing massive arrays of `TopologyNode` physics components or `TextureNode` assets.
 - **Instant UI State Refresh (Vixen Hub):** Re-engineered the action delegate for the "Snap To Surface" world tool. It now asynchronously reads live `EditorPrefs.GetBool` states and forces an immediate UIElements layout refresh, allowing the button text to instantly transition between active and inactive states without requiring a manual window reload.
@@ -752,7 +766,7 @@ All notable changes to the VixForge project will be documented in this file.
 ### Changed
 - **Magick.NET Font Engine Upgrade (Badge Studio):** Ripped out unstable, Windows-only `Gdi32.dll` OS-level font installation hacks. Migrated to modern Magick.NET direct file pathing (`@font.ttf`), ensuring cross-platform stability and significantly faster text-plate rendering.
 - **Cyber-Noir Aesthetic Standardization:** Unified the visual language across the entire VixenTools suite. Deployed tinted glass `.cyber-panel` wrappers, high-contrast neon headers, and massive, deeply saturated action buttons (`.cyan-btn`, `.pink-btn`) to clearly delineate execution phases.
-- **Markdown Engine Sanitization:** Upgraded the Hub's internal Markdown parser to natively generate `VisualElements`. Actively stripped all volatile unicode emojis—which inherently conflict with Unity's TextCore rendering engine—and replaced them with stable, terminal-compliant chevron syntax (`>>`, `::`, `>`).
+- **Markdown Engine Sanitization:** Upgraded the Hub's internal Markdown parser to natively generate `VisualElements`. Actively stripped all volatile unicode emojis (which inherently conflict with Unity's TextCore rendering engine) and replaced them with stable, terminal-compliant chevron syntax (`>>`, `::`, `>`).
 - **Graceful Degradation States:** Overhauled error-handling UIs (such as missing VRChat SDK warnings) to utilize the new enterprise styling, deploying amber `.warning-box-styled` elements to keep the interface looking premium even in failure states.
 - **Skinned Mesh Raycasting (UV Mapper):** The mapping engine now automatically detects and bakes `SkinnedMeshRenderer` data into a static `MeshCollider`, allowing accurate raycasting on dynamically weighted Furality attendee badges.
 

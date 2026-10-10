@@ -101,12 +101,12 @@ namespace VixenTools.Editor
             {
                 EditorUtility.SetDirty(dict);
                 AssetDatabase.SaveAssets();
-                Debug.Log($"[Vixen System] Added {addedCount} VixForge shaders to the replacement list.");
+                Debug.Log($"[VixForge] Added {addedCount} VixForge shaders to the replacement list.");
             }
 
             if (missingCount > 0)
             {
-                Debug.Log($"[Vixen System] {missingCount} VixForge shaders are not in this project. Install VixenWear to use them as replacements.");
+                Debug.Log($"[VixForge] {missingCount} VixForge shaders are not in this project. Install VixenWear to use them as replacements.");
             }
         }
 
@@ -271,7 +271,7 @@ namespace VixenTools.Editor
             {
                 EditorUtility.SetDirty(dict);
                 AssetDatabase.SaveAssets();
-                Debug.Log($"[Vixen System] Discovered and populated Whitelist Dictionary with {addedCount} globally protected shaders.");
+                Debug.Log($"[VixForge] Discovered and populated Whitelist Dictionary with {addedCount} globally protected shaders.");
             }
         }
     }

@@ -13,7 +13,6 @@ namespace VixenTools.Editor
 {
     public class QuestWorldConverter : EditorWindow
     {
-        private const string FontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/QuestConversionEngineStyles.uss";
         private const string OutputRoot = "Assets/VixenTools/Quest World";
 
@@ -31,7 +30,6 @@ namespace VixenTools.Editor
             public Terrain Terrain;
         }
 
-        private Font _cyberFont;
         private readonly List<MaterialNode> _materials = new List<MaterialNode>();
         private readonly List<RendererBinding> _bindings = new List<RendererBinding>();
         private readonly Dictionary<Texture, Texture> _textureCache = new Dictionary<Texture, Texture>();
@@ -53,7 +51,6 @@ namespace VixenTools.Editor
 
         private void OnEnable()
         {
-            _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
             minSize = new Vector2(620, 700);
         }
 
@@ -71,7 +68,6 @@ namespace VixenTools.Editor
             title.style.marginTop = 8;
             title.style.marginBottom = 2;
             title.style.marginLeft = 8;
-            if (_cyberFont != null) title.style.unityFont = _cyberFont;
             root.Add(title);
 
             var blurb = new Label("Makes Quest-ready copies of the materials in your open scenes. Your originals are never changed.");

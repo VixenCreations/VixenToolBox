@@ -15,10 +15,7 @@ namespace VixenTools.Editor
         private enum ToolMode { Extraction, Authoring }
         private ToolMode _currentMode = ToolMode.Extraction;
 
-        private const string FontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/BulkPresetGeneratorStyles.uss";
-
-        private Font _cyberFont;
 
         private string _outputDirectory = "Assets/VixenTools/GeneratedPresets";
 
@@ -51,11 +48,6 @@ namespace VixenTools.Editor
             window.Show();
         }
 
-        private void OnEnable()
-        {
-            _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
-        }
-
         private void CreateGUI()
         {
             VisualElement root = rootVisualElement;
@@ -67,7 +59,6 @@ namespace VixenTools.Editor
 
             var headerRect = new VisualElement { name = "tool-header" };
             var titleLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> PRESET MANAGER") { enableRichText = true };
-            if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             headerRect.Add(titleLabel);
             root.Add(headerRect);
 

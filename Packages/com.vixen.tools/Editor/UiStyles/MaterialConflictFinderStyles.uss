@@ -1,7 +1,5 @@
-/* =====================================================================
-   Vixforge Toolkit - Material Toggle Conflict Finder Styles
-   Aesthetic: Dark Glass UI / Neon Cyberpunk
-   ===================================================================== */
+/* Vixforge Toolkit - Material Toggle Conflict Finder Styles */
+/* Aesthetic: Dark Glass UI / Neon Cyberpunk */
 
 /* --- Root & Layout --- */
 .mcf-root {
