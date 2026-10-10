@@ -15,7 +15,6 @@ namespace VixenTools.Editor
         private const string PREF_STORED_VER = "VixenTools_StoredVersion";
         private const string PREF_UPDATE_PENDING = "VixenTools_UpdatePending";
         private const string PKG_PATH = "Packages/com.vixencreations.vixens-toolbox/package.json";
-        private const string FONT_PATH = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
 
         static VixenUpdateNotifier()
         {
@@ -117,9 +116,6 @@ namespace VixenTools.Editor
 
             var label = new Label(">> <color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> UPDATE") { enableRichText = true };
             label.style.fontSize = 14;
-
-            Font cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FONT_PATH);
-            if (cyberFont != null) label.style.unityFontDefinition = new StyleFontDefinition(cyberFont);
 
             badge.Add(label);
 

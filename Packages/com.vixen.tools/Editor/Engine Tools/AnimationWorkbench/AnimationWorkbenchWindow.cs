@@ -13,8 +13,6 @@ namespace Vixenlicious.AnimationWorkbench
     public class AnimationWorkbenchWindow : EditorWindow
     {
         private VisualElement root;
-        private Font _cyberFont;
-        private const string PackageFontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/AnimationWorkbenchStyles.uss";
 
         private AnimationClip currentClip;
@@ -78,7 +76,6 @@ namespace Vixenlicious.AnimationWorkbench
         {
             root = rootVisualElement;
             root.name = "workbench-root";
-            _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(PackageFontPath);
 
             LoadStyles();
             ConstructUI();
@@ -120,11 +117,6 @@ namespace Vixenlicious.AnimationWorkbench
             var headerLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> ANIMATION WORKBENCH");
             headerLabel.enableRichText = true;
             headerLabel.style.fontSize = 24;
-            if (_cyberFont != null)
-            {
-                headerLabel.style.unityFont = _cyberFont;
-                headerLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
-            }
             headerRect.Add(headerLabel);
             root.Add(headerRect);
 

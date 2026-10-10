@@ -20,7 +20,6 @@ namespace VixenTools.Editor
     public class VixenWorldEngine : EditorWindow
     {
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/VixenWorldSpider.uss";
-        private const string FontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
 
         private const string TargetDictPath = "Assets/VixenTools/Asset Database/World Engine/VixenReplacementTargets.asset";
         private const string WhitelistDictPath = "Assets/VixenTools/Asset Database/World Engine/VixenShaderWhitelist.asset";
@@ -30,7 +29,6 @@ namespace VixenTools.Editor
         private VisualElement _performanceTab;
         private Button _findingsTabButton;
         private Button _performanceTabButton;
-        private Font _cyberFont;
 
         private int _targetTextureResolution = 2048;
         private readonly List<string> _resolutionOptions = new List<string> { "512", "1024", "2048", "4096" };
@@ -72,7 +70,6 @@ namespace VixenTools.Editor
 
         private void OnEnable()
         {
-            _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
             _targetTMPFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset");
             _targetLegacyFont = AssetDatabase.LoadAssetAtPath<Font>("Assets/TextMesh Pro/Fonts/LiberationSans.ttf");
 
@@ -100,7 +97,6 @@ namespace VixenTools.Editor
             title.style.color = ColorUtility.TryParseHtmlString("#ffffff", out Color w) ? w : Color.white;
             title.text = "<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> WORLD ENGINE";
             title.enableRichText = true;
-            if (_cyberFont != null) title.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             header.Add(title);
             root.Add(header);
 

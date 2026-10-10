@@ -12,12 +12,10 @@ namespace VixenTools.Editor
     public class VixenAnimatorForge : EditorWindow
     {
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/VixenAnimatorForgeStyles.uss";
-        private const string FontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
 
         private enum Mode { Doctor, Forge }
         private Mode _mode = Mode.Doctor;
 
-        private Font _cyberFont;
         private ObjectField _targetField;
         private Button _btnDoctor;
         private Button _btnForge;
@@ -49,8 +47,6 @@ namespace VixenTools.Editor
             window.Show();
         }
 
-        private void OnEnable() => _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
-
         private void OnSelectionChange()
         {
             var go = Selection.activeGameObject;
@@ -81,7 +77,6 @@ namespace VixenTools.Editor
             var header = new VisualElement { name = "hub-header", style = { minHeight = 80, justifyContent = Justify.Center, alignItems = Align.Center } };
             var title = new Label("<color=#00e5ff>ANIMATOR</color> <color=#ff00aa>FORGE</color>") { enableRichText = true };
             title.AddToClassList("hub-header-title");
-            if (_cyberFont != null) title.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             header.Add(title);
             root.Add(header);
 
@@ -443,7 +438,6 @@ namespace VixenTools.Editor
             panel.AddToClassList("cyber-panel");
             var header = new Label($"<color={hex}>{title}</color>") { enableRichText = true };
             header.AddToClassList("panel-header");
-            if (_cyberFont != null) header.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             panel.Add(header);
             var sep = new VisualElement();
             sep.AddToClassList("md-separator");

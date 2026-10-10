@@ -23,10 +23,8 @@ namespace VixenTools.Editor
 {
     public class QuestConversionEngine : EditorWindow
     {
-        private const string FontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/QuestConversionEngineStyles.uss";
 
-        private Font _cyberFont;
         private GameObject _sourceAvatar;
 
         private int _totalTriangles = 0;
@@ -98,8 +96,6 @@ namespace VixenTools.Editor
             window.Show();
         }
 
-        private void OnEnable() => _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
-
         private void CreateGUI()
         {
             VisualElement root = rootVisualElement;
@@ -110,7 +106,6 @@ namespace VixenTools.Editor
 
             var headerRect = new VisualElement { name = "tool-header" };
             var titleLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> QUEST ENGINE") { enableRichText = true };
-            if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             headerRect.Add(titleLabel);
             root.Add(headerRect);
 

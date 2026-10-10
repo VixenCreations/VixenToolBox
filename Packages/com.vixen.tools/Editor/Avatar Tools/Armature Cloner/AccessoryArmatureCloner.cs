@@ -11,10 +11,7 @@ namespace VixenTools.Editor
     public class VixenAccessoryEngine : EditorWindow
     {
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/VixenAvatarValidatorStyles.uss";
-        private const string FontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
         private const string GENERATED_ASSET_PATH = "Assets/VixenTools/Meshes/BakedAccessories/";
-
-        private Font _cyberFont;
 
         public enum PipelineMode { FullGeneration, AppendToExisting }
         public enum MountStrategy { DestructiveAutoRig, KinematicConstraint }
@@ -44,7 +41,6 @@ namespace VixenTools.Editor
 
         private void OnEnable()
         {
-            _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
             _serializedObject = new SerializedObject(this);
         }
 
@@ -59,7 +55,6 @@ namespace VixenTools.Editor
             var header = new VisualElement { name = "hub-header", style = { minHeight = 80, justifyContent = Justify.Center, alignItems = Align.Center } };
             var titleLabel = new Label("<color=#00e5ff>ACCESSORY</color> <color=#ff00aa>MOUNTING</color> ENGINE") { enableRichText = true };
             titleLabel.AddToClassList("hub-header-title");
-            if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             header.Add(titleLabel);
             root.Add(header);
 
@@ -130,7 +125,6 @@ namespace VixenTools.Editor
             panel.AddToClassList("cyber-panel");
             var header = new Label($"<color={hex}>{title}</color>") { enableRichText = true };
             header.AddToClassList("panel-header");
-            if (_cyberFont != null) header.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             panel.Add(header);
 
             var sep = new VisualElement();

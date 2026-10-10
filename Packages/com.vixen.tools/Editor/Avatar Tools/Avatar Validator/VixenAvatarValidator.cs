@@ -1261,9 +1261,7 @@ namespace VixenTools.Editor
     public class VixenAvatarValidator : EditorWindow
     {
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/VixenAvatarValidatorStyles.uss";
-        private const string FontPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/Cyberpunk-Regular.ttf";
 
-        private Font _cyberFont;
         private VisualElement _resultsContainer;
         private ObjectField _targetField;
         private PopupField<int> _sizePopup;
@@ -1283,8 +1281,6 @@ namespace VixenTools.Editor
             window.minSize = new Vector2(480, 650);
             window.Show();
         }
-
-        private void OnEnable() => _cyberFont = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
 
         private double _nextScanTime = 0;
         private bool _scanQueued = false;
@@ -1336,7 +1332,6 @@ namespace VixenTools.Editor
             var header = new VisualElement { name = "hub-header", style = { minHeight = 80, justifyContent = Justify.Center, alignItems = Align.Center } };
             var titleLabel = new Label("<color=#00e5ff>AVATAR</color> <color=#ff00aa>OPTIMIZATION</color> SUITE") { enableRichText = true };
             titleLabel.AddToClassList("hub-header-title");
-            if (_cyberFont != null) titleLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             header.Add(titleLabel);
             root.Add(header);
 
@@ -1661,7 +1656,6 @@ namespace VixenTools.Editor
 
             var headLabel = new Label($"<color={(ready ? "#00e5ff" : "#ff00aa")}>{title}</color> - {status}") { enableRichText = true };
             headLabel.AddToClassList("md-h1");
-            if (_cyberFont != null) headLabel.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
             p.Insert(0, headLabel);
 
             bool hasErrors = !ready && errors.Count > 0;
@@ -1725,7 +1719,6 @@ namespace VixenTools.Editor
             {
                 var header = new Label($"<color={hex}>{title}</color>") { enableRichText = true };
                 header.AddToClassList("panel-header");
-                if (_cyberFont != null) header.style.unityFontDefinition = new StyleFontDefinition(_cyberFont);
                 panel.Add(header);
 
                 var sep = new VisualElement();

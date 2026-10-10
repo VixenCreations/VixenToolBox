@@ -5,6 +5,15 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.19.2] - Unreleased
+*The toolbox uses Unity's own font.*
+
+### Changed
+
+* **Tool windows use Unity's default font.** The toolbox no longer includes a font of its own, so window titles and headings now match the rest of the editor.
+* **Badge Studio writes badge text in LiberationSans**, the font TextMesh Pro comes with, when your project has it. Without it, the text uses ImageMagick's default font. Badges you already made are not changed.
+
+***
 ## [2.19.0] - 2026-09-27
 *The World Engine understands VRC Light Volumes 3, converting a material leaves the original alone, and ImageMagick runs on Linux.*
 
