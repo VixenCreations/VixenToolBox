@@ -72,6 +72,7 @@ Our dual-lobe PBR shader for synthetic materials is a **standalone product** and
 ### 9. Third-Party Components
 
 * **Magick.NET `14.17.2`** (ImageMagick `7.1.2-32`), by Dirk Lemstra, under the Apache-2.0 licence. It does all of the toolbox's image work: texture resizing, the World Engine's PNG copies, badge compositing and the VRAM passes. It ships as an Editor-only plugin for Windows and Linux x64, so nothing of it reaches your avatar or world.
+* **ImageMagick** is under the ImageMagick License, and the libraries built into it keep their own licences. **Third Party Notices.md** lists them, and their full licence texts ship in `Editor/ImageMagik/`.
 
 ### 10. Thanks
 

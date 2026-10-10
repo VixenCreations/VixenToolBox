@@ -8,6 +8,10 @@ All notable changes to the VixForge project will be documented in this file.
 ## [2.19.2] - Unreleased
 *The toolbox uses Unity's own font.*
 
+### Added
+
+* **Licences for ImageMagick come with the toolbox.** **Third Party Notices.md** lists Magick.NET, ImageMagick and the libraries built into them, and their full licence texts sit next to them in `Editor/ImageMagik/`.
+
 ### Changed
 
 * **Tool windows use Unity's default font.** The toolbox no longer includes a font of its own, so window titles and headings now match the rest of the editor.
