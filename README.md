@@ -4,6 +4,7 @@
 [![Version](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FVixenCreations%2FVixenToolBox%2Fbadge-data%2Fversion.json&style=for-the-badge)](https://github.com/VixenCreations/VixenToolBox/releases/latest)
 [![Downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FVixenCreations%2FVixenToolBox%2Fbadge-data%2Fdownloads.json&style=for-the-badge)](https://github.com/VixenCreations/VixenToolBox/releases)
 [![CodeQL](https://github.com/VixenCreations/VixenToolBox/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/VixenCreations/VixenToolBox/actions/workflows/github-code-scanning/codeql)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
 ---
 
@@ -115,6 +116,12 @@ Built on the official VRChat VPM template - add the repo to VCC and receive inst
 * **Target Environment:** Unity 2022.3.22f1 / VRChat SDK 3.10.3
 
 Open an Issue for mesh edge cases, world diagnostic problems, or feature requests.
+
+---
+
+## License
+
+The Vixens Toolbox is open source under the [MIT License](LICENSE), and the same text ships inside the package as `LICENSE.md`. Magick.NET and ImageMagick come with it under their own licenses, listed in [Third Party Notices](Packages/com.vixen.tools/Third%20Party%20Notices.md).
 
 ---
 

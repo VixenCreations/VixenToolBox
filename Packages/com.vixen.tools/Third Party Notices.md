@@ -1,6 +1,6 @@
 # Third Party Notices
 
-Vixens Toolbox includes the third party software below. Each part keeps its own licence. The toolbox's own code is under the MIT licence named in `package.json`.
+Vixens Toolbox includes the third party software below. Each part keeps its own licence. The toolbox's own code is under the MIT licence in `LICENSE.md`.
 
 ## Magick.NET 14.17.2
 

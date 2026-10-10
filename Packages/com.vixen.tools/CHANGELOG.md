@@ -10,6 +10,7 @@ All notable changes to the VixForge project will be documented in this file.
 
 ### Added
 
+* **The toolbox's MIT licence comes with it.** The full text is in **LICENSE.md**.
 * **Licences for ImageMagick come with the toolbox.** **Third Party Notices.md** lists Magick.NET, ImageMagick and the libraries built into them, and their full licence texts sit next to them in `Editor/ImageMagik/`.
 
 ### Changed

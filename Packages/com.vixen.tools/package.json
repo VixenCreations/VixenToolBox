@@ -23,6 +23,7 @@
   "changelogUrl": "https://vixencreations.github.io/VixenToolBox/changelog.html",
   "documentationUrl": "https://vixencreations.github.io/VixenToolBox/tools.html",
   "license": "MIT",
+  "licensesUrl": "https://github.com/VixenCreations/VixenToolBox/blob/main/LICENSE",
   "legacyFolders": {
   },
   "legacyFiles": {}
