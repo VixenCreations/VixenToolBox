@@ -247,6 +247,16 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
+                <div class="changelog-entry" data-version="v2.19.2">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.19.2 - 2026-10-10</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>ImageMagick only runs with the toolbox's security policy in force.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-3" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>ImageMagick could run without the toolbox's security policy.</strong> When Unity started several import workers at once, each one set up ImageMagick, and they collided over the policy file. A process that lost logged "Could not apply the ImageMagick security policy", or sometimes nothing, and kept using ImageMagick with no policy. The main editor could lose too. Import workers now leave ImageMagick off, because no toolbox tool runs in them. The editor rewrites the policy file only when it has changed, tries again if another process is using it, and then checks that ImageMagick refuses a format the policy blocks. If the policy is not in force, the tools that need ImageMagick are turned off and the Console says why.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="v2.19.1">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.19.1 - 2026-10-02</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A comprehensive web overhaul, bringing full AI-search indexing, expanded site navigation, and pristine Google Knowledge Graph mapping to the VixForge ecosystem.</em></p>

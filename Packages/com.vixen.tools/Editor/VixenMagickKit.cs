@@ -12,8 +12,8 @@ namespace VixenTools.Editor
     [InitializeOnLoad]
     public static class VixenMagickKit
     {
-#if UNITY_EDITOR_LINUX
-        public const string UnavailableMessage = "ImageMagick did not load in this editor, so this is turned off. The Console says why.";
+#if UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || VIXEN_MAGICK_NET
+        public const string UnavailableMessage = "ImageMagick did not start in this editor, so this is turned off. The Console says why.";
 #else
         public const string UnavailableMessage = "This needs ImageMagick, which the toolbox includes for Windows and Linux.";
 #endif
@@ -67,9 +67,10 @@ namespace VixenTools.Editor
 
         static VixenMagickKit()
         {
-#if UNITY_EDITOR_LINUX
+            // Every tool that uses ImageMagick runs from a window in the main editor, so import workers leave it off.
+            // Unity starts several workers at once, and they would all write the same policy file.
             if (AssetDatabase.IsAssetImportWorkerProcess()) return;
-
+#if UNITY_EDITOR_LINUX
             string marker = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Library", "VixenTools", "ImageMagick", "linux-load.pending"));
             if (File.Exists(marker))
             {
@@ -94,31 +95,65 @@ namespace VixenTools.Editor
                 return;
             }
 #endif
-            IsReady = true;
+            IsReady = ApplySecurityPolicy() && PolicyIsEnforced();
 
-            try
+            if (IsReady)
             {
-                IConfigurationFiles config = ConfigurationFiles.Default;
-                config.Policy.Data = SecurityPolicy;
-                string path = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Library", "VixenTools", "ImageMagick"));
-                Directory.CreateDirectory(path);
-                string policyFile = Path.Combine(path, config.Policy.FileName);
-                if (File.Exists(policyFile)) File.Delete(policyFile);
-                MagickNET.Initialize(config, path);
+                try
+                {
+                    ResourceLimits.Thread = (ulong)System.Math.Max(1, System.Environment.ProcessorCount);
+                }
+                catch { }
             }
-            catch (System.Exception e)
-            {
-                Debug.LogWarning("[VixForge] Could not apply the ImageMagick security policy: " + e.Message);
-            }
-
-            try
-            {
-                ResourceLimits.Thread = (ulong)System.Math.Max(1, System.Environment.ProcessorCount);
-            }
-            catch { }
 #if UNITY_EDITOR_LINUX
             try { File.Delete(marker); } catch { }
 #endif
+        }
+
+        // MagickNET.Initialize only writes the files that are missing, and fails if another process
+        // creates one first, so the policy is written here and only when it differs.
+        static bool ApplySecurityPolicy()
+        {
+            IConfigurationFiles config = ConfigurationFiles.Default;
+            config.Policy.Data = SecurityPolicy;
+            string path = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Library", "VixenTools", "ImageMagick"));
+            string policyFile = Path.Combine(path, config.Policy.FileName);
+
+            for (int attempt = 1; ; attempt++)
+            {
+                try
+                {
+                    Directory.CreateDirectory(path);
+                    if (!File.Exists(policyFile) || File.ReadAllText(policyFile) != SecurityPolicy)
+                        File.WriteAllText(policyFile, SecurityPolicy);
+                    MagickNET.Initialize(config, path);
+                    return true;
+                }
+                catch (IOException) when (attempt < 5)
+                {
+                    System.Threading.Thread.Sleep(50 * attempt);
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogWarning("[VixForge] Could not apply the ImageMagick security policy, so the tools that need ImageMagick are turned off. " + e.Message);
+                    return false;
+                }
+            }
+        }
+
+        // ImageMagick reads its policy once per editor session, the first time it runs, so a policy written
+        // after that never takes effect. The policy blocks MVG, so ImageMagick must refuse to read one.
+        static bool PolicyIsEnforced()
+        {
+            string detail = "";
+            try
+            {
+                using (new MagickImage(System.Text.Encoding.ASCII.GetBytes("viewbox 0 0 4 4\nrectangle 0 0 3 3\n"), new MagickReadSettings { Format = MagickFormat.Mvg })) { }
+            }
+            catch (MagickPolicyErrorException) { return true; }
+            catch (System.Exception e) { detail = " " + e.Message; }
+            Debug.LogWarning("[VixForge] ImageMagick is running without the toolbox's security policy, so the tools that need it are turned off. Restart the editor to turn them back on." + detail);
+            return false;
         }
 #endif
 

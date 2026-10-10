@@ -5,6 +5,13 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.19.2] - 2026-10-10
+*ImageMagick only runs with the toolbox's security policy in force.*
+
+### Fixed
+* **ImageMagick could run without the toolbox's security policy.** When Unity started several import workers at once, each one set up ImageMagick, and they collided over the policy file. A process that lost logged "Could not apply the ImageMagick security policy", or sometimes nothing, and kept using ImageMagick with no policy. The main editor could lose too. Import workers now leave ImageMagick off, because no toolbox tool runs in them. The editor rewrites the policy file only when it has changed, tries again if another process is using it, and then checks that ImageMagick refuses a format the policy blocks. If the policy is not in force, the tools that need ImageMagick are turned off and the Console says why.
+
+***
 ## [2.19.0] - 2026-09-27
 *The World Engine understands VRC Light Volumes 3, converting a material leaves the original alone, and ImageMagick runs on Linux.*
 
