@@ -200,7 +200,7 @@ namespace VixenTools.Editor
             warningLabel.AddToClassList("warning-box-styled");
             panel.Add(warningLabel);
 
-            var extractBtn = new Button() { text = "Extract Master Copy (SDK Required)" };
+            var extractBtn = new Button() { text = "Save Blueprint (SDK Required)" };
             extractBtn.AddToClassList("cyber-action-btn");
             extractBtn.AddToClassList("disabled-btn");
             extractBtn.SetEnabled(false);

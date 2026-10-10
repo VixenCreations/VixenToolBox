@@ -12,9 +12,9 @@ The Vixens Toolbox is our professional-grade VRChat package suite, delivering av
 
 The four flagship tools:
 
-- **Quest Conversion Engine** - a non-destructive PC to Android conversion pipeline that clones the avatar into an isolated workspace, maps every VRChat mobile limit per performance rank, and routes textures through Magick.NET before ASTC compression.
+- **Quest Conversion Engine** - a non-destructive PC to Android converter that clones the avatar into an isolated workspace, maps every VRChat mobile limit per performance rank, and routes textures through Magick.NET before ASTC compression.
 - **Avatar Optimization Suite** - QEM (Garland-Heckbert) mesh decimation with face and hand shielding, leaf-bone collapsing, tight-fit skinned bounds, and ImageMagick-driven VRAM control.
-- **Vixen World Engine** - the omni-system diagnostic spider, running roughly 137 checks across nine third-party ecosystems (ProTV, TXL, VizVid, IwaSync3, AudioLink, LTCGI, Rinvo, VRC Light Volumes, VRSL), most carrying a one-click fix.
+- **Vixen World Engine** - the all-in-one diagnostic spider, running more than 160 checks across ten third-party ecosystems (ProTV, TXL, VizVid, IwaSync3, AudioLink, LTCGI, Rinvo, VRC Light Volumes, VRSL, GPU Particle Volumes), most carrying a one-click fix.
 - **Animation Workbench Pro** - a curve authoring environment with material and component property binding, an easing library, staged non-destructive edits, and real-time preview.
 
 Supporting tools: **Vixen Hub** (the unified editor hub that ties the suite together), **Animator Forge**, **PhysBone Blueprints**, the **Accessory Mounting Engine**, **Vixen Badge Studio**, and the Pipeline Preset Manager.
@@ -23,7 +23,7 @@ Note: **VixenWear Latex Ultra** is a separate standalone product and does not sh
 
 ## Focus and Research
 
-Beyond the shipping toolbox, VixForge Interactive invests in R&D for next-generation creator workflows: UdonSharp and C# frameworks, spatial engine experiments, automation pipelines, and prototype editor systems that feed back into our released tools.
+Beyond the shipping toolbox, VixForge Interactive invests in R&D for next-generation creator workflows: UdonSharp and C# frameworks, spatial engine experiments, automation tools, and prototype editor tools that feed back into our released tools.
 
 ## Extended Projects and R&D
 
@@ -35,10 +35,10 @@ Beyond the shipping toolbox, VixForge Interactive invests in R&D for next-genera
 
 ### In Active Development
 
-- **Latex Ultra (VixenWear)** - _Shipping and evolving, sold separately from the Vixens Toolbox._ Our GGX latex avatar shader: clearcoat, thin-film, wet / drip and melting-goo effects, triple matcaps, and live reactions to every major world-lighting system (AudioLink, LTCGI, VRC Light Volumes, and VRSL). Built-In Render Pipeline, with both a base and an SPS twin.
-- **Surface Ultra (VixenWorld)** - _In development._ The world-side counterpart to Latex Ultra, sharing the same BRDF and world-lighting stack so VRChat worlds and props can react to the same systems your avatar does.
-- **ClothingPro (VixenWear)** - _In development._ A modular clothing and wardrobe-layer system built on top of the VixenWear pipeline, designed to drop layered outfits in cleanly without manual rig surgery.
-- **VixForge Director** - _In development._ An over-the-top automatic Virtual Jockey system that puts on full lighting shows when a DJ does not have a VJ on hand to run the visuals. Stack: pipeline, worlds, UdonSharp.
+- **Latex Ultra (VixenWear)** - _Shipping and evolving, sold separately from the Vixens Toolbox._ Our GGX latex avatar shader: clearcoat, thin-film, wet / drip and melting-goo effects, triple matcaps, and live reactions to every major world-lighting package (AudioLink, LTCGI, VRC Light Volumes, and VRSL). Built-In Render Pipeline, with both a base and an SPS twin.
+- **Surface Ultra (VixenWorld)** - _In development._ The world-side counterpart to Latex Ultra, sharing the same BRDF and world-lighting stack so VRChat worlds and props can react to the same lighting your avatar does.
+- **ClothingPro (VixenWear)** - _In development._ A modular clothing and wardrobe-layer set built on top of VixenWear, designed to drop layered outfits in cleanly without manual rig surgery.
+- **VixForge Director** - _In development._ An over-the-top automatic Virtual Jockey that puts on full lighting shows when a DJ does not have a VJ on hand to run the visuals. Stack: worlds, UdonSharp.
 
 ## Links
 

@@ -227,7 +227,7 @@ namespace VixenTools.Editor
             infoLabel.AddToClassList("info-box-styled");
             panel.Add(infoLabel);
 
-            BuildTextureSection(panel, "System: Texture Map Selection", true, out _textureScroll, out _textureLabel);
+            BuildTextureSection(panel, "Texture Map Selection", true, out _textureScroll, out _textureLabel);
 
             BuildTopologySection(panel, "Animators", false, out _animatorScroll, out _animatorLabel);
 
@@ -628,7 +628,7 @@ namespace VixenTools.Editor
 
             _hasScanned = true;
             BuildDynamicResultsUI();
-            Debug.Log($"[VixForge] Deep System Scan Complete. {_scannedMaterials.Count} unique materials extracted including hidden nodes.");
+            Debug.Log($"[VixForge] Scan complete. Found {_scannedMaterials.Count} unique materials, hidden objects included.");
         }
 
         private TopologyNode CreateNode(Component comp, bool lockedPurge)
@@ -712,7 +712,7 @@ namespace VixenTools.Editor
 
             try
             {
-                EditorUtility.DisplayProgressBar("VixForge Quest Engine", "Initializing Directory Structures...", 0.1f);
+                EditorUtility.DisplayProgressBar("VixForge Quest Engine", "Creating folders...", 0.1f);
 
                 string avatarName = _sourceAvatar.name;
                 string questName = $"Quest_{avatarName}";
@@ -742,7 +742,7 @@ namespace VixenTools.Editor
                 questClone.transform.rotation = _sourceAvatar.transform.rotation;
                 questClone.transform.parent = _sourceAvatar.transform.parent;
 
-                EditorUtility.DisplayProgressBar("VixForge Quest Engine", "Cloning and Converting ALL System Materials...", 0.4f);
+                EditorUtility.DisplayProgressBar("VixForge Quest Engine", "Copying and converting all materials...", 0.4f);
                 Dictionary<Material, Material> materialCache = new Dictionary<Material, Material>();
                 Shader targetShader = VixenQuestKit.ResolveShader(_selectedTargetShader);
                 if (targetShader == null)

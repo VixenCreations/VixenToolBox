@@ -117,7 +117,7 @@ namespace Vixforge.Toolkit.Diagnostics
             var title = new Label("MATERIAL TOGGLE CONFLICT FINDER");
             title.AddToClassList("mcf-header-title");
 
-            var subtitle = new Label("Vixforge Toolkit Avatar Pipeline • VRCFury & Animation Layer Diagnostic");
+            var subtitle = new Label("Vixforge Toolkit Avatar Tools • VRCFury & Animation Layer Diagnostic");
             subtitle.AddToClassList("mcf-header-subtitle");
 
             headerBox.Add(title);

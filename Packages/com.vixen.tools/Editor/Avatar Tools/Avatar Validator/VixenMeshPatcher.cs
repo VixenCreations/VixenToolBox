@@ -189,7 +189,7 @@ namespace VixenTools.Editor
 
             if (animator == null || !animator.isHuman || smr == null)
             {
-                Debug.LogWarning("[VixForge] Warning: Missing Animator, Non-Humanoid Rig, or missing SMR. Returning empty protection system.");
+                Debug.LogWarning("[VixForge] Warning: Missing Animator, Non-Humanoid Rig, or missing SMR. No bones will be protected.");
                 return protectedIndices;
             }
 
@@ -217,7 +217,7 @@ namespace VixenTools.Editor
                 }
             }
 
-            Debug.Log($"[VixForge] Kinematic Protection System generated: {protectedIndices.Count} structural bones locked.");
+            Debug.Log($"[VixForge] Protected {protectedIndices.Count} bones from decimation.");
             return protectedIndices;
         }
 

@@ -61,7 +61,7 @@ namespace VixenTools.Editor
             var scroll = new ScrollView() { style = { flexGrow = 1, paddingLeft = 15, paddingRight = 15, paddingTop = 15 } };
 
             var modePanel = CreateCyberPanel("1. Mode", "#ffaa00");
-            var pipelineField = new PropertyField(_serializedObject.FindProperty("activePipeline"), "Execution Mode");
+            var pipelineField = new PropertyField(_serializedObject.FindProperty("activePipeline"), "Armature Setup");
             pipelineField.Bind(_serializedObject);
             modePanel.Add(pipelineField);
 
@@ -140,7 +140,7 @@ namespace VixenTools.Editor
         {
             if (sourceArmatureRoot == null || targetAccessoryRoot == null)
             {
-                Debug.LogWarning("[VixForge] Execution halted: Missing Armature or Target Root.");
+                Debug.LogWarning("[VixForge] Nothing was mounted: the Armature or the Target Root is missing.");
                 return;
             }
 
@@ -152,12 +152,12 @@ namespace VixenTools.Editor
             if (activePipeline == PipelineMode.FullGeneration)
             {
                 CloneHierarchy(sourceArmatureRoot, targetAccessoryRoot, boneMap);
-                Debug.Log("<b>[VixForge]</b> Pipeline: Generated new sterile hierarchy.");
+                Debug.Log("<b>[VixForge]</b> Made a new clean armature.");
             }
             else
             {
                 MapExistingHierarchy(sourceArmatureRoot, targetAccessoryRoot, boneMap);
-                Debug.Log("<b>[VixForge]</b> Pipeline: Mapped to existing sterile hierarchy.");
+                Debug.Log("<b>[VixForge]</b> Using the existing clean armature.");
             }
 
             if (strategy == MountStrategy.DestructiveAutoRig)
@@ -189,7 +189,7 @@ namespace VixenTools.Editor
 
             Undo.CollapseUndoOperations(undoGroup);
             AssetDatabase.SaveAssets();
-            Debug.Log($"<b>[VixForge]</b> Pipeline complete. Processed {accessoryMappings.Count} accessories into {targetAccessoryRoot.name}.");
+            Debug.Log($"<b>[VixForge]</b> Done. Mounted {accessoryMappings.Count} accessories onto {targetAccessoryRoot.name}.");
             EditorGUIUtility.PingObject(targetAccessoryRoot);
         }
 

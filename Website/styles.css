@@ -1248,8 +1248,8 @@ fluent-option {
 
 /* === MOBILE / TABLET: collapse the fixed sidebar into a dropdown menu === */
 @media (max-width: 900px) {
-    /* body is a flex row on desktop with a fixed sidebar; stack it on mobile
-       so the now-static sidebar sits on top instead of beside the content. */
+    /* body is a flex row on desktop with a fixed sidebar; stack it on mobile */
+    /* so the now-static sidebar sits on top instead of beside the content. */
     body {
         flex-direction: column;
     }
@@ -1296,8 +1296,8 @@ fluent-option {
         background: rgba(255, 69, 0, 0.12);
     }
 
-    /* Once app.js wires the toggle (.js-nav), the tab list becomes a dropdown.
-       Without JS the list stays visible, so navigation never disappears. */
+    /* Once app.js wires the toggle (.js-nav), the tab list becomes a dropdown. */
+    /* Without JS the list stays visible, so navigation never disappears. */
     .sidebar.js-nav .nav-links {
         display: none;
         border-top: 1px solid rgba(255, 69, 0, 0.15);
@@ -1332,8 +1332,8 @@ fluent-option {
     }
 }
 
-/* Index page: the VCC add flow is desktop-only, so on mobile keep just the
-   Downloads and Latest Release stat cards plus a notice. */
+/* Index page: the VCC add flow is desktop-only, so on mobile keep just the */
+/* Downloads and Latest Release stat cards plus a notice. */
 .mobile-vcc-notice {
     display: none;
 }
@@ -1429,8 +1429,8 @@ fluent-option {
 }
 
 /* Ecosystem block: other VixForge products, the VRChat group, and the Discord widget. */
-/* The registry page carries a table and a sidebar, so it gets more room than the
-   text-led pages that share .content. */
+/* The registry page carries a table and a sidebar, so it gets more room than the */
+/* text-led pages that share .content. */
 .content-wide {
     max-width: 1600px;
     /* Positioning context for the Discord widget pinned at the top right. */
@@ -1455,10 +1455,10 @@ fluent-option {
     text-align: center;
 }
 
-/* Wide screens: pin the Discord widget to the top right of the page. The page content
-   reserves a gutter the same width, so nothing can ever run underneath the widget.
-   Padding on the container does not move the widget: an absolutely positioned child
-   anchored with right:0 sits against the padding box edge. */
+/* Wide screens: pin the Discord widget to the top right of the page. The page content */
+/* reserves a gutter the same width, so nothing can ever run underneath the widget. */
+/* Padding on the container does not move the widget: an absolutely positioned child */
+/* anchored with right:0 sits against the padding box edge. */
 @media (min-width: 1201px) {
     .content-wide {
         padding-right: 374px;

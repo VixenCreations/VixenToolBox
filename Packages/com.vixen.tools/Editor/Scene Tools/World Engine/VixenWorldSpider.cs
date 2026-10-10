@@ -121,7 +121,7 @@ namespace VixenTools.Editor
             root.Add(_performanceTab);
             SelectEngineTab(false);
 
-            var infoBox = new Label("Scanning your scene across every supported system.") { name = "info-box" };
+            var infoBox = new Label("Scanning your scene for every supported package.") { name = "info-box" };
             infoBox.AddToClassList("info-box-styled");
             _mainScroll.Add(infoBox);
 
@@ -285,7 +285,7 @@ namespace VixenTools.Editor
                 AssetDatabase.DeleteAsset(WhitelistDictPath);
                 _targetShaderAsset = null;
                 _shaderWhitelistAsset = null;
-                Debug.Log("[Vixen System] Previous dictionaries purged. Rebuilding from fresh schema...");
+                Debug.Log("[VixForge] Cleared the old shader lists. Rebuilding them...");
             }
 
             _targetShaderAsset = AssetDatabase.LoadAssetAtPath<ShaderDictionaryAsset>(TargetDictPath);
@@ -561,7 +561,7 @@ namespace VixenTools.Editor
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"[VixenWorldSpider] Queue Execution Failed on an asset: {e.Message}");
+                    Debug.LogError($"[VixForge] An asset in the queue failed: {e.Message}");
                 }
             }
 
@@ -577,11 +577,11 @@ namespace VixenTools.Editor
                 EditorUtility.ClearProgressBar();
 
                 InitiateFullSystemScan();
-                Debug.Log("[Vixen System] Background Asset Queue Completed. Lookup Checksum Saved.");
+                Debug.Log("[VixForge] Background asset queue finished. Lookup checksum saved.");
             }
             else
             {
-                EditorUtility.DisplayProgressBar("VIXEN SYSTEM: I/O THREAD", $"Processing Asset Queue... ({_workQueue.Count} remaining)", 0.5f);
+                EditorUtility.DisplayProgressBar("VixForge World Engine", $"Processing Asset Queue... ({_workQueue.Count} remaining)", 0.5f);
             }
         }
 
@@ -855,7 +855,7 @@ namespace VixenTools.Editor
                 Undo.CollapseUndoOperations(undoGroup);
             }
 
-            Debug.Log($"[Vixen System] {swaps.Count} converted material(s) now used by {changed} component(s) in the open scenes.");
+            Debug.Log($"[VixForge] {swaps.Count} converted material(s) now used by {changed} component(s) in the open scenes.");
             return changed;
         }
 
@@ -1547,7 +1547,7 @@ namespace VixenTools.Editor
                     if (lowLatencyField != null && Convert.ToBoolean(lowLatencyField.GetValue(player)))
                     {
                         LogDiagnostic("VIDEO: STABILITY", "Low Latency Enabled",
-                            $"'{component.gameObject.name}' has 'Use Low Latency' enabled. This strips the video buffer and will cause severe stuttering for any player without a perfect internet connection. Disable for general media.",
+                            $"'{component.gameObject.name}' has 'Use Low Latency' enabled. This removes the video buffer and will cause severe stuttering for any player without a perfect internet connection. Disable for general media.",
                             "#ffaa00", component, () => {
                                 Undo.RecordObject(component, "Disable Low Latency");
                                 lowLatencyField.SetValue(player, false);
@@ -1973,7 +1973,7 @@ namespace VixenTools.Editor
                         float tvAspect = aspectProp.floatValue;
                         if (tvAspect <= 0f || Math.Abs(tvAspect - 1.777777f) > 0.05f && Math.Abs(tvAspect - 1.333333f) > 0.05f && Math.Abs(tvAspect - 2.333333f) > 0.05f)
                         {
-                            LogDiagnostic("PROTV CONFIG: INVALID ASPECT", "Non-Standard Aspect Ratio", $"'{component.gameObject.name}' has its default aspect ratio set to {tvAspect:F3}. This breaks shader system bounds and UV calculations. Click Fix to force standard 16:9.", "#ff00aa", component, () => {
+                            LogDiagnostic("PROTV CONFIG: INVALID ASPECT", "Non-Standard Aspect Ratio", $"'{component.gameObject.name}' has its default aspect ratio set to {tvAspect:F3}. This breaks the screen shader's bounds and UV calculations. Click Fix to force standard 16:9.", "#ff00aa", component, () => {
                                 tvSO.Update();
                                 aspectProp.floatValue = 1.777777f;
                                 tvSO.ApplyModifiedProperties();
@@ -1990,7 +1990,7 @@ namespace VixenTools.Editor
                         var videoManagers = videoManagersField.GetValue(tv) as Array;
                         if (videoManagers == null || videoManagers.Length == 0)
                         {
-                            LogDiagnostic("PROTV CRITICAL: MISSING MANAGERS", "Missing Video Managers", $"'{component.gameObject.name}' has no VPManagers assigned. The TV will crash on initialization.", "#ff00aa", component);
+                            LogDiagnostic("PROTV CRITICAL: MISSING MANAGERS", "Missing Video Managers", $"'{component.gameObject.name}' has no VPManagers assigned. The TV will crash when it starts.", "#ff00aa", component);
                         }
                     }
 
@@ -2608,7 +2608,7 @@ namespace VixenTools.Editor
                     if (globalSettings.Length > 1)
                     {
                         LogDiagnostic("VIZVID ECOSYSTEM", "Singleton Violation: Global Settings",
-                            $"System detected {globalSettings.Length} GlobalSettings instances. VVMW expects a single global settings module. Multiple instances will trigger race conditions and initialization failures.",
+                            $"Found {globalSettings.Length} GlobalSettings instances. VVMW expects a single global settings module. Multiple instances will trigger race conditions and failures at startup.",
                             "#ff00aa", (Component)globalSettings[1]);
                     }
                 }
@@ -2738,7 +2738,7 @@ namespace VixenTools.Editor
                         if (linkedCore == null)
                         {
                             LogDiagnostic("VIZVID INTERFACE", "Orphaned Frontend Handler",
-                                $"FrontendHandler '{((Component)frontend).gameObject.name}' is decoupled. It has no linked VizVid Core and will fail to execute logic.",
+                                $"FrontendHandler '{((Component)frontend).gameObject.name}' is decoupled. It has no linked VizVid Core and will not run.",
                                 "#ff00aa", (Component)frontend);
                         }
                     }
@@ -2833,7 +2833,7 @@ namespace VixenTools.Editor
             }
             else
             {
-                LogDiagnostic("AUDIOLINK: SETUP", "System Missing",
+                LogDiagnostic("AUDIOLINK: SETUP", "Core Missing",
                     "No AudioLink Core found. All sound-reactive materials and stage lighting will remain static.",
                     "#ffaa00", null);
             }
@@ -3116,7 +3116,7 @@ namespace VixenTools.Editor
                             if (actualInput != null)
                             {
                                 LogDiagnostic("TXL + RINVO ECOSYSTEM", "Invalid TXL UI Target",
-                                    $"'{component.gameObject.name}' is pointing directly to the Core TXL Video Player instead of the InputProxy. Rinvo must be linked to the InputProxy component for events and queues to execute properly.",
+                                    $"'{component.gameObject.name}' is pointing directly to the Core TXL Video Player instead of the InputProxy. Rinvo must be linked to the InputProxy component for events and queues to work.",
                                     "#ff00aa", component, () => {
                                         Undo.RecordObject(component, "Fix TXL Target");
                                         uiControllerField?.SetValue(searchManager, actualInput as UdonBehaviour);
@@ -4588,9 +4588,9 @@ namespace VixenTools.Editor
                         if (!isProtectedVideoComponent && filter.sharedMesh.vertexCount > 5000 && renderer.GetComponentInParent<LODGroup>() == null)
                         {
                             LogDiagnostic("MESHES & GEOMETRY", "Missing LOD Group",
-                                $"'{renderer.name}' has {filter.sharedMesh.vertexCount} verts but no LODs. Will generate a Culling LODGroup.",
+                                $"'{renderer.name}' has {filter.sharedMesh.vertexCount} verts but no LODs. Will add an LOD Group that hides it once it is under 5% of the screen height.",
                                 "#00e5ff", renderer.gameObject, () => {
-                                    Undo.RecordObject(renderer.gameObject, "Generate Culling LODGroup");
+                                    Undo.RecordObject(renderer.gameObject, "Add LOD Group");
                                     LODGroup lodGroup = renderer.gameObject.AddComponent<LODGroup>();
                                     LOD[] lods = new LOD[1];
                                     lods[0] = new LOD(0.05f, new Renderer[] { renderer });
@@ -5278,13 +5278,13 @@ namespace VixenTools.Editor
 
             if (actionableDiagnostics.Count == 0)
             {
-                EditorUtility.DisplayDialog("VIXEN SYSTEM", "No fixes selected or available.", "OK");
+                EditorUtility.DisplayDialog("VixForge World Engine", "No fixes selected or available.", "OK");
                 return;
             }
 
             if (actionableDiagnostics.Any(d => d.Category == "SHADERS & REPLACER") && _targetReplacementShader == null)
             {
-                 if (!EditorUtility.DisplayDialog("VIXEN SYSTEM WARNING", "You have selected shaders to replace, but have not set a REPLACEMENT SHADER TARGET. \n\nContinue anyway (skipping shader swaps)?", "CONTINUE", "ABORT")) return;
+                 if (!EditorUtility.DisplayDialog("VixForge World Engine", "You have selected shaders to replace, but have not set a REPLACEMENT SHADER TARGET. \n\nContinue anyway (skipping shader swaps)?", "CONTINUE", "ABORT")) return;
             }
             else if (!EditorUtility.DisplayDialog("Apply Fixes?", $"Applying {actionableDiagnostics.Count} specific fixes. This may take a moment to reimport assets.\n\nGo ahead?", "APPLY", "CANCEL")) return;
 
@@ -5299,7 +5299,7 @@ namespace VixenTools.Editor
                     }
                     catch (Exception ex)
                     {
-                        Debug.LogError($"[Vixen System] Fix execution failed for '{diag.IssueType}': {ex.Message}");
+                        Debug.LogError($"[VixForge] A fix failed for '{diag.IssueType}': {ex.Message}");
                     }
 
                     diag.FixPayload = null;
@@ -5319,7 +5319,7 @@ namespace VixenTools.Editor
                     }
                     catch (Exception ex)
                     {
-                        Debug.LogError($"[Vixen System] Moving the scene onto the converted materials failed: {ex.Message}");
+                        Debug.LogError($"[VixForge] Moving the scene onto the converted materials failed: {ex.Message}");
                     }
                 }
 

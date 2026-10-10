@@ -159,7 +159,7 @@ namespace VixenTools.Editor
                 RenderCoreModules);
 
             AddTab(TabSupportedModules, "Supported Modules", CatTools,
-                "The third-party systems the toolbox knows about and checks for you.",
+                "The third-party packages the toolbox knows about and checks for you.",
                 RenderSupportedModules);
 
 #if UDON
@@ -222,7 +222,7 @@ namespace VixenTools.Editor
             titleLabel.AddToClassList("hub-header-title");
 
             string sdkText = _sdkVersion != "Unknown" ? $" • VRCSDK {_sdkVersion}" : "";
-            var versionLabel = new Label($"v{_packageVersion}{sdkText} • System Online") { style = { color = new Color(0.6f, 0.6f, 0.6f) } };
+            var versionLabel = new Label($"v{_packageVersion}{sdkText}") { style = { color = new Color(0.6f, 0.6f, 0.6f) } };
 
             textContainer.Add(titleLabel);
             textContainer.Add(versionLabel);
