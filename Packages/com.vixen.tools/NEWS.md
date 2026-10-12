@@ -1,22 +1,28 @@
-# What's New In 2.18
+# What's New In 2.20
 
-**See what slows the editor down, find what a tool left in memory, and a safer ImageMagick.**
+**The Hub is a library now. One search box finds every page, every tool and every line in the guides.**
 
-## Scene View Enhancer
+## The Library
 
-Find it at `VixenTools/Unity Engine/Scene View Enhancer`. It caps the editor's frame rate while it is idle, through Unity's own Interaction Mode setting, and puts your old setting back when you turn it off. Its **Vixen Scene Stats** panel in the Scene view shows how often the view redraws and how much memory scripts, Unity and the graphics driver are using.
+Open it from `VixenTools/Hub Dashboard`. Every page sits on a shelf in the list on the left, and **Library** in the header shows or hides that list. The home page shows the release you have installed, a button for every tool, and a card for every page.
 
-## Memory Diagnostics
+## Search
 
-At `VixenTools/Unity Engine/Memory Diagnostics`. Take a snapshot, repeat the task you want to test a few times, then compare. Anything a tool made and never freed shows up in the list. **Largest Textures** shows what is using the most memory.
+Type in the search box, or press **Ctrl+F**. You get the matching tools, pages and lines from the guides and the changelog. Click a tool to open it, or a line to jump straight to it.
 
-## World Engine
+## Easier Reading
 
-The performance map is now a tab in the World Engine window instead of a window of its own. Several checks that newer ProTV, TXL, LTCGI and UdonSharp releases had quietly broken work again, and the compute score no longer counts baked reflection probes or cameras that draw nothing.
+A long page lists its sections under its name, so you can skip to the part you need. The changelog steps through releases with **Newer** and **Older**, and marks the one you have installed. Links to websites open in your browser.
 
-## Safer Images
+## Safer ImageMagick
 
-ImageMagick, which the toolbox uses to resize and build textures, is updated with 25 security fixes, and it now refuses file formats the toolbox never needs.
+ImageMagick only runs when the toolbox's security policy is in force. If it is not, the tools that need ImageMagick turn off and the Console says why.
+
+## Also New Since 2.18
+
+* **The World Engine understands VRC Light Volumes 3**, and the performance score counts it.
+* **Converting a material keeps the original.** **Fix** saves a converted copy and moves your scene onto it, and Ctrl+Z puts everything back.
+* **ImageMagick works in the Linux editor.**
 
 ***
 # Thank You For 3,500 Downloads

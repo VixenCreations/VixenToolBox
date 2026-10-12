@@ -388,10 +388,90 @@
                 </div>
             </div>
             <!-- FORGE:START -->
+            <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-10-11-vixens-toolbox-2-20-0-the-hub-is-a-libra">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-tag">Vixens Toolbox</span>
+                        <span class="news-date">October 11, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Vixens Toolbox 2.20.0: the Hub is a library now</h2>
+                    <p class="forge-intro"><em>The Hub kept growing: more guides, more tools, and a changelog dozens of releases long. Finding the line you half remembered meant opening page after page until you hit it. This release rebuilds the Hub as a library, with every page on a shelf, one search box for all of it, and pages that read like our website.</em></p>
+                    <h3 class="text-glow-cyan">The library</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Hub Dashboard</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Every page sits on a shelf in the list down the left: <strong>Start Here</strong>, <strong>Tools</strong>, <strong>Docs</strong> and <strong>About</strong>.</li>
+                        <li><strong>Library</strong> in the header shows or hides the list. In a narrow window the list slides over the page instead of squeezing it.</li>
+                        <li>A long page lists its sections under its name in the list. Click one to scroll straight to it.</li>
+                        <li>The Hub stays on its page when Unity recompiles, instead of jumping back to the first one.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Search</h3>
+                    <p class="forge-where">In the box at the top of the list.</p>
+                    <ul class="pledge-list">
+                        <li>Type to find a tool, a page, or a line in any guide or release. <strong>Ctrl+F</strong> jumps to the box.</li>
+                        <li>Tools come first, and clicking one opens it.</li>
+                        <li>Every line from a guide shows which page it is on. Click it to jump straight there, and a changelog line opens its release.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Home</h3>
+                    <p class="forge-where">At the top of the list.</p>
+                    <ul class="pledge-list">
+                        <li>The release you have installed, with <strong>What Changed</strong>, <strong>News</strong> and <strong>All Tools</strong> buttons.</li>
+                        <li><strong>Quick Launch</strong> buttons for your tools.</li>
+                        <li>A card for every page, shelf by shelf.</li>
+                        <li>Run our shaders too, and a little thank-you opens their <strong>Shader Hub</strong> in one click.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Changelog</h3>
+                    <p class="forge-where">On the <strong>Changelog</strong> page.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Newer</strong> and <strong>Older</strong> step one release at a time, and the picker jumps anywhere.</li>
+                        <li>The release you have installed is marked <strong>Installed</strong>, and the newest one <strong>Latest</strong>.</li>
+                        <li><strong>Added</strong>, <strong>Changed</strong> and <strong>Fixed</strong> each get a colour of their own.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Tool cards</h3>
+                    <p class="forge-where">On the <strong>All Tools</strong> page.</p>
+                    <ul class="pledge-list">
+                        <li>Every card says what its tool does and where it lives in the <strong>VixenTools</strong> menu.</li>
+                        <li><strong>Scene View Enhancer</strong>, <strong>Live Surface Snapping</strong> and <strong>Precision Click-to-Place</strong> show <strong>ON</strong> or <strong>OFF</strong>, and a click switches them.</li>
+                        <li><strong>Fix Scene Data</strong>, the <strong>Quest World Converter</strong>, <strong>Drop to Surface</strong> and the <strong>Omni-Chaos Generator</strong> have cards now.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">New pages, new names</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Supporters</strong>: every tier and the people backing it, the same wall as on our website.</li>
+                        <li><strong>Privacy &amp; Terms</strong>: what the toolbox does with your information (nothing leaves your computer), with links to the full Privacy Policy and Terms of Service. <strong>MIT License</strong> and <strong>Third Party Notices</strong> have pages of their own.</li>
+                        <li>"Core Modules" is now <strong>All Tools</strong>, "Supported Modules" is <strong>Supported Packages</strong>, "Network" is <strong>Links</strong>, and "Metrics Engine" is <strong>How The Score Works</strong>.</li>
+                        <li><strong>Supported Packages</strong> only shows in world projects now, next to <strong>How The Score Works</strong>.</li>
+                        <li>Links to websites open in your browser, and a link to another guide opens it in the Hub.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">The frame</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Hide Bars</strong> folds the header and the list away so the page gets the room.</li>
+                        <li><strong>Minimize</strong> shrinks the Hub to one bar, and <strong>Move</strong> docks it at the bottom of the editor, floats it along the bottom edge, or gives it a window of its own.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">A safer ImageMagick</h3>
+                    <ul class="pledge-list">
+                        <li>When Unity started several import workers at once, they could collide over ImageMagick's security policy, and the one that lost kept running with no policy at all.</li>
+                        <li>Import workers now leave ImageMagick off, because no toolbox tool runs in them.</li>
+                        <li>The editor checks that the policy really works before any tool uses ImageMagick. If it does not, those tools switch off and the Console says why.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Also in this release</h3>
+                    <ul class="pledge-list">
+                        <li>Tool windows use Unity's own font, and Badge Studio writes badge text in LiberationSans when your project has it.</li>
+                        <li>Plainer wording in dialogs, progress bars and Console messages.</li>
+                        <li>The toolbox's MIT licence and the ImageMagick licences ship with it.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Out now in the Creator Companion.</li>
+                        <li>If a page reads wrong, or search misses something you expected it to find, tell us in the Discord.</li>
+                    </ul>
+                </div>
+            </article>
+
             <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-10-10-halloween-looks-for-latex-ultra-toon-clo">
                 <div class="news-body">
                     <div class="news-meta">
-                        <span class="news-tag">Dev Notes</span>
+                        <span class="news-tag">Release Notes</span>
                         <span class="news-tag">Latex Ultra</span>
                         <span class="news-tag">Toon</span>
                         <span class="news-tag">Clothing Pro</span>
@@ -403,7 +483,6 @@
                     </div>
 
                     <h2 class="text-glow-cyan" style="margin-top: 0;">Halloween looks for Latex Ultra, Toon, Clothing Pro, Fur Pro, World Surface and World Fur: Hologram, Pearl hair, Haunting and more ways to dissolve.</h2>
-                    <p class="forge-status"><strong>Status:</strong> In development for the next update. Not out yet.</p>
                     <p class="forge-intro"><em>Spooky season needed more than one trick, so we built a few: turn into a flickering projection, give your hair a pearly shimmer, vanish when someone looks straight at you, or break into shards as you dissolve.</em></p>
                     <h3 class="text-glow-cyan">Hologram</h3>
                     <p class="forge-where">New group under <strong>SPECIAL EFFECTS</strong>.</p>
@@ -500,9 +579,9 @@
                     </ul>
                     <h3 class="text-glow-cyan">Where this is at</h3>
                     <ul class="pledge-list">
-                        <li>In development for the next update of Latex Ultra, Toon, Clothing Pro, Fur Pro, World Surface and World Fur, with the VixForge Editor.</li>
-                        <li>Not released yet, so names and defaults may still shift before it lands.</li>
-                        <li>Questions or ideas for more Halloween looks: ask here.</li>
+                        <li>Out now: Latex Ultra 5.6.0, Toon 2.6.0, Clothing Pro 2.6.0, Fur Pro 2.6.0, World Surface 1.4.0 and World Fur 1.4.0, each with VixForge Editor 2.7.0.</li>
+                        <li>The full notes are on the website's changelog page.</li>
+                        <li>Questions or ideas for more Halloween looks: ask in #suggestions.</li>
                     </ul>
                 </div>
             </article>

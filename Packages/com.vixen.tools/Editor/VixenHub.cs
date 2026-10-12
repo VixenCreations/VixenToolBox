@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
-using UnityEditor.UIElements;
+using UnityEngine.UIElements.Experimental;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -10,82 +10,146 @@ using System.Collections.Generic;
 
 namespace VixenTools.Editor
 {
-    public class VixenHub : EditorWindow
+    public partial class VixenHub : EditorWindow
     {
-        private const string PackageRoot = "Packages/com.vixencreations.vixens-toolbox/";
+        private const string PackageName = "com.vixencreations.vixens-toolbox";
+        private const string PackageRoot = "Packages/" + PackageName + "/";
         private const string UssPath = PackageRoot + "Editor/UiStyles/VixenHubStyles.uss";
-        private const string ChangelogFile = "CHANGELOG.md";
+        private const string ChangelogSuffix = "CHANGELOG.md";
+        private const string SiteRoot = "https://vixencreations.github.io/VixenToolBox/";
+        private const string WindowTitle = "VixForge Hub";
+        private const string BrandTitle = "<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> HUB";
+        private const string FindCommand = "Find";
 
+        private const string TabHome = "home";
         private const string TabNews = "news";
         private const string TabOverview = "overview";
         private const string TabCoreModules = "core-modules";
         private const string TabSupportedModules = "supported-modules";
         private const string TabMetrics = "metrics-engine";
-        private const string TabNetwork = "network";
-        private const string TabSupport = "support";
         private const string TabChangelogs = "changelogs";
+        private const string TabSupporters = "supporters";
+        private const string TabSupport = "support";
+        private const string TabNetwork = "network";
+        private const string TabPrivacy = "privacy";
+        private const string TabLicense = "license";
+        private const string TabThirdParty = "third-party";
 
         private const string CatStart = "Start Here";
         private const string CatTools = "Tools";
         private const string CatDocs = "Docs";
         private const string CatAbout = "About";
+        private const string CatMore = "More";
 
-        private static readonly string[] CategoryOrder = { CatStart, CatTools, CatDocs, CatAbout };
+        private static readonly string[] CategoryOrder = { CatStart, CatTools, CatDocs, CatAbout, CatMore };
 
-        private const int DropdownThreshold = 9;
+        private const string GroupUnity = "Unity Tools";
+        private const string GroupAvatar = "Avatar Tools";
+        private const string GroupWorld = "World Tools";
 
-        private class HubTab
+#if UDON
+        private static readonly bool WorldProject = true;
+#else
+        private static readonly bool WorldProject = false;
+#endif
+
+        private class DocMeta
         {
             public string Id;
             public string Title;
             public string Description;
             public string Category;
             public int Order;
-            public System.Action<VisualElement> Render;
-            public Button Button;
+            public bool WorldOnly;
         }
 
-        private class ChangelogEntry
+        private static readonly Dictionary<string, DocMeta> KnownDocs = new Dictionary<string, DocMeta>(System.StringComparer.OrdinalIgnoreCase)
         {
-            public string VersionTitle;
-            public string Content;
+            { "NEWS.md", new DocMeta { Id = TabNews, Title = "News", Category = CatStart, Order = 0, Description = "What's new in this version, and news from VixForge Interactive." } },
+            { "README.md", new DocMeta { Id = TabOverview, Title = "Overview", Category = CatStart, Order = 1, Description = "What is in the toolbox and what each part does." } },
+            { "CHANGELOG.md", new DocMeta { Id = TabChangelogs, Title = "Changelog", Category = CatDocs, Order = 20, Description = "Every release, and what it added, changed and fixed." } },
+            { "HOWITWORKS.md", new DocMeta { Id = TabMetrics, Title = "How The Score Works", Category = CatDocs, Order = 21, WorldOnly = true, Description = "How the World Engine's Performance Map works out its score." } },
+            { "SUPPORTERS.md", new DocMeta { Id = TabSupporters, Title = "Supporters", Category = CatAbout, Order = 30, Description = "Everyone backing the toolbox on Patreon and Ko-fi." } },
+            { "SUPPORT.md", new DocMeta { Id = TabSupport, Title = "Support", Category = CatAbout, Order = 31, Description = "The toolbox is free. If it saves you time, here is how to help keep it going." } },
+            { "LICENSE.md", new DocMeta { Id = TabLicense, Title = "MIT License", Category = CatAbout, Order = 34, Description = "The toolbox's own licence: free to use, change and share, as long as the copyright notice stays." } },
+            { "Third Party Notices.md", new DocMeta { Id = TabThirdParty, Title = "Third Party Notices", Category = CatAbout, Order = 35, Description = "Magick.NET, ImageMagick and the libraries built into them, with their licences." } },
+        };
+
+        private const string SupportedPackagesIntro =
+            "The **World Engine** checks each of these packages in your scene and fixes what it can. Click one to open its own page.";
+
+        private const string PrivacyMarkdown =
+            "## Your Privacy\n" +
+            "The toolbox runs inside Unity on your computer. It never connects to the internet, and it sends nothing to us or to anyone else.\n\n" +
+            "* **Settings** stay in Unity's editor preferences on this computer.\n" +
+            "* **Your Assets folder** only changes when you use a tool. ImageMagick keeps its settings file in your project's Library folder.\n" +
+            "* **Buttons and links** in the Hub that point to our website, Discord or stores open them in your web browser.\n\n" +
+            "## The Full Details\n" +
+            "Our Privacy Policy covers the toolbox, our shaders, VixForge Camera Pro, our Discord server and its bot, and our memberships. Our Terms of Service are the rules for using all of them.\n";
+
+        private class HubPage
+        {
+            public string Id;
+            public string Title;
+            public string Description;
+            public string Category;
+            public int Order;
+            public string FileName;
+            public System.Action<VisualElement> Render;
+            public System.Func<string> Source;
+            public VisualElement NavItem;
         }
 
-        private readonly List<HubTab> _tabs = new List<HubTab>();
-        private List<HubTab> _dropdownOrder;
-        private DropdownField _tabDropdown;
-        private string _pendingTabId;
+        private class HubAction
+        {
+            public string Group;
+            public string Title;
+            public string Description;
+            public string Where;
+            public System.Action Run;
+            public System.Func<bool> IsOn;
+        }
 
-        private List<ChangelogEntry> _changelogEntries = new List<ChangelogEntry>();
-        private int _selectedChangelogIndex = 0;
+        private readonly List<HubPage> _pages = new List<HubPage>();
+        private HubPage _activePage;
+        [SerializeField] private string _activePageId;
+        private string _pendingPageId;
 
         private string _packageVersion = "Unknown";
         private string _sdkVersion = "Unknown";
 
-        private Label _tabDescription;
+        private Label _pageCrumb;
+        private Label _pageTitle;
+        private Label _pageDescription;
         private ScrollView _contentScroll;
         private VisualElement _contentContainer;
+
+        private static readonly Regex CommentLine = new Regex(@"^[ \t]*<!--.*?-->[ \t]*\r?\n?", RegexOptions.Multiline);
+        private static readonly Regex VersionField = new Regex(@"""version""\s*:\s*""([^""]+)""");
 
         [MenuItem("VixenTools/Hub Dashboard")]
         public static void ShowWindow()
         {
-            var window = GetWindow<VixenHub>("VixForge Hub");
-            window.minSize = new Vector2(450, 600);
-            window.Show();
+            OpenHub();
         }
 
         public static void ShowChangelogWindow()
         {
-            var window = GetWindow<VixenHub>("VixForge Hub");
-            window.minSize = new Vector2(450, 600);
-            window.Show();
-
-            window.OpenTab(TabChangelogs);
+            OpenHub().OpenTab(TabChangelogs);
         }
 
         public void OpenChangelogTab()
         {
             OpenTab(TabChangelogs);
+        }
+
+        private static VixenHub OpenHub()
+        {
+            var window = GetWindow<VixenHub>(WindowTitle);
+            if (window._minimized) window.SetMinimized(false);
+            else if (window.minSize.x < NormalMinSize.x) window.minSize = NormalMinSize;
+            window.Show();
+            return window;
         }
 
         public void OpenTab(string id)
@@ -94,28 +158,35 @@ namespace VixenTools.Editor
 
             if (_contentContainer == null)
             {
-                _pendingTabId = id;
+                _pendingPageId = id;
                 return;
             }
 
-            SelectTab(id);
+            if (_minimized) SetMinimized(false);
+            ClearSearch();
+            ShowPage(FindPage(id));
             Repaint();
         }
 
         private void OnEnable()
         {
             LoadVersionData();
-            BuildTabs();
+            BuildPages();
+        }
+
+        private static string PackageDirectory()
+        {
+            var info = UnityEditor.PackageManager.PackageInfo.FindForAssetPath(PackageRoot + "package.json");
+            if (info != null && !string.IsNullOrEmpty(info.resolvedPath)) return info.resolvedPath;
+            return Path.GetFullPath(PackageRoot);
         }
 
         private void LoadVersionData()
         {
-            string path = Path.GetFullPath(PackageRoot + "package.json");
+            string path = Path.Combine(PackageDirectory(), "package.json");
             if (File.Exists(path))
             {
-                string json = File.ReadAllText(path);
-
-                Match vMatch = Regex.Match(json, @"""version""\s*:\s*""([^""]+)""");
+                Match vMatch = VersionField.Match(File.ReadAllText(path));
                 if (vMatch.Success) _packageVersion = vMatch.Groups[1].Value;
             }
 
@@ -133,7 +204,7 @@ namespace VixenTools.Editor
                     string sdkPath = Path.GetFullPath($"Packages/{packageId}/package.json");
                     if (!File.Exists(sdkPath)) continue;
 
-                    Match match = Regex.Match(File.ReadAllText(sdkPath), @"""version""\s*:\s*""([^""]+)""");
+                    Match match = VersionField.Match(File.ReadAllText(sdkPath));
                     if (match.Success) return match.Groups[1].Value;
                 }
                 catch { }
@@ -142,67 +213,125 @@ namespace VixenTools.Editor
             return "Unknown";
         }
 
-        private void BuildTabs()
+        private static List<string> DiscoverDocs()
         {
-            _tabs.Clear();
+            var files = new List<string>();
+            try
+            {
+                string dir = PackageDirectory();
+                if (Directory.Exists(dir))
+                {
+                    foreach (string full in Directory.GetFiles(dir, "*.md", SearchOption.TopDirectoryOnly))
+                        files.Add(Path.GetFileName(full));
+                }
+            }
+            catch { }
 
-            AddTab(TabNews, "News", CatStart,
-                "Latest ecosystem news, partnerships, and announcements from <b>VixForge Interactive</b>.",
-                c => ParseMarkdownAndInject(LoadMarkdownFile("NEWS.md"), c));
-
-            AddTab(TabOverview, "Overview", CatStart,
-                "What is in the toolbox and what each part does, straight from the package README.",
-                c => ParseMarkdownAndInject(LoadMarkdownFile("README.md"), c));
-
-            AddTab(TabCoreModules, "Core Modules", CatTools,
-                "Every tool in the box, opened from here.",
-                RenderCoreModules);
-
-            AddTab(TabSupportedModules, "Supported Modules", CatTools,
-                "The third-party packages the toolbox knows about and checks for you.",
-                RenderSupportedModules);
-
-#if UDON
-            AddTab(TabMetrics, "Metrics Engine", CatDocs,
-                "How the World Profiler works out the score it gives your scene.",
-                c => ParseMarkdownAndInject(LoadMarkdownFile("HOWITWORKS.md"), c));
-#endif
-
-            AddTab(TabNetwork, "Network", CatAbout,
-                "The repo, the Discord, issue tracker and YouTube channel.",
-                RenderNetwork);
-
-            AddTab(TabSupport, "Support", CatAbout,
-                "These tools take a lot of R&D. If they save your sanity, consider fueling the engine.",
-                RenderSupport);
-
-            AddTab(TabChangelogs, "Changelogs", CatDocs,
-                "Review version history, upgrades and fixes.",
-                RenderChangelog);
+            if (files.Count == 0) files.AddRange(KnownDocs.Keys);
+            return files;
         }
 
-        private void AddTab(string id, string title, string category, string description, System.Action<VisualElement> render)
+        private void BuildPages()
         {
-            _tabs.Add(new HubTab
+            _pages.Clear();
+            _searchIndex = null;
+            _changelogEntries.Clear();
+
+            AddPage(TabHome, "Home", null, 0, "Every page and every tool in the toolbox, in one place.", RenderHome, null);
+
+            foreach (string file in DiscoverDocs())
+            {
+                KnownDocs.TryGetValue(file, out DocMeta meta);
+                if (meta != null && meta.WorldOnly && !WorldProject) continue;
+
+                string captured = file;
+                bool changelog = file.EndsWith(ChangelogSuffix, System.StringComparison.OrdinalIgnoreCase);
+                string pretty = PrettifyDocName(file);
+
+                var page = new HubPage
+                {
+                    Id = meta != null ? meta.Id : file.ToLowerInvariant(),
+                    Title = meta != null ? meta.Title : pretty,
+                    Description = meta != null ? meta.Description : $"{pretty}, from the toolbox's own files.",
+                    Category = meta != null ? meta.Category : (changelog ? CatDocs : CatMore),
+                    Order = meta != null ? meta.Order : 100,
+                    FileName = file,
+                    Source = () => LoadMarkdownFile(captured)
+                };
+
+                if (changelog) page.Render = c => RenderChangelog(captured, c);
+                else if (page.Id == TabSupporters) page.Render = c => RenderSupporters(captured, c);
+                else if (page.Id == TabSupport) page.Render = c => RenderSupport(captured, c);
+                else page.Render = c => RenderDocument(captured, c);
+
+                _pages.Add(page);
+            }
+
+            AddPage(TabCoreModules, "All Tools", CatTools, 10,
+                "Every tool in the toolbox, one click away.",
+                RenderTools, null);
+
+            if (WorldProject)
+            {
+                AddPage(TabSupportedModules, "Supported Packages", CatTools, 11,
+                    "The third-party packages the World Engine knows and checks for you.",
+                    RenderSupportedPackages, () => SupportedPackagesIntro);
+            }
+
+            AddPage(TabNetwork, "Links", CatAbout, 32,
+                "Our website, the source code, the Discord, and where to report a problem.",
+                RenderLinks, null);
+
+            AddPage(TabPrivacy, "Privacy & Terms", CatAbout, 33,
+                "What the toolbox does with your information, and the rules for using it.",
+                RenderPrivacy, () => PrivacyMarkdown);
+
+            _pages.Sort((a, b) =>
+            {
+                int ca = CategoryRank(a.Category), cb = CategoryRank(b.Category);
+                if (ca != cb) return ca.CompareTo(cb);
+                if (a.Order != b.Order) return a.Order.CompareTo(b.Order);
+                return string.Compare(a.Title, b.Title, System.StringComparison.OrdinalIgnoreCase);
+            });
+        }
+
+        private void AddPage(string id, string title, string category, int order, string description, System.Action<VisualElement> render, System.Func<string> source)
+        {
+            _pages.Add(new HubPage
             {
                 Id = id,
                 Title = title,
                 Category = category,
                 Description = description,
-                Order = _tabs.Count,
-                Render = render
+                Order = order,
+                Render = render,
+                Source = source
             });
         }
 
         private static int CategoryRank(string category)
         {
+            if (category == null) return -1;
             int i = System.Array.IndexOf(CategoryOrder, category);
             return i < 0 ? CategoryOrder.Length : i;
         }
 
-        private static string DropdownLabel(HubTab tab)
+        private HubPage FindPage(string id)
         {
-            return $"{tab.Category}  /  {tab.Title}";
+            if (string.IsNullOrEmpty(id)) return null;
+            return _pages.FirstOrDefault(p => p.Id == id);
+        }
+
+        private static string PrettifyDocName(string fileName)
+        {
+            string raw = Path.GetFileNameWithoutExtension(fileName).Replace('_', ' ').Replace('-', ' ');
+            string[] words = raw.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < words.Length; i++)
+            {
+                string w = words[i];
+                words[i] = char.ToUpperInvariant(w[0]) + (w.Length > 1 ? w.Substring(1).ToLowerInvariant() : "");
+            }
+            return words.Length > 0 ? string.Join(" ", words) : fileName;
         }
 
         private void CreateGUI()
@@ -213,557 +342,417 @@ namespace VixenTools.Editor
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath);
             if (styleSheet != null) root.styleSheets.Add(styleSheet);
 
-            var headerRect = new VisualElement { name = "hub-header" };
-            var textContainer = new VisualElement();
-            textContainer.AddToClassList("hub-header-text-container");
-            textContainer.style.height = 120;
+            if (_pages.Count == 0) BuildPages();
 
-            var titleLabel = new Label("<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color> HUB") { enableRichText = true };
-            titleLabel.AddToClassList("hub-header-title");
+            VisualElement header = BuildHeader();
+            root.Add(header);
+            SetUpFrame(root, header);
 
-            string sdkText = _sdkVersion != "Unknown" ? $" • VRCSDK {_sdkVersion}" : "";
-            var versionLabel = new Label($"v{_packageVersion}{sdkText}") { style = { color = new Color(0.6f, 0.6f, 0.6f) } };
+            var body = new VisualElement { name = "hub-body" };
+            body.Add(BuildReader());
+            body.Add(BuildSidebar());
+            root.Add(body);
 
-            textContainer.Add(titleLabel);
-            textContainer.Add(versionLabel);
-            headerRect.Add(textContainer);
-            root.Add(headerRect);
+            HookShortcuts(root);
 
-            if (_tabs.Count == 0) BuildTabs();
+            HubPage initial = FindPage(_pendingPageId) ?? FindPage(_activePageId) ?? _pages.FirstOrDefault();
+            _pendingPageId = null;
+            ShowPage(initial);
 
-            var tabContainer = new VisualElement { name = "tab-container" };
-            if (_tabs.Count >= DropdownThreshold) BuildTabDropdown(tabContainer);
-            else BuildTabButtons(tabContainer);
-            root.Add(tabContainer);
+            ApplyFrame();
+        }
 
-            var descContainer = new VisualElement { name = "desc-container" };
-            _tabDescription = new Label() { enableRichText = true };
-            _tabDescription.AddToClassList("tab-desc-label");
-            descContainer.Add(_tabDescription);
-            root.Add(descContainer);
+        private VisualElement BuildHeader()
+        {
+            var header = new VisualElement { name = "hub-header" };
+
+            var library = new Button(ToggleSidebar) { text = "Library", tooltip = SidebarTip };
+            library.AddToClassList("hub-frame-btn");
+            library.AddToClassList("hub-library-btn");
+            header.Add(library);
+
+            var brand = new VisualElement();
+            brand.AddToClassList("hub-brand");
+
+            var title = new Label(BrandTitle) { enableRichText = true };
+            title.AddToClassList("hub-header-title");
+            brand.Add(title);
+            brand.Add(Chip("v" + _packageVersion));
+            if (_sdkVersion != "Unknown") brand.Add(Chip("VRChat SDK " + _sdkVersion, "hub-chip--sdk"));
+
+            header.Add(brand);
+            return header;
+        }
+
+        private VisualElement BuildReader()
+        {
+            var reader = new VisualElement { name = "hub-reader" };
+            reader.RegisterCallback<PointerDownEvent>(_ => CloseDrawer());
 
             _contentScroll = new ScrollView(ScrollViewMode.Vertical) { name = "main-scroll" };
-            _contentScroll.style.flexGrow = 1;
-            _contentScroll.style.flexShrink = 1;
+            _contentScroll.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
+            _contentScroll.RegisterCallback<PointerUpLinkTagEvent>(OnLinkClicked);
 
-            _contentContainer = new VisualElement();
-            _contentContainer.style.flexShrink = 1;
-            _contentContainer.style.flexGrow = 1;
-            _contentContainer.style.paddingBottom = 40;
+            var head = new VisualElement { name = "hub-page-head" };
+            _pageCrumb = new Label();
+            _pageCrumb.AddToClassList("hub-page-crumb");
+            _pageTitle = new Label { enableRichText = true };
+            _pageTitle.AddToClassList("hub-page-title");
+            _pageDescription = new Label();
+            _pageDescription.AddToClassList("hub-page-desc");
+            head.Add(_pageCrumb);
+            head.Add(_pageTitle);
+            head.Add(_pageDescription);
 
+            _contentContainer = new VisualElement { name = "hub-page-body" };
+
+            _contentScroll.Add(head);
             _contentScroll.Add(_contentContainer);
-            root.Add(_contentScroll);
-
-            HubTab initial = _tabs.FirstOrDefault(t => t.Id == _pendingTabId) ?? _tabs.FirstOrDefault();
-            _pendingTabId = null;
-            if (initial != null) SwitchMode(initial);
+            reader.Add(_contentScroll);
+            return reader;
         }
 
-        private void BuildTabButtons(VisualElement container)
+        private static Label Chip(string text, string extraClass = null)
         {
-            container.style.flexWrap = Wrap.Wrap;
-            container.style.flexDirection = FlexDirection.Row;
-
-            foreach (HubTab tab in _tabs)
-            {
-                HubTab captured = tab;
-                captured.Button = new Button(() => SwitchMode(captured)) { text = captured.Title };
-                captured.Button.AddToClassList("tab-btn");
-                container.Add(captured.Button);
-            }
+            var chip = new Label(text);
+            chip.AddToClassList("hub-chip");
+            if (extraClass != null) chip.AddToClassList(extraClass);
+            return chip;
         }
 
-        private void BuildTabDropdown(VisualElement container)
+        private void SetPageHead(string crumb, string title, string description)
         {
-            _dropdownOrder = new List<HubTab>(_tabs);
-            _dropdownOrder.Sort((a, b) =>
-            {
-                int ca = CategoryRank(a.Category), cb = CategoryRank(b.Category);
-                if (ca != cb) return ca.CompareTo(cb);
-                return a.Order.CompareTo(b.Order);
-            });
-
-            container.style.flexDirection = FlexDirection.Row;
-
-            _tabDropdown = new DropdownField();
-            _tabDropdown.choices = _dropdownOrder.Select(DropdownLabel).ToList();
-            _tabDropdown.AddToClassList("doc-dropdown");
-            _tabDropdown.style.flexGrow = 1;
-            _tabDropdown.RegisterValueChangedCallback(evt =>
-            {
-                int i = _tabDropdown.choices.IndexOf(evt.newValue);
-                if (i >= 0 && i < _dropdownOrder.Count) SwitchMode(_dropdownOrder[i]);
-            });
-            container.Add(_tabDropdown);
+            _pageCrumb.text = (crumb ?? "").ToUpperInvariant();
+            _pageTitle.text = title ?? "";
+            _pageDescription.text = description ?? "";
+            _pageDescription.EnableInClassList("hub-hidden", string.IsNullOrEmpty(description));
         }
 
-        private void SyncDropdown(HubTab tab)
+        private void ShowPage(HubPage page, string anchor = null)
         {
-            if (_tabDropdown == null || _dropdownOrder == null) return;
-            int i = _dropdownOrder.IndexOf(tab);
-            if (i >= 0 && _tabDropdown.index != i) _tabDropdown.SetValueWithoutNotify(_tabDropdown.choices[i]);
-        }
+            if (page == null || _contentContainer == null) return;
 
-        private void SelectTab(string id)
-        {
-            HubTab tab = _tabs.FirstOrDefault(t => t.Id == id);
-            if (tab != null) SwitchMode(tab);
-        }
+            bool samePage = _activePage == page && !_searching;
+            _activePage = page;
+            _activePageId = page.Id;
+            _searching = false;
 
-        private void SwitchMode(HubTab tab)
-        {
-            if (tab == null || _contentContainer == null) return;
+            SetPageHead(page.Category ?? "Vixens Toolbox", page.Title, page.Description);
 
-            SyncDropdown(tab);
-
-            foreach (HubTab t in _tabs)
-            {
-                if (t.Button == null) continue;
-                t.Button.RemoveFromClassList("tab-btn-active");
-                t.Button.AddToClassList("tab-btn-inactive");
-            }
-
-            if (tab.Button != null)
-            {
-                tab.Button.RemoveFromClassList("tab-btn-inactive");
-                tab.Button.AddToClassList("tab-btn-active");
-            }
-
-            _tabDescription.text = tab.Description;
+            _headings.Clear();
             _contentContainer.Clear();
-            tab.Render(_contentContainer);
+            page.Render(_contentContainer);
+
+            RefreshNav();
+            if (!samePage) _contentScroll.scrollOffset = Vector2.zero;
+            if (!string.IsNullOrEmpty(anchor)) ScrollToHeading(anchor);
+
+            UpdateCompactLocation();
+            CloseDrawer();
         }
 
-        private string LoadMarkdownFile(string fileName)
+        private void RenderDocument(string fileName, VisualElement container)
         {
-            string path = PackageRoot + fileName;
-            TextAsset asset = AssetDatabase.LoadAssetAtPath<TextAsset>(path);
-            if (asset != null) return asset.text;
-
-            string fullPath = Path.GetFullPath(path);
-            if (File.Exists(fullPath)) return File.ReadAllText(fullPath);
-
-            return $"### Error: File Not Found\nCould not locate `{fileName}` at `{PackageRoot}`. Ensure the VPM package is installed correctly.";
+            string text = LoadMarkdownFile(fileName);
+            string title = TakeLeadingTitle(ref text);
+            if (title != null) _pageTitle.text = FormatInline(title);
+            RenderMarkdown(text, container);
         }
 
-        private void ParseChangelogData()
+        private void RenderSupport(string fileName, VisualElement container)
         {
-            _changelogEntries.Clear();
-            string rawText = LoadMarkdownFile(ChangelogFile);
-            string[] lines = rawText.Split('\n');
+            RenderDocument(fileName, container);
 
-            ChangelogEntry currentEntry = null;
-
-            foreach (string rawLine in lines)
+            RenderActionGrid(container, "Memberships", new List<HubAction>
             {
-                string line = rawLine.TrimEnd();
-
-                if (line.StartsWith("## ["))
-                {
-                    currentEntry = new ChangelogEntry
-                    {
-                        VersionTitle = line.Replace("## ", "").Trim(),
-                        Content = ""
-                    };
-                    _changelogEntries.Add(currentEntry);
-                }
-                else if (currentEntry != null)
-                {
-                    currentEntry.Content += line + "\n";
-                }
-            }
-        }
-
-        private void RenderChangelog(VisualElement container)
-        {
-            if (_changelogEntries.Count == 0) ParseChangelogData();
-
-            if (_changelogEntries.Count == 0)
-            {
-                ParseMarkdownAndInject($"### Error\nCould not parse changelog versions from `{ChangelogFile}`.", container);
-                return;
-            }
-
-            var controlRow = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 15, marginTop = 10, paddingLeft = 5, paddingRight = 5 } };
-
-            var dropLabel = new Label("Target Release:") { style = { color = new Color(0.67f, 0.67f, 0.67f), marginRight = 10, fontSize = 14 } };
-            controlRow.Add(dropLabel);
-
-            List<string> versionNames = new List<string>();
-            foreach (var log in _changelogEntries) versionNames.Add(log.VersionTitle);
-
-            if (_selectedChangelogIndex < 0 || _selectedChangelogIndex >= versionNames.Count) _selectedChangelogIndex = 0;
-
-            var dropdown = new DropdownField(versionNames, _selectedChangelogIndex);
-            dropdown.style.flexGrow = 1;
-            dropdown.style.backgroundColor = new Color(0.12f, 0.12f, 0.12f);
-            dropdown.style.borderTopColor = new Color(0f, 0.898f, 1f, 0.4f);
-            dropdown.style.borderBottomColor = new Color(0f, 0.898f, 1f, 0.4f);
-            dropdown.style.borderLeftColor = new Color(0f, 0.898f, 1f, 0.4f);
-            dropdown.style.borderRightColor = new Color(0f, 0.898f, 1f, 0.4f);
-            dropdown.style.color = new Color(0.9f, 0.9f, 0.9f);
-
-            var logContentContainer = new VisualElement();
-
-            dropdown.RegisterValueChangedCallback(e =>
-            {
-                int index = versionNames.IndexOf(e.newValue);
-                if (index < 0) return;
-                _selectedChangelogIndex = index;
-                logContentContainer.Clear();
-                ParseMarkdownAndInject(_changelogEntries[index].Content, logContentContainer);
+                WebLink(null, "Every Tier", SiteRoot + "support.html", "What each membership includes, on our website."),
+                PageLink(null, "Supporters", TabSupporters, "The people already on the wall.")
             });
-
-            controlRow.Add(dropdown);
-            container.Add(controlRow);
-
-            var sep = new VisualElement();
-            sep.AddToClassList("md-separator");
-            sep.style.backgroundColor = new Color(0f, 0.9f, 1f, 0.3f);
-            container.Add(sep);
-
-            container.Add(logContentContainer);
-
-            ParseMarkdownAndInject(_changelogEntries[_selectedChangelogIndex].Content, logContentContainer);
         }
 
-        private void RenderCoreModules(VisualElement container)
+        private void RenderPrivacy(VisualElement container)
         {
-            var universalList = new List<(System.Action action, string title, string desc)>
-            {
-                (() => EditorApplication.ExecuteMenuItem("VixenTools/Unity Engine/Animation Workbench Pro"), "Animation Workbench Pro", "A visual workspace for building and easing animation curves."),
-                (() => EditorApplication.ExecuteMenuItem("VixenTools/Unity Engine/Pipeline Preset Manager"), "Pipeline Preset Manager", "Pulls import settings out of your assets, or creates a preset from scratch."),
-                (() =>
-                {
-                    VixenSceneViewEnhancer.SetEnabled(!VixenSceneViewEnhancer.IsEnabled);
-                    SelectTab(TabCoreModules);
-                },
-                VixenSceneViewEnhancer.IsEnabled
-                    ? "<color=#00e5ff>Scene View Enhancer [ ACTIVE ]</color>"
-                    : "Scene View Enhancer [ OFF ]",
-                "Caps the editor frame rate and adds a Scene view panel showing redraws and memory, so you can see what slows the editor down."),
-                (() => VixenMemoryDiagnostics.Open(), "Memory Diagnostics", "Finds what a tool left behind in memory, and lists the textures using the most of it.")
-            };
+            RenderMarkdown(PrivacyMarkdown, container);
 
-            RenderActionGrid(container, "Universal Utilities", "#00e5ff", universalList);
+            RenderActionGrid(container, "Read More", new List<HubAction>
+            {
+                WebLink(null, "Privacy Policy", SiteRoot + "privacy.html", "What our website, tools, shaders, Discord server and bot do with your information."),
+                WebLink(null, "Terms of Service", SiteRoot + "terms.html", "The rules for using our website, products, Discord server and memberships."),
+                PageLink(null, "MIT License", TabLicense, "The toolbox's own licence, right here in the Hub."),
+                PageLink(null, "Third Party Notices", TabThirdParty, "The licences of the parts of the toolbox we didn't write.")
+            });
+        }
+
+        private void RenderTools(VisualElement container)
+        {
+            foreach (IGrouping<string, HubAction> group in ToolActions().GroupBy(a => a.Group))
+                RenderActionGrid(container, group.Key, group.ToList());
+        }
+
+        private void RenderSupportedPackages(VisualElement container)
+        {
+            RenderMarkdown(SupportedPackagesIntro, container);
+            RenderActionGrid(container, "Supported Packages", PackageActions());
+        }
+
+        private void RenderLinks(VisualElement container)
+        {
+            RenderActionGrid(container, null, LinkActions());
+        }
+
+        private List<HubAction> ToolActions()
+        {
+            var list = new List<HubAction>
+            {
+                MenuTool(GroupUnity, "Animation Workbench Pro", "VixenTools/Unity Engine/Animation Workbench Pro", "Build and ease animation curves, with a live preview on your scene object."),
+                MenuTool(GroupUnity, "Pipeline Preset Manager", "VixenTools/Unity Engine/Pipeline Preset Manager", "Turns import settings into presets, and can make one the default for everything you import next."),
+                new HubAction
+                {
+                    Group = GroupUnity,
+                    Title = "Scene View Enhancer",
+                    Where = VixenSceneViewEnhancer.MenuPath,
+                    Description = "Caps the editor's frame rate while it's idle, and adds a Scene view panel showing redraws and memory.",
+                    Run = () => VixenSceneViewEnhancer.SetEnabled(!VixenSceneViewEnhancer.IsEnabled),
+                    IsOn = () => VixenSceneViewEnhancer.IsEnabled
+                },
+                new HubAction
+                {
+                    Group = GroupUnity,
+                    Title = "Memory Diagnostics",
+                    Where = VixenMemoryDiagnostics.MenuPath,
+                    Description = "Shows which textures, materials and meshes a tool made and never freed.",
+                    Run = VixenMemoryDiagnostics.Open
+                },
+                MenuTool(GroupUnity, "Fix Scene Data", "VixenTools/Unity Engine/Fix Scene Data", "Reattaches a scene's lighting data when it has gone missing.")
+            };
 #if !UDON
-            var avatarList = new List<(System.Action action, string title, string desc)>
-            {
-                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Badge Studio"), "Badge Studio", "Builds VRChat convention badges for you, ready to wear."),
-                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Quest Conversion Engine"), "Quest Conversion Engine", "Makes a Quest copy of your avatar without touching the original, checked against every Android limit."),
-                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/PhysBone Blueprints"), "PhysBone Blueprints", "Saves every PhysBone setup on an avatar as a blueprint, then puts it back on another one."),
-                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Animator Forge"), "Animator Forge", "Diagnoses broken animators (missing params, mixed Write Defaults, menu desync) and forges fully-rigged toggles, sliders, swaps, and exclusive groups."),
-                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Material Conflict Finder"), "Material Conflict Finder", "Finds materials that disagree on a shader setting, leftover keywords, and toggles your animations or VRCFury fight over, then syncs them for you."),
-                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Accessory Engine"), "Accessory Mounting Engine", "Clones a clean armature and mounts accessories onto it, either by re-rigging them or with parent constraints."),
-                (() => EditorApplication.ExecuteMenuItem("VixenTools/Avatars/Optimization Suite"), "Optimization Suite", "Checks your avatar against VRChat limits, then shrinks meshes and textures to fit.")
-            };
-
-            RenderActionGrid(container, "Avatar Tools", "#ff00aa", avatarList);
-#elif UDON
-            bool isSnapActive = EditorPrefs.GetBool("VixenTools/Scene/Live Surface Snapping", false);
-            string snapTitle = isSnapActive
-                ? "<color=#00e5ff>Live Surface Snapping [ ACTIVE ]</color>"
-                : "Live Surface Snapping [ OFF ]";
-
-            bool isPrecisionActive = EditorPrefs.GetBool("VixenTools/Scene/Precision Click-to-Place", false);
-            string precisionTitle = isPrecisionActive
-                ? "<color=#00e5ff>Precision Click-to-Place [ ACTIVE ]</color>"
-                : "Precision Click-to-Place [ OFF ]";
-
-            var worldList = new List<(System.Action action, string title, string desc)>
-            {
-                (() =>
-                {
-                    EditorApplication.ExecuteMenuItem("VixenTools/Scene/Live Surface Snapping");
-                    SelectTab(TabCoreModules);
-                },
-                snapTitle,
-                "Enterprise-grade gravity snapper. Automatically drops selected objects to the nearest floor or shelf when moved."),
-
-                (() =>
-                {
-                    EditorApplication.ExecuteMenuItem("VixenTools/Scene/Precision Click-to-Place");
-                    SelectTab(TabCoreModules);
-                },
-                precisionTitle,
-                "Sniper-rifle camera raycaster. Click anywhere in the Scene View to instantly teleport objects to complex shelf polygons."),
-
-                (() =>
-                {
-                    EditorApplication.ExecuteMenuItem("VixenTools/Scene/Vixen World Engine");
-                    SelectTab(TabCoreModules);
-                },
-                "<color=#00e5ff>Vixen World Engine</color>",
-                "Audits your whole world: ProTV, TXL, IwaSync3, video players, Udon persistence and shader swaps.")
-            };
-
-            RenderActionGrid(container, "WORLD TOOLS", "#ff00aa", worldList);
+            list.Add(MenuTool(GroupAvatar, "Optimization Suite", "VixenTools/Avatars/Optimization Suite", "Checks your avatar against VRChat's limits, then shrinks meshes and textures to fit."));
+            list.Add(MenuTool(GroupAvatar, "Quest Conversion Engine", "VixenTools/Avatars/Quest Conversion Engine", "Makes a Quest copy of your avatar and leaves the original alone."));
+            list.Add(MenuTool(GroupAvatar, "Animator Forge", "VixenTools/Avatars/Animator Forge", "Finds problems in your animator, and builds toggles, sliders, swaps and exclusive groups for you."));
+            list.Add(MenuTool(GroupAvatar, "Material Conflict Finder", "VixenTools/Avatars/Material Conflict Finder", "Finds materials whose toggles disagree and keywords left switched on, then settles them."));
+            list.Add(MenuTool(GroupAvatar, "PhysBone Blueprints", "VixenTools/Avatars/PhysBone Blueprints", "Saves an avatar's PhysBones and puts them back on another one."));
+            list.Add(MenuTool(GroupAvatar, "Accessory Mounting Engine", "VixenTools/Avatars/Accessory Engine", "Mounts accessories onto a clean copy of your armature."));
+            list.Add(MenuTool(GroupAvatar, "Badge Studio", "VixenTools/Avatars/Badge Studio", "Builds VRChat convention badges, Furality included."));
+#else
+            list.Add(MenuTool(GroupWorld, "Vixen World Engine", "VixenTools/Scene/Vixen World Engine", "Runs more than 160 checks on your world and fixes the ones you tick."));
+            list.Add(MenuTool(GroupWorld, "Quest World Converter", "VixenTools/Scene/Quest World Converter", "Makes Quest copies of your world's materials and leaves the originals alone."));
+            list.Add(MenuToggle(GroupWorld, "Live Surface Snapping", "VixenTools/Scene/Live Surface Snapping", "Drops selected objects onto the floor or shelf below them as you move them."));
+            list.Add(MenuToggle(GroupWorld, "Precision Click-to-Place", "VixenTools/Scene/Precision Click-to-Place", "Click in the Scene view to move the selection onto that surface."));
+            list.Add(MenuTool(GroupWorld, "Drop to Surface", "VixenTools/Scene/Drop to Surface", "Drops the selected objects onto the surface below them, once. Shortcut: Ctrl+Alt+S."));
+            list.Add(MenuTool(GroupWorld, "Omni-Chaos Generator", "VixenTools/QA/Generate Omni-Chaos Environment", "Builds a test scene full of deliberate problems for the World Engine to catch."));
 #endif
+            return list;
         }
 
-        private void RenderSupportedModules(VisualElement container)
+        private List<HubAction> PackageActions()
         {
-            string markdown = @"
-The **World Engine** checks each of these packages in your scene and fixes what it can. Click a card to open the package's own page.
-";
-            ParseMarkdownAndInject(markdown, container);
-
-            var list = new List<(System.Action action, string title, string desc)>
+            const string g = "Supported Packages";
+            return new List<HubAction>
             {
-                (() => Application.OpenURL("https://protv.dev/"),
-                    "ProTV (Techanon)",
-                    "Checks screens, speakers and the AudioLink link, Quest fallbacks, global video textures, and heavy UI or queue settings."),
-
-                (() => Application.OpenURL("https://github.com/llealloo/audiolink"),
-                    "AudioLink",
-                    "Finds a missing or doubled AudioLink, video players and materials that are not linked to it, and a setting that stalls Quest."),
-
-                (() => Application.OpenURL("https://ltcgi.dev/"),
-                    "LTCGI",
-                    "Finds screens with no video texture, old screen data that needs a rebuild, a stuck bake, and AudioLink screens with no AudioLink."),
-
-                (() => Application.OpenURL("https://xtlcdn.github.io/VizVid/"),
-                    "VizVid (VVMW)",
-                    "Checks player and UI handlers, the rate limit resolver, Quest fallbacks, 2D audio bleed and the AudioLink link."),
-
-                (() => Application.OpenURL("https://github.com/vrctxl/VideoTXL"),
-                    "Video TXL",
-                    "Checks screen render textures, the queue and access settings, the AudioLink link, audio zones, portals, chairs and material swappers."),
-
-                (() => Application.OpenURL("https://booth.pm/en/items/2666275"),
-                    "iwaSync3",
-                    "Flags very frequent sync, overbright screens, global 2D speakers, high default resolution and playlists that fetch without limit."),
-
-                (() => Application.OpenURL("https://rinvo.booth.pm/items/5757644"),
-                    "YouTube Search (Rinvo)",
-                    "Checks that search results reach the right player UI for ProTV, TXL, iwaSync3 and USharpVideo, and the size of its request pool."),
-
-                (() => Application.OpenURL("https://github.com/REDSIM/VRCLightVolumes"),
-                    "VRC Light Volumes",
-                    "Flags more than one manager, shadow bakers with no target or that rebake all the time, TVGI and AudioLink flicker settings, and area lights."),
-
-                (() => Application.OpenURL("https://github.com/AcChosen/VR-Stage-Lighting"),
-                    "VR Stage Lighting",
-                    "Flags AudioLink fixtures in a scene with no AudioLink."),
-
-                (() => Application.OpenURL("https://github.com/REDSIM/GPUParticleVolumes"),
-                    "GPU Particle Volumes",
-                    "Flags a manager with no mesh, volumes that update every frame, and empty volume slots.")
+                WebLink(g, "ProTV (Techanon)", "https://protv.dev/", "Checks screens, speakers and the AudioLink link, Quest fallbacks, global video textures, and heavy UI or queue settings."),
+                WebLink(g, "AudioLink", "https://github.com/llealloo/audiolink", "Finds a missing or doubled AudioLink, video players and materials that are not linked to it, and a setting that stalls Quest."),
+                WebLink(g, "LTCGI", "https://ltcgi.dev/", "Finds screens with no video texture, old screen data that needs a rebuild, a stuck bake, and AudioLink screens with no AudioLink."),
+                WebLink(g, "VizVid (VVMW)", "https://xtlcdn.github.io/VizVid/", "Checks player and UI handlers, the rate limit resolver, Quest fallbacks, 2D audio bleed and the AudioLink link."),
+                WebLink(g, "Video TXL", "https://github.com/vrctxl/VideoTXL", "Checks screen render textures, the queue and access settings, the AudioLink link, audio zones, portals, chairs and material swappers."),
+                WebLink(g, "iwaSync3", "https://booth.pm/en/items/2666275", "Flags very frequent sync, overbright screens, global 2D speakers, high default resolution and playlists that fetch without limit."),
+                WebLink(g, "YouTube Search (Rinvo)", "https://rinvo.booth.pm/items/5757644", "Checks that search results reach the right player UI for ProTV, TXL, iwaSync3 and USharpVideo, and the size of its request pool."),
+                WebLink(g, "VRC Light Volumes", "https://github.com/REDSIM/VRCLightVolumes", "Flags more than one manager, too many volumes or point lights, volumes with no bake, shadow bakers, area lights, and AudioLink and TVGI flicker settings."),
+                WebLink(g, "VR Stage Lighting", "https://github.com/AcChosen/VR-Stage-Lighting", "Flags AudioLink fixtures in a scene with no AudioLink."),
+                WebLink(g, "GPU Particle Volumes", "https://github.com/REDSIM/GPUParticleVolumes", "Flags a manager with no mesh, volumes that update every frame, and empty volume slots.")
             };
-
-            RenderActionGrid(container, "Ecosystem Integrations", "#00e5ff", list);
         }
 
-        private void RenderNetwork(VisualElement container)
+        private List<HubAction> LinkActions()
         {
-            var list = new List<(System.Action action, string title, string desc)>
+            const string g = "Links";
+            return new List<HubAction>
             {
-                (() => Application.OpenURL("https://github.com/VixenCreations/VixenToolBox"), "GitHub Repository", "Core ecosystem source code and release tracking."),
-                (() => Application.OpenURL("https://x.com/VixForge"), "Twitter", "Where I post All Kinds of things and Interact with the community."),
-                (() => Application.OpenURL("https://discord.com/invite/3vbJCKcPtJ"), "Discord", "My Official Community to get help with things."),
-                (() => Application.OpenURL("https://github.com/VixenCreations/VixenToolBox/issues"), "Report An Issue", "Report an Issue or Request a new feature."),
-                (() => Application.OpenURL("https://www.youtube.com/@vixenlicous"), "YouTube Channel", "Technical breakdowns, tutorials and development logs.")
+                WebLink(g, "Website", SiteRoot, "Docs, changelogs, and adding the toolbox to the VRChat Creator Companion."),
+                WebLink(g, "GitHub", "https://github.com/VixenCreations/VixenToolBox", "The toolbox's source code and every release."),
+                WebLink(g, "Report a Problem", "https://github.com/VixenCreations/VixenToolBox/issues", "Report a bug or ask for a feature."),
+                WebLink(g, "Discord", "https://discord.com/invite/3vbJCKcPtJ", "Our community, and the quickest place to get help."),
+                WebLink(g, "X", "https://x.com/VixForge", "News and previews of what's coming."),
+                WebLink(g, "YouTube", "https://www.youtube.com/@vixenlicous", "Tutorials, breakdowns and development logs.")
             };
-
-            RenderActionGrid(container, "Ecosystem Routing", "#00e5ff", list);
         }
 
-        private void RenderSupport(VisualElement container)
+        private static HubAction MenuTool(string group, string title, string menuPath, string description)
         {
-            string markdown = @"
-If my code has ever saved your scene from completely bricking, optimized your Quest fallback in under 10 seconds, or just made your workflow suck a little bit less... consider throwing a coffee my way:
-";
-            ParseMarkdownAndInject(markdown, container);
-
-            var list = new List<(System.Action action, string title, string desc)>
+            return new HubAction
             {
-                (() => Application.OpenURL("https://ko-fi.com/vixenlicous"), "Ko-Fi Donation", "One-Time Support"),
-                (() => Application.OpenURL("https://vixenlicous.gumroad.com/coffee"), "Gumroad Donation", "One-Time Donation"),
-                (() => Application.OpenURL("https://cash.app/$VixenVRC"), "CashApp Donation", "Direct Transfer"),
-                (() => Application.OpenURL("https://www.patreon.com/cw/Vixenlicious"), "Patreon Donation", "Monthly Support"),
-                (() => Application.OpenURL("https://jinxxy.com/Vixenlicious"), "Jinxxy", "Full Asset Storefront"),
-                (() => Application.OpenURL("https://vixenlicous.gumroad.com/"), "Gumroad", "Full Asset Storefront")
+                Group = group,
+                Title = title,
+                Where = menuPath,
+                Description = description,
+                Run = () => EditorApplication.ExecuteMenuItem(menuPath)
             };
-
-            RenderActionGrid(container, "Support The Projects", "#ff00aa", list);
         }
 
-        private void RenderActionGrid(VisualElement container, string headerText, string accentHex, List<(System.Action action, string title, string desc)> items)
+        private static HubAction MenuToggle(string group, string title, string menuPath, string description)
         {
-            var header = new Label($"<color={accentHex}>{headerText}</color>") { enableRichText = true };
-            header.AddToClassList("md-h1");
-            container.Add(header);
+            HubAction action = MenuTool(group, title, menuPath, description);
+            action.IsOn = () => EditorPrefs.GetBool(menuPath, false);
+            return action;
+        }
 
-            var sep = new VisualElement();
-            sep.AddToClassList("md-separator");
-            ColorUtility.TryParseHtmlString(accentHex, out Color c);
-            c.a = 0.3f;
-            sep.style.backgroundColor = c;
-            container.Add(sep);
+        private static HubAction WebLink(string group, string title, string url, string description)
+        {
+            return new HubAction
+            {
+                Group = group,
+                Title = title,
+                Where = ShortUrl(url),
+                Description = description,
+                Run = () => Application.OpenURL(url)
+            };
+        }
+
+        private HubAction PageLink(string group, string title, string pageId, string description)
+        {
+            return new HubAction
+            {
+                Group = group,
+                Title = title,
+                Description = description,
+                Run = () => OpenTab(pageId)
+            };
+        }
+
+        private static string ShortUrl(string url)
+        {
+            try
+            {
+                var uri = new System.Uri(url);
+                string host = uri.Host.StartsWith("www.") ? uri.Host.Substring(4) : uri.Host;
+                return host + uri.AbsolutePath.TrimEnd('/');
+            }
+            catch
+            {
+                return url;
+            }
+        }
+
+        private void RenderActionGrid(VisualElement container, string heading, List<HubAction> actions)
+        {
+            if (!string.IsNullOrEmpty(heading))
+            {
+                var title = new Label(heading);
+                title.AddToClassList("hub-section-title");
+                container.Add(title);
+                _headings.Add((2, heading, title));
+            }
 
             var grid = new VisualElement();
-            grid.AddToClassList("link-grid");
-
-            foreach (var item in items)
-            {
-                var card = new VisualElement();
-                card.AddToClassList("link-card");
-
-                var btn = new Button(item.action) { text = item.title };
-                btn.AddToClassList("link-card-btn");
-
-                var desc = new Label(item.desc) { enableRichText = true };
-                desc.AddToClassList("link-card-desc");
-
-                card.Add(btn);
-                card.Add(desc);
-                grid.Add(card);
-            }
-
+            grid.AddToClassList("hub-grid");
+            foreach (HubAction action in actions) grid.Add(ActionCard(action));
             container.Add(grid);
         }
 
-        private void ParseMarkdownAndInject(string text, VisualElement container)
+        private static VisualElement ActionCard(HubAction action)
         {
-            string[] lines = text.Split('\n');
+            var card = new VisualElement();
+            card.AddToClassList("hub-card");
 
-            for (int i = 0; i < lines.Length; i++)
+            var top = new VisualElement();
+            top.AddToClassList("hub-card-top");
+            var title = new Label(action.Title);
+            title.AddToClassList("hub-card-title");
+            top.Add(title);
+
+            Label pill = null;
+            if (action.IsOn != null)
             {
-                string line = lines[i].TrimEnd();
-                if (string.IsNullOrWhiteSpace(line)) continue;
-
-                if (line.StartsWith("|"))
-                {
-                    string[] cells = line.Trim().Trim('|').Split('|');
-
-                    bool isSeparator = true;
-                    foreach (string c in cells)
-                    {
-                        if (!Regex.IsMatch(c.Trim(), @"^:?-{2,}:?$")) { isSeparator = false; break; }
-                    }
-                    if (isSeparator) continue;
-
-                    string next = (i + 1 < lines.Length) ? lines[i + 1].Trim() : "";
-                    bool isHeader = next.StartsWith("|") && Regex.IsMatch(next.Replace("|", "").Trim(), @"^[:\-\s]+$") && next.Contains("-");
-
-                    var tableRow = new VisualElement();
-                    tableRow.style.flexDirection = FlexDirection.Row;
-                    tableRow.style.width = new StyleLength(Length.Percent(100));
-                    tableRow.style.borderBottomWidth = 1;
-                    tableRow.style.borderBottomColor = new Color(0f, 0.9f, 1f, 0.15f);
-                    tableRow.style.paddingTop = 2;
-                    tableRow.style.paddingBottom = 2;
-
-                    foreach (string c in cells)
-                    {
-                        var cellLbl = new Label(ParseMarkdownFormatting(c.Trim())) { enableRichText = true };
-                        cellLbl.AddToClassList("md-p");
-                        cellLbl.style.flexGrow = 1;
-                        cellLbl.style.flexBasis = 0;
-                        cellLbl.style.flexShrink = 1;
-                        cellLbl.style.whiteSpace = WhiteSpace.Normal;
-                        cellLbl.style.paddingRight = 8;
-                        if (isHeader) cellLbl.style.color = new Color(0f, 0.898f, 1f);
-                        tableRow.Add(cellLbl);
-                    }
-                    container.Add(tableRow);
-                }
-                else if (line.StartsWith("---") || line.StartsWith("***"))
-                {
-                    var sep = new VisualElement();
-                    sep.AddToClassList("md-separator");
-                    sep.style.backgroundColor = new Color(1f, 0f, 0.66f, 0.3f);
-                    container.Add(sep);
-                }
-                else if (line.StartsWith("# ") || line.StartsWith("## ") || line.StartsWith("### "))
-                {
-                    int hashes = 0;
-                    while (hashes < line.Length && line[hashes] == '#') hashes++;
-
-                    string hText = line.Substring(hashes).Trim();
-                    hText = ParseMarkdownFormatting(hText);
-                    var lbl = new Label(hText) { enableRichText = true };
-
-                    if (hashes == 1) lbl.AddToClassList("md-h1");
-                    else if (hashes == 2) lbl.AddToClassList("md-h2");
-                    else lbl.AddToClassList("md-h3");
-
-                    container.Add(lbl);
-
-                    if (hashes <= 2)
-                    {
-                        var sep = new VisualElement();
-                        sep.AddToClassList("md-separator");
-                        sep.style.backgroundColor = new Color(0f, 0.9f, 1f, 0.3f);
-                        container.Add(sep);
-                    }
-                }
-                else if (line.StartsWith("- ") || line.StartsWith("* "))
-                {
-                    string pText = line.Substring(2).Trim();
-                    pText = ParseMarkdownFormatting(pText);
-
-                    var row = new VisualElement();
-                    row.AddToClassList("md-row");
-                    row.style.width = new StyleLength(Length.Percent(100));
-                    row.style.maxWidth = new StyleLength(Length.Percent(100));
-                    row.style.flexShrink = 1;
-
-                    var bullet = new Label(">>") { style = { color = new Color(1f, 0f, 0.66f) } };
-                    bullet.AddToClassList("md-bullet");
-                    bullet.style.flexShrink = 0;
-
-                    var lbl = new Label(pText) { enableRichText = true };
-                    lbl.AddToClassList("md-p");
-                    lbl.style.whiteSpace = WhiteSpace.Normal;
-                    lbl.style.flexShrink = 1;
-                    lbl.style.flexGrow = 1;
-                    lbl.style.width = new StyleLength(Length.Percent(100));
-                    lbl.style.maxWidth = new StyleLength(Length.Percent(100));
-
-                    row.Add(bullet);
-                    row.Add(lbl);
-                    container.Add(row);
-                }
-                else if (line.StartsWith("> "))
-                {
-                    string pText = line.Substring(2).Trim();
-                    pText = ParseMarkdownFormatting(pText);
-                    var lbl = new Label(pText) { enableRichText = true };
-                    lbl.AddToClassList("md-p");
-                    lbl.style.whiteSpace = WhiteSpace.Normal;
-                    lbl.style.flexShrink = 1;
-                    lbl.style.width = new StyleLength(Length.Percent(100));
-                    lbl.style.maxWidth = new StyleLength(Length.Percent(100));
-                    lbl.style.color = new Color(0.7f, 0.7f, 0.7f);
-                    lbl.style.borderLeftWidth = 3;
-                    lbl.style.borderLeftColor = new Color(0f, 0.9f, 1f);
-                    lbl.style.paddingLeft = 10;
-                    lbl.style.marginLeft = 5;
-                    lbl.style.marginTop = 5;
-                    lbl.style.marginBottom = 5;
-                    container.Add(lbl);
-                }
-                else
-                {
-                    string pText = ParseMarkdownFormatting(line);
-                    var lbl = new Label(pText) { enableRichText = true };
-
-                    if (pText.StartsWith("<b>")) lbl.AddToClassList("md-h2");
-                    else lbl.AddToClassList("md-p");
-
-                    container.Add(lbl);
-                }
+                pill = new Label();
+                pill.AddToClassList("hub-pill");
+                top.Add(pill);
             }
+            card.Add(top);
+
+            var desc = new Label(action.Description);
+            desc.AddToClassList("hub-card-desc");
+            card.Add(desc);
+
+            if (!string.IsNullOrEmpty(action.Where))
+            {
+                var where = new Label(action.Where);
+                where.AddToClassList("hub-card-where");
+                card.Add(where);
+            }
+
+            System.Action sync = () =>
+            {
+                if (pill == null) return;
+                bool on = action.IsOn();
+                pill.text = on ? "ON" : "OFF";
+                pill.EnableInClassList("hub-pill--on", on);
+                card.EnableInClassList("hub-card--on", on);
+            };
+            sync();
+
+            card.AddManipulator(new Clickable(() =>
+            {
+                action.Run();
+                sync();
+            }));
+            return card;
         }
 
-        private string ParseMarkdownFormatting(string text)
+        private void OnLinkClicked(PointerUpLinkTagEvent evt)
         {
-            text = Regex.Replace(text, @"\*\*(.*?)\*\*", "<b><color=#00e5ff>$1</color></b>");
-            text = Regex.Replace(text, @"\*(.*?)\*", "<i>$1</i>");
-            text = Regex.Replace(text, @"\`(.*?)\`", "<color=#ffaa00><i>$1</i></color>");
-            text = Regex.Replace(text, @"\[(.*?)\]\(.*?\)", "<b><color=#ff00aa>$1</color></b>");
-            return text;
+            string target = evt.linkID;
+            if (string.IsNullOrEmpty(target)) return;
+
+            if (target.StartsWith(HubLinkPrefix))
+            {
+                string file = target.Substring(HubLinkPrefix.Length);
+                HubPage page = _pages.FirstOrDefault(p => string.Equals(p.FileName, file, System.StringComparison.OrdinalIgnoreCase));
+                if (page != null) EditorApplication.delayCall += () => { ClearSearch(); ShowPage(page); };
+                return;
+            }
+
+            if (IsWebLink(target)) Application.OpenURL(target);
+        }
+
+        private static bool IsWebLink(string url)
+        {
+            return !string.IsNullOrEmpty(url)
+                && (url.StartsWith("https://") || url.StartsWith("http://") || url.StartsWith("mailto:"));
+        }
+
+        private void HookShortcuts(VisualElement root)
+        {
+            root.focusable = true;
+            root.RegisterCallback<PointerDownEvent>(_ =>
+            {
+                if (root.focusController != null && root.focusController.focusedElement == null) root.Focus();
+            }, TrickleDown.TrickleDown);
+
+            root.RegisterCallback<ValidateCommandEvent>(e =>
+            {
+                if (e.commandName == FindCommand) e.StopPropagation();
+            });
+
+            root.RegisterCallback<ExecuteCommandEvent>(e =>
+            {
+                if (e.commandName != FindCommand) return;
+                FocusSearch();
+                e.StopPropagation();
+            });
+
+            root.RegisterCallback<KeyDownEvent>(e =>
+            {
+                if (!e.actionKey || e.keyCode != KeyCode.F) return;
+                FocusSearch();
+                e.StopPropagation();
+            }, TrickleDown.TrickleDown);
+        }
+
+        private void FocusSearch()
+        {
+            if (_search == null || _minimized) return;
+            if (_collapsed) ToggleCollapsed();
+            OpenSidebarForSearch();
+            _search.Focus();
         }
     }
 }

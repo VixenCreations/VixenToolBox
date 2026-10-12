@@ -257,6 +257,42 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
+                <div class="changelog-entry" data-version="v2.20.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.20.0 - 2026-10-10</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>The Hub is a library now, with one search box for every page and tool, and ImageMagick only runs with the toolbox's security policy in force.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The Hub is a library.</strong> Every page sits on a shelf in the list down the left side: Start Here, Tools, Docs and About. <strong>Library</strong> in the header shows or hides the list. In a narrow window the header gets smaller, and the list slides over the page instead of squeezing it.</li>
+                        <li class="mb-2"><strong>Search the whole Hub.</strong> Type in the search box, or press <strong>Ctrl+F</strong>, to find a tool, a page, or a line in any guide or release. Click a tool to open it, or a line to jump straight to it.</li>
+                        <li class="mb-2"><strong>A home page.</strong> It shows the release you have installed, a button for every tool, and a card for every page.</li>
+                        <li class="mb-2"><strong>Jump to a section.</strong> A long page lists its sections under its name in the list. Click one to scroll straight to it.</li>
+                        <li class="mb-2"><strong>A thank-you when you run our shaders too.</strong> With the VixForge shaders in the same project, the home page thanks you and opens their Shader Hub in one click.</li>
+                        <li class="mb-2"><strong>Supporters in the Hub.</strong> A <strong>Supporters</strong> page lists every tier and the people backing it, the same wall as on our website.</li>
+                        <li class="mb-2"><strong>Privacy &amp; Terms in the Hub.</strong> It says what the toolbox does with your information: nothing leaves your computer. It links to our full Privacy Policy and Terms of Service, and the <strong>MIT License</strong> and <strong>Third Party Notices</strong> have pages of their own.</li>
+                        <li class="mb-2"><strong>Hide Bars, Minimize and Move in the Hub.</strong> <strong>Hide Bars</strong> folds the header and the page list away so the page gets the room. <strong>Minimize</strong> shrinks the Hub to one bar. <strong>Move</strong> docks it at the bottom of the editor, floats it along the bottom edge, or opens it in a window of its own.</li>
+                        <li class="mb-2"><strong>The toolbox's MIT licence comes with it.</strong> The full text is in <strong>LICENSE.md</strong>.</li>
+                        <li class="mb-2"><strong>Licences for ImageMagick come with the toolbox.</strong> <strong>Third Party Notices.md</strong> lists Magick.NET, ImageMagick and the libraries built into them, and their full licence texts sit next to them in <code>Editor/ImageMagik/</code>.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The changelog steps through releases.</strong> <strong>Newer</strong> and <strong>Older</strong> move one release at a time, and the release you have installed is marked <strong>Installed</strong>.</li>
+                        <li class="mb-2"><strong>Hub pages read like web pages.</strong> Paragraphs, tables, numbered lists and notes each have their own look. Links to websites open in your browser, where they used to be coloured text you could not click, and a link to another guide opens it in the Hub.</li>
+                        <li class="mb-2"><strong>Every tool is on the Hub.</strong> <strong>Fix Scene Data</strong>, the <strong>Quest World Converter</strong>, <strong>Drop to Surface</strong> and the <strong>Omni-Chaos Generator</strong> now have cards. Every card says plainly what its tool does and where it is in the <strong>VixenTools</strong> menu, and <strong>Scene View Enhancer</strong>, <strong>Live Surface Snapping</strong> and <strong>Precision Click-to-Place</strong> show whether they are on.</li>
+                        <li class="mb-2"><strong>Some Hub pages have new names.</strong> <strong>Core Modules</strong> is now <strong>All Tools</strong>, <strong>Supported Modules</strong> is <strong>Supported Packages</strong>, <strong>Network</strong> is <strong>Links</strong>, and <strong>Metrics Engine</strong> is <strong>How The Score Works</strong>. <strong>Supported Packages</strong> now shows in world projects only, next to <strong>How The Score Works</strong>, because both are about the World Engine.</li>
+                        <li class="mb-2"><strong>Tool windows use Unity's default font.</strong> The toolbox no longer includes a font of its own, so window titles and headings now match the rest of the editor.</li>
+                        <li class="mb-2"><strong>Badge Studio writes badge text in LiberationSans</strong>, the font TextMesh Pro comes with, when your project has it. Without it, the text uses ImageMagick's default font. Badges you already made are not changed.</li>
+                        <li class="mb-2"><strong>Plainer wording across the tools.</strong> Dialogs, progress bars, Console messages and a few labels now say what is happening in everyday words.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The Hub stays on its page when Unity reloads scripts.</strong> It used to jump back to the first page after every compile.</li>
+                        <li class="mb-2"><strong>ImageMagick could run without the toolbox's security policy.</strong> When Unity started several import workers at once, each one set up ImageMagick, and they collided over the policy file. A process that lost logged "Could not apply the ImageMagick security policy", or sometimes nothing, and kept using ImageMagick with no policy. The main editor could lose too. Import workers now leave ImageMagick off, because no toolbox tool runs in them. The editor rewrites the policy file only when it has changed, tries again if another process is using it, and then checks that ImageMagick refuses a format the policy blocks. If the policy is not in force, the tools that need ImageMagick are turned off and the Console says why.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="v2.19.1">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.19.1 - 2026-10-02</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A comprehensive web overhaul, bringing full AI-search indexing, expanded site navigation, and pristine Google Knowledge Graph mapping to the VixForge ecosystem.</em></p>
@@ -274,6 +310,7 @@
                         <li class="mb-2"><strong>Consolidated creator entity mapping.</strong> "Vixenlicious" is now strictly mapped to the Founder/Lead Developer entity, perfectly separating personal creator aliases from the overarching VixForge Interactive studio brand.</li>
                         <li class="mb-2"><strong>Streamlined SEO metadata.</strong> Trimmed <code>&lt;title&gt;</code> tags to prevent truncation on mobile SERPs, consolidated description payloads, and purged redundant meta tags to lighten the raw HTML payload for faster parsing.</li>
                         <li class="mb-2"><strong>Refined social authority signals.</strong> Pruned dead links from the brand's identity graph, hyper-focusing domain authority strictly onto active GitHub repositories and the primary YouTube channel.</li>
+                        <li class="mb-2"><strong>The package's Changelog and Documentation links</strong> now go to the changelog and the tools page on our website.</li>
                     </ul>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>

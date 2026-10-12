@@ -2,7 +2,7 @@
 
 A free set of Unity editor tools for VRChat avatars and worlds. It checks your work against VRChat's limits, fixes what it can in one click, and takes the repetitive setup off your hands.
 
-* **Package:** `com.vixencreations.vixens-toolbox` (v2.19.1)
+* **Package:** `com.vixencreations.vixens-toolbox` (v2.20.0)
 * **Needs:** Unity 2022.3.22f1 and VRChat SDK 3.10.3 or newer
 * **Docs and install:** [vixencreations.github.io/VixenToolBox](https://vixencreations.github.io/VixenToolBox/)
 
@@ -17,7 +17,7 @@ Everything lives under the **VixenTools** menu. The **Hub** (`VixenTools/Hub Das
 * **Udon:** sync settings, scripts that do a lot every frame, and player data saved every frame, read from your compiled scripts.
 * **Textures:** checked the way the VixForge Texture Check does it: Max Size over your target, normal maps not on BC5, mipmaps off, the wrong colour space and Read/Write left on. Fixes change import settings only, never your image files. **Convert To PNG** saves PNG copies of PSD, JPG and big TIF, TGA or BMP files to `Assets/VixenTools/Converted/` and points your materials at them.
 * **Physics, lighting and post processing:** colliders players walk straight through, baked lighting that will not hold, Light Probe and Light Volume coverage, and post processing VRChat does not accept.
-* **Performance Map:** a second tab in the same window that scores how heavy your world is and estimates its memory. The Hub's **Metrics Engine** tab explains the score.
+* **Performance Map:** a second tab in the same window that scores how heavy your world is and estimates its memory. The Hub's **How The Score Works** page explains the score.
 
 ### 2. Optimization Suite
 
@@ -61,7 +61,14 @@ Everything lives under the **VixenTools** menu. The **Hub** (`VixenTools/Hub Das
 
 ### 7. The Hub
 
-`VixenTools/Hub Dashboard` has News, Overview, Core Modules, Supported Modules, Network, Support and Changelogs tabs, plus Metrics Engine in world projects. When a new version is out, a badge in the Scene view takes you straight to its changelog.
+`VixenTools/Hub Dashboard` opens every tool and guide in one window, laid out like a library.
+
+* **Pages:** News, Overview, All Tools, Changelog, Supporters, Support, Links, Privacy & Terms, MIT License and Third Party Notices, plus Supported Packages and How The Score Works in world projects. They sit on shelves in the list on the left, and **Library** shows or hides the list.
+* **Search:** type in the search box, or press **Ctrl+F**, to find a tool, a page, or a line in any guide or release, then click it to go straight there.
+* **Home:** the release you have installed, a button for every tool, and a card for every page.
+* **Frame:** **Hide Bars** folds the header and the list away so the page gets the room, **Minimize** shrinks the Hub to one bar, and **Move** docks it at the bottom of the editor, floats it along the bottom edge or opens it in its own window.
+
+After you update, a badge in the Scene view takes you straight to what changed.
 
 ### 8. VixenWear Latex Ultra
 

@@ -5,23 +5,45 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
-## [2.19.2] - Unreleased
-*ImageMagick only runs with the toolbox's security policy in force, and the toolbox uses Unity's own font.*
+## [2.20.0] - 2026-10-10
+*The Hub is a library now, with one search box for every page and tool, and ImageMagick only runs with the toolbox's security policy in force.*
 
 ### Added
 
+* **The Hub is a library.** Every page sits on a shelf in the list down the left side: Start Here, Tools, Docs and About. **Library** in the header shows or hides the list. In a narrow window the header gets smaller, and the list slides over the page instead of squeezing it.
+* **Search the whole Hub.** Type in the search box, or press **Ctrl+F**, to find a tool, a page, or a line in any guide or release. Click a tool to open it, or a line to jump straight to it.
+* **A home page.** It shows the release you have installed, a button for every tool, and a card for every page.
+* **Jump to a section.** A long page lists its sections under its name in the list. Click one to scroll straight to it.
+* **A thank-you when you run our shaders too.** With the VixForge shaders in the same project, the home page thanks you and opens their Shader Hub in one click.
+* **Supporters in the Hub.** A **Supporters** page lists every tier and the people backing it, the same wall as on our website.
+* **Privacy & Terms in the Hub.** It says what the toolbox does with your information: nothing leaves your computer. It links to our full Privacy Policy and Terms of Service, and the **MIT License** and **Third Party Notices** have pages of their own.
+* **Hide Bars, Minimize and Move in the Hub.** **Hide Bars** folds the header and the page list away so the page gets the room. **Minimize** shrinks the Hub to one bar. **Move** docks it at the bottom of the editor, floats it along the bottom edge, or opens it in a window of its own.
 * **The toolbox's MIT licence comes with it.** The full text is in **LICENSE.md**.
 * **Licences for ImageMagick come with the toolbox.** **Third Party Notices.md** lists Magick.NET, ImageMagick and the libraries built into them, and their full licence texts sit next to them in `Editor/ImageMagik/`.
 
 ### Changed
 
+* **The changelog steps through releases.** **Newer** and **Older** move one release at a time, and the release you have installed is marked **Installed**.
+* **Hub pages read like web pages.** Paragraphs, tables, numbered lists and notes each have their own look. Links to websites open in your browser, where they used to be coloured text you could not click, and a link to another guide opens it in the Hub.
+* **Every tool is on the Hub.** **Fix Scene Data**, the **Quest World Converter**, **Drop to Surface** and the **Omni-Chaos Generator** now have cards. Every card says plainly what its tool does and where it is in the **VixenTools** menu, and **Scene View Enhancer**, **Live Surface Snapping** and **Precision Click-to-Place** show whether they are on.
+* **Some Hub pages have new names.** **Core Modules** is now **All Tools**, **Supported Modules** is **Supported Packages**, **Network** is **Links**, and **Metrics Engine** is **How The Score Works**. **Supported Packages** now shows in world projects only, next to **How The Score Works**, because both are about the World Engine.
 * **Tool windows use Unity's default font.** The toolbox no longer includes a font of its own, so window titles and headings now match the rest of the editor.
 * **Badge Studio writes badge text in LiberationSans**, the font TextMesh Pro comes with, when your project has it. Without it, the text uses ImageMagick's default font. Badges you already made are not changed.
 * **Plainer wording across the tools.** Dialogs, progress bars, Console messages and a few labels now say what is happening in everyday words.
 
 ### Fixed
 
+* **The Hub stays on its page when Unity reloads scripts.** It used to jump back to the first page after every compile.
 * **ImageMagick could run without the toolbox's security policy.** When Unity started several import workers at once, each one set up ImageMagick, and they collided over the policy file. A process that lost logged "Could not apply the ImageMagick security policy", or sometimes nothing, and kept using ImageMagick with no policy. The main editor could lose too. Import workers now leave ImageMagick off, because no toolbox tool runs in them. The editor rewrites the policy file only when it has changed, tries again if another process is using it, and then checks that ImageMagick refuses a format the policy blocks. If the policy is not in force, the tools that need ImageMagick are turned off and the Console says why.
+
+***
+## [2.19.1] - 2026-10-02
+*The package links to our changelog and tool docs, and our website has a Planned Features page.*
+
+### Changed
+
+* **The package's Changelog and Documentation links** now go to the changelog and the tools page on our website.
+* **Our website has a Planned Features page**, so you can see what is coming next.
 
 ***
 ## [2.19.0] - 2026-09-27

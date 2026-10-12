@@ -18,11 +18,17 @@ Everything lives under the **VixenTools** menu in Unity.
 
 `VixenTools/Hub Dashboard`
 
-* **Tabs:** News, Overview, Core Modules, Supported Modules, Network, Support and Changelogs, plus Metrics Engine in world projects.
+* **Library:** every page sits on a shelf (Start Here, Tools, Docs, About) in a list down the left. **Library** shows or hides the list, and in a narrow window it slides over the page. A long page lists its sections under its name.
+* **Pages:** News, Overview, All Tools, Changelog, Supporters, Support, Links, Privacy & Terms, MIT License and Third Party Notices, plus Supported Packages and How The Score Works in world projects.
+* **Search:** one box, or **Ctrl+F**, finds tools, pages and lines in every guide and release. Clicking a tool opens it, and clicking a line jumps to it.
+* **Home:** the installed release, a button for every tool and a card for every page.
+* **Supporters:** every tier and the people backing it, the same wall as on the website.
+* **Privacy & Terms:** what the toolbox does with your information (nothing leaves your computer), with links to the full Privacy Policy and Terms of Service.
+* **Frame:** **Hide Bars** folds the header and the list away, **Minimize** shrinks the Hub to one bar, and **Move** docks it at the bottom of the editor, floats it along the bottom edge or opens it in its own window.
 * **Avatar or world:** it checks which VRChat SDK your project has (`VRC_SDK_VRCSDK3` for avatars, `UDON` for worlds) and shows the matching tools.
-* **Version and changelog:** it reads the version from the package's own `package.json`, and splits `CHANGELOG.md` into one page per version with a picker.
-* **Docs inside Unity:** the guides, the changelog and `NEWS.md` are rendered right in the window.
-* **Update badge:** when a new version is out, a badge in the Scene view takes you straight to its changelog.
+* **Version and changelog:** it reads the version from the package's own `package.json`, and splits `CHANGELOG.md` into one page per version, with **Newer** and **Older** buttons and a picker. The installed release is marked.
+* **Docs inside Unity:** every Markdown file in the package folder becomes a page of its own. Links to websites open in your browser, and links to another guide open it in the Hub.
+* **Update badge:** after an update, a badge in the Scene view takes you straight to what changed.
 
 ---
 

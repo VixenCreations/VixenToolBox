@@ -424,6 +424,7 @@
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask holds the part to cut away.</li>
                     <li class="mb-2"><strong>Color</strong> - Albedo holds your colour in RGB. In Cutout its alpha is the cutout; in Fade and Transparent it multiplies the Color's opacity. Leave it empty to set opacity from the Color alpha alone.</li>
                     <li class="mb-2"><strong>Albedo</strong> - The main colour map. Everything else layers on top of this.</li>
+                    <li class="mb-2"><strong>Tiling Moves Albedo Only</strong> - Off: Tiling and Offset move every map along with the Albedo. On: they move only the Albedo, the way Poiyomi and lilToon work, so a palette texture can pick a colour without moving the other maps. Translated materials turn this on.</li>
                     <li class="mb-2"><strong>Minimum Brightness</strong> - A floor under how dark the material is allowed to get, so you never vanish completely in an unlit room. 0 lets the dark be dark.</li>
                     <li class="mb-2"><strong>Use Alpha Map</strong> - Drives opacity from a texture instead of the Albedo's alpha, handy when your Albedo has no alpha channel. Black keeps the pixel, white takes it away, so you paint over the parts you want gone. Pick the channel that holds the mask below, or turn on Invert for the usual opacity map.</li>
                     <li class="mb-2"><strong>Alpha Map</strong> - A separate map for transparency, for when the alpha in your albedo is doing something else. Black is solid and white is clear. Turn on Invert to flip that.</li>
@@ -432,12 +433,155 @@
                     <li class="mb-2"><strong>Transparency</strong> - Fades the whole material out. 0 is solid, 1 is invisible. Only works in the Fade and Transparent modes; Opaque and Cutout ignore it.</li>
                 </ul>
 
+                <h3 class="text-glow-pink opt-group">Alpha Options</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Alpha Mod</strong> - Adds to the opacity everywhere, or takes it away below 0, so you can fade the whole material or fill in see-through parts.</li>
+                    <li class="mb-2"><strong>Global Mask</strong> - A mask image for the options below. Each one can use one of its channels to limit where it applies, so lace can stay solid while the fabric around it fades.</li>
+                    <li class="mb-2"><strong>Global Mask UV</strong> - Which set of texture coordinates the Global Mask uses.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
+                    <li class="mb-2"><strong>Global Mask Channel</strong> - Mixes one channel of the Global Mask into the opacity.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
+                    <li class="mb-2"><strong>Global Mask Blend</strong> - How that channel mixes in. Multiply takes the opacity away where the mask is dark.
+                        <span class="opt-values">Options: <code>Replace</code>, <code>Subtract</code>, <code>Multiply</code>, <code>Divide</code>, <code>Min</code>, <code>Max</code>, <code>Average</code>, <code>Add</code></span></li>
+                    <li class="mb-2"><strong>Beat Alpha</strong> - Lets the music push the opacity up or down.</li>
+                    <li class="mb-2"><strong>Beat Alpha Band</strong> - Which part of the music moves the opacity.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code></span></li>
+                    <li class="mb-2"><strong>Beat Alpha Range</strong> - Added to the opacity. Min when the music is quiet, Max at its loudest. Below 0 takes it away.</li>
+                </ul>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Alpha To Coverage</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Sharpened</strong> - Keeps the cutout edge crisp. Turn it off to let soft alpha show as a soft edge, which suits hair cards.</li>
+                    <li class="mb-2"><strong>Mip Level Alpha Scale</strong> - Stops thin cutout parts like hair and lace from thinning out and vanishing at a distance. 0 leaves them as they are.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Dithering</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns dithering on.</li>
+                    <li class="mb-2"><strong>Gradient</strong> - How far the pattern eats into see-through areas. Higher dithers more.</li>
+                    <li class="mb-2"><strong>Bias</strong> - Raise it to keep more pixels solid.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Distance Alpha</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns distance fading on.</li>
+                    <li class="mb-2"><strong>Measure From</strong> - Object Position fades the whole thing at once. Pixel Position fades each part by its own distance.
+                        <span class="opt-values">Options: <code>Object Position</code>, <code>Pixel Position</code></span></li>
+                    <li class="mb-2"><strong>Min Alpha</strong> - The opacity at Min Distance and closer.</li>
+                    <li class="mb-2"><strong>Max Alpha</strong> - The opacity at Max Distance and further.</li>
+                    <li class="mb-2"><strong>Min Distance</strong> - Where the fade starts.</li>
+                    <li class="mb-2"><strong>Max Distance</strong> - Where the fade ends.</li>
+                    <li class="mb-2"><strong>Global Mask</strong> - Limits this to where one channel of the Global Mask is light. Off applies it everywhere.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Fresnel Alpha</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns fresnel fading on.</li>
+                    <li class="mb-2"><strong>Intensity</strong> - How far the middle fades. 0 leaves the material alone.</li>
+                    <li class="mb-2"><strong>Sharpness</strong> - How hard the line between the edge and the middle is. Lower is softer.</li>
+                    <li class="mb-2"><strong>Width</strong> - How wide the solid edge is.</li>
+                    <li class="mb-2"><strong>Invert</strong> - Fades the edges and keeps the middle instead.</li>
+                    <li class="mb-2"><strong>Global Mask</strong> - Limits this to where one channel of the Global Mask is light. Off applies it everywhere.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Angular Alpha</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns angle fading on.</li>
+                    <li class="mb-2"><strong>Angle Type</strong> - Camera Face Model fades by where the viewer looks. Model Face Camera fades by which way the model faces. Face Each Other uses both.
+                        <span class="opt-values">Options: <code>Camera Face Model</code>, <code>Model Face Camera</code>, <code>Face Each Other</code></span></li>
+                    <li class="mb-2"><strong>Measure From</strong> - Model uses the object's centre, so it all fades together. Vertex measures each part on its own.
+                        <span class="opt-values">Options: <code>Model</code>, <code>Vertex</code></span></li>
+                    <li class="mb-2"><strong>Forward Direction</strong> - Which way counts as the model's front, in its own space.</li>
+                    <li class="mb-2"><strong>Camera Angle Min</strong> - Below this it is fully shown. 0 is the viewer looking straight at the model.</li>
+                    <li class="mb-2"><strong>Camera Angle Max</strong> - Above this it is fully faded.</li>
+                    <li class="mb-2"><strong>Model Angle Min</strong> - Below this it is fully shown. 0 is the model's front pointing straight away from the viewer.</li>
+                    <li class="mb-2"><strong>Model Angle Max</strong> - Above this it is fully faded.</li>
+                    <li class="mb-2"><strong>Min Alpha</strong> - The lowest it fades to. Above 0 it never vanishes completely.</li>
+                    <li class="mb-2"><strong>Global Mask</strong> - Limits this to where one channel of the Global Mask is light. Off applies it everywhere.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Haunting</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns Haunting on.</li>
+                    <li class="mb-2"><strong>Flicker</strong> - Wavers in and out like a dying light, and cuts out now and then. <em>Amount</em>: How far it fades as it wavers. 0 turns it off. <em>Speed</em>: How fast it wavers. <em>Dropouts</em>: How often it vanishes for a moment.</li>
+                    <li class="mb-2"><strong>Heartbeat</strong> - Fades in on each beat of a slow heart, lub then dub, and fades away between them. <em>Amount</em>: How strongly it pulses. 0 turns it off. <em>Rate</em>: How fast the heart beats, in beats a minute. <em>Between Beats</em>: How solid it stays between beats.</li>
+                    <li class="mb-2"><strong>Look Away</strong> - Vanishes wherever someone looks straight at you, so you only show out of the corner of their eye. <em>Amount</em>: How far it vanishes. 0 turns it off. <em>Angle</em>: How wide the patch they look at is, in degrees. <em>Softness</em>: How soft the edge of that patch is.</li>
+                    <li class="mb-2"><strong>Shy Of Light</strong> - Shows only in the dark and fades as the room gets brighter, so you appear when the lights go out. <em>Amount</em>: How far the light fades it. 0 turns it off. <em>Dark</em>: The light level where it is fully there. <em>Bright</em>: The light level where it is gone.</li>
+                    <li class="mb-2"><strong>Mirrors</strong> - Hidden In Mirrors makes you vanish from mirrors like a vampire. Only In Mirrors shows you nowhere else.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Hidden In Mirrors</code>, <code>Only In Mirrors</code></span></li>
+                    </ul>
+                </div>
+
                 <h3 class="text-glow-pink opt-group">UV Animation</h3>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>UV Rotation</strong> - Turns your texture on the surface, in degrees.</li>
                     <li class="mb-2"><strong>UV Speed X</strong> - Slides your texture sideways, forever. 0 holds it still.</li>
                     <li class="mb-2"><strong>UV Speed Y</strong> - Slides your texture up or down, forever. 0 holds it still.</li>
                 </ul>
+
+                <h3 class="text-glow-pink opt-group">Color Adjust</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Mask</strong> - Limits each change to part of the material. Red holds Hue Shift and Chromatize, green Brightness, blue Saturation and alpha Gamma. White is the full change. Leave it empty to change everything.</li>
+                    <li class="mb-2"><strong>Saturation</strong> - Below 0 drains the colour toward grey. Above 0 makes it stronger.</li>
+                    <li class="mb-2"><strong>Chromatize</strong> - Makes colours more vivid but keeps how light they are, and stops before they clip. Below 0 dulls them.</li>
+                    <li class="mb-2"><strong>Brightness</strong> - Below 0 darkens the colour. Above 0 brightens it.</li>
+                    <li class="mb-2"><strong>Gamma</strong> - Above 1 deepens the darker colours, below 1 lifts them. 1 leaves them as they are.</li>
+                    <li class="mb-2"><strong>Clamp</strong> - Keeps the changed colour between black and white, so a big Brightness or Saturation cannot push it past white.</li>
+                </ul>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Tint</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Color</strong> - The colour to tint toward. Its alpha is how strongly: 0 leaves the material alone.</li>
+                    <li class="mb-2"><strong>Texture</strong> - Multiplies the tint colour, and its alpha scales how strongly, so you can tint parts differently.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Hue Shift</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns the hue shift on.</li>
+                    <li class="mb-2"><strong>Color Space</strong> - OKLab keeps the brightness even as the hue turns. HSV is the classic colour wheel. Okhsv keeps every colour as vivid as it was, so a strong red turns into an equally strong blue, and it can colour greys with Colorize.
+                        <span class="opt-values">Options: <code>OKLab</code>, <code>HSV</code>, <code>Okhsv</code></span></li>
+                    <li class="mb-2"><strong>Mode</strong> - Hue Shift turns the colour by Shift. Hue Select sets the hue to Shift outright.
+                        <span class="opt-values">Options: <code>Hue Select</code>, <code>Hue Shift</code></span></li>
+                    <li class="mb-2"><strong>Replace</strong> - On, the red of the Mask blends between your colour and the shifted one. Off, it adds to the shift, so the hue changes across the mask.</li>
+                    <li class="mb-2"><strong>Shift</strong> - How far round the wheel. 1 is a full turn.</li>
+                    <li class="mb-2"><strong>Colorize</strong> - Gives greys, whites and pale colours some of the hue, so the shift shows on them too. 0 only turns colour that is already there. Black always stays black.</li>
+                    <li class="mb-2"><strong>Speed</strong> - Keeps the hue turning over time.</li>
+                    <li class="mb-2"><strong>Beat Hue Run</strong> - Turns the hue in time with the music.</li>
+                    <li class="mb-2"><strong>Beat Hue Band</strong> - Which part of the music turns the hue.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code></span></li>
+                    <li class="mb-2"><strong>Beat Hue Style</strong> - How the music turns the hue. Speeds Up goes faster the louder it is, Rocks swings back and forth with the level, Runs In Quiet moves between beats and holds on them, and Reverses On Beat runs back on each beat.
+                        <span class="opt-values">Options: <code>Speeds Up</code>, <code>Speeds Up Smooth</code>, <code>Rocks</code>, <code>Rocks Smooth</code>, <code>Runs In Quiet</code>, <code>Runs In Quiet Smooth</code>, <code>Reverses On Beat</code>, <code>Reverses On Beat Smooth</code></span></li>
+                    <li class="mb-2"><strong>Beat Hue Speed</strong> - How far the music turns the hue.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Color Grading</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns the gradient map on.</li>
+                    <li class="mb-2"><strong>Gradient Map</strong> - A strip read from left to right. Each channel of your colour picks the same channel from the strip, dark on the left and bright on the right.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the Mask limits the gradient map. None applies it everywhere.
+                        <span class="opt-values">Options: <code>None</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
+                    <li class="mb-2"><strong>Strength</strong> - How much of the gradient map shows. 0 is off.</li>
+                    </ul>
+                </div>
 
                 <h3 class="text-glow-pink opt-group">UV Tile Discard</h3>
 
@@ -598,7 +742,7 @@
                     <li class="mb-2"><strong>Channel is Roughness</strong> - Tick this if your map stores roughness rather than smoothness, which is the same information the other way up.</li>
                     <li class="mb-2"><strong>AO Channel</strong> - Which channel of the packed map holds ambient occlusion. Set it to None if your map does not carry one.
                         <span class="opt-values">Options: <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code>, <code>None</code></span></li>
-                    <li class="mb-2"><strong>Mochie Metallic Map Setup</strong> - One-click: maps a Mochie/Poiyomi 'Metallic Maps' texture (R:Met G:Smooth B:Reflection A:Specular) onto the packed PBR. Drop the Mochie map into Packed PBR Mask above first.</li>
+                    <li class="mb-2"><strong>Mochie Metallic Map Setup</strong> - One-click: maps a Mochie/Poiyomi 'Metallic Maps' texture (R:Met G:Smooth B:Reflection A:Specular) onto the packed PBR. With Packed PBR Mask empty, it uses the map a Poiyomi material still holds, or looks for one next to your Albedo.</li>
                     <li class="mb-2"><strong>Toon Standard Specular Setup</strong> - One click for a Substance ToonStandardSpecular export: red is metallic, green is smoothness, blue is occlusion. With the Packed PBR Mask slot empty, it finds that file next to your Albedo and drops it in.</li>
                 </ul>
 
@@ -995,6 +1139,7 @@
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Decal</strong> - The image this decal stamps onto the material.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the decal. White leaves its own colours alone.</li>
+                    <li class="mb-2"><strong>Alpha</strong> - How much of the decal shows. 0 hides it, so a menu toggle can switch it on and off.</li>
                     <li class="mb-2"><strong>Position</strong> - Where the decal sits, across and up the surface.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns the decal, in degrees.</li>
                     <li class="mb-2"><strong>Rotation Speed</strong> - Spins the decal on forever. 0 holds it still.</li>
@@ -1007,8 +1152,27 @@
                         <span class="opt-values">Options: <code>Texture Alpha</code>, <code>Luminance</code>, <code>Luminance Inverted</code>, <code>Ignore Alpha</code></span></li>
                     <li class="mb-2"><strong>Color Blend</strong> - How the decal sits on the material underneath: laid over it, added as light, or multiplied into it.
                         <span class="opt-values">Options: <code>Normal</code>, <code>Darken</code>, <code>Multiply</code>, <code>Lighten</code>, <code>Screen</code>, <code>Add</code>, <code>Subtract</code>, <code>Overlay</code></span></li>
+                    <li class="mb-2"><strong>Alpha Blend Mode</strong> - Lets the decal change how see-through the material is. Replace uses the decal's own alpha. Works in Cutout, Fade and Transparent.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Replace</code>, <code>Multiply</code>, <code>Add</code>, <code>Subtract</code>, <code>Min</code>, <code>Max</code></span></li>
+                    <li class="mb-2"><strong>Alpha Area</strong> - Where Alpha Blend Mode applies: the whole material, only inside the decal, or only where this decal's mask allows.
+                        <span class="opt-values">Options: <code>Everywhere</code>, <code>Decal Bounds</code>, <code>Everywhere Masked</code>, <code>Bounds Masked</code></span></li>
                     <li class="mb-2"><strong>Strength</strong> - How much the decal glows on its own, so it stays readable in a dark room.</li>
                     <li class="mb-2"><strong>Smoothness Offset</strong> - Shifts how glossy the surface is under the decal, so a sticker can sit shinier or more matte than what it is stuck to.</li>
+                </ul>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Hue Shift</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns the hue shift on.</li>
+                    <li class="mb-2"><strong>Color Space</strong> - OKLab keeps the brightness even as the hue turns. HSV is the classic colour wheel. Okhsv keeps every colour as vivid as it was.
+                        <span class="opt-values">Options: <code>OKLab</code>, <code>HSV</code>, <code>Okhsv</code></span></li>
+                    <li class="mb-2"><strong>Mode</strong> - Hue Shift turns the colour by Shift. Hue Select sets the hue to Shift outright.
+                        <span class="opt-values">Options: <code>Hue Select</code>, <code>Hue Shift</code></span></li>
+                    <li class="mb-2"><strong>Shift</strong> - How far round the wheel. 1 is a full turn.</li>
+                    <li class="mb-2"><strong>Speed</strong> - Keeps the hue turning over time.</li>
+                    </ul>
+                </div>
+                <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Mirror UV</strong> - Flip the decal, for when it faces the wrong way on one side.
                         <span class="opt-values">Options: <code>Off</code>, <code>Flip</code>, <code>Left Only</code>, <code>Right Only</code></span></li>
                     <li class="mb-2"><strong>Symmetry</strong> - Place a matching decal on the other side, so a pair takes one slot instead of two.
@@ -1020,6 +1184,7 @@
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Decal</strong> - The image this decal stamps onto the material.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the decal. White leaves its own colours alone.</li>
+                    <li class="mb-2"><strong>Alpha</strong> - How much of the decal shows. 0 hides it, so a menu toggle can switch it on and off.</li>
                     <li class="mb-2"><strong>Position</strong> - Where the decal sits, across and up the surface.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns the decal, in degrees.</li>
                     <li class="mb-2"><strong>Rotation Speed</strong> - Spins the decal on forever. 0 holds it still.</li>
@@ -1032,8 +1197,27 @@
                         <span class="opt-values">Options: <code>Texture Alpha</code>, <code>Luminance</code>, <code>Luminance Inverted</code>, <code>Ignore Alpha</code></span></li>
                     <li class="mb-2"><strong>Color Blend</strong> - How the decal sits on the material underneath: laid over it, added as light, or multiplied into it.
                         <span class="opt-values">Options: <code>Normal</code>, <code>Darken</code>, <code>Multiply</code>, <code>Lighten</code>, <code>Screen</code>, <code>Add</code>, <code>Subtract</code>, <code>Overlay</code></span></li>
+                    <li class="mb-2"><strong>Alpha Blend Mode</strong> - Lets the decal change how see-through the material is. Replace uses the decal's own alpha. Works in Cutout, Fade and Transparent.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Replace</code>, <code>Multiply</code>, <code>Add</code>, <code>Subtract</code>, <code>Min</code>, <code>Max</code></span></li>
+                    <li class="mb-2"><strong>Alpha Area</strong> - Where Alpha Blend Mode applies: the whole material, only inside the decal, or only where this decal's mask allows.
+                        <span class="opt-values">Options: <code>Everywhere</code>, <code>Decal Bounds</code>, <code>Everywhere Masked</code>, <code>Bounds Masked</code></span></li>
                     <li class="mb-2"><strong>Strength</strong> - How much the decal glows on its own, so it stays readable in a dark room.</li>
                     <li class="mb-2"><strong>Smoothness Offset</strong> - Shifts how glossy the surface is under the decal, so a sticker can sit shinier or more matte than what it is stuck to.</li>
+                </ul>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Hue Shift</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns the hue shift on.</li>
+                    <li class="mb-2"><strong>Color Space</strong> - OKLab keeps the brightness even as the hue turns. HSV is the classic colour wheel. Okhsv keeps every colour as vivid as it was.
+                        <span class="opt-values">Options: <code>OKLab</code>, <code>HSV</code>, <code>Okhsv</code></span></li>
+                    <li class="mb-2"><strong>Mode</strong> - Hue Shift turns the colour by Shift. Hue Select sets the hue to Shift outright.
+                        <span class="opt-values">Options: <code>Hue Select</code>, <code>Hue Shift</code></span></li>
+                    <li class="mb-2"><strong>Shift</strong> - How far round the wheel. 1 is a full turn.</li>
+                    <li class="mb-2"><strong>Speed</strong> - Keeps the hue turning over time.</li>
+                    </ul>
+                </div>
+                <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Mirror UV</strong> - Flip the decal, for when it faces the wrong way on one side.
                         <span class="opt-values">Options: <code>Off</code>, <code>Flip</code>, <code>Left Only</code>, <code>Right Only</code></span></li>
                     <li class="mb-2"><strong>Symmetry</strong> - Place a matching decal on the other side, so a pair takes one slot instead of two.
@@ -1045,6 +1229,7 @@
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Decal</strong> - The image this decal stamps onto the material.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the decal. White leaves its own colours alone.</li>
+                    <li class="mb-2"><strong>Alpha</strong> - How much of the decal shows. 0 hides it, so a menu toggle can switch it on and off.</li>
                     <li class="mb-2"><strong>Position</strong> - Where the decal sits, across and up the surface.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns the decal, in degrees.</li>
                     <li class="mb-2"><strong>Rotation Speed</strong> - Spins the decal on forever. 0 holds it still.</li>
@@ -1057,8 +1242,27 @@
                         <span class="opt-values">Options: <code>Texture Alpha</code>, <code>Luminance</code>, <code>Luminance Inverted</code>, <code>Ignore Alpha</code></span></li>
                     <li class="mb-2"><strong>Color Blend</strong> - How the decal sits on the material underneath: laid over it, added as light, or multiplied into it.
                         <span class="opt-values">Options: <code>Normal</code>, <code>Darken</code>, <code>Multiply</code>, <code>Lighten</code>, <code>Screen</code>, <code>Add</code>, <code>Subtract</code>, <code>Overlay</code></span></li>
+                    <li class="mb-2"><strong>Alpha Blend Mode</strong> - Lets the decal change how see-through the material is. Replace uses the decal's own alpha. Works in Cutout, Fade and Transparent.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Replace</code>, <code>Multiply</code>, <code>Add</code>, <code>Subtract</code>, <code>Min</code>, <code>Max</code></span></li>
+                    <li class="mb-2"><strong>Alpha Area</strong> - Where Alpha Blend Mode applies: the whole material, only inside the decal, or only where this decal's mask allows.
+                        <span class="opt-values">Options: <code>Everywhere</code>, <code>Decal Bounds</code>, <code>Everywhere Masked</code>, <code>Bounds Masked</code></span></li>
                     <li class="mb-2"><strong>Strength</strong> - How much the decal glows on its own, so it stays readable in a dark room.</li>
                     <li class="mb-2"><strong>Smoothness Offset</strong> - Shifts how glossy the surface is under the decal, so a sticker can sit shinier or more matte than what it is stuck to.</li>
+                </ul>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Hue Shift</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns the hue shift on.</li>
+                    <li class="mb-2"><strong>Color Space</strong> - OKLab keeps the brightness even as the hue turns. HSV is the classic colour wheel. Okhsv keeps every colour as vivid as it was.
+                        <span class="opt-values">Options: <code>OKLab</code>, <code>HSV</code>, <code>Okhsv</code></span></li>
+                    <li class="mb-2"><strong>Mode</strong> - Hue Shift turns the colour by Shift. Hue Select sets the hue to Shift outright.
+                        <span class="opt-values">Options: <code>Hue Select</code>, <code>Hue Shift</code></span></li>
+                    <li class="mb-2"><strong>Shift</strong> - How far round the wheel. 1 is a full turn.</li>
+                    <li class="mb-2"><strong>Speed</strong> - Keeps the hue turning over time.</li>
+                    </ul>
+                </div>
+                <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Mirror UV</strong> - Flip the decal, for when it faces the wrong way on one side.
                         <span class="opt-values">Options: <code>Off</code>, <code>Flip</code>, <code>Left Only</code>, <code>Right Only</code></span></li>
                     <li class="mb-2"><strong>Symmetry</strong> - Place a matching decal on the other side, so a pair takes one slot instead of two.
@@ -1070,6 +1274,7 @@
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Decal</strong> - The image this decal stamps onto the material.</li>
                     <li class="mb-2"><strong>Tint</strong> - Tints the decal. White leaves its own colours alone.</li>
+                    <li class="mb-2"><strong>Alpha</strong> - How much of the decal shows. 0 hides it, so a menu toggle can switch it on and off.</li>
                     <li class="mb-2"><strong>Position</strong> - Where the decal sits, across and up the surface.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Turns the decal, in degrees.</li>
                     <li class="mb-2"><strong>Rotation Speed</strong> - Spins the decal on forever. 0 holds it still.</li>
@@ -1082,8 +1287,27 @@
                         <span class="opt-values">Options: <code>Texture Alpha</code>, <code>Luminance</code>, <code>Luminance Inverted</code>, <code>Ignore Alpha</code></span></li>
                     <li class="mb-2"><strong>Color Blend</strong> - How the decal sits on the material underneath: laid over it, added as light, or multiplied into it.
                         <span class="opt-values">Options: <code>Normal</code>, <code>Darken</code>, <code>Multiply</code>, <code>Lighten</code>, <code>Screen</code>, <code>Add</code>, <code>Subtract</code>, <code>Overlay</code></span></li>
+                    <li class="mb-2"><strong>Alpha Blend Mode</strong> - Lets the decal change how see-through the material is. Replace uses the decal's own alpha. Works in Cutout, Fade and Transparent.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Replace</code>, <code>Multiply</code>, <code>Add</code>, <code>Subtract</code>, <code>Min</code>, <code>Max</code></span></li>
+                    <li class="mb-2"><strong>Alpha Area</strong> - Where Alpha Blend Mode applies: the whole material, only inside the decal, or only where this decal's mask allows.
+                        <span class="opt-values">Options: <code>Everywhere</code>, <code>Decal Bounds</code>, <code>Everywhere Masked</code>, <code>Bounds Masked</code></span></li>
                     <li class="mb-2"><strong>Strength</strong> - How much the decal glows on its own, so it stays readable in a dark room.</li>
                     <li class="mb-2"><strong>Smoothness Offset</strong> - Shifts how glossy the surface is under the decal, so a sticker can sit shinier or more matte than what it is stuck to.</li>
+                </ul>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Hue Shift</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns the hue shift on.</li>
+                    <li class="mb-2"><strong>Color Space</strong> - OKLab keeps the brightness even as the hue turns. HSV is the classic colour wheel. Okhsv keeps every colour as vivid as it was.
+                        <span class="opt-values">Options: <code>OKLab</code>, <code>HSV</code>, <code>Okhsv</code></span></li>
+                    <li class="mb-2"><strong>Mode</strong> - Hue Shift turns the colour by Shift. Hue Select sets the hue to Shift outright.
+                        <span class="opt-values">Options: <code>Hue Select</code>, <code>Hue Shift</code></span></li>
+                    <li class="mb-2"><strong>Shift</strong> - How far round the wheel. 1 is a full turn.</li>
+                    <li class="mb-2"><strong>Speed</strong> - Keeps the hue turning over time.</li>
+                    </ul>
+                </div>
+                <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Mirror UV</strong> - Flip the decal, for when it faces the wrong way on one side.
                         <span class="opt-values">Options: <code>Off</code>, <code>Flip</code>, <code>Left Only</code>, <code>Right Only</code></span></li>
                     <li class="mb-2"><strong>Symmetry</strong> - Place a matching decal on the other side, so a pair takes one slot instead of two.
@@ -1165,6 +1389,69 @@
                     <li class="mb-2"><strong>Root Darkening</strong> - How much the sheen fades down inside the weave, so only the raised threads catch the light. It follows your AO map, so it needs one.</li>
                     <li class="mb-2"><strong>Fabric Mask (B&amp;W)</strong> - Scopes the sheen and the fur to part of the material, so you can put velvet on the collar and leave the rest plain. Leave empty to apply everywhere.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the fabric sheen applies.</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Sheer &amp; Lace</h3>
+                <div class="tag-row"><span class="shader-tag">Clothing Pro</span></div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Sheerness</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Density</strong> - How solid the fabric is when you look straight at it. 1 keeps the opacity you already have; lower it for chiffon and sheer stockings.</li>
+                    <li class="mb-2"><strong>Edge Thickening</strong> - How much denser the fabric gets where it turns away from you, the way stockings darken at the sides of the leg. 1 is true to life, 0 turns it off.</li>
+                    <li class="mb-2"><strong>Global Mask</strong> - Limits all of this to where one channel of the Global Mask (under Alpha Options) is light, so straps and bands can stay solid. Off applies it everywhere.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Weave</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Pattern</strong> - Plain Weave is close-woven chiffon, Mesh is a square net, Fishnet is a diamond net with knots, and Tulle is the fine hexagon net of veils and petticoats.
+                        <span class="opt-values">Options: <code>None</code>, <code>Plain Weave</code>, <code>Mesh</code>, <code>Fishnet</code>, <code>Tulle</code></span></li>
+                    <li class="mb-2"><strong>Scale</strong> - How many holes fit across your texture. Higher is a finer net.</li>
+                    <li class="mb-2"><strong>Thread Width</strong> - How thick the threads are next to the holes. Plain Weave looks best thick, fishnet and tulle thin.</li>
+                    <li class="mb-2"><strong>Rotation</strong> - Turns the net on the fabric.</li>
+                    <li class="mb-2"><strong>Fill</strong> - A thin film between the threads. 0 leaves the holes open, 1 fills them in.</li>
+                    <li class="mb-2"><strong>Relief</strong> - How round the threads look up close, so they catch the light like real yarn.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Lace</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Pattern</strong> - A black and white lace image that tiles: white is thread, black is gap. Tiling sets how small the lace is.</li>
+                    <li class="mb-2"><strong>Channel</strong> - Which channel of the image holds the lace.</li>
+                    <li class="mb-2"><strong>UV</strong> - Which set of texture coordinates the lace follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
+                    <li class="mb-2"><strong>Global Mask</strong> - Puts the lace only where one channel of the Global Mask is light, such as a hem or a cup. Off lays it everywhere.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
+                    <li class="mb-2"><strong>Colour</strong> - Tints the lace threads, for black lace on a coloured fabric.</li>
+                    <li class="mb-2"><strong>Opacity</strong> - How solid the lace threads are.</li>
+                    <li class="mb-2"><strong>Backing</strong> - How much fabric stays between the lace threads. 0 is open lace, 1 keeps the fabric behind it.</li>
+                    <li class="mb-2"><strong>Crisp Edges</strong> - Sharpens soft or blurry lace into clean thread edges up close.</li>
+                    <li class="mb-2"><strong>Relief</strong> - How raised the lace threads look.</li>
+                    <li class="mb-2"><strong>Raise Albedo Lace</strong> - Raises lace that is painted into the see-through part of your Albedo so it catches the light. 0 leaves it flat.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Light</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Backlight Glow</strong> - Light shining through the fabric from behind, the way a curtain glows in the sun.</li>
+                    <li class="mb-2"><strong>Inside Shade</strong> - Darkens the inside of the garment, which gets less light than the outside. It shows where both sides draw: Cull Off, or Inside First below.</li>
+                    <li class="mb-2"><strong>Shadow</strong> - How much shadow the fabric casts. 1 matches how solid it is, so sheer fabric casts a light shadow. 0 casts none.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Layers</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Inside First</strong> - Draws the inside of the garment before the outside, so the back of a skirt shows through the front in the right order. Works with any Cull setting. Costs one more draw of this material.</li>
+                    <li class="mb-2"><strong>Tint Through</strong> - Light passing through the threads takes the fabric colour, so skin under red chiffon turns rosy instead of the fabric looking milky. Costs one more draw of this material.</li>
+                    <li class="mb-2"><strong>Amount</strong> - How much light passes through the threads themselves rather than only through the gaps.</li>
+                    <li class="mb-2"><strong>Colour</strong> - Multiplies the fabric colour for the light that passes through. White uses the fabric colour as it is.</li>
                     </ul>
                 </div>
 
@@ -1600,8 +1887,8 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Dissolve Settings</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Shape</strong> - Where the dissolve starts and which way it runs. Gradient Texture follows a black and white image, Point to Point runs from one point to another, Spherical grows out from a point, and Center Out goes by the angle of the surface.
-                        <span class="opt-values">Options: <code>Gradient Texture</code>, <code>Point to Point</code>, <code>Spherical</code>, <code>Center Out</code></span></li>
+                    <li class="mb-2"><strong>Shape</strong> - Where the dissolve starts and which way it runs. Gradient Texture follows a black and white image, Point to Point runs from one point to another, Spherical grows out from a point, Center Out goes by the angle of the surface, and Cymatics follows the lines of a vibrating plate figure that can change with the music.
+                        <span class="opt-values">Options: <code>Gradient Texture</code>, <code>Point to Point</code>, <code>Spherical</code>, <code>Center Out</code>, <code>Cymatics</code></span></li>
                     <li class="mb-2"><strong>Amount</strong> - How far it has dissolved. 0 is all there and 1 is all gone. Animate this to play the effect.</li>
                     <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music moves the Amount.</li>
                     <li class="mb-2"><strong>Beat Amount</strong> - Added to Amount. Min when the music is quiet, Max at its loudest.</li>
@@ -1658,8 +1945,24 @@
                     </div>
 
                     <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Cymatics</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Plate</strong> - Square Plate gives the crossing lines of a Chladni figure. Round Plate gives rings and spokes, like a drum head.
+                        <span class="opt-values">Options: <code>Square Plate</code>, <code>Round Plate</code></span></li>
+                    <li class="mb-2"><strong>Modes</strong> - Which figure the plate rings in. Higher numbers give a busier pattern. Keep the two different, or the square figure cancels out.</li>
+                    <li class="mb-2"><strong>Scale</strong> - How many times the figure repeats across the UVs.</li>
+                    <li class="mb-2"><strong>UV Set</strong> - Which UV set the figure follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code>, <code>UV2</code>, <code>UV3</code></span></li>
+                    <li class="mb-2"><strong>Morph</strong> - How far the music bends the figure toward the next one.</li>
+                    <li class="mb-2"><strong>Morph Band</strong> - Which part of the music bends the figure.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Dissolved Area</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Portal</strong> - Turns the dissolved part into a window onto Hyperspace, Inner Cosmos or Cymatics instead of a hole. While one is picked here, it shows only through the window.
+                        <span class="opt-values">Options: <code>None</code>, <code>Hyperspace</code>, <code>Inner Cosmos</code>, <code>Cymatics</code></span></li>
                     <li class="mb-2"><strong>Alpha Only</strong> - Fades the material out by the ramp below, instead of turning it into the colour and texture.</li>
                     <li class="mb-2"><strong>Alpha Ramp</strong> - How solid it is before and after it dissolves. The default goes from fully there to fully gone.</li>
                     <li class="mb-2"><strong>Color</strong> - The colour the dissolved part turns. Its alpha is how solid that part stays: 0 makes it vanish, 1 keeps it fully there.</li>
@@ -1767,6 +2070,77 @@
                     </div>
 
                     <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Shatter</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns Shatter on.</li>
+                    <li class="mb-2"><strong>Shards</strong> - How the shards fly. <em>Length</em>: How far behind the front a shard lasts before it is gone. <em>Distance</em>: How far the shards fly out, in metres. <em>Spin</em>: How many times a shard turns over on its way. <em>Fall</em>: How far the shards drop as they fly, in metres.</li>
+                    <li class="mb-2"><strong>Glow Colour</strong> - The colour the shards glow as they break off. It fades as they fly.</li>
+                    <li class="mb-2"><strong>Glow</strong> - How brightly the shards glow as they break off. 0 leaves them in the colours of the material.</li>
+                    <li class="mb-2"><strong>Trails</strong> - Streaks of colour behind each shard. 0 turns them off.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Glitter Sparks</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns Glitter Sparks on.</li>
+                    <li class="mb-2"><strong>Width</strong> - How far either side of the front the glitter sparks.</li>
+                    <li class="mb-2"><strong>Glow</strong> - How brightly the sparks glow.</li>
+                    <li class="mb-2"><strong>Keep Elsewhere</strong> - How much glitter stays on the rest of the material. At 0 it shows only at the front.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Goo Melt</strong> <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns Goo Melt on.</li>
+                    <li class="mb-2"><strong>Width</strong> - How far ahead of the front the goo reaches.</li>
+                    <li class="mb-2"><strong>Keep Elsewhere</strong> - How much goo stays on the rest of the material. At 0 there is goo only at the front.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Beat Travel</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns Beat Travel on.</li>
+                    <li class="mb-2"><strong>Band</strong> - Which part of the music pushes the dissolve.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code></span></li>
+                    <li class="mb-2"><strong>Push</strong> - How far a beat pushes the dissolve forward.</li>
+                    <li class="mb-2"><strong>Travel</strong> - How far along the shape one beat runs. 0 hits everywhere at once; 1 takes about two seconds to cross.</li>
+                    <li class="mb-2"><strong>Drop Burst</strong> - When the track hits a big peak, the material dissolves and comes back as the peak passes. <em>Amount</em>: How far it dissolves. <em>Threshold</em>: How big the peak has to be. <em>Hold</em>: How long it stays dissolved. <em>Softness</em>: Eases it in and out.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Viewer</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns Viewer on.</li>
+                    <li class="mb-2"><strong>Normal View</strong> - Added to Amount when you are seen directly, not in a mirror or through the camera.</li>
+                    <li class="mb-2"><strong>In Mirrors</strong> - Added to Amount in mirrors.</li>
+                    <li class="mb-2"><strong>On Camera</strong> - Added to Amount in the VRChat camera and in screenshots.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Proximity</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns Proximity on.</li>
+                    <li class="mb-2"><strong>Radius</strong> - How close the viewer has to be, in metres, before it opens.</li>
+                    <li class="mb-2"><strong>Fade</strong> - How far, in metres, the edge of the window spreads. The Shape and Gradient Noise roughen it.</li>
+                    <li class="mb-2"><strong>Invert</strong> - Dissolves what is far away instead, so the material appears as you come close.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Interior</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns Interior on.</li>
+                    <li class="mb-2"><strong>Color</strong> - The colour of the inside. The room's light shades it.</li>
+                    <li class="mb-2"><strong>Glow</strong> - Makes the inside glow in its colour, so it shows in the dark.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Wave Mode</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Enable</strong> - Turns Wave Mode on.</li>
@@ -1839,6 +2213,34 @@
                     </ul>
                 </div>
 
+                <h3 class="text-glow-pink opt-group">Hologram</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Hologram Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Colour</strong> - The colour of the projection. The Palette below colours it further.</li>
+                    <li class="mb-2"><strong>See-Through</strong> - How clear the middle of the body is. 1 is fully clear and 0 is solid. Needs Rendering Mode on Fade or Transparent.</li>
+                    <li class="mb-2"><strong>Edge Width</strong> - How far the glow reaches in from the outline.</li>
+                    <li class="mb-2"><strong>Glow</strong> - How brightly the edges glow.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music the glow pulses with.</li>
+                    <li class="mb-2"><strong>AudioLink Amount</strong> - How far the beat flares the glow and pushes it in from the edges.</li>
+                    <li class="mb-2"><strong>Inner Glow</strong> - A faint glow across the whole body, not just the edges.</li>
+                    <li class="mb-2"><strong>Body Tint</strong> - How much the body takes on the hologram colour in place of its own.</li>
+                    <li class="mb-2"><strong>Palette</strong> - Colours that run across the hologram. Custom Gradient uses your own gradient image. The last five are for Halloween.
+                        <span class="opt-values">Options: <code>Colour Only</code>, <code>Custom Gradient</code>, <code>Cyan Signal</code>, <code>Synthwave</code>, <code>Aurora</code>, <code>Glacier</code>, <code>Molten Gold</code>, <code>Rainbow</code>, <code>Pumpkin Patch</code>, <code>Witching Hour</code>, <code>Ghoul</code>, <code>Blood Moon</code>, <code>Phantom</code></span></li>
+                    <li class="mb-2"><strong>Gradient</strong> - A gradient image, read from left to right. Make the two ends match if you scroll it.</li>
+                    <li class="mb-2"><strong>Palette Runs</strong> - Height runs the colours up the body in metres. UV runs them across the texture layout. Edges runs them from the middle out to the silhouette.
+                        <span class="opt-values">Options: <code>Height</code>, <code>UV</code>, <code>Edges</code></span></li>
+                    <li class="mb-2"><strong>Palette Motion</strong> - How the colours sit and move. <em>Repeat</em>: How many times the colours repeat. <em>Scroll</em>: How fast they scroll. Negative scrolls them the other way. <em>Offset</em>: Slides the colours along.</li>
+                    <li class="mb-2"><strong>Beat Shift</strong> - How far the beat pushes the colours along. It follows the AudioLink Band above.</li>
+                    <li class="mb-2"><strong>Scanlines</strong> - Lines that roll up the body. <em>Amount</em>: How strong the lines are. 0 turns them off. <em>Lines</em>: How many lines there are in a metre. <em>Speed</em>: How fast they roll. Negative rolls them down. <em>Sharpness</em>: How thin and crisp each line is.</li>
+                    <li class="mb-2"><strong>Glitch</strong> - The signal breaking up. <em>Amount</em>: How often a glitch fires on its own. <em>Shift</em>: How far a glitch tears bands of the body sideways, in metres. 0 keeps the shape still. <em>Bands</em>: How many bands there are in a metre. <em>Static</em>: Snow in the picture, stronger while a glitch fires.</li>
+                    <li class="mb-2"><strong>Glitch Band</strong> - Which part of the music sets off glitches.</li>
+                    <li class="mb-2"><strong>Beat Glitch</strong> - How easily the music sets off a glitch. 0 leaves glitches to chance.</li>
+                    <li class="mb-2"><strong>Flicker</strong> - The projection wavering like a weak signal. <em>Amount</em>: How much it wavers. <em>Speed</em>: How fast it wavers. <em>Dropouts</em>: How often the picture cuts out for a moment.</li>
+                    </ul>
+                </div>
+
                 <h3 class="text-glow-pink opt-group">Skeleton X-Ray</h3>
 
                 <div class="opt-subgroup">
@@ -1862,6 +2264,57 @@
                     <li class="mb-2"><strong>See-Through</strong> - How clear the body gets around the bones. Needs Rendering Mode on Fade or Transparent.</li>
                     <li class="mb-2"><strong>Flicker</strong> - Makes the X-ray flicker like an old screen.</li>
                     </ul>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Pearl</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Pearl Settings</strong></p>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Root To Tip</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Runs Along</strong> - UV Tip Up puts the tips at the top of your texture layout and UV Tip Down at the bottom. Height measures up the model in metres.
+                        <span class="opt-values">Options: <code>UV Tip Up</code>, <code>UV Tip Down</code>, <code>Height</code></span></li>
+                    <li class="mb-2"><strong>Root And Tip Height</strong> - The height of the roots and of the tips, in metres above the model origin.</li>
+                    <li class="mb-2"><strong>Root Colour</strong> - The colour at the roots. Its alpha sets how strongly it shows.</li>
+                    <li class="mb-2"><strong>Tip Colour</strong> - The colour at the tips. Its alpha sets how strongly it shows, so at 0 the tips stay as they are.</li>
+                    <li class="mb-2"><strong>Falloff</strong> - Where along the strand the colours meet. Higher carries the root colour further down.</li>
+                    <li class="mb-2"><strong>Keep Brightness</strong> - Keeps the brightness of what is under the gradient, so a dark root colour tints the hair without darkening it. 0 takes the brightness of the colours too.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Aurora</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Amount</strong> - How much the aurora takes over from your own colours.</li>
+                    <li class="mb-2"><strong>Top Colour</strong> - The colour on parts facing up in your view.</li>
+                    <li class="mb-2"><strong>Bottom Colour</strong> - The colour on parts facing down in your view.</li>
+                    <li class="mb-2"><strong>Side Colour</strong> - The colour toward the sides.</li>
+                    <li class="mb-2"><strong>Ripple</strong> - Slow waves that move the colours about. <em>Amount</em>: How far the waves move the colours. <em>Size</em>: How big the waves are, in metres. <em>Speed</em>: How fast they move. 0 holds them still.</li>
+                    <li class="mb-2"><strong>Shimmer</strong> - A rainbow sheen that grows toward the edges, like mother of pearl.</li>
+                    <li class="mb-2"><strong>Shimmer Bands</strong> - How many times the rainbow repeats from the middle out to the edges.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Shine</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Colour</strong> - The colour of the shine.</li>
+                    <li class="mb-2"><strong>Shine</strong> - How the shine looks. <em>Strength</em>: How bright it is. 0 turns it off. <em>Sharpness</em>: How tight the band is. <em>Lift</em>: How high it sits. Higher moves it up the hair.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Edges</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Edge Colour</strong> - The colour around the silhouette.</li>
+                    <li class="mb-2"><strong>Edge Amount</strong> - How much the edge colour shows.</li>
+                    <li class="mb-2"><strong>Edge Sharpness</strong> - How tightly the edge colour hugs the silhouette.</li>
+                    <li class="mb-2"><strong>Back Face Tint</strong> - Tints the back of each hair card. Set Cull to Off under RENDERING to see the backs.</li>
+                    <li class="mb-2"><strong>Back Face Opacity</strong> - How solid the back of each card is. Needs Rendering Mode on Cutout, Fade or Transparent.</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <h3 class="text-glow-pink opt-group">Glitter</h3>
@@ -2341,7 +2794,7 @@
                 <h3 class="text-glow-pink opt-group">Inner Cosmos</h3>
                 <p class="opt-note">The surface becomes a thin window onto a living volume of energy with real depth: look
                     into it from any angle and it parallaxes and swirls like you are peering into a contained galaxy, and
-                    it never repeats. Off by default.</p>
+                    it never repeats. Off by default. Original effect designed by Claude (Opus 4.8) for VixForge.</p>
 
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Inner Cosmos Settings</strong></p>
@@ -2593,8 +3046,8 @@
                     outlines.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Outward Direction</strong> - Which way the outline pushes out from the mesh. Mesh Normal is the plain one and is right for a smooth, unbroken model. If your outline breaks up or stops at seams and hard edges, that is the model having several normals in one spot, and no width setting will close it: run VixenTools &gt; VixForge Mesh Fixes &gt; Bake Outline Normals and switch this to Vertex Colour. UV4 does the same job if your model already uses vertex colours for something else. Spherical needs no baking and pushes everything away from one point, which is exact on a ball and rougher the less ball-like the shape is.
-                        <span class="opt-values">Options: <code>Mesh Normal</code>, <code>Vertex Colour</code>, <code>UV4</code>, <code>Spherical</code></span></li>
+                    <li class="mb-2"><strong>Outward Direction</strong> - Which way the outline pushes out from the mesh. Mesh Normal suits almost every model. If the line splits at hard edges, run Bake Outline Normals under Mesh Fixes on the Hub, which switches this to Baked for you. Spherical needs no baking and pushes everything away from one point, so it suits a round part. The two Old options read bakes from earlier versions, and Restore Original Meshes undoes those.
+                        <span class="opt-values">Options: <code>Mesh Normal</code>, <code>Baked</code>, <code>Spherical</code>, <code>Old Colour Bake</code>, <code>Old UV4 Bake</code></span></li>
                     <li class="mb-2"><strong>Spherical Centre</strong> - The point Spherical pushes away from, in the model's own space. 0,0,0 is the mesh origin.</li>
                     <li class="mb-2"><strong>Depth Write</strong> - On lets the line block what is drawn behind it. Turn it off if the outline is punching holes through hair or other see-through pieces.
                         <span class="opt-values">Options: <code>On</code>, <code>Off</code></span></li>
