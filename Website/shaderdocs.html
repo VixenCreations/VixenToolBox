@@ -1392,150 +1392,6 @@
                     </ul>
                 </div>
 
-                <h3 class="text-glow-pink opt-group">Sheer &amp; Lace</h3>
-                <div class="tag-row"><span class="shader-tag">Clothing Pro</span></div>
-
-                <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Sheerness</strong></p>
-                    <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Density</strong> - How solid the fabric is when you look straight at it. 1 keeps the opacity you already have; lower it for chiffon and sheer stockings.</li>
-                    <li class="mb-2"><strong>Edge Thickening</strong> - How much denser the fabric gets where it turns away from you, the way stockings darken at the sides of the leg. 1 is true to life, 0 turns it off.</li>
-                    <li class="mb-2"><strong>Global Mask</strong> - Limits all of this to where one channel of the Global Mask (under Alpha Options) is light, so straps and bands can stay solid. Off applies it everywhere.
-                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
-                    </ul>
-                </div>
-
-                <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Weave</strong></p>
-                    <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Pattern</strong> - Plain Weave is close-woven chiffon, Mesh is a square net, Fishnet is a diamond net with knots, and Tulle is the fine hexagon net of veils and petticoats.
-                        <span class="opt-values">Options: <code>None</code>, <code>Plain Weave</code>, <code>Mesh</code>, <code>Fishnet</code>, <code>Tulle</code></span></li>
-                    <li class="mb-2"><strong>Scale</strong> - How many holes fit across your texture. Higher is a finer net.</li>
-                    <li class="mb-2"><strong>Thread Width</strong> - How thick the threads are next to the holes. Plain Weave looks best thick, fishnet and tulle thin.</li>
-                    <li class="mb-2"><strong>Rotation</strong> - Turns the net on the fabric.</li>
-                    <li class="mb-2"><strong>Fill</strong> - A thin film between the threads. 0 leaves the holes open, 1 fills them in.</li>
-                    <li class="mb-2"><strong>Relief</strong> - How round the threads look up close, so they catch the light like real yarn.</li>
-                    </ul>
-                </div>
-
-                <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Lace</strong></p>
-                    <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Pattern</strong> - A black and white lace image that tiles: white is thread, black is gap. Tiling sets how small the lace is.</li>
-                    <li class="mb-2"><strong>Channel</strong> - Which channel of the image holds the lace.</li>
-                    <li class="mb-2"><strong>UV</strong> - Which set of texture coordinates the lace follows.
-                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
-                    <li class="mb-2"><strong>Global Mask</strong> - Puts the lace only where one channel of the Global Mask is light, such as a hem or a cup. Off lays it everywhere.
-                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
-                    <li class="mb-2"><strong>Colour</strong> - Tints the lace threads, for black lace on a coloured fabric.</li>
-                    <li class="mb-2"><strong>Opacity</strong> - How solid the lace threads are.</li>
-                    <li class="mb-2"><strong>Backing</strong> - How much fabric stays between the lace threads. 0 is open lace, 1 keeps the fabric behind it.</li>
-                    <li class="mb-2"><strong>Crisp Edges</strong> - Sharpens soft or blurry lace into clean thread edges up close.</li>
-                    <li class="mb-2"><strong>Relief</strong> - How raised the lace threads look.</li>
-                    <li class="mb-2"><strong>Raise Albedo Lace</strong> - Raises lace that is painted into the see-through part of your Albedo so it catches the light. 0 leaves it flat.</li>
-                    </ul>
-                </div>
-
-                <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Light</strong></p>
-                    <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Backlight Glow</strong> - Light shining through the fabric from behind, the way a curtain glows in the sun.</li>
-                    <li class="mb-2"><strong>Inside Shade</strong> - Darkens the inside of the garment, which gets less light than the outside. It shows where both sides draw: Cull Off, or Inside First below.</li>
-                    <li class="mb-2"><strong>Shadow</strong> - How much shadow the fabric casts. 1 matches how solid it is, so sheer fabric casts a light shadow. 0 casts none.</li>
-                    </ul>
-                </div>
-
-                <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Layers</strong></p>
-                    <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Inside First</strong> - Draws the inside of the garment before the outside, so the back of a skirt shows through the front in the right order. Works with any Cull setting. Costs one more draw of this material.</li>
-                    <li class="mb-2"><strong>Tint Through</strong> - Light passing through the threads takes the fabric colour, so skin under red chiffon turns rosy instead of the fabric looking milky. Costs one more draw of this material.</li>
-                    <li class="mb-2"><strong>Amount</strong> - How much light passes through the threads themselves rather than only through the gaps.</li>
-                    <li class="mb-2"><strong>Colour</strong> - Multiplies the fabric colour for the light that passes through. White uses the fabric colour as it is.</li>
-                    </ul>
-                </div>
-
-                <h3 class="text-glow-pink opt-group">Surface Fur</h3>
-                <div class="tag-row"><span class="shader-tag">Clothing Pro</span><span class="shader-tag">Fur Pro</span><span class="shader-tag">World Surface</span><span class="shader-tag">World Fur</span></div>
-                <p class="opt-note">Fur shaded on the surface itself, with no extra geometry. It costs nothing in mesh, reads correctly
-                    at any distance, and it is what carries the coat once Real Fur's strands drop out.</p>
-
-                <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Surface Fur Settings</strong></p>
-                    <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Comb Direction</strong> - Which way the fur lies. Rotate it to follow the grain of the garment. This has its own control, separate from the anisotropy direction.</li>
-                    <li class="mb-2"><strong>Use Flow Map</strong> - Lets a texture set which way the fur lies, so it can follow the grain of the garment instead of all lying one way. Drop a map in below and this switches on by itself.</li>
-                    <li class="mb-2"><strong>Flow Map</strong> - Red and green steer the fur direction across the surface, the way a normal map steers the lighting. Bake one from your groom or paint it. Grey means no flow.</li>
-                    <li class="mb-2"><strong>Flow Strength</strong> - How far the map pulls the fur off the Comb Direction. Full strength follows the map exactly.</li>
-                    <li class="mb-2"><strong>Highlight Shift</strong> - Slides the two highlights along the strands. Set the sharp white one where the light catches, and the soft coloured one falls in behind it.</li>
-                    <li class="mb-2"><strong>Strand Specular</strong> - How much each strand catches the light along its length.</li>
-                    <li class="mb-2"><strong>Band</strong> - Which part of the music this reacts to.</li>
-                    <li class="mb-2"><strong>Glint</strong> - How far the beat pushes this.</li>
-                    <li class="mb-2"><strong>Strand Sharpness</strong> - How tight each strand reads, from a soft pelt to fine wiry hair.</li>
-                    <li class="mb-2"><strong>Secondary Highlight</strong> - The soft second sheen real fur has, in the Tip Tint colour, sitting just off the sharp white one. This is what makes fur read as fur and not plastic.</li>
-                    <li class="mb-2"><strong>Tip Tint</strong> - Colour of the second highlight, the light that glows through the strands, and the tips of the shell strands. A warm tone suits most fur.</li>
-                    <li class="mb-2"><strong>Edge Light</strong> - Light catching along the edges of the strands, for a fine bright rim.</li>
-                    <li class="mb-2"><strong>Ambient Response</strong> - Keeps the fur lit in soft, even light where a plain strand highlight would go dead. Turn it down for hard studio lighting.</li>
-                    <li class="mb-2"><strong>Strand Break-up</strong> - Scatters the highlight so it is not one clean band, the way real strands sit at slightly different angles.</li>
-                    <li class="mb-2"><strong>Light Scatter</strong> - How much light passes through the coat and comes back out, which is what makes fur glow at its edges when it is backlit.</li>
-                    <li class="mb-2"><strong>Root Darkening</strong> - How much darker the fur is at its roots, which is what gives a coat depth. It follows your AO map, so it needs one.</li>
-                    <li class="mb-2"><strong>Mask (B&amp;W)</strong> - Narrows the fur to part of what the Fabric Mask already covers, so the sheen can run over the whole garment while the strands stay on the collar and cuffs. White keeps the fur, black drops it. Leave empty for fur everywhere the Fabric Mask allows.</li>
-                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the surface fur shows.</li>
-                    </ul>
-                </div>
-
-                <h3 class="text-glow-pink opt-group">Real Fur</h3>
-                <div class="tag-row"><span class="shader-tag">Clothing Pro</span><span class="shader-tag">Fur Pro</span><span class="shader-tag">World Fur</span></div>
-                <p class="opt-note">Actual hairs grown off the mesh. Turn Surface Fur on underneath it: the strands drop out with
-                    distance and in mirrors, and the surface shading carries the coat once they do.</p>
-
-                <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Real Fur Settings</strong></p>
-                    <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Strands Per Face</strong> - How many hairs grow from each triangle of your mesh. Trades against Curve Segments: they share one budget, so asking for more of one quietly gives you less of the other. Hairs you cannot see are dropped automatically, so raising this costs less than it looks. For denser fur on a low-poly mesh use Mesh Detail below.</li>
-                    <li class="mb-2"><strong>Strand Spacing</strong> - How much of the screen each hair is expected to cover, in pixels. The fur thins out on its own as a face gets smaller on screen, so distance, camera lens and resolution all take care of themselves. Lower puts more hairs on screen and costs more; higher is the first thing to raise if you need framerate back.</li>
-                    <li class="mb-2"><strong>Detail Distance</strong> - How far away the fur keeps growing, in metres. Past this the hairs stop entirely, which is most of what keeps a crowded room running. Turn Surface Fur on underneath and the coat still reads once the hairs go. 0 turns the cutoff off and grows fur at any distance.</li>
-                    <li class="mb-2"><strong>Mirror Quality</strong> - How much fur to grow in mirrors. A mirror draws you a second time at close range, on top of the view you already have, so fur is roughly twice the cost in front of one and four times in VR. Half is a good trade and is hard to spot. 0 drops the hairs in mirrors entirely and leaves Surface Fur to carry the look.</li>
-                    <li class="mb-2"><strong>Mesh Detail</strong> - Splits each triangle into smaller ones before growing hairs, so you get far denser fur than the mesh alone allows. 2 is about four times the hairs, 4 is about sixteen. THIS IS THE MOST EXPENSIVE CONTROL IN THE SHADER: it multiplies both the hairs and the work, so raise it a step at a time and watch your framerate. It only spends the extra detail on triangles that are large on screen, so distance stays cheap. 1 turns it off.</li>
-                    <li class="mb-2"><strong>Curve Segments</strong> - How many joints each hair bends at. Two or three is plenty for short fur; raise it only when long hairs droop enough to show the corners. Every extra segment costs you hairs, so start low.</li>
-                    <li class="mb-2"><strong>Length</strong> - How long each hair is, in metres. 0.01 is short pile, 0.05 is a shag, 0.15 is a full fur coat. Long hairs want more Curve Segments so they bend smoothly.</li>
-                    <li class="mb-2"><strong>Strand Width</strong> - How thick each hair is at the root. 0.05 is a fine 0.15mm hair, 1.0 is a 3mm bristle. Thin is what reads as fur, and hairs never fall below a pixel on screen so they will not sparkle at distance.</li>
-                    <li class="mb-2"><strong>Tip Taper</strong> - How sharply the strands narrow toward the tip. Low gives a soft rounded pile, high gives fine needle points. Strands always come to a point either way.</li>
-                    <li class="mb-2"><strong>Tufting</strong> - Pulls nearby strands together into tufts that converge as they rise, the way real fur clumps. Turn it down for an even brushed pile, up for a shaggy coat that has parted into locks.</li>
-                    <li class="mb-2"><strong>Guard Hairs</strong> - Mixes longer, sparser hairs over the short dense coat, the way real fur has an undercoat with guard hairs on top. This is what breaks the outline into strays instead of one clean edge, and it is most of what stops a coat looking printed on. Raising it grows the coat a little past your Length to make room for them.</li>
-                    <li class="mb-2"><strong>Comb Bend</strong> - Lays the strands over in the Comb Direction, instead of standing them straight up.</li>
-                    <li class="mb-2"><strong>Comb Pattern</strong> - How the coat lies before you paint anything. Uniform combs it all one way with Comb Direction above. Radial sweeps it outward from a point, which is how fur sits on a chest, a rump or the crown of a head. Swirl turns it around that point into a rosette. Wave ripples it back and forth for a rumpled coat. A painted Comb Map still overrides all of them wherever you brush.
-                        <span class="opt-values">Options: <code>Uniform</code>, <code>Radial</code>, <code>Swirl</code>, <code>Wave</code></span></li>
-                    <li class="mb-2"><strong>Pattern Centre</strong> - Where Radial and Swirl sweep out from, in UV space. 0.5, 0.5 is the middle of your texture. Read the UV position off your model in an image editor to place it exactly.</li>
-                    <li class="mb-2"><strong>Wave Count</strong> - How many ripples run across the coat.</li>
-                    <li class="mb-2"><strong>Comb Map</strong> - Which way the fur lies, painted onto the material instead of set by one angle. Leave it empty and the Comb Pattern above combs the whole coat. Hit Brush below to stroke the fur around in the scene view the way you would brush a real animal, and the harder you brush the flatter it lies. The same map can carry length and thickness: paint those with the Length and Density brushes, then raise the two sliders under it. Whatever you leave unpainted keeps following the pattern.
-                        <ul class="custom-list mt-2">
-                            <li class="mb-2"><strong>Direction</strong> - <code>Comb</code>, <code>Radial</code>, <code>Swirl</code>, <code>Part</code>, <code>Ruffle</code></li>
-                            <li class="mb-2"><strong>Shape</strong> - <code>Straight</code>, <code>Curved</code>, <code>Curling</code>, <code>Slicker</code>. These comb as well, then write their own curl on top, into the Comb Shape Map.</li>
-                            <li class="mb-2"><strong>Other</strong> - <code>Smooth</code>, <code>Erase</code>, <code>Length</code>, <code>Density</code>. Length and Density write into the Comb Map, so raise Map Length and Map Density below to let them take effect.</li>
-                            <li class="mb-2"><strong>New map size</strong> - <code>512</code>, <code>1024</code>, <code>2048</code></li>
-                        </ul></li>
-                    <li class="mb-2"><strong>Fur Ambient</strong> - How much of the room's light the hairs pick up. 1 lights them the way the world says. Lower it if a coat looks washed out in a bright room; raise it if it reads too dark. This is separate from Surface Fur's own Ambient Response, so tuning one no longer changes the other.</li>
-                    <li class="mb-2"><strong>Map Length</strong> - How far the Comb Map is allowed to change hair length. Paint with the Length brush, then raise this. 0 ignores the painted length entirely, which is why an unpainted map changes nothing.</li>
-                    <li class="mb-2"><strong>Map Density</strong> - How far the Comb Map is allowed to thin or thicken the coat. Paint with the Density brush, then raise this. 0 ignores the painted density entirely.</li>
-                    <li class="mb-2"><strong>Bend Height</strong> - Where along a strand the bend happens. High keeps it upright and curves it near the ends, which reads as a brushed coat with body. Low bends it down by the roots so the coat lies flat and the tips point away. It does not change how far the coat lays over, only the shape of the arc it takes.</li>
-                    <li class="mb-2"><strong>Curl</strong> - Hooks the tips round. Positive curls them back under, the way hair comes off a round brush. Negative flicks them out. It follows whichever way the coat is combed, so comb first and then curl.</li>
-                    <li class="mb-2"><strong>Comb Shape Map</strong> - Curl and bend height painted per patch, so one coat can curl at the ends and lie flat elsewhere. Paint it with the Curling, Curved and Straight brushes. Leave it empty and the two sliders above set the whole coat.</li>
-                    <li class="mb-2"><strong>Map Shape</strong> - How far the Comb Shape Map is allowed to change curl and bend height. Paint with the shape brushes, then raise this. 0 ignores the painted shape entirely.</li>
-                    <li class="mb-2"><strong>Droop</strong> - Pulls the tips down under their own weight. Negative lifts them instead.</li>
-                    <li class="mb-2"><strong>Wind Sway</strong> - How much the fur bends in the wind.</li>
-                    <li class="mb-2"><strong>Wind Speed</strong> - How fast that wind blows through it.</li>
-                    <li class="mb-2"><strong>Self Shadowing</strong> - Hairs shadowing each other. Light has to push through the coat to reach the deeper strands, and further when it comes in at a low angle, so the coat opens up and closes down as the light moves around it. This is the difference between fur that has volume and fur that is a flat pattern.</li>
-                    <li class="mb-2"><strong>Root Shading</strong> - Darkens the strands toward the roots, the way light struggles to reach the bottom of a thick coat, and dims the ambient down there too.</li>
-                    <li class="mb-2"><strong>Shade Variation</strong> - Gives each hair its own slightly different shade. Real coats are never one flat colour, and an even one reads as a printed texture however good the strands are. A little goes a long way.</li>
-                    <li class="mb-2"><strong>Tip Softness</strong> - Fades the very tips out so the coat does not end on a hard edge.</li>
-                    <li class="mb-2"><strong>Coverage</strong> - How much of the surface grows fur. Lower leaves bald patches, higher packs it solid.</li>
-                    <li class="mb-2"><strong>Follow PBR Map</strong> - Lets the material's packed PBR map set how shiny each hair is, so fur over a glossy patch catches more light than fur over a matte one, and metal tints the highlight. 0 gives every hair the same shine, the way it was before.</li>
-                    <li class="mb-2"><strong>Mask (B&amp;W)</strong> - Paints where the strands grow and how long they are: white is full Length, grey is shorter, black grows nothing at all and skips the work. Use it to put a fur trim on a hood or a pair of cuffs without paying for it across the whole garment. Stacks on the masks in the Fabric and Surface Fur groups above.</li>
-                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where fur grows.</li>
-                    </ul>
-                </div>
-
                 <h3 class="text-glow-pink opt-group">Wet Effects</h3>
                 <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">World Surface</span></div>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -2240,6 +2096,296 @@
                     <li class="mb-2"><strong>Flicker</strong> - The projection wavering like a weak signal. <em>Amount</em>: How much it wavers. <em>Speed</em>: How fast it wavers. <em>Dropouts</em>: How often the picture cuts out for a moment.</li>
                     </ul>
                 </div>
+
+                <h3 class="text-glow-pink opt-group">Sheer &amp; Lace</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">Clothing Pro</span></div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Sheerness</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Density</strong> - How solid the fabric is when you look straight at it. 1 keeps the opacity you already have; lower it for chiffon and sheer stockings.</li>
+                    <li class="mb-2"><strong>Edge Thickening</strong> - How much denser the fabric gets where it turns away from you, the way stockings darken at the sides of the leg. 1 is true to life, 0 turns it off.</li>
+                    <li class="mb-2"><strong>Global Mask</strong> - Limits all of this to where one channel of the Global Mask (under Alpha Options) is light, so straps and bands can stay solid. Off applies it everywhere.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Weave</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Pattern</strong> - Plain Weave is close-woven chiffon, Mesh is a square net, Fishnet is a diamond net with knots, and Tulle is the fine hexagon net of veils and petticoats. Knit, Ribbing and Cable Knit are knitted wool, Denim Twill and Satin are woven cloth, Sports Mesh is jersey mesh, Chainmail is linked metal rings and Perforated is a sheet punched with holes.
+                        <span class="opt-values">Options: <code>None</code>, <code>Plain Weave</code>, <code>Mesh</code>, <code>Fishnet</code>, <code>Tulle</code>, <code>Knit</code>, <code>Ribbing</code>, <code>Cable Knit</code>, <code>Denim Twill</code>, <code>Satin</code>, <code>Sports Mesh</code>, <code>Chainmail</code>, <code>Perforated</code></span></li>
+                    <li class="mb-2"><strong>Scale</strong> - How many holes fit across your texture. Higher is a finer net.</li>
+                    <li class="mb-2"><strong>Thread Width</strong> - How thick the threads are next to the holes. Plain Weave looks best thick, fishnet and tulle thin. For Sports Mesh and Perforated it is how much solid there is between the holes.</li>
+                    <li class="mb-2"><strong>Rotation</strong> - Turns the net on the fabric.</li>
+                    <li class="mb-2"><strong>Fill</strong> - A thin film between the threads. 0 leaves the holes open, 1 fills them in.</li>
+                    <li class="mb-2"><strong>Relief</strong> - How round the threads look up close, so they catch the light like real yarn.</li>
+                    <li class="mb-2"><strong>Groove Shading</strong> - How much darker the grooves between the stitches and threads are, which is what makes a knit or a weave read from a distance.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Lace</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Pattern</strong> - A black and white lace image that tiles: white is thread, black is gap. Tiling sets how small the lace is.</li>
+                    <li class="mb-2"><strong>Channel</strong> - Which channel of the image holds the lace.</li>
+                    <li class="mb-2"><strong>UV</strong> - Which set of texture coordinates the lace follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
+                    <li class="mb-2"><strong>Global Mask</strong> - Puts the lace only where one channel of the Global Mask is light, such as a hem or a cup. Off lays it everywhere.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
+                    <li class="mb-2"><strong>Colour</strong> - Tints the lace threads, for black lace on a coloured fabric.</li>
+                    <li class="mb-2"><strong>Opacity</strong> - How solid the lace threads are.</li>
+                    <li class="mb-2"><strong>Backing</strong> - How much fabric stays between the lace threads. 0 is open lace, 1 keeps the fabric behind it.</li>
+                    <li class="mb-2"><strong>Crisp Edges</strong> - Sharpens soft or blurry lace into clean thread edges up close.</li>
+                    <li class="mb-2"><strong>Relief</strong> - How raised the lace threads look.</li>
+                    <li class="mb-2"><strong>Raise Albedo Lace</strong> - Raises lace that is painted into the see-through part of your Albedo so it catches the light. 0 leaves it flat.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Print</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Pattern</strong> - Which pattern to print.
+                        <span class="opt-values">Options: <code>None</code>, <code>Plaid</code>, <code>Houndstooth</code>, <code>Pinstripe</code>, <code>Polka Dots</code>, <code>Gingham</code>, <code>Checker</code></span></li>
+                    <li class="mb-2"><strong>Blend</strong> - Replace paints the print in its own colours. Multiply tints your Albedo with it, so the texture's detail shows through.
+                        <span class="opt-values">Options: <code>Replace</code>, <code>Multiply</code></span></li>
+                    <li class="mb-2"><strong>Ground Colour</strong> - The background colour of the print.</li>
+                    <li class="mb-2"><strong>Pattern Colour</strong> - The colour of the stripes, checks or dots.</li>
+                    <li class="mb-2"><strong>Line Colour</strong> - The thin accent line in plaid.</li>
+                    <li class="mb-2"><strong>Scale</strong> - How many repeats fit across your texture.</li>
+                    <li class="mb-2"><strong>Size</strong> - How wide the bands and lines are, or how big the dots.</li>
+                    <li class="mb-2"><strong>Rotation</strong> - Turns the print on the fabric.</li>
+                    <li class="mb-2"><strong>Opacity</strong> - How strongly the print shows.</li>
+                    <li class="mb-2"><strong>Global Mask</strong> - Prints only where one channel of the Global Mask is light. Off prints everywhere.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Quilting</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns quilting on.</li>
+                    <li class="mb-2"><strong>Scale</strong> - How many padded panels fit across your texture.</li>
+                    <li class="mb-2"><strong>Rotation</strong> - 45 gives diamonds, 0 gives squares.</li>
+                    <li class="mb-2"><strong>Puff</strong> - How padded each panel looks.</li>
+                    <li class="mb-2"><strong>Stitch Colour</strong> - The colour of the stitching along the seams. Its alpha sets how strongly it shows.</li>
+                    <li class="mb-2"><strong>Stitch Width</strong> - How thick the stitching is.</li>
+                    <li class="mb-2"><strong>Global Mask</strong> - Quilts only where one channel of the Global Mask is light. Off quilts everywhere.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Distress</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns distress on.</li>
+                    <li class="mb-2"><strong>Rips</strong> - How much of the fabric is torn.</li>
+                    <li class="mb-2"><strong>Damage Size</strong> - How many rips and ladders fit across your texture. Higher gives smaller, more frequent damage.</li>
+                    <li class="mb-2"><strong>Loose Threads</strong> - Threads left hanging across each rip, like ripped jeans.</li>
+                    <li class="mb-2"><strong>Ladders</strong> - Runs up the fabric, like a laddered stocking.</li>
+                    <li class="mb-2"><strong>Eyelets</strong> - Round holes with a ring round each one. 0 has none; higher gives bigger holes.</li>
+                    <li class="mb-2"><strong>Eyelet Count</strong> - How many eyelets fit across your texture. Use the Global Mask to put them only along a seam.</li>
+                    <li class="mb-2"><strong>Eyelet Ring Colour</strong> - The colour of the ring round each eyelet.</li>
+                    <li class="mb-2"><strong>Variation</strong> - Moves the rips and ladders somewhere else, so two pieces of clothing do not tear the same way.</li>
+                    <li class="mb-2"><strong>Global Mask</strong> - Damages only where one channel of the Global Mask is light. Off damages everywhere.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Light</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Backlight Glow</strong> - Light shining through the fabric from behind, the way a curtain glows in the sun.</li>
+                    <li class="mb-2"><strong>Inside Shade</strong> - Darkens the inside of the garment, which gets less light than the outside. It shows where both sides draw: Cull Off, or Inside First below.</li>
+                    <li class="mb-2"><strong>Shadow</strong> - How much shadow the fabric casts. 1 matches how solid it is, so sheer fabric casts a light shadow. 0 casts none.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Layers</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Inside First</strong> - Draws the inside of the garment before the outside, so the back of a skirt shows through the front in the right order. Works with any Cull setting. Costs one more draw of this material.</li>
+                    <li class="mb-2"><strong>Tint Through</strong> - Light passing through the threads takes the fabric colour, so skin under red chiffon turns rosy instead of the fabric looking milky. Costs one more draw of this material.</li>
+                    <li class="mb-2"><strong>Amount</strong> - How much light passes through the threads themselves rather than only through the gaps.</li>
+                    <li class="mb-2"><strong>Colour</strong> - Multiplies the fabric colour for the light that passes through. White uses the fabric colour as it is.</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Surface Fur</h3>
+                <div class="tag-row"><span class="shader-tag">Clothing Pro</span><span class="shader-tag">Fur Pro</span><span class="shader-tag">World Surface</span><span class="shader-tag">World Fur</span></div>
+                <p class="opt-note">Fur shaded on the surface itself, with no extra geometry. It costs nothing in mesh, reads correctly
+                    at any distance, and it is what carries the coat once Real Fur's strands drop out.</p>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Surface Fur Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Comb Direction</strong> - Which way the fur lies. Rotate it to follow the grain of the garment. This has its own control, separate from the anisotropy direction.</li>
+                    <li class="mb-2"><strong>Use Flow Map</strong> - Lets a texture set which way the fur lies, so it can follow the grain of the garment instead of all lying one way. Drop a map in below and this switches on by itself.</li>
+                    <li class="mb-2"><strong>Flow Map</strong> - Red and green steer the fur direction across the surface, the way a normal map steers the lighting. Bake one from your groom or paint it. Grey means no flow.</li>
+                    <li class="mb-2"><strong>Flow Strength</strong> - How far the map pulls the fur off the Comb Direction. Full strength follows the map exactly.</li>
+                    <li class="mb-2"><strong>Highlight Shift</strong> - Slides the two highlights along the strands. Set the sharp white one where the light catches, and the soft coloured one falls in behind it.</li>
+                    <li class="mb-2"><strong>Strand Specular</strong> - How much each strand catches the light along its length.</li>
+                    <li class="mb-2"><strong>Band</strong> - Which part of the music this reacts to.</li>
+                    <li class="mb-2"><strong>Glint</strong> - How far the beat pushes this.</li>
+                    <li class="mb-2"><strong>Strand Sharpness</strong> - How tight each strand reads, from a soft pelt to fine wiry hair.</li>
+                    <li class="mb-2"><strong>Secondary Highlight</strong> - The soft second sheen real fur has, in the Tip Tint colour, sitting just off the sharp white one. This is what makes fur read as fur and not plastic.</li>
+                    <li class="mb-2"><strong>Tip Tint</strong> - Colour of the second highlight, the light that glows through the strands, and the tips of the shell strands. A warm tone suits most fur.</li>
+                    <li class="mb-2"><strong>Edge Light</strong> - Light catching along the edges of the strands, for a fine bright rim.</li>
+                    <li class="mb-2"><strong>Ambient Response</strong> - Keeps the fur lit in soft, even light where a plain strand highlight would go dead. Turn it down for hard studio lighting.</li>
+                    <li class="mb-2"><strong>Strand Break-up</strong> - Scatters the highlight so it is not one clean band, the way real strands sit at slightly different angles.</li>
+                    <li class="mb-2"><strong>Light Scatter</strong> - How much light passes through the coat and comes back out, which is what makes fur glow at its edges when it is backlit.</li>
+                    <li class="mb-2"><strong>Root Darkening</strong> - How much darker the fur is at its roots, which is what gives a coat depth. It follows your AO map, so it needs one.</li>
+                    <li class="mb-2"><strong>Mask (B&amp;W)</strong> - Narrows the fur to part of what the Fabric Mask already covers, so the sheen can run over the whole garment while the strands stay on the collar and cuffs. White keeps the fur, black drops it. Leave empty for fur everywhere the Fabric Mask allows.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the surface fur shows.</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Real Fur</h3>
+                <div class="tag-row"><span class="shader-tag">Clothing Pro</span><span class="shader-tag">Fur Pro</span><span class="shader-tag">World Fur</span></div>
+                <p class="opt-note">Actual hairs grown off the mesh. Turn Surface Fur on underneath it: the strands drop out with
+                    distance and in mirrors, and the surface shading carries the coat once they do.</p>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Real Fur Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Strands Per Face</strong> - How many hairs grow from each triangle of your mesh. Trades against Curve Segments: they share one budget, so asking for more of one quietly gives you less of the other. Hairs you cannot see are dropped automatically, so raising this costs less than it looks. For denser fur on a low-poly mesh use Mesh Detail below.</li>
+                    <li class="mb-2"><strong>Strand Spacing</strong> - How much of the screen each hair is expected to cover, in pixels. The fur thins out on its own as a face gets smaller on screen, so distance, camera lens and resolution all take care of themselves. Lower puts more hairs on screen and costs more; higher is the first thing to raise if you need framerate back.</li>
+                    <li class="mb-2"><strong>Detail Distance</strong> - How far away the fur keeps growing, in metres. Past this the hairs stop entirely, which is most of what keeps a crowded room running. Turn Surface Fur on underneath and the coat still reads once the hairs go. 0 turns the cutoff off and grows fur at any distance.</li>
+                    <li class="mb-2"><strong>Mirror Quality</strong> - How much fur to grow in mirrors. A mirror draws you a second time at close range, on top of the view you already have, so fur is roughly twice the cost in front of one and four times in VR. Half is a good trade and is hard to spot. 0 drops the hairs in mirrors entirely and leaves Surface Fur to carry the look.</li>
+                    <li class="mb-2"><strong>Mesh Detail</strong> - Splits each triangle into smaller ones before growing hairs, so you get far denser fur than the mesh alone allows. 2 is about four times the hairs, 4 is about sixteen. THIS IS THE MOST EXPENSIVE CONTROL IN THE SHADER: it multiplies both the hairs and the work, so raise it a step at a time and watch your framerate. It only spends the extra detail on triangles that are large on screen, so distance stays cheap. 1 turns it off.</li>
+                    <li class="mb-2"><strong>Curve Segments</strong> - How many joints each hair bends at. Two or three is plenty for short fur; raise it only when long hairs droop enough to show the corners. Every extra segment costs you hairs, so start low.</li>
+                    <li class="mb-2"><strong>Length</strong> - How long each hair is, in metres. 0.01 is short pile, 0.05 is a shag, 0.15 is a full fur coat. Long hairs want more Curve Segments so they bend smoothly.</li>
+                    <li class="mb-2"><strong>Strand Width</strong> - How thick each hair is at the root. 0.05 is a fine 0.15mm hair, 1.0 is a 3mm bristle. Thin is what reads as fur, and hairs never fall below a pixel on screen so they will not sparkle at distance.</li>
+                    <li class="mb-2"><strong>Tip Taper</strong> - How sharply the strands narrow toward the tip. Low gives a soft rounded pile, high gives fine needle points. Strands always come to a point either way.</li>
+                    <li class="mb-2"><strong>Tufting</strong> - Pulls nearby strands together into tufts that converge as they rise, the way real fur clumps. Turn it down for an even brushed pile, up for a shaggy coat that has parted into locks.</li>
+                    <li class="mb-2"><strong>Guard Hairs</strong> - Mixes longer, sparser hairs over the short dense coat, the way real fur has an undercoat with guard hairs on top. This is what breaks the outline into strays instead of one clean edge, and it is most of what stops a coat looking printed on. Raising it grows the coat a little past your Length to make room for them.</li>
+                    <li class="mb-2"><strong>Comb Bend</strong> - Lays the strands over in the Comb Direction, instead of standing them straight up.</li>
+                    <li class="mb-2"><strong>Comb Pattern</strong> - How the coat lies before you paint anything. Uniform combs it all one way with Comb Direction above. Radial sweeps it outward from a point, which is how fur sits on a chest, a rump or the crown of a head. Swirl turns it around that point into a rosette. Wave ripples it back and forth for a rumpled coat. A painted Comb Map still overrides all of them wherever you brush.
+                        <span class="opt-values">Options: <code>Uniform</code>, <code>Radial</code>, <code>Swirl</code>, <code>Wave</code></span></li>
+                    <li class="mb-2"><strong>Pattern Centre</strong> - Where Radial and Swirl sweep out from, in UV space. 0.5, 0.5 is the middle of your texture. Read the UV position off your model in an image editor to place it exactly.</li>
+                    <li class="mb-2"><strong>Wave Count</strong> - How many ripples run across the coat.</li>
+                    <li class="mb-2"><strong>Comb Map</strong> - Which way the fur lies, painted onto the material instead of set by one angle. Leave it empty and the Comb Pattern above combs the whole coat. Hit Brush below to stroke the fur around in the scene view the way you would brush a real animal, and the harder you brush the flatter it lies. The same map can carry length and thickness: paint those with the Length and Density brushes, then raise the two sliders under it. Whatever you leave unpainted keeps following the pattern.
+                        <ul class="custom-list mt-2">
+                            <li class="mb-2"><strong>Direction</strong> - <code>Comb</code>, <code>Radial</code>, <code>Swirl</code>, <code>Part</code>, <code>Ruffle</code></li>
+                            <li class="mb-2"><strong>Shape</strong> - <code>Straight</code>, <code>Curved</code>, <code>Curling</code>, <code>Slicker</code>. These comb as well, then write their own curl on top, into the Comb Shape Map.</li>
+                            <li class="mb-2"><strong>Other</strong> - <code>Smooth</code>, <code>Erase</code>, <code>Length</code>, <code>Density</code>. Length and Density write into the Comb Map, so raise Map Length and Map Density below to let them take effect.</li>
+                            <li class="mb-2"><strong>New map size</strong> - <code>512</code>, <code>1024</code>, <code>2048</code></li>
+                        </ul></li>
+                    <li class="mb-2"><strong>Fur Ambient</strong> - How much of the room's light the hairs pick up. 1 lights them the way the world says. Lower it if a coat looks washed out in a bright room; raise it if it reads too dark. This is separate from Surface Fur's own Ambient Response, so tuning one no longer changes the other.</li>
+                    <li class="mb-2"><strong>Map Length</strong> - How far the Comb Map is allowed to change hair length. Paint with the Length brush, then raise this. 0 ignores the painted length entirely, which is why an unpainted map changes nothing.</li>
+                    <li class="mb-2"><strong>Map Density</strong> - How far the Comb Map is allowed to thin or thicken the coat. Paint with the Density brush, then raise this. 0 ignores the painted density entirely.</li>
+                    <li class="mb-2"><strong>Bend Height</strong> - Where along a strand the bend happens. High keeps it upright and curves it near the ends, which reads as a brushed coat with body. Low bends it down by the roots so the coat lies flat and the tips point away. It does not change how far the coat lays over, only the shape of the arc it takes.</li>
+                    <li class="mb-2"><strong>Curl</strong> - Hooks the tips round. Positive curls them back under, the way hair comes off a round brush. Negative flicks them out. It follows whichever way the coat is combed, so comb first and then curl.</li>
+                    <li class="mb-2"><strong>Comb Shape Map</strong> - Curl and bend height painted per patch, so one coat can curl at the ends and lie flat elsewhere. Paint it with the Curling, Curved and Straight brushes. Leave it empty and the two sliders above set the whole coat.</li>
+                    <li class="mb-2"><strong>Map Shape</strong> - How far the Comb Shape Map is allowed to change curl and bend height. Paint with the shape brushes, then raise this. 0 ignores the painted shape entirely.</li>
+                    <li class="mb-2"><strong>Droop</strong> - Pulls the tips down under their own weight. Negative lifts them instead.</li>
+                    <li class="mb-2"><strong>Wind Sway</strong> - How much the fur bends in the wind.</li>
+                    <li class="mb-2"><strong>Wind Speed</strong> - How fast that wind blows through it.</li>
+                    <li class="mb-2"><strong>Self Shadowing</strong> - Hairs shadowing each other. Light has to push through the coat to reach the deeper strands, and further when it comes in at a low angle, so the coat opens up and closes down as the light moves around it. This is the difference between fur that has volume and fur that is a flat pattern.</li>
+                    <li class="mb-2"><strong>Root Shading</strong> - Darkens the strands toward the roots, the way light struggles to reach the bottom of a thick coat, and dims the ambient down there too.</li>
+                    <li class="mb-2"><strong>Shade Variation</strong> - Gives each hair its own slightly different shade. Real coats are never one flat colour, and an even one reads as a printed texture however good the strands are. A little goes a long way.</li>
+                    <li class="mb-2"><strong>Tip Softness</strong> - Fades the very tips out so the coat does not end on a hard edge.</li>
+                    <li class="mb-2"><strong>Coverage</strong> - How much of the surface grows fur. Lower leaves bald patches, higher packs it solid.</li>
+                    <li class="mb-2"><strong>Follow PBR Map</strong> - Lets the material's packed PBR map set how shiny each hair is, so fur over a glossy patch catches more light than fur over a matte one, and metal tints the highlight. 0 gives every hair the same shine, the way it was before.</li>
+                    <li class="mb-2"><strong>Mask (B&amp;W)</strong> - Paints where the strands grow and how long they are: white is full Length, grey is shorter, black grows nothing at all and skips the work. Use it to put a fur trim on a hood or a pair of cuffs without paying for it across the whole garment. Stacks on the masks in the Fabric and Surface Fur groups above.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where fur grows.</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Hypno</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span></div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Hypno Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Amount</strong> - How far under you are. As it rises the world twists toward the middle, then the spiral swims in over it. The Hypno toggle that Hypno Setup adds to your menu plays the whole thing.</li>
+                    <li class="mb-2"><strong>Radius</strong> - How close a pair of eyes has to come to yours to go under, in metres at your avatar's own size, so it grows and shrinks with you. Around 0.3 is only you. Raise it and anyone who leans in goes under too, when Others Can Join is on in Hypno Setup.</li>
+                    <li class="mb-2"><strong>Swirl</strong> - How far your real view twists into the middle, in turns. At 0 the world stays still under the spiral, which is a little easier on your framerate.</li>
+                    <li class="mb-2"><strong>Take Over</strong> - How solid the spiral gets at full Amount. Below 1 the world always shows through.</li>
+                    <li class="mb-2"><strong>Fill</strong> - How much of your view the spiral covers. 1 fills it; lower leaves a spiral in the middle with the world round it.</li>
+                    <li class="mb-2"><strong>Pattern</strong> - Spiral is the classic hypno swirl. Endless Spiral zooms inward forever. Rings pulse out from the middle. Pinwheel spins blades round it.
+                        <span class="opt-values">Options: <code>Spiral</code>, <code>Endless Spiral</code>, <code>Rings</code>, <code>Pinwheel</code></span></li>
+                    <li class="mb-2"><strong>Arms</strong> - How many arms the spiral or the pinwheel has.</li>
+                    <li class="mb-2"><strong>Tightness</strong> - How close together the stripes sit.</li>
+                    <li class="mb-2"><strong>Size</strong> - Scales the whole pattern up or down.</li>
+                    <li class="mb-2"><strong>Speed</strong> - How fast it turns. Below 0 it turns the other way.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music the Hypno follows.</li>
+                    <li class="mb-2"><strong>Beat Spin</strong> - The beat spins the spiral faster. It adds to Speed rather than scaling it, so it gathers pace without jumping.</li>
+                    <li class="mb-2"><strong>Color A</strong> - One of the two stripe colours.</li>
+                    <li class="mb-2"><strong>Color B</strong> - The other stripe colour.</li>
+                    <li class="mb-2"><strong>Softness</strong> - How soft the edge between the stripes is.</li>
+                    <li class="mb-2"><strong>Rainbow</strong> - Turns Color A into a rainbow that runs through the pattern, like the eyes of a hypnotic snake.</li>
+                    <li class="mb-2"><strong>Rainbow Speed</strong> - How fast the rainbow moves through the pattern.</li>
+                    <li class="mb-2"><strong>Music Colour</strong> - How much the colour of the music takes over the stripes. It follows the Color Source in the AudioLink section.</li>
+                    <li class="mb-2"><strong>Pulse</strong> - Makes the spiral breathe in and out.</li>
+                    <li class="mb-2"><strong>Pulse Speed</strong> - How many breaths a second.</li>
+                    <li class="mb-2"><strong>Beat Pulse</strong> - Each beat throbs the spiral toward you.</li>
+                    <li class="mb-2"><strong>Show In Photos</strong> - Lets your own VRChat camera photos and screenshots show the Hypno as you see it. Off keeps them clear.</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Eyes</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">Toon</span></div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Eye Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Iris Centres</strong> - Where the middle of each iris sits in your texture, from 0 to 1 across and up. Set both to the same point if this material has one eye. <em>First X</em>: How far across the texture the first iris sits. <em>First Y</em>: How far up the texture the first iris sits. <em>Second X</em>: How far across the texture the second iris sits. <em>Second Y</em>: How far up the texture the second iris sits.</li>
+                    <li class="mb-2"><strong>Iris Size</strong> - How big the iris is in your texture, from its middle to its edge, as a share of the whole texture.</li>
+                    <li class="mb-2"><strong>Iris Width</strong> - Stretches the iris sideways. Below 1 for the tall irises of anime eyes, above 1 for wide ones.</li>
+                    <li class="mb-2"><strong>Sclera Colour</strong> - The white of the eye. Watcher Eyes paints it where the iris moves off its spot in your texture.</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Hypno Iris</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">Toon</span></div>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Amount</strong> - How much of the iris the spiral covers. 1 replaces it completely.</li>
+                    <li class="mb-2"><strong>Pattern</strong> - Spiral is the classic hypno swirl. Endless Spiral zooms inward forever. Rings pulse out from the middle. Pinwheel spins blades round it.
+                        <span class="opt-values">Options: <code>Spiral</code>, <code>Endless Spiral</code>, <code>Rings</code>, <code>Pinwheel</code></span></li>
+                    <li class="mb-2"><strong>Arms</strong> - How many arms the spiral or the pinwheel has.</li>
+                    <li class="mb-2"><strong>Tightness</strong> - How close together the stripes sit.</li>
+                    <li class="mb-2"><strong>Speed</strong> - How fast it turns. Below 0 it turns the other way.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music the iris follows.</li>
+                    <li class="mb-2"><strong>Beat Spin</strong> - The beat spins the iris faster. It adds to Speed rather than scaling it, so it gathers pace without jumping.</li>
+                    <li class="mb-2"><strong>Color A</strong> - One of the two stripe colours.</li>
+                    <li class="mb-2"><strong>Color B</strong> - The other stripe colour.</li>
+                    <li class="mb-2"><strong>Softness</strong> - How soft the edge between the stripes is.</li>
+                    <li class="mb-2"><strong>Rainbow</strong> - Turns Color A into a rainbow that runs through the pattern.</li>
+                    <li class="mb-2"><strong>Rainbow Speed</strong> - How fast the rainbow moves through the pattern.</li>
+                    <li class="mb-2"><strong>Glow</strong> - How much the spiral glows on its own, so it shows in a dark room.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Pupil Shapes</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">Toon</span></div>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Shape</strong> - The shape of the pupil. Spiral fills a round pupil with a turning spiral.
+                        <span class="opt-values">Options: <code>Round</code>, <code>Cat Slit</code>, <code>Heart</code>, <code>Star</code>, <code>Cross</code>, <code>Diamond</code>, <code>Spiral</code></span></li>
+                    <li class="mb-2"><strong>Size</strong> - How big the pupil is, as a share of the iris.</li>
+                    <li class="mb-2"><strong>Color</strong> - The colour of the pupil.</li>
+                    <li class="mb-2"><strong>Softness</strong> - How soft the pupil's edge is.</li>
+                    <li class="mb-2"><strong>Rotation</strong> - Turns the pupil, in degrees.</li>
+                    <li class="mb-2"><strong>Dilate In The Dark</strong> - How much wider the pupil opens in a dark room, the way a real eye does. It reads the room's light probes.</li>
+                    <li class="mb-2"><strong>Glow</strong> - How much the pupil glows on its own.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music the pupil pulses with.</li>
+                    <li class="mb-2"><strong>Beat Pulse</strong> - Each beat throbs the pupil wider.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Watcher Eyes</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">Toon</span></div>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Range</strong> - How far the iris can travel toward whoever is looking, as a share of its own size.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Deep Iris</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">Toon</span></div>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Depth</strong> - How deep the iris sits under the cornea.</li>
+                    <li class="mb-2"><strong>Glint Colour</strong> - The colour and brightness of the bright spot on the cornea. Black turns it off.</li>
+                    <li class="mb-2"><strong>Glint Size</strong> - How big the glint is, as a share of the iris.</li>
+                    <li class="mb-2"><strong>Glint Position</strong> - Where the glint sits on the iris when it is not following the light. 0,0 is the middle and 1 is the iris edge. <em>X</em>: Across the iris. <em>Y</em>: Up the iris.</li>
+                    <li class="mb-2"><strong>Follow Light</strong> - At 0 the glint stays where Glint Position puts it, the way an artist paints one. At 1 it slides toward the strongest light in the room.</li>
+                </ul>
 
                 <h3 class="text-glow-pink opt-group">Skeleton X-Ray</h3>
 
@@ -3132,6 +3278,42 @@
                     <li class="mb-2"><strong>Equaliser Silhouette</strong> - Turns the line into an equaliser drawn up your body, bass at your feet and treble at Height. <em>Width</em>: How far each part of the music pushes the line out. <em>Glow</em>: How much each part of the music brightens the line. <em>Height</em>: Where the treble sits, in metres from your feet. <em>Low Octave</em>: Skips the deepest rumble.</li>
                     </ul>
                 </div>
+
+                <h3 class="text-glow-pink opt-group">Silhouette Ripples</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Color</strong> - The colour of the rings. Its alpha sets how strong they are.</li>
+                    <li class="mb-2"><strong>Distance</strong> - How far the rings travel out from the line before they are gone, in metres.</li>
+                    <li class="mb-2"><strong>Rings</strong> - How many rings fit between the line and Distance at once.</li>
+                    <li class="mb-2"><strong>Ring Width</strong> - How much of the gap between two rings each ring fills.</li>
+                    <li class="mb-2"><strong>Softness</strong> - How soft the edges of each ring are. Soft edges show best with a Fade or Transparent Rendering Mode.</li>
+                    <li class="mb-2"><strong>Fade</strong> - How quickly the rings fade as they travel. 0 keeps them solid all the way out.</li>
+                    <li class="mb-2"><strong>Speed</strong> - How fast the rings travel out. Below 0 they pull in toward you instead.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music the rings follow.</li>
+                    <li class="mb-2"><strong>Beat Speed</strong> - The beat pushes the rings out faster. It adds to Speed rather than scaling it, so they gather pace without jumping.</li>
+                    <li class="mb-2"><strong>Beat Launch</strong> - Each hit in the music leaves your outline as a ring and rides out to Distance. At 1 the music draws every ring, and below 1 its rings mix with the steady ones. Volume and Peak Hold use Bass here. With no AudioLink in the world the steady rings carry on.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Ink Weight</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Lit Side</strong> - How thick the line is where the light hits it, as a share of its Width. 0 lets it vanish in full light.</li>
+                    <li class="mb-2"><strong>Shadow Side</strong> - How thick the line is on the side turned away from the light, as a multiple of its Width.</li>
+                    <li class="mb-2"><strong>Softness</strong> - How gradually the line thickens from the lit side round to the dark side.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Line Boil</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Amount</strong> - How much the line wobbles. Near 1 it breaks into a sketchy, broken line in places.</li>
+                    <li class="mb-2"><strong>Scale</strong> - How close together the wobbles sit. Low gives long, slow swells along the line; high gives a scratchy, jittery one.</li>
+                    <li class="mb-2"><strong>Frame Rate</strong> - How many times a second the line is redrawn. Cartoons boil at about 8 to 12.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Velocity Smear</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Velocity</strong> - How fast you are moving, in metres per second: X to your right, Y up, Z forward. Drive each from the matching VRChat Velocity parameter. <em>X</em>: How fast you move to your right, in metres per second. <em>Y</em>: How fast you move up. <em>Z</em>: How fast you move forward. <span class="tag-inline"><span class="avail-tag">Toon</span><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span><span class="avail-tag">World Fur</span></span></li>
+                    <li class="mb-2"><strong>Length</strong> - How far the line trails behind you for your speed. At 1 it trails about 10 cm at a walk and 20 cm at a run.</li>
+                    <li class="mb-2"><strong>Streaks</strong> - Breaks the trail into separate speed lines. 0 drags the whole back of the line evenly.</li>
+                    <li class="mb-2"><strong>Streak Count</strong> - How many speed lines run across you. Higher gives finer streaks.</li>
+                </ul>
             </div>
             <!-- ========================= -->
             <!-- EMISSIONS -->
@@ -3145,7 +3327,7 @@
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Exposure (All Layers)</strong> - Raises or lowers every emission layer at once, on top of their own strengths. Useful for pulling the whole glow down in a bright world.</li>
-                    <li class="mb-2"><strong>Colour By Time Of Day (All Layers)</strong> - Drifts the hue of every emission layer with the real local clock, so the material glows a different colour at midnight than at noon. Needs AudioLink, which is where the time comes from.</li>
+                    <li class="mb-2"><strong>Colour By Time Of Day (All Layers)</strong> - Drifts the hue of every emission layer with the real local clock, so the material glows a different colour at midnight than at noon. It takes the time from AudioLink, or from VRChat itself in a world without AudioLink.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Emission Layer 1</h3>
@@ -3530,6 +3712,22 @@
                     <li class="mb-2"><strong>Section 7</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
                     <li class="mb-2"><strong>Section 8 Tint</strong> - Tints that slot on its own, so one atlas can serve several looks.</li>
                     <li class="mb-2"><strong>Section 8</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
+                    <li class="mb-2"><strong>Section 9 Tint</strong> - Tints that slot on its own, so one atlas can serve several looks.</li>
+                    <li class="mb-2"><strong>Section 9</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
+                    <li class="mb-2"><strong>Section 10 Tint</strong> - Tints that slot on its own, so one atlas can serve several looks.</li>
+                    <li class="mb-2"><strong>Section 10</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
+                    <li class="mb-2"><strong>Section 11 Tint</strong> - Tints that slot on its own, so one atlas can serve several looks.</li>
+                    <li class="mb-2"><strong>Section 11</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
+                    <li class="mb-2"><strong>Section 12 Tint</strong> - Tints that slot on its own, so one atlas can serve several looks.</li>
+                    <li class="mb-2"><strong>Section 12</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
+                    <li class="mb-2"><strong>Section 13 Tint</strong> - Tints that slot on its own, so one atlas can serve several looks.</li>
+                    <li class="mb-2"><strong>Section 13</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
+                    <li class="mb-2"><strong>Section 14 Tint</strong> - Tints that slot on its own, so one atlas can serve several looks.</li>
+                    <li class="mb-2"><strong>Section 14</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
+                    <li class="mb-2"><strong>Section 15 Tint</strong> - Tints that slot on its own, so one atlas can serve several looks.</li>
+                    <li class="mb-2"><strong>Section 15</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
+                    <li class="mb-2"><strong>Section 16 Tint</strong> - Tints that slot on its own, so one atlas can serve several looks.</li>
+                    <li class="mb-2"><strong>Section 16</strong> - Adjusts how the matcap shows in this section, on top of the layer's own settings. <em>Intensity</em>: Scales how strong the matcap is in this section. 1 leaves it as the layer has it. <em>Emission</em>: Adds glow in this section only. 0 adds none. <em>Lit Mix</em>: Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it. <em>Opacity</em>: Scales how solid the matcap is in this section. 0 hides it here.</li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Car Paint</h3>
@@ -3672,14 +3870,22 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Procedural</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Style</strong> - Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns.
-                        <span class="opt-values">Options: <code>Studio Rig</code>, <code>Liquid Flow</code>, <code>Shatter</code>, <code>Iridescent Film</code>, <code>Plasma</code>, <code>Caustics</code></span></li>
+                    <li class="mb-2"><strong>Style</strong> - Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns. Chladni Plate, Drum Head and Ripple Tank draw vibrating plate figures, the two Hyperspace styles stream past, Grid and Rings are clean lines, Starfield twinkles, Spectrum and Waveform draw the music, Julia Fractal breathes and Nebula swirls.
+                        <span class="opt-values">Options: <code>Studio Rig</code>, <code>Liquid Flow</code>, <code>Shatter</code>, <code>Iridescent Film</code>, <code>Plasma</code>, <code>Caustics</code>, <code>Chladni Plate</code>, <code>Drum Head</code>, <code>Ripple Tank</code>, <code>Hyperspace Tunnel</code>, <code>Hyperspace Weave</code>, <code>Grid</code>, <code>Rings</code>, <code>Starfield</code>, <code>Spectrum</code>, <code>Waveform</code>, <code>Julia Fractal</code>, <code>Nebula</code></span></li>
                     <li class="mb-2"><strong>Colour A</strong> - The first colour of the built-in matcap, used when you would rather not supply a texture at all.</li>
                     <li class="mb-2"><strong>Colour B</strong> - The second colour it blends to.</li>
                     <li class="mb-2"><strong>Scale</strong> - How big the built-in pattern is.</li>
                     <li class="mb-2"><strong>Speed</strong> - How fast the built-in pattern moves. 0 holds it still.</li>
                     <li class="mb-2"><strong>Sharpness</strong> - How hard the edge between the two colours is.</li>
                     <li class="mb-2"><strong>Warp</strong> - How much the built-in pattern is bent out of shape, for something more liquid than a clean gradient.</li>
+                    <li class="mb-2"><strong>Space</strong> - Bends the pattern before it is drawn. Polar unrolls it round the middle, Kaleidoscope folds it into mirrored wedges, Tunnel rolls it down a tube, Spiral winds it inward and Mirror folds it into four. Flat leaves it as it is.
+                        <span class="opt-values">Options: <code>Flat</code>, <code>Polar</code>, <code>Kaleidoscope</code>, <code>Tunnel</code>, <code>Spiral</code>, <code>Mirror</code></span></li>
+                    <li class="mb-2"><strong>Space Shape</strong> - Shapes the Space you picked. <em>Segments</em>: How many wedges Kaleidoscope folds into, and how many times Tunnel and Spiral wrap round. <em>Twist</em>: Twists the pattern more the further out it is. <em>Flow</em>: Slides the pattern outward, or down the tunnel, forever. Below 0 it runs the other way. <em>Spin</em>: Turns the pattern round the middle, forever.</li>
+                    <li class="mb-2"><strong>Detail</strong> - More detail for the styles that have it: the plate's figure, how many stars, the fractal's depth and the nebula's layers.</li>
+                    <li class="mb-2"><strong>Colour</strong> - How the pattern turns into colour. Two Colour runs from Colour A to Colour B, Three Colour adds Colour C, Rainbow runs round the colour wheel, Palette makes a smooth palette that Colour A picks, and Music Colour takes the colour of the music.
+                        <span class="opt-values">Options: <code>Two Colour</code>, <code>Three Colour</code>, <code>Rainbow</code>, <code>Palette</code>, <code>Music Colour</code></span></li>
+                    <li class="mb-2"><strong>Colour C</strong> - The third colour for Three Colour.</li>
+                    <li class="mb-2"><strong>Colour Shape</strong> - Shapes the Colour you picked. <em>Bands</em>: Steps the colours into flat bands. 0 or 1 keeps them smooth. <em>Invert</em>: Swaps which end of the pattern gets which colour. <em>Glow</em>: Makes the brightest part of the pattern glow. <em>Cycle</em>: Runs Rainbow and Palette round, forever.</li>
                         </ul>
                     </div>
 
@@ -3691,6 +3897,8 @@
                     <li class="mb-2"><strong>Emission</strong> - How much the beat pushes this matcap into the glow.</li>
                     <li class="mb-2"><strong>Hue</strong> - How far the beat swings the colour.</li>
                     <li class="mb-2"><strong>Scroll</strong> - Drives Scroll from the track, so the image slides on the beat. On a Procedural layer it also pushes the pattern forward on the beat.</li>
+                    <li class="mb-2"><strong>Pattern Beat</strong> - How the music moves a procedural matcap. <em>Size</em>: The beat makes the pattern bigger. <em>Warp</em>: The beat bends the pattern further. <em>Push</em>: The beat pushes the pattern forward. It adds to Speed rather than scaling it, so it never jumps. <em>Twist</em>: The beat twists the pattern round the middle.</li>
+                    <li class="mb-2"><strong>Pattern Beat 2</strong> - More ways the music moves a procedural matcap. <em>Travel</em>: Each hit leaves the middle as a ring and travels out. <em>Spectrum</em>: Lays the music out from the middle, bass at the centre. <em>Shake</em>: The beat shakes the pattern. <em>Morph</em>: The beat changes the shape itself: the plate's figure, the tunnel's turbulence, the fractal.</li>
                         </ul>
                     </div>
                 </div>
@@ -3805,14 +4013,22 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Procedural</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Style</strong> - Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns.
-                        <span class="opt-values">Options: <code>Studio Rig</code>, <code>Liquid Flow</code>, <code>Shatter</code>, <code>Iridescent Film</code>, <code>Plasma</code>, <code>Caustics</code></span></li>
+                    <li class="mb-2"><strong>Style</strong> - Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns. Chladni Plate, Drum Head and Ripple Tank draw vibrating plate figures, the two Hyperspace styles stream past, Grid and Rings are clean lines, Starfield twinkles, Spectrum and Waveform draw the music, Julia Fractal breathes and Nebula swirls.
+                        <span class="opt-values">Options: <code>Studio Rig</code>, <code>Liquid Flow</code>, <code>Shatter</code>, <code>Iridescent Film</code>, <code>Plasma</code>, <code>Caustics</code>, <code>Chladni Plate</code>, <code>Drum Head</code>, <code>Ripple Tank</code>, <code>Hyperspace Tunnel</code>, <code>Hyperspace Weave</code>, <code>Grid</code>, <code>Rings</code>, <code>Starfield</code>, <code>Spectrum</code>, <code>Waveform</code>, <code>Julia Fractal</code>, <code>Nebula</code></span></li>
                     <li class="mb-2"><strong>Colour A</strong> - The first colour of the built-in matcap, used when you would rather not supply a texture at all.</li>
                     <li class="mb-2"><strong>Colour B</strong> - The second colour it blends to.</li>
                     <li class="mb-2"><strong>Scale</strong> - How big the built-in pattern is.</li>
                     <li class="mb-2"><strong>Speed</strong> - How fast the built-in pattern moves. 0 holds it still.</li>
                     <li class="mb-2"><strong>Sharpness</strong> - How hard the edge between the two colours is.</li>
                     <li class="mb-2"><strong>Warp</strong> - How much the built-in pattern is bent out of shape, for something more liquid than a clean gradient.</li>
+                    <li class="mb-2"><strong>Space</strong> - Bends the pattern before it is drawn. Polar unrolls it round the middle, Kaleidoscope folds it into mirrored wedges, Tunnel rolls it down a tube, Spiral winds it inward and Mirror folds it into four. Flat leaves it as it is.
+                        <span class="opt-values">Options: <code>Flat</code>, <code>Polar</code>, <code>Kaleidoscope</code>, <code>Tunnel</code>, <code>Spiral</code>, <code>Mirror</code></span></li>
+                    <li class="mb-2"><strong>Space Shape</strong> - Shapes the Space you picked. <em>Segments</em>: How many wedges Kaleidoscope folds into, and how many times Tunnel and Spiral wrap round. <em>Twist</em>: Twists the pattern more the further out it is. <em>Flow</em>: Slides the pattern outward, or down the tunnel, forever. Below 0 it runs the other way. <em>Spin</em>: Turns the pattern round the middle, forever.</li>
+                    <li class="mb-2"><strong>Detail</strong> - More detail for the styles that have it: the plate's figure, how many stars, the fractal's depth and the nebula's layers.</li>
+                    <li class="mb-2"><strong>Colour</strong> - How the pattern turns into colour. Two Colour runs from Colour A to Colour B, Three Colour adds Colour C, Rainbow runs round the colour wheel, Palette makes a smooth palette that Colour A picks, and Music Colour takes the colour of the music.
+                        <span class="opt-values">Options: <code>Two Colour</code>, <code>Three Colour</code>, <code>Rainbow</code>, <code>Palette</code>, <code>Music Colour</code></span></li>
+                    <li class="mb-2"><strong>Colour C</strong> - The third colour for Three Colour.</li>
+                    <li class="mb-2"><strong>Colour Shape</strong> - Shapes the Colour you picked. <em>Bands</em>: Steps the colours into flat bands. 0 or 1 keeps them smooth. <em>Invert</em>: Swaps which end of the pattern gets which colour. <em>Glow</em>: Makes the brightest part of the pattern glow. <em>Cycle</em>: Runs Rainbow and Palette round, forever.</li>
                         </ul>
                     </div>
 
@@ -3824,6 +4040,8 @@
                     <li class="mb-2"><strong>Emission</strong> - How much the beat pushes this matcap into the glow.</li>
                     <li class="mb-2"><strong>Hue</strong> - How far the beat swings the colour.</li>
                     <li class="mb-2"><strong>Scroll</strong> - Drives Scroll from the track, so the image slides on the beat. On a Procedural layer it also pushes the pattern forward on the beat.</li>
+                    <li class="mb-2"><strong>Pattern Beat</strong> - How the music moves a procedural matcap. <em>Size</em>: The beat makes the pattern bigger. <em>Warp</em>: The beat bends the pattern further. <em>Push</em>: The beat pushes the pattern forward. It adds to Speed rather than scaling it, so it never jumps. <em>Twist</em>: The beat twists the pattern round the middle.</li>
+                    <li class="mb-2"><strong>Pattern Beat 2</strong> - More ways the music moves a procedural matcap. <em>Travel</em>: Each hit leaves the middle as a ring and travels out. <em>Spectrum</em>: Lays the music out from the middle, bass at the centre. <em>Shake</em>: The beat shakes the pattern. <em>Morph</em>: The beat changes the shape itself: the plate's figure, the tunnel's turbulence, the fractal.</li>
                         </ul>
                     </div>
                 </div>
@@ -3938,14 +4156,22 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Procedural</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Style</strong> - Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns.
-                        <span class="opt-values">Options: <code>Studio Rig</code>, <code>Liquid Flow</code>, <code>Shatter</code>, <code>Iridescent Film</code>, <code>Plasma</code>, <code>Caustics</code></span></li>
+                    <li class="mb-2"><strong>Style</strong> - Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns. Chladni Plate, Drum Head and Ripple Tank draw vibrating plate figures, the two Hyperspace styles stream past, Grid and Rings are clean lines, Starfield twinkles, Spectrum and Waveform draw the music, Julia Fractal breathes and Nebula swirls.
+                        <span class="opt-values">Options: <code>Studio Rig</code>, <code>Liquid Flow</code>, <code>Shatter</code>, <code>Iridescent Film</code>, <code>Plasma</code>, <code>Caustics</code>, <code>Chladni Plate</code>, <code>Drum Head</code>, <code>Ripple Tank</code>, <code>Hyperspace Tunnel</code>, <code>Hyperspace Weave</code>, <code>Grid</code>, <code>Rings</code>, <code>Starfield</code>, <code>Spectrum</code>, <code>Waveform</code>, <code>Julia Fractal</code>, <code>Nebula</code></span></li>
                     <li class="mb-2"><strong>Colour A</strong> - The first colour of the built-in matcap, used when you would rather not supply a texture at all.</li>
                     <li class="mb-2"><strong>Colour B</strong> - The second colour it blends to.</li>
                     <li class="mb-2"><strong>Scale</strong> - How big the built-in pattern is.</li>
                     <li class="mb-2"><strong>Speed</strong> - How fast the built-in pattern moves. 0 holds it still.</li>
                     <li class="mb-2"><strong>Sharpness</strong> - How hard the edge between the two colours is.</li>
                     <li class="mb-2"><strong>Warp</strong> - How much the built-in pattern is bent out of shape, for something more liquid than a clean gradient.</li>
+                    <li class="mb-2"><strong>Space</strong> - Bends the pattern before it is drawn. Polar unrolls it round the middle, Kaleidoscope folds it into mirrored wedges, Tunnel rolls it down a tube, Spiral winds it inward and Mirror folds it into four. Flat leaves it as it is.
+                        <span class="opt-values">Options: <code>Flat</code>, <code>Polar</code>, <code>Kaleidoscope</code>, <code>Tunnel</code>, <code>Spiral</code>, <code>Mirror</code></span></li>
+                    <li class="mb-2"><strong>Space Shape</strong> - Shapes the Space you picked. <em>Segments</em>: How many wedges Kaleidoscope folds into, and how many times Tunnel and Spiral wrap round. <em>Twist</em>: Twists the pattern more the further out it is. <em>Flow</em>: Slides the pattern outward, or down the tunnel, forever. Below 0 it runs the other way. <em>Spin</em>: Turns the pattern round the middle, forever.</li>
+                    <li class="mb-2"><strong>Detail</strong> - More detail for the styles that have it: the plate's figure, how many stars, the fractal's depth and the nebula's layers.</li>
+                    <li class="mb-2"><strong>Colour</strong> - How the pattern turns into colour. Two Colour runs from Colour A to Colour B, Three Colour adds Colour C, Rainbow runs round the colour wheel, Palette makes a smooth palette that Colour A picks, and Music Colour takes the colour of the music.
+                        <span class="opt-values">Options: <code>Two Colour</code>, <code>Three Colour</code>, <code>Rainbow</code>, <code>Palette</code>, <code>Music Colour</code></span></li>
+                    <li class="mb-2"><strong>Colour C</strong> - The third colour for Three Colour.</li>
+                    <li class="mb-2"><strong>Colour Shape</strong> - Shapes the Colour you picked. <em>Bands</em>: Steps the colours into flat bands. 0 or 1 keeps them smooth. <em>Invert</em>: Swaps which end of the pattern gets which colour. <em>Glow</em>: Makes the brightest part of the pattern glow. <em>Cycle</em>: Runs Rainbow and Palette round, forever.</li>
                         </ul>
                     </div>
 
@@ -3957,6 +4183,8 @@
                     <li class="mb-2"><strong>Emission</strong> - How much the beat pushes this matcap into the glow.</li>
                     <li class="mb-2"><strong>Hue</strong> - How far the beat swings the colour.</li>
                     <li class="mb-2"><strong>Scroll</strong> - Drives Scroll from the track, so the image slides on the beat. On a Procedural layer it also pushes the pattern forward on the beat.</li>
+                    <li class="mb-2"><strong>Pattern Beat</strong> - How the music moves a procedural matcap. <em>Size</em>: The beat makes the pattern bigger. <em>Warp</em>: The beat bends the pattern further. <em>Push</em>: The beat pushes the pattern forward. It adds to Speed rather than scaling it, so it never jumps. <em>Twist</em>: The beat twists the pattern round the middle.</li>
+                    <li class="mb-2"><strong>Pattern Beat 2</strong> - More ways the music moves a procedural matcap. <em>Travel</em>: Each hit leaves the middle as a ring and travels out. <em>Spectrum</em>: Lays the music out from the middle, bass at the centre. <em>Shake</em>: The beat shakes the pattern. <em>Morph</em>: The beat changes the shape itself: the plate's figure, the tunnel's turbulence, the fractal.</li>
                         </ul>
                     </div>
                 </div>
@@ -4071,14 +4299,22 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Procedural</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Style</strong> - Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns.
-                        <span class="opt-values">Options: <code>Studio Rig</code>, <code>Liquid Flow</code>, <code>Shatter</code>, <code>Iridescent Film</code>, <code>Plasma</code>, <code>Caustics</code></span></li>
+                    <li class="mb-2"><strong>Style</strong> - Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns. Chladni Plate, Drum Head and Ripple Tank draw vibrating plate figures, the two Hyperspace styles stream past, Grid and Rings are clean lines, Starfield twinkles, Spectrum and Waveform draw the music, Julia Fractal breathes and Nebula swirls.
+                        <span class="opt-values">Options: <code>Studio Rig</code>, <code>Liquid Flow</code>, <code>Shatter</code>, <code>Iridescent Film</code>, <code>Plasma</code>, <code>Caustics</code>, <code>Chladni Plate</code>, <code>Drum Head</code>, <code>Ripple Tank</code>, <code>Hyperspace Tunnel</code>, <code>Hyperspace Weave</code>, <code>Grid</code>, <code>Rings</code>, <code>Starfield</code>, <code>Spectrum</code>, <code>Waveform</code>, <code>Julia Fractal</code>, <code>Nebula</code></span></li>
                     <li class="mb-2"><strong>Colour A</strong> - The first colour of the built-in matcap, used when you would rather not supply a texture at all.</li>
                     <li class="mb-2"><strong>Colour B</strong> - The second colour it blends to.</li>
                     <li class="mb-2"><strong>Scale</strong> - How big the built-in pattern is.</li>
                     <li class="mb-2"><strong>Speed</strong> - How fast the built-in pattern moves. 0 holds it still.</li>
                     <li class="mb-2"><strong>Sharpness</strong> - How hard the edge between the two colours is.</li>
                     <li class="mb-2"><strong>Warp</strong> - How much the built-in pattern is bent out of shape, for something more liquid than a clean gradient.</li>
+                    <li class="mb-2"><strong>Space</strong> - Bends the pattern before it is drawn. Polar unrolls it round the middle, Kaleidoscope folds it into mirrored wedges, Tunnel rolls it down a tube, Spiral winds it inward and Mirror folds it into four. Flat leaves it as it is.
+                        <span class="opt-values">Options: <code>Flat</code>, <code>Polar</code>, <code>Kaleidoscope</code>, <code>Tunnel</code>, <code>Spiral</code>, <code>Mirror</code></span></li>
+                    <li class="mb-2"><strong>Space Shape</strong> - Shapes the Space you picked. <em>Segments</em>: How many wedges Kaleidoscope folds into, and how many times Tunnel and Spiral wrap round. <em>Twist</em>: Twists the pattern more the further out it is. <em>Flow</em>: Slides the pattern outward, or down the tunnel, forever. Below 0 it runs the other way. <em>Spin</em>: Turns the pattern round the middle, forever.</li>
+                    <li class="mb-2"><strong>Detail</strong> - More detail for the styles that have it: the plate's figure, how many stars, the fractal's depth and the nebula's layers.</li>
+                    <li class="mb-2"><strong>Colour</strong> - How the pattern turns into colour. Two Colour runs from Colour A to Colour B, Three Colour adds Colour C, Rainbow runs round the colour wheel, Palette makes a smooth palette that Colour A picks, and Music Colour takes the colour of the music.
+                        <span class="opt-values">Options: <code>Two Colour</code>, <code>Three Colour</code>, <code>Rainbow</code>, <code>Palette</code>, <code>Music Colour</code></span></li>
+                    <li class="mb-2"><strong>Colour C</strong> - The third colour for Three Colour.</li>
+                    <li class="mb-2"><strong>Colour Shape</strong> - Shapes the Colour you picked. <em>Bands</em>: Steps the colours into flat bands. 0 or 1 keeps them smooth. <em>Invert</em>: Swaps which end of the pattern gets which colour. <em>Glow</em>: Makes the brightest part of the pattern glow. <em>Cycle</em>: Runs Rainbow and Palette round, forever.</li>
                         </ul>
                     </div>
 
@@ -4090,6 +4326,8 @@
                     <li class="mb-2"><strong>Emission</strong> - How much the beat pushes this matcap into the glow.</li>
                     <li class="mb-2"><strong>Hue</strong> - How far the beat swings the colour.</li>
                     <li class="mb-2"><strong>Scroll</strong> - Drives Scroll from the track, so the image slides on the beat. On a Procedural layer it also pushes the pattern forward on the beat.</li>
+                    <li class="mb-2"><strong>Pattern Beat</strong> - How the music moves a procedural matcap. <em>Size</em>: The beat makes the pattern bigger. <em>Warp</em>: The beat bends the pattern further. <em>Push</em>: The beat pushes the pattern forward. It adds to Speed rather than scaling it, so it never jumps. <em>Twist</em>: The beat twists the pattern round the middle.</li>
+                    <li class="mb-2"><strong>Pattern Beat 2</strong> - More ways the music moves a procedural matcap. <em>Travel</em>: Each hit leaves the middle as a ring and travels out. <em>Spectrum</em>: Lays the music out from the middle, bass at the centre. <em>Shake</em>: The beat shakes the pattern. <em>Morph</em>: The beat changes the shape itself: the plate's figure, the tunnel's turbulence, the fractal.</li>
                         </ul>
                     </div>
                 </div>
@@ -4204,14 +4442,22 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Procedural</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Style</strong> - Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns.
-                        <span class="opt-values">Options: <code>Studio Rig</code>, <code>Liquid Flow</code>, <code>Shatter</code>, <code>Iridescent Film</code>, <code>Plasma</code>, <code>Caustics</code></span></li>
+                    <li class="mb-2"><strong>Style</strong> - Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns. Chladni Plate, Drum Head and Ripple Tank draw vibrating plate figures, the two Hyperspace styles stream past, Grid and Rings are clean lines, Starfield twinkles, Spectrum and Waveform draw the music, Julia Fractal breathes and Nebula swirls.
+                        <span class="opt-values">Options: <code>Studio Rig</code>, <code>Liquid Flow</code>, <code>Shatter</code>, <code>Iridescent Film</code>, <code>Plasma</code>, <code>Caustics</code>, <code>Chladni Plate</code>, <code>Drum Head</code>, <code>Ripple Tank</code>, <code>Hyperspace Tunnel</code>, <code>Hyperspace Weave</code>, <code>Grid</code>, <code>Rings</code>, <code>Starfield</code>, <code>Spectrum</code>, <code>Waveform</code>, <code>Julia Fractal</code>, <code>Nebula</code></span></li>
                     <li class="mb-2"><strong>Colour A</strong> - The first colour of the built-in matcap, used when you would rather not supply a texture at all.</li>
                     <li class="mb-2"><strong>Colour B</strong> - The second colour it blends to.</li>
                     <li class="mb-2"><strong>Scale</strong> - How big the built-in pattern is.</li>
                     <li class="mb-2"><strong>Speed</strong> - How fast the built-in pattern moves. 0 holds it still.</li>
                     <li class="mb-2"><strong>Sharpness</strong> - How hard the edge between the two colours is.</li>
                     <li class="mb-2"><strong>Warp</strong> - How much the built-in pattern is bent out of shape, for something more liquid than a clean gradient.</li>
+                    <li class="mb-2"><strong>Space</strong> - Bends the pattern before it is drawn. Polar unrolls it round the middle, Kaleidoscope folds it into mirrored wedges, Tunnel rolls it down a tube, Spiral winds it inward and Mirror folds it into four. Flat leaves it as it is.
+                        <span class="opt-values">Options: <code>Flat</code>, <code>Polar</code>, <code>Kaleidoscope</code>, <code>Tunnel</code>, <code>Spiral</code>, <code>Mirror</code></span></li>
+                    <li class="mb-2"><strong>Space Shape</strong> - Shapes the Space you picked. <em>Segments</em>: How many wedges Kaleidoscope folds into, and how many times Tunnel and Spiral wrap round. <em>Twist</em>: Twists the pattern more the further out it is. <em>Flow</em>: Slides the pattern outward, or down the tunnel, forever. Below 0 it runs the other way. <em>Spin</em>: Turns the pattern round the middle, forever.</li>
+                    <li class="mb-2"><strong>Detail</strong> - More detail for the styles that have it: the plate's figure, how many stars, the fractal's depth and the nebula's layers.</li>
+                    <li class="mb-2"><strong>Colour</strong> - How the pattern turns into colour. Two Colour runs from Colour A to Colour B, Three Colour adds Colour C, Rainbow runs round the colour wheel, Palette makes a smooth palette that Colour A picks, and Music Colour takes the colour of the music.
+                        <span class="opt-values">Options: <code>Two Colour</code>, <code>Three Colour</code>, <code>Rainbow</code>, <code>Palette</code>, <code>Music Colour</code></span></li>
+                    <li class="mb-2"><strong>Colour C</strong> - The third colour for Three Colour.</li>
+                    <li class="mb-2"><strong>Colour Shape</strong> - Shapes the Colour you picked. <em>Bands</em>: Steps the colours into flat bands. 0 or 1 keeps them smooth. <em>Invert</em>: Swaps which end of the pattern gets which colour. <em>Glow</em>: Makes the brightest part of the pattern glow. <em>Cycle</em>: Runs Rainbow and Palette round, forever.</li>
                         </ul>
                     </div>
 
@@ -4223,6 +4469,8 @@
                     <li class="mb-2"><strong>Emission</strong> - How much the beat pushes this matcap into the glow.</li>
                     <li class="mb-2"><strong>Hue</strong> - How far the beat swings the colour.</li>
                     <li class="mb-2"><strong>Scroll</strong> - Drives Scroll from the track, so the image slides on the beat. On a Procedural layer it also pushes the pattern forward on the beat.</li>
+                    <li class="mb-2"><strong>Pattern Beat</strong> - How the music moves a procedural matcap. <em>Size</em>: The beat makes the pattern bigger. <em>Warp</em>: The beat bends the pattern further. <em>Push</em>: The beat pushes the pattern forward. It adds to Speed rather than scaling it, so it never jumps. <em>Twist</em>: The beat twists the pattern round the middle.</li>
+                    <li class="mb-2"><strong>Pattern Beat 2</strong> - More ways the music moves a procedural matcap. <em>Travel</em>: Each hit leaves the middle as a ring and travels out. <em>Spectrum</em>: Lays the music out from the middle, bass at the centre. <em>Shake</em>: The beat shakes the pattern. <em>Morph</em>: The beat changes the shape itself: the plate's figure, the tunnel's turbulence, the fractal.</li>
                         </ul>
                     </div>
                 </div>
@@ -4575,9 +4823,10 @@
                 <p class="caption1 mb-4" style="color: #bfa8d2;">
                     All six run on one core, so the PBR base, matcaps, emissions, decals, outlines, AudioLink, Light
                     Volumes, LTCGI and VRSL work the same way in every one, with a few extra settings on the two world
-                    shaders. Only five blocks move around: <strong>Wet</strong> and <strong>Goo</strong>, with the
+                    shaders. Only a few blocks move around: <strong>Wet</strong> and <strong>Goo</strong>, with the
                     <strong>Touch</strong> and <strong>Movement</strong> groups that drive them,
                     <strong>Shading Options</strong>, the <strong>Fabric and Fur</strong> groups,
+                    <strong>Sheer &amp; Lace</strong>, <strong>Eyes</strong>, <strong>Hypno</strong>,
                     <strong>Baked Lighting</strong>, and <strong>Triplanar Projection</strong> with
                     <strong>Tiling Breakup</strong>.
                 </p>
@@ -4585,15 +4834,17 @@
                 <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>VixenWear / Latex Ultra</strong> - The physically based latex finish, and
                         the only one with the full liquid toolkit: it is the shader with <strong>Wet Effects</strong>,
-                        <strong>Goo Effects</strong>, <strong>Touch</strong> and <strong>Movement</strong>. No stylised
-                        shading, no fabric or fur.</li>
+                        <strong>Goo Effects</strong>, <strong>Touch</strong> and <strong>Movement</strong>. It also has
+                        <strong>Sheer &amp; Lace</strong> for procedural latex, <strong>Eyes</strong>, and
+                        <strong>Hypno</strong>, which only Latex Ultra has. No stylised shading, no Fabric block and no
+                        fur.</li>
                     <li class="mb-2"><strong>VixForge / Toon</strong> - The cel and anime sibling. Adds
-                        <strong>Shading Options</strong>; drops Wet and Goo, which are liquid-latex tricks that do not fit
+                        <strong>Shading Options</strong> and <strong>Eyes</strong>; drops Wet and Goo, which are liquid-latex tricks that do not fit
                         a toon surface. Its Realistic style is a full physical pass, so you can stylise the body and keep
                         realistic boots on the same avatar.</li>
-                    <li class="mb-2"><strong>VixenWear / Clothing Pro</strong> - Garments. Adds Shading Options plus all
-                        three cloth blocks: <strong>Fabric</strong>, <strong>Surface Fur</strong> and
-                        <strong>Real Fur</strong>. Drops Wet and Goo.</li>
+                    <li class="mb-2"><strong>VixenWear / Clothing Pro</strong> - Garments. Adds Shading Options,
+                        <strong>Sheer &amp; Lace</strong> and all three cloth blocks: <strong>Fabric</strong>,
+                        <strong>Surface Fur</strong> and <strong>Real Fur</strong>. Drops Wet and Goo.</li>
                     <li class="mb-2"><strong>VixForge / Fur Pro</strong> - Fur on its own, without the cloth sheen. Adds
                         Shading Options, <strong>Surface Fur</strong> and <strong>Real Fur</strong>. Drops Wet, Goo and
                         Fabric.</li>
@@ -4608,7 +4859,7 @@
                         <strong>Tiling Breakup</strong>. Drops Wet and Goo.</li>
                 </ul>
 
-                <p class="opt-note mb-4">The Fabric, Surface Fur and Real Fur blocks are documented under
+                <p class="opt-note mb-4">The Fabric, Surface Fur, Real Fur, Sheer &amp; Lace, Eyes and Hypno blocks are documented under
                     <a href="#specialfx">SPECIAL EFFECTS</a>, Shading Options and Baked Lighting under
                     <a href="#shading">SHADING</a>, and Triplanar Projection and Tiling Breakup under
                     <a href="#base">BASE</a>, because that is where the inspector puts them.</p>

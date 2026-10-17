@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-only
+# This file is adapted from VRCX-0, so it stays under the GNU GPL v3 (https://www.gnu.org/licenses/gpl-3.0.html),
+# not the MIT License that covers the rest of this repository.
 # Downloads / version badge pipeline.
 # With deep thanks to Map1en and the VRCX-0 project (https://github.com/Map1en/VRCX-0),
 # whose badge-downloads workflow this is adapted from. We would not have known we had

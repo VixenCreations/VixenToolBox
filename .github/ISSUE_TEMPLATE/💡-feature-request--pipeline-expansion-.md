@@ -1,30 +1,26 @@
 ---
-name: "\U0001F4A1 Feature Request (Pipeline Expansion)"
-about: Propose a new tool, workflow, or architectural upgrade for the VixenTools ecosystem.
-title: "[FEATURE]"
+name: "\U0001F4A1 Feature Request"
+about: Suggest a new tool, or a way to make an existing one better.
+title: "[FEATURE] "
 labels: enhancement
 assignees: VixenCreations
 
 ---
 
-### 🚧 The Pipeline Bottleneck
-*Is this feature request related to a specific workflow friction?*
-A clear and concise description of what the problem is. (e.g., "I spend way too much time manually re-linking specific Poiyomi emission masks when building for Quest...")
+### 🚧 What's the problem?
+<!-- What are you trying to do, and what makes it slow or hard today? For example: "I re-link the same emission masks by hand every time I build for Quest." -->
 
-### 🏗️ Proposed Architecture
-*Describe the ideal automation or utility.*
-A clear and concise description of what you want the engine to do. How does this eliminate human error or speed up the avatar pipeline? 
+### 💡 What would help?
+<!-- Describe the tool or change you'd like. -->
 
-### 🔄 Current Workarounds
-*Describe any alternative solutions you currently use.*
-How are you currently handling this? (e.g., "Currently, I manually duplicate the mesh, run a third-party script, and then re-parent the bones.")
+### 🔄 How do you handle it now?
+<!-- Any workaround you use, even a manual one. -->
 
-### 📸 Mockups & Ecosystem Context
-Add any other context here. Drag and drop Inspector screenshots, UI mockups, or links to VRChat SDK documentation that support this feature request.
+### 🎯 Which area is it for?
+- [ ] Avatars
+- [ ] Worlds and scenes
+- [ ] Unity editor
+- [ ] The Hub or the docs
 
-### 🎯 Target Domain
-*Which sector of the VixenTools ecosystem does this belong in? (Check all that apply)*
-- [ ] `VixenTools / Avatars` (Badges, Quest Conversion, PhysBones)
-- [ ] `VixenTools / Unity Engine` (Animation Workbench, Presets, Assets)
-- [ ] `VixenTools / Scene` (Lighting Data, Surface Snapping)
-- [ ] `Vixen Hub` (UI/UX, Documentation, Ecosystem Routing)
+### 📸 Anything else?
+<!-- Screenshots, mockups or links that help explain it. -->

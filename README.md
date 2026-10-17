@@ -65,15 +65,24 @@ Want the full picture? **[Details.md](Details.md)** covers every tool in depth, 
 * **[Tools](https://vixencreations.github.io/VixenToolBox/tools.html)**
 * **[Changelog](https://vixencreations.github.io/VixenToolBox/changelog.html)**
 * **[Support](https://vixencreations.github.io/VixenToolBox/support.html)**
+* **[Discord](https://discord.com/invite/3vbJCKcPtJ)**
 * **[AI Transparency](https://vixencreations.github.io/VixenToolBox/ai-transparency.html)**
 
-Found a bug or want a feature? [Open an issue](https://github.com/VixenCreations/VixenToolBox/issues).
+---
+
+## Contributing
+
+Found a bug or want a feature? [Open an issue](https://github.com/VixenCreations/VixenToolBox/issues). Want to fix it yourself? Pull requests are welcome, and **[CONTRIBUTING.md](CONTRIBUTING.md)** covers setup and the house rules.
+
+* **[Code of Conduct](CODE_OF_CONDUCT.md):** how we treat each other here and on Discord.
+* **[Security Policy](SECURITY.md):** report security problems privately, never in a public issue.
+* **[Accessibility](ACCESSIBILITY.md):** what we focus on, what doesn't work well yet, and how to report a barrier.
 
 ---
 
 ## License
 
-The Vixens Toolbox is open source under the [MIT License](LICENSE), and the same text ships inside the package as `LICENSE.md`. Magick.NET and ImageMagick come with it under their own licenses, listed in [Third Party Notices](Packages/com.vixen.tools/Third%20Party%20Notices.md).
+The Vixens Toolbox is open source under the [MIT License](LICENSE), and the same text ships inside the package as `LICENSE.md`. Magick.NET and ImageMagick come with it under their own licenses, listed in [Third Party Notices](Packages/com.vixen.tools/Third%20Party%20Notices.md). The VRChat packages under `Packages/com.vrchat.core.*` belong to VRChat and keep VRChat's own license, and `.github/workflows/badge-downloads.yml` is adapted from VRCX-0, so that one file stays under the [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.html). Neither ships in the package.
 
 ---
 

@@ -1,35 +1,36 @@
 ---
-name: "\U0001F41B Bug Report (VixForge Engine)"
-about: File a diagnostic report to help me fix a malfunction in the VixForge ecosystem.
-title: "[BUG]"
+name: "\U0001F41B Bug Report"
+about: Something in the Vixens Toolbox isn't working the way it should.
+title: "[BUG] "
 labels: bug
 assignees: VixenCreations
 
 ---
 
-### 🚨 System Anomaly Description
-A clear and concise description of what the bug is and how it disrupts the pipeline.
+<!-- Found a security problem? Please don't post it here. See https://github.com/VixenCreations/VixenToolBox/blob/main/SECURITY.md -->
 
-### 🔄 Steps to Reproduce
-Steps to reproduce the behavior within the Unity Editor:
-1. Open the tool located at `VixenTools / ...`
-2. Target the following object or asset: '....'
-3. Execute the action '....'
-4. See error
+### 🐛 What happened?
+<!-- A short description of the problem. -->
 
-### ✨ Expected Behavior
-A clear and concise description of what the engine *should* have done (e.g., "The Quest Conversion Engine should have generated 27 isolated materials instead of throwing a NullReferenceException").
+### 🔄 Steps to reproduce
+1. Open `VixenTools > ...`
+2. Select '...'
+3. Click '...'
+4. See the problem
 
-### 🖥️ Execution Environment
-Please complete the following telemetry checklist to help me isolate the variable:
- - **OS:** [e.g., Windows 10, Windows 11]
- - **Unity Version:** [e.g., 2022.3.22f1] *(Note: VixForge officially targets 2022.3.22f1)*
- - **VixForge Version:** [e.g., v1.3.0]
- - **VRChat SDK Version:** [e.g., 3.5.2] *(Note: VixForge officially targets 3.10.0)*
- - **Target Tool:** [e.g., Quest Conversion Engine, Animation Workbench Pro, Live Surface Snapping]
+### ✨ What did you expect?
+<!-- What should have happened instead. -->
 
-### 📜 Console Telemetry (Stack Trace)
-*If the tool threw a red error in the Unity Console, copy the ENTIRE text of the error and paste it between the backticks below. This is critical for debugging.*
+### 🖥️ Versions
+- **Toolbox:** <!-- e.g. 2.20.0, shown in the VRChat Creator Companion -->
+- **Unity:** <!-- e.g. 2022.3.22f1 -->
+- **VRChat SDK:** <!-- e.g. Avatars 3.10.3 or Worlds 3.10.3 -->
+- **Operating system:** <!-- e.g. Windows 11 -->
+- **Tool:** <!-- e.g. Quest Conversion Engine -->
+
+### 📜 Console error
+<!-- If the Unity Console shows a red error, click it and paste the whole message, including the lines under it. Screenshots help too. -->
 
 ```text
-// Paste your Unity Console stack trace here
+
+```

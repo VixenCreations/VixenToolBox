@@ -52,6 +52,8 @@ decisions when appropriate.
 
 This Code of Conduct applies within all community spaces, and also applies when
 an individual is officially representing the community in public spaces.
+Our community spaces include this GitHub repository (its issues, pull requests
+and comments) and our [Discord server](https://discord.com/invite/3vbJCKcPtJ).
 Examples of representing our community include using an official e-mail address,
 posting via an official social media account, or acting as an appointed
 representative at an online or offline event.
@@ -60,7 +62,7 @@ representative at an online or offline event.
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported to the community leaders responsible for enforcement at
-Vixenlicious@outlook.com.
+[Vixenlicious@outlook.com](mailto:Vixenlicious@outlook.com).
 All complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the
