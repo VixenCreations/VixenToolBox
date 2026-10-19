@@ -396,6 +396,7 @@
                     <a href="#outlines">OUTLINES</a>
                     <a href="#emissions">EMISSIONS</a>
                     <a href="#matcaps">MATCAPS</a>
+                    <a href="#viewercontext">VIEWER CONTEXT</a>
                     <a href="#audiolink">AUDIOLINK</a>
                     <a href="#rendering">RENDERING</a>
                     <a href="#debug">DEBUG TOOLS</a>
@@ -411,7 +412,7 @@
 <div id="base" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">BASE</h2>
-                    <div class="badge">Section 1 of 13</div>
+                    <div class="badge">Section 1 of 14</div>
                 </div>
                 <p class="tab-desc">Render mode, albedo, brightness floor, and UV animation.</p>
                 <p class="opt-note">Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -651,7 +652,7 @@
 <div id="normals" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">NORMAL MAPS</h2>
-                    <div class="badge">Section 2 of 13</div>
+                    <div class="badge">Section 2 of 14</div>
                 </div>
                 <p class="tab-desc">Macro normal map and the secondary micro-detail normal.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -722,7 +723,7 @@
 <div id="surface" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">SURFACE</h2>
-                    <div class="badge">Section 3 of 13</div>
+                    <div class="badge">Section 3 of 14</div>
                 </div>
                 <p class="tab-desc">The packed PBR map, its channel routing, reflection / specular masks, and surface shaping.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -818,6 +819,39 @@
                     <li class="mb-2"><strong>Displacement Strength</strong> - Pushes the surface out along its normals using your height source, so folds and seams become real geometry instead of shading. It needs a height source above. Tessellation Detail sets how finely the mesh is split to carry it.</li>
                     <li class="mb-2"><strong>Tessellation Detail</strong> - Splits each triangle into smaller ones before the surface is moved, so displacement and goo land smoothly instead of blocky. Higher costs more framerate, and it only spends the detail on triangles that are large on screen. Nothing moving the surface means nothing to smooth, so this only appears once something is. Set 0 to stop Touch from splitting triangles.</li>
                 </ul>
+
+                <h3 class="text-glow-pink opt-group">Stretch Response</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">Toon</span><span class="shader-tag">Clothing Pro</span><span class="shader-tag">Fur Pro</span></div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Stretch Response Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Stretch</strong> - How far the surface has to stretch before it starts reacting, and where it reacts fully. 1 is its rest size. Stretch is measured across the triangles of the mesh, so a joint with few triangles can show them when this range is narrow. A wide range hides them. <em>Start</em>: Starts reacting at this much stretch. <em>Full</em>: Fully reacted at this much stretch.</li>
+                    <li class="mb-2"><strong>Squash</strong> - How far the surface has to bunch up before creases form, and where they are deepest. 1 is its rest size. <em>Start</em>: Creases start at this much squash. <em>Full</em>: Creases are deepest at this much squash.</li>
+                    </ul>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Look</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Thin Colour</strong> - The colour the material turns where it is stretched thin. A paler version of your colour reads as real latex.</li>
+                    <li class="mb-2"><strong>Paleness</strong> - How far stretched parts turn toward the Thin Colour.</li>
+                    <li class="mb-2"><strong>Gloss</strong> - How much glossier stretched parts get, as the surface pulls smooth.</li>
+                    <li class="mb-2"><strong>See-Through</strong> - How much stretched parts thin out and let what is behind show through. Needs Rendering Mode on Fade or Transparent.</li>
+                    <li class="mb-2"><strong>Detail Flattening</strong> - How much your normal map detail flattens where the surface stretches and sharpens where it bunches.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Creases</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Amount</strong> - How strongly creases fold up where the surface bunches.</li>
+                    <li class="mb-2"><strong>Crease Shape</strong> - How the creases look. <em>Density</em>: How many creases fit across your texture. <em>Depth</em>: How deep each crease is. <em>Sharpness</em>: Soft rolls at 0, sharp folds at 1.</li>
+                        </ul>
+                    </div>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Show Stretch</strong> - Colours the material by how it stretches: grey at rest, red where it stretches, blue where it bunches. Use it to check your bake and to set Stretch and Squash.</li>
+                    </ul>
+                </div>
             </div>
             <!-- ========================= -->
             <!-- SHADING -->
@@ -825,7 +859,7 @@
 <div id="shading" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">SHADING</h2>
-                    <div class="badge">Section 4 of 13</div>
+                    <div class="badge">Section 4 of 14</div>
                 </div>
                 <p class="tab-desc">The lighting model and every world-lighting integration, grouped together. Light Volumes, LTCGI and Stage / VRSL are each fail-safe: they strip or no-op cleanly in worlds that lack the system.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -1126,7 +1160,7 @@
 <div id="decals" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">DECALS</h2>
-                    <div class="badge">Section 5 of 13</div>
+                    <div class="badge">Section 5 of 14</div>
                 </div>
                 <p class="tab-desc">Place up to four logos, stickers, brand graphics or tattoos on the latex. Each layer is positioned right in the Scene view: select the material on your mesh and drag the on-screen gizmo handles to move, scale and rotate the decal. The whole section stays off until you enable it.</p>
                 <p class="opt-note">Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -1321,7 +1355,7 @@
 <div id="polish" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">POLISH</h2>
-                    <div class="badge">Section 6 of 13</div>
+                    <div class="badge">Section 6 of 14</div>
                 </div>
                 <p class="tab-desc">The polish master gate, clearcoat, and thin film.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -1350,7 +1384,7 @@
 <div id="specialfx" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">SPECIAL EFFECTS</h2>
-                    <div class="badge">Section 7 of 13</div>
+                    <div class="badge">Section 7 of 14</div>
                 </div>
                 <p class="tab-desc">The extra effect layers: the soaked wet look with run-off and real droplets, the melting goo with slime shading, writhing, drips and touch, procedural glitter, an animated flipbook overlay, a true infinity mirror, a living inner-cosmos volume, and effects that react to where the material is being viewed from. The VixForge Toon shader carries everything here except the wet and goo effects, which are liquid-latex tricks that do not fit a toon surface.</p>
                 <p class="opt-note"><strong>Mask Source</strong>, on most of the effects below - Borrows an Emission or Matcap layer's map so the effect only shows where that layer does. Pick the layer, then the channel your mask sits in, and <strong>Invert Mask</strong> if you painted it the other way round. Paint once and several effects can share it. The layer you point at has to be switched on. Leave it on <code>None</code> and the effect covers everything.
@@ -2731,32 +2765,6 @@
                     </div>
                 </div>
 
-                <h3 class="text-glow-pink opt-group">Viewer Context</h3>
-                <p class="opt-note">The material can tell where it is being drawn and who is looking at it, and react to that on its own. Nothing here needs an animator, a menu or a parameter, and everyone sees their own version at the same moment.</p>
-
-                <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Viewer Context Settings</strong></p>
-                    <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Show</strong> - Where the change shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
-                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
-                    <li class="mb-2"><strong>Seen By</strong> - Which eye sees the change in VR. Pick one eye to show it to that eye only.
-                        <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
-                    <li class="mb-2"><strong>Distance</strong> - Whether it reacts to them coming closer or moving away.
-                        <span class="opt-values">Options: <code>Off</code>, <code>Closer is Stronger</code>, <code>Further is Stronger</code></span></li>
-                    <li class="mb-2"><strong>Near Distance</strong> - The distance it has fully reacted by.</li>
-                    <li class="mb-2"><strong>Far Distance</strong> - The distance it has stopped reacting by.</li>
-                    <li class="mb-2"><strong>Face-On Only</strong> - How square on they have to be looking before it counts.</li>
-                    <li class="mb-2"><strong>Hidden Level</strong> - How much of the effect stays where these rules hide it. 0 removes it there.</li>
-                    <li class="mb-2"><strong>Affects</strong> - What changes when that happens.
-                        <span class="opt-values">Options: <code>Emission</code>, <code>Decals</code>, <code>Emission and Decals</code></span></li>
-                    <li class="mb-2"><strong>Also Hide Outlines</strong> - Applies the same rules above to the outline passes, so a line stops showing up alone once what it traces is hidden.</li>
-                    <li class="mb-2"><strong>Also Apply To Wet And Goo</strong> - Applies the same rules above to the wet look and the goo, their drops and strands included, so they can show only in a mirror, only in photos, or only up close. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span><span class="avail-tag">World Surface</span></span></li>
-                    <li class="mb-2"><strong>Reaction Glow</strong> - A glow added wherever these rules let the effect show.</li>
-                    <li class="mb-2"><strong>Mask</strong> - Keeps the whole effect to part of the material. White is where it applies, black is left completely alone, so one patch can vanish in mirrors while the rest stays normal. The Reaction Glow follows the mask too.</li>
-                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says which parts react.</li>
-                    </ul>
-                </div>
-
                 <h3 class="text-glow-pink opt-group">Flipbook</h3>
                 <p class="opt-note">An animated overlay that plays across the surface, then blends over the material like
                     a decal. Drop a GIF or a set of images onto Frames and it bakes into one flipbook; or point it at a
@@ -3183,7 +3191,7 @@
 <div id="outlines" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">OUTLINES</h2>
-                    <div class="badge">Section 8 of 13</div>
+                    <div class="badge">Section 8 of 14</div>
                 </div>
                 <p class="tab-desc">Two stacked outlines around the silhouette, an inner and an outer, each with its own colour, glow, width, scrolling texture and AudioLink boost.</p>
                 <p class="opt-note">Width is a real thickness: the line grows as you raise it and thins naturally as the camera moves away, like a real object. Both outlines are off by default.</p>
@@ -3321,7 +3329,7 @@
 <div id="emissions" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">EMISSIONS</h2>
-                    <div class="badge">Section 9 of 13</div>
+                    <div class="badge">Section 9 of 14</div>
                 </div>
                 <p class="tab-desc">Five stacked emission layers, the Pathing effect, and a multi-region colour mask. Every layer's AudioLink controls sit inline with that layer and appear only when AudioLink is enabled.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -3684,7 +3692,7 @@
 <div id="matcaps" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">MATCAPS</h2>
-                    <div class="badge">Section 10 of 13</div>
+                    <div class="badge">Section 10 of 14</div>
                 </div>
                 <p class="tab-desc">Up to five stacked material-capture layers with a shared projection setting, plus a Car Paint look. Each layer has its own Tiling &amp; Movement and Offsets sub-sections, and can be frozen to read as part of the material rather than a sliding reflection.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -4476,12 +4484,709 @@
                 </div>
             </div>
             <!-- ========================= -->
+            <!-- VIEWER CONTEXT -->
+            <!-- ========================= -->
+<div id="viewercontext" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">VIEWER CONTEXT</h2>
+                    <div class="badge">Section 11 of 14</div>
+                </div>
+                <p class="tab-desc">Rules that show or hide each part of the material by who is looking, where they are, how close, the light on you and the beat.</p>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Mask</strong> - One mask every part below can use. Pick a channel in a part's Mask Channel to keep its rules to the painted area. Outside it, that part is left alone.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Hidden Ink</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Hidden Ink Settings</strong></p>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Ink</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Design</strong> - The hidden design. Its colour tints the ink, and its alpha says where the ink is.</li>
+                    <li class="mb-2"><strong>UV Set</strong> - Which UV layout the design follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
+                    <li class="mb-2"><strong>Colour</strong> - The colour of the ink.</li>
+                    <li class="mb-2"><strong>Mode</strong> - Fluorescent glows only where light of the Light Colour below lands on it, brighter the stronger that light is, like real UV-reactive ink. Glow lights up wherever the rules let it show. Paint lays the ink on the surface like a print.
+                        <span class="opt-values">Options: <code>Fluorescent</code>, <code>Glow</code>, <code>Paint</code></span></li>
+                    <li class="mb-2"><strong>Strength</strong> - How bright the glow is.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
+                        <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Distance &amp; Gaze</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Distance</strong> - Whether it reacts to the viewer coming closer or moving away.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Closer is Stronger</code>, <code>Further is Stronger</code></span></li>
+                    <li class="mb-2"><strong>Distance Range</strong> - The distances it reacts between, in metres. <em>Near</em>: Fully reacted by this distance. <em>Far</em>: Stops reacting at this distance.</li>
+                    <li class="mb-2"><strong>Face-On Only</strong> - How square on the viewer has to be looking at this part before it shows.</li>
+                    <li class="mb-2"><strong>Gaze Torch</strong> - Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own. <em>Amount</em>: How much the torch decides. 0 turns it off. <em>Angle</em>: How wide the torch is, in degrees. <em>Softness</em>: How soft its edge is.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Light</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Light Colour</strong> - The colour of light that makes the ink glow, like the violet of a blacklight.</li>
+                    <li class="mb-2"><strong>Light Colour Match</strong> - In Fluorescent mode the ink glows by how much of this light lands on it. In the other modes it shows only where this light lands. <em>Amount</em>: How much the light colour decides. 0 turns it off. <em>Tolerance</em>: How close a light has to be to that colour, in degrees of hue. Lower is pickier. <em>Min Brightness</em>: How bright that light has to be. <em>Softness</em>: How gently it fades in near the limits.</li>
+                    <li class="mb-2"><strong>Darkness</strong> - Shows it in the dark and fades it as the room gets brighter. <em>Amount</em>: How much darkness decides. 0 turns it off. <em>Dark</em>: Fully shown at or below this brightness. <em>Bright</em>: Gone at or above this brightness.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Beat</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Beat</strong> - Shows it on the beat. <em>Amount</em>: How much the beat decides. 0 turns it off. <em>Threshold</em>: How loud the band has to be. <em>Softness</em>: How gently it fades in around that level.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music it listens to.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Result</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Invert</strong> - Flips the rules, so it shows exactly where it would have been hidden.</li>
+                    <li class="mb-2"><strong>Hidden Level</strong> - How much stays where the rules hide it. 0 removes it there.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code>, <code>Auto</code></span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Base</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Base Settings</strong></p>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
+                        <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Distance &amp; Gaze</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Distance</strong> - Whether it reacts to the viewer coming closer or moving away.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Closer is Stronger</code>, <code>Further is Stronger</code></span></li>
+                    <li class="mb-2"><strong>Distance Range</strong> - The distances it reacts between, in metres. <em>Near</em>: Fully reacted by this distance. <em>Far</em>: Stops reacting at this distance.</li>
+                    <li class="mb-2"><strong>Face-On Only</strong> - How square on the viewer has to be looking at this part before it shows.</li>
+                    <li class="mb-2"><strong>Gaze Torch</strong> - Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own. <em>Amount</em>: How much the torch decides. 0 turns it off. <em>Angle</em>: How wide the torch is, in degrees. <em>Softness</em>: How soft its edge is.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Light</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Light Colour</strong> - The colour of light that reveals it, like the violet of a blacklight.</li>
+                    <li class="mb-2"><strong>Light Colour Match</strong> - Shows it only where light of that colour lands on it, from any light in the room. <em>Amount</em>: How much the light colour decides. 0 turns it off. <em>Tolerance</em>: How close a light has to be to that colour, in degrees of hue. Lower is pickier. <em>Min Brightness</em>: How bright that light has to be. <em>Softness</em>: How gently it fades in near the limits.</li>
+                    <li class="mb-2"><strong>Darkness</strong> - Shows it in the dark and fades it as the room gets brighter. <em>Amount</em>: How much darkness decides. 0 turns it off. <em>Dark</em>: Fully shown at or below this brightness. <em>Bright</em>: Gone at or above this brightness.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Beat</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Beat</strong> - Shows it on the beat. <em>Amount</em>: How much the beat decides. 0 turns it off. <em>Threshold</em>: How loud the band has to be. <em>Softness</em>: How gently it fades in around that level.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music it listens to.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Result</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Invert</strong> - Flips the rules, so it shows exactly where it would have been hidden.</li>
+                    <li class="mb-2"><strong>Hidden Level</strong> - How much stays where the rules hide it. 0 removes it there.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code>, <code>Auto</code></span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Normal Maps</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Normal Maps Settings</strong></p>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
+                        <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Distance &amp; Gaze</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Distance</strong> - Whether it reacts to the viewer coming closer or moving away.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Closer is Stronger</code>, <code>Further is Stronger</code></span></li>
+                    <li class="mb-2"><strong>Distance Range</strong> - The distances it reacts between, in metres. <em>Near</em>: Fully reacted by this distance. <em>Far</em>: Stops reacting at this distance.</li>
+                    <li class="mb-2"><strong>Face-On Only</strong> - How square on the viewer has to be looking at this part before it shows.</li>
+                    <li class="mb-2"><strong>Gaze Torch</strong> - Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own. <em>Amount</em>: How much the torch decides. 0 turns it off. <em>Angle</em>: How wide the torch is, in degrees. <em>Softness</em>: How soft its edge is.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Light</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Light Colour</strong> - The colour of light that reveals it, like the violet of a blacklight.</li>
+                    <li class="mb-2"><strong>Light Colour Match</strong> - Shows it only where light of that colour lands on it, from any light in the room. <em>Amount</em>: How much the light colour decides. 0 turns it off. <em>Tolerance</em>: How close a light has to be to that colour, in degrees of hue. Lower is pickier. <em>Min Brightness</em>: How bright that light has to be. <em>Softness</em>: How gently it fades in near the limits.</li>
+                    <li class="mb-2"><strong>Darkness</strong> - Shows it in the dark and fades it as the room gets brighter. <em>Amount</em>: How much darkness decides. 0 turns it off. <em>Dark</em>: Fully shown at or below this brightness. <em>Bright</em>: Gone at or above this brightness.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Beat</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Beat</strong> - Shows it on the beat. <em>Amount</em>: How much the beat decides. 0 turns it off. <em>Threshold</em>: How loud the band has to be. <em>Softness</em>: How gently it fades in around that level.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music it listens to.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Result</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Invert</strong> - Flips the rules, so it shows exactly where it would have been hidden.</li>
+                    <li class="mb-2"><strong>Hidden Level</strong> - How much stays where the rules hide it. 0 removes it there.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code>, <code>Auto</code></span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Surface</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Surface Settings</strong></p>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
+                        <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Distance &amp; Gaze</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Distance</strong> - Whether it reacts to the viewer coming closer or moving away.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Closer is Stronger</code>, <code>Further is Stronger</code></span></li>
+                    <li class="mb-2"><strong>Distance Range</strong> - The distances it reacts between, in metres. <em>Near</em>: Fully reacted by this distance. <em>Far</em>: Stops reacting at this distance.</li>
+                    <li class="mb-2"><strong>Face-On Only</strong> - How square on the viewer has to be looking at this part before it shows.</li>
+                    <li class="mb-2"><strong>Gaze Torch</strong> - Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own. <em>Amount</em>: How much the torch decides. 0 turns it off. <em>Angle</em>: How wide the torch is, in degrees. <em>Softness</em>: How soft its edge is.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Light</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Light Colour</strong> - The colour of light that reveals it, like the violet of a blacklight.</li>
+                    <li class="mb-2"><strong>Light Colour Match</strong> - Shows it only where light of that colour lands on it, from any light in the room. <em>Amount</em>: How much the light colour decides. 0 turns it off. <em>Tolerance</em>: How close a light has to be to that colour, in degrees of hue. Lower is pickier. <em>Min Brightness</em>: How bright that light has to be. <em>Softness</em>: How gently it fades in near the limits.</li>
+                    <li class="mb-2"><strong>Darkness</strong> - Shows it in the dark and fades it as the room gets brighter. <em>Amount</em>: How much darkness decides. 0 turns it off. <em>Dark</em>: Fully shown at or below this brightness. <em>Bright</em>: Gone at or above this brightness.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Beat</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Beat</strong> - Shows it on the beat. <em>Amount</em>: How much the beat decides. 0 turns it off. <em>Threshold</em>: How loud the band has to be. <em>Softness</em>: How gently it fades in around that level.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music it listens to.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Result</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Invert</strong> - Flips the rules, so it shows exactly where it would have been hidden.</li>
+                    <li class="mb-2"><strong>Hidden Level</strong> - How much stays where the rules hide it. 0 removes it there.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code>, <code>Auto</code></span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Shading</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Shading Settings</strong></p>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
+                        <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Distance &amp; Gaze</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Distance</strong> - Whether it reacts to the viewer coming closer or moving away.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Closer is Stronger</code>, <code>Further is Stronger</code></span></li>
+                    <li class="mb-2"><strong>Distance Range</strong> - The distances it reacts between, in metres. <em>Near</em>: Fully reacted by this distance. <em>Far</em>: Stops reacting at this distance.</li>
+                    <li class="mb-2"><strong>Face-On Only</strong> - How square on the viewer has to be looking at this part before it shows.</li>
+                    <li class="mb-2"><strong>Gaze Torch</strong> - Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own. <em>Amount</em>: How much the torch decides. 0 turns it off. <em>Angle</em>: How wide the torch is, in degrees. <em>Softness</em>: How soft its edge is.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Light</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Light Colour</strong> - The colour of light that reveals it, like the violet of a blacklight.</li>
+                    <li class="mb-2"><strong>Light Colour Match</strong> - Shows it only where light of that colour lands on it, from any light in the room. <em>Amount</em>: How much the light colour decides. 0 turns it off. <em>Tolerance</em>: How close a light has to be to that colour, in degrees of hue. Lower is pickier. <em>Min Brightness</em>: How bright that light has to be. <em>Softness</em>: How gently it fades in near the limits.</li>
+                    <li class="mb-2"><strong>Darkness</strong> - Shows it in the dark and fades it as the room gets brighter. <em>Amount</em>: How much darkness decides. 0 turns it off. <em>Dark</em>: Fully shown at or below this brightness. <em>Bright</em>: Gone at or above this brightness.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Beat</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Beat</strong> - Shows it on the beat. <em>Amount</em>: How much the beat decides. 0 turns it off. <em>Threshold</em>: How loud the band has to be. <em>Softness</em>: How gently it fades in around that level.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music it listens to.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Result</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Invert</strong> - Flips the rules, so it shows exactly where it would have been hidden.</li>
+                    <li class="mb-2"><strong>Hidden Level</strong> - How much stays where the rules hide it. 0 removes it there.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code>, <code>Auto</code></span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Decals</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Decals Settings</strong></p>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
+                        <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Distance &amp; Gaze</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Distance</strong> - Whether it reacts to the viewer coming closer or moving away.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Closer is Stronger</code>, <code>Further is Stronger</code></span></li>
+                    <li class="mb-2"><strong>Distance Range</strong> - The distances it reacts between, in metres. <em>Near</em>: Fully reacted by this distance. <em>Far</em>: Stops reacting at this distance.</li>
+                    <li class="mb-2"><strong>Face-On Only</strong> - How square on the viewer has to be looking at this part before it shows.</li>
+                    <li class="mb-2"><strong>Gaze Torch</strong> - Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own. <em>Amount</em>: How much the torch decides. 0 turns it off. <em>Angle</em>: How wide the torch is, in degrees. <em>Softness</em>: How soft its edge is.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Light</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Light Colour</strong> - The colour of light that reveals it, like the violet of a blacklight.</li>
+                    <li class="mb-2"><strong>Light Colour Match</strong> - Shows it only where light of that colour lands on it, from any light in the room. <em>Amount</em>: How much the light colour decides. 0 turns it off. <em>Tolerance</em>: How close a light has to be to that colour, in degrees of hue. Lower is pickier. <em>Min Brightness</em>: How bright that light has to be. <em>Softness</em>: How gently it fades in near the limits.</li>
+                    <li class="mb-2"><strong>Darkness</strong> - Shows it in the dark and fades it as the room gets brighter. <em>Amount</em>: How much darkness decides. 0 turns it off. <em>Dark</em>: Fully shown at or below this brightness. <em>Bright</em>: Gone at or above this brightness.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Beat</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Beat</strong> - Shows it on the beat. <em>Amount</em>: How much the beat decides. 0 turns it off. <em>Threshold</em>: How loud the band has to be. <em>Softness</em>: How gently it fades in around that level.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music it listens to.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Result</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Invert</strong> - Flips the rules, so it shows exactly where it would have been hidden.</li>
+                    <li class="mb-2"><strong>Hidden Level</strong> - How much stays where the rules hide it. 0 removes it there.</li>
+                    <li class="mb-2"><strong>Reaction Glow</strong> - A glow added wherever these rules let the decals show.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code>, <code>Auto</code></span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Polish</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Polish Settings</strong></p>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
+                        <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Distance &amp; Gaze</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Distance</strong> - Whether it reacts to the viewer coming closer or moving away.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Closer is Stronger</code>, <code>Further is Stronger</code></span></li>
+                    <li class="mb-2"><strong>Distance Range</strong> - The distances it reacts between, in metres. <em>Near</em>: Fully reacted by this distance. <em>Far</em>: Stops reacting at this distance.</li>
+                    <li class="mb-2"><strong>Face-On Only</strong> - How square on the viewer has to be looking at this part before it shows.</li>
+                    <li class="mb-2"><strong>Gaze Torch</strong> - Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own. <em>Amount</em>: How much the torch decides. 0 turns it off. <em>Angle</em>: How wide the torch is, in degrees. <em>Softness</em>: How soft its edge is.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Light</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Light Colour</strong> - The colour of light that reveals it, like the violet of a blacklight.</li>
+                    <li class="mb-2"><strong>Light Colour Match</strong> - Shows it only where light of that colour lands on it, from any light in the room. <em>Amount</em>: How much the light colour decides. 0 turns it off. <em>Tolerance</em>: How close a light has to be to that colour, in degrees of hue. Lower is pickier. <em>Min Brightness</em>: How bright that light has to be. <em>Softness</em>: How gently it fades in near the limits.</li>
+                    <li class="mb-2"><strong>Darkness</strong> - Shows it in the dark and fades it as the room gets brighter. <em>Amount</em>: How much darkness decides. 0 turns it off. <em>Dark</em>: Fully shown at or below this brightness. <em>Bright</em>: Gone at or above this brightness.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Beat</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Beat</strong> - Shows it on the beat. <em>Amount</em>: How much the beat decides. 0 turns it off. <em>Threshold</em>: How loud the band has to be. <em>Softness</em>: How gently it fades in around that level.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music it listens to.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Result</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Invert</strong> - Flips the rules, so it shows exactly where it would have been hidden.</li>
+                    <li class="mb-2"><strong>Hidden Level</strong> - How much stays where the rules hide it. 0 removes it there.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code>, <code>Auto</code></span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Special Effects</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Special Effects Settings</strong></p>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Reaches</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Glitter</strong> - These rules show or hide the glitter.</li>
+                    <li class="mb-2"><strong>Wet And Goo</strong> - These rules show or hide the wet look and the goo, their drops and strands included. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span><span class="avail-tag">World Surface</span></span></li>
+                    <li class="mb-2"><strong>Every Other Effect</strong> - These rules show or hide every other special effect: Ghost, Hologram, Pearl, Eyes, Skeleton X-Ray, Sheer &amp; Lace, Dissolve and the effects that glow.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
+                        <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Distance &amp; Gaze</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Distance</strong> - Whether it reacts to the viewer coming closer or moving away.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Closer is Stronger</code>, <code>Further is Stronger</code></span></li>
+                    <li class="mb-2"><strong>Distance Range</strong> - The distances it reacts between, in metres. <em>Near</em>: Fully reacted by this distance. <em>Far</em>: Stops reacting at this distance.</li>
+                    <li class="mb-2"><strong>Face-On Only</strong> - How square on the viewer has to be looking at this part before it shows.</li>
+                    <li class="mb-2"><strong>Gaze Torch</strong> - Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own. <em>Amount</em>: How much the torch decides. 0 turns it off. <em>Angle</em>: How wide the torch is, in degrees. <em>Softness</em>: How soft its edge is.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Light</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Light Colour</strong> - The colour of light that reveals it, like the violet of a blacklight.</li>
+                    <li class="mb-2"><strong>Light Colour Match</strong> - Shows it only where light of that colour lands on it, from any light in the room. <em>Amount</em>: How much the light colour decides. 0 turns it off. <em>Tolerance</em>: How close a light has to be to that colour, in degrees of hue. Lower is pickier. <em>Min Brightness</em>: How bright that light has to be. <em>Softness</em>: How gently it fades in near the limits.</li>
+                    <li class="mb-2"><strong>Darkness</strong> - Shows it in the dark and fades it as the room gets brighter. <em>Amount</em>: How much darkness decides. 0 turns it off. <em>Dark</em>: Fully shown at or below this brightness. <em>Bright</em>: Gone at or above this brightness.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Beat</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Beat</strong> - Shows it on the beat. <em>Amount</em>: How much the beat decides. 0 turns it off. <em>Threshold</em>: How loud the band has to be. <em>Softness</em>: How gently it fades in around that level.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music it listens to.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Result</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Invert</strong> - Flips the rules, so it shows exactly where it would have been hidden.</li>
+                    <li class="mb-2"><strong>Hidden Level</strong> - How much stays where the rules hide it. 0 removes it there.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code>, <code>Auto</code></span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Outlines</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Outlines Settings</strong></p>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
+                        <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Distance &amp; Gaze</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Distance</strong> - Whether it reacts to the viewer coming closer or moving away.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Closer is Stronger</code>, <code>Further is Stronger</code></span></li>
+                    <li class="mb-2"><strong>Distance Range</strong> - The distances it reacts between, in metres. <em>Near</em>: Fully reacted by this distance. <em>Far</em>: Stops reacting at this distance.</li>
+                    <li class="mb-2"><strong>Face-On Only</strong> - How square on the viewer has to be looking at this part before it shows.</li>
+                    <li class="mb-2"><strong>Gaze Torch</strong> - Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own. <em>Amount</em>: How much the torch decides. 0 turns it off. <em>Angle</em>: How wide the torch is, in degrees. <em>Softness</em>: How soft its edge is.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Light</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Light Colour</strong> - The colour of light that reveals it, like the violet of a blacklight.</li>
+                    <li class="mb-2"><strong>Light Colour Match</strong> - Shows it only where light of that colour lands on it, from any light in the room. <em>Amount</em>: How much the light colour decides. 0 turns it off. <em>Tolerance</em>: How close a light has to be to that colour, in degrees of hue. Lower is pickier. <em>Min Brightness</em>: How bright that light has to be. <em>Softness</em>: How gently it fades in near the limits.</li>
+                    <li class="mb-2"><strong>Darkness</strong> - Shows it in the dark and fades it as the room gets brighter. <em>Amount</em>: How much darkness decides. 0 turns it off. <em>Dark</em>: Fully shown at or below this brightness. <em>Bright</em>: Gone at or above this brightness.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Beat</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Beat</strong> - Shows it on the beat. <em>Amount</em>: How much the beat decides. 0 turns it off. <em>Threshold</em>: How loud the band has to be. <em>Softness</em>: How gently it fades in around that level.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music it listens to.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Result</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Invert</strong> - Flips the rules, so it shows exactly where it would have been hidden.</li>
+                    <li class="mb-2"><strong>Hidden Level</strong> - How much stays where the rules hide it. 0 removes it there.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code>, <code>Auto</code></span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Emissions</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Emissions Settings</strong></p>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
+                        <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Distance &amp; Gaze</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Distance</strong> - Whether it reacts to the viewer coming closer or moving away.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Closer is Stronger</code>, <code>Further is Stronger</code></span></li>
+                    <li class="mb-2"><strong>Distance Range</strong> - The distances it reacts between, in metres. <em>Near</em>: Fully reacted by this distance. <em>Far</em>: Stops reacting at this distance.</li>
+                    <li class="mb-2"><strong>Face-On Only</strong> - How square on the viewer has to be looking at this part before it shows.</li>
+                    <li class="mb-2"><strong>Gaze Torch</strong> - Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own. <em>Amount</em>: How much the torch decides. 0 turns it off. <em>Angle</em>: How wide the torch is, in degrees. <em>Softness</em>: How soft its edge is.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Light</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Light Colour</strong> - The colour of light that reveals it, like the violet of a blacklight.</li>
+                    <li class="mb-2"><strong>Light Colour Match</strong> - Shows it only where light of that colour lands on it, from any light in the room. <em>Amount</em>: How much the light colour decides. 0 turns it off. <em>Tolerance</em>: How close a light has to be to that colour, in degrees of hue. Lower is pickier. <em>Min Brightness</em>: How bright that light has to be. <em>Softness</em>: How gently it fades in near the limits.</li>
+                    <li class="mb-2"><strong>Darkness</strong> - Shows it in the dark and fades it as the room gets brighter. <em>Amount</em>: How much darkness decides. 0 turns it off. <em>Dark</em>: Fully shown at or below this brightness. <em>Bright</em>: Gone at or above this brightness.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Beat</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Beat</strong> - Shows it on the beat. <em>Amount</em>: How much the beat decides. 0 turns it off. <em>Threshold</em>: How loud the band has to be. <em>Softness</em>: How gently it fades in around that level.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music it listens to.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Result</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Invert</strong> - Flips the rules, so it shows exactly where it would have been hidden.</li>
+                    <li class="mb-2"><strong>Hidden Level</strong> - How much stays where the rules hide it. 0 removes it there.</li>
+                    <li class="mb-2"><strong>Reaction Glow</strong> - A glow added wherever these rules let the emission show.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code>, <code>Auto</code></span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Matcaps</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Matcaps Settings</strong></p>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
+                        <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Distance &amp; Gaze</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Distance</strong> - Whether it reacts to the viewer coming closer or moving away.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Closer is Stronger</code>, <code>Further is Stronger</code></span></li>
+                    <li class="mb-2"><strong>Distance Range</strong> - The distances it reacts between, in metres. <em>Near</em>: Fully reacted by this distance. <em>Far</em>: Stops reacting at this distance.</li>
+                    <li class="mb-2"><strong>Face-On Only</strong> - How square on the viewer has to be looking at this part before it shows.</li>
+                    <li class="mb-2"><strong>Gaze Torch</strong> - Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own. <em>Amount</em>: How much the torch decides. 0 turns it off. <em>Angle</em>: How wide the torch is, in degrees. <em>Softness</em>: How soft its edge is.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Light</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Light Colour</strong> - The colour of light that reveals it, like the violet of a blacklight.</li>
+                    <li class="mb-2"><strong>Light Colour Match</strong> - Shows it only where light of that colour lands on it, from any light in the room. <em>Amount</em>: How much the light colour decides. 0 turns it off. <em>Tolerance</em>: How close a light has to be to that colour, in degrees of hue. Lower is pickier. <em>Min Brightness</em>: How bright that light has to be. <em>Softness</em>: How gently it fades in near the limits.</li>
+                    <li class="mb-2"><strong>Darkness</strong> - Shows it in the dark and fades it as the room gets brighter. <em>Amount</em>: How much darkness decides. 0 turns it off. <em>Dark</em>: Fully shown at or below this brightness. <em>Bright</em>: Gone at or above this brightness.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Beat</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Beat</strong> - Shows it on the beat. <em>Amount</em>: How much the beat decides. 0 turns it off. <em>Threshold</em>: How loud the band has to be. <em>Softness</em>: How gently it fades in around that level.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music it listens to.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Result</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Invert</strong> - Flips the rules, so it shows exactly where it would have been hidden.</li>
+                    <li class="mb-2"><strong>Hidden Level</strong> - How much stays where the rules hide it. 0 removes it there.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code>, <code>Auto</code></span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">AudioLink</h3>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>AudioLink Settings</strong></p>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
+                        <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Distance &amp; Gaze</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Distance</strong> - Whether it reacts to the viewer coming closer or moving away.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Closer is Stronger</code>, <code>Further is Stronger</code></span></li>
+                    <li class="mb-2"><strong>Distance Range</strong> - The distances it reacts between, in metres. <em>Near</em>: Fully reacted by this distance. <em>Far</em>: Stops reacting at this distance.</li>
+                    <li class="mb-2"><strong>Face-On Only</strong> - How square on the viewer has to be looking at this part before it shows.</li>
+                    <li class="mb-2"><strong>Gaze Torch</strong> - Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own. <em>Amount</em>: How much the torch decides. 0 turns it off. <em>Angle</em>: How wide the torch is, in degrees. <em>Softness</em>: How soft its edge is.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Light</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Light Colour</strong> - The colour of light that reveals it, like the violet of a blacklight.</li>
+                    <li class="mb-2"><strong>Light Colour Match</strong> - Shows it only where light of that colour lands on it, from any light in the room. <em>Amount</em>: How much the light colour decides. 0 turns it off. <em>Tolerance</em>: How close a light has to be to that colour, in degrees of hue. Lower is pickier. <em>Min Brightness</em>: How bright that light has to be. <em>Softness</em>: How gently it fades in near the limits.</li>
+                    <li class="mb-2"><strong>Darkness</strong> - Shows it in the dark and fades it as the room gets brighter. <em>Amount</em>: How much darkness decides. 0 turns it off. <em>Dark</em>: Fully shown at or below this brightness. <em>Bright</em>: Gone at or above this brightness.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Beat</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Beat</strong> - Shows it on the beat. <em>Amount</em>: How much the beat decides. 0 turns it off. <em>Threshold</em>: How loud the band has to be. <em>Softness</em>: How gently it fades in around that level.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music it listens to.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Result</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Invert</strong> - Flips the rules, so it shows exactly where it would have been hidden.</li>
+                    <li class="mb-2"><strong>Hidden Level</strong> - How much stays where the rules hide it. 0 removes it there.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.
+                        <span class="opt-values">Options: <code>Off</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code>, <code>Auto</code></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- ========================= -->
             <!-- AUDIOLINK -->
             <!-- ========================= -->
 <div id="audiolink" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">AUDIOLINK</h2>
-                    <div class="badge">Section 11 of 13</div>
+                    <div class="badge">Section 12 of 14</div>
                 </div>
                 <p class="tab-desc">The master AudioLink toggle and every reactive sub-group beneath it.</p>
                 <p class="opt-note">
@@ -4719,7 +5424,7 @@
 <div id="rendering" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">RENDERING</h2>
-                    <div class="badge">Section 12 of 13</div>
+                    <div class="badge">Section 13 of 14</div>
                 </div>
                 <p class="tab-desc">Culling, blend and stencil overrides. The Rendering Mode up in BASE already sets sensible values, so leave these alone unless you need a specific result.</p>
                 <p class="opt-note"><strong>Models must be triangles.</strong> If yours looks torn into triangles or shredded, select the model file, open its Model Import Settings, turn off <em>Keep Quads</em> and hit Apply.</p>
@@ -4794,7 +5499,7 @@
 <div id="debug" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">DEBUG TOOLS</h2>
-                    <div class="badge">Section 13 of 13</div>
+                    <div class="badge">Section 14 of 14</div>
                 </div>
                 <p class="tab-desc">Tools for checking what a world is doing to your material. They change nothing you upload.</p>
 
@@ -4827,7 +5532,7 @@
                     <strong>Touch</strong> and <strong>Movement</strong> groups that drive them,
                     <strong>Shading Options</strong>, the <strong>Fabric and Fur</strong> groups,
                     <strong>Sheer &amp; Lace</strong>, <strong>Eyes</strong>, <strong>Hypno</strong>,
-                    <strong>Baked Lighting</strong>, and <strong>Triplanar Projection</strong> with
+                    <strong>Stretch Response</strong>, <strong>Baked Lighting</strong>, and <strong>Triplanar Projection</strong> with
                     <strong>Tiling Breakup</strong>.
                 </p>
 
@@ -4852,16 +5557,16 @@
                         six. It keeps <strong>Wet Effects</strong>, <strong>Goo Effects</strong>, <strong>Touch</strong>
                         and <strong>Movement</strong>, and adds Shading
                         Options, <strong>Fabric</strong>, <strong>Surface Fur</strong>, <strong>Baked Lighting</strong>,
-                        <strong>Triplanar Projection</strong> and <strong>Tiling Breakup</strong>. No Real Fur.</li>
+                        <strong>Triplanar Projection</strong> and <strong>Tiling Breakup</strong>. No Real Fur and no Stretch Response.</li>
                     <li class="mb-2"><strong>VixForge / World Fur</strong> - The world build with the strands. Adds
                         Shading Options, <strong>Fabric</strong>, <strong>Surface Fur</strong>, <strong>Real Fur</strong>,
                         <strong>Baked Lighting</strong>, <strong>Triplanar Projection</strong> and
-                        <strong>Tiling Breakup</strong>. Drops Wet and Goo.</li>
+                        <strong>Tiling Breakup</strong>. Drops Wet, Goo and Stretch Response.</li>
                 </ul>
 
                 <p class="opt-note mb-4">The Fabric, Surface Fur, Real Fur, Sheer &amp; Lace, Eyes and Hypno blocks are documented under
                     <a href="#specialfx">SPECIAL EFFECTS</a>, Shading Options and Baked Lighting under
-                    <a href="#shading">SHADING</a>, and Triplanar Projection and Tiling Breakup under
+                    <a href="#shading">SHADING</a>, Stretch Response under <a href="#surface">SURFACE</a>, and Triplanar Projection and Tiling Breakup under
                     <a href="#base">BASE</a>, because that is where the inspector puts them.</p>
 
             </div>
