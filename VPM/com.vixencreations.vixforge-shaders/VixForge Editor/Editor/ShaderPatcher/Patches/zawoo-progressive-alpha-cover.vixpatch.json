@@ -1,0 +1,122 @@
+{
+  "id": "zawoo.progressive-alpha-cover.hdr",
+  "displayName": "HDR, reflections and VRC Light Volumes",
+  "assetName": "Zawoo Rock-It Shaft",
+  "author": "Vixen Creations",
+  "version": "1.0.0",
+  "description": "Stops HDR emission being clamped, adds VRC Light Volumes ambient and soft specular, and adds Reflection Strength and Emission Strength controls.",
+  "shaderName": "Zawoo/PorgressiveAlphaCover",
+  "appliedMarker": "g_ZawooLVSpec",
+  "knownSourceSha256": [
+    "9d0507a234de54bb5046bbaf6e5b1ee9a4499fd4d082d55299c4c332f10ff90d"
+  ],
+  "notes": [
+    "Needs the free VRC Light Volumes package.",
+    "Light Volume Intensity 0 falls back to light probes, so the patch is safe in worlds with no volumes."
+  ],
+  "tokens": [
+    {
+      "name": "LIGHT_VOLUMES_INCLUDE",
+      "displayName": "VRC Light Volumes",
+      "candidates": [
+        "Packages/red.sim.lightvolumes/Shaders/LightVolumes.cginc",
+        "Assets/VixForge/Editor/cginc/LightVolumes.cginc"
+      ],
+      "searchFileName": "LightVolumes.cginc",
+      "excludeFolders": [
+        "OptimizedShaders",
+        "liltoon",
+        "lilToon"
+      ],
+      "installHint": "Install VRC Light Volumes (red.sim.lightvolumes) from the VRChat Creator Companion or https://github.com/REDSIM/VRCLightVolumes"
+    }
+  ],
+  "operations": [
+    {
+      "op": "insertAfterLine",
+      "anchor": "[HDR] _Emission (\"Emission\", Color) = (0,0,0,0)",
+      "text": "        _EmissionStrength (\"Emission Strength\", Float) = 1.0\n\n        // Reflection probe response. 1.0 is the stock Standard result.\n        _ReflectionStrength (\"Reflection Strength\", Range(0,2)) = 1.0\n\n        // VRC Light Volumes: replaces flat light-probe ambient with the world's\n        // baked light volumes so the accessory lights the same as the avatar.\n        [ToggleUI] _UseLightVolumes (\"VRC Light Volumes\", Float) = 1.0\n        _LightVolumeIntensity (\"Light Volume Intensity\", Range(0,2)) = 1.0\n        _LightVolumeSpecular (\"Light Volume Specular\", Range(0,2)) = 1.0",
+      "skipIfPresent": "_LightVolumeSpecular (\"Light Volume Specular\"",
+      "note": "Add the HDR, reflection and Light Volume controls"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "#pragma surface surf StandardSpecular fullforwardshadows alpha:fade",
+      "text": "        // Custom StandardSpecular-based lighting model that folds in VRC Light Volumes.\n        // Forward only (VRChat is forward); target 5.0 is required by the Light Volumes cginc\n        // (Texture3D / Texture2DArray.SampleLevel).\n        #pragma surface surf StandardSpecularLV fullforwardshadows alpha:fade exclude_path:deferred exclude_path:prepass",
+      "note": "Point the surface shader at the Light Volume lighting model"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "#pragma target 3.0",
+      "text": "        #pragma target 5.0\n\n        #include \"UnityPBSLighting.cginc\"\n\n        // The surface-shader analysis parser is a cut-down HLSL parser and cannot handle the\n        // modern syntax inside the Light Volumes cginc (const params, etc.). Feed it lightweight\n        // stubs during analysis; the real per-platform compile (analysis undefined) pulls in the\n        // actual implementation.\n        #ifdef SHADER_TARGET_SURFACE_ANALYSIS\n            float LightVolumesEnabled() { return 0; }\n            void LightVolumeSH(float3 worldPos, out float3 L0, out float3 L1r, out float3 L1g, out float3 L1b, float3 worldPosOffset, float3 worldNormal) { L0 = 0; L1r = 0; L1g = 0; L1b = 0; }\n            float3 LightVolumeEvaluate(float3 worldNormal, float3 L0, float3 L1r, float3 L1g, float3 L1b) { return 0; }\n            float3 LightVolumeSpecular(float3 f0, float smoothness, float3 worldNormal, float3 viewDir, float3 L0, float3 L1r, float3 L1g, float3 L1b) { return 0; }\n        #else\n            #include \"{{LIGHT_VOLUMES_INCLUDE}}\"\n        #endif",
+      "note": "Raise the shader target and pull in Light Volumes"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed4 _Specular;",
+      "text": "        half4 _Specular;",
+      "note": "HDR precision: _Specular"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed4 _Emission;",
+      "text": "        // _Emission is an [HDR] Color. Held in a fixed4 it clamps at 2.0 wherever fixed is a\n        // real 11-bit type (Android/Quest), silently capping HDR emission on those platforms.\n        float4 _Emission;\n        half _EmissionStrength;",
+      "note": "HDR precision: _Emission was clamped at 2.0"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed4 _Color1;",
+      "text": "        half4 _Color1;",
+      "note": "HDR precision: _Color1"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed4 _Color2;",
+      "text": "        half4 _Color2;",
+      "note": "HDR precision: _Color2"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "bool _ForceHide;",
+      "text": "        half _ForceHide;\n        half _UseLightVolumes;\n        half _LightVolumeIntensity;\n        half _LightVolumeSpecular;\n        half _ReflectionStrength;",
+      "note": "Declare the new controls, and stop binding a float property to a bool"
+    },
+    {
+      "op": "insertAfterLine",
+      "anchor": "UNITY_INSTANCING_BUFFER_END(Props)",
+      "text": "\n        // Per-fragment carrier for the Light Volume specular. _GI runs before the lighting\n        // function in the same fragment, so it computes the value and the lighting function\n        // adds it after the standard BRDF (keeps it out of the reflection-probe fresnel term).\n        static half3 g_ZawooLVSpec = 0;\n\n        // Standard specular lighting, plus the Light Volume soft-spec on top.\n        inline half4 LightingStandardSpecularLV (SurfaceOutputStandardSpecular s, half3 viewDir, UnityGI gi)\n        {\n            half4 c = LightingStandardSpecular(s, viewDir, gi);\n            c.rgb += g_ZawooLVSpec;\n            return c;\n        }\n\n        inline void LightingStandardSpecularLV_GI (inout SurfaceOutputStandardSpecular s, UnityGIInput data, inout UnityGI gi)\n        {\n            // Standard reflection-probe specular, atmospheric fog, direct light, etc.\n            LightingStandardSpecular_GI(s, data, gi);\n\n            g_ZawooLVSpec = 0;\n\n            // Light Volumes are ambient, so only touch the forward base pass.\n        #if defined(UNITY_PASS_FORWARDBASE)\n            if (_UseLightVolumes > 0.5 && LightVolumesEnabled() > 0.5)\n            {\n                // s.Normal is already world-space inside the lighting function.\n                float3 L0, L1r, L1g, L1b;\n                LightVolumeSH(data.worldPos, L0, L1r, L1g, L1b, float3(0,0,0), s.Normal);\n\n                // Blend towards the volumetric ambient instead of overwriting the probe ambient,\n                // so intensity 0 falls back to light probes rather than going black.\n                float3 lvDiffuse = max(0.0, LightVolumeEvaluate(s.Normal, L0, L1r, L1g, L1b));\n                gi.indirect.diffuse = lerp(gi.indirect.diffuse, lvDiffuse * _LightVolumeIntensity, saturate(_LightVolumeIntensity));\n\n                // Soft SH specular from the same volumes (uses the specular colour as f0).\n                float3 viewDir = normalize(data.worldViewDir);\n                g_ZawooLVSpec = max(0.0, LightVolumeSpecular(s.Specular, s.Smoothness, s.Normal, viewDir, L0, L1r, L1g, L1b)) * (_LightVolumeIntensity * _LightVolumeSpecular);\n            }\n        #endif\n\n            gi.indirect.specular *= _ReflectionStrength;\n        }",
+      "skipIfPresent": "g_ZawooLVSpec",
+      "note": "Add the Light Volume lighting model"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed4 c = tex2D(_MainTex, IN.uv_MainTex);",
+      "text": "            half4 c = tex2D(_MainTex, IN.uv_MainTex);",
+      "note": "HDR precision: albedo local"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed4 modC1 = _Color1 + (1-_Color1) * (1-_Color1Str);",
+      "text": "            half4 modC1 = _Color1 + (1-_Color1) * (1-_Color1Str);",
+      "note": "HDR precision: modC1"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed4 modC2 = _Color2 + (1-_Color2) * (1-_Color2Str);",
+      "text": "            half4 modC2 = _Color2 + (1-_Color2) * (1-_Color2Str);",
+      "note": "HDR precision: modC2"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "if (_ForceHide == 1) finalA = 0.0;",
+      "text": "            if (_ForceHide > 0.0) finalA = 0.0;",
+      "note": "Compare Force Hide as a float"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "o.Emission = _Emission;",
+      "text": "            o.Emission = _Emission.rgb * _EmissionStrength;",
+      "note": "Apply Emission Strength"
+    }
+  ]
+}

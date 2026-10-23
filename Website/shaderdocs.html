@@ -389,14 +389,17 @@
                     <a href="#base">BASE</a>
                     <a href="#normals">NORMAL MAPS</a>
                     <a href="#surface">SURFACE</a>
+                    <a href="#lightdata">LIGHT DATA</a>
                     <a href="#shading">SHADING</a>
                     <a href="#decals">DECALS</a>
+                    <a href="#tattoos">TATTOOS</a>
                     <a href="#polish">POLISH</a>
                     <a href="#specialfx">SPECIAL EFFECTS</a>
                     <a href="#outlines">OUTLINES</a>
                     <a href="#emissions">EMISSIONS</a>
                     <a href="#matcaps">MATCAPS</a>
                     <a href="#viewercontext">VIEWER CONTEXT</a>
+                    <a href="#touch">TOUCH</a>
                     <a href="#audiolink">AUDIOLINK</a>
                     <a href="#rendering">RENDERING</a>
                     <a href="#debug">DEBUG TOOLS</a>
@@ -412,7 +415,7 @@
 <div id="base" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">BASE</h2>
-                    <div class="badge">Section 1 of 14</div>
+                    <div class="badge">Section 1 of 17</div>
                 </div>
                 <p class="tab-desc">Render mode, albedo, brightness floor, and UV animation.</p>
                 <p class="opt-note">Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -652,7 +655,7 @@
 <div id="normals" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">NORMAL MAPS</h2>
-                    <div class="badge">Section 2 of 14</div>
+                    <div class="badge">Section 2 of 17</div>
                 </div>
                 <p class="tab-desc">Macro normal map and the secondary micro-detail normal.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -723,7 +726,7 @@
 <div id="surface" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">SURFACE</h2>
-                    <div class="badge">Section 3 of 14</div>
+                    <div class="badge">Section 3 of 17</div>
                 </div>
                 <p class="tab-desc">The packed PBR map, its channel routing, reflection / specular masks, and surface shaping.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -854,12 +857,37 @@
                 </div>
             </div>
             <!-- ========================= -->
+            <!-- LIGHT DATA -->
+            <!-- ========================= -->
+<div id="lightdata" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">LIGHT DATA</h2>
+                    <div class="badge">Section 4 of 17</div>
+                </div>
+                <p class="tab-desc">Which of a world's extra lights reach you, and whether they bring shadows and cookies.</p>
+
+                <h3 class="text-glow-pink opt-group">Lights</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">Toon</span><span class="shader-tag">Clothing Pro</span><span class="shader-tag">Fur Pro</span></div>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Pixel Lights</strong> - Point lights, spot lights and extra suns that the world set to Important. Off ignores them, and a locked material then saves the lock time and framerate they cost.</li>
+                    <li class="mb-2"><strong>Vertex Lights</strong> - The cheaper lights the world set to Not Important, up to four at a time. Off ignores them, and a locked material then locks faster.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Shadows and Cookies</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">Toon</span><span class="shader-tag">Clothing Pro</span><span class="shader-tag">Fur Pro</span></div>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Point Light Shadows</strong> - Point lights that cast shadows also shadow you. It adds lock time, so it is off until you want it.</li>
+                    <li class="mb-2"><strong>Soft Shadows</strong> - Spot and point light shadows get soft edges when the light is set to Soft Shadows. Off keeps them hard. It adds lock time while on.</li>
+                    <li class="mb-2"><strong>Light Cookies</strong> - A point light or sun with a cookie texture projects its pattern onto you. It adds lock time while on.</li>
+                </ul>
+            </div>
+            <!-- ========================= -->
             <!-- SHADING -->
             <!-- ========================= -->
 <div id="shading" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">SHADING</h2>
-                    <div class="badge">Section 4 of 14</div>
+                    <div class="badge">Section 5 of 17</div>
                 </div>
                 <p class="tab-desc">The lighting model and every world-lighting integration, grouped together. Light Volumes, LTCGI and Stage / VRSL are each fail-safe: they strip or no-op cleanly in worlds that lack the system.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -925,6 +953,7 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Rim Light</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Off turns this off and leaves it out of the locked material, so locking is faster. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span><span class="avail-tag">Toon</span><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span></span></li>
                     <li class="mb-2"><strong>Strength</strong> - How bright that edge gets. 0 turns it off.</li>
                     <li class="mb-2"><strong>Band</strong> - Which part of the music the edge listens to.</li>
                     <li class="mb-2"><strong>Flare</strong> - How far the beat pushes the edge brightness up.</li>
@@ -943,6 +972,7 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Subsurface</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Off turns this off and leaves it out of the locked material, so locking is faster. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span><span class="avail-tag">Toon</span><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span></span></li>
                     <li class="mb-2"><strong>Strength</strong> - How much light soaks in. 0 turns it off.</li>
                     <li class="mb-2"><strong>Distance</strong> - How far the light spreads once it is inside. Small keeps the glow tight to the lit edge, large carries it round onto the shaded side.</li>
                     <li class="mb-2"><strong>Power</strong> - How much extra you get looking towards the light, the way a hand held up to a lamp glows at the edges. Low shows it across a wide range of angles, high only when the light is nearly behind.</li>
@@ -955,6 +985,7 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Transmission</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Off turns this off and leaves it out of the locked material, so locking is faster. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span><span class="avail-tag">Toon</span><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span></span></li>
                     <li class="mb-2"><strong>Strength</strong> - How much light comes through. 0 turns it off.</li>
                     <li class="mb-2"><strong>Band</strong> - Which part of the music the glow listens to.</li>
                     <li class="mb-2"><strong>Glow Through</strong> - How far the beat pushes the glow up.</li>
@@ -968,6 +999,7 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Anisotropy</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Off turns this off and leaves it out of the locked material, so locking is faster. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span><span class="avail-tag">Toon</span><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span></span></li>
                     <li class="mb-2"><strong>Strength</strong> - How far the highlight stretches. 0 leaves it round. Negative stretches it the other way across the surface.</li>
                     <li class="mb-2"><strong>Rotation</strong> - Which way the brushing runs, in degrees.</li>
                     </ul>
@@ -997,6 +1029,7 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Micro Lighting</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Off turns this off and leaves it out of the locked material, so locking is faster. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span><span class="avail-tag">Toon</span><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span></span></li>
                     <li class="mb-2"><strong>Peak Light</strong> - Brightens the raised detail so peaks catch a little more light. It is the light-side companion to Micro Shading in Shadow Detail, which darkens the creases. The sliders below trim it per lighting source.</li>
                     <li class="mb-2"><strong>Scene Lights</strong> - How much of it lands on light from the lights in the room. 1 is full, 0 leaves it out.</li>
                     <li class="mb-2"><strong>Ambient</strong> - How much of it lands on ambient light and light probes. 1 is full, 0 leaves it out.</li>
@@ -1009,6 +1042,7 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Cavity Lighting</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Off turns this off and leaves it out of the locked material, so locking is faster. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span><span class="avail-tag">Toon</span><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span></span></li>
                     <li class="mb-2"><strong>Strength</strong> - Raised areas catch the light and creases fall into shadow as the light rakes across, on top of the flat Cavity shading. Needs Cavity turned on in the Surface section. The sliders below trim it per lighting source.</li>
                     <li class="mb-2"><strong>Scene Lights</strong> - How much of it lands on light from the lights in the room. 1 is full, 0 leaves it out.</li>
                     <li class="mb-2"><strong>Ambient</strong> - How much of it lands on ambient light and light probes. 1 is full, 0 leaves it out.</li>
@@ -1036,6 +1070,7 @@
                 <div class="opt-subgroup">
                     <p class="opt-note mt-2 mb-2"><strong>Micro Shading</strong></p>
                     <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Off turns this off and leaves it out of the locked material, so locking is faster. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span><span class="avail-tag">Toon</span><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span></span></li>
                     <li class="mb-2"><strong>Strength</strong> - Makes occlusion react to where the light is coming from, so creases go dark when the light rakes in from the side and open up when it hits head on. Without it occlusion dims everything evenly and reads as dirt painted on. The sliders below trim it per lighting system, so you can lean on it in the ambient and ease off under a stage rig.</li>
                     <li class="mb-2"><strong>Scene Lights</strong> - How much Micro Shading lands on light from the lights in the room. 1 is full, 0 leaves it out.</li>
                     <li class="mb-2"><strong>Ambient</strong> - How much of it lands on ambient light and light probes. 1 is full, 0 leaves it out.</li>
@@ -1160,7 +1195,7 @@
 <div id="decals" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">DECALS</h2>
-                    <div class="badge">Section 5 of 14</div>
+                    <div class="badge">Section 6 of 17</div>
                 </div>
                 <p class="tab-desc">Place up to four logos, stickers, brand graphics or tattoos on the latex. Each layer is positioned right in the Scene view: select the material on your mesh and drag the on-screen gizmo handles to move, scale and rotate the decal. The whole section stays off until you enable it.</p>
                 <p class="opt-note">Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -1350,12 +1385,197 @@
                 </ul>
             </div>
             <!-- ========================= -->
+            <!-- TATTOOS -->
+            <!-- ========================= -->
+<div id="tattoos" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">TATTOOS</h2>
+                    <div class="badge">Section 7 of 17</div>
+                </div>
+                <p class="tab-desc">Toon only. Up to three tattoos that sit in your skin like real ink, with toon highlights, glow, blacklight ink and comic linework.</p>
+                <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>.</p>
+
+                <h3 class="text-glow-pink opt-group">Tattoo Ink</h3>
+                <div class="tag-row"><span class="shader-tag">Toon</span></div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Tattoo 1</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns this tattoo on.</li>
+                    <li class="mb-2"><strong>Art</strong> - Your tattoo design. Its alpha says where the ink is. Tiling and Offset move and repeat it.</li>
+                    <li class="mb-2"><strong>UV</strong> - Which UV the art follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
+                    <li class="mb-2"><strong>Ink Colour</strong> - Tints the art. Its alpha fades the whole tattoo.</li>
+                    <li class="mb-2"><strong>Opacity</strong> - How solid the ink is.</li>
+                    </ul>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Ink Under Skin</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Bleed</strong> - Softens the edges, the way ink spreads a little under the skin.</li>
+                    <li class="mb-2"><strong>Age</strong> - Fades and blurs the ink and turns black toward the blue-green of an old tattoo.</li>
+                    <li class="mb-2"><strong>Fresh Ink</strong> - A glossy shine over new ink, as if it was just done.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Highlight Bands</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Sheen Band</strong> - A hard cel highlight on the ink where the main light hits it.</li>
+                    <li class="mb-2"><strong>Sheen Shape</strong> - Where the band starts and how soft its edge is. <em>Threshold</em>: Higher keeps the band to where the light hits head on. <em>Softness</em>: Low is a hard cel edge, high a soft one.</li>
+                    <li class="mb-2"><strong>Band Colour</strong> - The colour of the sheen and rim bands.</li>
+                    <li class="mb-2"><strong>Rim Band</strong> - A hard band on the ink along your outline.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Glow</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Glow</strong> - Makes the ink glow by itself.</li>
+                    <li class="mb-2"><strong>Band</strong> - Which part of the music makes the ink glow.</li>
+                    <li class="mb-2"><strong>Beat Glow</strong> - How much the beat makes the ink glow.</li>
+                    <li class="mb-2"><strong>Glow Colour</strong> - The colour the ink glows, for Glow and UV Ink.</li>
+                    <li class="mb-2"><strong>UV Ink</strong> - Glows only under light of the UV Light colour, like blacklight ink.</li>
+                    <li class="mb-2"><strong>UV Light</strong> - The colour of light that makes UV Ink glow. Purple matches a blacklight.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Linework</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Outline</strong> - Draws a line round the art. Higher draws it wider.</li>
+                    <li class="mb-2"><strong>Outline Colour</strong> - The colour of the outline. Its alpha sets how strong it is.</li>
+                    <li class="mb-2"><strong>Halftone</strong> - Turns the ink into comic dots, bigger where the ink is solid.</li>
+                    <li class="mb-2"><strong>Hatching</strong> - Turns the ink into diagonal pen lines, thicker where the ink is solid.</li>
+                    <li class="mb-2"><strong>Dot and Line Size</strong> - How many dots or lines fit across the art.</li>
+                    <li class="mb-2"><strong>Flow</strong> - A shine that travels along the ink.</li>
+                    <li class="mb-2"><strong>Flow Speed</strong> - How fast the shine travels.</li>
+                    <li class="mb-2"><strong>Flow Colour</strong> - The colour of the travelling shine.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Tattoo 2</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns this tattoo on.</li>
+                    <li class="mb-2"><strong>Art</strong> - Your tattoo design. Its alpha says where the ink is. Tiling and Offset move and repeat it.</li>
+                    <li class="mb-2"><strong>UV</strong> - Which UV the art follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
+                    <li class="mb-2"><strong>Ink Colour</strong> - Tints the art. Its alpha fades the whole tattoo.</li>
+                    <li class="mb-2"><strong>Opacity</strong> - How solid the ink is.</li>
+                    </ul>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Ink Under Skin</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Bleed</strong> - Softens the edges, the way ink spreads a little under the skin.</li>
+                    <li class="mb-2"><strong>Age</strong> - Fades and blurs the ink and turns black toward the blue-green of an old tattoo.</li>
+                    <li class="mb-2"><strong>Fresh Ink</strong> - A glossy shine over new ink, as if it was just done.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Highlight Bands</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Sheen Band</strong> - A hard cel highlight on the ink where the main light hits it.</li>
+                    <li class="mb-2"><strong>Sheen Shape</strong> - Where the band starts and how soft its edge is. <em>Threshold</em>: Higher keeps the band to where the light hits head on. <em>Softness</em>: Low is a hard cel edge, high a soft one.</li>
+                    <li class="mb-2"><strong>Band Colour</strong> - The colour of the sheen and rim bands.</li>
+                    <li class="mb-2"><strong>Rim Band</strong> - A hard band on the ink along your outline.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Glow</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Glow</strong> - Makes the ink glow by itself.</li>
+                    <li class="mb-2"><strong>Band</strong> - Which part of the music makes the ink glow.</li>
+                    <li class="mb-2"><strong>Beat Glow</strong> - How much the beat makes the ink glow.</li>
+                    <li class="mb-2"><strong>Glow Colour</strong> - The colour the ink glows, for Glow and UV Ink.</li>
+                    <li class="mb-2"><strong>UV Ink</strong> - Glows only under light of the UV Light colour, like blacklight ink.</li>
+                    <li class="mb-2"><strong>UV Light</strong> - The colour of light that makes UV Ink glow. Purple matches a blacklight.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Linework</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Outline</strong> - Draws a line round the art. Higher draws it wider.</li>
+                    <li class="mb-2"><strong>Outline Colour</strong> - The colour of the outline. Its alpha sets how strong it is.</li>
+                    <li class="mb-2"><strong>Halftone</strong> - Turns the ink into comic dots, bigger where the ink is solid.</li>
+                    <li class="mb-2"><strong>Hatching</strong> - Turns the ink into diagonal pen lines, thicker where the ink is solid.</li>
+                    <li class="mb-2"><strong>Dot and Line Size</strong> - How many dots or lines fit across the art.</li>
+                    <li class="mb-2"><strong>Flow</strong> - A shine that travels along the ink.</li>
+                    <li class="mb-2"><strong>Flow Speed</strong> - How fast the shine travels.</li>
+                    <li class="mb-2"><strong>Flow Colour</strong> - The colour of the travelling shine.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Tattoo 3</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Turns this tattoo on.</li>
+                    <li class="mb-2"><strong>Art</strong> - Your tattoo design. Its alpha says where the ink is. Tiling and Offset move and repeat it.</li>
+                    <li class="mb-2"><strong>UV</strong> - Which UV the art follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
+                    <li class="mb-2"><strong>Ink Colour</strong> - Tints the art. Its alpha fades the whole tattoo.</li>
+                    <li class="mb-2"><strong>Opacity</strong> - How solid the ink is.</li>
+                    </ul>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Ink Under Skin</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Bleed</strong> - Softens the edges, the way ink spreads a little under the skin.</li>
+                    <li class="mb-2"><strong>Age</strong> - Fades and blurs the ink and turns black toward the blue-green of an old tattoo.</li>
+                    <li class="mb-2"><strong>Fresh Ink</strong> - A glossy shine over new ink, as if it was just done.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Highlight Bands</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Sheen Band</strong> - A hard cel highlight on the ink where the main light hits it.</li>
+                    <li class="mb-2"><strong>Sheen Shape</strong> - Where the band starts and how soft its edge is. <em>Threshold</em>: Higher keeps the band to where the light hits head on. <em>Softness</em>: Low is a hard cel edge, high a soft one.</li>
+                    <li class="mb-2"><strong>Band Colour</strong> - The colour of the sheen and rim bands.</li>
+                    <li class="mb-2"><strong>Rim Band</strong> - A hard band on the ink along your outline.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Glow</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Glow</strong> - Makes the ink glow by itself.</li>
+                    <li class="mb-2"><strong>Band</strong> - Which part of the music makes the ink glow.</li>
+                    <li class="mb-2"><strong>Beat Glow</strong> - How much the beat makes the ink glow.</li>
+                    <li class="mb-2"><strong>Glow Colour</strong> - The colour the ink glows, for Glow and UV Ink.</li>
+                    <li class="mb-2"><strong>UV Ink</strong> - Glows only under light of the UV Light colour, like blacklight ink.</li>
+                    <li class="mb-2"><strong>UV Light</strong> - The colour of light that makes UV Ink glow. Purple matches a blacklight.</li>
+                        </ul>
+                    </div>
+
+                    <div class="opt-subgroup">
+                        <p class="opt-note mt-2 mb-2"><strong>Linework</strong></p>
+                        <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Outline</strong> - Draws a line round the art. Higher draws it wider.</li>
+                    <li class="mb-2"><strong>Outline Colour</strong> - The colour of the outline. Its alpha sets how strong it is.</li>
+                    <li class="mb-2"><strong>Halftone</strong> - Turns the ink into comic dots, bigger where the ink is solid.</li>
+                    <li class="mb-2"><strong>Hatching</strong> - Turns the ink into diagonal pen lines, thicker where the ink is solid.</li>
+                    <li class="mb-2"><strong>Dot and Line Size</strong> - How many dots or lines fit across the art.</li>
+                    <li class="mb-2"><strong>Flow</strong> - A shine that travels along the ink.</li>
+                    <li class="mb-2"><strong>Flow Speed</strong> - How fast the shine travels.</li>
+                    <li class="mb-2"><strong>Flow Colour</strong> - The colour of the travelling shine.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- ========================= -->
             <!-- POLISH -->
             <!-- ========================= -->
 <div id="polish" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">POLISH</h2>
-                    <div class="badge">Section 6 of 14</div>
+                    <div class="badge">Section 8 of 17</div>
                 </div>
                 <p class="tab-desc">The polish master gate, clearcoat, and thin film.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -1384,7 +1604,7 @@
 <div id="specialfx" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">SPECIAL EFFECTS</h2>
-                    <div class="badge">Section 7 of 14</div>
+                    <div class="badge">Section 9 of 17</div>
                 </div>
                 <p class="tab-desc">The extra effect layers: the soaked wet look with run-off and real droplets, the melting goo with slime shading, writhing, drips and touch, procedural glitter, an animated flipbook overlay, a true infinity mirror, a living inner-cosmos volume, and effects that react to where the material is being viewed from. The VixForge Toon shader carries everything here except the wet and goo effects, which are liquid-latex tricks that do not fit a toon surface.</p>
                 <p class="opt-note"><strong>Mask Source</strong>, on most of the effects below - Borrows an Emission or Matcap layer's map so the effect only shows where that layer does. Pick the layer, then the channel your mask sits in, and <strong>Invert Mask</strong> if you painted it the other way round. Paint once and several effects can share it. The layer you point at has to be switched on. Leave it on <code>None</code> and the effect covers everything.
@@ -1423,6 +1643,8 @@
                     <li class="mb-2"><strong>Root Darkening</strong> - How much the sheen fades down inside the weave, so only the raised threads catch the light. It follows your AO map, so it needs one.</li>
                     <li class="mb-2"><strong>Fabric Mask (B&amp;W)</strong> - Scopes the sheen and the fur to part of the material, so you can put velvet on the collar and leave the rest plain. Leave empty to apply everywhere.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the fabric sheen applies.</li>
+                    <li class="mb-2"><strong>Touch Press</strong> - How far the fabric dents in under a hand, in metres. Turn Tessellation up for a smooth dent. Needs Material Contacts on in TOUCH. <span class="tag-inline"><span class="avail-tag">Clothing Pro</span></span></li>
+                    <li class="mb-2"><strong>Touch Creases</strong> - Creases that fan out round a hand pressing into the fabric. Needs Material Contacts on in TOUCH. <span class="tag-inline"><span class="avail-tag">Clothing Pro</span></span></li>
                     </ul>
                 </div>
 
@@ -1748,6 +1970,7 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Native Touch</strong> - Finds hands, and anything else close to you, from what the camera already sees, so no contacts or animator are needed. Each person sees only their own hands, only up close, and never in a mirror. The world has to draw a depth texture, which most worlds with realtime shadows do.</li>
                     <li class="mb-2"><strong>Sensing</strong> - How hands are felt on you. <em>Strength</em>: How hard a hand presses. <em>Reach cm</em>: How far in front of you a hand still counts, in centimetres. <em>Radius cm</em>: How wide an area each point feels around it, in centimetres. <em>Max Distance</em>: How close the viewer has to be, in metres, before it switches on. Keeps the cost down.</li>
+                    <li class="mb-2"><strong>Contacts</strong> - Feels real hands, fingers and heads through Material Contacts, set up in TOUCH. Every control below follows them, in mirrors too, and everyone who sees you sees the same touch. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     <li class="mb-2"><strong>Zones</strong> - Four touchable areas, one per colour channel: red, green, blue and alpha. Paint soft edges rather than hard ones, since the material pushes in across the whole shape you paint.</li>
                     <li class="mb-2"><strong>Press Red</strong> - Animate this from a contact receiver. 0 is untouched, 1 is pressed all the way in. Give it a curve that overshoots and settles back rather than a straight ramp and the material springs like real slime.</li>
                     <li class="mb-2"><strong>Press Green</strong> - How hard a press at this contact point pushes into the goo. Driven by the contacts on your avatar, so it reacts to being touched.</li>
@@ -2271,6 +2494,7 @@
                     <li class="mb-2"><strong>Root Darkening</strong> - How much darker the fur is at its roots, which is what gives a coat depth. It follows your AO map, so it needs one.</li>
                     <li class="mb-2"><strong>Mask (B&amp;W)</strong> - Narrows the fur to part of what the Fabric Mask already covers, so the sheen can run over the whole garment while the strands stay on the collar and cuffs. White keeps the fur, black drops it. Leave empty for fur everywhere the Fabric Mask allows.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the surface fur shows.</li>
+                    <li class="mb-2"><strong>Touch Parting</strong> - The fur parts and lies away from a hand that touches it. Needs Material Contacts on in TOUCH. <span class="tag-inline"><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span></span></li>
                     </ul>
                 </div>
 
@@ -2323,6 +2547,8 @@
                     <li class="mb-2"><strong>Follow PBR Map</strong> - Lets the material's packed PBR map set how shiny each hair is, so fur over a glossy patch catches more light than fur over a matte one, and metal tints the highlight. 0 gives every hair the same shine, the way it was before.</li>
                     <li class="mb-2"><strong>Mask (B&amp;W)</strong> - Paints where the strands grow and how long they are: white is full Length, grey is shorter, black grows nothing at all and skips the work. Use it to put a fur trim on a hood or a pair of cuffs without paying for it across the whole garment. Stacks on the masks in the Fabric and Surface Fur groups above.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where fur grows.</li>
+                    <li class="mb-2"><strong>Touch Parting</strong> - Hairs bend away from a hand that touches them, so the coat parts round it. Needs Material Contacts on in TOUCH. <span class="tag-inline"><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span></span></li>
+                    <li class="mb-2"><strong>Touch Flatten</strong> - Hairs under a hand lie down flat, the way a coat does when you press into it. Needs Material Contacts on in TOUCH. <span class="tag-inline"><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span></span></li>
                     </ul>
                 </div>
 
@@ -2765,6 +2991,70 @@
                     </div>
                 </div>
 
+                <h3 class="text-glow-pink opt-group">Gemstones</h3>
+                <div class="tag-row"><span class="shader-tag">Clothing Pro</span></div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Layout</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Pattern</strong> - How the stones are laid out. Stone Map takes the stones from a map you paint instead.
+                        <span class="opt-values">Options: <code>Grid</code>, <code>Hex</code>, <code>Diamond</code>, <code>Scatter</code>, <code>Stone Map</code></span></li>
+                    <li class="mb-2"><strong>Density</strong> - How many stones fit across your texture.</li>
+                    <li class="mb-2"><strong>Stone Size</strong> - How much of its space each stone fills. Lower leaves fabric showing between them.</li>
+                    <li class="mb-2"><strong>Rotation</strong> - Turns the whole layout, in degrees.</li>
+                    <li class="mb-2"><strong>UV</strong> - Which UV the layout follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
+                    <li class="mb-2"><strong>Mask</strong> - Where stones go. White sets stones, black leaves the fabric bare. A stone is kept or left out whole, never cut in half.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask holds where stones go.</li>
+                    <li class="mb-2"><strong>Stone Map</strong> - For Stone Map: paint each stone as a soft white dome on black, brightest at its middle.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Stones</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Cut</strong> - The shape and facets of each stone. Cabochon is a smooth dome with no facets.
+                        <span class="opt-values">Options: <code>Round Brilliant</code>, <code>Princess</code>, <code>Emerald</code>, <code>Cabochon</code></span></li>
+                    <li class="mb-2"><strong>Facet Depth</strong> - How steeply the facets slope. Higher catches light at wider angles.</li>
+                    <li class="mb-2"><strong>Colour</strong> - The colour of the stones. White makes clear crystal.</li>
+                    <li class="mb-2"><strong>Colour Depth</strong> - How deep the colour goes where light travels further through the stone.</li>
+                    <li class="mb-2"><strong>Refraction</strong> - How strongly the stone bends light. About 1.5 is glass and rhinestone, 2.4 is diamond.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Sparkle</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Brilliance</strong> - How much light bounces round inside the stones and comes back out of the top.</li>
+                    <li class="mb-2"><strong>Fire</strong> - Rainbow flashes from light splitting into colours inside the stone.</li>
+                    <li class="mb-2"><strong>Scintillation</strong> - Facets flashing on and off as you move.</li>
+                    <li class="mb-2"><strong>Band</strong> - Which part of the music makes the facets flash.</li>
+                    <li class="mb-2"><strong>Beat Sparkle</strong> - How much the beat makes the facets flash.</li>
+                    <li class="mb-2"><strong>Light Sparkle</strong> - Bright pinpoints where the main light catches a facet just right.</li>
+                    <li class="mb-2"><strong>Inclusions</strong> - Specks and cloudy flaws inside the stones. 0 is flawless.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Variance</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Size</strong> - How much the stones differ in size.</li>
+                    <li class="mb-2"><strong>Hue</strong> - How far each stone strays from the stone colour, for a mixed set.</li>
+                    <li class="mb-2"><strong>Brightness</strong> - How much brighter or darker each stone is.</li>
+                    <li class="mb-2"><strong>Missing Stones</strong> - How many stones have fallen out.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Setting</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Setting</strong> - The metal holding each stone: a rim round it, or claws.
+                        <span class="opt-values">Options: <code>None</code>, <code>Bezel</code>, <code>Four Prongs</code>, <code>Six Prongs</code></span></li>
+                    <li class="mb-2"><strong>Metal Colour</strong> - The colour of the metal: silver, gold, gunmetal.</li>
+                    <li class="mb-2"><strong>Metal Width</strong> - How thick the rim or claws are.</li>
+                    </ul>
+                </div>
+
                 <h3 class="text-glow-pink opt-group">Flipbook</h3>
                 <p class="opt-note">An animated overlay that plays across the surface, then blends over the material like
                     a decal. Drop a GIF or a set of images onto Frames and it bakes into one flipbook; or point it at a
@@ -3191,7 +3481,7 @@
 <div id="outlines" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">OUTLINES</h2>
-                    <div class="badge">Section 8 of 14</div>
+                    <div class="badge">Section 10 of 17</div>
                 </div>
                 <p class="tab-desc">Two stacked outlines around the silhouette, an inner and an outer, each with its own colour, glow, width, scrolling texture and AudioLink boost.</p>
                 <p class="opt-note">Width is a real thickness: the line grows as you raise it and thins naturally as the camera moves away, like a real object. Both outlines are off by default.</p>
@@ -3329,7 +3619,7 @@
 <div id="emissions" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">EMISSIONS</h2>
-                    <div class="badge">Section 9 of 14</div>
+                    <div class="badge">Section 11 of 17</div>
                 </div>
                 <p class="tab-desc">Five stacked emission layers, the Pathing effect, and a multi-region colour mask. Every layer's AudioLink controls sit inline with that layer and appear only when AudioLink is enabled.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -3692,7 +3982,7 @@
 <div id="matcaps" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">MATCAPS</h2>
-                    <div class="badge">Section 10 of 14</div>
+                    <div class="badge">Section 12 of 17</div>
                 </div>
                 <p class="tab-desc">Up to five stacked material-capture layers with a shared projection setting, plus a Car Paint look. Each layer has its own Tiling &amp; Movement and Offsets sub-sections, and can be frozen to read as part of the material rather than a sliding reflection.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -4489,7 +4779,7 @@
 <div id="viewercontext" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">VIEWER CONTEXT</h2>
-                    <div class="badge">Section 11 of 14</div>
+                    <div class="badge">Section 13 of 17</div>
                 </div>
                 <p class="tab-desc">Rules that show or hide each part of the material by who is looking, where they are, how close, the light on you and the beat.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -5181,12 +5471,61 @@
                 </div>
             </div>
             <!-- ========================= -->
+            <!-- TOUCH -->
+            <!-- ========================= -->
+<div id="touch" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
+                <div class="row justify-content-between align-items-center mb-3">
+                    <h2 class="text-glow-cyan m-0">TOUCH</h2>
+                    <div class="badge">Section 14 of 17</div>
+                </div>
+                <p class="tab-desc">Real hands, fingers and heads touching you, through VRChat's Material Contacts, and the glow and reactions they drive.</p>
+                <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>.</p>
+
+                <h3 class="text-glow-pink opt-group">Material Contacts</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">Toon</span><span class="shader-tag">Clothing Pro</span><span class="shader-tag">Fur Pro</span></div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Material Contacts Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Hands</strong> - Hands count as a touch.</li>
+                    <li class="mb-2"><strong>Fingers</strong> - Fingertips count as a touch.</li>
+                    <li class="mb-2"><strong>Head</strong> - Heads count, for a cheek against yours or a nuzzle.</li>
+                    <li class="mb-2"><strong>Feet</strong> - Feet count as a touch.</li>
+                    <li class="mb-2"><strong>Body</strong> - Chests and hips count, for a hug.</li>
+                    <li class="mb-2"><strong>Props</strong> - Anything tagged VF_Touch counts, such as a toy or a wand.</li>
+                    <li class="mb-2"><strong>Size</strong> - How wide a touch is, in centimetres.</li>
+                    <li class="mb-2"><strong>Reach</strong> - How far in front of you a contact still counts, in centimetres. Raise it if a touch only shows once the hand sinks in.</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Touch Glow</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">Toon</span><span class="shader-tag">Clothing Pro</span><span class="shader-tag">Fur Pro</span></div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Touch Glow Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Style</strong> - Glow lights a soft spot under each touch, Ripple sends rings out from it, and Ring draws a ring round it.
+                        <span class="opt-values">Options: <code>Glow</code>, <code>Ripple</code>, <code>Ring</code></span></li>
+                    <li class="mb-2"><strong>Colour</strong> - The colour of the glow. Push it past white for a brighter glow.</li>
+                    <li class="mb-2"><strong>Strength</strong> - How bright the glow is.</li>
+                    <li class="mb-2"><strong>Band</strong> - Which part of the music brightens the glow.</li>
+                    <li class="mb-2"><strong>Beat Glow</strong> - How much the beat brightens the glow.</li>
+                    <li class="mb-2"><strong>Size</strong> - How far the glow spreads round each touch, as a share of the touch size.</li>
+                    <li class="mb-2"><strong>Ripple Spacing</strong> - The gap between ripples, in centimetres.</li>
+                    <li class="mb-2"><strong>Ripple Speed</strong> - How fast the ripples travel out.</li>
+                    <li class="mb-2"><strong>Colour Per Person</strong> - Each person who touches you glows in a colour of their own. Colour then sets only the brightness.</li>
+                    <li class="mb-2"><strong>Who Glows</strong> - Whose touch lights you up: everyone, only other people, or only your own hands.
+                        <span class="opt-values">Options: <code>Everyone</code>, <code>Others</code>, <code>Me</code></span></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- ========================= -->
             <!-- AUDIOLINK -->
             <!-- ========================= -->
 <div id="audiolink" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">AUDIOLINK</h2>
-                    <div class="badge">Section 12 of 14</div>
+                    <div class="badge">Section 15 of 17</div>
                 </div>
                 <p class="tab-desc">The master AudioLink toggle and every reactive sub-group beneath it.</p>
                 <p class="opt-note">
@@ -5424,7 +5763,7 @@
 <div id="rendering" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">RENDERING</h2>
-                    <div class="badge">Section 13 of 14</div>
+                    <div class="badge">Section 16 of 17</div>
                 </div>
                 <p class="tab-desc">Culling, blend and stencil overrides. The Rendering Mode up in BASE already sets sensible values, so leave these alone unless you need a specific result.</p>
                 <p class="opt-note"><strong>Models must be triangles.</strong> If yours looks torn into triangles or shredded, select the model file, open its Model Import Settings, turn off <em>Keep Quads</em> and hit Apply.</p>
@@ -5499,7 +5838,7 @@
 <div id="debug" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">DEBUG TOOLS</h2>
-                    <div class="badge">Section 14 of 14</div>
+                    <div class="badge">Section 17 of 17</div>
                 </div>
                 <p class="tab-desc">Tools for checking what a world is doing to your material. They change nothing you upload.</p>
 
@@ -5544,12 +5883,12 @@
                         <strong>Hypno</strong>, which only Latex Ultra has. No stylised shading, no Fabric block and no
                         fur.</li>
                     <li class="mb-2"><strong>VixForge / Toon</strong> - The cel and anime sibling. Adds
-                        <strong>Shading Options</strong> and <strong>Eyes</strong>; drops Wet and Goo, which are liquid-latex tricks that do not fit
+                        <strong>Shading Options</strong>, <strong>Eyes</strong> and <strong>Tattoo Ink</strong>, which only Toon has; drops Wet and Goo, which are liquid-latex tricks that do not fit
                         a toon surface. Its Realistic style is a full physical pass, so you can stylise the body and keep
                         realistic boots on the same avatar.</li>
                     <li class="mb-2"><strong>VixenWear / Clothing Pro</strong> - Garments. Adds Shading Options,
                         <strong>Sheer &amp; Lace</strong> and all three cloth blocks: <strong>Fabric</strong>,
-                        <strong>Surface Fur</strong> and <strong>Real Fur</strong>. Drops Wet and Goo.</li>
+                        <strong>Surface Fur</strong> and <strong>Real Fur</strong>, plus <strong>Gemstones</strong>, which only Clothing Pro has. Drops Wet and Goo.</li>
                     <li class="mb-2"><strong>VixForge / Fur Pro</strong> - Fur on its own, without the cloth sheen. Adds
                         Shading Options, <strong>Surface Fur</strong> and <strong>Real Fur</strong>. Drops Wet, Goo and
                         Fabric.</li>
@@ -5557,14 +5896,14 @@
                         six. It keeps <strong>Wet Effects</strong>, <strong>Goo Effects</strong>, <strong>Touch</strong>
                         and <strong>Movement</strong>, and adds Shading
                         Options, <strong>Fabric</strong>, <strong>Surface Fur</strong>, <strong>Baked Lighting</strong>,
-                        <strong>Triplanar Projection</strong> and <strong>Tiling Breakup</strong>. No Real Fur and no Stretch Response.</li>
+                        <strong>Triplanar Projection</strong> and <strong>Tiling Breakup</strong>. No Real Fur, no Stretch Response, no LIGHT DATA and no TOUCH.</li>
                     <li class="mb-2"><strong>VixForge / World Fur</strong> - The world build with the strands. Adds
                         Shading Options, <strong>Fabric</strong>, <strong>Surface Fur</strong>, <strong>Real Fur</strong>,
                         <strong>Baked Lighting</strong>, <strong>Triplanar Projection</strong> and
-                        <strong>Tiling Breakup</strong>. Drops Wet, Goo and Stretch Response.</li>
+                        <strong>Tiling Breakup</strong>. Drops Wet, Goo, Stretch Response, LIGHT DATA and TOUCH.</li>
                 </ul>
 
-                <p class="opt-note mb-4">The Fabric, Surface Fur, Real Fur, Sheer &amp; Lace, Eyes and Hypno blocks are documented under
+                <p class="opt-note mb-4">The Fabric, Surface Fur, Real Fur, Sheer &amp; Lace, Gemstones, Eyes and Hypno blocks are documented under
                     <a href="#specialfx">SPECIAL EFFECTS</a>, Shading Options and Baked Lighting under
                     <a href="#shading">SHADING</a>, Stretch Response under <a href="#surface">SURFACE</a>, and Triplanar Projection and Tiling Breakup under
                     <a href="#base">BASE</a>, because that is where the inspector puts them.</p>

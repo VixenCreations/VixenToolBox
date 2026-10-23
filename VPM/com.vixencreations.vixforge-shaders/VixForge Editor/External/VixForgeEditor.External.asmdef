@@ -1,0 +1,31 @@
+{
+    "name": "VixForgeEditor.External",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e895c9fd83fa41049f3b15cc5fd26d7f",
+        "GUID:dde09067b7f7a054ca208a3c17c8f7c5",
+        "GUID:b4ae365a73764ee478adc74cb89832fe"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.basis.sdk",
+            "expression": "0",
+            "define": "BASIS_SDK_EXISTS"
+        },
+        {
+            "name": "com.vrchat.avatars",
+            "expression": "",
+            "define": "VIXFORGE_VRC_AVATARS"
+        }
+    ],
+    "noEngineReferences": false
+}

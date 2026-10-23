@@ -1,0 +1,2708 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Latex Soft Silicone
+  m_Shader: {fileID: 4800000, guid: abe655f5dd8f77644909c57daeb70bdc, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - VF_MULTISCATTER
+  - VF_POLISH
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2000
+  stringTagMap:
+    AllLockedGUIDS: 2f6087bedb0a29e4b9dc8c135e4edf1c
+    OriginalKeywords: VF_MULTISCATTER VF_POLISH
+    OriginalShader: VixenWear/Latex Ultra
+    OriginalShaderGUID: cef6ed55fff1dfe4a95a00abefef6445
+    RenderType: Opaque
+    VRCFallback: ToonDoubleSided
+    _CC_Smoothness_vixforgeIsPreset: true
+    _CC_Strength_vixforgeIsPreset: true
+    _GlobalMetallic_vixforgeIsPreset: true
+    _GlobalSmoothness_vixforgeIsPreset: true
+    _SSS_Dist_vixforgeIsPreset: true
+    _SSS_Str_vixforgeIsPreset: true
+    _Trans_Str_vixforgeIsPreset: true
+    _UsePolish_vixforgeIsPreset: true
+    vixforgeIsPreset: true
+    vixforgePresetName: Latex/Soft Silicone
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - GeometryShader_Enabled: 1
+    - Instancing: 0
+    - Tessellation_Enabled: 1
+    - _AL_AutoCorr_Mod: 0
+    - _AL_AutoCorr_Norm: 0
+    - _AL_Band_CarPaint: 3
+    - _AL_Band_Cosmos: 0
+    - _AL_Band_Cym: 0
+    - _AL_Band_Detail: 2
+    - _AL_Band_Emis2: 1
+    - _AL_Band_Emis3: 1
+    - _AL_Band_Emis4: 1
+    - _AL_Band_Emis5: 1
+    - _AL_Band_Emission: 0
+    - _AL_Band_Film: 2
+    - _AL_Band_Flip: 0
+    - _AL_Band_Ghost: 0
+    - _AL_Band_Glit: 3
+    - _AL_Band_Glit2: 0
+    - _AL_Band_Glit3: 2
+    - _AL_Band_Glit4: 1
+    - _AL_Band_Glit5: 3
+    - _AL_Band_Glitch: 3
+    - _AL_Band_Goo: 0
+    - _AL_Band_Holo: 0
+    - _AL_Band_HoloGlitch: 3
+    - _AL_Band_Hyper: 0
+    - _AL_Band_Infinity: 0
+    - _AL_Band_MatCap: 0
+    - _AL_Band_MatCap2: 0
+    - _AL_Band_MatCap3: 0
+    - _AL_Band_MatCap4: 0
+    - _AL_Band_MatCap5: 0
+    - _AL_Band_Outline: 0
+    - _AL_Band_Outline2: 0
+    - _AL_Band_Parallax: 0
+    - _AL_Band_PathA: 3
+    - _AL_Band_PathB: 2
+    - _AL_Band_PathG: 1
+    - _AL_Band_PathR: 0
+    - _AL_Band_Rim: 1
+    - _AL_Band_Scanlines: 1
+    - _AL_Band_Shadow: 0
+    - _AL_Band_Shatter: 2
+    - _AL_Band_Skel: 0
+    - _AL_Band_Sonar: 0
+    - _AL_Band_Spectrum: 0
+    - _AL_Band_Trans: 1
+    - _AL_Band_Wet: 0
+    - _AL_CC_Shatter: 0
+    - _AL_CarPaint_Mod: 0
+    - _AL_Ceiling: 0.7
+    - _AL_Chrono_Idx: 0
+    - _AL_Clock: 0
+    - _AL_Col_Blend: 0
+    - _AL_ColorMode: 1
+    - _AL_Cosmos_Mod: 0
+    - _AL_Crowd: 0
+    - _AL_CrowdMax: 20
+    - _AL_CrowdMin: 2
+    - _AL_Curve: 0.5
+    - _AL_DFT_Mod: 0
+    - _AL_DFT_Note: 0
+    - _AL_Detail_Mod: 0
+    - _AL_Drip_Speed: 0
+    - _AL_Drip_Twist: 0
+    - _AL_Emis1_NoteKey: 3
+    - _AL_Emis1_TravelAng: 0
+    - _AL_Emis1_TravelDir: 0
+    - _AL_Emis2_ColBlend: 0
+    - _AL_Emis2_Mod: 0
+    - _AL_Emis2_NoteKey: 3
+    - _AL_Emis2_TravelAng: 0
+    - _AL_Emis2_TravelDir: 0
+    - _AL_Emis3_ColBlend: 0
+    - _AL_Emis3_Mod: 0
+    - _AL_Emis3_NoteKey: 3
+    - _AL_Emis3_TravelAng: 0
+    - _AL_Emis3_TravelDir: 0
+    - _AL_Emis4_ColBlend: 0
+    - _AL_Emis4_Mod: 0
+    - _AL_Emis4_NoteKey: 3
+    - _AL_Emis4_TravelAng: 0
+    - _AL_Emis4_TravelDir: 0
+    - _AL_Emis5_ColBlend: 0
+    - _AL_Emis5_Mod: 0
+    - _AL_Emis5_NoteKey: 3
+    - _AL_Emis5_TravelAng: 0
+    - _AL_Emis5_TravelDir: 0
+    - _AL_Emis_Mod: 0
+    - _AL_FXMask_Ch: 4
+    - _AL_Film_Mod: 0
+    - _AL_Flip_Mod: 0
+    - _AL_Floor: 0.05
+    - _AL_Fracture_Band: 3
+    - _AL_Fracture_MaskCh: 3
+    - _AL_Fracture_MaskInv: 0
+    - _AL_Fracture_MaskSrc: 0
+    - _AL_Fracture_Str: 0.4
+    - _AL_Gain: 1
+    - _AL_Ghost_Mod: 0
+    - _AL_Glit2_Mod: 0
+    - _AL_Glit3_Mod: 0
+    - _AL_Glit4_Mod: 0
+    - _AL_Glit5_Mod: 0
+    - _AL_Glit_Mod: 0
+    - _AL_Glitch_Mod: 0
+    - _AL_GlobalMod_MaskCh: 3
+    - _AL_GlobalMod_MaskInv: 0
+    - _AL_GlobalMod_MaskSrc: 0
+    - _AL_Goo_Absorb: 0
+    - _AL_Goo_ClingAbsorb: 0
+    - _AL_Goo_ClingBeat: 0
+    - _AL_Goo_ClingBreak: 0
+    - _AL_Goo_ClingEdge: 0
+    - _AL_Goo_ClingGloss: 0
+    - _AL_Goo_ClingOpacity: 0
+    - _AL_Goo_ClingPull: 0
+    - _AL_Goo_ClingSpeed: 0
+    - _AL_Goo_ClingVeins: 0
+    - _AL_Goo_ClingWarp: 0
+    - _AL_Goo_Coat: 0
+    - _AL_Goo_CoatGloss: 0
+    - _AL_Goo_ColBlend: 0
+    - _AL_Goo_Contact: 0
+    - _AL_Goo_Cover: 0
+    - _AL_Goo_Crawl: 0
+    - _AL_Goo_DripAmt: 0
+    - _AL_Goo_DripBeat: 0
+    - _AL_Goo_DripCov: 0
+    - _AL_Goo_DripFall: 0
+    - _AL_Goo_DripSpeed: 0
+    - _AL_Goo_DripSpread: 0
+    - _AL_Goo_DripString: 0
+    - _AL_Goo_Droop: 0
+    - _AL_Goo_EdgeFalloff: 0
+    - _AL_Goo_Flow: 0
+    - _AL_Goo_Fold: 0
+    - _AL_Goo_Form: 0
+    - _AL_Goo_FormEdge: 0
+    - _AL_Goo_FormHeight: 0
+    - _AL_Goo_FormNoise: 0
+    - _AL_Goo_FormPeel: 0
+    - _AL_Goo_FormRise: 0
+    - _AL_Goo_FormStretch: 0
+    - _AL_Goo_Gloss: 0
+    - _AL_Goo_Melt: 0
+    - _AL_Goo_MeltSpeed: 0
+    - _AL_Goo_Metallic: 0
+    - _AL_Goo_Pool: 0
+    - _AL_Goo_PoolSoft: 0
+    - _AL_Goo_Refract: 0
+    - _AL_Goo_Run: 0
+    - _AL_Goo_Sag: 0
+    - _AL_Goo_Stretch: 0
+    - _AL_Goo_Sway: 0
+    - _AL_Goo_Swell: 0
+    - _AL_Goo_Tendril: 0
+    - _AL_Goo_Translucency: 0
+    - _AL_Goo_UnderPool: 0
+    - _AL_Goo_Variation: 0
+    - _AL_Goo_VeinBleed: 0
+    - _AL_Goo_VeinPulse: 0
+    - _AL_Goo_VeinSpeed: 0
+    - _AL_Goo_VeinWidth: 0
+    - _AL_Goo_Veins: 0
+    - _AL_Goo_Wander: 0
+    - _AL_Goo_Wet: 0
+    - _AL_Goo_Writhe: 0
+    - _AL_Goo_WritheDepth: 0
+    - _AL_Holo_Glitch: 0
+    - _AL_Holo_Mod: 0.5
+    - _AL_Holo_Ramp: 0.3
+    - _AL_Infinity_Depth: 0
+    - _AL_Infinity_Mod: 0
+    - _AL_Infinity_Spin: 0
+    - _AL_MatCap2_Emis: 0
+    - _AL_MatCap2_Hue: 0
+    - _AL_MatCap2_Mod: 0
+    - _AL_MatCap2_Pan: 0
+    - _AL_MatCap3_Emis: 0
+    - _AL_MatCap3_Hue: 0
+    - _AL_MatCap3_Mod: 0
+    - _AL_MatCap3_Pan: 0
+    - _AL_MatCap4_Emis: 0
+    - _AL_MatCap4_Hue: 0
+    - _AL_MatCap4_Mod: 0
+    - _AL_MatCap4_Pan: 0
+    - _AL_MatCap5_Emis: 0
+    - _AL_MatCap5_Hue: 0
+    - _AL_MatCap5_Mod: 0
+    - _AL_MatCap5_Pan: 0
+    - _AL_MatCap_Emis: 0
+    - _AL_MatCap_Hue: 0
+    - _AL_MatCap_Mod: 0
+    - _AL_MatCap_Pan: 0
+    - _AL_Outline2_ColBlend: 0
+    - _AL_Outline2_Hue: 0
+    - _AL_Outline2_Mod: 0
+    - _AL_Outline2_PulseDir: 0
+    - _AL_Outline2_Reveal: 0
+    - _AL_Outline2_Scroll: 0
+    - _AL_Outline2_Width: 0
+    - _AL_Outline_ColBlend: 0
+    - _AL_Outline_Hue: 0
+    - _AL_Outline_Mod: 0
+    - _AL_Outline_PulseDir: 0
+    - _AL_Outline_Reveal: 0
+    - _AL_Outline_Scroll: 0
+    - _AL_Outline_Width: 0
+    - _AL_Override: 0
+    - _AL_Paralx_Mod: 0
+    - _AL_PathA_Mod: 0.5
+    - _AL_PathA_Mode: 0
+    - _AL_PathB_Mod: 0.5
+    - _AL_PathB_Mode: 0
+    - _AL_PathG_Mod: 0.5
+    - _AL_PathG_Mode: 0
+    - _AL_PathR_Mod: 0.5
+    - _AL_PathR_Mode: 0
+    - _AL_Pump_Band: 0
+    - _AL_Pump_MaskCh: 3
+    - _AL_Pump_MaskInv: 0
+    - _AL_Pump_MaskSrc: 0
+    - _AL_Pump_Str: 0.35
+    - _AL_Response: 0
+    - _AL_Response_Help: 0
+    - _AL_Rim_Mod: 0
+    - _AL_Scan_Density: 50
+    - _AL_Scan_MaskCh: 3
+    - _AL_Scan_MaskInv: 0
+    - _AL_Scan_MaskSrc: 0
+    - _AL_Scan_React: 0
+    - _AL_Scan_Speed: 1
+    - _AL_Scan_Speed_Ph: 0
+    - _AL_Scanlines: 0
+    - _AL_Shadow_Mod: 0
+    - _AL_Skel_Mod: 0
+    - _AL_Smooth_Vol: 0
+    - _AL_Strip_Pos: 0.5
+    - _AL_Thump_MaskCh: 3
+    - _AL_Thump_MaskInv: 0
+    - _AL_Thump_MaskSrc: 0
+    - _AL_Trans_Mod: 0
+    - _AL_Vortex_Band: 2
+    - _AL_Vortex_MaskCh: 3
+    - _AL_Vortex_MaskInv: 0
+    - _AL_Vortex_MaskSrc: 0
+    - _AL_Vortex_Str: 2.5
+    - _AL_Waveform_Mod: 0
+    - _AL_Wet_Amount: 0
+    - _AL_Wet_ColBlend: 0
+    - _AOMap_Ch: 0
+    - _AOMap_Str: 1
+    - _AO_Str: 1
+    - _AlphaAngular: 0
+    - _AlphaAngularGlobalMask: 0
+    - _AlphaAudioLinkAddBand: 0
+    - _AlphaAudioLinkEnabled: 0
+    - _AlphaDistanceFade: 0
+    - _AlphaDistanceFadeGlobalMask: 0
+    - _AlphaDistanceFadeMax: 0
+    - _AlphaDistanceFadeMaxAlpha: 1
+    - _AlphaDistanceFadeMin: 0
+    - _AlphaDistanceFadeMinAlpha: 0
+    - _AlphaDistanceFadeType: 1
+    - _AlphaDitherBias: 0
+    - _AlphaDitherGradient: 0.1
+    - _AlphaDithering: 0
+    - _AlphaForceOpaque: 1
+    - _AlphaFresnel: 0
+    - _AlphaFresnelAlpha: 0
+    - _AlphaFresnelGlobalMask: 0
+    - _AlphaFresnelInvert: 0
+    - _AlphaFresnelSharpness: 0.5
+    - _AlphaFresnelWidth: 0.5
+    - _AlphaGlobalMask: 0
+    - _AlphaGlobalMaskBlendType: 2
+    - _AlphaHaunt: 0
+    - _AlphaHauntMirror: 0
+    - _AlphaMask_Ch: 4
+    - _AlphaMask_Inv: 0
+    - _AlphaMipScale: 0
+    - _AlphaMod: 0
+    - _AlphaOptions_Attribution: 0
+    - _AlphaSharpenedA2C: 1
+    - _AlphaToMask: 0
+    - _AngleCompareTo: 0
+    - _AngleMinAlpha: 0
+    - _AngleType: 0
+    - _Aniso: 0
+    - _AnisoRot: 0
+    - _AudioLinkDissolveAlphaBand: 0
+    - _AudioLinkDissolveAlphaChronoBand: 0
+    - _AudioLinkDissolveAlphaChronoSpeed: 0
+    - _AudioLinkDissolveAlphaMotionType: 0
+    - _AudioLinkDissolveDetailBand: 0
+    - _AudioLinkDissolveEdgeEmissionBand: 0
+    - _AudioLinkDissolveEdgeWidthBand: 0
+    - _AudioLinkDissolveHueShiftChronoBand: 0
+    - _AudioLinkDissolveHueShiftChronoSpeed: 0
+    - _AudioLinkDissolveHueShiftMotionType: 0
+    - _AudioLink_Attribution: 0
+    - _BentNormal_Amb: 1
+    - _BentNormal_Spec: 1
+    - _Bent_Sharpen: 0
+    - _Bio_Bass: 0.55
+    - _Bio_Blend: 0.35
+    - _Bio_Breath: 0.05
+    - _Bio_Emis: 8
+    - _Bio_GlitchTrig: 0.05
+    - _Bio_Hue: 0.5
+    - _Bio_Mid: 0.25
+    - _Bio_SSS: 1
+    - _Bio_Trans: 0.1
+    - _Bio_Treble: 0.2
+    - _BlendOp: 0
+    - _BlendOpAlpha: 0
+    - _CC_F0: 0.04
+    - _CC_Flat: 1
+    - _CC_Smoothness: 0.7
+    - _CC_Spec_AA: 1
+    - _CC_Strength: 0.45
+    - _CameraAngleMax: 90
+    - _CameraAngleMin: 45
+    - _CarPaintMaskCh: 4
+    - _CarPaint_FlakeDensity: 200
+    - _CarPaint_FlakeSharp: 20
+    - _CarPaint_FlakeStr: 0
+    - _CarPaint_FlipPower: 3
+    - _CarPaint_FlipStr: 1
+    - _CarPaint_Gloss: 0.9
+    - _CarPaint_Metallic: 0
+    - _CarPaint_Str: 1
+    - _CavLight_Ambient: 1
+    - _CavLight_Direct: 1
+    - _CavLight_LTCGI: 0
+    - _CavLight_LV: 0
+    - _CavLight_Str: 0
+    - _CavLight_VRSL: 0
+    - _Cavity_Radius: 0.5
+    - _Cavity_Spec: 1
+    - _Cavity_Str: 0
+    - _CenterOutDissolveInvert: 0
+    - _CenterOutDissolveLinear: 1
+    - _CenterOutDissolveMode: 1
+    - _Chroma_Gain: 12
+    - _Chroma_Gap: 0.25
+    - _Chroma_Layout: 0
+    - _Chroma_MaskCh: 3
+    - _Chroma_MaskInv: 0
+    - _Chroma_MaskSrc: 0
+    - _Chroma_Octave: 4
+    - _Chroma_Repeat: 1
+    - _Chroma_Rotate: 0
+    - _Chroma_Strength: 2
+    - _ColorAdjust_Attribution: 0
+    - _ColorGradingToggle: 0
+    - _ColorMask: 15
+    - _ContinuousDissolveBlend: 0
+    - _ContinuousDissolveEnabled: 0
+    - _ContinuousDissolvePhase: 0
+    - _ContinuousDissolveSpeed: 1
+    - _ContinuousDissolveSpeed_Ph: 0
+    - _ContinuousDissolveWave: 0
+    - _Cosmos_AL_Band: 0
+    - _Cosmos_AL_Reach: 0.4
+    - _Cosmos_AL_Spectrum: 0.6
+    - _Cosmos_AL_Tails: 0.5
+    - _Cosmos_AL_Whip: 0.5
+    - _Cosmos_Bright: 2
+    - _Cosmos_Contrast: 1
+    - _Cosmos_Density: 0.55
+    - _Cosmos_Depth: 0.5
+    - _Cosmos_MaskCh: 4
+    - _Cosmos_Rotation: 0
+    - _Cosmos_Scale: 4
+    - _Cosmos_Speed: 0.3
+    - _Cosmos_Speed_Ph: 0
+    - _Cosmos_Spin: 0
+    - _Cosmos_Spin_Ph: 0
+    - _Cosmos_Stars: 0.4
+    - _Cosmos_Steps: 12
+    - _Cosmos_Swirl: 0.6
+    - _Cosmos_Warp: 0.2
+    - _Ctx_DistMode: 0
+    - _Ctx_Eye: 0
+    - _Ctx_Far: 3
+    - _Ctx_Gaze: 0
+    - _Ctx_Hidden: 0
+    - _Ctx_MaskCh: 4
+    - _Ctx_Near: 0.5
+    - _Ctx_Outlines: 0
+    - _Ctx_Target: 0
+    - _Ctx_WetGoo: 0
+    - _Ctx_Where: 0
+    - _CullMode: 2
+    - _CutOff: 0.5
+    - _CutoutMaskCh: 0
+    - _Cyber_AutoCorr_Str: 1
+    - _Cyber_Auto_Band: 0
+    - _Cyber_Auto_Electrify: 1
+    - _Cyber_Auto_Electrify_Band: 1
+    - _Cyber_Auto_MaskCh: 3
+    - _Cyber_Auto_MaskInv: 0
+    - _Cyber_Auto_MaskSrc: 0
+    - _Cyber_Auto_Pop: 1
+    - _Cyber_Auto_Pop_Band: 0
+    - _Cyber_Auto_Shimmer: 1
+    - _Cyber_Auto_Shimmer_Band: 3
+    - _Cyber_Auto_Sizzle: 1
+    - _Cyber_Auto_Sizzle_Band: 2
+    - _Cyber_CC_Band: 1
+    - _Cyber_CC_Density: 16
+    - _Cyber_CC_MaskCh: 3
+    - _Cyber_CC_MaskInv: 0
+    - _Cyber_CC_MaskSrc: 0
+    - _Cyber_CC_Str: 1
+    - _Cyber_DMX_Band: 0
+    - _Cyber_DMX_MaskCh: 3
+    - _Cyber_DMX_MaskInv: 0
+    - _Cyber_DMX_MaskSrc: 0
+    - _Cyber_DMX_Str: 1
+    - _Cyber_Hover: 0.03
+    - _Cyber_Hover_Bob: 0.25
+    - _Cyber_VU_MaskCh: 3
+    - _Cyber_VU_MaskInv: 0
+    - _Cyber_VU_MaskSrc: 0
+    - _Cyber_VU_Str: 1
+    - _Cyber_VU_Style: 0
+    - _Cyber_Wave_Band: 0
+    - _Cyber_Wave_MaskCh: 3
+    - _Cyber_Wave_MaskInv: 0
+    - _Cyber_Wave_MaskSrc: 0
+    - _Cyber_Wave_Str: 1
+    - _Cym_Bright: 2
+    - _Cym_MaskCh: 3
+    - _Cym_MaskInv: 0
+    - _Cym_MaskSrc: 0
+    - _Cym_Style: 0
+    - _DMX_Channel: 1
+    - _DebugBrokenPixels: 0
+    - _DebugLighting: 0
+    - _DebugLightingExp: 1
+    - _Decal0Blend: 0
+    - _Decal0CovSrc: 0
+    - _Decal0Emis: 0
+    - _Decal0Enabled: 0
+    - _Decal0MaskCh: 0
+    - _Decal0Mirror: 0
+    - _Decal0OverrideAlphaMode: 0
+    - _Decal0Rot: 0
+    - _Decal0RotSpeed: 0
+    - _Decal0RotSpeed_Ph: 0
+    - _Decal0Smooth: 0
+    - _Decal0Symmetry: 0
+    - _Decal0Tiled: 0
+    - _Decal0UV: 0
+    - _Decal0_CopyPaste: 0
+    - _Decal1Blend: 0
+    - _Decal1CovSrc: 0
+    - _Decal1Emis: 0
+    - _Decal1Enabled: 0
+    - _Decal1MaskCh: 1
+    - _Decal1Mirror: 0
+    - _Decal1OverrideAlphaMode: 0
+    - _Decal1Rot: 0
+    - _Decal1RotSpeed: 0
+    - _Decal1RotSpeed_Ph: 0
+    - _Decal1Smooth: 0
+    - _Decal1Symmetry: 0
+    - _Decal1Tiled: 0
+    - _Decal1UV: 0
+    - _Decal1_CopyPaste: 0
+    - _Decal2Blend: 0
+    - _Decal2CovSrc: 0
+    - _Decal2Emis: 0
+    - _Decal2Enabled: 0
+    - _Decal2MaskCh: 2
+    - _Decal2Mirror: 0
+    - _Decal2OverrideAlphaMode: 0
+    - _Decal2Rot: 0
+    - _Decal2RotSpeed: 0
+    - _Decal2RotSpeed_Ph: 0
+    - _Decal2Smooth: 0
+    - _Decal2Symmetry: 0
+    - _Decal2Tiled: 0
+    - _Decal2UV: 0
+    - _Decal2_CopyPaste: 0
+    - _Decal3Blend: 0
+    - _Decal3CovSrc: 0
+    - _Decal3Emis: 0
+    - _Decal3Enabled: 0
+    - _Decal3MaskCh: 3
+    - _Decal3Mirror: 0
+    - _Decal3OverrideAlphaMode: 0
+    - _Decal3Rot: 0
+    - _Decal3RotSpeed: 0
+    - _Decal3RotSpeed_Ph: 0
+    - _Decal3Smooth: 0
+    - _Decal3Symmetry: 0
+    - _Decal3Tiled: 0
+    - _Decal3UV: 0
+    - _Decal3_CopyPaste: 0
+    - _DecalBlendAlpha: 1
+    - _DecalBlendAlpha1: 1
+    - _DecalBlendAlpha2: 1
+    - _DecalBlendAlpha3: 1
+    - _DecalEnabled: 0
+    - _DecalHueShift: 0
+    - _DecalHueShift1: 0
+    - _DecalHueShift2: 0
+    - _DecalHueShift3: 0
+    - _DecalHueShiftColorSpace: 0
+    - _DecalHueShiftColorSpace1: 0
+    - _DecalHueShiftColorSpace2: 0
+    - _DecalHueShiftColorSpace3: 0
+    - _DecalHueShiftEnabled: 0
+    - _DecalHueShiftEnabled1: 0
+    - _DecalHueShiftEnabled2: 0
+    - _DecalHueShiftEnabled3: 0
+    - _DecalHueShiftSelectOrShift: 1
+    - _DecalHueShiftSelectOrShift1: 1
+    - _DecalHueShiftSelectOrShift2: 1
+    - _DecalHueShiftSelectOrShift3: 1
+    - _DecalHueShiftSpeed: 0
+    - _DecalHueShiftSpeed1: 0
+    - _DecalHueShiftSpeed1_Ph: 0
+    - _DecalHueShiftSpeed2: 0
+    - _DecalHueShiftSpeed2_Ph: 0
+    - _DecalHueShiftSpeed3: 0
+    - _DecalHueShiftSpeed3_Ph: 0
+    - _DecalHueShiftSpeed_Ph: 0
+    - _DecalOverrideAlpha: 0
+    - _DecalOverrideAlpha1: 0
+    - _DecalOverrideAlpha2: 0
+    - _DecalOverrideAlpha3: 0
+    - _DecalPoiyomi_Attribution: 0
+    - _Det_Strength: 0
+    - _Det_UV_Tiling: 1
+    - _Disp_Str: 0
+    - _DissolveALColorOverrideBand: 0
+    - _DissolveALColorOverrideEnabled: 0
+    - _DissolveALColorOverrideThemeIndex: 0
+    - _DissolveAlpha: 0
+    - _DissolveAlphaOnly: 0
+    - _DissolveBeatTravel: 0.3
+    - _DissolveBeatTravelBand: 0
+    - _DissolveBeatTravelEnabled: 0
+    - _DissolveBeatTravelLength: 0.5
+    - _DissolveCymBand: 0
+    - _DissolveCymMorph: 0
+    - _DissolveCymScale: 1
+    - _DissolveCymStyle: 0
+    - _DissolveCymUV: 0
+    - _DissolveDebugGradient: 0
+    - _DissolveDetailEdgeMask: 0
+    - _DissolveDetailNoiseEnabled: 0
+    - _DissolveDetailNoiseMode: 0
+    - _DissolveDetailNoiseUV: 0
+    - _DissolveDetailStrength: 0.1
+    - _DissolveEdgeBlur1: 0.1
+    - _DissolveEdgeBlur2: 0.1
+    - _DissolveEdgeBorder1: 0.5
+    - _DissolveEdgeBorder2: 1
+    - _DissolveEdgeColor2ThemeIndex: 0
+    - _DissolveEdgeColor3ThemeIndex: 0
+    - _DissolveEdgeColorThemeIndex: 0
+    - _DissolveEdgeEmission: 1
+    - _DissolveEdgeEnabled: 0
+    - _DissolveEdgeFlip: 0
+    - _DissolveEdgeGradient: 0
+    - _DissolveEdgeHueSelectOrShift: 1
+    - _DissolveEdgeHueShift: 0
+    - _DissolveEdgeHueShiftColorSpace: 0
+    - _DissolveEdgeHueShiftEnabled: 0
+    - _DissolveEdgeHueShiftSpeed: 0
+    - _DissolveEdgeHueShiftSpeed_Ph: 0
+    - _DissolveEdgeWidth: 0.1
+    - _DissolveEmberEnabled: 0
+    - _DissolveGooEnabled: 0
+    - _DissolveGooKeep: 0
+    - _DissolveGooWarn: 0
+    - _DissolveGooWidth: 0.2
+    - _DissolveHueSelectOrShift: 1
+    - _DissolveHueShift: 0
+    - _DissolveHueShiftColorSpace: 0
+    - _DissolveHueShiftEnabled: 0
+    - _DissolveHueShiftSpeed: 0
+    - _DissolveHueShiftSpeed_Ph: 0
+    - _DissolveInteriorCullWarn: 0
+    - _DissolveInteriorEnabled: 0
+    - _DissolveInteriorGlow: 0
+    - _DissolveInvertDetailNoise: 0
+    - _DissolveInvertDotNoise: 0
+    - _DissolveInvertNoise: 0
+    - _DissolveMaskInvert: 0
+    - _DissolveMaskUV: 0
+    - _DissolveMeltEnabled: 0
+    - _DissolveMeltGlow: 0
+    - _DissolveMeltSpeed: 0.5
+    - _DissolveMeltSpeed_Ph: 0
+    - _DissolveNoiseTextureUV: 0
+    - _DissolveP2PUV: 0
+    - _DissolveP2PWorldLocal: 0
+    - _DissolvePortal: 0
+    - _DissolvePortalWarn: 0
+    - _DissolveProximityEnabled: 0
+    - _DissolveProximityFade: 0.15
+    - _DissolveProximityInvert: 0
+    - _DissolveProximityRadius: 0.35
+    - _DissolveShatterEnabled: 0
+    - _DissolveShatterGlow: 0
+    - _DissolveShatterTrail: 0
+    - _DissolveSoftness: 0
+    - _DissolveSparkEnabled: 0
+    - _DissolveSparkGlow: 4
+    - _DissolveSparkKeep: 0
+    - _DissolveSparkWarn: 0
+    - _DissolveSparkWidth: 0.06
+    - _DissolveTextureColorThemeIndex: 0
+    - _DissolveToEmissionStrength: 0
+    - _DissolveToTextureUV: 0
+    - _DissolveType: 1
+    - _DissolveUseVertexColors: 0
+    - _DissolveVertexHeight: 0.04
+    - _DissolveVertexHeightContinue: 0
+    - _DissolveVertexHeightDetailStrength: 0
+    - _DissolveVertexHeightDirectionBlend: 0
+    - _DissolveVertexHeightDirectionSpace: 0
+    - _DissolveVertexHeightDotMask: 0
+    - _DissolveVertexHeightEasing: 1
+    - _DissolveVertexHeightEnabled: 0
+    - _DissolveVertexHeightOffset: 0
+    - _DissolveViewerCamera: 0
+    - _DissolveViewerEnabled: 0
+    - _DissolveViewerMain: 0
+    - _DissolveViewerMirror: 0
+    - _DissolveWaveBounds: 0
+    - _DissolveWaveMode: 0
+    - _DissolveWaveWidth: 0.1
+    - _Dissolve_Attribution: 0
+    - _Drip3D_Fall: 0.6
+    - _Drip3D_Scale: 8
+    - _Drip3D_Sheen: 0.8
+    - _Drip3D_Strength: 0
+    - _Drip3D_TexBlend: 1
+    - _Drip3D_TexSpin: 0
+    - _DripMaskCh: 0
+    - _Drip_Angle: 0
+    - _Drip_BodyFollow: 0
+    - _Drip_Coverage: 0.4
+    - _Drip_Density: 40
+    - _Drip_FloorCollide: 0
+    - _Drip_FromWrithe: 0
+    - _Drip_Normal: 0.5
+    - _Drip_Pool: 0.5
+    - _Drip_RoomLight: 1
+    - _Drip_Speed: 0.25
+    - _Drip_Speed_Ph: 0
+    - _Drip_Strength: 0.7
+    - _Drip_Sway: 0
+    - _Drip_Water: 0
+    - _Drip_WaterDepth: 0.5
+    - _Drip_Width: 90
+    - _Drip_WorldFlow: 0
+    - _DstBlend: 0
+    - _DstBlendAlpha: 0
+    - _Emis1_CopyPaste: 0
+    - _Emis1_Flame: 0
+    - _Emis1_Hue: 0
+    - _Emis1_HueSpeed: 0
+    - _Emis1_HueSpeed_Ph: 0
+    - _Emis1_MaskCh: 3
+    - _Emis1_Strength: 1
+    - _Emis2_CopyPaste: 0
+    - _Emis2_Flame: 0
+    - _Emis2_Hue: 0
+    - _Emis2_HueSpeed: 0
+    - _Emis2_HueSpeed_Ph: 0
+    - _Emis2_MaskCh: 3
+    - _Emis2_Strength: 1
+    - _Emis3_CopyPaste: 0
+    - _Emis3_Flame: 0
+    - _Emis3_Hue: 0
+    - _Emis3_HueSpeed: 0
+    - _Emis3_HueSpeed_Ph: 0
+    - _Emis3_MaskCh: 3
+    - _Emis3_Strength: 1
+    - _Emis4_CopyPaste: 0
+    - _Emis4_Flame: 0
+    - _Emis4_Hue: 0
+    - _Emis4_HueSpeed: 0
+    - _Emis4_HueSpeed_Ph: 0
+    - _Emis4_MaskCh: 3
+    - _Emis4_Strength: 1
+    - _Emis5_CopyPaste: 0
+    - _Emis5_Flame: 0
+    - _Emis5_Hue: 0
+    - _Emis5_HueSpeed: 0
+    - _Emis5_HueSpeed_Ph: 0
+    - _Emis5_MaskCh: 3
+    - _Emis5_Strength: 1
+    - _Emis_Exp: 0
+    - _EnableDissolve: 0
+    - _EnableUDIMDiscardOptions: 0
+    - _EnableUDIMFaceDiscardOptions: 0
+    - _Film_Str: 0
+    - _Film_Thick: 0
+    - _FlipBackfaceNormals: 0
+    - _FlipbookMaskCh: 4
+    - _Flipbook_Blend: 0
+    - _Flipbook_Cols: 8
+    - _Flipbook_CovSrc: 0
+    - _Flipbook_FPS: 12
+    - _Flipbook_FPS_Ph: 0
+    - _Flipbook_Frames: 1
+    - _Flipbook_IsSheet: 0
+    - _Flipbook_Mirror: 0
+    - _Flipbook_Opacity: 1
+    - _Flipbook_Rot: 0
+    - _Flipbook_RotSpeed: 0
+    - _Flipbook_RotSpeed_Ph: 0
+    - _Flipbook_Rows: 8
+    - _Flipbook_SheetFrames: 0
+    - _Flipbook_Symmetry: 0
+    - _Flipbook_Tiled: 0
+    - _Flipbook_UV: 0
+    - _Ghost_Attribution: 0
+    - _Ghost_Edge: 0.4
+    - _Ghost_Fade: 0.8
+    - _Ghost_Glow: 2
+    - _Ghost_Tint: 0.5
+    - _Glit2_Angle: 0
+    - _Glit2_BorrowCh: 3
+    - _Glit2_BorrowInv: 0
+    - _Glit2_BorrowSrc: 0
+    - _Glit2_BorrowWarn: 0
+    - _Glit2_Burst: 0
+    - _Glit2_Clump: 0
+    - _Glit2_ClumpScale: 8
+    - _Glit2_ColorMode: 1
+    - _Glit2_CopyPaste: 0
+    - _Glit2_Coverage: 0.25
+    - _Glit2_Density: 60
+    - _Glit2_Depth: 0
+    - _Glit2_Gain: 1
+    - _Glit2_HueVar: 0
+    - _Glit2_Irid: 0.6
+    - _Glit2_Mix: 0.5
+    - _Glit2_On: 0
+    - _Glit2_Shape: 0
+    - _Glit2_ShapeCh: 1
+    - _Glit2_Size: 0.6
+    - _Glit2_SizeVar: 0
+    - _Glit2_SparkVar: 0
+    - _Glit2_Spin: 0
+    - _Glit2_Spin_Ph: 0
+    - _Glit2_Spread: 0.7
+    - _Glit2_Swirl: 0
+    - _Glit2_SwirlScale: 1.5
+    - _Glit2_TwinkRate: 2
+    - _Glit2_TwinkRate_Ph: 0
+    - _Glit2_Twinkle: 0
+    - _Glit3_Angle: 0
+    - _Glit3_BorrowCh: 3
+    - _Glit3_BorrowInv: 0
+    - _Glit3_BorrowSrc: 0
+    - _Glit3_BorrowWarn: 0
+    - _Glit3_Burst: 0
+    - _Glit3_Clump: 0
+    - _Glit3_ClumpScale: 8
+    - _Glit3_ColorMode: 0
+    - _Glit3_CopyPaste: 0
+    - _Glit3_Coverage: 0.2
+    - _Glit3_Density: 320
+    - _Glit3_Depth: 0
+    - _Glit3_Gain: 1
+    - _Glit3_HueVar: 0
+    - _Glit3_Irid: 0.6
+    - _Glit3_Mix: 0.5
+    - _Glit3_On: 0
+    - _Glit3_Shape: 0
+    - _Glit3_ShapeCh: 1
+    - _Glit3_Size: 0.3
+    - _Glit3_SizeVar: 0
+    - _Glit3_SparkVar: 0
+    - _Glit3_Spin: 0
+    - _Glit3_Spin_Ph: 0
+    - _Glit3_Spread: 0.4
+    - _Glit3_Swirl: 0
+    - _Glit3_SwirlScale: 1.5
+    - _Glit3_TwinkRate: 2
+    - _Glit3_TwinkRate_Ph: 0
+    - _Glit3_Twinkle: 0
+    - _Glit4_Angle: 0
+    - _Glit4_BorrowCh: 3
+    - _Glit4_BorrowInv: 0
+    - _Glit4_BorrowSrc: 0
+    - _Glit4_BorrowWarn: 0
+    - _Glit4_Burst: 0
+    - _Glit4_Clump: 0
+    - _Glit4_ClumpScale: 8
+    - _Glit4_ColorMode: 0
+    - _Glit4_CopyPaste: 0
+    - _Glit4_Coverage: 0.15
+    - _Glit4_Density: 90
+    - _Glit4_Depth: 0
+    - _Glit4_Gain: 1
+    - _Glit4_HueVar: 0
+    - _Glit4_Irid: 0.6
+    - _Glit4_Mix: 0.5
+    - _Glit4_On: 0
+    - _Glit4_Shape: 0
+    - _Glit4_ShapeCh: 1
+    - _Glit4_Size: 0.8
+    - _Glit4_SizeVar: 0
+    - _Glit4_SparkVar: 0
+    - _Glit4_Spin: 0
+    - _Glit4_Spin_Ph: 0
+    - _Glit4_Spread: 0.5
+    - _Glit4_Swirl: 0
+    - _Glit4_SwirlScale: 1.5
+    - _Glit4_TwinkRate: 2
+    - _Glit4_TwinkRate_Ph: 0
+    - _Glit4_Twinkle: 0
+    - _Glit5_Angle: 0
+    - _Glit5_BorrowCh: 3
+    - _Glit5_BorrowInv: 0
+    - _Glit5_BorrowSrc: 0
+    - _Glit5_BorrowWarn: 0
+    - _Glit5_Burst: 0
+    - _Glit5_Clump: 0
+    - _Glit5_ClumpScale: 8
+    - _Glit5_ColorMode: 1
+    - _Glit5_CopyPaste: 0
+    - _Glit5_Coverage: 0.3
+    - _Glit5_Density: 480
+    - _Glit5_Depth: 0
+    - _Glit5_Gain: 1
+    - _Glit5_HueVar: 0
+    - _Glit5_Irid: 0.6
+    - _Glit5_Mix: 0.5
+    - _Glit5_On: 0
+    - _Glit5_Shape: 0
+    - _Glit5_ShapeCh: 1
+    - _Glit5_Size: 0.25
+    - _Glit5_SizeVar: 0
+    - _Glit5_SparkVar: 0
+    - _Glit5_Spin: 0
+    - _Glit5_Spin_Ph: 0
+    - _Glit5_Spread: 0.8
+    - _Glit5_Swirl: 0
+    - _Glit5_SwirlScale: 1.5
+    - _Glit5_TwinkRate: 2
+    - _Glit5_TwinkRate_Ph: 0
+    - _Glit5_Twinkle: 0
+    - _Glit_AL_Flow: 0
+    - _Glit_AL_Spin: 0
+    - _Glit_AL_Swirl: 0
+    - _Glit_AL_Twink: 0
+    - _Glit_Angle: 0
+    - _Glit_BorrowCh: 3
+    - _Glit_BorrowInv: 0
+    - _Glit_BorrowSrc: 0
+    - _Glit_BorrowWarn: 0
+    - _Glit_Burst: 0
+    - _Glit_Clump: 0
+    - _Glit_ClumpScale: 8
+    - _Glit_ColorMode: 0
+    - _Glit_CopyPaste: 0
+    - _Glit_Coverage: 0.35
+    - _Glit_Density: 150
+    - _Glit_Depth: 0
+    - _Glit_Env: 0.6
+    - _Glit_Gain: 1
+    - _Glit_HueVar: 0
+    - _Glit_Irid: 0.6
+    - _Glit_LightTint: 1
+    - _Glit_LitBy: 0
+    - _Glit_MaskCh: 0
+    - _Glit_MinLight: 0
+    - _Glit_Mix: 0.5
+    - _Glit_OverCC: 1
+    - _Glit_Shape: 0
+    - _Glit_ShapeCh: 1
+    - _Glit_Sharp: 90
+    - _Glit_Size: 0.45
+    - _Glit_SizeVar: 0
+    - _Glit_Space: 0
+    - _Glit_SparkVar: 0
+    - _Glit_Spin: 0
+    - _Glit_Spin_Ph: 0
+    - _Glit_Spread: 0.55
+    - _Glit_Str: 2
+    - _Glit_Swirl: 0
+    - _Glit_SwirlScale: 1.5
+    - _Glit_SwirlSpeed: 1
+    - _Glit_SwirlSpeed_Ph: 0
+    - _Glit_TwinkRate: 2
+    - _Glit_TwinkRate_Ph: 0
+    - _Glit_Twinkle: 0
+    - _GlobalMaskTexture0UV: 0
+    - _GlobalMetallic: 0
+    - _GlobalSmoothness: 0.58
+    - _GlossMapChannel: 0
+    - _GlossMapIsRough: 0
+    - _GooMaskCh: 0
+    - _Goo_Absorb: 3
+    - _Goo_BodyFollow: 0
+    - _Goo_BorrowCh: 3
+    - _Goo_BorrowInv: 0
+    - _Goo_BorrowSrc: 0
+    - _Goo_BorrowWarn: 0
+    - _Goo_Cling: 0
+    - _Goo_ClingAbsorb: 3
+    - _Goo_ClingBreak: 0.6
+    - _Goo_ClingColorMode: 0
+    - _Goo_ClingEdge: 2.5
+    - _Goo_ClingFromWrithe: 0
+    - _Goo_ClingGloss: 0.97
+    - _Goo_ClingMaskCh: 0
+    - _Goo_ClingOpacity: 0.85
+    - _Goo_ClingPull: 0.5
+    - _Goo_ClingReach: 0.12
+    - _Goo_ClingRoom: 1
+    - _Goo_ClingSpeed: 1
+    - _Goo_ClingSpeed_Ph: 0
+    - _Goo_ClingSpread: 0.7
+    - _Goo_ClingStrands: 12
+    - _Goo_ClingVeins: 1.5
+    - _Goo_ClingWarp: 0.35
+    - _Goo_Coat: 1
+    - _Goo_CoatSmooth: 0.98
+    - _Goo_Contact: 1
+    - _Goo_Drip: 0
+    - _Goo_DripAmount: 0.8
+    - _Goo_DripCoverage: 0.35
+    - _Goo_DripFall: 0.8
+    - _Goo_DripFromWrithe: 0.5
+    - _Goo_DripRoomLight: 1
+    - _Goo_DripScale: 11
+    - _Goo_DripSpeed: 0.12
+    - _Goo_DripSpeed_Ph: 0
+    - _Goo_DripSpread: 0.7
+    - _Goo_DripString: 0.75
+    - _Goo_Droop: 0.6
+    - _Goo_EdgePower: 3
+    - _Goo_FloorCollide: 0
+    - _Goo_Form: 1
+    - _Goo_FormEdge: 0.06
+    - _Goo_FormHeight: 2.5
+    - _Goo_FormNoise: 0.12
+    - _Goo_FormPeel: 0.03
+    - _Goo_FormRise: 0.04
+    - _Goo_FormScale: 8
+    - _Goo_FormStretch: 4
+    - _Goo_GroundMode: 0
+    - _Goo_GroundY: 0
+    - _Goo_Look: 0
+    - _Goo_Metallic: 0
+    - _Goo_Noise: 6
+    - _Goo_NoiseBlend: 1
+    - _Goo_NoiseDepth: 0.5
+    - _Goo_Pool: 0.3
+    - _Goo_PoolSoft: 0.25
+    - _Goo_Pooling: 0.7
+    - _Goo_Reach: 0.3
+    - _Goo_Refract: 0.3
+    - _Goo_Smoothness: 0.97
+    - _Goo_Speed: 0.3
+    - _Goo_Speed_Ph: 0
+    - _Goo_Strength: 0
+    - _Goo_Sway: 0
+    - _Goo_SwaySpeed: 1
+    - _Goo_SwaySpeed_Ph: 0
+    - _Goo_Thickness: 0.6
+    - _Goo_ToGround: 0
+    - _Goo_Translucency: 0.25
+    - _Goo_Variation: 0.7
+    - _Goo_VeinEdgeBleed: 0.8
+    - _Goo_VeinFlow: 0.35
+    - _Goo_VeinFlow_Ph: 0
+    - _Goo_VeinIntensity: 1.5
+    - _Goo_VeinPulse: 0.6
+    - _Goo_VeinScale: 9
+    - _Goo_VeinSpeed: 0.8
+    - _Goo_VeinSpeed_Ph: 0
+    - _Goo_VeinWidth: 12
+    - _Goo_Warp: 0
+    - _Goo_WarpCrawl: 0.35
+    - _Goo_WarpFold: 0.5
+    - _Goo_WarpRun: 0.6
+    - _Goo_WarpScale: 5
+    - _Goo_WarpSpeed: 1
+    - _Goo_WarpSpeed_Ph: 0
+    - _Goo_WarpStretch: 0.3
+    - _Goo_WarpSurge: 0
+    - _Goo_WarpTendril: 0.5
+    - _Goo_WarpWander: 0.35
+    - _Goo_WarpWet: 0.8
+    - _HashMode: 0
+    - _HeightMap_Ch: 4
+    - _Holo_Attribution: 0
+    - _Holo_Edge: 0.45
+    - _Holo_Fade: 0.85
+    - _Holo_Fill: 0.2
+    - _Holo_Glow: 3
+    - _Holo_Palette: 2
+    - _Holo_RampAlong: 0
+    - _Holo_Tint: 0.6
+    - _Horizon_Occ: 1
+    - _Hyper_AL_Rush: 0
+    - _Hyper_AL_Warp: 0
+    - _Hyper_Attribution: 0
+    - _Hyper_Attribution2: 0
+    - _Hyper_Bright: 2
+    - _Hyper_Cell: 1
+    - _Hyper_Falloff: 0.8
+    - _Hyper_Floors: 1
+    - _Hyper_Hue: 0.61
+    - _Hyper_HueSpread: 1
+    - _Hyper_MaskCh: 3
+    - _Hyper_MaskInv: 0
+    - _Hyper_MaskSrc: 0
+    - _Hyper_Mirror: 1
+    - _Hyper_Octaves: 6
+    - _Hyper_Parallax: 1
+    - _Hyper_Radius: 15
+    - _Hyper_Reach: 3
+    - _Hyper_Sat: 0.6
+    - _Hyper_Speed: 1
+    - _Hyper_Speed_Ph: 0
+    - _Hyper_Spread: 1
+    - _Hyper_Steps: 24
+    - _Hyper_Style: 0
+    - _Hyper_Turb: 1
+    - _Hyper_Twist: 1
+    - _IgnoreFog: 1
+    - _Infinity_Approach: 0
+    - _Infinity_Attribution: 0
+    - _Infinity_Depth: 0.25
+    - _Infinity_Falloff: 0.78
+    - _Infinity_HueShift: 0
+    - _Infinity_Layers: 12
+    - _Infinity_MaskCh: 4
+    - _Infinity_Near: 1.5
+    - _Infinity_NearCurve: 1
+    - _Infinity_Pattern: 0
+    - _Infinity_Reach: 1
+    - _Infinity_Scale: 1.12
+    - _LTCGI_Attribution: 0
+    - _LTCGI_AvatarAdvice: 0
+    - _LTCGI_Diff_Mix: 1
+    - _LTCGI_Int: 1
+    - _LTCGI_Mode: 0
+    - _LTCGI_Spec_Mix: 1
+    - _LV_AdditiveOnly: 0
+    - _LV_Attribution: 0
+    - _LV_Bias: 0
+    - _LV_CC_Spec_Mix: 1
+    - _LV_CC_Tight: 0.5
+    - _LV_Int: 1
+    - _LV_ProbeDering: 0
+    - _LV_Pt_Edge: 1
+    - _LV_Pt_Int: 1
+    - _LV_Pt_Shading: 3
+    - _LV_Pt_Spec: 0
+    - _LV_Pt_Stability: 0
+    - _LV_Spec_Dominant: 0
+    - _LV_Spec_Fresnel: 0
+    - _LV_Spec_Mix: 1
+    - _MC_SecHelp: 0
+    - _ML_Ambient: 1
+    - _ML_Direct: 1
+    - _ML_LTCGI: 1
+    - _ML_LV: 1
+    - _ML_VRSL: 1
+    - _MS_Ambient: 1
+    - _MS_Direct: 1
+    - _MS_LTCGI: 1
+    - _MS_LV: 1
+    - _MS_Source: 0
+    - _MS_VRSL: 1
+    - _MainALHueShiftBand: 0
+    - _MainALHueShiftCTIndex: 0
+    - _MainBrightness: 0
+    - _MainChromatize: 0
+    - _MainColorAdjustClamp: 1
+    - _MainColorAdjustToggle: 0
+    - _MainGamma: 1
+    - _MainGradationMaskChannel: 0
+    - _MainGradationStrength: 0
+    - _MainHueALCTEnabled: 0
+    - _MainHueALMotionSpeed: 1
+    - _MainHueShift: 0
+    - _MainHueShiftColorSpace: 0
+    - _MainHueShiftColorize: 0
+    - _MainHueShiftReplace: 1
+    - _MainHueShiftSelectOrShift: 1
+    - _MainHueShiftSpeed: 0
+    - _MainHueShiftSpeed_Ph: 0
+    - _MainHueShiftToggle: 0
+    - _MainTilingOnly: 0
+    - _MatCap2_AtlasBuild: 0
+    - _MatCap2_AtlasHelp: 0
+    - _MatCap2_BaseMix: 0
+    - _MatCap2_Blend: 0
+    - _MatCap2_Blur: 0
+    - _MatCap2_BlurCh: 0
+    - _MatCap2_BorrowWarn: 0
+    - _MatCap2_Circle: 0
+    - _MatCap2_CircleBlur: 0.1
+    - _MatCap2_CircleR: 0.45
+    - _MatCap2_Coat: 0
+    - _MatCap2_CopyPaste: 0
+    - _MatCap2_Depth: 0
+    - _MatCap2_DistHi: 0
+    - _MatCap2_DistLo: 0
+    - _MatCap2_Emis: 0
+    - _MatCap2_Freeze: 0
+    - _MatCap2_FresHi: 1
+    - _MatCap2_FresLo: 0
+    - _MatCap2_Hue: 0
+    - _MatCap2_HueSpd: 0
+    - _MatCap2_HueSpd_Ph: 0
+    - _MatCap2_Int: 1
+    - _MatCap2_LightMix: 0
+    - _MatCap2_Lit: 1
+    - _MatCap2_MaskCh: 2
+    - _MatCap2_MaskInv: 0
+    - _MatCap2_MaskSrc: 0
+    - _MatCap2_MaskSrcCh: 0
+    - _MatCap2_Metal: 0
+    - _MatCap2_Mirror: 0
+    - _MatCap2_NrmFollow: 0
+    - _MatCap2_NrmSrc: 0
+    - _MatCap2_Opacity: 1
+    - _MatCap2_Proc: 0
+    - _MatCap2_ProcScale: 6
+    - _MatCap2_ProcSharp: 0.5
+    - _MatCap2_ProcSpeed: 0.5
+    - _MatCap2_ProcSpeed_Ph: 0
+    - _MatCap2_ProcWarp: 0.3
+    - _MatCap2_Proj: 0
+    - _MatCap2_Rot: 0
+    - _MatCap2_SecCh: 0
+    - _MatCap2_SecCount: 4
+    - _MatCap2_SecSrc: 0
+    - _MatCap2_SecWarn: 0
+    - _MatCap2_Smooth: 0
+    - _MatCap2_Src: 0
+    - _MatCap2_SurfWarn: 0
+    - _MatCap2_ToneMix: 0
+    - _MatCap2_Zoom: 1
+    - _MatCap3_AtlasBuild: 0
+    - _MatCap3_AtlasHelp: 0
+    - _MatCap3_BaseMix: 0
+    - _MatCap3_Blend: 0
+    - _MatCap3_Blur: 0
+    - _MatCap3_BlurCh: 0
+    - _MatCap3_BorrowWarn: 0
+    - _MatCap3_Circle: 0
+    - _MatCap3_CircleBlur: 0.1
+    - _MatCap3_CircleR: 0.45
+    - _MatCap3_Coat: 0
+    - _MatCap3_CopyPaste: 0
+    - _MatCap3_Depth: 0
+    - _MatCap3_DistHi: 0
+    - _MatCap3_DistLo: 0
+    - _MatCap3_Emis: 0
+    - _MatCap3_Freeze: 0
+    - _MatCap3_FresHi: 1
+    - _MatCap3_FresLo: 0
+    - _MatCap3_Hue: 0
+    - _MatCap3_HueSpd: 0
+    - _MatCap3_HueSpd_Ph: 0
+    - _MatCap3_Int: 1
+    - _MatCap3_LightMix: 0
+    - _MatCap3_Lit: 1
+    - _MatCap3_MaskCh: 3
+    - _MatCap3_MaskInv: 0
+    - _MatCap3_MaskSrc: 0
+    - _MatCap3_MaskSrcCh: 0
+    - _MatCap3_Metal: 0
+    - _MatCap3_Mirror: 0
+    - _MatCap3_NrmFollow: 0
+    - _MatCap3_NrmSrc: 0
+    - _MatCap3_Opacity: 1
+    - _MatCap3_Proc: 0
+    - _MatCap3_ProcScale: 6
+    - _MatCap3_ProcSharp: 0.5
+    - _MatCap3_ProcSpeed: 0.5
+    - _MatCap3_ProcSpeed_Ph: 0
+    - _MatCap3_ProcWarp: 0.3
+    - _MatCap3_Proj: 0
+    - _MatCap3_Rot: 0
+    - _MatCap3_SecCh: 0
+    - _MatCap3_SecCount: 4
+    - _MatCap3_SecSrc: 0
+    - _MatCap3_SecWarn: 0
+    - _MatCap3_Smooth: 0
+    - _MatCap3_Src: 0
+    - _MatCap3_SurfWarn: 0
+    - _MatCap3_ToneMix: 0
+    - _MatCap3_Zoom: 1
+    - _MatCap4_AtlasBuild: 0
+    - _MatCap4_AtlasHelp: 0
+    - _MatCap4_BaseMix: 0
+    - _MatCap4_Blend: 0
+    - _MatCap4_Blur: 0
+    - _MatCap4_BlurCh: 0
+    - _MatCap4_BorrowWarn: 0
+    - _MatCap4_Circle: 0
+    - _MatCap4_CircleBlur: 0.1
+    - _MatCap4_CircleR: 0.45
+    - _MatCap4_Coat: 0
+    - _MatCap4_CopyPaste: 0
+    - _MatCap4_Depth: 0
+    - _MatCap4_DistHi: 0
+    - _MatCap4_DistLo: 0
+    - _MatCap4_Emis: 0
+    - _MatCap4_Freeze: 0
+    - _MatCap4_FresHi: 1
+    - _MatCap4_FresLo: 0
+    - _MatCap4_Hue: 0
+    - _MatCap4_HueSpd: 0
+    - _MatCap4_HueSpd_Ph: 0
+    - _MatCap4_Int: 1
+    - _MatCap4_LightMix: 0
+    - _MatCap4_Lit: 1
+    - _MatCap4_MaskCh: 0
+    - _MatCap4_MaskInv: 0
+    - _MatCap4_MaskSrc: 0
+    - _MatCap4_MaskSrcCh: 0
+    - _MatCap4_Metal: 0
+    - _MatCap4_Mirror: 0
+    - _MatCap4_NrmFollow: 0
+    - _MatCap4_NrmSrc: 0
+    - _MatCap4_Opacity: 1
+    - _MatCap4_Proc: 0
+    - _MatCap4_ProcScale: 6
+    - _MatCap4_ProcSharp: 0.5
+    - _MatCap4_ProcSpeed: 0.5
+    - _MatCap4_ProcSpeed_Ph: 0
+    - _MatCap4_ProcWarp: 0.3
+    - _MatCap4_Proj: 0
+    - _MatCap4_Rot: 0
+    - _MatCap4_SecCh: 0
+    - _MatCap4_SecCount: 4
+    - _MatCap4_SecSrc: 0
+    - _MatCap4_SecWarn: 0
+    - _MatCap4_Smooth: 0
+    - _MatCap4_Src: 0
+    - _MatCap4_SurfWarn: 0
+    - _MatCap4_ToneMix: 0
+    - _MatCap4_Zoom: 1
+    - _MatCap5_AtlasBuild: 0
+    - _MatCap5_AtlasHelp: 0
+    - _MatCap5_BaseMix: 0
+    - _MatCap5_Blend: 0
+    - _MatCap5_Blur: 0
+    - _MatCap5_BlurCh: 0
+    - _MatCap5_BorrowWarn: 0
+    - _MatCap5_Circle: 0
+    - _MatCap5_CircleBlur: 0.1
+    - _MatCap5_CircleR: 0.45
+    - _MatCap5_Coat: 0
+    - _MatCap5_CopyPaste: 0
+    - _MatCap5_Depth: 0
+    - _MatCap5_DistHi: 0
+    - _MatCap5_DistLo: 0
+    - _MatCap5_Emis: 0
+    - _MatCap5_Freeze: 0
+    - _MatCap5_FresHi: 1
+    - _MatCap5_FresLo: 0
+    - _MatCap5_Hue: 0
+    - _MatCap5_HueSpd: 0
+    - _MatCap5_HueSpd_Ph: 0
+    - _MatCap5_Int: 1
+    - _MatCap5_LightMix: 0
+    - _MatCap5_Lit: 1
+    - _MatCap5_MaskCh: 0
+    - _MatCap5_MaskInv: 0
+    - _MatCap5_MaskSrc: 0
+    - _MatCap5_MaskSrcCh: 0
+    - _MatCap5_Metal: 0
+    - _MatCap5_Mirror: 0
+    - _MatCap5_NrmFollow: 0
+    - _MatCap5_NrmSrc: 0
+    - _MatCap5_Opacity: 1
+    - _MatCap5_Proc: 0
+    - _MatCap5_ProcScale: 6
+    - _MatCap5_ProcSharp: 0.5
+    - _MatCap5_ProcSpeed: 0.5
+    - _MatCap5_ProcSpeed_Ph: 0
+    - _MatCap5_ProcWarp: 0.3
+    - _MatCap5_Proj: 0
+    - _MatCap5_Rot: 0
+    - _MatCap5_SecCh: 0
+    - _MatCap5_SecCount: 4
+    - _MatCap5_SecSrc: 0
+    - _MatCap5_SecWarn: 0
+    - _MatCap5_Smooth: 0
+    - _MatCap5_Src: 0
+    - _MatCap5_SurfWarn: 0
+    - _MatCap5_ToneMix: 0
+    - _MatCap5_Zoom: 1
+    - _MatCap_AtlasBuild: 0
+    - _MatCap_AtlasHelp: 0
+    - _MatCap_BaseMix: 0
+    - _MatCap_Bias: 0.2
+    - _MatCap_Blend: 0
+    - _MatCap_Blur: 0
+    - _MatCap_BlurCh: 0
+    - _MatCap_BorrowWarn: 0
+    - _MatCap_Circle: 0
+    - _MatCap_CircleBlur: 0.1
+    - _MatCap_CircleR: 0.45
+    - _MatCap_Coat: 0
+    - _MatCap_CopyPaste: 0
+    - _MatCap_Depth: 0
+    - _MatCap_DistHi: 0
+    - _MatCap_DistLo: 0
+    - _MatCap_Emis: 0
+    - _MatCap_Freeze: 0
+    - _MatCap_FresHi: 1
+    - _MatCap_FresLo: 0
+    - _MatCap_Hue: 0
+    - _MatCap_HueSpd: 0
+    - _MatCap_HueSpd_Ph: 0
+    - _MatCap_Int: 0
+    - _MatCap_LightMix: 0
+    - _MatCap_Lit: 1
+    - _MatCap_MaskCh: 0
+    - _MatCap_MaskInv: 0
+    - _MatCap_MaskSrc: 0
+    - _MatCap_MaskSrcCh: 0
+    - _MatCap_Metal: 0
+    - _MatCap_Mirror: 0
+    - _MatCap_NrmFollow: 0
+    - _MatCap_NrmSrc: 0
+    - _MatCap_Opacity: 1
+    - _MatCap_Proc: 0
+    - _MatCap_ProcScale: 6
+    - _MatCap_ProcSharp: 0.5
+    - _MatCap_ProcSpeed: 0.5
+    - _MatCap_ProcSpeed_Ph: 0
+    - _MatCap_ProcWarp: 0.3
+    - _MatCap_Proj: 0
+    - _MatCap_Rot: 0
+    - _MatCap_SecCh: 0
+    - _MatCap_SecCount: 4
+    - _MatCap_SecSrc: 0
+    - _MatCap_SecWarn: 0
+    - _MatCap_Smooth: 0
+    - _MatCap_Src: 0
+    - _MatCap_SurfWarn: 0
+    - _MatCap_ToneMix: 0
+    - _MatCap_Zoom: 1
+    - _MetallicMapChannel: 0
+    - _MicroGloss_Occ: 0
+    - _MicroGloss_Rough: 0
+    - _MicroLight: 0
+    - _MicroRefl_Occ: 0
+    - _MicroRefl_Rough: 0
+    - _MicroShadow: 0
+    - _MinBrightness: 0
+    - _MochieSetup: 0
+    - _Mode: 0
+    - _ModelAngleMax: 90
+    - _ModelAngleMin: 45
+    - _Norm2_Blend: 0
+    - _Norm2_BorrowCh: 3
+    - _Norm2_BorrowInv: 0
+    - _Norm2_BorrowSrc: 0
+    - _Norm2_BorrowWarn: 0
+    - _Norm2_FlipG: 0
+    - _Norm2_Str: 1
+    - _Norm_Str: 1
+    - _NormalSmooth: 0
+    - _OffsetFactor: 0
+    - _OffsetUnits: 0
+    - _Outline2AlbedoTint: 0
+    - _Outline2Alpha: 1
+    - _Outline2ColorMaskCh: 0
+    - _Outline2LV: 1
+    - _Outline2Lighting: 0
+    - _Outline2MaskCh: 0
+    - _Outline2Width: 2
+    - _OutlineAlbedoTint: 0
+    - _OutlineAlpha: 1
+    - _OutlineColorMaskCh: 0
+    - _OutlineLV: 1
+    - _OutlineLighting: 0
+    - _OutlineMaskCh: 0
+    - _OutlineNormalSrc: 0
+    - _OutlineOffsetFactor: 0
+    - _OutlineOffsetUnits: 0
+    - _OutlineWidth: 1
+    - _OutlineZTest: 4
+    - _OutlineZWrite: 1
+    - _PBR_AO_Ch: 1
+    - _PBR_Height_Ch: 2
+    - _PBR_Met_Ch: 0
+    - _PBR_Met_Inv: 0
+    - _PBR_Smooth_Ch: 3
+    - _PBR_Smooth_Inv: 0
+    - _Parallax: 0
+    - _PathA_Gap: 0.15
+    - _PathA_Offset: 0
+    - _PathA_Seg: 0
+    - _PathA_Soft: 0.1
+    - _PathA_Speed: 0.25
+    - _PathA_Speed_Ph: 0
+    - _PathA_Type: 0
+    - _PathA_Width: 0.15
+    - _PathB_Gap: 0.15
+    - _PathB_Offset: 0
+    - _PathB_Seg: 0
+    - _PathB_Soft: 0.1
+    - _PathB_Speed: 0.25
+    - _PathB_Speed_Ph: 0
+    - _PathB_Type: 0
+    - _PathB_Width: 0.15
+    - _PathG_Gap: 0.15
+    - _PathG_Offset: 0
+    - _PathG_Seg: 0
+    - _PathG_Soft: 0.1
+    - _PathG_Speed: 0.25
+    - _PathG_Speed_Ph: 0
+    - _PathG_Type: 0
+    - _PathG_Width: 0.15
+    - _PathR_Gap: 0.15
+    - _PathR_Offset: 0
+    - _PathR_Seg: 0
+    - _PathR_Soft: 0.1
+    - _PathR_Speed: 0.25
+    - _PathR_Speed_Ph: 0
+    - _PathR_Type: 0
+    - _PathR_Width: 0.15
+    - _Pathing_Blend: 0
+    - _Pathing_Src: 0
+    - _Pearl_Along: 0
+    - _Pearl_Attribution: 0
+    - _Pearl_Aurora: 0.5
+    - _Pearl_BackAlpha: 1
+    - _Pearl_Falloff: 1
+    - _Pearl_Keep: 1
+    - _Pearl_Rim: 0.2
+    - _Pearl_RimSharp: 4
+    - _Pearl_Shimmer: 0.4
+    - _Pearl_ShimmerCycles: 1.5
+    - _PolishMaskCh: 0
+    - _RC_LTCGI: 1
+    - _RC_LV: 1
+    - _RC_Probe: 1
+    - _RC_VRSL: 1
+    - _ReflFromMask: 0
+    - _ReflFromMask_Rough: 0.1
+    - _ReflMask_Ch: 2
+    - _ReflMask_Inv: 0
+    - _ReflMask_Str: 1
+    - _Refl_Clamp: 1
+    - _Region_B_Emis: 0
+    - _Region_G_Emis: 0
+    - _Region_R_Emis: 0
+    - _Rim_Ambient: 1
+    - _Rim_Blur: 0.8
+    - _Rim_Direct: 1
+    - _Rim_Follow: 0
+    - _Rim_LTCGI: 0
+    - _Rim_LV: 1
+    - _Rim_Power: 4
+    - _Rim_Str: 0
+    - _Rim_VRSL: 0
+    - _Rim_Wrap: 0.5
+    - _SSS_Dist: 0.18
+    - _SSS_Power: 4
+    - _SSS_Str: 0.35
+    - _Saturation: 0
+    - _Shad_Hard: 0
+    - _Shad_NormalBias: 0
+    - _Shad_NormalBiasMode: 0
+    - _Shad_Soft: 0
+    - _ShaderOptimizerEnabled: 1
+    - _ShadowCull: 2
+    - _ShadowMask_Ch: 0
+    - _ShadowMask_Indirect: 0.35
+    - _ShadowMask_Str: 1
+    - _ShadowMatch: 1
+    - _ShadowOffsetFactor: 0
+    - _ShadowOffsetUnits: 0
+    - _ShadowZTest: 4
+    - _ShadowZWrite: 1
+    - _Shard_CC_Str: 0
+    - _Shard_ColorMod: 0
+    - _Shard_ColorMod_Speed: 0
+    - _Shard_ColorMod_Speed_Ph: 0
+    - _Shard_LV: 1
+    - _SkelMask_Ch: 0
+    - _Skel_Amount: 1
+    - _Skel_Depth: 0.03
+    - _Skel_Flicker: 0.2
+    - _Skel_Glow: 2
+    - _Skel_Halo: 0.4
+    - _Skel_Reveal: 0
+    - _Skel_SeeThrough: 0.6
+    - _Skel_XRay: 0.7
+    - _Sonar_Density: 0.5
+    - _Sonar_Facing: 0.7
+    - _Sonar_MaskCh: 3
+    - _Sonar_MaskInv: 0
+    - _Sonar_MaskSrc: 0
+    - _Sonar_Origin: 0
+    - _Sonar_Range: 15
+    - _Sonar_React: 1
+    - _Sonar_Sharp: 12
+    - _Sonar_Speed: 1.5
+    - _Sonar_Speed_Ph: 0
+    - _Sonar_Strength: 2
+    - _SpecMask_Ch: 3
+    - _SpecMask_Inv: 0
+    - _SpecMask_Str: 1
+    - _Spec_Axis: 0
+    - _Spec_Clamp: 1
+    - _Spec_ColorMode: 0
+    - _Spec_Fade: 0.5
+    - _Spec_Height: 1
+    - _Spec_Occ: 1
+    - _Spec_Reverse: 0
+    - _Spec_Strength: 2
+    - _Spec_Style: 0
+    - _Spec_Thickness: 0.02
+    - _Spectrum_MaskCh: 3
+    - _Spectrum_MaskInv: 0
+    - _Spectrum_MaskSrc: 0
+    - _SpeedX: 0
+    - _SpeedX_Ph: 0
+    - _SpeedY: 0
+    - _SpeedY_Ph: 0
+    - _SphericalDissolveInvert: 0
+    - _SphericalDissolveRadius: 1.5
+    - _SrcBlend: 1
+    - _SrcBlendAlpha: 1
+    - _StencilComp: 8
+    - _StencilFail: 0
+    - _StencilPass: 0
+    - _StencilReadMask: 255
+    - _StencilRef: 0
+    - _StencilWriteMask: 255
+    - _StencilZFail: 0
+    - _Swarm_Count: 8
+    - _Swarm_Drift: 0.4
+    - _Swarm_Drift_Ph: 0
+    - _Swarm_Falloff: 3
+    - _Swarm_MaskCh: 3
+    - _Swarm_MaskInv: 0
+    - _Swarm_MaskSrc: 0
+    - _Swarm_Size: 0.14
+    - _Swarm_Spread: 4
+    - _Swarm_Strength: 2
+    - _Swarm_Wander: 0.5
+    - _Tess_Detail: 0.5
+    - _Thick_Ch: 4
+    - _Thickness: 0
+    - _ToonStdSetup: 0
+    - _Touch0: 0
+    - _Touch1: 0
+    - _Touch2: 0
+    - _Touch3: 0
+    - _Touch_Depth: 0.04
+    - _Touch_Flow: 0.4
+    - _Touch_Native: 0
+    - _Touch_Normal: 0.6
+    - _Touch_Rim: 0.8
+    - _Touch_Spread: 0.35
+    - _Touch_Tendril: 0.3
+    - _Touch_Veins: 1.2
+    - _Touch_Wet: 0.7
+    - _Trans_Dist: 0.25
+    - _Trans_Fracture: 0
+    - _Trans_Power: 2
+    - _Trans_Spread: 0.5
+    - _Trans_Str: 0.25
+    - _Transparency: 0
+    - _UDIMDiscardHeader: 0
+    - _UDIMDiscardMode: 0
+    - _UDIMDiscardRow0_0: 0
+    - _UDIMDiscardRow0_1: 0
+    - _UDIMDiscardRow0_2: 0
+    - _UDIMDiscardRow0_3: 0
+    - _UDIMDiscardRow1_0: 0
+    - _UDIMDiscardRow1_1: 0
+    - _UDIMDiscardRow1_2: 0
+    - _UDIMDiscardRow1_3: 0
+    - _UDIMDiscardRow2_0: 0
+    - _UDIMDiscardRow2_1: 0
+    - _UDIMDiscardRow2_2: 0
+    - _UDIMDiscardRow2_3: 0
+    - _UDIMDiscardRow3_0: 0
+    - _UDIMDiscardRow3_1: 0
+    - _UDIMDiscardRow3_2: 0
+    - _UDIMDiscardRow3_3: 0
+    - _UDIMDiscardUV: 0
+    - _UDIMFaceDiscardFace: 0
+    - _UDIMFaceDiscardHeader: 0
+    - _UDIMFaceDiscardRow0_0: 0
+    - _UDIMFaceDiscardRow0_1: 0
+    - _UDIMFaceDiscardRow0_2: 0
+    - _UDIMFaceDiscardRow0_3: 0
+    - _UDIMFaceDiscardRow1_0: 0
+    - _UDIMFaceDiscardRow1_1: 0
+    - _UDIMFaceDiscardRow1_2: 0
+    - _UDIMFaceDiscardRow1_3: 0
+    - _UDIMFaceDiscardRow2_0: 0
+    - _UDIMFaceDiscardRow2_1: 0
+    - _UDIMFaceDiscardRow2_2: 0
+    - _UDIMFaceDiscardRow2_3: 0
+    - _UDIMFaceDiscardRow3_0: 0
+    - _UDIMFaceDiscardRow3_1: 0
+    - _UDIMFaceDiscardRow3_2: 0
+    - _UDIMFaceDiscardRow3_3: 0
+    - _UDIMFaceDiscardUV: 0
+    - _UDIM_Attribution: 0
+    - _UL_AnisoStart: 0.005
+    - _UL_LeakDim: 1
+    - _UL_LightSize: 0
+    - _UL_ProbeSpec: 0
+    - _UV_Rot: 0
+    - _UnifiedLight: 0
+    - _UseALFracture: 0
+    - _UseALPump: 0
+    - _UseALVortex: 0
+    - _UseAOMap: 0
+    - _UseAlphaMask: 0
+    - _UseAudioLink: 0
+    - _UseBentNormal: 0
+    - _UseBio: 1
+    - _UseCarPaint: 0
+    - _UseChroma: 0
+    - _UseChronoFX: 0
+    - _UseCosmos: 0
+    - _UseCosmos_AL: 0
+    - _UseCtx: 0
+    - _UseCutoutMask: 0
+    - _UseCyber: 0
+    - _UseCyberAuto: 0
+    - _UseCyberCC: 0
+    - _UseCyberDMX: 0
+    - _UseCyberVU: 0
+    - _UseCyberWave: 0
+    - _UseCymatics: 0
+    - _UseDetailNormal: 0
+    - _UseDrip: 0
+    - _UseDripSprite: 0
+    - _UseEmission: 0
+    - _UseEmission2: 0
+    - _UseEmission3: 0
+    - _UseEmission4: 0
+    - _UseEmission5: 0
+    - _UseFlipbook: 0
+    - _UseGhost: 0
+    - _UseGlitter: 0
+    - _UseGlossMap: 0
+    - _UseGoo: 0
+    - _UseGooNoise: 0
+    - _UseHeightMap: 0
+    - _UseHolo: 0
+    - _UseHyper: 0
+    - _UseInfinity: 0
+    - _UseLTCGI: 0
+    - _UseLightVolumes: 0
+    - _UseMatCap1: 0
+    - _UseMatCap2: 0
+    - _UseMatCap3: 0
+    - _UseMatCap4: 0
+    - _UseMatCap5: 0
+    - _UseMediaState: 0
+    - _UseMetallicMap: 0
+    - _UseMultiScatter: 1
+    - _UseNonLinearSH: 0
+    - _UseNormal2: 0
+    - _UseOutline: 0
+    - _UseOutline2: 0
+    - _UsePackedMasks: 0
+    - _UsePathing: 0
+    - _UsePearl: 0
+    - _UsePolish: 1
+    - _UseRegionMask: 0
+    - _UseShadowMask: 0
+    - _UseShardCC: 0
+    - _UseSkeleton: 0
+    - _UseSonar: 0
+    - _UseSpectrum: 0
+    - _UseSwarm: 0
+    - _UseTouch: 0
+    - _UseVRSL: 0
+    - _UseVtxKinetic: 0
+    - _UseWorldPost: 0
+    - _VRSL_Attribution: 0
+    - _VRSL_ChannelMode: 3
+    - _VRSL_Color_Hijack: 0
+    - _VRSL_GI_Int: 0
+    - _VRSL_GI_Sat: 0.85
+    - _VRSL_GI_Spec: 0.5
+    - _VRSL_Geo_Warp: 1
+    - _VRSL_Intensity: 1
+    - _Vtx_AutoCorr_Str: 0
+    - _Vtx_Fracture_Amount: 0
+    - _Vtx_Fracture_Band: 3
+    - _Vtx_Fracture_Dist: 0.35
+    - _Vtx_Fracture_Float: 0
+    - _Vtx_Fracture_Lift: 0
+    - _Vtx_Fracture_Spin: 0.6
+    - _Vtx_Fracture_Spin_Ph: 0
+    - _Vtx_Fracture_Spiral: 0
+    - _Vtx_Fracture_Spiral_Ph: 0
+    - _Vtx_Fracture_Str: 0
+    - _Vtx_Fracture_Trail: 0
+    - _Vtx_MaskCh: 3
+    - _Vtx_MaskInv: 0
+    - _Vtx_MaskSrc: 0
+    - _Vtx_Pump_Band: 0
+    - _Vtx_Pump_Str: 0
+    - _WG_Land: 0
+    - _WP_Limit: 4
+    - _Wet_Amount: 0.7
+    - _Wet_BorrowCh: 3
+    - _Wet_BorrowInv: 0
+    - _Wet_BorrowSrc: 0
+    - _Wet_BorrowWarn: 0
+    - _Wet_Darken: 0.6
+    - _Wet_Flatten: 0.5
+    - _Wet_Pool: 0
+    - _Wet_Sheen: 0.5
+    - _Wet_Smoothness: 0.95
+    - _Wet_TouchWipe: 0
+    - _ZClip: 1
+    - _ZTest: 4
+    - _ZWrite: 1
+    - footer_discord: 0
+    - footer_github: 0
+    - footer_kofi: 0
+    - footer_website: 0
+    - footer_x: 0
+    - m_audiolink: 0
+    - m_base: 0
+    - m_debugtools: 0
+    - m_decals: 0
+    - m_emissions: 0
+    - m_end_al_chrono_grp: 0
+    - m_end_al_cyber_auto: 0
+    - m_end_al_cyber_autoeffects: 0
+    - m_end_al_cyber_cc: 0
+    - m_end_al_cyber_dmx: 0
+    - m_end_al_cyber_grp: 0
+    - m_end_al_cyber_vu: 0
+    - m_end_al_cyber_wave: 0
+    - m_end_al_env_grp: 0
+    - m_end_al_global_grp: 0
+    - m_end_al_lobe_grp: 0
+    - m_end_al_response_grp: 0
+    - m_end_al_scan_grp: 0
+    - m_end_al_uv_bump: 0
+    - m_end_al_uv_fracture: 0
+    - m_end_al_uv_grp: 0
+    - m_end_al_vtx_grp: 0
+    - m_end_alphaoptions: 0
+    - m_end_base_uv: 0
+    - m_end_bio: 0
+    - m_end_blending: 0
+    - m_end_brokenpixels: 0
+    - m_end_carpaint: 0
+    - m_end_chroma: 0
+    - m_end_coloradjust: 0
+    - m_end_context: 0
+    - m_end_cosmos: 0
+    - m_end_cymatics: 0
+    - m_end_dissolve: 0
+    - m_end_drip: 0
+    - m_end_drip_droplets: 0
+    - m_end_drip_soak: 0
+    - m_end_drip_streaks: 0
+    - m_end_flipbook: 0
+    - m_end_ghost: 0
+    - m_end_glitter: 0
+    - m_end_goo: 0
+    - m_end_goo_cling: 0
+    - m_end_goo_drips: 0
+    - m_end_goo_floor: 0
+    - m_end_goo_form: 0
+    - m_end_goo_melt: 0
+    - m_end_goo_noise: 0
+    - m_end_goo_oobleck: 0
+    - m_end_goo_slime: 0
+    - m_end_goo_sway: 0
+    - m_end_goo_touch: 0
+    - m_end_goo_veins: 0
+    - m_end_goo_writhe: 0
+    - m_end_holo: 0
+    - m_end_hyper: 0
+    - m_end_infinity: 0
+    - m_end_lightcheck: 0
+    - m_end_lightdetail: 0
+    - m_end_lighting: 0
+    - m_end_lightvolumes: 0
+    - m_end_ltcgi: 0
+    - m_end_matcap1: 0
+    - m_end_matcap2: 0
+    - m_end_matcap3: 0
+    - m_end_matcap4: 0
+    - m_end_matcap5: 0
+    - m_end_matcap_global: 0
+    - m_end_matcap_sections: 0
+    - m_end_norm_bent: 0
+    - m_end_norm_detail: 0
+    - m_end_norm_second: 0
+    - m_end_outline1: 0
+    - m_end_outline2: 0
+    - m_end_pearl: 0
+    - m_end_shadowdepth: 0
+    - m_end_skeleton: 0
+    - m_end_sonar: 0
+    - m_end_spectrum: 0
+    - m_end_stage: 0
+    - m_end_stencil: 0
+    - m_end_surf_masks: 0
+    - m_end_surf_pbr: 0
+    - m_end_surf_sepmaps: 0
+    - m_end_surf_shape: 0
+    - m_end_swarm: 0
+    - m_end_udimdiscard: 0
+    - m_end_wg_motion: 0
+    - m_end_worldpost: 0
+    - m_matcaps: 0
+    - m_normals: 0
+    - m_outlines: 0
+    - m_polish: 0
+    - m_rendering: 0
+    - m_shading: 0
+    - m_specialfx: 0
+    - m_start_al_chrono_grp: 0
+    - m_start_al_cyber_auto: 0
+    - m_start_al_cyber_autoeffects: 0
+    - m_start_al_cyber_cc: 0
+    - m_start_al_cyber_dmx: 0
+    - m_start_al_cyber_grp: 0
+    - m_start_al_cyber_vu: 0
+    - m_start_al_cyber_wave: 0
+    - m_start_al_env_grp: 0
+    - m_start_al_global_grp: 0
+    - m_start_al_lobe_grp: 0
+    - m_start_al_response_grp: 0
+    - m_start_al_scan_grp: 0
+    - m_start_al_uv_bump: 0
+    - m_start_al_uv_fracture: 0
+    - m_start_al_uv_grp: 0
+    - m_start_al_vtx_grp: 0
+    - m_start_alphaoptions: 0
+    - m_start_base_uv: 0
+    - m_start_bio: 0
+    - m_start_blending: 0
+    - m_start_brokenpixels: 0
+    - m_start_carpaint: 0
+    - m_start_chroma: 0
+    - m_start_coloradjust: 0
+    - m_start_context: 0
+    - m_start_cosmos: 0
+    - m_start_cymatics: 0
+    - m_start_dissolve: 0
+    - m_start_drip: 0
+    - m_start_drip_droplets: 0
+    - m_start_drip_soak: 0
+    - m_start_drip_streaks: 0
+    - m_start_flipbook: 0
+    - m_start_ghost: 0
+    - m_start_glitter: 0
+    - m_start_goo: 0
+    - m_start_goo_cling: 0
+    - m_start_goo_drips: 0
+    - m_start_goo_floor: 0
+    - m_start_goo_form: 0
+    - m_start_goo_melt: 0
+    - m_start_goo_noise: 0
+    - m_start_goo_oobleck: 0
+    - m_start_goo_slime: 0
+    - m_start_goo_sway: 0
+    - m_start_goo_touch: 0
+    - m_start_goo_veins: 0
+    - m_start_goo_writhe: 0
+    - m_start_holo: 0
+    - m_start_hyper: 0
+    - m_start_infinity: 0
+    - m_start_lightcheck: 0
+    - m_start_lightdetail: 0
+    - m_start_lighting: 0
+    - m_start_lightvolumes: 0
+    - m_start_ltcgi: 0
+    - m_start_matcap1: 0
+    - m_start_matcap2: 0
+    - m_start_matcap3: 0
+    - m_start_matcap4: 0
+    - m_start_matcap5: 0
+    - m_start_matcap_global: 0
+    - m_start_matcap_sections: 0
+    - m_start_norm_bent: 0
+    - m_start_norm_detail: 0
+    - m_start_norm_second: 0
+    - m_start_outline1: 0
+    - m_start_outline2: 0
+    - m_start_pearl: 0
+    - m_start_shadowdepth: 0
+    - m_start_skeleton: 0
+    - m_start_sonar: 0
+    - m_start_spectrum: 0
+    - m_start_stage: 0
+    - m_start_stencil: 0
+    - m_start_surf_masks: 0
+    - m_start_surf_pbr: 0
+    - m_start_surf_sepmaps: 0
+    - m_start_surf_shape: 0
+    - m_start_swarm: 0
+    - m_start_udimdiscard: 0
+    - m_start_wg_motion: 0
+    - m_start_worldpost: 0
+    - m_surface: 0
+    - s_end_AlphaAngular: 0
+    - s_end_AlphaDistanceFade: 0
+    - s_end_AlphaDithering: 0
+    - s_end_AlphaFresnel: 0
+    - s_end_AlphaHaunt: 0
+    - s_end_AlphaToCoverage: 0
+    - s_end_ColorAdjustColorGrading: 0
+    - s_end_Decal0HueShift: 0
+    - s_end_Decal1HueShift: 0
+    - s_end_Decal2HueShift: 0
+    - s_end_Decal3HueShift: 0
+    - s_end_DissolveArea: 0
+    - s_end_DissolveBeatTravel: 0
+    - s_end_DissolveCenterOut: 0
+    - s_end_DissolveCont: 0
+    - s_end_DissolveCym: 0
+    - s_end_DissolveDetail: 0
+    - s_end_DissolveEdge: 0
+    - s_end_DissolveEmber: 0
+    - s_end_DissolveGoo: 0
+    - s_end_DissolveGradient: 0
+    - s_end_DissolveHeight: 0
+    - s_end_DissolveInterior: 0
+    - s_end_DissolveMask: 0
+    - s_end_DissolveMelt: 0
+    - s_end_DissolveP2P: 0
+    - s_end_DissolveProximity: 0
+    - s_end_DissolveShatter: 0
+    - s_end_DissolveSpark: 0
+    - s_end_DissolveSphere: 0
+    - s_end_DissolveViewer: 0
+    - s_end_DissolveWave: 0
+    - s_end_MainHueShift: 0
+    - s_end_MainTint: 0
+    - s_end_PearlAurora: 0
+    - s_end_PearlEdge: 0
+    - s_end_PearlGradient: 0
+    - s_end_PearlShine: 0
+    - s_end_al_override: 0
+    - s_end_al_room: 0
+    - s_end_al_smooth: 0
+    - s_end_aniso: 0
+    - s_end_cavlight: 0
+    - s_end_decal0: 0
+    - s_end_decal1: 0
+    - s_end_decal2: 0
+    - s_end_decal3: 0
+    - s_end_emis1: 0
+    - s_end_emis1_beat: 0
+    - s_end_emis1_react: 0
+    - s_end_emis1_uv: 0
+    - s_end_emis2: 0
+    - s_end_emis2_beat: 0
+    - s_end_emis2_react: 0
+    - s_end_emis2_uv: 0
+    - s_end_emis3: 0
+    - s_end_emis3_beat: 0
+    - s_end_emis3_react: 0
+    - s_end_emis3_uv: 0
+    - s_end_emis4: 0
+    - s_end_emis4_beat: 0
+    - s_end_emis4_react: 0
+    - s_end_emis4_uv: 0
+    - s_end_emis5: 0
+    - s_end_emis5_beat: 0
+    - s_end_emis5_react: 0
+    - s_end_emis5_uv: 0
+    - s_end_glit_l1: 0
+    - s_end_glit_l1_style: 0
+    - s_end_glit_l2: 0
+    - s_end_glit_l2_style: 0
+    - s_end_glit_l3: 0
+    - s_end_glit_l3_style: 0
+    - s_end_glit_l4: 0
+    - s_end_glit_l4_style: 0
+    - s_end_glit_l5: 0
+    - s_end_glit_l5_style: 0
+    - s_end_glit_motion: 0
+    - s_end_global_dft: 0
+    - s_end_global_surf: 0
+    - s_end_heightmap: 0
+    - s_end_lobe_glitch: 0
+    - s_end_matcap1_al: 0
+    - s_end_matcap1_atlas: 0
+    - s_end_matcap1_colour: 0
+    - s_end_matcap1_mask: 0
+    - s_end_matcap1_offset: 0
+    - s_end_matcap1_proc: 0
+    - s_end_matcap1_proj: 0
+    - s_end_matcap1_surface: 0
+    - s_end_matcap1_tiling: 0
+    - s_end_matcap2_al: 0
+    - s_end_matcap2_atlas: 0
+    - s_end_matcap2_colour: 0
+    - s_end_matcap2_mask: 0
+    - s_end_matcap2_offset: 0
+    - s_end_matcap2_proc: 0
+    - s_end_matcap2_proj: 0
+    - s_end_matcap2_surface: 0
+    - s_end_matcap2_tiling: 0
+    - s_end_matcap3_al: 0
+    - s_end_matcap3_atlas: 0
+    - s_end_matcap3_colour: 0
+    - s_end_matcap3_mask: 0
+    - s_end_matcap3_offset: 0
+    - s_end_matcap3_proc: 0
+    - s_end_matcap3_proj: 0
+    - s_end_matcap3_surface: 0
+    - s_end_matcap3_tiling: 0
+    - s_end_matcap4_al: 0
+    - s_end_matcap4_atlas: 0
+    - s_end_matcap4_colour: 0
+    - s_end_matcap4_mask: 0
+    - s_end_matcap4_offset: 0
+    - s_end_matcap4_proc: 0
+    - s_end_matcap4_proj: 0
+    - s_end_matcap4_surface: 0
+    - s_end_matcap4_tiling: 0
+    - s_end_matcap5_al: 0
+    - s_end_matcap5_atlas: 0
+    - s_end_matcap5_colour: 0
+    - s_end_matcap5_mask: 0
+    - s_end_matcap5_offset: 0
+    - s_end_matcap5_proc: 0
+    - s_end_matcap5_proj: 0
+    - s_end_matcap5_surface: 0
+    - s_end_matcap5_tiling: 0
+    - s_end_microlight: 0
+    - s_end_microshade: 0
+    - s_end_path_a: 0
+    - s_end_path_b: 0
+    - s_end_path_g: 0
+    - s_end_path_r: 0
+    - s_end_pathing: 0
+    - s_end_reflclamp: 0
+    - s_end_reflmask: 0
+    - s_end_region: 0
+    - s_end_rim: 0
+    - s_end_specmask: 0
+    - s_end_specresp: 0
+    - s_end_sss: 0
+    - s_end_tog_Dissolve: 0
+    - s_end_tog_UDIMDiscard: 0
+    - s_end_tog_UseALFracture: 0
+    - s_end_tog_UseALPump: 0
+    - s_end_tog_UseALVortex: 0
+    - s_end_tog_UseBentNormal: 0
+    - s_end_tog_UseBio: 0
+    - s_end_tog_UseCarPaint: 0
+    - s_end_tog_UseChroma: 0
+    - s_end_tog_UseChronoFX: 0
+    - s_end_tog_UseCosmos: 0
+    - s_end_tog_UseCtx: 0
+    - s_end_tog_UseCyber: 0
+    - s_end_tog_UseCyberAuto: 0
+    - s_end_tog_UseCyberCC: 0
+    - s_end_tog_UseCyberDMX: 0
+    - s_end_tog_UseCyberVU: 0
+    - s_end_tog_UseCyberWave: 0
+    - s_end_tog_UseCymatics: 0
+    - s_end_tog_UseDetailNormal: 0
+    - s_end_tog_UseDripSprite: 0
+    - s_end_tog_UseFlipbook: 0
+    - s_end_tog_UseGhost: 0
+    - s_end_tog_UseGlitter: 0
+    - s_end_tog_UseGooNoise: 0
+    - s_end_tog_UseHeightMap: 0
+    - s_end_tog_UseHolo: 0
+    - s_end_tog_UseHyper: 0
+    - s_end_tog_UseInfinity: 0
+    - s_end_tog_UseLTCGI: 0
+    - s_end_tog_UseLightVolumes: 0
+    - s_end_tog_UseMatCap1: 0
+    - s_end_tog_UseMatCap2: 0
+    - s_end_tog_UseMatCap3: 0
+    - s_end_tog_UseMatCap4: 0
+    - s_end_tog_UseMatCap5: 0
+    - s_end_tog_UseMediaState: 0
+    - s_end_tog_UseNormal2: 0
+    - s_end_tog_UseOutline: 0
+    - s_end_tog_UseOutline2: 0
+    - s_end_tog_UsePearl: 0
+    - s_end_tog_UseShardCC: 0
+    - s_end_tog_UseSkeleton: 0
+    - s_end_tog_UseSonar: 0
+    - s_end_tog_UseSpectrum: 0
+    - s_end_tog_UseSwarm: 0
+    - s_end_tog_UseTouch: 0
+    - s_end_tog_UseVRSL: 0
+    - s_end_tog_UseVtxKinetic: 0
+    - s_end_tog_UseWorldPost: 0
+    - s_end_trans: 0
+    - s_end_udimface: 0
+    - s_end_unified: 0
+    - s_end_vrsl_gi: 0
+    - s_end_vtx_autocorr: 0
+    - s_end_vtx_fracture: 0
+    - s_end_vtx_pump: 0
+    - s_start_AlphaAngular: 0
+    - s_start_AlphaDistanceFade: 0
+    - s_start_AlphaDithering: 0
+    - s_start_AlphaFresnel: 0
+    - s_start_AlphaHaunt: 0
+    - s_start_AlphaToCoverage: 0
+    - s_start_ColorAdjustColorGrading: 0
+    - s_start_Decal0HueShift: 0
+    - s_start_Decal1HueShift: 0
+    - s_start_Decal2HueShift: 0
+    - s_start_Decal3HueShift: 0
+    - s_start_DissolveArea: 0
+    - s_start_DissolveBeatTravel: 0
+    - s_start_DissolveCenterOut: 0
+    - s_start_DissolveCont: 0
+    - s_start_DissolveCym: 0
+    - s_start_DissolveDetail: 0
+    - s_start_DissolveEdge: 0
+    - s_start_DissolveEmber: 0
+    - s_start_DissolveGoo: 0
+    - s_start_DissolveGradient: 0
+    - s_start_DissolveHeight: 0
+    - s_start_DissolveInterior: 0
+    - s_start_DissolveMask: 0
+    - s_start_DissolveMelt: 0
+    - s_start_DissolveP2P: 0
+    - s_start_DissolveProximity: 0
+    - s_start_DissolveShatter: 0
+    - s_start_DissolveSpark: 0
+    - s_start_DissolveSphere: 0
+    - s_start_DissolveViewer: 0
+    - s_start_DissolveWave: 0
+    - s_start_MainHueShift: 0
+    - s_start_MainTint: 0
+    - s_start_PearlAurora: 0
+    - s_start_PearlEdge: 0
+    - s_start_PearlGradient: 0
+    - s_start_PearlShine: 0
+    - s_start_al_override: 0
+    - s_start_al_room: 0
+    - s_start_al_smooth: 0
+    - s_start_aniso: 0
+    - s_start_cavlight: 0
+    - s_start_decal0: 0
+    - s_start_decal1: 0
+    - s_start_decal2: 0
+    - s_start_decal3: 0
+    - s_start_emis1: 0
+    - s_start_emis1_beat: 0
+    - s_start_emis1_react: 0
+    - s_start_emis1_uv: 0
+    - s_start_emis2: 0
+    - s_start_emis2_beat: 0
+    - s_start_emis2_react: 0
+    - s_start_emis2_uv: 0
+    - s_start_emis3: 0
+    - s_start_emis3_beat: 0
+    - s_start_emis3_react: 0
+    - s_start_emis3_uv: 0
+    - s_start_emis4: 0
+    - s_start_emis4_beat: 0
+    - s_start_emis4_react: 0
+    - s_start_emis4_uv: 0
+    - s_start_emis5: 0
+    - s_start_emis5_beat: 0
+    - s_start_emis5_react: 0
+    - s_start_emis5_uv: 0
+    - s_start_glit_l1: 0
+    - s_start_glit_l1_style: 0
+    - s_start_glit_l2: 0
+    - s_start_glit_l2_style: 0
+    - s_start_glit_l3: 0
+    - s_start_glit_l3_style: 0
+    - s_start_glit_l4: 0
+    - s_start_glit_l4_style: 0
+    - s_start_glit_l5: 0
+    - s_start_glit_l5_style: 0
+    - s_start_glit_motion: 0
+    - s_start_global_dft: 0
+    - s_start_global_surf: 0
+    - s_start_heightmap: 0
+    - s_start_lobe_glitch: 0
+    - s_start_matcap1_al: 0
+    - s_start_matcap1_atlas: 0
+    - s_start_matcap1_colour: 0
+    - s_start_matcap1_mask: 0
+    - s_start_matcap1_offset: 0
+    - s_start_matcap1_proc: 0
+    - s_start_matcap1_proj: 0
+    - s_start_matcap1_surface: 0
+    - s_start_matcap1_tiling: 0
+    - s_start_matcap2_al: 0
+    - s_start_matcap2_atlas: 0
+    - s_start_matcap2_colour: 0
+    - s_start_matcap2_mask: 0
+    - s_start_matcap2_offset: 0
+    - s_start_matcap2_proc: 0
+    - s_start_matcap2_proj: 0
+    - s_start_matcap2_surface: 0
+    - s_start_matcap2_tiling: 0
+    - s_start_matcap3_al: 0
+    - s_start_matcap3_atlas: 0
+    - s_start_matcap3_colour: 0
+    - s_start_matcap3_mask: 0
+    - s_start_matcap3_offset: 0
+    - s_start_matcap3_proc: 0
+    - s_start_matcap3_proj: 0
+    - s_start_matcap3_surface: 0
+    - s_start_matcap3_tiling: 0
+    - s_start_matcap4_al: 0
+    - s_start_matcap4_atlas: 0
+    - s_start_matcap4_colour: 0
+    - s_start_matcap4_mask: 0
+    - s_start_matcap4_offset: 0
+    - s_start_matcap4_proc: 0
+    - s_start_matcap4_proj: 0
+    - s_start_matcap4_surface: 0
+    - s_start_matcap4_tiling: 0
+    - s_start_matcap5_al: 0
+    - s_start_matcap5_atlas: 0
+    - s_start_matcap5_colour: 0
+    - s_start_matcap5_mask: 0
+    - s_start_matcap5_offset: 0
+    - s_start_matcap5_proc: 0
+    - s_start_matcap5_proj: 0
+    - s_start_matcap5_surface: 0
+    - s_start_matcap5_tiling: 0
+    - s_start_microlight: 0
+    - s_start_microshade: 0
+    - s_start_path_a: 0
+    - s_start_path_b: 0
+    - s_start_path_g: 0
+    - s_start_path_r: 0
+    - s_start_pathing: 0
+    - s_start_reflclamp: 0
+    - s_start_reflmask: 0
+    - s_start_region: 0
+    - s_start_rim: 0
+    - s_start_specmask: 0
+    - s_start_specresp: 0
+    - s_start_sss: 0
+    - s_start_tog_Dissolve: 0
+    - s_start_tog_UDIMDiscard: 0
+    - s_start_tog_UseALFracture: 0
+    - s_start_tog_UseALPump: 0
+    - s_start_tog_UseALVortex: 0
+    - s_start_tog_UseBentNormal: 0
+    - s_start_tog_UseBio: 0
+    - s_start_tog_UseCarPaint: 0
+    - s_start_tog_UseChroma: 0
+    - s_start_tog_UseChronoFX: 0
+    - s_start_tog_UseCosmos: 0
+    - s_start_tog_UseCtx: 0
+    - s_start_tog_UseCyber: 0
+    - s_start_tog_UseCyberAuto: 0
+    - s_start_tog_UseCyberCC: 0
+    - s_start_tog_UseCyberDMX: 0
+    - s_start_tog_UseCyberVU: 0
+    - s_start_tog_UseCyberWave: 0
+    - s_start_tog_UseCymatics: 0
+    - s_start_tog_UseDetailNormal: 0
+    - s_start_tog_UseDripSprite: 0
+    - s_start_tog_UseFlipbook: 0
+    - s_start_tog_UseGhost: 0
+    - s_start_tog_UseGlitter: 0
+    - s_start_tog_UseGooNoise: 0
+    - s_start_tog_UseHeightMap: 0
+    - s_start_tog_UseHolo: 0
+    - s_start_tog_UseHyper: 0
+    - s_start_tog_UseInfinity: 0
+    - s_start_tog_UseLTCGI: 0
+    - s_start_tog_UseLightVolumes: 0
+    - s_start_tog_UseMatCap1: 0
+    - s_start_tog_UseMatCap2: 0
+    - s_start_tog_UseMatCap3: 0
+    - s_start_tog_UseMatCap4: 0
+    - s_start_tog_UseMatCap5: 0
+    - s_start_tog_UseMediaState: 0
+    - s_start_tog_UseNormal2: 0
+    - s_start_tog_UseOutline: 0
+    - s_start_tog_UseOutline2: 0
+    - s_start_tog_UsePearl: 0
+    - s_start_tog_UseShardCC: 0
+    - s_start_tog_UseSkeleton: 0
+    - s_start_tog_UseSonar: 0
+    - s_start_tog_UseSpectrum: 0
+    - s_start_tog_UseSwarm: 0
+    - s_start_tog_UseTouch: 0
+    - s_start_tog_UseVRSL: 0
+    - s_start_tog_UseVtxKinetic: 0
+    - s_start_tog_UseWorldPost: 0
+    - s_start_trans: 0
+    - s_start_udimface: 0
+    - s_start_unified: 0
+    - s_start_vrsl_gi: 0
+    - s_start_vtx_autocorr: 0
+    - s_start_vtx_fracture: 0
+    - s_start_vtx_pump: 0
+    - shader_is_using_vixforge_editor: 0
+    - shader_master_label: 0
+    m_Colors:
+    - _AL_Drip_Shake: {r: 0, g: 0.85, b: 0.5, a: 0.1}
+    - _AL_Emis1_Motion: {r: 0, g: 0, b: 0, a: 0}
+    - _AL_Emis1_Note: {r: 0, g: 4, b: 2, a: 0}
+    - _AL_Emis1_Strobe: {r: 0, g: 0.6, b: 0.3, a: 0.1}
+    - _AL_Emis1_Travel: {r: 0, g: 0.5, b: 0, a: 0}
+    - _AL_Emis1_Wave: {r: 0, g: 0.5, b: 0, a: 0}
+    - _AL_Emis2_Motion: {r: 0, g: 0, b: 0, a: 0}
+    - _AL_Emis2_Note: {r: 0, g: 4, b: 2, a: 0}
+    - _AL_Emis2_Strobe: {r: 0, g: 0.6, b: 0.3, a: 0.1}
+    - _AL_Emis2_Travel: {r: 0, g: 0.5, b: 0, a: 0}
+    - _AL_Emis2_Wave: {r: 0, g: 0.5, b: 0, a: 0}
+    - _AL_Emis3_Motion: {r: 0, g: 0, b: 0, a: 0}
+    - _AL_Emis3_Note: {r: 0, g: 4, b: 2, a: 0}
+    - _AL_Emis3_Strobe: {r: 0, g: 0.6, b: 0.3, a: 0.1}
+    - _AL_Emis3_Travel: {r: 0, g: 0.5, b: 0, a: 0}
+    - _AL_Emis3_Wave: {r: 0, g: 0.5, b: 0, a: 0}
+    - _AL_Emis4_Motion: {r: 0, g: 0, b: 0, a: 0}
+    - _AL_Emis4_Note: {r: 0, g: 4, b: 2, a: 0}
+    - _AL_Emis4_Strobe: {r: 0, g: 0.6, b: 0.3, a: 0.1}
+    - _AL_Emis4_Travel: {r: 0, g: 0.5, b: 0, a: 0}
+    - _AL_Emis4_Wave: {r: 0, g: 0.5, b: 0, a: 0}
+    - _AL_Emis5_Motion: {r: 0, g: 0, b: 0, a: 0}
+    - _AL_Emis5_Note: {r: 0, g: 4, b: 2, a: 0}
+    - _AL_Emis5_Strobe: {r: 0, g: 0.6, b: 0.3, a: 0.1}
+    - _AL_Emis5_Travel: {r: 0, g: 0.5, b: 0, a: 0}
+    - _AL_Emis5_Wave: {r: 0, g: 0.5, b: 0, a: 0}
+    - _AL_Fracture_UV: {r: 0, g: 0, b: 1, a: 0}
+    - _AL_Goo_Travel: {r: 0, g: 0.5, b: 0, a: 0}
+    - _AL_Infinity_Vortex: {r: 0, g: 4, b: 0, a: 0}
+    - _AL_Outline2_EQ: {r: 0, g: 0, b: 1.7, a: 1}
+    - _AL_Outline2_Pulse: {r: 0, g: 0.5, b: 0, a: 0}
+    - _AL_Outline_EQ: {r: 0, g: 0, b: 1.7, a: 1}
+    - _AL_Outline_Pulse: {r: 0, g: 0.5, b: 0, a: 0}
+    - _AL_OverrideVals: {r: 0, g: 0, b: 0, a: 0}
+    - _AL_Pump_UV: {r: 0, g: 0, b: 1, a: 0}
+    - _AL_Smooth: {r: 0, g: 0, b: 0, a: 0}
+    - _AL_Vortex_UV: {r: 0, g: 0, b: 1, a: 0}
+    - _AL_Wet_Travel: {r: 0, g: 0.5, b: 0, a: 0}
+    - _AlphaAudioLinkAddRange: {r: 0, g: 0, b: 0, a: 0}
+    - _AlphaHauntDark: {r: 0, g: 0.05, b: 0.5, a: 0}
+    - _AlphaHauntFlicker: {r: 0, g: 1, b: 0.3, a: 0}
+    - _AlphaHauntFlicker_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _AlphaHauntGaze: {r: 0, g: 20, b: 0.5, a: 0}
+    - _AlphaHauntPulse: {r: 0, g: 60, b: 0.2, a: 0}
+    - _AlphaHauntPulse_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _AngleForwardDirection: {r: 0, g: 0, b: 1, a: 0}
+    - _AudioLinkDissolveAlpha: {r: 0, g: 0, b: 0, a: 0}
+    - _AudioLinkDissolveDetail: {r: 0, g: 0, b: 0, a: 0}
+    - _AudioLinkDissolveEdgeEmission: {r: 0, g: 0, b: 0, a: 0}
+    - _AudioLinkDissolveEdgeWidth: {r: 0, g: 0, b: 0, a: 0}
+    - _CC_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _CarPaint_Base: {r: 1, g: 1, b: 1, a: 1}
+    - _CarPaint_FlakeColor: {r: 1, g: 1, b: 1, a: 1}
+    - _CarPaint_Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _CenterOutDissolveDirection: {r: 0, g: 0, b: 1, a: 0}
+    - _Chroma_UV: {r: 0, g: 0, b: 1, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _ContinuousDissolveRange: {r: 0, g: 1, b: 0, a: 1}
+    - _Cosmos_AL_Flare: {r: 1, g: 0.6, b: 0.2, a: 1}
+    - _Cosmos_ColA: {r: 0.15, g: 0, b: 0.45, a: 1}
+    - _Cosmos_ColB: {r: 0.25, g: 0.9, b: 1, a: 1}
+    - _Ctx_Glow: {r: 0, g: 0, b: 0, a: 1}
+    - _Cyber_Auto_Transform: {r: 0, g: 0, b: 1, a: 0}
+    - _Cyber_CC_Transform: {r: 0, g: 0, b: 1, a: 0}
+    - _Cyber_DMX_Transform: {r: 0, g: 0, b: 1, a: 0}
+    - _Cyber_VU_Transform: {r: 0, g: 0, b: 1, a: 0}
+    - _Cyber_Wave_Transform: {r: 0, g: 0, b: 1, a: 0}
+    - _Cym_AL: {r: 0.5, g: 0.6, b: 1, a: 0.5}
+    - _Cym_Depth: {r: 3, g: 0.5, b: 0.5, a: 0.35}
+    - _Cym_Hue: {r: 0.55, g: 0.4, b: 0.8, a: 0}
+    - _Cym_Line: {r: 18, g: 0.25, b: 0.3, a: 1}
+    - _Cym_Mode: {r: 3, g: 3, b: 0.6, a: 0.15}
+    - _Cym_Mode_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Cym_Place: {r: 0, g: 0, b: 1, a: 0}
+    - _Cym_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _Cym_Warp: {r: 0.2, g: 2, b: 0, a: 0.5}
+    - _Cym_Warp_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Decal0Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Decal0Pos: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _Decal0Scale: {r: 1, g: 1, b: 0, a: 0}
+    - _Decal0SideOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _Decal1Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Decal1Pos: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _Decal1Scale: {r: 1, g: 1, b: 0, a: 0}
+    - _Decal1SideOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _Decal2Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Decal2Pos: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _Decal2Scale: {r: 1, g: 1, b: 0, a: 0}
+    - _Decal2SideOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _Decal3Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Decal3Pos: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _Decal3Scale: {r: 1, g: 1, b: 0, a: 0}
+    - _Decal3SideOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _DissolveALColorOverride: {r: 1, g: 1, b: 1, a: 1}
+    - _DissolveALColorOverrideRamp: {r: 0, g: 1, b: 0, a: 1}
+    - _DissolveAlphaOnlyRamp: {r: 1, g: 0, b: 0, a: 1}
+    - _DissolveCymModes: {r: 3, g: 5, b: 0, a: 0}
+    - _DissolveDetailNoisePan: {r: 0, g: 0, b: 0, a: 0}
+    - _DissolveDetailNoisePan_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _DissolveDotNoiseOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _DissolveDotNoiseScale: {r: 1, g: 1, b: 1, a: 0}
+    - _DissolveDotNoiseSpeed: {r: 0, g: 0, b: 0, a: 0}
+    - _DissolveDotNoiseSpeed_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _DissolveDropBurst: {r: 0, g: 0.85, b: 0.5, a: 0.1}
+    - _DissolveEdgeColor: {r: 1, g: 1, b: 1, a: 1}
+    - _DissolveEdgeColor2: {r: 1, g: 0.5, b: 0, a: 1}
+    - _DissolveEdgeColor3: {r: 1, g: 1, b: 0, a: 1}
+    - _DissolveEmberColor: {r: 4, g: 1.2, b: 0.25, a: 1}
+    - _DissolveEmberSet: {r: 0.08, g: 30, b: 0.7, a: 1}
+    - _DissolveEmberSet_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _DissolveEndPoint: {r: 0, g: 1, b: 0, a: 0}
+    - _DissolveInteriorColor: {r: 0.45, g: 0.04, b: 0.059999965, a: 1}
+    - _DissolveMaskPan: {r: 0, g: 0, b: 0, a: 0}
+    - _DissolveMaskPan_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _DissolveMeltColor: {r: 0.25, g: 0.9, b: 0.2, a: 0}
+    - _DissolveMeltSet: {r: 0.2, g: 18, b: 0.02, a: 0.85}
+    - _DissolveNoiseTexturePan: {r: 0, g: 0, b: 0, a: 0}
+    - _DissolveNoiseTexturePan_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _DissolveShatterColor: {r: 4, g: 1.2, b: 0.25, a: 1}
+    - _DissolveShatterSet: {r: 0.15, g: 0.3, b: 1, a: 0.4}
+    - _DissolveStartPoint: {r: 0, g: -1, b: 0, a: 0}
+    - _DissolveTextureColor: {r: 1, g: 1, b: 1, a: 0}
+    - _DissolveToTexturePan: {r: 0, g: 0, b: 0, a: 0}
+    - _DissolveToTexturePan_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _DissolveVertexHeightDirection: {r: 0, g: 1, b: 0, a: 0}
+    - _Drip_WaterColor: {r: 0.45, g: 0.75, b: 1, a: 1}
+    - _Emis1_FlameSet: {r: 1, g: 0.5, b: 0.3, a: 0}
+    - _Emis1_FlameSet_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis1_HueCtl: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis1_Scroll: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis1_Scroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis1_UV: {r: 0, g: 0, b: 1, a: 0}
+    - _Emis2_FlameSet: {r: 1, g: 0.5, b: 0.3, a: 0}
+    - _Emis2_FlameSet_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis2_HueCtl: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis2_Scroll: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis2_Scroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis2_UV: {r: 0, g: 0, b: 1, a: 0}
+    - _Emis3_FlameSet: {r: 1, g: 0.5, b: 0.3, a: 0}
+    - _Emis3_FlameSet_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis3_HueCtl: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis3_Scroll: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis3_Scroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis3_UV: {r: 0, g: 0, b: 1, a: 0}
+    - _Emis4_FlameSet: {r: 1, g: 0.5, b: 0.3, a: 0}
+    - _Emis4_FlameSet_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis4_HueCtl: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis4_Scroll: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis4_Scroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis4_UV: {r: 0, g: 0, b: 1, a: 0}
+    - _Emis5_FlameSet: {r: 1, g: 0.5, b: 0.3, a: 0}
+    - _Emis5_FlameSet_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis5_HueCtl: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis5_Scroll: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis5_Scroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Emis5_UV: {r: 0, g: 0, b: 1, a: 0}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissionColor2: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissionColor3: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissionColor4: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissionColor5: {r: 0, g: 0, b: 0, a: 1}
+    - _Flipbook_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Flipbook_Pos: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _Flipbook_Scale: {r: 1, g: 1, b: 0, a: 0}
+    - _Flipbook_SideOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _Ghost_Color: {r: 0.45, g: 1, b: 0.85, a: 1}
+    - _Ghost_Scan: {r: 0, g: 40, b: 0.5, a: 0}
+    - _Ghost_Scan_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Ghost_Wisp: {r: 0.5, g: 0.4, b: 0.3, a: 0.5}
+    - _Ghost_Wisp_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Glit2_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Glit2_Color2: {r: 1, g: 0.35, b: 0.8, a: 1}
+    - _Glit2_Scroll: {r: 0, g: 0, b: 0, a: 0}
+    - _Glit2_Scroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Glit3_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Glit3_Color2: {r: 1, g: 0.35, b: 0.8, a: 1}
+    - _Glit3_Scroll: {r: 0, g: 0, b: 0, a: 0}
+    - _Glit3_Scroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Glit4_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Glit4_Color2: {r: 1, g: 0.35, b: 0.8, a: 1}
+    - _Glit4_Scroll: {r: 0, g: 0, b: 0, a: 0}
+    - _Glit4_Scroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Glit5_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Glit5_Color2: {r: 1, g: 0.35, b: 0.8, a: 1}
+    - _Glit5_Scroll: {r: 0, g: 0, b: 0, a: 0}
+    - _Glit5_Scroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Glit_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Glit_Color2: {r: 1, g: 0.35, b: 0.8, a: 1}
+    - _Glit_Scroll: {r: 0, g: 0, b: 0, a: 0}
+    - _Glit_Scroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Goo_ClingColor: {r: 0.02, g: 0.02, b: 0.025, a: 1}
+    - _Goo_ClingVeinColor: {r: 0.1, g: 1.4, b: 1.1, a: 1}
+    - _Goo_Color: {r: 0.02, g: 0.02, b: 0.025, a: 1}
+    - _Goo_Oobleck: {r: 0, g: 6, b: 3, a: 3}
+    - _Goo_VeinColor: {r: 0.1, g: 1.4, b: 1.1, a: 1}
+    - _Goo_VeinDir: {r: 0, g: -1, b: 0, a: 0}
+    - _Holo_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Holo_Flicker: {r: 0.2, g: 1, b: 0.1, a: 0}
+    - _Holo_Flicker_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Holo_Glitch: {r: 0.2, g: 0.03, b: 8, a: 0.15}
+    - _Holo_RampSet: {r: 1, g: 0.1, b: 0, a: 0}
+    - _Holo_RampSet_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Holo_Scan: {r: 0.6, g: 60, b: 0.5, a: 0.6}
+    - _Holo_Scan_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Hyper_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _Infinity_Center: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _Infinity_Color: {r: 0, g: 0.9, b: 1, a: 1}
+    - _Infinity_Drift: {r: 0, g: 0, b: 0, a: 0}
+    - _Infinity_Drift_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Infinity_Ring: {r: 0.32, g: 0.05, b: 0, a: 0}
+    - _LTCGI_DiffuseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _LTCGI_SpecularColor: {r: 1, g: 1, b: 1, a: 1}
+    - _LV_PosOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _MC_Sec0_Set: {r: 1, g: 0, b: 1, a: 1}
+    - _MC_Sec0_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _MC_Sec1_Set: {r: 1, g: 0, b: 1, a: 1}
+    - _MC_Sec1_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _MC_Sec2_Set: {r: 1, g: 0, b: 1, a: 1}
+    - _MC_Sec2_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _MC_Sec3_Set: {r: 1, g: 0, b: 1, a: 1}
+    - _MC_Sec3_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _MC_Sec4_Set: {r: 1, g: 0, b: 1, a: 1}
+    - _MC_Sec4_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _MC_Sec5_Set: {r: 1, g: 0, b: 1, a: 1}
+    - _MC_Sec5_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _MC_Sec6_Set: {r: 1, g: 0, b: 1, a: 1}
+    - _MC_Sec6_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _MC_Sec7_Set: {r: 1, g: 0, b: 1, a: 1}
+    - _MC_Sec7_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _MainTintColor: {r: 1, g: 1, b: 1, a: 0}
+    - _MatCap2_Grid: {r: 2, g: 2, b: 0, a: 0}
+    - _MatCap2_Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _MatCap2_ProcA: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCap2_ProcB: {r: 0.19999996, g: 0.45, b: 1, a: 1}
+    - _MatCap2_Scroll: {r: 0, g: 0, b: 0, a: 0}
+    - _MatCap2_Scroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _MatCap2_Tiling: {r: 1, g: 1, b: 0, a: 0}
+    - _MatCap2_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCap2_ToneA: {r: 0, g: 0, b: 0, a: 1}
+    - _MatCap2_ToneB: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCap3_Grid: {r: 2, g: 2, b: 0, a: 0}
+    - _MatCap3_Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _MatCap3_ProcA: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCap3_ProcB: {r: 0.19999996, g: 0.45, b: 1, a: 1}
+    - _MatCap3_Scroll: {r: 0, g: 0, b: 0, a: 0}
+    - _MatCap3_Scroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _MatCap3_Tiling: {r: 1, g: 1, b: 0, a: 0}
+    - _MatCap3_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCap3_ToneA: {r: 0, g: 0, b: 0, a: 1}
+    - _MatCap3_ToneB: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCap4_Grid: {r: 2, g: 2, b: 0, a: 0}
+    - _MatCap4_Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _MatCap4_ProcA: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCap4_ProcB: {r: 0.19999996, g: 0.45, b: 1, a: 1}
+    - _MatCap4_Scroll: {r: 0, g: 0, b: 0, a: 0}
+    - _MatCap4_Scroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _MatCap4_Tiling: {r: 1, g: 1, b: 0, a: 0}
+    - _MatCap4_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCap4_ToneA: {r: 0, g: 0, b: 0, a: 1}
+    - _MatCap4_ToneB: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCap5_Grid: {r: 2, g: 2, b: 0, a: 0}
+    - _MatCap5_Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _MatCap5_ProcA: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCap5_ProcB: {r: 0.19999996, g: 0.45, b: 1, a: 1}
+    - _MatCap5_Scroll: {r: 0, g: 0, b: 0, a: 0}
+    - _MatCap5_Scroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _MatCap5_Tiling: {r: 1, g: 1, b: 0, a: 0}
+    - _MatCap5_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCap5_ToneA: {r: 0, g: 0, b: 0, a: 1}
+    - _MatCap5_ToneB: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCap_Grid: {r: 2, g: 2, b: 0, a: 0}
+    - _MatCap_Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _MatCap_ProcA: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCap_ProcB: {r: 0.19999996, g: 0.45, b: 1, a: 1}
+    - _MatCap_Scroll: {r: 0, g: 0, b: 0, a: 0}
+    - _MatCap_Scroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _MatCap_Tiling: {r: 1, g: 1, b: 0, a: 0}
+    - _MatCap_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCap_ToneA: {r: 0, g: 0, b: 0, a: 1}
+    - _MatCap_ToneB: {r: 1, g: 1, b: 1, a: 1}
+    - _Norm2_Scroll: {r: 0, g: 0, b: 0, a: 0}
+    - _Norm2_Scroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Norm2_Tile: {r: 1, g: 1, b: 0, a: 0}
+    - _Norm2_UV: {r: 0, g: 0, b: 1, a: 0}
+    - _NormalSmoothPivot: {r: 0, g: 0, b: 0, a: 0}
+    - _Outline2Color: {r: 0, g: 0, b: 0, a: 1}
+    - _Outline2Emis: {r: 0, g: 0, b: 0, a: 1}
+    - _Outline2Scroll: {r: 0, g: 0, b: 0, a: 0}
+    - _Outline2Scroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineEmis: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineScroll: {r: 0, g: 0, b: 0, a: 0}
+    - _OutlineScroll_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _OutlineSphPivot: {r: 0, g: 0, b: 0, a: 0}
+    - _PathA_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _PathB_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _PathG_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _PathR_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Pathing_Pan: {r: 0, g: 0, b: 0, a: 0}
+    - _Pathing_Pan_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Pearl_BackColor: {r: 0.866, g: 0.866, b: 1, a: 1}
+    - _Pearl_Bottom: {r: 0.6, g: 0.9, b: 1, a: 1}
+    - _Pearl_Range: {r: 1.7, g: 1.2, b: 0, a: 0}
+    - _Pearl_RimColor: {r: 1, g: 0.5725, b: 0, a: 1}
+    - _Pearl_Ripple: {r: 0.15, g: 0.3, b: 0.5, a: 0}
+    - _Pearl_Ripple_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Pearl_RootColor: {r: 1, g: 0, b: 0.44299996, a: 0.5}
+    - _Pearl_Shine: {r: 1, g: 40, b: 0.5, a: 0}
+    - _Pearl_ShineColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Pearl_Side: {r: 1, g: 0.95, b: 0.7, a: 1}
+    - _Pearl_TipColor: {r: 1, g: 1, b: 1, a: 0}
+    - _Pearl_Top: {r: 1, g: 0.7, b: 0.9, a: 1}
+    - _Region_B_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _Region_G_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _Region_R_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _Skel_Color: {r: 0.85, g: 0.95, b: 1, a: 1}
+    - _Skel_Scan: {r: 0.3, g: 0.4, b: 0.3, a: 2}
+    - _Skel_ScanRange: {r: -1, g: 2, b: 0, a: 0}
+    - _Skel_Scan_Ph: {r: 0, g: 0, b: 0, a: 0}
+    - _Skel_XRayColor: {r: 0.15, g: 0.4, b: 0.55, a: 1}
+    - _Sonar_Color: {r: 0.3, g: 0.8, b: 1, a: 1}
+    - _Sonar_Glow: {r: 0, g: 0, b: 3, a: 1}
+    - _Spec_Color: {r: 1, g: 0.4, b: 0.8, a: 1}
+    - _Spec_UV: {r: 0, g: 0, b: 1, a: 0}
+    - _SphericalDissolveCenter: {r: 0, g: 0, b: 0, a: 0}
+    - _Swarm_UV: {r: 0, g: 0, b: 1, a: 0}
+    - _Touch_NativeCtl: {r: 0.8, g: 3, b: 1.5, a: 1}
+    - _Vtx_Fracture_Drop: {r: 0, g: 0.85, b: 0.5, a: 0.1}
+    - _Vtx_Pump_EQ: {r: 0, g: 0, b: 1.7, a: 1}
+    - _WG_Motion: {r: 0, g: 0, b: 0, a: 0}
+    - _WG_Velocity: {r: 0, g: 0, b: 0, a: 0}
+    - _Wet_Glint: {r: 0, g: 60, b: 0.3, a: 0.5}
+  m_BuildTextureStacks: []

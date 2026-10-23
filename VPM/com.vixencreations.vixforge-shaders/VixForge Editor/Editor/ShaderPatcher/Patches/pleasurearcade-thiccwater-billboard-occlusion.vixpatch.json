@@ -1,0 +1,32 @@
+{
+  "id": "pleasurearcade.thiccwater.billboard.occlusion",
+  "displayName": "Hide beads behind surfaces",
+  "assetName": "PleasureArcade ThiccWater",
+  "author": "Vixen Creations",
+  "version": "1.0.0",
+  "description": "The bead shader drew through everything and only hid itself using the scene depth texture, loosened by Depth Adjust. With the negative Depth Adjust most setups ship with, the liquid showed through anything up to about 10 cm in front of it, such as the model it pours from. This adds a real depth test, so the liquid hides behind surfaces whatever Depth Adjust is set to.",
+  "shaderName": "PleasureArcade/BillboardShader",
+  "appliedMarker": "_VW_ZTest",
+  "knownSourceSha256": [
+    "2a838e0efaa94f3900f302ed7ed9f16fb8a8bfe0a749b54d3dca1d4ae696aa01"
+  ],
+  "notes": [
+    "Liquid that starts inside a model now appears as it leaves the surface rather than showing through it.",
+    "Set Behind Surfaces to Show to get the original look back."
+  ],
+  "operations": [
+    {
+      "op": "insertAfterLine",
+      "anchor": "_DepthAdjust (\"Depth Adjust\", Float) = 0",
+      "text": "\t\t[Enum(Hide, 4, Show, 8)] _VW_ZTest (\"Behind Surfaces\", Float) = 4",
+      "skipIfPresent": "_VW_ZTest (\"Behind Surfaces\"",
+      "note": "Add the Behind Surfaces control"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "ZTest Always",
+      "text": "\t\t\tZTest [_VW_ZTest]",
+      "note": "Depth test against the scene instead of drawing through it"
+    }
+  ]
+}

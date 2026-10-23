@@ -1,0 +1,276 @@
+{
+  "id": "pleasurearcade.thiccwater.processor.hdr",
+  "displayName": "HDR, reflections and VRC Light Volumes",
+  "assetName": "PleasureArcade ThiccWater",
+  "author": "Vixen Creations",
+  "version": "1.0.0",
+  "description": "Fixes a divide-by-zero in the normal reconstruction and a mirrored reflection vector, stops emission clamping at 2.0, and adds box-projected probe blending, fresnel and VRC Light Volumes.",
+  "shaderName": "PleasureArcade/ProcessorShader",
+  "appliedMarker": "VW_ProbeSpecular",
+  "knownSourceSha256": [
+    "f12bdd87af5b6fada0eb534b34a5c5b992b1c600cd2e4bf6578944ee3c317c98"
+  ],
+  "notes": [
+    "Needs the free VRC Light Volumes package.",
+    "Set Corrected Reflection Vector to 0 to keep the original reflection direction.",
+    "Set Fresnel to 0 to keep the original flat reflection response."
+  ],
+  "tokens": [
+    {
+      "name": "LIGHT_VOLUMES_INCLUDE",
+      "displayName": "VRC Light Volumes",
+      "candidates": [
+        "Packages/red.sim.lightvolumes/Shaders/LightVolumes.cginc",
+        "Assets/VixForge/Editor/cginc/LightVolumes.cginc"
+      ],
+      "searchFileName": "LightVolumes.cginc",
+      "excludeFolders": [
+        "OptimizedShaders",
+        "liltoon",
+        "lilToon"
+      ],
+      "installHint": "Install VRC Light Volumes (red.sim.lightvolumes) from the VRChat Creator Companion or https://github.com/REDSIM/VRCLightVolumes"
+    }
+  ],
+  "operations": [
+    {
+      "op": "replaceLine",
+      "anchor": "_Emission (\"Emission\", Color)",
+      "text": "        [HDR] _Emission (\"Emission\", Color) = (1,1,1,1)",
+      "note": "Give centre emission an HDR colour picker"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "_EmissionEdge (\"Emission (Edge)\", Color)",
+      "text": "    \t[HDR] _EmissionEdge (\"Emission (Edge)\", Color) = (1,1,1,1)",
+      "note": "Give edge emission an HDR colour picker"
+    },
+    {
+      "op": "insertAfterLine",
+      "anchor": "_ReflectionStrength (\"Reflection Strength\", Range(0,1)) = 0.5",
+      "text": "\t\t_Smoothness (\"Smoothness\", Range(0,1)) = 1\n\t\t_FresnelStrength (\"Fresnel\", Range(0,1)) = 1\n\t\t_FresnelBase (\"Fresnel Base Reflectivity\", Range(0,1)) = 0.15\n\t\t[ToggleUI] _CorrectedReflection (\"Corrected Reflection Vector\", Float) = 1\n\t\t[ToggleUI] _WorldPosFromDepth (\"World Position From Depth\", Float) = 1\n\t\t[ToggleUI] _UseLightVolumes (\"VRC Light Volumes\", Float) = 1\n\t\t_LightVolumeIntensity (\"Light Volume Intensity\", Range(0,2)) = 1\n\t\t_LightVolumeSpecular (\"Light Volume Specular\", Range(0,2)) = 1",
+      "skipIfPresent": "_FresnelBase (\"Fresnel Base Reflectivity\"",
+      "note": "Add the smoothness, fresnel and Light Volume controls"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "#pragma fragment frag",
+      "text": "            #pragma fragment frag\n            // target 5.0 is required by the Light Volumes cginc (Texture3D / Texture2DArray.SampleLevel).\n            #pragma target 5.0",
+      "note": "Raise the shader target"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "#include \"UnityCG.cginc\"",
+      "text": "            #include \"UnityCG.cginc\"\n            // BoxProjectedCubemapDirection, UNITY_SPECCUBE_* and the LOD step count.\n            #include \"UnityStandardUtils.cginc\"\n            #include \"{{LIGHT_VOLUMES_INCLUDE}}\"",
+      "note": "Add the reflection helper and Light Volume includes"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed4 _Color;",
+      "text": "\t\t\thalf4 _Color;",
+      "note": "HDR precision: _Color"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed4 _ColorEdge;",
+      "text": "\t\t\thalf4 _ColorEdge;",
+      "note": "HDR precision: _ColorEdge"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed3 _Emission;",
+      "text": "\t\t\tfloat3 _Emission;",
+      "note": "HDR precision: _Emission"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed3 _EmissionEdge;",
+      "text": "\t\t\tfloat3 _EmissionEdge;",
+      "note": "HDR precision: _EmissionEdge"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed _ReflectionStrength;",
+      "text": "\t\t\thalf _ReflectionStrength;",
+      "note": "HDR precision: _ReflectionStrength"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed _Threshold;",
+      "text": "\t\t\thalf _Threshold;",
+      "note": "HDR precision: _Threshold"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed _NormalHeightScale;",
+      "text": "\t\t\tfloat _NormalHeightScale;",
+      "note": "HDR precision: _NormalHeightScale"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed _EmissionStrength;",
+      "text": "\t\t\tfloat _EmissionStrength;",
+      "note": "HDR precision: _EmissionStrength"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed _EmissionStrengthEdge;",
+      "text": "\t\t\tfloat _EmissionStrengthEdge;",
+      "note": "HDR precision: _EmissionStrengthEdge"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed _Clarity;",
+      "text": "\t\t\thalf _Clarity;",
+      "note": "HDR precision: _Clarity"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed _Alpha;",
+      "text": "\t\t\thalf _Alpha;",
+      "note": "HDR precision: _Alpha"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed _AlphaEdge;",
+      "text": "\t\t\thalf _AlphaEdge;",
+      "note": "HDR precision: _AlphaEdge"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed _EdgeWidth;",
+      "text": "\t\t\thalf _EdgeWidth;",
+      "note": "HDR precision: _EdgeWidth"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed _LightDesaturation;",
+      "text": "\t\t\thalf _LightDesaturation;",
+      "note": "HDR precision: _LightDesaturation"
+    },
+    {
+      "op": "insertAfterLine",
+      "anchor": "half4 _CameraDepthTexture_ST;",
+      "text": "\n\t\t\thalf _Smoothness;\n\t\t\thalf _FresnelStrength;\n\t\t\thalf _FresnelBase;\n\t\t\thalf _CorrectedReflection;\n\t\t\thalf _WorldPosFromDepth;\n\t\t\thalf _UseLightVolumes;\n\t\t\thalf _LightVolumeIntensity;\n\t\t\thalf _LightVolumeSpecular;",
+      "skipIfPresent": "half _FresnelBase;",
+      "note": "Declare the new controls"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "float3 view : TEXCOORD1;",
+      "text": "                float3 view : TEXCOORD1;\n                // View-space ray with z pinned to 1. unity_CameraToWorld is +Z forward in\n                // shaders, so ray * eyeDepth is this pixel's view position.\n                float3 viewRay : TEXCOORD2;",
+      "note": "Carry a corrected view ray to the fragment"
+    },
+    {
+      "op": "insertAfterLine",
+      "anchor": "o.view = mul(unity_CameraToWorld, normalize(float4(-ssUV",
+      "text": "\n                // The clip position above is hand-built with w = 1, so clip == NDC. Invert the\n                // real projection to get the direction this pixel actually looks along;\n                // _ProjectionParams.x carries the render-target flip.\n                float2 ndc = float2(ssUV.x, -ssUV.y);\n                o.viewRay = float3(ndc.x / unity_CameraProjection._11,\n                                   ndc.y * _ProjectionParams.x / unity_CameraProjection._22,\n                                   1.0);",
+      "skipIfPresent": "o.viewRay = float3(",
+      "note": "Build the corrected view ray"
+    },
+    {
+      "op": "insertBeforeLine",
+      "anchor": "// Remap a [0,inf) value to [0,1]",
+      "text": "\n            // Reflection probe sampling that matches the main VixForge shaders: box projection,\n            // probe blending across unity_SpecCube0/1, a smoothness-driven mip, and the probe's\n            // own HDR decode. mipBias preserves the old _ReflectionLod meaning, so at Smoothness 1\n            // the mip is exactly _ReflectionLod and the reflection is unchanged.\n            half3 VW_ProbeSpecular(float3 worldPos, float3 R, half perceptualRoughness, half mipBias)\n            {\n                half rgh = perceptualRoughness * (1.7 - 0.7 * perceptualRoughness);\n                half mip = rgh * UNITY_SPECCUBE_LOD_STEPS + mipBias;\n\n                float3 dir0 = R;\n                #ifdef UNITY_SPECCUBE_BOX_PROJECTION\n                    dir0 = BoxProjectedCubemapDirection(R, worldPos, unity_SpecCube0_ProbePosition, unity_SpecCube0_BoxMin, unity_SpecCube0_BoxMax);\n                #endif\n                half3 env = DecodeHDR(UNITY_SAMPLE_TEXCUBE_LOD(unity_SpecCube0, dir0, mip), unity_SpecCube0_HDR);\n\n                #ifdef UNITY_SPECCUBE_BLENDING\n                    UNITY_BRANCH\n                    if (unity_SpecCube0_BoxMin.w < 0.99999)\n                    {\n                        float3 dir1 = R;\n                        #ifdef UNITY_SPECCUBE_BOX_PROJECTION\n                            dir1 = BoxProjectedCubemapDirection(R, worldPos, unity_SpecCube1_ProbePosition, unity_SpecCube1_BoxMin, unity_SpecCube1_BoxMax);\n                        #endif\n                        half3 env1 = DecodeHDR(UNITY_SAMPLE_TEXCUBE_SAMPLER_LOD(unity_SpecCube1, unity_SpecCube0, dir1, mip), unity_SpecCube1_HDR);\n                        env = lerp(env1, env, unity_SpecCube0_BoxMin.w);\n                    }\n                #endif\n\n                return env;\n            }\n",
+      "skipIfPresent": "VW_ProbeSpecular",
+      "note": "Add the reflection probe sampler"
+    },
+    {
+      "op": "insertAfterLine",
+      "anchor": "float h = RemapInf(hRaw);",
+      "text": "                // _Threshold can be 0, which leaves hRaw free to reach 0 and NaN the normal.\n                float hSafe = max(hRaw, 1e-4);",
+      "skipIfPresent": "float hSafe = max(hRaw",
+      "note": "Guard the divide-by-zero when Threshold is 0"
+    },
+    {
+      "op": "replaceAll",
+      "anchor": "* _NormalHeightScale / hRaw)",
+      "text": "* _NormalHeightScale / hSafe)",
+      "note": "Use the guarded divisor in all four taps"
+    },
+    {
+      "op": "replaceAll",
+      "anchor": "mul(unity_CameraToWorld, cross(",
+      "text": "mul((float3x3)unity_CameraToWorld, cross(",
+      "note": "Rotate the normal with an explicit 3x3"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed edge = smoothstep(",
+      "text": "                half edge = smoothstep(_EdgeWidth + _Threshold, _Threshold, h) * step(0.001, _EdgeWidth);",
+      "note": "HDR precision: edge"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed3 bg = tex2D(_SplortGrab",
+      "text": "\t\t\t\thalf3 bg = tex2D(_SplortGrab, UnityStereoScreenSpaceUVAdjust(i.uv, _SplortGrab_ST)).rgb;",
+      "note": "HDR precision: background sample"
+    },
+    {
+      "op": "replaceAll",
+      "anchor": "const fixed3 baseColor",
+      "text": "const half3 baseColor",
+      "note": "HDR precision: baseColor"
+    },
+    {
+      "op": "replaceAll",
+      "anchor": "const fixed3 liquidColor",
+      "text": "const half3 liquidColor",
+      "note": "HDR precision: liquidColor"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "// GI/ambient lighting\nhalf3 lightColor = ShadeSH9(half4(normal, 1)) + UNITY_LIGHTMODEL_AMBIENT;",
+      "text": "                // World position for this pixel. Light Volumes and box projection both need one,\n                // and the pass draws a screen-space quad, so reconstruct it from the depth buffer.\n                float3 worldPos = _WorldSpaceCameraPos;\n                if (_WorldPosFromDepth > 0.5)\n                {\n                    float2 depthUV = i.uv;\n                    depthUV.y = -depthUV.y * _ProjectionParams.x + step(0, _ProjectionParams.x);\n                    depthUV = UnityStereoScreenSpaceUVAdjust(depthUV, _CameraDepthTexture_ST);\n                    // The asset declares _CameraDepthTexture as a sampler2D, so read it directly.\n                    // SAMPLE_DEPTH_TEXTURE expands to a Texture2DArray sampler under\n                    // STEREO_INSTANCING_ON and needs sampler_CameraDepthTexture, which does not exist here.\n                    float eyeDepth = LinearEyeDepth(tex2D(_CameraDepthTexture, depthUV).r);\n                    eyeDepth = clamp(eyeDepth, _ProjectionParams.y, _ProjectionParams.z);\n                    worldPos = mul(unity_CameraToWorld, float4(i.viewRay * eyeDepth, 1.0)).xyz;\n                }\n\n                // The height-field normal is built in a screen-space basis, so its facing is not\n                // guaranteed. Force it towards the viewer before anything takes an N.V from it.\n                float3 viewRayW = normalize(mul((float3x3)unity_CameraToWorld, i.viewRay));\n                float3 V = -viewRayW;\n                float3 N = dot(normal, V) < 0.0 ? -normal : normal;\n                half NdotV = saturate(dot(N, V));\n\n                // GI/ambient lighting\n                half3 lightColor = ShadeSH9(half4(N, 1)) + UNITY_LIGHTMODEL_AMBIENT;\n\n                // Dielectric F0 for a liquid, tinted towards the liquid colour as metallic rises.\n                half3 f0 = lerp(half3(_FresnelBase, _FresnelBase, _FresnelBase), baseColor, _Metallic);\n\n                half3 lvSpec = 0;\n                UNITY_BRANCH\n                if (_UseLightVolumes > 0.5 && LightVolumesEnabled() > 0.5)\n                {\n                    float3 L0, L1r, L1g, L1b;\n                    LightVolumeSH(worldPos, L0, L1r, L1g, L1b, float3(0, 0, 0), N);\n\n                    // Blend towards the volume so intensity 0 still leaves the probe ambient.\n                    half3 lvDiffuse = max(0.0, LightVolumeEvaluate(N, L0, L1r, L1g, L1b));\n                    lightColor = lerp(lightColor, lvDiffuse * _LightVolumeIntensity, saturate(_LightVolumeIntensity));\n                    lvSpec = max(0.0, LightVolumeSpecular(f0, _Smoothness, N, V, L0, L1r, L1g, L1b))\n                           * (_LightVolumeIntensity * _LightVolumeSpecular);\n                }\n",
+      "note": "World position, viewer-facing normal, and Light Volume ambient plus specular"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "fixed3 col = lerp(bg, liquidColor * lightColor",
+      "text": "                float3 col = lerp(bg, liquidColor * lightColor, lerp(_Alpha, _AlphaEdge, edge));",
+      "note": "HDR precision: composite"
+    },
+    {
+      "op": "deleteLine",
+      "anchor": "// Reflections - since the material",
+      "note": "Drop the note about the old approximated reflection vector"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "const float3 reflectionVector = reflect(i.view, normal);",
+      "text": "                // Reflections. The legacy vector inverted screen-space x, which mirrored the\n                // reflection horizontally and ignored the render-target flip; the corrected one is\n                // rebuilt from the real projection. Set Corrected Reflection Vector to 0 for the old look.\n                float3 incident = _CorrectedReflection > 0.5 ? viewRayW : i.view;\n                float3 reflectionVector = reflect(incident, N);",
+      "note": "Fix the mirrored reflection vector"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "const half4 skyData = UNITY_SAMPLE_TEXCUBE_LOD(unity_SpecCube0",
+      "text": "",
+      "note": "Drop the single fixed-mip probe sample"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "half3 skyColor = DecodeHDR (skyData, unity_SpecCube0_HDR);",
+      "text": "                half3 skyColor = VW_ProbeSpecular(worldPos, reflectionVector, saturate(1.0 - _Smoothness), _ReflectionLod);",
+      "note": "Sample the probes with box projection, blending and a roughness mip"
+    },
+    {
+      "op": "insertAfterLine",
+      "anchor": "skyColor = lerp(skyColor, LinearRgbToLuminance(skyColor), _LightDesaturation);",
+      "text": "                skyColor += lvSpec;\n\n                // Grazing angles reflect more than head-on ones. Fresnel 0 restores the flat response.\n                half fresnel = pow(1.0 - NdotV, 5.0);\n                half reflWeight = lerp(1.0, lerp(_FresnelBase, 1.0, fresnel), _FresnelStrength);\n                half reflStrength = _ReflectionStrength * reflWeight;",
+      "skipIfPresent": "half reflStrength = _ReflectionStrength",
+      "note": "Add the Light Volume specular and the fresnel weight"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "col = lerp(col + skyColor * _ReflectionStrength",
+      "text": "                col = lerp(col + skyColor * reflStrength, lerp(col, col * skyColor, reflStrength), _Metallic);",
+      "note": "Weight the reflection by fresnel"
+    },
+    {
+      "op": "replaceLine",
+      "anchor": "return fixed4(col, 1);",
+      "text": "                return float4(col, 1);",
+      "note": "HDR precision: fragment output"
+    }
+  ]
+}

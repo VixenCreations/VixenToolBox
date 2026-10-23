@@ -1,0 +1,35 @@
+{
+    "name": "VixForge.Director.Bundled.Editor",
+    "rootNamespace": "VixForge",
+    "references": [
+        "VixForge.Director.Bundled",
+        "AudioLink",
+        "UdonSharp.Runtime",
+        "VRC.Udon"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "VIXFORGE_HAS_AUDIOLINK",
+        "!VIXFORGE_DIRECTOR_PACKAGE"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.llealloo.audiolink",
+            "expression": "",
+            "define": "VIXFORGE_HAS_AUDIOLINK"
+        },
+        {
+            "name": "com.vixforge.director",
+            "expression": "",
+            "define": "VIXFORGE_DIRECTOR_PACKAGE"
+        }
+    ],
+    "noEngineReferences": false
+}
