@@ -1,6 +1,6 @@
 {
   "name": "com.vixencreations.vixforge-shaders",
-  "version": "5.6.0",
+  "version": "5.6.1",
   "displayName": "VixForge Shaders",
   "description": "All six VixForge shaders: Latex Ultra, Toon, Clothing Pro, Fur Pro, World Surface and World Fur, with the Shader Hub and its tools. This is the previous release; the newest version comes out first on Gumroad. Use either this package or the Gumroad copy in a project, not both.",
   "unity": "2022.3",
