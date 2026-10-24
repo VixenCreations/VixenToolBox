@@ -213,7 +213,7 @@ namespace VixenTools.Editor
                 {
                     ID = "FLATTEN_HIERARCHY",
                     Label = $"Delete {orphanedTransforms.Count} Unused Empty Objects",
-                    Description = "Destroys GameObjects that hold nothing: no components beyond their Transform, no children, no vertex weights. Before anything is listed here it is checked against every animation clip on the avatar (both your playable layers and any clip VRCFury brings with it), every object reference held by a VRCFury component, PhysBone and collider roots, contact senders and receivers, and constraint sources. If a path is animated or referenced anywhere, it stays.",
+                    Description = "Destroys GameObjects that hold nothing: no components beyond their Transform, no children, no vertex weights. Before anything is listed here it is checked against every animation clip on the avatar (both your playable layers and any clip VRCFury brings with it), every object reference held by a VRCFury component, PhysBone and collider roots, contact senders and receivers, and anything a Unity or VRChat constraint moves or follows. If a path is animated or referenced anywhere, it stays.",
                     ComputeSignature = () => "orphans:" + orphanedTransforms.Count(t => t != null),
                     Execute = () => {
                         int culled = 0;
@@ -838,10 +838,23 @@ namespace VixenTools.Editor
 
             foreach (var constraint in avatarRoot.GetComponentsInChildren<UnityEngine.Animations.IConstraint>(true))
             {
+                if (constraint is Component constrained) referenced.Add(constrained.transform);
                 for (int i = 0; i < constraint.sourceCount; i++)
                 {
                     var source = constraint.GetSource(i);
                     if (source.sourceTransform != null) referenced.Add(source.sourceTransform);
+                }
+            }
+
+            foreach (var constraint in avatarRoot.GetComponentsInChildren<VRCConstraintBase>(true))
+            {
+                if (constraint == null) continue;
+                referenced.Add(constraint.transform);
+                if (constraint.TargetTransform != null) referenced.Add(constraint.TargetTransform);
+                for (int i = 0; i < constraint.Sources.Count; i++)
+                {
+                    var source = constraint.Sources[i];
+                    if (source.SourceTransform != null) referenced.Add(source.SourceTransform);
                 }
             }
 

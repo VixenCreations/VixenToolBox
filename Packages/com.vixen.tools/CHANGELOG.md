@@ -5,6 +5,18 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.20.2] - 2026-10-23
+*The Avatar Validator's clean-up no longer breaks VRChat Constraints.*
+
+### Fixed
+
+* **Delete Unused Empty Objects keeps what your VRChat Constraints use.** It used to check only Unity constraints, so it could remove an empty object a VRChat Constraint follows or moves. **Collapse Unused End Bones** also leaves alone any end bone a constraint moves or follows.
+
+***
+## [2.20.1] - 2026-10-23
+*A maintenance release. Nothing in the tools changed.*
+
+***
 ## [2.20.0] - 2026-10-10
 *The Hub is a library now, with one search box for every page and tool, and ImageMagick only runs with the toolbox's security policy in force.*
 
