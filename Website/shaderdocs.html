@@ -1638,8 +1638,6 @@
                     <li class="mb-2"><strong>Root Darkening</strong> - How much the sheen fades down inside the weave, so only the raised threads catch the light. It follows your AO map, so it needs one.</li>
                     <li class="mb-2"><strong>Fabric Mask (B&amp;W)</strong> - Scopes the sheen and the fur to part of the material, so you can put velvet on the collar and leave the rest plain. Leave empty to apply everywhere.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the fabric sheen applies.</li>
-                    <li class="mb-2"><strong>Touch Press</strong> - How far the fabric dents in under a hand, in metres. Turn Tessellation up for a smooth dent. Needs Material Contacts on in TOUCH. <span class="tag-inline"><span class="avail-tag">Clothing Pro</span></span></li>
-                    <li class="mb-2"><strong>Touch Creases</strong> - Creases that fan out round a hand pressing into the fabric. Needs Material Contacts on in TOUCH. <span class="tag-inline"><span class="avail-tag">Clothing Pro</span></span></li>
                     </ul>
                 </div>
 
@@ -1664,7 +1662,6 @@
                     <li class="mb-2"><strong>Film Sheen</strong> - How much of a film sits on top of the wetness.</li>
                     <li class="mb-2"><strong>Normal Flatten</strong> - How much the water smooths out the detail underneath it.</li>
                     <li class="mb-2"><strong>Gravity Pooling</strong> - Lets the water follow gravity: it gathers on the parts of you facing up, clings under the parts facing down, and thins on the steep sides it runs off.</li>
-                    <li class="mb-2"><strong>Touch Wipe</strong> - A touch pushes the water aside, so the spot under a hand dries and the water gathers round its edge. Uses the Touch section below.</li>
                     <li class="mb-2"><strong>Glints</strong> - Tiny sparkles in the water film and on the drops, where the light catches them. <em>Amount</em>: How bright the sparkles are. <em>Density</em>: How many there are. <em>Size</em>: How big each one is. <em>Twinkle</em>: Makes them flicker.</li>
                     <li class="mb-2"><strong>Music Colour</strong> - Tints the water, and the drops, with the colour of the music. It follows the Color Source in the AudioLink section.</li>
                     </ul>
@@ -1954,31 +1951,6 @@
                     <li class="mb-2"><strong>Vein Colour</strong> - Neon threads running out along the strands. They brighten toward the reaching ends.</li>
                     <li class="mb-2"><strong>Vein Glow</strong> - Set to 0 for plain strands with no threads in them.</li>
                     <li class="mb-2"><strong>Beat Vein Glow</strong> - The beat lights the veins inside the strands. It applies when Colour Source is set to its own. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
-                    </ul>
-                </div>
-
-                <h3 class="text-glow-pink opt-group">Touch</h3>
-                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">World Surface</span></div>
-
-                <div class="opt-subgroup">
-                    <p class="opt-note mt-2 mb-2"><strong>Touch Settings</strong></p>
-                    <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Native Touch</strong> - Finds hands, and anything else close to you, from what the camera already sees, so no contacts or animator are needed. Each person sees only their own hands, only up close, and never in a mirror. The world has to draw a depth texture, which most worlds with realtime shadows do.</li>
-                    <li class="mb-2"><strong>Sensing</strong> - How hands are felt on you. <em>Strength</em>: How hard a hand presses. <em>Reach cm</em>: How far in front of you a hand still counts, in centimetres. <em>Radius cm</em>: How wide an area each point feels around it, in centimetres. <em>Max Distance</em>: How close the viewer has to be, in metres, before it switches on. Keeps the cost down.</li>
-                    <li class="mb-2"><strong>Contacts</strong> - Feels real hands, fingers and heads through Material Contacts, set up in TOUCH. Every control below follows them, in mirrors too, and everyone who sees you sees the same touch. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
-                    <li class="mb-2"><strong>Zones</strong> - Four touchable areas, one per colour channel: red, green, blue and alpha. Paint soft edges rather than hard ones, since the material pushes in across the whole shape you paint.</li>
-                    <li class="mb-2"><strong>Press Red</strong> - Animate this from a contact receiver. 0 is untouched, 1 is pressed all the way in. Give it a curve that overshoots and settles back rather than a straight ramp and the material springs like real slime.</li>
-                    <li class="mb-2"><strong>Press Green</strong> - How hard a press at this contact point pushes into the goo. Driven by the contacts on your avatar, so it reacts to being touched.</li>
-                    <li class="mb-2"><strong>Press Blue</strong> - How hard a press at this contact point pushes into the goo. Driven by the contacts on your avatar, so it reacts to being touched.</li>
-                    <li class="mb-2"><strong>Press Alpha</strong> - How hard a press at this contact point pushes into the goo. Driven by the contacts on your avatar, so it reacts to being touched.</li>
-                    <li class="mb-2"><strong>Depth</strong> - How far the material pushes in, in metres. Turn Tessellation up for smoother results.</li>
-                    <li class="mb-2"><strong>Spread</strong> - How far the dent softens out past the painted zone. Low is a sharp fingertip press, high is a broad squash as though something heavy leaned on you.</li>
-                    <li class="mb-2"><strong>Rim</strong> - How much material piles up around the edge of the press. This is what makes it read as something soft being squeezed rather than a dent stamped into a solid.</li>
-                    <li class="mb-2"><strong>Shading</strong> - How strongly the dent shows up in the lighting. Leave this up: without it the surface moves but still catches light as though it were flat.</li>
-                    <li class="mb-2"><strong>Tendrils</strong> - Strands of goo squeezed out around the contact. They grow at the rim rather than under the press, the way slime escapes around a finger.</li>
-                    <li class="mb-2"><strong>Wetness</strong> - How much glossier the material goes where it is pressed.</li>
-                    <li class="mb-2"><strong>Flow</strong> - Slides the slime pattern out of the way of the press, so the surface looks pushed rather than printed on. Needs Slime Shading above to be doing something.</li>
-                    <li class="mb-2"><strong>Veins</strong> - Brightens the glowing veins where the material is squeezed. Needs Veins above to be turned up.</li>
                     </ul>
                 </div>
 
@@ -2489,7 +2461,6 @@
                     <li class="mb-2"><strong>Root Darkening</strong> - How much darker the fur is at its roots, which is what gives a coat depth. It follows your AO map, so it needs one.</li>
                     <li class="mb-2"><strong>Mask (B&amp;W)</strong> - Narrows the fur to part of what the Fabric Mask already covers, so the sheen can run over the whole garment while the strands stay on the collar and cuffs. White keeps the fur, black drops it. Leave empty for fur everywhere the Fabric Mask allows.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where the surface fur shows.</li>
-                    <li class="mb-2"><strong>Touch Parting</strong> - The fur parts and lies away from a hand that touches it. Needs Material Contacts on in TOUCH. <span class="tag-inline"><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span></span></li>
                     </ul>
                 </div>
 
@@ -2542,8 +2513,6 @@
                     <li class="mb-2"><strong>Follow PBR Map</strong> - Lets the material's packed PBR map set how shiny each hair is, so fur over a glossy patch catches more light than fur over a matte one, and metal tints the highlight. 0 gives every hair the same shine, the way it was before.</li>
                     <li class="mb-2"><strong>Mask (B&amp;W)</strong> - Paints where the strands grow and how long they are: white is full Length, grey is shorter, black grows nothing at all and skips the work. Use it to put a fur trim on a hood or a pair of cuffs without paying for it across the whole garment. Stacks on the masks in the Fabric and Surface Fur groups above.</li>
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask says where fur grows.</li>
-                    <li class="mb-2"><strong>Touch Parting</strong> - Hairs bend away from a hand that touches them, so the coat parts round it. Needs Material Contacts on in TOUCH. <span class="tag-inline"><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span></span></li>
-                    <li class="mb-2"><strong>Touch Flatten</strong> - Hairs under a hand lie down flat, the way a coat does when you press into it. Needs Material Contacts on in TOUCH. <span class="tag-inline"><span class="avail-tag">Clothing Pro</span><span class="avail-tag">Fur Pro</span></span></li>
                     </ul>
                 </div>
 
@@ -5511,6 +5480,106 @@
                     <li class="mb-2"><strong>Colour Per Person</strong> - Each person who touches you glows in a colour of their own. Colour then sets only the brightness.</li>
                     <li class="mb-2"><strong>Who Glows</strong> - Whose touch lights you up: everyone, only other people, or only your own hands.
                         <span class="opt-values">Options: <code>Everyone</code>, <code>Others</code>, <code>Me</code></span></li>
+                    <li class="mb-2"><strong>Emissions</strong> - What a touch does to your emission layers. Brighten lights them up where you are touched, Reveal shows them only there, and Hide turns them off there. It follows Style, so Ripple sends the change out in rings.
+                        <span class="opt-values">Options: <code>Off</code>, <code>Brighten</code>, <code>Reveal</code>, <code>Hide</code></span></li>
+                    <li class="mb-2"><strong>Brighten By</strong> - How much brighter Brighten makes your emissions under a touch.</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Colour Touch</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">Toon</span><span class="shader-tag">Clothing Pro</span><span class="shader-tag">Fur Pro</span></div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Colour Touch Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Mode</strong> - Tint mixes the colour into yours, like a blush. Paint covers your colour with it.
+                        <span class="opt-values">Options: <code>Tint</code>, <code>Paint</code></span></li>
+                    <li class="mb-2"><strong>Colour</strong> - The colour a touch brings out. The sparkles use it too.</li>
+                    <li class="mb-2"><strong>Strength</strong> - How strongly the colour shows under a touch.</li>
+                    <li class="mb-2"><strong>Shine</strong> - Makes you glossier where you are touched.</li>
+                    <li class="mb-2"><strong>Sparkle</strong> - Sparkles twinkle where you are touched, in Colour.</li>
+                    <li class="mb-2"><strong>Size</strong> - How far the change spreads round each touch, as a share of the touch size.</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Outline Touch</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">Toon</span><span class="shader-tag">Clothing Pro</span><span class="shader-tag">Fur Pro</span></div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Outline Touch Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Width</strong> - How much the line thickens under a touch. Below 0 it thins, and at -1 it disappears.</li>
+                    <li class="mb-2"><strong>Colour</strong> - The colour the line turns under a touch.</li>
+                    <li class="mb-2"><strong>Colour Amount</strong> - How far the line turns that colour.</li>
+                    <li class="mb-2"><strong>Glow</strong> - How much brighter the line gets under a touch.</li>
+                    <li class="mb-2"><strong>Size</strong> - How far the change spreads round each touch, as a share of the touch size.</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Fabric Touch</h3>
+                <div class="tag-row"><span class="shader-tag">Clothing Pro</span></div>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Press</strong> - How far the fabric dents in under a hand, in metres. Turn Tessellation up for a smooth dent.</li>
+                    <li class="mb-2"><strong>Creases</strong> - Creases that fan out round a hand pressing into the fabric.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Surface Fur Touch</h3>
+                <div class="tag-row"><span class="shader-tag">Clothing Pro</span><span class="shader-tag">Fur Pro</span></div>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Parting</strong> - The fur parts and lies away from a hand that touches it.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Real Fur Touch</h3>
+                <div class="tag-row"><span class="shader-tag">Clothing Pro</span><span class="shader-tag">Fur Pro</span></div>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Parting</strong> - Hairs bend away from a hand that touches them, so the coat parts round it.</li>
+                    <li class="mb-2"><strong>Flatten</strong> - Hairs under a hand lie down flat, the way a coat does when you press into it.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Goo Touch</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">World Surface</span></div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Goo Touch Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Native Touch</strong> - Finds hands, and anything else close to you, from what the camera already sees, so no contacts or animator are needed. Each person sees only their own hands, only up close, and never in a mirror. The world has to draw a depth texture, which most worlds with realtime shadows do.</li>
+                    <li class="mb-2"><strong>Sensing</strong> - How hands are felt on you. <em>Strength</em>: How hard a hand presses. <em>Reach cm</em>: How far in front of you a hand still counts, in centimetres. <em>Radius cm</em>: How wide an area each point feels around it, in centimetres. <em>Max Distance</em>: How close the viewer has to be, in metres, before it switches on. Keeps the cost down.</li>
+                    <li class="mb-2"><strong>Contacts</strong> - Feels real hands, fingers and heads through Material Contacts above. Every control below follows them, in mirrors too, and everyone who sees you sees the same touch. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
+                    <li class="mb-2"><strong>Zones</strong> - Four touchable areas, one per colour channel: red, green, blue and alpha. Paint soft edges rather than hard ones, since the material pushes in across the whole shape you paint.</li>
+                    <li class="mb-2"><strong>Press Red</strong> - Animate this from a contact receiver. 0 is untouched, 1 is pressed all the way in. Give it a curve that overshoots and settles back rather than a straight ramp and the material springs like real slime.</li>
+                    <li class="mb-2"><strong>Press Green</strong> - How hard a press at this contact point pushes into the goo. Driven by the contacts on your avatar, so it reacts to being touched.</li>
+                    <li class="mb-2"><strong>Press Blue</strong> - How hard a press at this contact point pushes into the goo. Driven by the contacts on your avatar, so it reacts to being touched.</li>
+                    <li class="mb-2"><strong>Press Alpha</strong> - How hard a press at this contact point pushes into the goo. Driven by the contacts on your avatar, so it reacts to being touched.</li>
+                    <li class="mb-2"><strong>Depth</strong> - How far the material pushes in, in metres. Turn Tessellation up for smoother results.</li>
+                    <li class="mb-2"><strong>Spread</strong> - How far the dent softens out past the painted zone. Low is a sharp fingertip press, high is a broad squash as though something heavy leaned on you.</li>
+                    <li class="mb-2"><strong>Rim</strong> - How much material piles up around the edge of the press. This is what makes it read as something soft being squeezed rather than a dent stamped into a solid.</li>
+                    <li class="mb-2"><strong>Shading</strong> - How strongly the dent shows up in the lighting. Leave this up: without it the surface moves but still catches light as though it were flat.</li>
+                    <li class="mb-2"><strong>Tendrils</strong> - Strands of goo squeezed out around the contact. They grow at the rim rather than under the press, the way slime escapes around a finger.</li>
+                    <li class="mb-2"><strong>Wetness</strong> - How much glossier the material goes where it is pressed.</li>
+                    <li class="mb-2"><strong>Flow</strong> - Slides the slime pattern out of the way of the press, so the surface looks pushed rather than printed on. Needs Slime Shading in Goo Effects to be doing something.</li>
+                    <li class="mb-2"><strong>Veins</strong> - Brightens the glowing veins where the material is squeezed. Needs Veins in Goo Effects turned up.</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Wet Touch</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">World Surface</span></div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Wet Touch Settings</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Contacts</strong> - Feels hands, fingers and heads through Material Contacts above, in mirrors too, and everyone sees the same touch. Ripples and Drip Trails need it. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
+                    <li class="mb-2"><strong>Native Touch</strong> - Finds hands close to you from what the camera already sees, with no setup. Each person sees only their own hands, up close, and never in a mirror. The world has to draw a depth texture, which most worlds with realtime shadows do.</li>
+                    <li class="mb-2"><strong>Sensing</strong> - How Native Touch feels hands on you. <em>Strength</em>: How hard a hand presses. <em>Reach cm</em>: How far in front of you a hand still counts, in centimetres. <em>Radius cm</em>: How wide an area each point feels around it, in centimetres. <em>Max Distance</em>: How close the viewer has to be, in metres, before it switches on. Keeps the cost down.</li>
+                    <li class="mb-2"><strong>Wipe</strong> - A touch pushes the water aside, so the spot under a hand dries and the water gathers round its edge.</li>
+                    <li class="mb-2"><strong>Wet Hands</strong> - A touch leaves the spot wetter, as if the hand were wet. With Wipe up too, the water is pushed out and spread round instead.</li>
+                    <li class="mb-2"><strong>Streaks</strong> - Breaks a wiped or wet spot into streaks, so it looks pushed by fingers instead of stamped clean.</li>
+                    <li class="mb-2"><strong>Ripples</strong> - Rings run out through the water round each touch, like a finger dipped in a puddle. Needs Contacts, and shows where the skin is wet. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
+                    <li class="mb-2"><strong>Ripple Spacing</strong> - The gap between rings, in centimetres. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
+                    <li class="mb-2"><strong>Ripple Speed</strong> - How many rings leave each touch every second. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
+                    <li class="mb-2"><strong>Ripple Reach</strong> - How far the rings travel before they fade, in centimetres. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
+                    <li class="mb-2"><strong>Drip Trails</strong> - Water squeezed out by a touch runs down below each hand. Needs Contacts. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
+                    <li class="mb-2"><strong>Trail Length</strong> - How far the drips run down, in centimetres. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
+                    <li class="mb-2"><strong>Trail Speed</strong> - How fast the drops run down the trails. <span class="tag-inline"><span class="avail-tag">Latex Ultra</span></span></li>
                     </ul>
                 </div>
             </div>
