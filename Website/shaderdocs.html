@@ -389,7 +389,6 @@
                     <a href="#base">BASE</a>
                     <a href="#normals">NORMAL MAPS</a>
                     <a href="#surface">SURFACE</a>
-                    <a href="#lightdata">LIGHT DATA</a>
                     <a href="#shading">SHADING</a>
                     <a href="#decals">DECALS</a>
                     <a href="#tattoos">TATTOOS</a>
@@ -415,7 +414,7 @@
 <div id="base" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">BASE</h2>
-                    <div class="badge">Section 1 of 17</div>
+                    <div class="badge">Section 1 of 16</div>
                 </div>
                 <p class="tab-desc">Render mode, albedo, brightness floor, and UV animation.</p>
                 <p class="opt-note">Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -655,7 +654,7 @@
 <div id="normals" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">NORMAL MAPS</h2>
-                    <div class="badge">Section 2 of 17</div>
+                    <div class="badge">Section 2 of 16</div>
                 </div>
                 <p class="tab-desc">Macro normal map and the secondary micro-detail normal.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -726,7 +725,7 @@
 <div id="surface" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">SURFACE</h2>
-                    <div class="badge">Section 3 of 17</div>
+                    <div class="badge">Section 3 of 16</div>
                 </div>
                 <p class="tab-desc">The packed PBR map, its channel routing, reflection / specular masks, and surface shaping.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -857,37 +856,12 @@
                 </div>
             </div>
             <!-- ========================= -->
-            <!-- LIGHT DATA -->
-            <!-- ========================= -->
-<div id="lightdata" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
-                <div class="row justify-content-between align-items-center mb-3">
-                    <h2 class="text-glow-cyan m-0">LIGHT DATA</h2>
-                    <div class="badge">Section 4 of 17</div>
-                </div>
-                <p class="tab-desc">Which of a world's extra lights reach you, and whether they bring shadows and cookies.</p>
-
-                <h3 class="text-glow-pink opt-group">Lights</h3>
-                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">Toon</span><span class="shader-tag">Clothing Pro</span><span class="shader-tag">Fur Pro</span></div>
-                <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Pixel Lights</strong> - Point lights, spot lights and extra suns that the world set to Important. Off ignores them, and a locked material then saves the lock time and framerate they cost.</li>
-                    <li class="mb-2"><strong>Vertex Lights</strong> - The cheaper lights the world set to Not Important, up to four at a time. Off ignores them, and a locked material then locks faster.</li>
-                </ul>
-
-                <h3 class="text-glow-pink opt-group">Shadows and Cookies</h3>
-                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">Toon</span><span class="shader-tag">Clothing Pro</span><span class="shader-tag">Fur Pro</span></div>
-                <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Point Light Shadows</strong> - Point lights that cast shadows also shadow you. It adds lock time, so it is off until you want it.</li>
-                    <li class="mb-2"><strong>Soft Shadows</strong> - Spot and point light shadows get soft edges when the light is set to Soft Shadows. Off keeps them hard. It adds lock time while on.</li>
-                    <li class="mb-2"><strong>Light Cookies</strong> - A point light or sun with a cookie texture projects its pattern onto you. It adds lock time while on.</li>
-                </ul>
-            </div>
-            <!-- ========================= -->
             <!-- SHADING -->
             <!-- ========================= -->
 <div id="shading" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">SHADING</h2>
-                    <div class="badge">Section 5 of 17</div>
+                    <div class="badge">Section 4 of 16</div>
                 </div>
                 <p class="tab-desc">The lighting model and every world-lighting integration, grouped together. Light Volumes, LTCGI and Stage / VRSL are each fail-safe: they strip or no-op cleanly in worlds that lack the system.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -930,6 +904,27 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Edge Softness</strong> - How soft the edge between light and shadow is.</li>
                     <li class="mb-2"><strong>Light Wrap</strong> - How far the light carries past the point it would normally stop. Higher softens the whole look and lifts the shaded side.</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Light Data</h3>
+                <div class="tag-row"><span class="shader-tag">Latex Ultra</span><span class="shader-tag">Toon</span><span class="shader-tag">Clothing Pro</span><span class="shader-tag">Fur Pro</span></div>
+                <p class="opt-note">Which of a world's extra lights reach you, and whether they bring shadows and cookies.</p>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Lights</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Pixel Lights</strong> - Point lights, spot lights and extra suns that the world set to Important. Off ignores them, and a locked material then saves the lock time and framerate they cost.</li>
+                    <li class="mb-2"><strong>Vertex Lights</strong> - The cheaper lights the world set to Not Important, up to four at a time. Off ignores them, and a locked material then locks faster.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Shadows and Cookies</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Point Light Shadows</strong> - Point lights that cast shadows also shadow you. It adds lock time, so it is off until you want it.</li>
+                    <li class="mb-2"><strong>Soft Shadows</strong> - Spot and point light shadows get soft edges when the light is set to Soft Shadows. Off keeps them hard. It adds lock time while on.</li>
+                    <li class="mb-2"><strong>Light Cookies</strong> - A point light or sun with a cookie texture projects its pattern onto you. It adds lock time while on.</li>
                     </ul>
                 </div>
 
@@ -1195,7 +1190,7 @@
 <div id="decals" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">DECALS</h2>
-                    <div class="badge">Section 6 of 17</div>
+                    <div class="badge">Section 5 of 16</div>
                 </div>
                 <p class="tab-desc">Place up to four logos, stickers, brand graphics or tattoos on the latex. Each layer is positioned right in the Scene view: select the material on your mesh and drag the on-screen gizmo handles to move, scale and rotate the decal. The whole section stays off until you enable it.</p>
                 <p class="opt-note">Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -1390,7 +1385,7 @@
 <div id="tattoos" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">TATTOOS</h2>
-                    <div class="badge">Section 7 of 17</div>
+                    <div class="badge">Section 6 of 16</div>
                 </div>
                 <p class="tab-desc">Toon only. Up to three tattoos that sit in your skin like real ink, with toon highlights, glow, blacklight ink and comic linework.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>.</p>
@@ -1575,7 +1570,7 @@
 <div id="polish" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">POLISH</h2>
-                    <div class="badge">Section 8 of 17</div>
+                    <div class="badge">Section 7 of 16</div>
                 </div>
                 <p class="tab-desc">The polish master gate, clearcoat, and thin film.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -1604,7 +1599,7 @@
 <div id="specialfx" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">SPECIAL EFFECTS</h2>
-                    <div class="badge">Section 9 of 17</div>
+                    <div class="badge">Section 8 of 16</div>
                 </div>
                 <p class="tab-desc">The extra effect layers: the soaked wet look with run-off and real droplets, the melting goo with slime shading, writhing, drips and touch, procedural glitter, an animated flipbook overlay, a true infinity mirror, a living inner-cosmos volume, and effects that react to where the material is being viewed from. The VixForge Toon shader carries everything here except the wet and goo effects, which are liquid-latex tricks that do not fit a toon surface.</p>
                 <p class="opt-note"><strong>Mask Source</strong>, on most of the effects below - Borrows an Emission or Matcap layer's map so the effect only shows where that layer does. Pick the layer, then the channel your mask sits in, and <strong>Invert Mask</strong> if you painted it the other way round. Paint once and several effects can share it. The layer you point at has to be switched on. Leave it on <code>None</code> and the effect covers everything.
@@ -3481,7 +3476,7 @@
 <div id="outlines" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">OUTLINES</h2>
-                    <div class="badge">Section 10 of 17</div>
+                    <div class="badge">Section 9 of 16</div>
                 </div>
                 <p class="tab-desc">Two stacked outlines around the silhouette, an inner and an outer, each with its own colour, glow, width, scrolling texture and AudioLink boost.</p>
                 <p class="opt-note">Width is a real thickness: the line grows as you raise it and thins naturally as the camera moves away, like a real object. Both outlines are off by default.</p>
@@ -3619,7 +3614,7 @@
 <div id="emissions" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">EMISSIONS</h2>
-                    <div class="badge">Section 11 of 17</div>
+                    <div class="badge">Section 10 of 16</div>
                 </div>
                 <p class="tab-desc">Five stacked emission layers, the Pathing effect, and a multi-region colour mask. Every layer's AudioLink controls sit inline with that layer and appear only when AudioLink is enabled.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -3982,7 +3977,7 @@
 <div id="matcaps" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">MATCAPS</h2>
-                    <div class="badge">Section 12 of 17</div>
+                    <div class="badge">Section 11 of 16</div>
                 </div>
                 <p class="tab-desc">Up to five stacked material-capture layers with a shared projection setting, plus a Car Paint look. Each layer has its own Tiling &amp; Movement and Offsets sub-sections, and can be frozen to read as part of the material rather than a sliding reflection.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>. Every channel dropdown offers <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code>, and most also offer <code>Auto</code>, which reads a plain black-and-white map correctly.</p>
@@ -4779,7 +4774,7 @@
 <div id="viewercontext" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">VIEWER CONTEXT</h2>
-                    <div class="badge">Section 13 of 17</div>
+                    <div class="badge">Section 12 of 16</div>
                 </div>
                 <p class="tab-desc">Rules that show or hide each part of the material by who is looking, where they are, how close, the light on you and the beat.</p>
                 <ul class="custom-list m-0 ps-4 mb-4">
@@ -5476,7 +5471,7 @@
 <div id="touch" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">TOUCH</h2>
-                    <div class="badge">Section 14 of 17</div>
+                    <div class="badge">Section 13 of 16</div>
                 </div>
                 <p class="tab-desc">Real hands, fingers and heads touching you, through VRChat's Material Contacts, and the glow and reactions they drive.</p>
                 <p class="opt-note">Every <em>Band</em> dropdown picks what the effect follows: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code>, <code>Peak Hold</code>.</p>
@@ -5525,7 +5520,7 @@
 <div id="audiolink" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">AUDIOLINK</h2>
-                    <div class="badge">Section 15 of 17</div>
+                    <div class="badge">Section 14 of 16</div>
                 </div>
                 <p class="tab-desc">The master AudioLink toggle and every reactive sub-group beneath it.</p>
                 <p class="opt-note">
@@ -5763,7 +5758,7 @@
 <div id="rendering" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">RENDERING</h2>
-                    <div class="badge">Section 16 of 17</div>
+                    <div class="badge">Section 15 of 16</div>
                 </div>
                 <p class="tab-desc">Culling, blend and stencil overrides. The Rendering Mode up in BASE already sets sensible values, so leave these alone unless you need a specific result.</p>
                 <p class="opt-note"><strong>Models must be triangles.</strong> If yours looks torn into triangles or shredded, select the model file, open its Model Import Settings, turn off <em>Keep Quads</em> and hit Apply.</p>
@@ -5838,7 +5833,7 @@
 <div id="debug" class="glass-panel shader-section w-100 mb-4" style="padding: 2.5rem;">
                 <div class="row justify-content-between align-items-center mb-3">
                     <h2 class="text-glow-cyan m-0">DEBUG TOOLS</h2>
-                    <div class="badge">Section 17 of 17</div>
+                    <div class="badge">Section 16 of 16</div>
                 </div>
                 <p class="tab-desc">Tools for checking what a world is doing to your material. They change nothing you upload.</p>
 
@@ -5896,11 +5891,11 @@
                         six. It keeps <strong>Wet Effects</strong>, <strong>Goo Effects</strong>, <strong>Touch</strong>
                         and <strong>Movement</strong>, and adds Shading
                         Options, <strong>Fabric</strong>, <strong>Surface Fur</strong>, <strong>Baked Lighting</strong>,
-                        <strong>Triplanar Projection</strong> and <strong>Tiling Breakup</strong>. No Real Fur, no Stretch Response, no LIGHT DATA and no TOUCH.</li>
+                        <strong>Triplanar Projection</strong> and <strong>Tiling Breakup</strong>. No Real Fur, no Stretch Response, no Light Data and no TOUCH.</li>
                     <li class="mb-2"><strong>VixForge / World Fur</strong> - The world build with the strands. Adds
                         Shading Options, <strong>Fabric</strong>, <strong>Surface Fur</strong>, <strong>Real Fur</strong>,
                         <strong>Baked Lighting</strong>, <strong>Triplanar Projection</strong> and
-                        <strong>Tiling Breakup</strong>. Drops Wet, Goo, Stretch Response, LIGHT DATA and TOUCH.</li>
+                        <strong>Tiling Breakup</strong>. Drops Wet, Goo, Stretch Response, Light Data and TOUCH.</li>
                 </ul>
 
                 <p class="opt-note mb-4">The Fabric, Surface Fur, Real Fur, Sheer &amp; Lace, Gemstones, Eyes and Hypno blocks are documented under
