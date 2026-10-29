@@ -230,7 +230,7 @@
                 <p class="text-glow-cyan" style="font-size: 1.1rem; max-width: 850px; margin: 0 auto; line-height: 1.6;">
                     What our website, the Vixens Toolbox, our shaders, VixForge Camera Pro, our Discord server and its bot, and our supporter platforms do with your information. Most of it collects nothing at all. The Discord bot is the one that keeps records, and this page says exactly what it keeps.
                 </p>
-                <p class="legal-updated">Last updated 10 October 2026. Read it with our <a href="terms.html">Terms of Service</a>.</p>
+                <p class="legal-updated">Last updated 29 October 2026. Read it with our <a href="terms.html">Terms of Service</a>.</p>
             </div>
 
             <div class="competitive-grid" style="margin-top: 2rem;">
@@ -303,7 +303,7 @@
                                     </tr>
                                     <tr>
                                         <td>Discord server and bot</td>
-                                        <td>Messages you post, your username and user ID, moderation records and ticket transcripts.</td>
+                                        <td>Messages you post, your username and user ID, moderation records, ticket transcripts, and your game scores, pets and adventure saves. No AI ever sees any of it.</td>
                                         <td>A computer we run ourselves, and Discord</td>
                                     </tr>
                                     <tr>
@@ -406,8 +406,9 @@
                     </div>
                     <div class="comp-section comp-vixen">
                         <p class="comp-text">
-                            Everything you post in our Discord server is handled by Discord under the <a href="https://discord.com/privacy" target="_blank" rel="noopener">Discord Privacy Policy</a>. On top of that, our own bot, VixenGitWatch, runs in the server to keep scammers and raids out, run support tickets, post updates from our GitHub projects and answer a few fun commands. It runs on a computer we operate ourselves. It works only in our server, and it leaves any other server it is added to.
+                            Everything you post in our Discord server is handled by Discord under the <a href="https://discord.com/privacy" target="_blank" rel="noopener">Discord Privacy Policy</a>. On top of that, our own bot, VixForge Bot, runs in the server to keep scammers and raids out, run support tickets, post updates from our GitHub projects, and chat, play games and joke around. It runs on a computer we operate ourselves. It works only in our server, and it leaves any other server it is added to.
                         </p>
+                        <p class="comp-text mt-2"><strong>No AI.</strong> The bot doesn't use artificial intelligence. Its replies come from rules and lines we wrote, and they run on the bot's own computer. Your messages are never sent to an AI service, and nothing you post is used to train anything.</p>
                         <p class="comp-text mt-2"><strong>The message log.</strong> To review scams, raids and rule breaks after the fact, the bot keeps a log of every message posted by a person in the channels it can see, including staff messages and edits. For each message it records:</p>
                         <ul class="legal-list comp-text">
                             <li>the channel, your username, your Discord user ID and the message ID;</li>
@@ -431,9 +432,24 @@
 
                         <p class="comp-text mt-2"><strong>GitHub updates.</strong> GitHub sends news of activity in our public repositories (new code, releases, issues and pull requests) through a relay service, smee.io, and the bot posts it in a channel. The bot keeps the raw notices in files on its computer, up to 64 MB per file with the two files before it kept. They hold what GitHub sends: the public activity itself and the GitHub usernames of the people involved.</p>
 
-                        <p class="comp-text mt-2"><strong>Fun commands.</strong> Mentions of the bot and commands such as <code>/joke</code> and <code>/roll</code> get a reply. A short per-person cooldown is kept in memory. Nothing is saved.</p>
+                        <p class="comp-text mt-2"><strong>Chat, reactions and fun commands.</strong> The bot reads a message to decide whether to answer it when you @ it, reply to one of its messages, or mention it by name (like "thanks bot" or "the bot is cute"). It also adds an emoji reaction to some short messages, stickers and pic posts. When you ask it to pass a message to "them", it looks at the channel's last 15 messages to work out who you mean. The cooldowns and counters behind all this live only in memory. Apart from the message log above, none of it is saved.</p>
 
-                        <p class="comp-text mt-2"><strong>The bot's working log.</strong> A separate log records errors, the actions the bot took, and the bot leaving servers it was not meant to be in. It keeps one current file of up to 5 MB and the two before it. When we switch on detailed logging to track a problem, it also records each message's author, channel and size (not its text) and each new member's account age.</p>
+                        <p class="comp-text mt-2"><strong>Pic ratings.</strong> When you ask the bot to rate or comment on a pic, it never opens or downloads the image, so it can't see what's in it. The score comes from the attachment's ID, which is why the same pic always gets the same score.</p>
+
+                        <p class="comp-text mt-2"><strong>What the bot saves when you play.</strong> A few features keep a small record on the bot's computer, tied to your Discord user ID:</p>
+                        <ul class="legal-list comp-text">
+                            <li><strong>Games:</strong> your display name and your right answers, total answers and best streak in <code>/trivia</code>, <code>/factorcap</code> and <code>/riddle</code>. <code>/leaderboard</code> shows your display name and score.</li>
+                            <li><strong>Pets:</strong> your pet's name, species and care stats, when you adopted it, and your display name.</li>
+                            <li><strong>Adventures:</strong> your characters and how far you got. If you submit an adventure, we also keep your file, your username, your note and the staff decision.</li>
+                            <li><strong>18+ replies:</strong> whether you turned them on or off with <code>/spicy</code>, your display name and when.</li>
+                        </ul>
+                        <p class="comp-text">These stay until you ask us to remove them, or until we reset the feature.</p>
+
+                        <p class="comp-text mt-2"><strong>Ghost pings.</strong> If someone mentions a person or the bot and then deletes or edits away the mention within two minutes, the bot posts a notice in that channel saying who pinged whom.</p>
+
+                        <p class="comp-text mt-2"><strong>Discord AutoMod.</strong> When Discord's own AutoMod acts on a message, the bot posts a note to the private staff channel with the account, the channel, the rule, what it matched and part of the message.</p>
+
+                        <p class="comp-text mt-2"><strong>The bot's working log.</strong> A separate log records errors, the actions the bot took, and the bot leaving servers it was not meant to be in. It notes which commands, buttons and replies each person used (your username, user ID and the channel, not your message), plus up to 300 characters of a deleted ghost ping and of a message Discord AutoMod acted on. It keeps one current file of up to 5 MB and the two before it. When we switch on detailed logging to track a problem, it also records each message's author, channel and size (not its text) and each new member's account age.</p>
 
                         <p class="comp-text mt-2"><strong>Supporter roles.</strong> If you link Patreon or Ko-fi to Discord, their own integrations give you your supporter role. That link is between you, Discord and that platform.</p>
                     </div>
@@ -491,6 +507,7 @@
                         <ul class="legal-list comp-text">
                             <li><strong>Keeping the Discord server safe</strong>: the message log, automatic moderation, join checks and staff records (our legitimate interest in protecting members from scams, spam and raids).</li>
                             <li><strong>Helping you</strong>: tickets, transcripts, emails and messages (our legitimate interest in giving support, and performing our agreement with you when you are a supporter).</li>
+                            <li><strong>Running the bot's games and chat</strong>: scores, pets, adventure saves and your 18+ choice (our legitimate interest in running the features you choose to use).</li>
                             <li><strong>Delivering what you paid for</strong>: purchase and membership records and Discord roles (performing our agreement with you).</li>
                             <li><strong>Keeping financial records</strong> that tax law requires (legal obligation).</li>
                             <li><strong>Thanking supporters</strong> on the supporter wall (our legitimate interest, and you can opt out at any time).</li>
@@ -548,6 +565,14 @@
                                         <td>Until we delete them.</td>
                                     </tr>
                                     <tr>
+                                        <td>Game scores, pets, adventure saves and your 18+ choice</td>
+                                        <td>Until you ask us to delete them, or we reset the feature.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Adventure submissions</td>
+                                        <td>Until we delete them.</td>
+                                    </tr>
+                                    <tr>
                                         <td>Moderation records in the staff channel</td>
                                         <td>Until staff delete them. Records of bans for scams or abuse may be kept so a banned account stays out.</td>
                                     </tr>
@@ -580,7 +605,7 @@
                         <ul class="legal-list comp-text">
                             <li>tell you what we hold about you and give you a copy;</li>
                             <li>correct anything that is wrong;</li>
-                            <li>delete it, including your entries in the bot's logs and your ticket transcripts;</li>
+                            <li>delete it, including your entries in the bot's logs, your ticket transcripts, and your scores, pets and adventure saves;</li>
                             <li>stop using it for a purpose, or take you off the supporter wall.</li>
                         </ul>
                         <p class="comp-text">
