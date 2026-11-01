@@ -544,6 +544,7 @@
                     <li class="mb-2"><strong>Brightness</strong> - Below 0 darkens the colour. Above 0 brightens it.</li>
                     <li class="mb-2"><strong>Gamma</strong> - Above 1 deepens the darker colours, below 1 lifts them. 1 leaves them as they are.</li>
                     <li class="mb-2"><strong>Clamp</strong> - Keeps the changed colour between black and white, so a big Brightness or Saturation cannot push it past white.</li>
+                    <li class="mb-2"><strong>Keep Hue</strong> - Colours pushed past white fade toward white and keep their hue. Off cuts each channel at white, which can turn a bright colour toward a neighbouring one.</li>
                 </ul>
 
                 <div class="opt-subgroup">
@@ -583,6 +584,7 @@
                     <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the Mask limits the gradient map. None applies it everywhere.
                         <span class="opt-values">Options: <code>None</code>, <code>R</code>, <code>G</code>, <code>B</code>, <code>A</code></span></li>
                     <li class="mb-2"><strong>Strength</strong> - How much of the gradient map shows. 0 is off.</li>
+                    <li class="mb-2"><strong>Exact sRGB</strong> - Reads the gradient map with exact sRGB, so a plain black to white strip leaves your colour as it was. Off keeps the classic reading, which is a little darker in the shadows.</li>
                     </ul>
                 </div>
 
@@ -5848,6 +5850,8 @@
                     <li class="mb-2"><strong>Noise Pattern</strong> - Classic keeps random patterns like glitch slices, fracture and car paint flakes exactly as they are. Fast builds them with cheaper maths, so a locked material is a little lighter to draw, but every pattern comes out in a new arrangement.
                         <span class="opt-values">Options: <code>Classic</code>, <code>Fast</code></span></li>
                     <li class="mb-2"><strong>Enable GPU Instancing</strong> - Draws every copy of this material in one go when the same material sits on lots of separate meshes, which can be much faster. It does nothing on a skinned mesh. Leave it off unless you reuse one material across many separate meshes, because turning it on makes the shader build the extra versions instancing needs.</li>
+                    <li class="mb-2"><strong>Luma</strong> - How colours are weighed when something fades them toward grey, like Saturation, glitter, Tattoo ageing and the music colour. Classic keeps your current look. Rec.709 matches how bright each colour really is, so blues fade darker and greens lighter.
+                        <span class="opt-values">Options: <code>Classic</code>, <code>Rec.709</code></span></li>
                 </ul>
 
                 <h3 class="text-glow-pink opt-group">Blending</h3>
