@@ -25,8 +25,8 @@ public static class VixForgeOutlineNormals
 
     // Generated assets live under Assets/VixenTools, alongside ShaderOptimizer.OptimizedShaderRoot
     // ("Assets/VixenTools/OptimizedShaders"), so it is obvious what came from us.
-    private const string ToolsRoot = "Assets/VixenTools";
-    private const string OutputFolder = ToolsRoot + "/BakedMeshes";
+    internal const string ToolsRoot = "Assets/VixenTools";
+    internal const string OutputFolder = ToolsRoot + "/BakedMeshes";
 
     private const float WeldTolerance = 0.00001f;
 
@@ -47,7 +47,7 @@ public static class VixForgeOutlineNormals
         public string Reason;
     }
 
-    private static Mesh MeshOf(Renderer r)
+    internal static Mesh MeshOf(Renderer r)
     {
         SkinnedMeshRenderer smr = r as SkinnedMeshRenderer;
         if (smr != null) return smr.sharedMesh;
@@ -55,7 +55,7 @@ public static class VixForgeOutlineNormals
         return mf != null ? mf.sharedMesh : null;
     }
 
-    private static void AssignMesh(Renderer r, Mesh mesh)
+    internal static void AssignMesh(Renderer r, Mesh mesh)
     {
         SkinnedMeshRenderer smr = r as SkinnedMeshRenderer;
         if (smr != null)
@@ -75,7 +75,7 @@ public static class VixForgeOutlineNormals
         }
     }
 
-    private static Renderer[] RenderersUnder(GameObject root)
+    internal static Renderer[] RenderersUnder(GameObject root)
     {
         // FindObjectsOfType<T>(bool) is 2020.1 and newer. Before that the only way to reach an inactive object is
         // FindObjectsOfTypeAll, which also returns prefab and asset instances, so those are filtered by scene.
@@ -88,13 +88,13 @@ public static class VixForgeOutlineNormals
 #endif
     }
 
-    private static bool IsOurCopy(Mesh m)
+    internal static bool IsOurCopy(Mesh m)
     {
         string path = AssetDatabase.GetAssetPath(m);
         return !string.IsNullOrEmpty(path) && path.StartsWith(OutputFolder + "/", System.StringComparison.OrdinalIgnoreCase);
     }
 
-    private static bool IsModelImport(Mesh m)
+    internal static bool IsModelImport(Mesh m)
     {
         string path = AssetDatabase.GetAssetPath(m);
         return !string.IsNullOrEmpty(path) && AssetImporter.GetAtPath(path) is ModelImporter;
@@ -111,7 +111,7 @@ public static class VixForgeOutlineNormals
         return GlobalObjectId.GlobalObjectIdentifierToObjectSlow(id) as Mesh;
     }
 
-    private static void TagSource(string copyPath, Mesh source)
+    internal static void TagSource(string copyPath, Mesh source)
     {
         AssetImporter imp = AssetImporter.GetAtPath(copyPath);
         if (imp == null) return;
@@ -154,7 +154,7 @@ public static class VixForgeOutlineNormals
         return found;
     }
 
-    private static Mesh OriginalOf(Mesh copy, Dictionary<Mesh, Mesh> cache)
+    internal static Mesh OriginalOf(Mesh copy, Dictionary<Mesh, Mesh> cache)
     {
         Mesh m = SourceOf(copy);
         return m != null ? m : FindOldOriginal(copy, cache);
@@ -360,7 +360,7 @@ public static class VixForgeOutlineNormals
         if (!VixForgeEditor.ToolHost.OpenTab("mesh-fixes")) RestoreFromMenu();
     }
 
-    private static bool RefuseInPlayMode(string title)
+    internal static bool RefuseInPlayMode(string title)
     {
         if (!EditorApplication.isPlayingOrWillChangePlaymode) return false;
         EditorUtility.DisplayDialog(title,
@@ -469,6 +469,12 @@ public static class VixForgeOutlineNormals
                 if (t.Copy != null)
                 {
                     copy = t.Copy;
+                    if (copy.HasVertexAttribute(VertexAttribute.TexCoord6) && copy.vertexCount == fresh.vertexCount)
+                    {
+                        List<Vector3> rest = new List<Vector3>();
+                        copy.GetUVs(VixForgeStretchBake.RestUvChannel, rest);
+                        fresh.SetUVs(VixForgeStretchBake.RestUvChannel, rest);
+                    }
                     string keepName = copy.name;
                     EditorUtility.CopySerialized(fresh, copy);
                     copy.name = keepName;
@@ -543,8 +549,8 @@ public static class VixForgeOutlineNormals
         if (byCopy.Count == 0)
         {
             EditorUtility.DisplayDialog(title, root == null
-                ? "Nothing in the scene uses a baked outline mesh."
-                : "Nothing on " + root.name + " uses a baked outline mesh.", "OK");
+                ? "Nothing in the scene uses a baked mesh."
+                : "Nothing on " + root.name + " uses a baked mesh.", "OK");
             return;
         }
 

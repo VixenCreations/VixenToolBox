@@ -582,7 +582,7 @@ public partial class VixenWearHub
         if (end < text.Length) cut += "…";
 
         string pattern = string.Join("|", terms.Select(Regex.Escape).ToArray());
-        return Regex.Replace(cut, pattern, m => "<color=#00e5ff><b>" + m.Value + "</b></color>", RegexOptions.IgnoreCase);
+        return Regex.Replace(cut, pattern, m => "<color=" + s_accentColor + "><b>" + m.Value + "</b></color>", RegexOptions.IgnoreCase);
     }
 
     private void RenderHome(VisualElement container)

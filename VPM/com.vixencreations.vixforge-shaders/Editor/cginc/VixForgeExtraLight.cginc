@@ -5,6 +5,7 @@
         //ifex _UseLTCGI==0
         #ifdef VF_LTCGI
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/LTCGI.cginc"
+        #ifndef VIXFORGE_EXTRALIGHT_UNIFORMS_EXTERNAL
         float _UseLTCGI;
         float _LTCGI_Int;
         float _LTCGI_Spec_Mix;
@@ -14,10 +15,12 @@
         fixed4 _LTCGI_SpecularColor;
         uniform float _UdonLightVolumesWithLTCGI;
         #endif
+        #endif
         //endex
 
         //ifex _UseVRSL==0
         #ifdef VF_VRSL
+        #ifndef VIXFORGE_EXTRALIGHT_UNIFORMS_EXTERNAL
         int _DMX_Channel;
         float _VRSL_ChannelMode;
         float _UseVRSL;
@@ -26,6 +29,7 @@
         float _VRSL_GI_Sat;
         Texture2D _Udon_DMXGridRenderTexture;
         uniform float4 _Udon_DMXGridRenderTexture_TexelSize;
+        #endif
         #endif
         //endex
 

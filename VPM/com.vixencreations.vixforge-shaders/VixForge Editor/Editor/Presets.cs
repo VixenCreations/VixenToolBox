@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using VixForgeEditor.Helpers;
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -511,6 +512,7 @@ namespace VixForgeEditor
 
         public static Material GetPresetMaterial(string guid)
         {   
+            InitializeDataStructures();
             if (s_materalCache.ContainsKey(guid))
             {
                 return s_materalCache[guid];
@@ -518,6 +520,21 @@ namespace VixForgeEditor
             Material m = AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(guid));
             s_materalCache[guid] = m;
             return m;
+        }
+
+        public static List<KeyValuePair<string, string>> ListPresets(string collection = "_full_")
+        {
+            var list = new List<KeyValuePair<string, string>>();
+            PresetsCollection c;
+            if (!PresetCollections.TryGetValue(collection, out c)) return list;
+            foreach (string n in c.NamesForShader(true)) list.Add(new KeyValuePair<string, string>(n, c.GetGuid(n)));
+            return list;
+        }
+
+        public static string PresetShaderName(string name, string collection = "_full_")
+        {
+            PresetsCollection c;
+            return PresetCollections.TryGetValue(collection, out c) ? c.GetShaderForName(name) : null;
         }
 
         public static bool DoesPresetExist(string collection, string presetName)
@@ -539,19 +556,21 @@ namespace VixForgeEditor
             Event.current.Use();
             
             Vector2 pos = GUIUtility.GUIToScreenPoint(Event.current.mousePosition);
-            pos.x = Mathf.Min(EditorWindow.focusedWindow.position.x + EditorWindow.focusedWindow.position.width - 250, pos.x);
-            pos.y = Mathf.Min(EditorWindow.focusedWindow.position.y + EditorWindow.focusedWindow.position.height - 200, pos.y);
+            pos.x = Mathf.Min(EditorWindow.focusedWindow.position.x + EditorWindow.focusedWindow.position.width - PresetsPopupGUI.Width, pos.x);
+            pos.y = Mathf.Min(EditorWindow.focusedWindow.position.y + EditorWindow.focusedWindow.position.height - PresetsPopupGUI.Height, pos.y);
                 
             if (Event.current.button == 0 && !forceQuick)
             {
                 if (window != null)
                     window.Close();
                 window = ScriptableObject.CreateInstance<PresetsPopupGUI>();
-                window.position = new Rect(pos.x, pos.y, 250, 200);
+                window.position = new Rect(pos.x, pos.y, PresetsPopupGUI.Width, PresetsPopupGUI.Height);
+                window.minSize = new Vector2(280f, 320f);
                 List<string> names = PresetCollections[collection].NamesForShader(OurPresetsOnly).ToList();
                 List<string> guids = names.Select(n => PresetCollections[collection].GetGuid(n)).ToList();
-                window.Init(collection, names, guids, shaderEditor);
-                window.titleContent = new GUIContent("Preset List");
+                List<string> shaders = names.Select(n => PresetCollections[collection].GetShaderForName(n) ?? "").ToList();
+                window.Init(collection, names, guids, shaders, shaderEditor);
+                window.titleContent = new GUIContent("Presets");
                 window.ShowUtility();
             }
             else
@@ -579,10 +598,11 @@ namespace VixForgeEditor
             if (names.Length > 0)
             {
                 menu.AddSeparator("");
-                foreach (string name in names)
+                List<string> display = PresetsPopupGUI.GroupedNames(names);
+                for (int i = 0; i < names.Length; i++)
                 {
-                    string captured = name;
-                    menu.AddItem(new GUIContent("Apply/" + captured), false, () => Apply("_full_", captured, shaderEditor, shaderEditor.CurrentProperty));
+                    string captured = names[i];
+                    menu.AddItem(new GUIContent("Apply/" + display[i]), false, () => Apply("_full_", captured, shaderEditor, shaderEditor.CurrentProperty));
                 }
             }
             menu.DropDown(r);
@@ -630,6 +650,17 @@ namespace VixForgeEditor
             AddPreset(preset);
             VixForgeLogger.LogDetail($"Created preset '{presetName}' from '{source.name}' ({tagged} properties) at {path}");
             EditorGUIUtility.PingObject(preset);
+        }
+
+        internal static string CurrentShaderName(Material m)
+        {
+            if (m == null || m.shader == null) return "";
+            if (ShaderOptimizer.IsMaterialLocked(m))
+            {
+                Shader original = ResolveOriginalShader(m);
+                if (original != null) return original.name;
+            }
+            return m.shader.name;
         }
 
         static Shader ResolveOriginalShader(Material m)
@@ -997,21 +1028,45 @@ namespace VixForgeEditor
 
     public class PresetsPopupGUI : EditorWindow
     {
+        public const float Width = 340f;
+        public const float Height = 520f;
+        public static Color Accent = new Color(0f, 0.898f, 1f);
+
+        const float Pad = 8f;
+        const float RowHeight = 46f;
+        const float FamilyHeight = 30f;
+        const float GroupHeight = 26f;
+        const float SearchHeight = 36f;
+        const float FooterHeight = 52f;
+        const float Radius = 6f;
+        const float Nest = 10f;
+        const string BaseGroup = "Base";
+
+        static readonly Dictionary<string, bool> s_open = new Dictionary<string, bool>();
+
         class PresetStruct
         {
-            Dictionary<string,PresetStruct> dict;
-            public List<PresetStruct> structure;
-            string name;
-            string fullName;
-            string guid;
-            bool hasPreset;
-            bool isOpen = false;
-            bool isOn;
-            public PresetStruct(string name)
+            readonly Dictionary<string, PresetStruct> dict = new Dictionary<string, PresetStruct>();
+            public readonly List<PresetStruct> structure = new List<PresetStruct>();
+            public readonly string path;
+            public string name;
+            public string fullName;
+            public string guid;
+            public string shader = "";
+            public bool hasPreset;
+            public bool isOn;
+
+            public PresetStruct(string name, string path)
             {
                 this.name = name;
-                dict = new Dictionary<string, PresetStruct>();
-                structure = new List<PresetStruct>();
+                this.path = path;
+            }
+
+            public bool IsGroup => structure.Count > 0;
+
+            string Child(string childName)
+            {
+                return path.Length == 0 ? childName : path + "/" + childName;
             }
 
             public PresetStruct GetSubStruct(string name)
@@ -1019,68 +1074,79 @@ namespace VixForgeEditor
                 name = name.Trim();
                 if (dict.ContainsKey(name) == false)
                 {
-                    dict.Add(name, new PresetStruct(name));
+                    dict.Add(name, new PresetStruct(name, Child(name)));
                     structure.Add(dict[name]);
                 }
                 return dict[name];
             }
-            public void AddPresetStruct(bool b, string name, string fullName, string guid)
+
+            public void AddPresetStruct(bool b, string name, string fullName, string guid, string shader)
             {
-                PresetStruct s = new PresetStruct(name);
+                PresetStruct s = new PresetStruct(name, Child(name));
                 s.hasPreset = b;
                 s.fullName = fullName;
                 s.guid = guid;
-                if(!dict.ContainsKey(fullName))
+                s.shader = shader ?? "";
+                if (!dict.ContainsKey(fullName))
                 {
                     dict.Add(fullName, s);
-                }else
+                }
+                else
                 {
                     PresetStruct dupl = dict[fullName];
-                    if(dupl.fullName.EndsWith(dupl.name))
+                    if (dupl.fullName.EndsWith(dupl.name))
                         dupl.name = dupl.name + $" ({dupl.guid})";
                     s.name = s.name + $" ({guid})";
                 }
                 structure.Add(s);
             }
-            public void StructGUI(PresetsPopupGUI popupGUI)
+
+            public int Total()
             {
-                if(hasPreset)
+                if (!IsGroup) return hasPreset ? 1 : 0;
+                int n = 0;
+                foreach (PresetStruct c in structure) n += c.Total();
+                return n;
+            }
+
+            public int Picked()
+            {
+                if (!IsGroup) return isOn ? 1 : 0;
+                int n = 0;
+                foreach (PresetStruct c in structure) n += c.Picked();
+                return n;
+            }
+
+            public bool Visible(string filter)
+            {
+                if (!IsGroup)
+                    return hasPreset && (filter.Length == 0
+                        || name.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0
+                        || fullName.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0);
+                foreach (PresetStruct c in structure)
+                    if (c.Visible(filter)) return true;
+                return false;
+            }
+
+            public bool Uses(string shaderName)
+            {
+                if (!IsGroup) return shaderName.Length > 0 && shader == shaderName;
+                foreach (PresetStruct c in structure)
+                    if (c.Uses(shaderName)) return true;
+                return false;
+            }
+
+            public void BaseFirst()
+            {
+                int i = structure.FindIndex(c => c.IsGroup && c.name == BaseGroup);
+                if (i > 0)
                 {
-                    EditorGUI.BeginChangeCheck();
-                    isOn = EditorGUILayout.ToggleLeft(name, isOn);
-                    if (EditorGUI.EndChangeCheck())
-                    {
-                        popupGUI.TogglePreset(Presets.GetPresetMaterial(guid), isOn);
-                    }
+                    PresetStruct b = structure[i];
+                    structure.RemoveAt(i);
+                    structure.Insert(0, b);
                 }
-                if(structure.Count > 0)
-                {
-                    Rect r = GUILayoutUtility.GetRect(new GUIContent(), Styles.flatHeader);
-                    r.x = GUILib.IndentToPixels(EditorGUI.indentLevel);
-                    r.width -= r.x;
-                    GUI.Box(r, name, Styles.flatHeader);
-                    if (Event.current.type == EventType.Repaint)
-                    {
-                        var toggleRect = new Rect(r.x + 4f, r.y + 2f, 13f, 13f);
-                        EditorStyles.foldout.Draw(toggleRect, false, false, isOpen, false);
-                    }
-                    if (Event.current.type == EventType.MouseDown && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
-                    {
-                        isOpen = !isOpen;
-                        ShaderEditor.Input.Use();
-                    }
-                    if (isOpen)
-                    {
-                        using (new GUILib.IndentScope(1))
-                        {
-                            foreach (PresetStruct struc in structure)
-                            {
-                                struc.StructGUI(popupGUI);
-                            }
-                        }
-                    }
-                }
-                
+                foreach (PresetStruct c in structure)
+                    if (c.IsGroup) c.BaseFirst();
             }
 
             public void Reset()
@@ -1091,32 +1157,74 @@ namespace VixForgeEditor
             }
         }
 
+        internal static List<string> GroupedNames(IList<string> names)
+        {
+            var parents = new HashSet<string>();
+            foreach (string n in names)
+            {
+                int cut = n.LastIndexOf('/');
+                while (cut > 0)
+                {
+                    int up = n.LastIndexOf('/', cut - 1);
+                    if (up > 0) parents.Add(n.Substring(0, up));
+                    cut = up;
+                }
+            }
+            var result = new List<string>(names.Count);
+            foreach (string n in names)
+            {
+                int cut = n.LastIndexOf('/');
+                bool loose = cut > 0 && parents.Contains(n.Substring(0, cut));
+                result.Add(loose ? n.Substring(0, cut) + "/" + BaseGroup + n.Substring(cut) : n);
+            }
+            return result;
+        }
+
         Material[] beforePreset;
-        List<Material> tickedPresets = new List<Material>();
+        readonly List<Material> tickedPresets = new List<Material>();
         PresetStruct mainStruct;
         ShaderEditor shaderEditor;
         string _collection;
-        public void Init(string collection, List<string> names, List<string> guids, ShaderEditor shaderEditor)
+        string _currentShader = "";
+        string _filter = "";
+        SearchField _search;
+        bool _focusSearch = true;
+        Vector2 scroll;
+        bool _save;
+        bool _close;
+
+        public void Init(string collection, List<string> names, List<string> guids, List<string> shaders, ShaderEditor shaderEditor)
         {
             this.shaderEditor = shaderEditor;
             this._collection = collection;
+            PresetThumbnails.Changed -= Repaint;
+            PresetThumbnails.Changed += Repaint;
+            wantsMouseMove = true;
+            wantsMouseEnterLeaveWindow = true;
+            _search = new SearchField();
             ShaderOptimizer.DetourApplyMaterialPropertyDrawers();
             this.beforePreset = shaderEditor.Materials.Select(m => new Material(m)).ToArray();
             ShaderOptimizer.RestoreApplyMaterialPropertyDrawers();
-            mainStruct = new PresetStruct("");
-            backgroundTextrure = new Texture2D(1,1);
-            if (EditorGUIUtility.isProSkin) backgroundTextrure.SetPixel(0, 0, new Color(0.18f, 0.18f, 0.18f, 1));
-            else backgroundTextrure.SetPixel(0, 0, new Color(0.9f, 0.9f, 0.9f, 1));
-            backgroundTextrure.Apply();
+            _currentShader = Presets.CurrentShaderName(shaderEditor.Materials[0]);
+            mainStruct = new PresetStruct("", "");
+            List<string> display = GroupedNames(names);
             for (int i = 0; i < names.Count; i++)
             {
-                string[] path = names[i].Split('/');
+                string[] path = display[i].Split('/');
                 PresetStruct addUnder = mainStruct;
-                for (int j=0;j<path.Length - 1; j++)
+                for (int j = 0; j < path.Length - 1; j++)
                 {
                     addUnder = addUnder.GetSubStruct(path[j]);
                 }
-                addUnder.AddPresetStruct(Presets.DoesPresetExist(this._collection, names[i]), path[path.Length-1], names[i], guids[i]);
+                addUnder.AddPresetStruct(Presets.DoesPresetExist(this._collection, names[i]), path[path.Length - 1], names[i], guids[i], shaders[i]);
+            }
+            mainStruct.BaseFirst();
+            int mine = mainStruct.structure.FindIndex(s => s.IsGroup && s.Uses(_currentShader));
+            if (mine > 0)
+            {
+                PresetStruct m = mainStruct.structure[mine];
+                mainStruct.structure.RemoveAt(mine);
+                mainStruct.structure.Insert(0, m);
             }
         }
 
@@ -1128,47 +1236,288 @@ namespace VixForgeEditor
             shaderEditor.Repaint();
         }
 
-        static Texture2D backgroundTextrure;
+        static bool Pro => EditorGUIUtility.isProSkin;
+        static Color Panel => Pro ? new Color(0.14f, 0.14f, 0.15f) : new Color(0.87f, 0.87f, 0.88f);
+        static Color Card => Pro ? new Color(1f, 1f, 1f, 0.045f) : new Color(0f, 0f, 0f, 0.045f);
+        static Color CardHover => Pro ? new Color(1f, 1f, 1f, 0.09f) : new Color(0f, 0f, 0f, 0.09f);
+        static Color Line => Pro ? new Color(1f, 1f, 1f, 0.09f) : new Color(0f, 0f, 0f, 0.11f);
+        static Color Ink => Pro ? new Color(0.9f, 0.9f, 0.92f) : new Color(0.1f, 0.1f, 0.12f);
+        static Color Muted => Pro ? new Color(0.58f, 0.58f, 0.62f) : new Color(0.38f, 0.38f, 0.42f);
+        static Color OnAccent => Accent.r * 0.299f + Accent.g * 0.587f + Accent.b * 0.114f > 0.55f ? new Color(0.07f, 0.07f, 0.08f) : Color.white;
 
-        Vector2 scroll;
-        bool _save;
+        static Color Alpha(Color c, float a)
+        {
+            c.a = a;
+            return c;
+        }
+
+        static GUIStyle s_family, s_group, s_tag, s_name, s_pill, s_button, s_hint, s_empty;
+
+        static void EnsureStyles()
+        {
+            if (s_family != null) return;
+            s_family = new GUIStyle(EditorStyles.boldLabel) { fontSize = 12, alignment = TextAnchor.MiddleLeft, clipping = TextClipping.Clip };
+            s_group = new GUIStyle(EditorStyles.miniBoldLabel) { alignment = TextAnchor.MiddleLeft };
+            s_tag = new GUIStyle(EditorStyles.miniBoldLabel) { alignment = TextAnchor.MiddleLeft, clipping = TextClipping.Clip };
+            s_name = new GUIStyle(EditorStyles.label) { fontSize = 12, alignment = TextAnchor.MiddleLeft, clipping = TextClipping.Clip };
+            s_pill = new GUIStyle(EditorStyles.miniBoldLabel) { alignment = TextAnchor.MiddleCenter, padding = new RectOffset(0, 0, 0, 0) };
+            s_button = new GUIStyle(EditorStyles.boldLabel) { alignment = TextAnchor.MiddleCenter };
+            s_hint = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleLeft, wordWrap = true };
+            s_empty = new GUIStyle(EditorStyles.label) { alignment = TextAnchor.MiddleCenter, wordWrap = true };
+        }
+
+        static void Fill(Rect r, Color c, float radius)
+        {
+            if (Event.current.type != EventType.Repaint) return;
+            GUI.DrawTexture(r, Texture2D.whiteTexture, ScaleMode.StretchToFill, true, 0f, c, 0f, radius);
+        }
+
+        static void Outline(Rect r, Color c, float radius, float width)
+        {
+            if (Event.current.type != EventType.Repaint) return;
+            GUI.DrawTexture(r, Texture2D.whiteTexture, ScaleMode.StretchToFill, true, 0f, c, width, radius);
+        }
+
+        static void Label(Rect r, string text, GUIStyle style, Color colour)
+        {
+            if (Event.current.type != EventType.Repaint) return;
+            style.normal.textColor = colour;
+            style.Draw(r, new GUIContent(text), false, false, false, false);
+        }
+
+        static bool Clicked(Rect r)
+        {
+            Event e = Event.current;
+            if (e.type != EventType.MouseDown || e.button != 0 || !r.Contains(e.mousePosition)) return false;
+            e.Use();
+            return true;
+        }
+
+        static float Indent(int depth)
+        {
+            return Mathf.Max(0, depth - 1) * Nest;
+        }
+
+        bool IsOpen(PresetStruct node, int depth)
+        {
+            bool open;
+            if (s_open.TryGetValue(node.path, out open)) return open;
+            return depth == 0 ? node.Uses(_currentShader) : node.name == BaseGroup;
+        }
+
+        static string Count(int picked, int total)
+        {
+            return picked > 0 ? picked + " / " + total : total.ToString();
+        }
+
         void OnGUI()
         {
             if (mainStruct == null) { this.Close(); return; }
+            EnsureStyles();
+            Event e = Event.current;
+            if (e.type == EventType.MouseMove || e.type == EventType.MouseLeaveWindow) Repaint();
+            if (e.type == EventType.Repaint) EditorGUI.DrawRect(new Rect(0f, 0f, position.width, position.height), Panel);
 
-            GUILayout.BeginHorizontal();
-            scroll = GUILayout.BeginScrollView(scroll, GUILayout.Height(position.height - 55));
-
-            GUILayoutUtility.GetRect(10, 5);
-            TopStructGUI();
-
-            GUILayout.EndScrollView();
-            GUILayout.EndHorizontal();
-
-            if (GUI.Button(new Rect(5, this.position.height - 35, this.position.width / 2 - 5, 30), "Apply"))
+            if (_search == null) _search = new SearchField();
+            if (_focusSearch)
             {
-                _save = true;
+                _search.SetFocus();
+                _focusSearch = false;
+            }
+            string typed = _search.OnGUI(new Rect(Pad, Pad + 2f, position.width - Pad * 2f, 20f), _filter) ?? "";
+            if (typed != _filter)
+            {
+                _filter = typed;
+                scroll = Vector2.zero;
+            }
+            string filter = _filter.Trim();
+
+            GUILayout.BeginArea(new Rect(0f, SearchHeight, position.width, position.height - SearchHeight - FooterHeight));
+            scroll = GUILayout.BeginScrollView(scroll, false, false, GUIStyle.none, GUI.skin.verticalScrollbar, GUIStyle.none);
+            GUILayoutUtility.GetRect(1f, 2f);
+            bool any = false;
+            foreach (PresetStruct node in mainStruct.structure)
+                any |= DrawNode(node, 0, filter);
+            if (!any)
+            {
+                s_empty.normal.textColor = Muted;
+                GUILayout.Label(filter.Length > 0 ? "No presets match your search." : "No presets found.", s_empty, GUILayout.Height(60f));
+            }
+            GUILayoutUtility.GetRect(1f, Pad);
+            GUILayout.EndScrollView();
+            GUILayout.EndArea();
+
+            DrawFooter();
+
+            if (_close)
+            {
+                _close = false;
                 this.Close();
             }
-                
-            if (GUI.Button(new Rect(this.position.width / 2, this.position.height - 35, this.position.width / 2 - 5, 30), "Discard"))
-            {
-                Revert();
-            }
         }
-        private void OnDestroy()
+
+        bool DrawNode(PresetStruct node, int depth, string filter)
         {
-            if (!_save)
+            if (!node.Visible(filter)) return false;
+            if (!node.IsGroup)
             {
-                Revert();
+                DrawPreset(node, depth);
+                return true;
+            }
+            bool open = depth == 0 ? DrawFamily(node, filter) : DrawGroup(node, depth, filter);
+            if (open)
+            {
+                foreach (PresetStruct child in node.structure)
+                    DrawNode(child, depth + 1, filter);
+            }
+            if (depth == 0) GUILayoutUtility.GetRect(1f, 6f);
+            return true;
+        }
+
+        bool DrawFamily(PresetStruct node, string filter)
+        {
+            bool filtering = filter.Length > 0;
+            bool open = filtering || IsOpen(node, 0);
+            Rect r = GUILayoutUtility.GetRect(0f, FamilyHeight, GUILayout.ExpandWidth(true));
+            r.xMin += Pad;
+            r.xMax -= Pad;
+            bool hover = r.Contains(Event.current.mousePosition);
+            Fill(r, hover ? CardHover : Card, Radius);
+
+            Rect arrow = new Rect(r.x + 8f, r.y + (r.height - 13f) * 0.5f, 13f, 13f);
+            if (Event.current.type == EventType.Repaint) EditorStyles.foldout.Draw(arrow, false, false, open, false);
+
+            int picked = node.Picked();
+            string count = Count(picked, node.Total());
+            float pillWidth = Mathf.Max(24f, s_pill.CalcSize(new GUIContent(count)).x + 14f);
+            Rect pill = new Rect(r.xMax - pillWidth - 8f, r.y + (r.height - 18f) * 0.5f, pillWidth, 18f);
+            Fill(pill, picked > 0 ? Accent : Line, 9f);
+            Label(pill, count, s_pill, picked > 0 ? OnAccent : Muted);
+
+            Rect label = new Rect(arrow.xMax + 6f, r.y, pill.x - arrow.xMax - 12f, r.height);
+            Label(label, node.name, s_family, Ink);
+            if (node.Uses(_currentShader))
+            {
+                float nameWidth = Mathf.Min(label.width, s_family.CalcSize(new GUIContent(node.name)).x);
+                Rect tag = new Rect(label.x + nameWidth + 8f, r.y, label.width - nameWidth - 8f, r.height);
+                if (tag.width > 40f) Label(tag, "This shader", s_tag, Accent);
+            }
+
+            if (!filtering && Clicked(r)) s_open[node.path] = !open;
+            return open;
+        }
+
+        bool DrawGroup(PresetStruct node, int depth, string filter)
+        {
+            bool filtering = filter.Length > 0;
+            bool open = filtering || IsOpen(node, depth);
+            GUILayoutUtility.GetRect(1f, 2f);
+            Rect r = GUILayoutUtility.GetRect(0f, GroupHeight, GUILayout.ExpandWidth(true));
+            r.xMin += Pad + 4f + Indent(depth);
+            r.xMax -= Pad;
+            bool hover = r.Contains(Event.current.mousePosition);
+
+            Rect arrow = new Rect(r.x + 2f, r.y + (r.height - 13f) * 0.5f, 13f, 13f);
+            if (Event.current.type == EventType.Repaint) EditorStyles.foldout.Draw(arrow, false, false, open, false);
+
+            string title = node.name.ToUpperInvariant();
+            int picked = node.Picked();
+            string count = Count(picked, node.Total());
+            Rect t = new Rect(arrow.xMax + 4f, r.y, s_group.CalcSize(new GUIContent(title)).x, r.height);
+            Label(t, title, s_group, hover ? Ink : Muted);
+            Rect c = new Rect(t.xMax + 6f, r.y, s_group.CalcSize(new GUIContent(count)).x, r.height);
+            Label(c, count, s_group, picked > 0 ? Accent : Alpha(Muted, 0.7f));
+            float lineX = c.xMax + 8f;
+            if (lineX < r.xMax) Fill(new Rect(lineX, Mathf.Round(r.center.y), r.xMax - lineX, 1f), Line, 0f);
+
+            if (!filtering && Clicked(r)) s_open[node.path] = !open;
+            return open;
+        }
+
+        void DrawPreset(PresetStruct node, int depth)
+        {
+            Rect r = GUILayoutUtility.GetRect(0f, RowHeight, GUILayout.ExpandWidth(true));
+            r.xMin += Pad + 4f + Indent(depth);
+            r.xMax -= Pad;
+            r.yMin += 2f;
+            r.yMax -= 2f;
+            Material presetMat = Presets.GetPresetMaterial(node.guid);
+            bool hover = r.Contains(Event.current.mousePosition);
+
+            if (node.isOn)
+            {
+                Fill(r, Alpha(Accent, hover ? 0.24f : 0.16f), Radius);
+                Outline(r, Alpha(Accent, 0.85f), Radius, 1f);
+            }
+            else Fill(r, hover ? CardHover : Card, Radius);
+
+            float size = r.height - 8f;
+            Rect icon = new Rect(r.x + 6f, r.y + 4f, size, size);
+            Texture2D thumb = PresetThumbnails.Get(presetMat);
+            if (thumb != null)
+            {
+                if (Event.current.type == EventType.Repaint) GUI.DrawTexture(icon, thumb, ScaleMode.ScaleToFit);
+            }
+            else Fill(new Rect(icon.x + 3f, icon.y + 3f, icon.width - 6f, icon.height - 6f), Line, (icon.width - 6f) * 0.5f);
+
+            Rect badge = new Rect(r.xMax - 28f, r.y + (r.height - 20f) * 0.5f, 20f, 20f);
+            if (node.isOn)
+            {
+                int order = tickedPresets.IndexOf(presetMat) + 1;
+                Fill(badge, Accent, 10f);
+                Label(badge, order > 0 ? order.ToString() : "", s_pill, OnAccent);
+            }
+            else Outline(badge, Alpha(hover ? Ink : Muted, 0.6f), 10f, 1.5f);
+
+            Rect label = new Rect(icon.xMax + 10f, r.y, badge.x - icon.xMax - 16f, r.height);
+            Label(label, node.name, s_name, Ink);
+
+            if (presetMat != null && Clicked(r))
+            {
+                node.isOn = !node.isOn;
+                TogglePreset(presetMat, node.isOn);
+                Repaint();
             }
         }
 
-        void TopStructGUI()
+        void DrawFooter()
         {
-            foreach (PresetStruct struc in mainStruct.structure)
+            float y0 = position.height - FooterHeight;
+            Fill(new Rect(0f, y0, position.width, 1f), Line, 0f);
+            float bw = 84f, bh = 30f, by = y0 + (FooterHeight - bh) * 0.5f;
+            Rect apply = new Rect(position.width - Pad - bw, by, bw, bh);
+            Rect discard = new Rect(apply.x - 6f - bw, by, bw, bh);
+            Rect hint = new Rect(Pad + 2f, y0, discard.x - Pad - 10f, FooterHeight);
+            int n = tickedPresets.Count;
+            string text = n == 0 ? "Click a preset to try it on. Pick more to layer them."
+                : n == 1 ? "1 preset on." : n + " presets on, layered in order.";
+            Label(hint, text, s_hint, Muted);
+
+            if (Button(discard, "Discard", false, n > 0)) Revert();
+            if (Button(apply, "Apply", true, true))
             {
-                struc.StructGUI(this);
+                _save = true;
+                _close = true;
+            }
+        }
+
+        static bool Button(Rect r, string label, bool primary, bool enabled)
+        {
+            bool hover = enabled && r.Contains(Event.current.mousePosition);
+            Color fill = primary ? (hover ? Color.Lerp(Accent, Color.white, 0.15f) : Accent) : (hover ? CardHover : Card);
+            if (!enabled) fill.a *= 0.4f;
+            Fill(r, fill, Radius);
+            if (!primary) Outline(r, Line, Radius, 1f);
+            Label(r, label, s_button, primary ? OnAccent : (enabled ? Ink : Muted));
+            return enabled && Clicked(r);
+        }
+
+        private void OnDestroy()
+        {
+            PresetThumbnails.Changed -= Repaint;
+            if (!_save && shaderEditor != null && beforePreset != null)
+            {
+                Revert();
             }
         }
 

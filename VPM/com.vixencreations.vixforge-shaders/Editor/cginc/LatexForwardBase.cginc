@@ -14,6 +14,9 @@ struct InternalTessInterp_appdata_full {
   float4 texcoord1 : TEXCOORD1;
   float4 texcoord2 : TEXCOORD2;
   float4 texcoord3 : TEXCOORD3;
+  #ifdef VF_STRETCH
+  float4 texcoord6 : TEXCOORD6;
+  #endif
   half4 color : COLOR;
   UNITY_VERTEX_INPUT_INSTANCE_ID
 };
@@ -26,6 +29,9 @@ InternalTessInterp_appdata_full tessvert_surf (appdata_full v) {
   o.texcoord1 = v.texcoord1;
   o.texcoord2 = v.texcoord2;
   o.texcoord3 = v.texcoord3;
+  #ifdef VF_STRETCH
+  o.texcoord6 = v.texcoord6;
+  #endif
   o.color = v.color;
   UNITY_TRANSFER_INSTANCE_ID(v, o);
   return o;
@@ -60,6 +66,11 @@ UnityTessellationFactors hsconst_surf (InputPatch<InternalTessInterp_appdata_ful
   vi[2].texcoord2 = v[2].texcoord2;
   vi[2].texcoord3 = v[2].texcoord3;
   vi[2].color = v[2].color;
+  #ifdef VF_STRETCH
+  vi[0].texcoord6 = v[0].texcoord6;
+  vi[1].texcoord6 = v[1].texcoord6;
+  vi[2].texcoord6 = v[2].texcoord6;
+  #endif
   tf = tessEdge(vi[0], vi[1], vi[2]);
   #ifdef VF_UDIMDISCARD
   if (VF_UDIM_PATCH_KILLED(v)) tf = 0;
@@ -108,6 +119,9 @@ struct v2f_surf {
   float4 vfDis3 : TEXCOORD12;
   #endif
   //endex
+  #ifdef VF_STRETCH
+  float3 vfRest : TEXCOORD13;
+  #endif
   UNITY_VERTEX_INPUT_INSTANCE_ID
   UNITY_VERTEX_OUTPUT_STEREO
 };
@@ -135,6 +149,9 @@ struct v2f_surf {
   float4 vfDis3 : TEXCOORD12;
   #endif
   //endex
+  #ifdef VF_STRETCH
+  float3 vfRest : TEXCOORD13;
+  #endif
   UNITY_VERTEX_INPUT_INSTANCE_ID
   UNITY_VERTEX_OUTPUT_STEREO
 };
@@ -162,6 +179,9 @@ struct v2f_surf {
   float4 vfDis3 : TEXCOORD12;
   #endif
   //endex
+  #ifdef VF_STRETCH
+  float3 vfRest : TEXCOORD13;
+  #endif
   UNITY_VERTEX_INPUT_INSTANCE_ID
   UNITY_VERTEX_OUTPUT_STEREO
 };
@@ -187,6 +207,9 @@ struct v2f_surf {
   float4 vfDis3 : TEXCOORD12;
   #endif
   //endex
+  #ifdef VF_STRETCH
+  float3 vfRest : TEXCOORD13;
+  #endif
   UNITY_VERTEX_INPUT_INSTANCE_ID
   UNITY_VERTEX_OUTPUT_STEREO
 };
@@ -205,6 +228,9 @@ v2f_surf vert_surf (appdata_full v) {
   o.pos = UnityObjectToClipPos(v.vertex);
   o.pack0.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
   o.pack0.zw = v.texcoord1.xy;
+  #ifdef VF_STRETCH
+  o.vfRest = v.texcoord6.xyz;
+  #endif
   #ifdef VF_UDIMDISCARD
   o.vfUdim = VF_UDIMFragUV(v.texcoord.xy, v.texcoord1.xy, v.texcoord2.xy, v.texcoord3.xy);
   #endif
@@ -243,6 +269,7 @@ v2f_surf vert_surf (appdata_full v) {
     #if UNITY_SHOULD_SAMPLE_SH
       o.sh = 0;
       #ifdef VERTEXLIGHT_ON
+        VF_IF_VERTEX
         o.sh += Shade4PointLights (
           unity_4LightPosX0, unity_4LightPosY0, unity_4LightPosZ0,
           unity_LightColor[0].rgb, unity_LightColor[1].rgb, unity_LightColor[2].rgb, unity_LightColor[3].rgb,
@@ -272,6 +299,9 @@ v2f_surf ds_surf (UnityTessellationFactors tessFactors, const OutputPatch<Intern
   v.texcoord2 = vi[0].texcoord2*bary.x + vi[1].texcoord2*bary.y + vi[2].texcoord2*bary.z;
   v.texcoord3 = vi[0].texcoord3*bary.x + vi[1].texcoord3*bary.y + vi[2].texcoord3*bary.z;
   v.color = vi[0].color*bary.x + vi[1].color*bary.y + vi[2].color*bary.z;
+  #ifdef VF_STRETCH
+  v.texcoord6 = vi[0].texcoord6*bary.x + vi[1].texcoord6*bary.y + vi[2].texcoord6*bary.z;
+  #endif
   disp (v);
   v2f_surf o = vert_surf (v);
   #if VF_WETGOO
@@ -284,6 +314,27 @@ v2f_surf ds_surf (UnityTessellationFactors tessFactors, const OutputPatch<Intern
 }
 
 #endif
+
+v2f_surf vert_notess_surf (appdata_full v) {
+  UNITY_SETUP_INSTANCE_ID(v);
+  #ifdef VF_UDIMDISCARD
+  bool vfKill = VF_UDIM_POINT_KILLED(v);
+  #endif
+  disp (v);
+  v2f_surf o = vert_surf (v);
+  #if VF_WETGOO
+  o.vwFogCoord.yz = float2(vwWritheSwell, vwWritheStretch);
+  #endif
+  #ifdef VF_UDIMDISCARD
+  if (vfKill) o.pos = asfloat(-1);
+  #endif
+  //ifex _UseSheer==0
+  #if defined(VF_SHEER_BACKPASS) || defined(VF_SHEER_TINTPASS)
+  if (!VF_SheerPassLive()) o.pos = asfloat(-1);
+  #endif
+  //endex
+  return o;
+}
 
 fixed4 frag_surf (v2f_surf IN, fixed vface : VFACE) : SV_Target {
   UNITY_SETUP_INSTANCE_ID(IN);
@@ -312,6 +363,9 @@ fixed4 frag_surf (v2f_surf IN, fixed vface : VFACE) : SV_Target {
   surfIN.worldNormal.x = 1.0;
   surfIN.uv_MainTex = IN.pack0.xy;
   surfIN.uv2_MainTex = IN.pack0.zw;
+  #ifdef VF_STRETCH
+  surfIN.vfRest = IN.vfRest;
+  #endif
   //ifex _EnableDissolve==0
   #ifdef VF_DISSOLVE
   surfIN.vfDis0 = IN.vfDis0;

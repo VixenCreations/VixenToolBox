@@ -13,10 +13,10 @@ Pick **VixForge Toon** for a stylised look: cel shading, anime skin, a painterly
 
 Toon is a superset in one direction. Set the style to **Realistic**, or turn shading off, and it lights like a normal PBR material. So you can stylise the body and keep realistic boots on the same avatar, both on Toon.
 
-Two things differ from Latex Ultra:
+A few things differ from Latex Ultra:
 
-- **New:** a **Shading Options** block at the top of the **SHADING** section (covered below).
-- **Dropped:** the Wet and Goo effects. Those are liquid-latex tricks that do not fit a toon surface. Everything else is here and behaves the same: Polish, Outlines, Emissions, Matcaps, AudioLink, Light Volumes, LTCGI and VRSL.
+- **New:** a **Shading Options** block at the top of the **SHADING** section, and a **TATTOOS** section for tattoo ink (both covered below).
+- **Dropped:** the Wet and Goo effects, with Goo Touch, Wet Touch and the Movement group that drive them. Those are liquid-latex tricks that do not fit a toon surface. Hypno and Sheer & Lace stay on Latex Ultra too. Everything else is here and behaves the same: Polish, Outlines, Emissions, Matcaps, Eyes, AudioLink, Light Volumes, LTCGI and VRSL.
 
 ---
 
@@ -61,6 +61,15 @@ The controls for each style appear only when that style is picked:
 Point, spot and area lights from a world's Light Volumes light you smoothly, like ambient light. Turn on **Use Shading Options** under **Light Volumes V3** to give them the same style as the lights in the room.
 
 ---
+
+## Tattoo Ink
+
+**TATTOOS**, just after DECALS, holds up to three tattoos that sit in your skin like real ink. Turn on **Enable**, turn on **Tattoo 1**, **Tattoo 2** or **Tattoo 3**, and give it **Art**: its alpha says where the ink is, and Tiling and Offset place it.
+
+* **Bleed** softens the edges the way ink spreads under skin. **Age** fades and blurs it and turns black toward the blue-green of an old tattoo. **Fresh Ink** adds a new-ink gloss.
+* **Sheen Band** and **Rim Band** put hard toon highlights on the ink only. **Sheen Shape** sets where the band starts and how soft its edge is.
+* **Glow** makes the ink glow. **UV Ink** glows only under light of the **UV Light** colour, like blacklight ink, from any light in the room. Both glow in **Glow Colour**.
+* **Outline** draws a line round the art. **Halftone** and **Hatching** turn the ink into comic dots or pen lines, sized by **Dot and Line Size**, and **Flow** sends a shine along the ink.
 
 ## Everything else works the same
 

@@ -10,7 +10,8 @@ shader code, so you need to own the asset a patch targets before it will do anyt
 
 The Shader Patcher is part of VixForge Editor, so it is already installed.
 Most patches also want the free [VRC Light Volumes](https://github.com/REDSIM/VRCLightVolumes)
-package installed.
+package installed, version 3.0.1 or newer. If an older one is installed, those patches use the copy
+that comes with VixForge instead, so update it in the VRChat Creator Companion when you can.
 
 ## Using it
 

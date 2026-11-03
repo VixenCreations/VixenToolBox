@@ -10,6 +10,22 @@
         #include "UnityPBSLighting.cginc"
         #include "Tessellation.cginc"
         #include "UnityCG.cginc"
+        #ifdef VF_STRETCH
+        struct appdata_vfs
+        {
+            float4 vertex : POSITION;
+            float4 tangent : TANGENT;
+            float3 normal : NORMAL;
+            float4 texcoord : TEXCOORD0;
+            float4 texcoord1 : TEXCOORD1;
+            float4 texcoord2 : TEXCOORD2;
+            float4 texcoord3 : TEXCOORD3;
+            float4 texcoord6 : TEXCOORD6;
+            fixed4 color : COLOR;
+            UNITY_VERTEX_INPUT_INSTANCE_ID
+        };
+        #define appdata_full appdata_vfs
+        #endif
 
         // --- Third-party -------------------------------------------------------------------
         // Each of these is a separate vendor drop, and each is gated on its own toggle below so a
@@ -51,6 +67,11 @@
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeDissolve.cginc"
 
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeProperties.cginc"
+        //ifex _UseContacts==0
+        #ifdef VF_CONTACTS
+        #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeContacts.cginc"
+        #endif
+        //endex
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeCommon.cginc"
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeAudioLink.cginc"
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeColorAdjust.cginc"
@@ -70,12 +91,27 @@
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgePearl.cginc"
         #endif
         //endex
+        //ifex _UseGems==0
+        #ifdef VF_GEMS
+        #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeGems.cginc"
+        #endif
+        //endex
+        //ifex _UseTattoos==0
+        #ifdef VF_TATTOO
+        #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeTattoo.cginc"
+        #endif
+        //endex
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeVertex.cginc"
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeProbeVolume.cginc"
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeShadow.cginc"
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeLighting.cginc"
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeEffects.cginc"
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeMatcap.cginc"
+        //ifex _UseEyes==0
+        #ifdef VF_EYES
+        #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeEyes.cginc"
+        #endif
+        //endex
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeSurface.cginc"
 
 #endif

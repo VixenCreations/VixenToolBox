@@ -17,7 +17,6 @@ using VixDropdown = UnityEditor.UIElements.PopupField<string>;
 public partial class VixenWearHub
 {
     private const string HubLinkPrefix = "hub:";
-    private const string LinkColor = "#ff4fc3";
     private const string CodeColor = "#ffb547";
 
     private class ChangelogEntry
@@ -277,7 +276,7 @@ public partial class VixenWearHub
         text = ImageSpan.Replace(text, "$1");
         text = BareUrl.Replace(text, m => LinkTag(m.Value, m.Value));
         text = LinkSpan.Replace(text, m => LinkFor(m.Groups[1].Value, m.Groups[2].Value));
-        text = BoldSpan.Replace(text, "<b><color=#ffffff>$1</color></b>");
+        text = BoldSpan.Replace(text, "<b><color=" + s_strongColor + ">$1</color></b>");
         text = ItalicSpan.Replace(text, "<i>$1</i>");
         text = CodeToken.Replace(text, m => "<color=" + CodeColor + ">" + codes[int.Parse(m.Groups[1].Value)] + "</color>");
         return text;
@@ -296,9 +295,9 @@ public partial class VixenWearHub
     private static string LinkTag(string target, string label)
     {
 #if UNITY_2022_2_OR_NEWER
-        return "<link=\"" + target + "\"><u><color=" + LinkColor + ">" + label + "</color></u></link>";
+        return "<link=\"" + target + "\"><u><color=" + s_linkColor + ">" + label + "</color></u></link>";
 #else
-        return "<u><color=" + LinkColor + ">" + label + "</color></u>";
+        return "<u><color=" + s_linkColor + ">" + label + "</color></u>";
 #endif
     }
 

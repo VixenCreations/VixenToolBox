@@ -24,8 +24,8 @@ using VixDropdown = UnityEditor.UIElements.PopupField<string>;
 
 public partial class VixenWearHub : EditorWindow
 {
-    private const string AssetRoot = "Packages/com.vixencreations.vixforge-shaders/";
-    private const string DocRoot = AssetRoot + "Editor/bin/";
+    private static string AssetRoot => VixForgePaths.Root;
+    private static string DocRoot => AssetRoot + "Editor/bin/";
     private const string ChangelogFile = "LATEX_CHANGELOG.md";
     private const string ToonChangelogFile = "TOON_CHANGELOG.md";
     private const string ClothingChangelogFile = "CLOTHING_CHANGELOG.md";
@@ -33,7 +33,7 @@ public partial class VixenWearHub : EditorWindow
     private const string WorldSurfaceChangelogFile = "WORLD_SURFACE_CHANGELOG.md";
     private const string WorldFurChangelogFile = "WORLD_FUR_CHANGELOG.md";
     private const string ChangelogSuffix = "CHANGELOG.md";
-    private const string UssPath = AssetRoot + "Editor/VixenHubStyles.uss";
+    private static string UssPath => AssetRoot + "Editor/VixenHubStyles.uss";
     private const string WindowTitle = "Shader Hub";
     private const string BrandTitle = "<color=#00e5ff>VIX</color><color=#ff00aa>FORGE</color>";
     private const string PageHome = "home";
@@ -65,6 +65,7 @@ public partial class VixenWearHub : EditorWindow
         { "TOON_SHADER.md",     new DocMeta { Title = "Toon",            Order = 3,  Category = CatShaders,    Description = "What the VixForge Toon shader adds: the cel, ramp, soft, hard and realistic shading styles." } },
         { "CLOTHING_SHADER.md", new DocMeta { Title = "Clothing Pro",    Order = 4,  Category = CatShaders,    Description = "What the Clothing Pro shader adds: cloth sheen, real fur, sheer fabric and lace, and the one-click fabric presets." } },
         { "FUR_SHADER.md",      new DocMeta { Title = "Fur Pro",         Order = 5,  Category = CatShaders,    Description = "What the Fur Pro shader does: real grown hair strands, guard hairs, self shadowing and the fur brush." } },
+        { "WORLD_SHADER.md",    new DocMeta { Title = "World",           Order = 6,  Category = CatShaders,    Description = "What World Surface and World Fur add for worlds: triplanar projection, tiling breakup, baked lighting, and the wet, goo and fur they carry." } },
         { "LATEX_CHANGELOG.md", new DocMeta { Title = "Latex Ultra",     Order = 10, Category = CatChangelogs, Description = "Every release of the VixenWear Latex Ultra shader." } },
         { "TOON_CHANGELOG.md",  new DocMeta { Title = "Toon",            Order = 11, Category = CatChangelogs, Description = "Every release of the VixForge Toon shader." } },
         { "CLOTHING_CHANGELOG.md", new DocMeta { Title = "Clothing Pro", Order = 12, Category = CatChangelogs, Description = "Every release of the VixenWear Clothing Pro shader." } },
@@ -377,13 +378,12 @@ public partial class VixenWearHub : EditorWindow
     {
         VisualElement root = rootVisualElement;
         root.name = "hub-root";
-
-        var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(UssPath);
-        if (styleSheet != null) root.styleSheets.Add(styleSheet);
+        ApplyLook();
 
         if (_pages.Count == 0) BuildPages();
 
         VisualElement header = BuildHeader();
+        _header = header;
         root.Add(header);
         SetUpFrame(root, header);
 
@@ -402,6 +402,7 @@ public partial class VixenWearHub : EditorWindow
         root.Add(body);
 
         HookShortcuts(root);
+        ApplyDecor();
 
         if (_toolsMode && _activeTool != null)
         {
@@ -558,7 +559,7 @@ public partial class VixenWearHub : EditorWindow
             ? (targets.Length == 1 ? $"\"{targets[0].name}\"" : $"{targets.Length} selected objects")
             : "every object in the open scene(s)";
 
-        if (!EditorUtility.DisplayDialog($"{verb} All Materials",
+        if (ConfirmLockAll() && !EditorUtility.DisplayDialog($"{verb} All Materials",
                 $"{verb} every material on {scope}?\n\n" +
                 "VixForge materials use the VixForge locker and Poiyomi materials use Poiyomi's own. Shaders that do not lock, such as lilToon, are left as they are.",
                 verb, "Cancel"))
@@ -640,7 +641,7 @@ public partial class VixenWearHub : EditorWindow
         string fullPath = Path.GetFullPath(path);
         if (File.Exists(fullPath)) return CommentLine.Replace(File.ReadAllText(fullPath), "");
 
-        return $"### Not Found\nCould not locate `{fileName}` at `{path}`. Make sure the VixForge Shaders package is installed.";
+        return $"### Not Found\nCould not locate `{fileName}` at `{path}`. Reinstall VixForge from Gumroad or from VCC.";
     }
 
 #if UNITY_2022_2_OR_NEWER

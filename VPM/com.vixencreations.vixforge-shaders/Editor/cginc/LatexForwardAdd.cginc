@@ -14,6 +14,9 @@ struct InternalTessInterp_appdata_full {
   float4 texcoord1 : TEXCOORD1;
   float4 texcoord2 : TEXCOORD2;
   float4 texcoord3 : TEXCOORD3;
+  #ifdef VF_STRETCH
+  float4 texcoord6 : TEXCOORD6;
+  #endif
   half4 color : COLOR;
   UNITY_VERTEX_INPUT_INSTANCE_ID
 };
@@ -26,6 +29,9 @@ InternalTessInterp_appdata_full tessvert_surf (appdata_full v) {
   o.texcoord1 = v.texcoord1;
   o.texcoord2 = v.texcoord2;
   o.texcoord3 = v.texcoord3;
+  #ifdef VF_STRETCH
+  o.texcoord6 = v.texcoord6;
+  #endif
   o.color = v.color;
   UNITY_TRANSFER_INSTANCE_ID(v, o);
   return o;
@@ -60,6 +66,11 @@ UnityTessellationFactors hsconst_surf (InputPatch<InternalTessInterp_appdata_ful
   vi[2].texcoord2 = v[2].texcoord2;
   vi[2].texcoord3 = v[2].texcoord3;
   vi[2].color = v[2].color;
+  #ifdef VF_STRETCH
+  vi[0].texcoord6 = v[0].texcoord6;
+  vi[1].texcoord6 = v[1].texcoord6;
+  vi[2].texcoord6 = v[2].texcoord6;
+  #endif
   tf = tessEdge(vi[0], vi[1], vi[2]);
   #ifdef VF_UDIMDISCARD
   if (VF_UDIM_PATCH_KILLED(v)) tf = 0;
@@ -99,6 +110,9 @@ struct v2f_surf {
   float4 vfDis3 : TEXCOORD12;
   #endif
   //endex
+  #ifdef VF_STRETCH
+  float3 vfRest : TEXCOORD13;
+  #endif
   UNITY_VERTEX_INPUT_INSTANCE_ID
   UNITY_VERTEX_OUTPUT_STEREO
 };
@@ -115,6 +129,9 @@ v2f_surf vert_surf (appdata_full v) {
   o.pos = UnityObjectToClipPos(v.vertex);
   o.pack0.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
   o.pack0.zw = v.texcoord1.xy;
+  #ifdef VF_STRETCH
+  o.vfRest = v.texcoord6.xyz;
+  #endif
   #ifdef VF_UDIMDISCARD
   o.vfUdim = VF_UDIMFragUV(v.texcoord.xy, v.texcoord1.xy, v.texcoord2.xy, v.texcoord3.xy);
   #endif
@@ -164,6 +181,9 @@ v2f_surf ds_surf (UnityTessellationFactors tessFactors, const OutputPatch<Intern
   v.texcoord2 = vi[0].texcoord2*bary.x + vi[1].texcoord2*bary.y + vi[2].texcoord2*bary.z;
   v.texcoord3 = vi[0].texcoord3*bary.x + vi[1].texcoord3*bary.y + vi[2].texcoord3*bary.z;
   v.color = vi[0].color*bary.x + vi[1].color*bary.y + vi[2].color*bary.z;
+  #ifdef VF_STRETCH
+  v.texcoord6 = vi[0].texcoord6*bary.x + vi[1].texcoord6*bary.y + vi[2].texcoord6*bary.z;
+  #endif
   disp (v);
   v2f_surf o = vert_surf (v);
   #if VF_WETGOO
@@ -174,9 +194,69 @@ v2f_surf ds_surf (UnityTessellationFactors tessFactors, const OutputPatch<Intern
 
 #endif
 
+v2f_surf vert_notess_surf (appdata_full v) {
+  UNITY_SETUP_INSTANCE_ID(v);
+  #ifdef VF_UDIMDISCARD
+  bool vfKill = VF_UDIM_POINT_KILLED(v);
+  #endif
+  disp (v);
+  v2f_surf o = vert_surf (v);
+  #if VF_WETGOO
+  o.vwFogCoord.yz = float2(vwWritheSwell, vwWritheStretch);
+  #endif
+  #ifdef VF_UDIMDISCARD
+  if (vfKill) o.pos = asfloat(-1);
+  #endif
+  return o;
+}
+
+#if !defined(VIXFORGE_WORLD) && defined(SHADOWS_SOFT) && !defined(UNITY_HALF_PRECISION_FRAGMENT_SHADER_REGISTERS) && ((defined(SHADOWS_DEPTH) && defined(SPOT)) || defined(SHADOWS_CUBE))
+half VF_HardForwardShadow(float3 worldPos)
+{
+  float zDist = dot(_WorldSpaceCameraPos - worldPos, UNITY_MATRIX_V[2].xyz);
+  float fadeDist = UnityComputeShadowFadeDistance(worldPos, zDist);
+  half fade = UnityComputeShadowFade(fadeDist);
+  half mask = UnitySampleBakedOcclusion(0, worldPos);
+  half realtime = 1.0;
+  #if defined(SHADOWS_DEPTH) && defined(SPOT)
+    unityShadowCoord4 spotCoord = mul(unity_WorldToShadow[0], unityShadowCoord4(worldPos, 1));
+    #if defined(SHADOWS_NATIVE)
+      half spotShadow = UNITY_SAMPLE_SHADOW_PROJ(_ShadowMapTexture, spotCoord);
+      realtime = lerp(_LightShadowData.r, 1.0f, spotShadow);
+    #else
+      realtime = SAMPLE_DEPTH_TEXTURE_PROJ(_ShadowMapTexture, UNITY_PROJ_COORD(spotCoord)) < (spotCoord.z / spotCoord.w) ? _LightShadowData.r : 1.0;
+    #endif
+  #endif
+  #if defined(SHADOWS_CUBE)
+    float3 vec = worldPos - _LightPositionRange.xyz;
+    #if defined(SHADOWS_CUBE_IN_DEPTH_TEX)
+      float3 absVec = abs(vec);
+      float dominantAxis = max(max(absVec.x, absVec.y), absVec.z);
+      dominantAxis = max(0.00001, dominantAxis - _LightProjectionParams.z);
+      dominantAxis *= _LightProjectionParams.w;
+      float mydist = -_LightProjectionParams.x + _LightProjectionParams.y/dominantAxis;
+      #if defined(UNITY_REVERSED_Z)
+      mydist = 1.0 - mydist;
+      #endif
+      half cubeShadow = UNITY_SAMPLE_TEXCUBE_SHADOW(_ShadowMapTexture, float4(vec, mydist));
+      realtime = lerp(_LightShadowData.r, 1.0, cubeShadow);
+    #else
+      float mydist = length(vec) * _LightPositionRange.w;
+      mydist *= _LightProjectionParams.w;
+      half shadowVal = UnityDecodeCubeShadowDepth(UNITY_SAMPLE_TEXCUBE(_ShadowMapTexture, vec));
+      realtime = shadowVal < mydist ? _LightShadowData.r : 1.0;
+    #endif
+  #endif
+  return UnityMixRealtimeAndBakedShadows(realtime, mask, fade);
+}
+#endif
+
 fixed4 frag_surf (v2f_surf IN, fixed vface : VFACE) : SV_Target {
   UNITY_SETUP_INSTANCE_ID(IN);
   UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(IN);
+  #if !defined(VIXFORGE_WORLD)
+  [branch] if (_LightingAdditiveEnable < 0.5) return 0;
+  #endif
   #ifdef VF_UDIMDISCARD
   VF_UDIMFragClip(IN.vfUdim, vface > 0 ? 1.0 : 0.0);
   #endif
@@ -199,6 +279,9 @@ fixed4 frag_surf (v2f_surf IN, fixed vface : VFACE) : SV_Target {
   surfIN.worldNormal.x = 1.0;
   surfIN.uv_MainTex = IN.pack0.xy;
   surfIN.uv2_MainTex = IN.pack0.zw;
+  #ifdef VF_STRETCH
+  surfIN.vfRest = IN.vfRest;
+  #endif
   //ifex _EnableDissolve==0
   #ifdef VF_DISSOLVE
   surfIN.vfDis0 = IN.vfDis0;
@@ -237,6 +320,25 @@ fixed4 frag_surf (v2f_surf IN, fixed vface : VFACE) : SV_Target {
 
   surf (surfIN, o);
   UNITY_LIGHT_ATTENUATION(atten, IN, worldPos)
+  #if !defined(VIXFORGE_WORLD)
+    #if defined(SHADOWS_SOFT) && !defined(UNITY_HALF_PRECISION_FRAGMENT_SHADER_REGISTERS) && ((defined(SHADOWS_DEPTH) && defined(SPOT)) || defined(SHADOWS_CUBE))
+    [branch] if (_LightingSoftShadows < 0.5) shadow = VF_HardForwardShadow(worldPos);
+    #endif
+    #if defined(SHADOWS_CUBE)
+    shadow = (_LightingPointShadows > 0.5) ? shadow : 1.0;
+    #endif
+    #if defined(POINT)
+    atten = tex2D(_LightTexture0, dot(lightCoord, lightCoord).rr).r * shadow;
+    #elif defined(SPOT)
+    atten = (lightCoord.z > 0) * UnitySpotCookie(lightCoord) * UnitySpotAttenuate(lightCoord.xyz) * shadow;
+    #elif defined(POINT_COOKIE)
+    fixed vfPointCookie = (_LightingCookies > 0.5) ? texCUBE(_LightTexture0, lightCoord).w : 1.0;
+    atten = tex2D(_LightTextureB0, dot(lightCoord, lightCoord).rr).r * vfPointCookie * shadow;
+    #elif defined(DIRECTIONAL_COOKIE)
+    fixed vfDirCookie = (_LightingCookies > 0.5) ? tex2D(_LightTexture0, lightCoord).w : 1.0;
+    atten = vfDirCookie * shadow;
+    #endif
+  #endif
   fixed4 c = 0;
   float3 worldN;
   worldN.x = dot(_unity_tbn_0, o.Normal);

@@ -6,7 +6,34 @@
 Version history for the material inspector and the tools that ship with it. These are the editor's own version numbers, starting at 1.0.0 when the VixForge Editor was first built. They do not track the shader releases; shader changes live in the Latex Ultra and Toon changelogs.
 
 ***
-## [2.7.0] - 2026-10-11
+## [2.8.0] - 2026-10-24
+
+*Hypno Setup attaches Hypno to your avatar in one go, Touch Setup adds the contact receiver that TOUCH reads, Hub Settings lets you make the Hub your own with colours, images and fonts, the Preset List gets a new look, the Shader Patcher is ready for VRC Light Volumes 3.0.1, Build Atlas packs 16 matcaps, Stretch Bake gets your avatar ready for Stretch Response, and Preset Toggle turns any preset into a menu toggle with its own picture.*
+
+### Added
+
+* **Hypno Setup**, a new tool under **Tools** in the Hub and in **VixenTools > VixForge Editor**. Pick your avatar and press **Attach Hypno**: it puts a small anchor at your eyes that stays with you in first person, gives it a Hypno material, and adds a **Hypno** toggle to your menu that takes you under and brings you back over the times you set. **Others Can Join** lets anyone who leans in close go under with you. **Look Through Your Eyes** shows it in the Scene view, and **Remove From Avatar** takes it all off again.
+* **Hub Settings**, a new tab under **Tools > Editor** in the Hub, to make the Hub your own. Pick a **Theme**, then change any colour: **Accent**, **Highlight**, **Background**, the **Header** and **Sidebar**, the text, headings and links, and both kinds of button and their text. Add a **Background Image**, **Header Image** or **Sidebar Image** from your project, then press **Place Image** to drag, size and turn it in the Decal Tool while the Hub changes with you. **Panel Opacity** lets the background show through, **Corner Roundness** goes from square to extra round, and **Font** uses any font in your project. **Size** makes the whole Hub bigger or smaller, and you can set the **Sidebar Width**, keep guides to a comfortable **Reading Width**, use **Compact Bars** at any size, and give the Hub a size for when it opens in its own window. It can also skip the question before **Lock All Materials**, hide the lock bar, and open the Hub when Unity starts. **Save Look** and **Load Look** keep a look in a file you can share (they start in `Assets/VixenTools/Hub Styles`), **Reset Hub Settings** puts it all back, and Unity remembers your picks in every project.
+* **Stretch Bake** and **Remove Stretch Bake** in the Shader Hub under **Tools > Mesh Fixes**, for **Stretch Response**. Select your avatar in its rest pose and press **Stretch Bake**: it records that pose on a copy of each mesh, keeps any outline bake, and adds a small layer to your FX controller so the effect follows avatar scaling in game.
+* **Preset Toggle**, a new tool under **Tools** in the Hub and in **VixenTools > VixForge Editor**. Pick your avatar, a mesh and a preset, and it adds a toggle or a radial to your menu that fades your material into the preset and back, with a picture of the preset as its icon.
+* **Pictures in the Preset List.** Each preset shows a small render of itself, so you can see a look before you pick it.
+* **Touch Setup** in the Shader Hub under **Tools**. It adds the VRChat contact receiver that **TOUCH** reads to your avatar, one for every four meshes, and **Preview Touch** shows a touch in the editor, so you can tune every touch effect without going into VRChat. It needs VRChat SDK 3.10.6 or newer (the 3.10.6 betas count). On an older SDK it warns you and adds nothing, and **Preview Touch** still works.
+
+### Changed
+
+* **Shader Patcher** checks which VRC Light Volumes you have. Its Light Volumes patches need 3.0.1 or newer: with an older version installed they use the copy that comes with VixForge, and if there is none they say which version you have and ask you to update it in the VRChat Creator Companion.
+* **Build Atlas** packs up to 16 matcaps into one sheet, where it stopped at 8.
+* **The Preset List has a new look.** Click a preset to try it on and click more to layer them; a number on each shows the order. Your shader's presets open first, its own looks sit under **Base** with **Halloween** below, and a search box finds any preset by name. It takes its colour from the **Accent** in Hub Settings.
+* **Locked materials draw faster when nothing moves their surface.** Locking leaves out the tessellation stage unless **Displacement Strength**, goo, **Touch**, VRSL movement or the AudioLink **Kinetic Modules** need it.
+
+### Fixed
+
+* **Lock All in the Locking tab locked the presets that come with the shaders.** Locking a preset turned it into a locked copy with its unused settings taken out, so it stopped working as a starting point. The Locking tab and **Lock Selected Folder** now leave presets alone. To fix presets that are already locked, select them in the Locking tab's Locked Materials list and unlock them.
+* **A locked material whose shader failed to load could not be unlocked or locked again.** Both stopped with an error, so the repair that reloads a broken locked shader never ran. Now it unlocks, and locking it again reloads the shader and clears the error.
+
+***
+## [2.7.0] - 2026-10-10
+
 *The Shader Hub is a library now, with one search box for every guide and tool. Its tools close when you switch away, so they stop using memory, and materials from Poiyomi, lilToon and VRChat's Toon Standard come across with their metallic maps, decals and much more.*
 
 ### Heads up

@@ -551,7 +551,7 @@
                 float3 toL = float3(toX[pl], toY[pl], toZ[pl]) * invLen[pl];
                 acc += unity_LightColor[pl].rgb * atten[pl] * lerp(flat, vw_CapLit(dot(d, toL), wrap), follow);
             }
-            return acc;
+            return acc VF_MUL_VERTEX;
         }
 
         float vw_GlitSrc(float id)
@@ -694,10 +694,10 @@
 
             half bentOn  = (_UseBentNormal > 0.5) ? 1.0 : 0.0;
             half bentAmt = bentOn * saturate(_BentNormal_Amb);
-            shadowTrace *= vw_DirectMicroOcc(L, NdotL, s.BentNormalWS, rawAO, _MicroShadow * _MS_Direct, bentOn) * vw_MicroLightBoost(NdotL, rawAO, _MicroLight * _ML_Direct) * vw_CavLight(s.CavRefl, _CavLight_Str * _CavLight_Direct, NdotL);
+            shadowTrace *= vw_DirectMicroOcc(L, NdotL, s.BentNormalWS, rawAO, _MicroShadow VF_MUL_MICROSHADOW * _MS_Direct, bentOn) * vw_MicroLightBoost(NdotL, rawAO, _MicroLight VF_MUL_MICROLIGHT * _ML_Direct) * vw_CavLight(s.CavRefl, _CavLight_Str VF_MUL_CAVLIGHT * _CavLight_Direct, NdotL);
 
             half3 msFallbackDir = vw_MicroSourceDir(_MS_Source, N, V);
-            half shOcc = vw_AmbientMicroOcc(s.SHDominant.xyz, s.SHDominant.w, N, s.BentNormalWS, rawAO, _MicroShadow * _MS_Ambient, bentAmt) * vw_MicroLightBoost(1.0, rawAO, _MicroLight * _ML_Ambient) * vw_CavLight(s.CavRefl, _CavLight_Str * _CavLight_Ambient, 1.0);
+            half shOcc = vw_AmbientMicroOcc(s.SHDominant.xyz, s.SHDominant.w, N, s.BentNormalWS, rawAO, _MicroShadow VF_MUL_MICROSHADOW * _MS_Ambient, bentAmt) * vw_MicroLightBoost(1.0, rawAO, _MicroLight VF_MUL_MICROLIGHT * _ML_Ambient) * vw_CavLight(s.CavRefl, _CavLight_Str VF_MUL_CAVLIGHT * _CavLight_Ambient, 1.0);
             // lvOcc is used only inside the LVActive block below, so the two are gated together and
             // separately from ambPlain and ambOccluded, which the rest of the function needs.
             // This was the last ungated read of _MS_LV and _ML_LV, and one ungated read is enough to
@@ -709,7 +709,7 @@
             // the creases simply did not react to the light at all. LVDominant is the direction the
             // volume says its light arrives from, which is what the cavity term needs to rake across
             // the relief. Starts at 0, so nothing changes until it is asked for.
-            half lvOcc = vw_AmbientMicroOcc(s.LVDominant.xyz, s.LVDominant.w, N, s.BentNormalWS, rawAO, _MicroShadow * _MS_LV,      bentAmt) * vw_MicroLightBoost(1.0, rawAO, _MicroLight * _ML_LV) * vw_CavLight(s.CavRefl, _CavLight_Str * _CavLight_LV, saturate(dot(N, s.LVDominant.xyz)));
+            half lvOcc = vw_AmbientMicroOcc(s.LVDominant.xyz, s.LVDominant.w, N, s.BentNormalWS, rawAO, _MicroShadow VF_MUL_MICROSHADOW * _MS_LV,      bentAmt) * vw_MicroLightBoost(1.0, rawAO, _MicroLight VF_MUL_MICROLIGHT * _ML_LV) * vw_CavLight(s.CavRefl, _CavLight_Str VF_MUL_CAVLIGHT * _CavLight_LV, saturate(dot(N, s.LVDominant.xyz)));
             #endif
             //endex
 
@@ -855,7 +855,7 @@
             // Hardness default the input was a flat 1.0, so this wrap had nothing left to work on.
             float wrap = saturate((ndlRaw + _SSS_Dist) / max(1e-5, 1.0 + _SSS_Dist));
             float back = pow(saturate(dot(V, -L)), max(0.01, _SSS_Power));
-            float sssTerm = (wrap * 0.6 + back * 0.4) * _SSS_Str * finalSSSMask;
+            float sssTerm = (wrap * 0.6 + back * 0.4) * _SSS_Str VF_MUL_SSS * finalSSSMask;
             half3 absorption = 1.0 - diffColor;
             half3 sssProfile = exp2(-effectiveThickness * absorption * 4.0);
             half3 sssColor = diffColor * light.color * sssTerm * sssProfile;
@@ -873,7 +873,7 @@
                 half   vlHardP = lerp(1.0, 0.15, saturate(_Shad_Hard));
                 [unroll] for (int vl = 0; vl < 4; vl++)
                 {
-                    half3 vCol = unity_LightColor[vl].rgb * vlAtten[vl];
+                    half3 vCol = unity_LightColor[vl].rgb * vlAtten[vl] VF_MUL_VERTEX;
                     [branch] if (dot(vCol, vCol) > 1e-8)
                     {
                         float3 vL   = float3(vlX[vl], vlY[vl], vlZ[vl]) * vlInv[vl];
@@ -894,7 +894,7 @@
                                       * UNITY_PI * vCcF * thinFilmColor * vCol * vNcL;
                         float vWrap = saturate((vRaw + _SSS_Dist) / max(1e-5, 1.0 + _SSS_Dist));
                         float vBack = pow(saturate(dot(V, -vL)), max(0.01, _SSS_Power));
-                        sssColor     += diffColor * vCol * ((vWrap * 0.6 + vBack * 0.4) * _SSS_Str * finalSSSMask) * sssProfile;
+                        sssColor     += diffColor * vCol * ((vWrap * 0.6 + vBack * 0.4) * _SSS_Str VF_MUL_SSS * finalSSSMask) * sssProfile;
                     }
                 }
                 [branch] if (_UL_ProbeSpec > 0.0 && s.LVActive < 0.5)
@@ -929,6 +929,7 @@
 
             // 3. Transmission Fix 
             half3 transmission = 0;
+            //ifex _UseTransmission==0 && _UseGoo==0
             [branch] if (s.Transmission > 0.001)
             {
                 float invNdotL = saturate(dot(-N, L));
@@ -969,10 +970,11 @@
                                (invNdotL * 0.5 + vFall * 0.5) *
                                s.Transmission * transPath * baseEnergy;
             }
+            //endex
 
-            float finalRimMask = 1.0;
+            float finalRimMask = VF_CTX_SHADEKEEP;
             float mixedNdotV = lerp(NdotV, NcV, s.ClearcoatStrength);
-            half rimStr   = saturate(_Rim_Str + GET_AL_BAND(s.ALAmps, s.ALExtra, _AL_Band_Rim) * _AL_Rim_Mod * s.ALThump);
+            half rimStr   = saturate(_Rim_Str + GET_AL_BAND(s.ALAmps, s.ALExtra, _AL_Band_Rim) * _AL_Rim_Mod * s.ALThump) VF_MUL_RIM;
             half rimWidth = saturate(_Rim_Power * 0.1);
             float rimU  = 1.0 - sqrt(saturate(1.0 - mixedNdotV * mixedNdotV));
             float rimFw = fwidth(rimU);
@@ -989,6 +991,7 @@
             // the larger of the two picks up the metal's own colour and leaves dielectrics alone.
             half3 rimTint = saturate(max(diffColor, specColor) + 0.5);
             half3 rimColor = 0;
+            //ifex _UseRim==0
             [branch] if (rim > 1e-4)
             {
                 half rimWrap   = saturate(_Rim_Wrap);
@@ -1013,6 +1016,7 @@
                 rimColor = rim * rimTint * (rimAmb * _Rim_Ambient + rimLights * _Rim_Direct);
                 #endif
             }
+            //endex
 
             half3 lvLoopLight = 0;
             //ifex _UseLightVolumes==0
@@ -1053,7 +1057,7 @@
                     ulm.T = VF_AnisoTangent(ulm.N, ulWT * cos(ulRad) + ulWB * sin(ulRad));
                     ulm.B = cross(ulm.N, ulm.T);
                 }
-                ulm.sssAmt     = _SSS_Str * finalSSSMask;
+                ulm.sssAmt     = _SSS_Str VF_MUL_SSS * finalSSSMask;
                 ulm.sssProfile = sssProfile;
                 ulm.trans      = s.Transmission;
                 ulm.transTint  = exp(-(1.0 - diffColor) * (1.0 / max(_Trans_Dist, 1e-3)));
@@ -1188,6 +1192,20 @@
                     float3 flowT = normalize(wT * flow.x + wB * flow.y);
                     furT = normalize(lerp(furT, flowT, saturate(_FurFlow_Str)));
                 }
+                #if defined(VF_CONTACTS) && !defined(VIXFORGE_WORLD)
+                half vfFurPart = 0.0;
+                //ifex _UseContacts==0
+                [branch] if (_Fur_TouchPart > 0.001 && VF_ContactsLive())
+                {
+                    float4 fct  = VF_ContactField(s.WorldPos, s.WorldToTangent[2], wT, wB, 1.0);
+                    float3 away = -(wT * fct.z + wB * fct.w);
+                    float  pt   = saturate((fct.x + fct.y) * _Fur_TouchPart);
+                    [branch] if (pt > 0.001 && dot(away, away) > 1.0e-6)
+                        furT = normalize(lerp(furT, normalize(away), pt));
+                    vfFurPart = saturate(fct.y * _Fur_TouchPart);
+                }
+                //endex
+                #endif
 
                 // Per-strand break-up so the highlight is not a clean band.
                 half breakup = (_Fur_Breakup > 0.001) ? (gooNoise3(float3(s.UV * 64.0, 0.0)) - 0.5) * _Fur_Breakup : 0.0;
@@ -1217,7 +1235,7 @@
                 half3 furScat = furScatTerm * diffColor * _Fur_Tint.rgb * light.color * baseEnergy * furMask;
 
                 half furRoot = lerp(1.0, rawAO, _Fur_RootDark);
-                clothExtra += (furSpec * specMask + furAmb * reflMask + furScat) * furRoot;
+                clothExtra += (furSpec * specMask + furAmb * reflMask + furScat) * furRoot VF_FUR_PART_DIM;
             }
             #endif
             //endex
@@ -1238,10 +1256,27 @@
             
             half3 finalColor =
                 baseDiffuse +
-                sssColor +
-                transmission +
+                sssColor * VF_CTX_SHADEKEEP +
+                transmission * VF_CTX_SHADEKEEP +
                 baseSpecular * specMask +
                 ccSpecular * specMask;
+
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            //ifex _CtxInkOn==0
+            half inkEx = 0.0;
+            [branch] if (any(s.InkFluor > 0.0))
+                inkEx = vw_InkExcite(light.color * NdotL * shadowTrace);
+            //endex
+            #endif
+            //endex
+            #if defined(VF_TATTOO) && defined(VIXFORGE_TOON) && !defined(VIXFORGE_CLOTHING) && !defined(VIXFORGE_WORLD)
+            half tatEx = 0.0;
+            //ifex _UseTattoos==0
+            [branch] if (any(s.TatUV > 0.0))
+                tatEx = VF_TatExcite(light.color * NdotL * shadowTrace, s.TatKey);
+            //endex
+            #endif
 
             #ifdef VIXFORGE_CLOTHING
             finalColor += clothExtra;
@@ -1252,6 +1287,18 @@
             #if defined(UNITY_PASS_FORWARDADD)
             finalColor += rimColor;
             finalColor = finalColor * s.MatcapMul + s.MatcapAddLit * saturate(light.color * smoothstep(0.0, 0.15, NcL)) * baseSpecOcc;
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            //ifex _CtxInkOn==0
+            finalColor += s.InkFluor * inkEx;
+            //endex
+            #endif
+            //endex
+            #if defined(VF_TATTOO) && defined(VIXFORGE_TOON) && !defined(VIXFORGE_CLOTHING) && !defined(VIXFORGE_WORLD)
+            //ifex _UseTattoos==0
+            finalColor += s.TatUV * tatEx;
+            //endex
+            #endif
             #endif
 
             half3 glitterAdd = 0;
@@ -1308,12 +1355,19 @@
                 half specMask = (_LTCGI_Mode != 1) ? 1.0 : 0.0;
                 // An LTCGI emitter carries no single direction the way a light does, so the cavity
                 // rakes along the same fallback direction the micro occlusion above already uses.
-                half ltcgiOcc = vw_AmbientMicroOcc(msFallbackDir, 1.0, N, s.BentNormalWS, rawAO, _MicroShadow * _MS_LTCGI, bentAmt) * vw_MicroLightBoost(1.0, rawAO, _MicroLight * _ML_LTCGI) * vw_CavLight(s.CavRefl, _CavLight_Str * _CavLight_LTCGI, saturate(dot(N, msFallbackDir)));
+                half ltcgiOcc = vw_AmbientMicroOcc(msFallbackDir, 1.0, N, s.BentNormalWS, rawAO, _MicroShadow VF_MUL_MICROSHADOW * _MS_LTCGI, bentAmt) * vw_MicroLightBoost(1.0, rawAO, _MicroLight VF_MUL_MICROLIGHT * _ML_LTCGI) * vw_CavLight(s.CavRefl, _CavLight_Str VF_MUL_CAVLIGHT * _CavLight_LTCGI, saturate(dot(N, msFallbackDir)));
                 half3 ltcgiDiff     = base_ltc_d * diffColor * baseEnergy * ltcgiOcc * _LTCGI_Diff_Mix * _LTCGI_DiffuseColor.rgb * diffMask;
                 half3 ltcgiBaseSpec = base_ltc_s * specColor * baseEnergy * baseSpecOcc * _LTCGI_Spec_Mix * baseMS * _LTCGI_SpecularColor.rgb * specMask;
                 half3 ltcgiCCSpec   = cc_ltc_s * ccFresEnv * thinFilmColor * ccSpecOcc * _LTCGI_Spec_Mix * _LTCGI_SpecularColor.rgb * specMask;
                 half3 ltcgiSpecSum = vw_ClampSpecular((ltcgiBaseSpec + ltcgiCCSpec) * _LTCGI_Int, vw_ReflClampAmt(_RC_LTCGI));
                 finalColor += ltcgiDiff * _LTCGI_Int + ltcgiSpecSum * reflMask;
+                //ifex _UseCtx==0
+                #ifdef VF_CTX_LIVE
+                //ifex _CtxInkOn==0
+                inkEx += vw_InkExcite(base_ltc_d * _LTCGI_Int);
+                //endex
+                #endif
+                //endex
                 // The rim never saw LTCGI at all, so a material standing in front of a lit screen
                 // still wore a rim lit by the room behind it.
                 finalColor += rim * rimTint * (base_ltc_d + base_ltc_s) * _LTCGI_Int * _Rim_LTCGI;
@@ -1327,11 +1381,18 @@
             if (_UseVRSL > 0.5 && _VRSL_GI_Int > 0.001 && _Udon_DMXGridRenderTexture_TexelSize.z > 16.0)
             {
                 half3 vrslCol = VF_VRSLWash(_Udon_DMXGridRenderTexture, _Udon_DMXGridRenderTexture_TexelSize, _DMX_Channel, _VRSL_ChannelMode, _VRSL_GI_Sat);
-                half vrslOcc = vw_AmbientMicroOcc(msFallbackDir, 1.0, N, s.BentNormalWS, rawAO, _MicroShadow * _MS_VRSL, bentAmt) * vw_MicroLightBoost(1.0, rawAO, _MicroLight * _ML_VRSL) * vw_CavLight(s.CavRefl, _CavLight_Str * _CavLight_VRSL, saturate(dot(N, msFallbackDir)));
+                half vrslOcc = vw_AmbientMicroOcc(msFallbackDir, 1.0, N, s.BentNormalWS, rawAO, _MicroShadow VF_MUL_MICROSHADOW * _MS_VRSL, bentAmt) * vw_MicroLightBoost(1.0, rawAO, _MicroLight VF_MUL_MICROLIGHT * _ML_VRSL) * vw_CavLight(s.CavRefl, _CavLight_Str VF_MUL_CAVLIGHT * _CavLight_VRSL, saturate(dot(N, msFallbackDir)));
                 half3 vrslDiff = vrslCol * diffColor * baseEnergy * vrslOcc;
                 half vrslFres  = pow(saturate(1.0 - NdotV), 4.0);
                 half3 vrslSpec = vw_ClampSpecular(vrslCol * vrslFres * specColor * baseEnergy * baseSpecOcc * _VRSL_GI_Spec * _VRSL_GI_Int, vw_ReflClampAmt(_RC_VRSL));
                 finalColor += vrslDiff * _VRSL_GI_Int + vrslSpec * reflMask;
+                //ifex _UseCtx==0
+                #ifdef VF_CTX_LIVE
+                //ifex _CtxInkOn==0
+                inkEx += vw_InkExcite(vrslCol * _VRSL_GI_Int);
+                //endex
+                #endif
+                //endex
                 // Same gap as LTCGI above: the stage rig never reached the rim either.
                 finalColor += rim * rimTint * vrslCol * _VRSL_GI_Int * _Rim_VRSL;
                 glitSrc += vrslCol * _VRSL_GI_Int * vw_GlitSrc(3);
@@ -1341,6 +1402,22 @@
 
             half3 matcapLitEnv = saturate(ambPlain + lvLoopLight + light.color * smoothstep(0.0, 0.15, NcL)) * baseSpecOcc;
             finalColor = finalColor * s.MatcapMul + s.MatcapAdd + s.MatcapAddLit * matcapLitEnv;
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            //ifex _CtxInkOn==0
+            [branch] if (any(s.InkFluor > 0.0))
+                inkEx += vw_InkExcite(ambPlain) + vw_InkExcite(lvLoopLight);
+            finalColor += s.InkFluor * inkEx;
+            //endex
+            #endif
+            //endex
+            #if defined(VF_TATTOO) && defined(VIXFORGE_TOON) && !defined(VIXFORGE_CLOTHING) && !defined(VIXFORGE_WORLD)
+            //ifex _UseTattoos==0
+            [branch] if (any(s.TatUV > 0.0))
+                tatEx += VF_TatExcite(ambPlain, s.TatKey) + VF_TatExcite(lvLoopLight, s.TatKey);
+            finalColor += s.TatUV * tatEx;
+            //endex
+            #endif
 
             finalColor += s.Emission * _Emis_Exp;
 
@@ -1741,8 +1818,9 @@
                 [branch] if (_LM_Specular > 0.001)
                 {
                     half3 lmDir = bakedDir.xyz * 2.0 - 1.0;
-                    half lmDirectionality = max(1e-3, length(lmDir));
-                    lmDir /= lmDirectionality;
+                    half lmLength = max(1e-3, length(lmDir));
+                    lmDir /= lmLength;
+                    half lmDirectionality = min(lmLength, 1.0);
 
                     half lmSmooth = min(s.Smoothness, _LM_SpecSmoothCap);
                     half lmPR = max(1.0 - lmSmooth, 0.02);

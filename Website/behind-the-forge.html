@@ -388,6 +388,85 @@
                 </div>
             </div>
             <!-- FORGE:START -->
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-11-02-touches-that-land-anywhere-and-mirror-li">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">Toon</span>
+                        <span class="news-tag">Clothing Pro</span>
+                        <span class="news-tag">Fur Pro</span>
+                        <span class="news-tag">World Surface</span>
+                        <span class="news-date">November 2, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Touches that land anywhere and Mirror Light on Latex Ultra, Toon, Clothing Pro and Fur Pro, a Focus window for Hypno, and water that really runs on Latex Ultra and World Surface.</h2>
+                    <p class="forge-intro"><em>A headpat often did nothing, you looked flat in your own mirror, and wet streaks looked like seams. This release makes a touch land wherever it happens, keeps your shading in VRChat's personal mirror, and turns the streaks into running water with light moving through it.</em></p>
+                    <h3 class="text-glow-cyan">Touches that land</h3>
+                    <p class="forge-where">In <strong>TOUCH</strong> and <strong>Touch Setup</strong> in the Shader Hub.</p>
+                    <ul class="pledge-list">
+                        <li>Touches on your hair, hood and head now show. VRChat only passes on the eight touches nearest each receiver, and your own hands at your sides took every place, so <strong>Touch Setup</strong> now puts a receiver on your head, chest or hips, next to the meshes it serves.</li>
+                        <li>The kinds of touch you tick under <strong>Material Contacts</strong> now count on every graphics card, so <strong>Who Glows</strong> and <strong>Colour Per Person</strong> do what they say.</li>
+                        <li>Your own head and chest no longer count as a touch on the meshes around them, so your hood doesn't glow where it sits on you.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Mirror Light</h3>
+                    <p class="forge-where">In <strong>Light Data</strong> on Latex Ultra, Toon, Clothing Pro and Fur Pro.</p>
+                    <ul class="pledge-list">
+                        <li>VRChat's personal mirror leaves out the world's lights unless you set it to show the world, so you looked flat in it.</li>
+                        <li>Turn <strong>Mirror Light</strong> on and a mirror with no light in it lights you from where the light probes say the light comes from. <strong>Mirror Light Strength</strong> sets how much. It starts off.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Hypno</h3>
+                    <p class="forge-where">Under <strong>SPECIAL EFFECTS</strong> on Latex Ultra.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Focus</strong> opens a clear window in the middle of your view, so you still see who's in front of you while the spiral fills the rest. <strong>Focus Glow</strong> rims it with <strong>Color A</strong> and <strong>Focus Edge</strong> softens it.</li>
+                        <li><strong>Wobble</strong> makes the stripes ripple like water.</li>
+                        <li>With <strong>Arms</strong> above 1, <strong>Rainbow</strong> no longer jumps back each time the stripes move on, here and in <strong>Hypno Iris</strong> on Latex Ultra and Toon.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Streaks</h3>
+                    <p class="forge-where">In <strong>Wet Effects</strong> on Latex Ultra and World Surface.</p>
+                    <ul class="pledge-list">
+                        <li>Streaks run like water now. Each one wanders, swells and thins, leaves a wet trail, and carries slugs of water down it. They used to stand in straight lines that looked like seams, and they ran up instead of down.</li>
+                        <li>Where they run straight down the texture they tile, so a layout that repeats the texture shows no line where the copies meet.</li>
+                        <li><strong>Caustics</strong> drifts a moving net of light down through the wet, like sun through running water. It starts off.</li>
+                        <li>New materials start with fewer, wider streaks.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Colour</h3>
+                    <p class="forge-where">Under <strong>Color Adjust</strong>, <strong>Color Grading</strong> and <strong>Rendering</strong> on all six shaders.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Keep Hue</strong> lets colours that <strong>Clamp</strong> stops at white fade toward white instead of turning a neighbouring hue.</li>
+                        <li><strong>Exact sRGB</strong> reads the gradient map with exact sRGB, so a plain black to white strip leaves your colour as it was.</li>
+                        <li><strong>Luma</strong> picks how colours fade to grey. <strong>Rec.709</strong> matches how bright each colour really is, and <strong>Classic</strong> keeps your current look.</li>
+                        <li><strong>Saturation</strong>, <strong>Chromatize</strong>, <strong>Tint</strong>, <strong>Hue Shift</strong>, <strong>Shard Hue Shift</strong> and the outline's <strong>AudioLink Hue</strong> keep the hue on strong colours, and none of them push a colour below black.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">VixForge Editor</h3>
+                    <p class="forge-where">In the Shader Hub under <strong>Tools</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Preset Toggle</strong> radials move smoothly for other players on VRChat SDK 3.10.6.</li>
+                        <li><strong>Hypno Setup</strong> and <strong>Preset Toggle</strong> count your parameter memory the same way VRChat does, so an avatar that uses smaller parameters isn't called full too early.</li>
+                        <li>Unity's background import workers no longer rebuild the preset list, so imports after a script change are quicker.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Fixed</h3>
+                    <ul class="pledge-list">
+                        <li>VRCFury SPS plugs now work with Latex Ultra and Clothing Pro.</li>
+                        <li><strong>Viewer Context</strong> rules that use <strong>Light Colour Match</strong> or <strong>Darkness</strong> now count the world's vertex lights.</li>
+                        <li><strong>Hyperspace</strong> <strong>Tunnel</strong> no longer breaks into black pixels when an animation sets <strong>Distance</strong> below its slider.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Before you update</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Run Touch Setup again, then unlock and lock your TOUCH materials.</strong> Press <strong>Add Touch Receivers</strong> so your receivers move next to your meshes, and re-lock each material with <strong>Material Contacts</strong> on.</li>
+                        <li><strong>Made a radial with Preset Toggle on VRChat SDK 3.10.6?</strong> Press <strong>Add Preset Toggle</strong> once more so it moves smoothly for other players.</li>
+                        <li><strong>Check materials that use Saturation above 0, Chromatize or Tint.</strong> Strong colours can look a little different now that they keep their hue.</li>
+                        <li><strong>Check materials that use Streaks in Wet Effects.</strong> They run like water now, so they look different. <strong>Density</strong>, <strong>Thinness</strong> and <strong>Coverage</strong> still set how many there are, how thin they are and how much they cover.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Out now: Latex Ultra 5.8.0, Toon, Clothing Pro and Fur Pro 2.8.0, World Surface and World Fur 1.6.0, and VixForge Editor 2.9.0.</li>
+                        <li>The previous release, 5.7, is free in the Vixens Toolbox VPM listing in VCC.</li>
+                        <li>Questions or ideas: ask in #suggestions.</li>
+                    </ul>
+                </div>
+            </article>
+
             <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-10-24-real-hands-that-touch-you-on-latex-ultra">
                 <div class="news-body">
                     <div class="news-meta">

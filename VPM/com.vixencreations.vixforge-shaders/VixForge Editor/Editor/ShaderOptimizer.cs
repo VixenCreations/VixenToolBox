@@ -104,6 +104,8 @@ namespace VixForgeEditor
         // this hard-coded material property will uncomment //#pragma multi_compile _ LOD_FADE_CROSSFADE in optimized .shader files
         public static readonly string LODCrossFadePropertyName = "_LODCrossfade";
 
+        public const string LockOnlyLinePrefix = "//VF_LOCK ";
+
         // VixForge addition. DYNAMICLIGHTMAP_ON doubles the forward base variant count and only a
         // scene with Realtime Global Illumination ever sets it, so the world shaders ship the keyword
         // enabled and locking can strip it back out. The strip appends nodynlightmap to every
@@ -662,9 +664,14 @@ namespace VixForgeEditor
         [MenuItem("Assets/VixForge Editor/Materials/Lock Folder", false, 303)]
         public static void LockFolder()
         {
-            List<Material> toLock = FindMaterials(GetSelectedFolders()).ToList();
+            List<Material> toLock = FindMaterials(GetSelectedFolders()).Where(m => !IsPresetMaterial(m)).ToList();
             ReportBlockedVRCFuryChangesInOpenScenes(toLock);
             SetLockedForAnyShader(toLock, 1, true);
+        }
+
+        public static bool IsPresetMaterial(Material m)
+        {
+            return m != null && (Presets.IsPreset(m) || m.GetTag("isPreset", false, "false") == "true");
         }
 
         [MenuItem("Assets/VixForge Editor/Materials/Lock Folder", true)]
@@ -945,6 +952,23 @@ namespace VixForgeEditor
         }
 
         private static Dictionary<string, List<Material>> s_shaderPropertyCombinations = new Dictionary<string, List<Material>>();
+        private static void ReimportLockedShadersWithErrors(IEnumerable<Material> materials)
+        {
+            string[] folders = materials.Where(m => m != null)
+                .Select(m => m.GetRoot().shader)
+                .Distinct()
+                .Where(s => !s.IsBroken() && IsShaderLockedInternal(s) && IsShaderUsingVixForgeOptimizer(s) && ShaderUtil.ShaderHasError(s))
+                .Select(s => AssetDatabase.GetAssetPath(s))
+                .Where(p => p.StartsWith(OptimizedShaderRoot + "/"))
+                .Select(p => p.Substring(0, p.LastIndexOf('/')))
+                .Distinct().ToArray();
+            foreach (string folder in folders)
+            {
+                Debug.Log($"[VixForge Editor] Reimported {folder}, because Unity reported a compile error for this locked shader.");
+                AssetDatabase.ImportAsset(folder, ImportAssetOptions.ForceUpdate | ImportAssetOptions.ImportRecursive | ImportAssetOptions.DontDownloadFromCacheServer);
+            }
+        }
+
         private static bool SetLockedForAllMaterialsInternal(IEnumerable<Material> materials, int lockState, bool showProgressbar = false, bool showDialog = false, bool allowCancel = true, MaterialProperty shaderOptimizerProp = null)
         {
             Helper.RegisterEditorUse();
@@ -960,6 +984,9 @@ namespace VixForgeEditor
                     && m.IsLocked() != isLocking // only select materials that are being changed
                     && (!isLocking || !m.shader.IsBroken() && IsShaderUsingVixForgeOptimizer(m.shader))) // select materials with compatible shaders for locking
                 .Distinct().ToArray();
+
+            if (isLocking)
+                ReimportLockedShadersWithErrors(materials);
 
             // Make sure keywords are set correctly for materials to be locked. If unlocking, do this after the shaders are unlocked
             if (isLocking && Config.Instance.fixKeywordsWhenLocking)
@@ -2156,6 +2183,13 @@ namespace VixForgeEditor
             {
                 string lineParsed = fileLines[i].TrimStart();
 
+                // VixForge addition: a //VF_LOCK line outside a stripped ifex region goes live in the locked copy (developer_info.md, "LIGHT DATA").
+                if (!doExclude && lineParsed.StartsWith(LockOnlyLinePrefix, StringComparison.Ordinal))
+                {
+                    fileLines[i] = lineParsed.Substring(LockOnlyLinePrefix.Length);
+                    lineParsed = fileLines[i].TrimStart();
+                }
+
                 if (lineParsed.StartsWith("//", StringComparison.Ordinal))
                 {
                     // Exclusion logic
@@ -2433,6 +2467,19 @@ namespace VixForgeEditor
         // Replace properties! The meat of the shader optimization process
         // For each constantProp, pattern match and find each instance of the property that isn't a declaration
         // most of these args could be private static members of the class
+        private static bool TessellationKeptForCurrentPass()
+        {
+            if (!UseTessellation) return false;
+            switch (CurrentLightmode)
+            {
+                case LightModeType.ForwardBase: return UseTessellationForwardBase;
+                case LightModeType.ForwardAdd: return UseTessellationForwardAdd;
+                case LightModeType.ShadowCaster: return UseTessellationShadowCaster;
+                case LightModeType.Meta: return UseTessellationMeta;
+            }
+            return true;
+        }
+
         private static void ReplaceShaderValues(Material material, string[] lines, int startLine, int endLine,
         MaterialProperty[] props, Dictionary<string,PropertyData> constants, Macro[] macros, GrabPassReplacement[] grabPassVariables)
         {
@@ -2443,6 +2490,17 @@ namespace VixForgeEditor
 #endif
 
             List <TextureProperty> uniqueSampledTextures = new List<TextureProperty>();
+
+            bool tessSwappable = false;
+            for (int k = startLine; k < endLine; k++)
+            {
+                if (lines[k].TrimStart().StartsWith("#pragma vertex tessvert", StringComparison.Ordinal))
+                {
+                    tessSwappable = true;
+                    break;
+                }
+            }
+            bool tessStripped = tessSwappable && !TessellationKeptForCurrentPass();
 
             // Outside loop is each line
             for (int i=startLine;i<endLine;i++)
@@ -2480,30 +2538,12 @@ namespace VixForgeEditor
                 }
                 else if (lineTrimmed.StartsWith("#pragma hull", StringComparison.Ordinal) || lineTrimmed.StartsWith("#pragma domain", StringComparison.Ordinal))
                 {
-                    if (!UseTessellation)
+                    if (tessStripped)
                         lines[i] = "//" + lines[i];
-                    else
-                    {
-                        switch (CurrentLightmode)
-                        {
-                            case LightModeType.ForwardBase:
-                                if (!UseTessellationForwardBase)
-                                    lines[i] = "//" + lines[i];
-                                break;
-                            case LightModeType.ForwardAdd:
-                                if (!UseTessellationForwardAdd)
-                                    lines[i] = "//" + lines[i];
-                                break;
-                            case LightModeType.ShadowCaster:
-                                if (!UseTessellationShadowCaster)
-                                    lines[i] = "//" + lines[i];
-                                break;
-                            case LightModeType.Meta:
-                                if (!UseTessellationMeta)
-                                    lines[i] = "//" + lines[i];
-                                break;
-                        }
-                    }
+                }
+                else if (tessStripped && lineTrimmed.StartsWith("#pragma vertex tessvert", StringComparison.Ordinal))
+                {
+                    lines[i] = lines[i].Replace("tessvert", "vert_notess");
                 }
                 // Replace inline smapler states
                 else if (UseInlineSamplerStates && lineTrimmed.StartsWith("//KSOInlineSamplerState", StringComparison.Ordinal))
@@ -3739,10 +3779,12 @@ namespace VixForgeEditor
         private static bool IsShaderLockedInternal(Shader shader)
         {
             string propertyName = GetOptimizerPropertyName(shader);
+            if (propertyName == null) return false;
 
             // Shader optimizer property is set to 1 on locked variants
-            return propertyName != null &&
-                shader.GetPropertyDefaultFloatValue(shader.FindPropertyIndex(propertyName)) == 1;
+            int index = shader.FindPropertyIndex(propertyName);
+            if (index < 0) return shader.name.StartsWith("Hidden/Locked/", StringComparison.Ordinal);
+            return shader.GetPropertyDefaultFloatValue(index) == 1;
         }
 
         /// <summary>

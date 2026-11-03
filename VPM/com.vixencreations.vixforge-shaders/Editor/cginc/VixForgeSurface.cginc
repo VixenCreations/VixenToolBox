@@ -8,7 +8,7 @@
         }
 
         //ifex _UseDrip==0
-        #ifdef VF_DRIP
+        #if VF_WETGOO && defined(VF_DRIP)
         void vw_DripLattice(float2 uv, float ang, float dripT, out float riv, out float slope, out float2 across)
         {
             float dsn, dcs;
@@ -29,6 +29,56 @@
             across        = float2(dcs, -dsn);
             [branch] if (AL_Active() && _AL_Wet_Travel.x > 0.001)
                 riv *= AL_TravelPulse(_AL_Band_Wet, saturate(0.5 + dot(uv - 0.5, dAlong)), _AL_Wet_Travel);
+        }
+        #endif
+        //endex
+
+        //ifex _UseCtx==0
+        #ifdef VF_CTX_LIVE
+        float3 vw_CtxLightSurf(float3 worldPos, float3 N)
+        {
+            float3 c = vw_CtxLightDirect(worldPos, N);
+            #if defined(UNITY_PASS_FORWARDBASE)
+            c += max(VF_ShadeSH9(half4(N, 1.0), worldPos), 0.0);
+            #if defined(VERTEXLIGHT_ON)
+            VF_IF_VERTEX
+            c += Shade4PointLights(unity_4LightPosX0, unity_4LightPosY0, unity_4LightPosZ0,
+                                   unity_LightColor[0].rgb, unity_LightColor[1].rgb, unity_LightColor[2].rgb, unity_LightColor[3].rgb,
+                                   unity_4LightAtten0, worldPos, N);
+            #endif
+            //ifex _UseVRSL==0
+            #ifdef VF_VRSL
+            [branch] if (_UseVRSL > 0.5 && _VRSL_GI_Int > 0.001 && _Udon_DMXGridRenderTexture_TexelSize.z > 16.0)
+                c += VF_VRSLWash(_Udon_DMXGridRenderTexture, _Udon_DMXGridRenderTexture_TexelSize, _DMX_Channel, _VRSL_ChannelMode, _VRSL_GI_Sat) * _VRSL_GI_Int;
+            #endif
+            //endex
+            #endif
+            return c;
+        }
+        #endif
+        //endex
+
+        //ifex _UseStretch==0
+        #ifdef VF_STRETCH
+        float2 vw_StretchUV(float3 worldPos, float3 rest, float2 uv, out float area)
+        {
+            float3 p  = worldPos;
+            float3 px = ddx(p);
+            float3 py = ddy(p);
+            float3 rx = ddx(rest);
+            float3 ry = ddy(rest);
+            float2 ux = ddx(uv);
+            float2 uy = ddy(uv);
+            float3 pu = px * uy.y - py * ux.y;
+            float3 pv = py * ux.x - px * uy.x;
+            float3 ru = rx * uy.y - ry * ux.y;
+            float3 rv = ry * ux.x - rx * uy.x;
+            float  lu = length(ru);
+            float  lv = length(rv);
+            float  la = length(cross(ru, rv));
+            bool   ok = abs(ux.x * uy.y - ux.y * uy.x) > 1.0e-14 && lu > 1.0e-12 && lv > 1.0e-12 && la > 1.0e-20;
+            area = ok ? length(cross(pu, pv)) / la : 1.0;
+            return ok ? float2(length(pu) / lu, length(pv) / lv) : float2(1.0, 1.0);
         }
         #endif
         //endex
@@ -69,6 +119,31 @@
                 dftAmp = AudioLinkGetAmplitudesAtNote(clamp(_AL_DFT_Note, 0.0, 11.0)).r;
             }
 
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            float4 vfCtxBands = amps;
+            //ifex _CtxALOn==0
+            [branch] if (_UseCtx > 0.5 && _CtxALOn > 0.5)
+            {
+                float4 vfCtxALMask = VF_FB_WHITE;
+                #ifdef VF_TEX_CTXMASK
+                [branch] if (_CtxALMaskCh > 0.5)
+                    vfCtxALMask = SAMPLE_MATCAP_TEX(_CtxMask, sampler_linear_repeat, baseUV);
+                #endif
+                float3 vfCtxALLight = 0.0;
+                [branch] if (_CtxALLight.x + _CtxALDark.x > 0.0)
+                    vfCtxALLight = vw_CtxLightSurf(IN.worldPos, normalWorld);
+                VFCtxView vfCtxALV = vw_CtxView(IN.worldPos, normalWorld, vfCtxALLight, amps, vfCtxALMask);
+                float2 vfCtxALR = vw_CtxRule(vfCtxALV, _CtxALWhere, _CtxALEye, _CtxALDistMode, _CtxALDist, _CtxALGaze, _CtxALTorch, _CtxALLightCol, _CtxALLight, _CtxALDark, _CtxALBeat, _CtxALBand, _CtxALInvert, _CtxALHidden, _CtxALMaskCh, 1.0);
+                float vfCtxAL = lerp(1.0, vfCtxALR.x, vfCtxALR.y);
+                amps    *= vfCtxAL;
+                alExtra *= vfCtxAL;
+                dftAmp  *= vfCtxAL;
+            }
+            //endex
+            #endif
+            //endex
+
             float vPump = ((int)_Vtx_Pump_Band == 0) ? amps.x :
                           ((int)_Vtx_Pump_Band == 1) ? amps.y :
                           ((int)_Vtx_Pump_Band == 2) ? amps.z : amps.w;
@@ -98,7 +173,7 @@
             // the scanlines at their two sites below. Read at baseUV, ahead of the vortex/pump/fracture/glitch
             // chain and the parallax march, so the mask stays put while the effects it gates distort the UV.
             float alOnE = (AL_Active()) ? 1.0 : 0.0;
-            float clockHue = (AL_Active()) ? AL_ClockHue() : 0.0;
+            float clockHue = (AL_Active() || (_UseAudioLink > 0.5 && !AudioLinkIsAvailable())) ? AL_ClockHue() : 0.0;
             float alFXMask = 1.0;
             //ifex _UseAudioLink==0
             #ifdef VF_AUDIOLINK
@@ -290,7 +365,153 @@
             // shadow and specular occlusion marches read the same mip as the surface march did.
             o.HeightMip           = vw_HeightMip(cUV + glitchOffset);
             float2 finalUV        = ParallaxRaymarching(cUV + glitchOffset, viewDirTangent, o.ParallaxDepth, o.HeightMip);
-            
+
+            // EYES, first of three calls: Watcher Eyes and Deep Iris decide where the iris reads every map from.
+            //ifex _UseEyes==0
+            #ifdef VF_EYES
+            VFEye vfEye = (VFEye)0;
+            [branch] if (_UseEyes > 0.5)
+                finalUV = VF_EyeUV(finalUV, viewDirTangent, vfEye);
+            #endif
+            //endex
+
+            float ctxBase = 1.0;
+            float ctxNorm = 1.0;
+            float ctxSurf = 1.0;
+            float ctxShade = 1.0;
+            float ctxDecal = 1.0;
+            float ctxPolish = 1.0;
+            float ctxSfxG = 1.0;
+            float ctxSfxW = 1.0;
+            float ctxSfxO = 1.0;
+            float ctxEmis = 1.0;
+            float ctxMatcap = 1.0;
+            float ctxInk = 1.0;
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            float3 ctxGlow = 0.0;
+            [branch] if (_UseCtx > 0.5)
+            {
+                float4 ctxTexV = VF_FB_WHITE;
+                #ifdef VF_TEX_CTXMASK
+                ctxTexV = SAMPLE_MATCAP_TEX(_CtxMask, sampler_linear_repeat, finalUV);
+                #endif
+                float ctxNeed = 0.0;
+                //ifex _CtxBaseOn==0
+                ctxNeed += _CtxBaseOn * (_CtxBaseLight.x + _CtxBaseDark.x);
+                //endex
+                //ifex _CtxNormOn==0
+                ctxNeed += _CtxNormOn * (_CtxNormLight.x + _CtxNormDark.x);
+                //endex
+                //ifex _CtxSurfOn==0
+                ctxNeed += _CtxSurfOn * (_CtxSurfLight.x + _CtxSurfDark.x);
+                //endex
+                //ifex _CtxShadeOn==0
+                ctxNeed += _CtxShadeOn * (_CtxShadeLight.x + _CtxShadeDark.x);
+                //endex
+                //ifex _CtxDecalOn==0
+                ctxNeed += _CtxDecalOn * (_CtxDecalLight.x + _CtxDecalDark.x);
+                //endex
+                //ifex _CtxPolishOn==0
+                ctxNeed += _CtxPolishOn * (_CtxPolishLight.x + _CtxPolishDark.x);
+                //endex
+                //ifex _CtxSfxOn==0
+                ctxNeed += _CtxSfxOn * (_CtxSfxLight.x + _CtxSfxDark.x);
+                //endex
+                //ifex _CtxEmisOn==0
+                ctxNeed += _CtxEmisOn * (_CtxEmisLight.x + _CtxEmisDark.x);
+                //endex
+                //ifex _CtxMatcapOn==0
+                ctxNeed += _CtxMatcapOn * (_CtxMatcapLight.x + _CtxMatcapDark.x);
+                //endex
+                //ifex _CtxInkOn==0
+                ctxNeed += _CtxInkOn * (((_CtxInkMode > 0.5) ? _CtxInkLight.x : 0.0) + _CtxInkDark.x);
+                //endex
+                float3 ctxLightV = 0.0;
+                [branch] if (ctxNeed > 0.0)
+                    ctxLightV = vw_CtxLightSurf(IN.worldPos, o.GeomNormalWS);
+                VFCtxView ctxV = vw_CtxView(IN.worldPos, o.GeomNormalWS, ctxLightV, vfCtxBands, ctxTexV);
+                float2 ctxR = float2(1.0, 0.0);
+                //ifex _CtxBaseOn==0
+                [branch] if (_CtxBaseOn > 0.5)
+                {
+                    ctxR = vw_CtxRule(ctxV, _CtxBaseWhere, _CtxBaseEye, _CtxBaseDistMode, _CtxBaseDist, _CtxBaseGaze, _CtxBaseTorch, _CtxBaseLightCol, _CtxBaseLight, _CtxBaseDark, _CtxBaseBeat, _CtxBaseBand, _CtxBaseInvert, _CtxBaseHidden, _CtxBaseMaskCh, 1.0);
+                    ctxBase = lerp(1.0, ctxR.x, ctxR.y);
+                }
+                //endex
+                //ifex _CtxNormOn==0
+                [branch] if (_CtxNormOn > 0.5)
+                {
+                    ctxR = vw_CtxRule(ctxV, _CtxNormWhere, _CtxNormEye, _CtxNormDistMode, _CtxNormDist, _CtxNormGaze, _CtxNormTorch, _CtxNormLightCol, _CtxNormLight, _CtxNormDark, _CtxNormBeat, _CtxNormBand, _CtxNormInvert, _CtxNormHidden, _CtxNormMaskCh, 1.0);
+                    ctxNorm = lerp(1.0, ctxR.x, ctxR.y);
+                }
+                //endex
+                //ifex _CtxSurfOn==0
+                [branch] if (_CtxSurfOn > 0.5)
+                {
+                    ctxR = vw_CtxRule(ctxV, _CtxSurfWhere, _CtxSurfEye, _CtxSurfDistMode, _CtxSurfDist, _CtxSurfGaze, _CtxSurfTorch, _CtxSurfLightCol, _CtxSurfLight, _CtxSurfDark, _CtxSurfBeat, _CtxSurfBand, _CtxSurfInvert, _CtxSurfHidden, _CtxSurfMaskCh, 1.0);
+                    ctxSurf = lerp(1.0, ctxR.x, ctxR.y);
+                }
+                //endex
+                //ifex _CtxShadeOn==0
+                [branch] if (_CtxShadeOn > 0.5)
+                {
+                    ctxR = vw_CtxRule(ctxV, _CtxShadeWhere, _CtxShadeEye, _CtxShadeDistMode, _CtxShadeDist, _CtxShadeGaze, _CtxShadeTorch, _CtxShadeLightCol, _CtxShadeLight, _CtxShadeDark, _CtxShadeBeat, _CtxShadeBand, _CtxShadeInvert, _CtxShadeHidden, _CtxShadeMaskCh, 1.0);
+                    ctxShade = lerp(1.0, ctxR.x, ctxR.y);
+                }
+                //endex
+                //ifex _CtxDecalOn==0
+                [branch] if (_CtxDecalOn > 0.5)
+                {
+                    ctxR = vw_CtxRule(ctxV, _CtxDecalWhere, _CtxDecalEye, _CtxDecalDistMode, _CtxDecalDist, _CtxDecalGaze, _CtxDecalTorch, _CtxDecalLightCol, _CtxDecalLight, _CtxDecalDark, _CtxDecalBeat, _CtxDecalBand, _CtxDecalInvert, _CtxDecalHidden, _CtxDecalMaskCh, 1.0);
+                    ctxDecal = lerp(1.0, ctxR.x, ctxR.y);
+                    ctxGlow += _CtxDecalGlow.rgb * (ctxR.x * ctxR.y);
+                }
+                //endex
+                //ifex _CtxPolishOn==0
+                [branch] if (_CtxPolishOn > 0.5)
+                {
+                    ctxR = vw_CtxRule(ctxV, _CtxPolishWhere, _CtxPolishEye, _CtxPolishDistMode, _CtxPolishDist, _CtxPolishGaze, _CtxPolishTorch, _CtxPolishLightCol, _CtxPolishLight, _CtxPolishDark, _CtxPolishBeat, _CtxPolishBand, _CtxPolishInvert, _CtxPolishHidden, _CtxPolishMaskCh, 1.0);
+                    ctxPolish = lerp(1.0, ctxR.x, ctxR.y);
+                }
+                //endex
+                //ifex _CtxSfxOn==0
+                [branch] if (_CtxSfxOn > 0.5)
+                {
+                    ctxR = vw_CtxRule(ctxV, _CtxSfxWhere, _CtxSfxEye, _CtxSfxDistMode, _CtxSfxDist, _CtxSfxGaze, _CtxSfxTorch, _CtxSfxLightCol, _CtxSfxLight, _CtxSfxDark, _CtxSfxBeat, _CtxSfxBand, _CtxSfxInvert, _CtxSfxHidden, _CtxSfxMaskCh, 1.0);
+                    float ctxSfx = lerp(1.0, ctxR.x, ctxR.y);
+                    ctxSfxG = (_CtxSfxGlitter > 0.5) ? ctxSfx : 1.0;
+                    ctxSfxW = (_CtxSfxWetGoo  > 0.5) ? ctxSfx : 1.0;
+                    ctxSfxO = (_CtxSfxOther   > 0.5) ? ctxSfx : 1.0;
+                }
+                //endex
+                //ifex _CtxEmisOn==0
+                [branch] if (_CtxEmisOn > 0.5)
+                {
+                    ctxR = vw_CtxRule(ctxV, _CtxEmisWhere, _CtxEmisEye, _CtxEmisDistMode, _CtxEmisDist, _CtxEmisGaze, _CtxEmisTorch, _CtxEmisLightCol, _CtxEmisLight, _CtxEmisDark, _CtxEmisBeat, _CtxEmisBand, _CtxEmisInvert, _CtxEmisHidden, _CtxEmisMaskCh, 1.0);
+                    ctxEmis = lerp(1.0, ctxR.x, ctxR.y);
+                    ctxGlow += _CtxEmisGlow.rgb * (ctxR.x * ctxR.y);
+                }
+                //endex
+                //ifex _CtxMatcapOn==0
+                [branch] if (_CtxMatcapOn > 0.5)
+                {
+                    ctxR = vw_CtxRule(ctxV, _CtxMatcapWhere, _CtxMatcapEye, _CtxMatcapDistMode, _CtxMatcapDist, _CtxMatcapGaze, _CtxMatcapTorch, _CtxMatcapLightCol, _CtxMatcapLight, _CtxMatcapDark, _CtxMatcapBeat, _CtxMatcapBand, _CtxMatcapInvert, _CtxMatcapHidden, _CtxMatcapMaskCh, 1.0);
+                    ctxMatcap = lerp(1.0, ctxR.x, ctxR.y);
+                }
+                //endex
+                //ifex _CtxInkOn==0
+                [branch] if (_CtxInkOn > 0.5)
+                {
+                    ctxR = vw_CtxRule(ctxV, _CtxInkWhere, _CtxInkEye, _CtxInkDistMode, _CtxInkDist, _CtxInkGaze, _CtxInkTorch, _CtxInkLightCol, _CtxInkLight, _CtxInkDark, _CtxInkBeat, _CtxInkBand, _CtxInkInvert, _CtxInkHidden, _CtxInkMaskCh, ((_CtxInkMode > 0.5) ? 1.0 : 0.0));
+                    ctxInk = lerp(1.0, ctxR.x, ctxR.y);
+                }
+                //endex
+            }
+            o.CtxShadeHide = 1.0 - ctxShade;
+            #endif
+            //endex
+
             // Cut once here and reused by every map below, so the weights and the projected
             // position cost the same whether the material samples one texture or six. triGeoN is
             // the geometric normal on purpose: the normal map is not read yet, and feeding a mapped
@@ -316,10 +537,38 @@
             #endif
             #endif
 
+            // EYES, second call: the sclera fill, Hypno Iris and Pupil Shapes over the albedo. The glow waits for
+            // the emission total below.
+            //ifex _UseEyes==0
+            #ifdef VF_EYES
+            float3 vfEyeEmis = 0.0;
+            [branch] if (_UseEyes > 0.5)
+            {
+                float3 vfEyeAlb = c.rgb;
+                VF_EyeColour(vfEye, IN.worldPos, vfEyeAlb, vfEyeEmis);
+                c.rgb = VF_CTX_SFXMIX(c.rgb, vfEyeAlb);
+            }
+            #endif
+            //endex
+
             //ifex _MainColorAdjustToggle==0
             #ifdef VF_COLORADJUST
             [branch] if (_MainColorAdjustToggle > 0.5)
                 c.rgb = VF_ColorAdjust(c.rgb, finalUV);
+            #endif
+            //endex
+
+            //ifex _UseStretch==0
+            #ifdef VF_STRETCH
+            float2 vfStr     = float2(1.0, 1.0);
+            float  vfStrArea = 1.0;
+            float  vfStrA    = 0.0;
+            [branch] if (_UseStretch > 0.5)
+            {
+                vfStr  = vw_StretchUV(IN.worldPos, IN.vfRest * (_Stretch_Scale > 0.0 ? _Stretch_Scale : 1.0), VF_AOUnST(IN.uv_MainTex, _MainTex_ST), vfStrArea);
+                vfStrA = smoothstep(_Stretch_Range.x, max(_Stretch_Range.y, _Stretch_Range.x + 1.0e-3), vfStrArea);
+                c.rgb  = lerp(c.rgb, _Stretch_Color.rgb, vfStrA * _Stretch_Pale);
+            }
             #endif
             //endex
 
@@ -335,29 +584,6 @@
             }
             #endif
             //endex
-
-            // ctxTex scopes WHERE the viewer gate applies, ctxRaw is the gate itself. Outside the mask the
-            // material must read as untouched, so the gate lerps back to 1 there rather than multiplying to 0.
-            float ctxTex  = 1.0;
-            float ctxRaw  = 1.0;
-            float ctxMask = 1.0;
-            //ifex _UseCtx==0
-            #ifdef VF_CTX
-            [branch] if (_UseCtx > 0.5)
-            {
-                #ifdef VF_TEX_CTXMASK
-                ctxTex  = vw_MaskRead(SAMPLE_MATCAP_TEX(_CtxMask, sampler_linear_repeat, finalUV), _Ctx_MaskCh);
-                #else
-                ctxTex  = vw_MaskRead(VF_FB_WHITE, _Ctx_MaskCh);
-                #endif
-                ctxRaw  = vw_ContextMask(IN.worldPos, o.GeomNormalWS);
-                ctxMask = lerp(1.0, ctxRaw, ctxTex);
-            }
-            #endif
-            //endex
-            float ctxOn    = (_UseCtx > 0.5) ? 1.0 : 0.0;
-            float ctxDecal = (ctxOn > 0.5 && _Ctx_Target > 0.5) ? ctxMask : 1.0;
-            float ctxEmis  = (ctxOn > 0.5 && (_Ctx_Target < 0.5 || _Ctx_Target > 1.5)) ? ctxMask : 1.0;
 
             // Written as "default, then overwrite" rather than a ternary so the sample can be gated.
             // A ternary keeps the texture referenced on both arms, so the declaration could never be
@@ -445,6 +671,14 @@
             cutoutSrc = VF_AlphaShape(cutoutSrc, vfAlphaMul, vfAlphaAdd, vfGM);
             fadeAlpha = VF_AlphaShape(fadeAlpha, vfAlphaMul, vfAlphaAdd, vfGM);
 
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            float  vfSfxA0   = fadeAlpha;
+            float  vfSfxC0   = cutoutSrc;
+            float3 vfSfxRGB0 = c.rgb;
+            #endif
+            //endex
+
             //ifex _UseSheer==0
             #ifdef VF_SHEER
             float2 vfSheerTilt = 0.0;
@@ -468,7 +702,7 @@
                 vfDisPortalArea = vfDis.alpha;
                 [branch] if (!VF_DissolveDebug())
                 {
-                    clip(VF_DissolveVis(vfDis) - VF_DissolveCutLevel(_Mode, _CutOff));
+                    clip(VF_CTX_SFXMIX(1.0, VF_DissolveVis(vfDis)) - VF_DissolveCutLevel(_Mode, _CutOff));
                     fadeAlpha = VF_DissolveAlpha(vfDis, fadeAlpha);
                 }
             }
@@ -538,6 +772,26 @@
             #ifndef VF_SKEL_SPARE
             #define VF_SKEL_SPARE(e) (e)
             #endif
+
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            [branch] if (ctxSfxO < 1.0)
+            {
+                fadeAlpha = lerp(vfSfxA0, fadeAlpha, ctxSfxO);
+                cutoutSrc = lerp(vfSfxC0, cutoutSrc, ctxSfxO);
+                c.rgb     = lerp(vfSfxRGB0, c.rgb, ctxSfxO);
+            }
+            fadeAlpha *= ctxBase;
+            cutoutSrc *= ctxBase;
+            #endif
+            //endex
+
+            //ifex _UseStretch==0
+            #ifdef VF_STRETCH
+            [branch] if (_UseStretch > 0.5 && _Stretch_Clear > 0.001)
+                fadeAlpha *= lerp(1.0, saturate(1.0 / max(vfStrArea, 1.0e-3)), _Stretch_Clear * vfStrA);
+            #endif
+            //endex
 
             //ifex _AlphaDithering==0
             #if !defined(UNITY_PASS_SHADOWCASTER)
@@ -617,7 +871,7 @@
             //ifex _UsePearl==0
             #ifdef VF_PEARL
             [branch] if (_UsePearl > 0.5)
-                o.Albedo = vw_PearlSurface(o.Albedo, IN.worldPos, normalWorld, IN.facing, vfPearlT);
+                o.Albedo = VF_CTX_SFXMIX(o.Albedo, vw_PearlSurface(o.Albedo, IN.worldPos, normalWorld, IN.facing, vfPearlT));
             #endif
             //endex
 
@@ -840,6 +1094,21 @@
                 o.ReflectionMask = saturate(o.ReflectionMask * saturate(1.0 + cav * _MicroRefl_Occ * 2.0));
                 o.CavRefl = cav;
             }
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            o.SpecularMask   *= ctxSurf;
+            o.ReflectionMask *= ctxSurf;
+            #endif
+            //endex
+            //ifex _UseStretch==0
+            #ifdef VF_STRETCH
+            [branch] if (_UseStretch > 0.5 && _Stretch_Gloss > 0.001)
+            {
+                o.Smoothness    = saturate(o.Smoothness + vfStrA * _Stretch_Gloss * (1.0 - o.Smoothness));
+                o.BaseRoughness = 1.0 - o.Smoothness;
+            }
+            #endif
+            //endex
 
             #if defined(VIXFORGE_WORLD)
             float3 normalTS;
@@ -962,9 +1231,95 @@
             #endif
             //endex
 
+            //ifex _UseStretch==0
+            #ifdef VF_STRETCH
+            [branch] if (_UseStretch > 0.5)
+            {
+                float2 vfK = lerp(float2(1.0, 1.0), clamp(1.0 / max(vfStr, 1.0e-3), 0.25, 2.0), _Stretch_Normal);
+                normalTS = normalize(float3(normalTS.xy * vfK, normalTS.z));
+                float2 vfWUV  = VF_AOUnST(IN.uv_MainTex, _MainTex_ST) * _Stretch_WrinkleSet.x;
+                float2 vfWFad = 1.0 - saturate(fwidth(vfWUV) * 2.0 - 0.5);
+                float2 vfSq   = float2(smoothstep(_Stretch_Squash.x, _Stretch_Squash.y, vfStr.x), smoothstep(_Stretch_Squash.x, _Stretch_Squash.y, vfStr.y)) * _Stretch_Wrinkle;
+                [branch] if (vfSq.x + vfSq.y > 0.001)
+                {
+                    float2 ph    = vfWUV * 6.2831853;
+                    float2 soft  = cos(ph);
+                    float2 cusp  = 0.5 * cos(ph * 0.5) * sign(sin(ph * 0.5));
+                    float2 slope = lerp(soft, cusp, saturate(_Stretch_WrinkleSet.z)) * (_Stretch_WrinkleSet.y * vfSq * vfWFad);
+                    normalTS = normalize(float3(normalTS.xy - slope, normalTS.z));
+                }
+            }
+            #endif
+            //endex
+
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            [branch] if (ctxNorm < 1.0)
+                normalTS = normalize(lerp(float3(0.0, 0.0, 1.0), normalTS, ctxNorm));
+            #endif
+            //endex
+
             o.Normal = normalTS;
             [branch] if (_FlipBackfaceNormals > 0.5 && IN.facing < 0.0) o.Normal.z = -o.Normal.z;
+            //ifex _UseContacts==0
+            #if defined(VF_CONTACTS) && defined(VIXFORGE_CLOTHING) && VF_HAS_SHEEN && !defined(VIXFORGE_WORLD)
+            //ifex _UseSheen==0
+            [branch] if (_UseSheen > 0.5 && _Fabric_Creases > 0.001 && VF_ContactsLive())
+            {
+                float4 fc = VF_ContactField(IN.worldPos, VF_SafeNormalize(normalWorld), VF_SafeNormalize(tangentWorld),
+                                            VF_SafeNormalize(bitangentWorld), 0.6);
+                [branch] if (fc.x + fc.y > 0.001)
+                {
+                    float  ang  = VF_SafeAtan2(fc.w, fc.z);
+                    float  fold = fc.y * 2.0 + fc.x * 0.5;
+                    float2 tilt = float2(-fc.w, fc.z) * (cos(ang * 9.0) * fold) - fc.zw * fc.y;
+                    o.Normal = normalize(o.Normal + float3(tilt * _Fabric_Creases, 0.0));
+                    o.Occlusion *= 1.0 - saturate(_Fabric_Creases * fold * 0.25 * (0.5 + 0.5 * sin(ang * 9.0)));
+                }
+            }
+            //endex
+            #endif
+            //endex
 
+            #if defined(VIXFORGE_TOON) && !defined(VIXFORGE_CLOTHING) && !defined(VIXFORGE_WORLD)
+            float3 vfTatEmis = 0.0;
+            //ifex _UseTattoos==0
+            #ifdef VF_TATTOO
+            o.TatUV  = 0.0;
+            o.TatKey = 0.0;
+            [branch] if (_UseTattoos > 0.5)
+            {
+                float3 tatN = VF_SafeNormalize(mul(o.Normal, o.WorldToTangent));
+                float3 tatV = vw_WorldViewDir(IN.worldPos);
+                float3 tatL = normalize(_WorldSpaceLightPos0.xyz - IN.worldPos * _WorldSpaceLightPos0.w);
+                float2 tatUV0 = VF_AOUnST(IN.uv_MainTex, _MainTex_ST);
+                //ifex _UseTattoo1==0
+                #ifdef VF_TEX_TATTOO1
+                [branch] if (_UseTattoo1 > 0.5)
+                    VF_TattooLayer1(tatUV0, IN.uv2_MainTex, tatN, tatV, tatL, _LightColor0.rgb, GET_AL_BAND(amps, alExtra, _AL_Band_Tattoo1),
+                                    o.Albedo, o.Smoothness, vfTatEmis);
+                #endif
+                //endex
+                //ifex _UseTattoo2==0
+                #ifdef VF_TEX_TATTOO2
+                [branch] if (_UseTattoo2 > 0.5)
+                    VF_TattooLayer2(tatUV0, IN.uv2_MainTex, tatN, tatV, tatL, _LightColor0.rgb, GET_AL_BAND(amps, alExtra, _AL_Band_Tattoo2),
+                                    o.Albedo, o.Smoothness, vfTatEmis);
+                #endif
+                //endex
+                //ifex _UseTattoo3==0
+                #ifdef VF_TEX_TATTOO3
+                [branch] if (_UseTattoo3 > 0.5)
+                    VF_TattooLayer3(tatUV0, IN.uv2_MainTex, tatN, tatV, tatL, _LightColor0.rgb, GET_AL_BAND(amps, alExtra, _AL_Band_Tattoo3),
+                                    o.Albedo, o.Smoothness, vfTatEmis);
+                #endif
+                //endex
+                o.TatUV  = vfTatUVAcc;
+                o.TatKey = vfTatKeyAcc;
+            }
+            #endif
+            //endex
+            #endif
             o.BentNormalWS = normalize(mul(o.Normal, o.WorldToTangent));
             //ifex _UseBentNormal==0
             #ifdef VF_BENTNORMAL
@@ -1009,9 +1364,9 @@
                 o.GlitterN     = gN;
                 o.GlitterColor = gC;
                 #ifdef VF_DISSOLVE
-                VF_DIS_SPARK(vfDis, gM, gC * ctxEmis);
+                VF_DIS_SPARK(vfDis, gM, gC * ctxSfxG);
                 #endif
-                o.GlitterMask  = gM * ctxEmis;
+                o.GlitterMask  = gM * ctxSfxG;
             }
             #endif
             //endex
@@ -1045,10 +1400,10 @@
             o.SpecAA              = saturate(_CC_Spec_AA);
 
             o.Thickness = 1.0 - saturate(thinBase + bio * _Bio_SSS);
-            o.Anisotropy    = _Aniso;
+            o.Anisotropy    = _Aniso VF_MUL_ANISO;
             o.AnisoRotation = _AnisoRot;
 
-            o.Transmission = saturate(_Trans_Str + bio * _Bio_Trans + amp_trans * _AL_Trans_Mod * thumpMask);
+            o.Transmission = saturate(_Trans_Str + bio * _Bio_Trans + amp_trans * _AL_Trans_Mod * thumpMask) VF_MUL_TRANS;
             // Written unconditionally first, so stripping the sample leaves a defined value rather than
             // an uninitialized one. That is what makes this single-writer safe to gate.
             o.PolishMask = 0;
@@ -1059,6 +1414,11 @@
             #else
             o.PolishMask = _UsePolish * vw_MaskRead(VF_FB_WHITE, _PolishMaskCh);
             #endif
+            #endif
+            //endex
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            o.PolishMask *= ctxPolish;
             #endif
             //endex
             #ifdef VIXFORGE_CLOTHING
@@ -1096,13 +1456,50 @@
             //endex
             #endif
 
+            #if defined(VIXFORGE_CLOTHING) && VF_HAS_SHEEN && !defined(VIXFORGE_WORLD)
+            float3 vfGemEmis = 0.0;
+            //ifex _UseGems==0
+            #ifdef VF_GEMS
+            [branch] if (_UseGems > 0.5)
+                VF_GemApply(o, (_Gem_UV < 0.5) ? VF_AOUnST(IN.uv_MainTex, _MainTex_ST) : IN.uv2_MainTex, IN.worldPos,
+                            o.WorldToTangent, GET_AL_BAND(amps, alExtra, _AL_Band_Gem), vfGemEmis);
+            #endif
+            //endex
+            #endif
+
+            //ifex _UseContacts==0
+            #if defined(VF_CONTACTS) && !defined(VIXFORGE_WORLD)
+            //ifex _UseColorTouch==0
+            float3 vfColTouchEmis = 0.0;
+            [branch] if (_UseColorTouch > 0.5 && VF_ContactsLive() && _ColorTouch_Strength + _ColorTouch_Shine + _ColorTouch_Sparkle > 0.001)
+            {
+                float ctF = VF_ContactNear(IN.worldPos, _ColorTouch_Size);
+                [branch] if (ctF > 0.001)
+                {
+                    float3 ctCol = _ColorTouch_Mode < 0.5 ? o.Albedo * _ColorTouch_Tint.rgb : _ColorTouch_Tint.rgb;
+                    o.Albedo        = lerp(o.Albedo, ctCol, saturate(ctF * _ColorTouch_Strength));
+                    o.Smoothness    = lerp(o.Smoothness, 1.0, saturate(ctF * _ColorTouch_Shine) * 0.9);
+                    o.BaseRoughness = 1.0 - o.Smoothness;
+                    [branch] if (_ColorTouch_Sparkle > 0.001)
+                    {
+                        float3 csP  = IN.worldPos * 400.0;
+                        float3 csH  = vw_HashFast3(floor(csP));
+                        float3 csF  = frac(csP) - (0.25 + 0.5 * csH);
+                        float  csS  = saturate(1.0 - dot(csF, csF) * 16.0);
+                        float  csTw = 0.5 + 0.5 * sin(_Time.y * (3.0 + csH.z * 6.0) + csH.x * 6.2831853);
+                        vfColTouchEmis = _ColorTouch_Tint.rgb * (csS * csS * csTw * step(0.7, csH.y) * ctF * _ColorTouch_Sparkle * 4.0);
+                    }
+                }
+            }
+            //endex
+            #endif
+            //endex
+
             #if VF_WETGOO
             float ampWet = (AL_Active()) ? GET_AL_BAND(amps, alExtra, _AL_Band_Wet) : 0.0;
             float ampGoo = (AL_Active()) ? GET_AL_BAND(amps, alExtra, _AL_Band_Goo) : 0.0;
 
-            // Viewer Context for the wet and the goo, when the material asks for it. ctxMask already carries the
-            // context mask's scope, so outside the painted area both read as untouched.
-            float ctxWG = (ctxOn > 0.5 && _Ctx_WetGoo > 0.5) ? ctxMask : 1.0;
+            float ctxWG = ctxSfxW;
             float3 wetGlint = 0.0;
 
             // THE PRESS FIELD, READ ONCE FOR THE WHOLE FRAGMENT, AND NOW AHEAD OF THE WET. The goo look slides its
@@ -1117,7 +1514,7 @@
             //ifex _UseTouch==0
             #ifdef VF_TOUCH
             [branch]
-            if (vw_TouchActive())
+            if (vw_TouchActive() VF_OR_CONTACT_TOUCH)
             {
                 [branch] if (vw_TouchZonesActive())
                 {
@@ -1140,12 +1537,24 @@
                     touchG  += nt.zw * 0.25;
                 }
                 #endif
+                //ifex _UseContacts==0
+                #if defined(VF_CONTACTS) && !defined(VIXFORGE_WORLD)
+                [branch] if (_Touch_Contacts > 0.5)
+                {
+                    float4 ct = VF_ContactField(IN.worldPos, VF_SafeNormalize(normalWorld), VF_SafeNormalize(tangentWorld),
+                                                VF_SafeNormalize(bitangentWorld), _Touch_Spread);
+                    touchP   = max(touchP, ct.x);
+                    touchRim = max(touchRim, ct.y);
+                    touchG  += ct.zw * 0.25;
+                }
+                #endif
+                //endex
             }
             #endif
             //endex
 
             //ifex _UseDrip==0
-            #ifdef VF_DRIP
+            #if VF_WETGOO && defined(VF_DRIP)
             [branch] // Forces dynamic branching, saving massive register space
             if (_UseDrip > 0.5)
             {
@@ -1206,6 +1615,69 @@
                         wetness = saturate(wetness * lerp(1.0, pool, saturate(_Wet_Pool)));
                     }
 
+                    //ifex _UseWetTouch==0
+                    float2 wtBump = float2(0.0, 0.0);
+                    [branch] if (_UseWetTouch > 0.5)
+                    {
+                        float  wtP   = touchP;
+                        float  wtRim = touchRim;
+                        float4 wtFilm = float4(0.0, 0.0, 0.0, -1.0);
+                        float3 wtN = VF_SafeNormalize(normalWorld);
+                        float3 wtT = VF_SafeNormalize(tangentWorld);
+                        float3 wtB = VF_SafeNormalize(bitangentWorld);
+                        //ifex _WetTouch_Native==0
+                        #if !defined(UNITY_PASS_SHADOWCASTER)
+                        [branch] if (_WetTouch_Native > 0.5)
+                        {
+                            float4 nt = vw_NativeTouchCtl(IN.worldPos, wtN, wtT, wtB, 4, _WetTouch_NativeCtl);
+                            wtP   = max(wtP, nt.x);
+                            wtRim = max(wtRim, nt.y);
+                        }
+                        #endif
+                        //endex
+                        //ifex _UseContacts==0
+                        #if defined(VF_CONTACTS) && !defined(VIXFORGE_WORLD)
+                        [branch] if (_WetTouch_Contacts > 0.5 && VF_ContactsLive())
+                        {
+                            float4 ct = VF_ContactField(IN.worldPos, wtN, wtT, wtB, 0.35);
+                            wtP   = max(wtP, ct.x);
+                            wtRim = max(wtRim, ct.y);
+                            [branch] if (_WetTouch_Ripples > 0.001 || _WetTouch_Drips > 0.001 || _WetTouch_Streaks > 0.001)
+                            {
+                                float4 rip = float4(_WetTouch_Ripples, _WetTouch_RippleSize * 0.01,
+                                                    _WetTouch_RippleSpeed * _Time.y + _WetTouch_RippleSpeed_Ph, _WetTouch_RippleReach * 0.01);
+                                float3 drp = float3(_WetTouch_Drips, _WetTouch_DripLength * 0.01,
+                                                    _WetTouch_DripSpeed * _Time.y + _WetTouch_DripSpeed_Ph);
+                                wtFilm = VF_ContactWetFilm(IN.worldPos, wtN, wtT, wtB, rip, drp, _WetTouch_Streaks);
+                                wtBump = wtFilm.xy;
+                            }
+                        }
+                        #endif
+                        //endex
+                        float sm = 1.0;
+                        [branch] if (_WetTouch_Streaks > 0.001 && (wtP > 0.001 || wtRim > 0.001))
+                        {
+                            float sv = wtFilm.w;
+                            [branch] if (sv < 0.0)
+                            {
+                                float2 sp = float2(dot(IN.worldPos, wtT), dot(IN.worldPos, wtB)) * 90.0;
+                                float2 si = floor(sp);
+                                float2 sf = sp - si;
+                                sf = sf * sf * (3.0 - 2.0 * sf);
+                                float n00 = vw_HashFast3(float3(si, 31.0)).x;
+                                float n10 = vw_HashFast3(float3(si + float2(1.0, 0.0), 31.0)).x;
+                                float n01 = vw_HashFast3(float3(si + float2(0.0, 1.0), 31.0)).x;
+                                float n11 = vw_HashFast3(float3(si + float2(1.0, 1.0), 31.0)).x;
+                                sv = smoothstep(0.3, 0.7, lerp(lerp(n00, n10, sf.x), lerp(n01, n11, sf.x), sf.y));
+                            }
+                            sm = lerp(1.0, sv, saturate(_WetTouch_Streaks));
+                        }
+                        float wipe = saturate(_Wet_TouchWipe) * sm;
+                        wetness = saturate(wetness * (1.0 - wtP * wipe)
+                                         + (wtRim * wipe * 0.5 + wtP * saturate(_WetTouch_Hands) * sm + wtFilm.z) * wetMaskTex);
+                    }
+                    else
+                    //endex
                     // Touch Wipe: a press pushes the water aside, so the spot under it dries and the rim around it
                     // gathers what was moved.
                     [branch] if (_Wet_TouchWipe > 0.001 && (touchP > 0.001 || touchRim > 0.001))
@@ -1281,6 +1753,10 @@
                         if (_UsePolish < 0.5)
                             o.ClearcoatSmoothness = _Wet_Smoothness;
                         o.Normal = normalize(o.Normal + float3(rivuletBump * (_Drip_Normal * 0.15), 0));
+                        //ifex _UseWetTouch==0
+                        [branch] if (dot(wtBump, wtBump) > 1.0e-8)
+                            o.Normal = normalize(o.Normal + float3(wtBump * saturate(wetness * 2.0), 0));
+                        //endex
                         [branch] if (waterAmt > 0.0)
                         {
                             float3 waterN = normalize(float3(rivuletBump * (0.1 + 0.4 * _Drip_WaterDepth), 1.0));
@@ -1557,6 +2033,14 @@
             half  mcSmooth = o.Smoothness;
             half  mcMetal = o.Metallic;
             half  mcCoat = o.ClearcoatStrength;
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            float3 vfMcAlb0 = o.Albedo;
+            half   vfMcSm0  = mcSmooth;
+            half   vfMcMe0  = mcMetal;
+            half   vfMcCo0  = mcCoat;
+            #endif
+            //endex
 
             //ifex _UseMatCap1==0
             #ifdef VF_MATCAP1
@@ -1724,6 +2208,23 @@
                 #endif
                 vw_MCApply(mcCtx, L5, mcUV5, mcRaw5, mRaw5, sRaw5, alAmp5,
                            mcMul, mcAdd, mcAddLit, mcCarPaint, mcEmis, o.Albedo, mcSmooth, mcMetal, mcCoat);
+            }
+            #endif
+            //endex
+
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            [branch] if (ctxMatcap < 1.0)
+            {
+                mcMul      = lerp(1.0, mcMul, ctxMatcap);
+                mcAdd     *= ctxMatcap;
+                mcAddLit  *= ctxMatcap;
+                mcCarPaint *= ctxMatcap;
+                mcEmis    *= ctxMatcap;
+                o.Albedo   = lerp(vfMcAlb0, o.Albedo, ctxMatcap);
+                mcSmooth   = lerp(vfMcSm0, mcSmooth, ctxMatcap);
+                mcMetal    = lerp(vfMcMe0, mcMetal, ctxMatcap);
+                mcCoat     = lerp(vfMcCo0, mcCoat, ctxMatcap);
             }
             #endif
             //endex
@@ -1995,7 +2496,12 @@
             //endex
 
             emisBase *= ctxEmis;
-            emisBase += _Ctx_Glow.rgb * (ctxRaw * ctxTex * ctxOn);
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            emisBase += ctxGlow;
+            float3 vfSfxE0 = emisBase;
+            #endif
+            //endex
 
             // The special effects sit ON TOP of the emission instead of adding to it, so an effect
             // and an emission layer that share a mask cannot sum into a blown-out white. This is the
@@ -2105,8 +2611,48 @@
             #endif
             //endex
 
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            [branch] if (ctxSfxO < 1.0)
+                emisBase = lerp(vfSfxE0, emisBase, ctxSfxO);
+            #endif
+            //endex
+
             emisBase += decalEmis;
             o.Emission = emisBase + mcEmis;
+            #if defined(VIXFORGE_TOON) && !defined(VIXFORGE_CLOTHING) && !defined(VIXFORGE_WORLD)
+            o.Emission += vfTatEmis;
+            #endif
+            #if defined(VIXFORGE_CLOTHING) && VF_HAS_SHEEN && !defined(VIXFORGE_WORLD)
+            o.Emission += vfGemEmis;
+            #endif
+            //ifex _UseContacts==0
+            #if defined(VF_CONTACTS) && !defined(VIXFORGE_WORLD)
+            //ifex _UseTouchGlow==0
+            [branch] if (_UseTouchGlow > 0.5)
+            {
+                float4 vfTG = VF_TouchGlow(IN.worldPos, GET_AL_BAND(amps, alExtra, _AL_Band_TouchGlow));
+                o.Emission += vfTG.rgb;
+                [branch] if (_TouchGlow_Emis > 0.5)
+                {
+                    float tgF = saturate(vfTG.a);
+                    float tgK = _TouchGlow_Emis < 1.5 ? 1.0 + vfTG.a * _TouchGlow_EmisBoost : (_TouchGlow_Emis < 2.5 ? tgF : 1.0 - tgF);
+                    o.Emission += emisBase * (tgK - 1.0);
+                }
+            }
+            //endex
+            //ifex _UseColorTouch==0
+            o.Emission += vfColTouchEmis;
+            //endex
+            #endif
+            //endex
+            // EYES, third call: the spiral and pupil glow, and the cornea glint, in the base pass only.
+            //ifex _UseEyes==0
+            #ifdef VF_EYES
+            [branch] if (_UseEyes > 0.5)
+                o.Emission += VF_CTX_SFX(vfEyeEmis + VF_EyeGlint(vfEye, IN.worldPos, o.WorldToTangent));
+            #endif
+            //endex
             #if VF_WETGOO
             //ifex _UseGoo==0
             #ifdef VF_GOO
@@ -2125,6 +2671,14 @@
             o.MatcapAdd = half3(0,0,0);
             o.Emission = 0;
             #endif
+
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            float3 vfSfxAlb0 = o.Albedo;
+            float3 vfSfxEm0  = o.Emission;
+            half   vfSfxSm0  = o.Smoothness;
+            #endif
+            //endex
 
             //ifex _EnableDissolve==0
             #ifdef VF_DISSOLVE
@@ -2204,6 +2758,18 @@
             #endif
             //endex
 
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            [branch] if (ctxSfxO < 1.0)
+            {
+                o.Albedo        = lerp(vfSfxAlb0, o.Albedo, ctxSfxO);
+                o.Emission      = lerp(vfSfxEm0, o.Emission, ctxSfxO);
+                o.Smoothness    = lerp(vfSfxSm0, o.Smoothness, ctxSfxO);
+                o.BaseRoughness = 1.0 - o.Smoothness;
+            }
+            #endif
+            //endex
+
             float3 nClearcoat = normalize(nWorld);
             if (_CC_Flat < 0.999)
             {
@@ -2226,7 +2792,7 @@
             float3 lvRegVec = 0, lvAddVec = 0;
             float  lvRegL0  = 0, lvAddL0  = 0;
 
-            bool   rimOn      = (_Rim_Str > 0.001 || _AL_Rim_Mod > 0.001) && _Rim_Power > 0.0;
+            bool   rimOn      = (_Rim_Str > 0.001 || _AL_Rim_Mod > 0.001) && _Rim_Power > 0.0 VF_AND_RIM;
             #if defined(LIGHTMAP_ON) || defined(DYNAMICLIGHTMAP_ON)
             rimOn = false;
             #endif
@@ -2477,7 +3043,7 @@
             #endif
             //endex
 
-            [branch] if (_MicroShadow > 0.001 || _CavLight_Str > 0.001)
+            [branch] if (_MicroShadow VF_MUL_MICROSHADOW > 0.001 || _CavLight_Str VF_MUL_CAVLIGHT > 0.001)
             {
                 // Both divisors are floored rather than used raw. A ternary does not protect a
                 // divide from the compiler: fxc folds BOTH arms, and with Light Volumes compiled
@@ -2499,6 +3065,45 @@
                                      saturate(lvLen / max(lvL0, 1e-4)));
             }
             #endif
+
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            //ifex _CtxInkOn==0
+            [branch] if (_UseCtx > 0.5 && _CtxInkOn > 0.5)
+            {
+                float4 inkT = VF_FB_WHITE;
+                #ifdef VF_TEX_CTXINK
+                float2 inkUV = ((_CtxInkUV < 0.5) ? VF_AOUnST(IN.uv_MainTex, _MainTex_ST) : IN.uv2_MainTex) * _CtxInkTex_ST.xy + _CtxInkTex_ST.zw;
+                inkT = SAMPLE_MATCAP_TEX(_CtxInkTex, sampler_linear_repeat, inkUV);
+                #endif
+                float3 inkCol = inkT.rgb * _CtxInkColor.rgb;
+                float  inkA   = saturate(inkT.a * _CtxInkColor.a) * ctxInk;
+                [branch] if (_CtxInkMode > 1.5)
+                    o.Albedo = lerp(o.Albedo, saturate(inkCol), inkA);
+                #if !defined(UNITY_PASS_FORWARDADD)
+                else if (_CtxInkMode > 0.5)
+                    o.Emission += inkCol * (inkA * _CtxInkStrength);
+                #endif
+                else if (_CtxInkMode < 0.5)
+                    o.InkFluor = inkCol * (inkA * _CtxInkStrength);
+            }
+            //endex
+            #endif
+            //endex
+
+            //ifex _UseStretch==0
+            #ifdef VF_STRETCH
+            [branch] if (_UseStretch > 0.5 && _Stretch_Debug > 0.5)
+            {
+                float  vfD  = log2(max(vfStrArea, 1.0e-3));
+                float3 vfDC = (vfD > 0.0) ? float3(1.0, 0.15, 0.05) : float3(0.05, 0.25, 1.0);
+                o.Albedo = lerp(float3(0.5, 0.5, 0.5), vfDC, saturate(abs(vfD) * 2.0));
+                #if !defined(UNITY_PASS_FORWARDADD)
+                o.Emission = o.Albedo * 0.5;
+                #endif
+            }
+            #endif
+            //endex
 
             o.UV = finalUV;
         }

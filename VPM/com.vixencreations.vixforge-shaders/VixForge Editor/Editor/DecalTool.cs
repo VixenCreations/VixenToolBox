@@ -23,14 +23,8 @@ namespace VixForgeEditor
         const string Hint = "Drag the decal to move it, a corner or an edge to resize it, or outside it to rotate it. "
                           + "Alt-drag resizes it evenly. Scroll to zoom, right-drag or middle-drag to pan. Esc takes back every change since you opened the tool.";
 
-        private MaterialProperty _propPosition;
-        private MaterialProperty _propRotation;
-        private MaterialProperty _propScale;
-        private MaterialProperty _propOffset;
-        private MaterialProperty _propUVChannel;
-        private Material _material;
+        private IDecalTarget _target;
         private Material _gizmoMaterial;
-        private int _initalUndoGroup;
         private bool _doDiscard = false;
 
         private float _zoom = 1f;
@@ -53,34 +47,46 @@ namespace VixForgeEditor
         public static DecalTool OpenDecalTool(Material m)
         {
             var window = ToolHost.Open<DecalTool>("Decal Tool");
-            window._material = m;
-            window._gizmoMaterial = new Material(AssetDatabase.LoadAssetAtPath<Shader>(AssetDatabase.GUIDToAssetPath(GUID_GIZMO_SHADER)));
-            window._gizmoMaterial.color = Color.white;
-            window._initalUndoGroup = Undo.GetCurrentGroup();
-            window._zoom = 1f;
-            window._center = new Vector2(0.5f, 0.5f);
+            window._target = new MaterialDecalTarget(m, Undo.GetCurrentGroup());
+            window.Begin();
             return window;
+        }
+
+        public static DecalTool OpenDecalTool(IDecalTarget target)
+        {
+            var window = ToolHost.Open<DecalTool>("Decal Tool");
+            if (window._target != null && window._target != target && !window._doDiscard) window._target.Finish();
+            window._target = target;
+            window.Begin();
+            ToolHost.Repaint(window);
+            return window;
+        }
+
+        private void Begin()
+        {
+            _gizmoMaterial = new Material(AssetDatabase.LoadAssetAtPath<Shader>(AssetDatabase.GUIDToAssetPath(GUID_GIZMO_SHADER)));
+            _gizmoMaterial.color = Color.white;
+            _doDiscard = false;
+            _zoom = 1f;
+            _center = new Vector2(0.5f, 0.5f);
         }
 
         public void SetMaterialProperties(MaterialProperty decalProp, MaterialProperty uvProp, MaterialProperty positionProp, MaterialProperty rotationProp, MaterialProperty scaleProp, MaterialProperty offsetProp)
         {
-            _propPosition = positionProp;
-            _propRotation = rotationProp;
-            _propScale = scaleProp;
-            _propOffset = offsetProp;
-            _propUVChannel = uvProp;
-            _gizmoMaterial.SetTexture("_DecalTex", decalProp.textureValue);
+            var target = _target as MaterialDecalTarget;
+            if (target == null) return;
+            target.SetProperties(decalProp, uvProp, positionProp, rotationProp, scaleProp, offsetProp);
             ToolHost.Repaint(this);
         }
 
         private void OnGUI()
         {
-            if (_propPosition == null || _material == null || _gizmoMaterial == null)
+            if (_target == null || !_target.IsValid || _gizmoMaterial == null)
             {
                 EditorGUILayout.HelpBox("Press Open Positioning Tool on a decal in the material's inspector to place it here.", MessageType.Info);
                 return;
             }
-            _texture = _material.mainTexture;
+            _texture = _target.Backdrop;
             int control = GUIUtility.GetControlID(FocusType.Passive);
 
             using (new EditorGUILayout.HorizontalScope())
@@ -97,8 +103,13 @@ namespace VixForgeEditor
                 float level = GUILayout.HorizontalSlider(Mathf.Log(_zoom, 2f), Mathf.Log(MinZoom, 2f), Mathf.Log(MaxZoom, 2f), GUILayout.MinWidth(80));
                 if (EditorGUI.EndChangeCheck()) _zoom = Mathf.Clamp(Mathf.Pow(2f, level), MinZoom, MaxZoom);
                 GUILayout.Label(Mathf.RoundToInt(_zoom * 100f) + "%", GUILayout.Width(50));
+                if (_target.DoneLabel != null && GUILayout.Button(_target.DoneLabel, GUILayout.ExpandWidth(false)))
+                {
+                    IDecalTarget done = _target;
+                    EditorApplication.delayCall += done.Done;
+                }
             }
-            EditorGUILayout.LabelField(Hint, EditorStyles.wordWrappedMiniLabel);
+            EditorGUILayout.LabelField(_target.Hint ?? Hint, EditorStyles.wordWrappedMiniLabel);
 
             Rect canvas = GUILayoutUtility.GetRect(0f, 100000f, 0f, 100000f, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
             if (Event.current.type == EventType.Layout) return;
@@ -110,7 +121,7 @@ namespace VixForgeEditor
             if (Event.current.type == EventType.KeyUp && Event.current.keyCode == KeyCode.Escape)
             {
                 Event.current.Use();
-                Undo.RevertAllDownToGroup(_initalUndoGroup);
+                _target.Revert();
                 _doDiscard = true;
                 this.Close();
             }
@@ -123,11 +134,7 @@ namespace VixForgeEditor
             // /shrug, idk how to fix that, so I just disable the log for a frame
             bool isLoggerEnabled = Debug.unityLogger.logEnabled;
             Debug.unityLogger.logEnabled = false;
-            if(!_doDiscard)
-            {
-                Undo.SetCurrentGroupName("Apply Decal Texture Tool");
-                Undo.CollapseUndoOperations(_initalUndoGroup);
-            }
+            if (!_doDiscard && _target != null) _target.Finish();
             EditorApplication.delayCall += () => Debug.unityLogger.logEnabled = isLoggerEnabled;
         }
 
@@ -135,7 +142,7 @@ namespace VixForgeEditor
         // its own shape.
         private Vector2 Pixels()
         {
-            float aspect = _texture != null && _texture.height > 0 ? (float)_texture.width / _texture.height : 1f;
+            float aspect = _target != null ? _target.BackdropAspect : 1f;
             float width = Mathf.Max(1f, Mathf.Min(_canvas.width, _canvas.height * aspect));
             return new Vector2(width, width / aspect) * _zoom;
         }
@@ -176,11 +183,12 @@ namespace VixForgeEditor
             Vector2 px = Pixels();
             _gizmoMaterial.SetVector("_UVRect", new Vector4(viewMin.x, viewMin.y, viewMax.x - viewMin.x, viewMax.y - viewMin.y));
             _gizmoMaterial.SetVector("_PixelUV", new Vector4(1f / px.x, 1f / px.y, 0f, 0f));
-            _gizmoMaterial.SetVector("_Position", _propPosition.vectorValue);
-            _gizmoMaterial.SetVector("_Scale", _propScale.vectorValue);
-            _gizmoMaterial.SetFloat("_Rotation", _propRotation.floatValue);
-            _gizmoMaterial.SetVector("_Offset", _propOffset.vectorValue);
-            _gizmoMaterial.SetNumber("_UVChannel", _propUVChannel.GetNumber());
+            _gizmoMaterial.SetTexture("_DecalTex", _target.Decal);
+            _gizmoMaterial.SetVector("_Position", _target.Position);
+            _gizmoMaterial.SetVector("_Scale", _target.Scale);
+            _gizmoMaterial.SetFloat("_Rotation", _target.Rotation);
+            _gizmoMaterial.SetVector("_Offset", _target.Offset);
+            _gizmoMaterial.SetNumber("_UVChannel", _target.UVChannel);
             EditorGUI.DrawPreviewTexture(_canvas, Texture2D.whiteTexture, _gizmoMaterial);
         }
 
@@ -205,9 +213,9 @@ namespace VixForgeEditor
 
         private void FrameDecal()
         {
-            Vector4 offset = _propOffset.vectorValue;
-            Vector2 full = FullSize(_propScale.vectorValue, offset);
-            Vector2 position = _propPosition.vectorValue;
+            Vector4 offset = _target.Offset;
+            Vector2 full = FullSize(_target.Scale, offset);
+            Vector2 position = _target.Position;
             _center = position + new Vector2((offset.y - offset.x) / 2f, (offset.w - offset.z) / 2f);
             float extent = Mathf.Max(Mathf.Abs(full.x), Mathf.Abs(full.y)) * 1.42f;
             float zoomAtOne = _zoom;
@@ -271,10 +279,10 @@ namespace VixForgeEditor
         private void BeginDrag(Vector2 mouse, bool alt)
         {
             _startUV = ToUV(mouse);
-            _startScale = _propScale.vectorValue;
-            _startOffset = _propOffset.vectorValue;
-            _startRotation = _propRotation.floatValue;
-            _startDecalUV = DecalUV(_startUV, _propPosition.vectorValue, _startRotation, _startScale, _startOffset);
+            _startScale = _target.Scale;
+            _startOffset = _target.Offset;
+            _startRotation = _target.Rotation;
+            _startDecalUV = DecalUV(_startUV, _target.Position, _startRotation, _startScale, _startOffset);
             if (alt)
             {
                 _drag = Drag.Resize;
@@ -310,7 +318,7 @@ namespace VixForgeEditor
         private void DragTo(Vector2 mouse)
         {
             Vector2 uv = ToUV(mouse);
-            Vector2 pivot = _propPosition.vectorValue;
+            Vector2 pivot = _target.Position;
             switch (_drag)
             {
                 case Drag.Pan:
@@ -324,16 +332,16 @@ namespace VixForgeEditor
                 case Drag.Move:
                 {
                     Vector2 step = uv - ToUV(_lastMouse);
-                    Vector4 pos = _propPosition.vectorValue;
+                    Vector4 pos = _target.Position;
                     pos.x += step.x;
                     pos.y += step.y;
-                    _propPosition.vectorValue = pos;
+                    _target.Position = pos;
                     break;
                 }
                 case Drag.Rotate:
                 {
                     float angle = Vector2.SignedAngle(_startUV - pivot, uv - pivot);
-                    SetClampedRotation(_propRotation, _startRotation - angle);
+                    SetRotation(_startRotation - angle);
                     break;
                 }
                 case Drag.Resize:
@@ -348,8 +356,8 @@ namespace VixForgeEditor
                     Vector4 scale = _startScale;
                     scale.x *= factor;
                     scale.y *= factor;
-                    _propScale.vectorValue = scale;
-                    _propOffset.vectorValue = _startOffset * factor;
+                    _target.Scale = scale;
+                    _target.Offset = _startOffset * factor;
                     break;
                 }
                 case Drag.Side:
@@ -365,10 +373,16 @@ namespace VixForgeEditor
                     if (_grab.x == 1f) o.y = Mathf.Max(MinSize - s.x - o.x, _startOffset.y + step.x * full.x);
                     if (_grab.y == 0f) o.z = Mathf.Max(MinSize - s.y - o.w, _startOffset.z - step.y * full.y);
                     if (_grab.y == 1f) o.w = Mathf.Max(MinSize - s.y - o.z, _startOffset.w + step.y * full.y);
-                    _propOffset.vectorValue = o;
+                    _target.Offset = o;
                     break;
                 }
             }
+        }
+
+        private void SetRotation(float value)
+        {
+            Vector2 limits = _target.RotationLimits;
+            _target.Rotation = Helper.Mod(value - limits.x, limits.y - limits.x) + limits.x;
         }
 
         static Vector2 Remap(Vector2 x, Vector2 minOld, Vector2 maxOld, Vector2 minNew, Vector2 maxNew)
@@ -394,6 +408,90 @@ namespace VixForgeEditor
             Vector2 limits = property.rangeLimits;
             value = Helper.Mod(value - limits.x, limits.y - limits.x) + limits.x;
             property.floatValue = value;
+        }
+    }
+
+    public interface IDecalTarget
+    {
+        bool IsValid { get; }
+        Texture Decal { get; }
+        Texture Backdrop { get; }
+        float BackdropAspect { get; }
+        Vector4 Position { get; set; }
+        float Rotation { get; set; }
+        Vector2 RotationLimits { get; }
+        Vector4 Scale { get; set; }
+        Vector4 Offset { get; set; }
+        float UVChannel { get; }
+        string Hint { get; }
+        string DoneLabel { get; }
+        void Done();
+        void Revert();
+        void Finish();
+    }
+
+    internal sealed class MaterialDecalTarget : IDecalTarget
+    {
+        private readonly Material _material;
+        private readonly int _undoGroup;
+        private MaterialProperty _decal;
+        private MaterialProperty _uv;
+        private MaterialProperty _position;
+        private MaterialProperty _rotation;
+        private MaterialProperty _scale;
+        private MaterialProperty _offset;
+
+        public MaterialDecalTarget(Material material, int undoGroup)
+        {
+            _material = material;
+            _undoGroup = undoGroup;
+        }
+
+        public void SetProperties(MaterialProperty decal, MaterialProperty uv, MaterialProperty position, MaterialProperty rotation, MaterialProperty scale, MaterialProperty offset)
+        {
+            _decal = decal;
+            _uv = uv;
+            _position = position;
+            _rotation = rotation;
+            _scale = scale;
+            _offset = offset;
+        }
+
+        public bool IsValid { get { return _position != null && _material != null; } }
+        public Texture Decal { get { return _decal != null ? _decal.textureValue : null; } }
+        public Texture Backdrop { get { return _material != null ? _material.mainTexture : null; } }
+
+        public float BackdropAspect
+        {
+            get
+            {
+                Texture t = Backdrop;
+                return t != null && t.height > 0 ? (float)t.width / t.height : 1f;
+            }
+        }
+
+        public Vector4 Position { get { return _position.vectorValue; } set { _position.vectorValue = value; } }
+        public float Rotation { get { return _rotation.floatValue; } set { _rotation.floatValue = value; } }
+        public Vector2 RotationLimits { get { return _rotation.rangeLimits; } }
+        public Vector4 Scale { get { return _scale.vectorValue; } set { _scale.vectorValue = value; } }
+        public Vector4 Offset { get { return _offset.vectorValue; } set { _offset.vectorValue = value; } }
+        public float UVChannel { get { return _uv.GetNumber(); } }
+        public string Hint { get { return null; } }
+        public string DoneLabel { get { return null; } }
+
+        public void Done()
+        {
+        }
+
+        public void Revert()
+        {
+            Undo.RevertAllDownToGroup(_undoGroup);
+        }
+
+        public void Finish()
+        {
+            Undo.SetCurrentGroupName("Apply Decal Texture Tool");
+            Undo.CollapseUndoOperations(_undoGroup);
         }
     }
 }

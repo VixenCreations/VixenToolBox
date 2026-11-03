@@ -16,7 +16,7 @@ using UnityEngine;
 // and it says whether the matcap shows there at all.
 public static class VixForgeMatcapAtlas
 {
-    public const int MaxSections = 8;
+    public const int MaxSections = 16;
 
     public static string Prefix(int layer)
     {

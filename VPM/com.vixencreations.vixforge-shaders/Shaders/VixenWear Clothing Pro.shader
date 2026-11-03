@@ -344,6 +344,32 @@ Shader "VixenWear/Clothing Pro"
         _Tess_Detail ("Tessellation Detail--{condition_show:(_Disp_Str>0 || (_UseVRSL==1 && _VRSL_Intensity>0 && _VRSL_Geo_Warp>0) || (_UseAudioLink==1 && _UseVtxKinetic==1)),tooltip:''Splits each triangle into smaller ones before the surface is moved, so displacement lands smoothly instead of blocky. Higher costs more framerate, and it only spends the detail on triangles that are large on screen. Nothing moving the surface means nothing to smooth, so this only appears once something is.''}", Range(0,1)) = 0.5
         [HideInInspector] m_end_surf_shape ("", Float) = 0
 
+        //ifex _UseStretch==0
+        [HideInInspector] m_start_stretch ("Stretch Response--{reference_property:_UseStretch,tooltip:''Makes the material react to how your mesh stretches as you move: latex goes paler, glossier and thinner where it is pulled tight, fine detail flattens out, and creases fold up where it bunches. Needs Stretch Bake in the Shader Hub to record your rest pose first.''}", Float) = 0
+        [HideInInspector][VixForgeToggleUI(VF_STRETCH)] _UseStretch ("Enable--{tooltip:''Turns Stretch Response on. It costs nothing while it is off.''}", Float) = 0
+        [VixForgeHelpbox] _Stretch_Help ("Run Stretch Bake (Shader Hub, Tools, Mesh Fixes) on your avatar in its rest pose first. Without it, nothing reacts.--{condition_show:(_UseStretch==1)}", Float) = 0
+        //ifex _UseStretch==0
+        [HideInInspector] s_start_tog_UseStretch ("Stretch Response Settings--{condition_show:(_UseStretch==1)}", Float) = 0
+        [VixForgeVectorToSliders(Start, p1, p2, Full, p1, p3)] _Stretch_Range ("Stretch--{tooltip:''How far the surface has to stretch before it starts reacting, and where it reacts fully. 1 is its rest size. Stretch is measured across the triangles of the mesh, so a joint with few triangles can show them when this range is narrow. A wide range hides them.'',tooltips:[''Starts reacting at this much stretch.'',''Fully reacted at this much stretch.'']}", Vector) = (1.15, 2.4, 0, 0)
+        [VixForgeVectorToSliders(Start, p0.3, p1, Full, p0.3, p1)] _Stretch_Squash ("Squash--{tooltip:''How far the surface has to bunch up before creases form, and where they are deepest. 1 is its rest size.'',tooltips:[''Creases start at this much squash.'',''Creases are deepest at this much squash.'']}", Vector) = (0.9, 0.55, 0, 0)
+        [HideInInspector] s_start_stretch_look ("Look", Float) = 0
+        _Stretch_Color ("Thin Colour--{tooltip:''The colour the material turns where it is stretched thin. A paler version of your colour reads as real latex.''}", Color) = (1, 0.9, 0.85, 1)
+        _Stretch_Pale ("Paleness--{tooltip:''How far stretched parts turn toward the Thin Colour.''}", Range(0, 1)) = 0.2
+        _Stretch_Gloss ("Gloss--{tooltip:''How much glossier stretched parts get, as the surface pulls smooth.''}", Range(0, 1)) = 0.2
+        _Stretch_Clear ("See-Through--{tooltip:''How much stretched parts thin out and let what is behind show through. Needs Rendering Mode on Fade or Transparent.''}", Range(0, 1)) = 0
+        _Stretch_Normal ("Detail Flattening--{tooltip:''How much your normal map detail flattens where the surface stretches and sharpens where it bunches.''}", Range(0, 1)) = 0.5
+        [HideInInspector] s_end_stretch_look ("", Float) = 0
+        [HideInInspector] s_start_stretch_crease ("Creases", Float) = 0
+        _Stretch_Wrinkle ("Amount--{tooltip:''How strongly creases fold up where the surface bunches.''}", Range(0, 1)) = 0.4
+        [VixForgeVectorToSliders(Density, p10, p800, Depth, p0, p2, Sharpness, p0, p1)] _Stretch_WrinkleSet ("Crease Shape--{tooltip:''How the creases look.'',tooltips:[''How many creases fit across your texture.'',''How deep each crease is.'',''Soft rolls at 0, sharp folds at 1.'']}", Vector) = (180, 0.6, 0.5, 0)
+        [HideInInspector] s_end_stretch_crease ("", Float) = 0
+        [ToggleUI] _Stretch_Debug ("Show Stretch--{tooltip:''Colours the material by how it stretches: grey at rest, red where it stretches, blue where it bunches. Use it to check your bake and to set Stretch and Squash.''}", Float) = 0
+        [HideInInspector] _Stretch_Scale ("", Float) = 1
+        [HideInInspector] s_end_tog_UseStretch ("", Float) = 0
+        //endex
+        [HideInInspector] m_end_stretch ("", Float) = 0
+        //endex
+        
         [HideInInspector] m_shading ("SHADING--{button_help:{action:{type:URL,data:https://vixencreations.github.io/VixenToolBox/shaderdocs.html#shading}}}", Float) = 0
 
         //ifex _UseToon==0
@@ -373,6 +399,19 @@ Shader "VixenWear/Clothing Pro"
         [HideInInspector] m_end_toon ("", Float) = 0
         //endex
 
+        [HideInInspector] m_start_lightdata ("Light Data--{tooltip:''Which extra lights in a world reach you, and whether they bring shadows and cookies.''}", Float) = 0
+        [VixForgeHelpbox] _LightData_Attribution ("Works like Light Data in Poiyomi Toon, by Poiyomi, with the same property names for Pixel Lights and Vertex Lights. Click for github.com/poiyomi/PoiyomiToonShader--{onClick:{type:URL,data:https://github.com/poiyomi/PoiyomiToonShader}}", Float) = 0
+        [HideInInspector] s_start_lightdata_lights ("Lights", Float) = 0
+        [ToggleUI] _LightingAdditiveEnable ("Pixel Lights--{tooltip:''Point lights, spot lights and extra suns that the world set to Important. Off ignores them, and a locked material then saves the lock time and framerate they cost.''}", Float) = 1
+        [ToggleUI] _LightingVertexLightingEnabled ("Vertex Lights--{tooltip:''The cheaper lights the world set to Not Important, up to four at a time. Off ignores them, and a locked material then locks faster.''}", Float) = 1
+        [HideInInspector] s_end_lightdata_lights ("", Float) = 0
+        [HideInInspector] s_start_lightdata_shadows ("Shadows and Cookies--{condition_enable_children:(_LightingAdditiveEnable==1)}", Float) = 0
+        [DoNotAnimate][ToggleUI] _LightingPointShadows ("Point Light Shadows--{tooltip:''Point lights that cast shadows also shadow you. It adds lock time, so it is off until you want it.''}", Float) = 0
+        [DoNotAnimate][ToggleUI] _LightingSoftShadows ("Soft Shadows--{tooltip:''Spot and point light shadows get soft edges when the light is set to Soft Shadows. Off keeps them hard. It adds lock time while on.''}", Float) = 0
+        [DoNotAnimate][ToggleUI] _LightingCookies ("Light Cookies--{tooltip:''A point light or sun with a cookie texture projects its pattern onto you. It adds lock time while on.''}", Float) = 0
+        [HideInInspector] s_end_lightdata_shadows ("", Float) = 0
+        [HideInInspector] m_end_lightdata ("", Float) = 0
+
         [HideInInspector] m_start_lighting ("Lighting", Float) = 0
         [Toggle] _UseNonLinearSH ("Sharper Probes--{tooltip:''Adds contrast to the light from light probes, so the side facing the light reads brighter and the far side darker. It is a look rather than a closer match: one strong light comes out up to a third brighter than Unity draws it. With Unified Light on it keeps that contrast and follows Soften and Hardness.''}", Float) = 0
         [HideInInspector] s_start_unified ("Unified Light--{reference_property:_UnifiedLight,tooltip:''Experimental, so you can compare it with the lighting you have now. It lights you the same way whichever route a light takes to reach you: realtime, the cheaper per-vertex lights, light probes or Light Volumes. Soften and Hardness then reach every light, Light Volumes look less flat, and the per-vertex lights pick up your normal map and highlights. Each Light Volume point, spot and area light lights you on its own, at its real size and with its own highlight. Reflections change too: they line up with the room even where box projection is switched off in the project settings, dim in corners the light does not reach, stretch along anisotropic surfaces, and come from the light probes on rough surfaces.''}", Float) = 0
@@ -383,7 +422,9 @@ Shader "VixenWear/Clothing Pro"
         _UL_LeakDim ("Dark Corner Dimming--{condition_show:(_UnifiedLight==1),tooltip:''How much reflections dim where the room light does not reach, so a dark corner does not mirror a bright sky. 1 is full, 0 turns it off and the material draws a little faster.''}", Range(0,1)) = 1
         [HideInInspector] s_end_unified ("", Float) = 0
 
-        [HideInInspector] s_start_rim ("Rim Light--{tooltip:''A bright edge where the material curves away from you, so you lift off whatever is behind you.''}", Float) = 0
+        //ifex _UseRim==0
+        [HideInInspector] s_start_rim ("Rim Light--{reference_property:_UseRim,condition_enable_children:(_UseRim==1),tooltip:''A bright edge where the material curves away from you, so you lift off whatever is behind you.''}", Float) = 0
+        [HideInInspector][ToggleUI] _UseRim ("Enable--{tooltip:''Off turns this off and leaves it out of the locked material, so locking is faster.''}", Float) = 1
         _Rim_Str ("Strength--{tooltip:''How bright that edge gets. 0 turns it off.''}", Range(0,1)) = 0.0
         [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3,Volume,4,Peak Hold,5)] _AL_Band_Rim ("Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music the edge listens to.''}", Float) = 1
         _AL_Rim_Mod ("Flare--{condition_show:(_UseAudioLink==1),tooltip:''How far the beat pushes the edge brightness up.''}", Range(0,1)) = 0.0
@@ -397,8 +438,11 @@ Shader "VixenWear/Clothing Pro"
         _Rim_LTCGI ("LTCGI--{condition_show:(_Rim_Str>0 && _UseLTCGI==1),tooltip:''How much a lit LTCGI screen feeds the edge. 1 is full, 0 leaves it out.''}", Range(0,1)) = 1.0
         _Rim_VRSL ("VRSL--{condition_show:(_Rim_Str>0 && _UseVRSL==1),tooltip:''How much the stage rig feeds the edge. It takes its light from GI Wash Overrides in the VRSL section, so raise Intensity there first.''}", Range(0,1)) = 1.0
         [HideInInspector] s_end_rim ("", Float) = 0
+        //endex
 
-        [HideInInspector] s_start_sss ("Subsurface--{tooltip:''Light soaking into the material and coming back out a little way from where it went in, the way skin and thick rubber do. It softens the edge of the light and lifts the shaded side.''}", Float) = 0
+        //ifex _UseSSS==0
+        [HideInInspector] s_start_sss ("Subsurface--{reference_property:_UseSSS,condition_enable_children:(_UseSSS==1),tooltip:''Light soaking into the material and coming back out a little way from where it went in, the way skin and thick rubber do. It softens the edge of the light and lifts the shaded side.''}", Float) = 0
+        [HideInInspector][ToggleUI] _UseSSS ("Enable--{tooltip:''Off turns this off and leaves it out of the locked material, so locking is faster.''}", Float) = 1
         _SSS_Str ("Strength--{tooltip:''How much light soaks in. 0 turns it off.''}", Range(0,1)) = 0.0
         _SSS_Dist ("Distance--{tooltip:''How far the light spreads once it is inside. Small keeps the glow tight to the lit edge, large carries it round onto the shaded side.''}", Range(0,1)) = 0.1
         _SSS_Power ("Power--{tooltip:''How much extra you get looking towards the light, the way a hand held up to a lamp glows at the edges. Low shows it across a wide range of angles, high only when the light is nearly behind.''}", Range(0,10)) = 4.0
@@ -406,8 +450,11 @@ Shader "VixenWear/Clothing Pro"
         [VixForgesRGBWarning(gamma)][NoScaleOffset][VixForgeTextureKeyword(VF_TEX_THICKNESSMAP)] _ThicknessMap ("Thickness Map--{tooltip:''Paints the thickness across the mesh instead of one value for the whole material. White is thick, black is thin. It scales Thinness above, so raise that first.''}", 2D) = "white" {}
         [Enum(R,0,G,1,B,2,A,3,Auto,4)] _Thick_Ch ("Thickness Channel--{tooltip:''Which channel of the map holds the thickness. Auto reads a plain greyscale map.''}", Float) = 4
         [HideInInspector] s_end_sss ("", Float) = 0
+        //endex
 
-        [HideInInspector] s_start_trans ("Transmission--{tooltip:''Light coming through the material from behind, so a thin part lights up when something bright is on the far side.''}", Float) = 0
+        //ifex _UseTransmission==0
+        [HideInInspector] s_start_trans ("Transmission--{reference_property:_UseTransmission,condition_enable_children:(_UseTransmission==1),tooltip:''Light coming through the material from behind, so a thin part lights up when something bright is on the far side.''}", Float) = 0
+        [HideInInspector][ToggleUI] _UseTransmission ("Enable--{tooltip:''Off turns this off and leaves it out of the locked material, so locking is faster.''}", Float) = 1
         _Trans_Str ("Strength--{tooltip:''How much light comes through. 0 turns it off.''}", Range(0,1)) = 0.0
         [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3,Volume,4,Peak Hold,5)] _AL_Band_Trans ("Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music the glow listens to.''}", Float) = 1
         _AL_Trans_Mod ("Glow Through--{condition_show:(_UseAudioLink==1),tooltip:''How far the beat pushes the glow up.''}", Range(0,1)) = 0.0
@@ -416,11 +463,15 @@ Shader "VixenWear/Clothing Pro"
         _Trans_Fracture ("Fracture--{tooltip:''Hold a hand up to the sun and the light does not come through evenly, it comes through as rays: bright where it found a thin path, dark where a knuckle blocked it. This makes the glow follow the detail in your height source that way, and the shafts stretch along the light rather than spreading evenly. Needs a height source. Starts at 0, which is the flat glow you have now.''}", Range(0,1)) = 0.0
         _Trans_Spread ("Spread--{condition_show:(_Trans_Fracture>0),tooltip:''How soft the edge of each shaft is. Low gives hard edged rays as if from a small bright source, high spreads them out the way a wide or overcast one does.''}", Range(0,1)) = 0.5
         [HideInInspector] s_end_trans ("", Float) = 0
+        //endex
 
-        [HideInInspector] s_start_aniso ("Anisotropy--{condition_show:(_UsePolish==1),tooltip:''Stretches the highlight into a streak, the way brushed metal, satin and hair do. It is part of the shine layer, so it needs Polish switched on.''}", Float) = 0
+        //ifex _UseAniso==0
+        [HideInInspector] s_start_aniso ("Anisotropy--{reference_property:_UseAniso,condition_enable_children:(_UseAniso==1),condition_show:(_UsePolish==1),tooltip:''Stretches the highlight into a streak, the way brushed metal, satin and hair do. It is part of the shine layer, so it needs Polish switched on.''}", Float) = 0
+        [HideInInspector][ToggleUI] _UseAniso ("Enable--{tooltip:''Off turns this off and leaves it out of the locked material, so locking is faster.''}", Float) = 1
         _Aniso ("Strength--{condition_show:(_UsePolish==1),tooltip:''How far the highlight stretches. 0 leaves it round. Negative stretches it the other way across the surface.''}", Range(-1,1)) = 0.0
         _AnisoRot ("Rotation--{condition_show:(_UsePolish==1),tooltip:''Which way the brushing runs, in degrees.''}", Range(0,360)) = 0.0
         [HideInInspector] s_end_aniso ("", Float) = 0
+        //endex
 
         [HideInInspector] s_start_specresp ("Specular Response--{tooltip:''How highlights from the lights in the room behave across the whole material.''}", Float) = 0
         [VixForgeToggle(VF_MULTISCATTER)] _UseMultiScatter ("Multi-Scatter Compensation--{tooltip:''Puts back the light that a rough surface bounces around inside itself before it escapes. Without it rough metal comes out darker than it should. Leave it on unless you want the older, darker look.''}", Float) = 1
@@ -437,7 +488,9 @@ Shader "VixenWear/Clothing Pro"
         _RC_VRSL ("VRSL--{condition_show:(_Refl_Clamp<1),tooltip:''How much of the clamp reaches stage lighting. 1 eases them down with everything else, 0 leaves them alone.''}", Range(0,1)) = 1.0
         [HideInInspector] s_end_reflclamp ("", Float) = 0
 
-        [HideInInspector] s_start_microlight ("Micro Lighting--{tooltip:''Brightens the raised detail in your height source so peaks catch a little more light.''}", Float) = 0
+        //ifex _UseMicroLight==0
+        [HideInInspector] s_start_microlight ("Micro Lighting--{reference_property:_UseMicroLight,condition_enable_children:(_UseMicroLight==1),tooltip:''Brightens the raised detail in your height source so peaks catch a little more light.''}", Float) = 0
+        [HideInInspector][ToggleUI] _UseMicroLight ("Enable--{tooltip:''Off turns this off and leaves it out of the locked material, so locking is faster.''}", Float) = 1
         _MicroLight ("Peak Light--{tooltip:''Brightens the raised detail so peaks catch a little more light. It is the light-side companion to Micro Shading in Shadow Detail, which darkens the creases. The sliders below trim it per lighting source.''}", Range(0,1)) = 0.0
         _ML_Direct ("Scene Lights--{condition_show:(_MicroLight>0),tooltip:''How much of it lands on light from the lights in the room. 1 is full, 0 leaves it out.''}", Range(0,1)) = 1.0
         _ML_Ambient ("Ambient--{condition_show:(_MicroLight>0),tooltip:''How much of it lands on ambient light and light probes. 1 is full, 0 leaves it out.''}", Range(0,1)) = 1.0
@@ -445,8 +498,11 @@ Shader "VixenWear/Clothing Pro"
         _ML_LTCGI ("LTCGI--{condition_show:(_MicroLight>0),tooltip:''How much of it lands on LTCGI. 1 is full, 0 leaves it out.''}", Range(0,1)) = 1.0
         _ML_VRSL ("VRSL--{condition_show:(_MicroLight>0),tooltip:''How much of it lands on stage lighting. 1 is full, 0 leaves it out.''}", Range(0,1)) = 1.0
         [HideInInspector] s_end_microlight ("", Float) = 0
+        //endex
 
-        [HideInInspector] s_start_cavlight ("Cavity Lighting--{tooltip:''Makes the Cavity detail react to which way the light is coming from, instead of shading it the same however the light moves.''}", Float) = 0
+        //ifex _UseCavLight==0
+        [HideInInspector] s_start_cavlight ("Cavity Lighting--{reference_property:_UseCavLight,condition_enable_children:(_UseCavLight==1),tooltip:''Makes the Cavity detail react to which way the light is coming from, instead of shading it the same however the light moves.''}", Float) = 0
+        [HideInInspector][ToggleUI] _UseCavLight ("Enable--{tooltip:''Off turns this off and leaves it out of the locked material, so locking is faster.''}", Float) = 1
         _CavLight_Str ("Strength--{tooltip:''Raised areas catch the light and creases fall into shadow as the light rakes across, on top of the flat Cavity shading. Needs Cavity turned on in the Surface section. The sliders below trim it per lighting source.''}", Range(0,1)) = 0.0
         _CavLight_Direct ("Scene Lights--{condition_show:(_CavLight_Str>0),tooltip:''How much of it lands on light from the lights in the room. 1 is full, 0 leaves it out.''}", Range(0,1)) = 1.0
         _CavLight_Ambient ("Ambient--{condition_show:(_CavLight_Str>0),tooltip:''How much of it lands on ambient light and light probes. 1 is full, 0 leaves it out.''}", Range(0,1)) = 1.0
@@ -454,6 +510,7 @@ Shader "VixenWear/Clothing Pro"
         _CavLight_LTCGI ("LTCGI--{condition_show:(_CavLight_Str>0),tooltip:''How much the creases react to LTCGI. Starts at 0.''}", Range(0,1)) = 0.0
         _CavLight_VRSL ("VRSL--{condition_show:(_CavLight_Str>0),tooltip:''How much the creases react to the stage rig. Starts at 0.''}", Range(0,1)) = 0.0
         [HideInInspector] s_end_cavlight ("", Float) = 0
+        //endex
 
         [HideInInspector] m_end_lighting ("", Float) = 0
 
@@ -469,7 +526,9 @@ Shader "VixenWear/Clothing Pro"
         [HideInInspector] m_start_lightdetail ("Shadow Detail--{tooltip:''Dedicated occlusion and baked-shadow maps for added realism. Leave a toggle off, or its map empty, to skip it.''}", Float) = 0
         _AO_Str ("AO Strength--{tooltip:''How strongly the ambient occlusion in your packed map darkens the creases.''}", Range(0,1)) = 1.0
 
-        [HideInInspector] s_start_microshade ("Micro Shading", Float) = 0
+        //ifex _UseMicroShadow==0
+        [HideInInspector] s_start_microshade ("Micro Shading--{reference_property:_UseMicroShadow,condition_enable_children:(_UseMicroShadow==1)}", Float) = 0
+        [HideInInspector][ToggleUI] _UseMicroShadow ("Enable--{tooltip:''Off turns this off and leaves it out of the locked material, so locking is faster.''}", Float) = 1
         _MicroShadow ("Strength--{tooltip:''Makes occlusion react to where the light is coming from, so creases go dark when the light rakes in from the side and open up when it hits head on. Without it occlusion dims everything evenly and reads as dirt painted on. The sliders below trim it per lighting system, so you can lean on it in the ambient and ease off under a stage rig.''}", Range(0,1)) = 0.0
         _MS_Direct ("Scene Lights--{condition_show:(_MicroShadow>0),tooltip:''How much Micro Shading lands on light from the lights in the room. 1 is full, 0 leaves it out.''}", Range(0,1)) = 1.0
         _MS_Ambient ("Ambient--{condition_show:(_MicroShadow>0),tooltip:''How much of it lands on ambient light and light probes. 1 is full, 0 leaves it out.''}", Range(0,1)) = 1.0
@@ -478,6 +537,7 @@ Shader "VixenWear/Clothing Pro"
         _MS_VRSL ("VRSL--{condition_show:(_MicroShadow>0),tooltip:''How much of it lands on stage lighting. 1 is full, 0 leaves it out.''}", Range(0,1)) = 1.0
         [VixForgeWideEnum(Above,0,Camera,1,Surface,2)] _MS_Source ("Assumed Direction--{condition_show:(_MicroShadow>0),tooltip:''Scene lights, ambient and Light Volumes tell the material which way their light arrives. LTCGI and VRSL do not, so pick what to assume for those two. Above suits ceiling panels and overhead rigs. Camera keys it to wherever you are looking from. Surface keeps it flat and just deepens the creases.''}", Float) = 0
         [HideInInspector] s_end_microshade ("", Float) = 0
+        //endex
 
         [VixForgeToggle(VF_AOMAP)] _UseAOMap ("Enable Occlusion Map--{tooltip:''Read occlusion from its own texture instead of from a channel of your packed map.''}", Float) = 0
         //ifex _UseAOMap==0
@@ -751,7 +811,7 @@ Shader "VixenWear/Clothing Pro"
         _MicroGloss_Rough ("Cavity Gloss Blur--{tooltip:''Uses the Cavity surface detail to break up the clearcoat reflection. Blur roughens the mirror in the creases; Occlusion dims it there. Needs Cavity turned on in the Surface section.''}", Range(0,1)) = 0.0
         _MicroGloss_Occ ("Cavity Gloss Occlusion--{tooltip:''How much the cavity detail dims the coat's reflection in the creases.''}", Range(0,1)) = 0.0
 
-        [HideInInspector] m_specialfx ("SPECIAL EFFECTS--{reference_properties:[_EnableDissolve, _UseGhost, _UseHolo, _UseSkeleton, _UsePearl, _UseGlitter, _UseCtx, _UseFlipbook, _UseInfinity, _UseChroma, _UseSwarm, _UseSonar, _UseSpectrum, _UseCosmos, _UseHyper, _UseCymatics, _UseCyber],button_help:{action:{type:URL,data:https://vixencreations.github.io/VixenToolBox/shaderdocs.html#specialfx}}}", Float) = 0
+        [HideInInspector] m_specialfx ("SPECIAL EFFECTS--{reference_properties:[_EnableDissolve, _UseGhost, _UseHolo, _UseSkeleton, _UsePearl, _UseGlitter, _UseFlipbook, _UseInfinity, _UseChroma, _UseSwarm, _UseSonar, _UseSpectrum, _UseCosmos, _UseHyper, _UseCymatics, _UseCyber],button_help:{action:{type:URL,data:https://vixencreations.github.io/VixenToolBox/shaderdocs.html#specialfx}}}", Float) = 0
 
         //ifex _UseSheen==0
         [HideInInspector] m_start_fabric ("Fabric--{reference_property:_UseSheen,tooltip:''The soft edge glow real fabric has: silk, satin and velvet catch the light at grazing angles. Roughness takes it from a tight satin sheen to a broad velvet bloom. Material Type sets this and the Surface Fur group below in one click.''}", Float) = 0
@@ -780,12 +840,13 @@ Shader "VixenWear/Clothing Pro"
         [VixForgeWideEnum(Off, 0, R, 1, G, 2, B, 3, A, 4)] _Sheer_GlobalMask ("Global Mask--{tooltip:''Limits all of this to where one channel of the Global Mask (under Alpha Options) is light, so straps and bands can stay solid. Off applies it everywhere.''}", Float) = 0
         [HideInInspector] s_end_sheer_amount ("", Float) = 0
         [HideInInspector] s_start_sheer_weave ("Weave--{condition_show:(_UseSheer==1),tooltip:''A net of threads the shader draws for you, no texture needed. It blends into an even sheer further away, so it never shimmers.''}", Float) = 0
-        [VixForgeWideEnum(None, 0, Plain Weave, 1, Mesh, 2, Fishnet, 3, Tulle, 4)] _Sheer_Weave ("Pattern--{tooltip:''Plain Weave is close-woven chiffon, Mesh is a square net, Fishnet is a diamond net with knots, and Tulle is the fine hexagon net of veils and petticoats.''}", Float) = 0
+        [VixForgeWideEnum(None, 0, Plain Weave, 1, Mesh, 2, Fishnet, 3, Tulle, 4, Knit, 5, Ribbing, 6, Cable Knit, 7, Denim Twill, 8, Satin, 9, Sports Mesh, 10, Chainmail, 11, Perforated, 12)] _Sheer_Weave ("Pattern--{tooltip:''Plain Weave is close-woven chiffon, Mesh is a square net, Fishnet is a diamond net with knots, and Tulle is the fine hexagon net of veils and petticoats. Knit, Ribbing and Cable Knit are knitted wool, Denim Twill and Satin are woven cloth, Sports Mesh is jersey mesh, Chainmail is linked metal rings and Perforated is a sheet punched with holes.''}", Float) = 0
         _Sheer_WeaveScale ("Scale--{condition_show:(_Sheer_Weave>0),tooltip:''How many holes fit across your texture. Higher is a finer net.''}", Range(2,1000)) = 120
-        _Sheer_WeaveWidth ("Thread Width--{condition_show:(_Sheer_Weave>0),tooltip:''How thick the threads are next to the holes. Plain Weave looks best thick, fishnet and tulle thin.''}", Range(0.02,0.9)) = 0.2
+        _Sheer_WeaveWidth ("Thread Width--{condition_show:(_Sheer_Weave>0),tooltip:''How thick the threads are next to the holes. Plain Weave looks best thick, fishnet and tulle thin. For Sports Mesh and Perforated it is how much solid there is between the holes.''}", Range(0.02,0.9)) = 0.2
         _Sheer_WeaveRot ("Rotation--{condition_show:(_Sheer_Weave>0),tooltip:''Turns the net on the fabric.''}", Range(0,180)) = 0
         _Sheer_WeaveFill ("Fill--{condition_show:(_Sheer_Weave>0),tooltip:''A thin film between the threads. 0 leaves the holes open, 1 fills them in.''}", Range(0,1)) = 0
         _Sheer_WeaveRelief ("Relief--{condition_show:(_Sheer_Weave>0),tooltip:''How round the threads look up close, so they catch the light like real yarn.''}", Range(0,1)) = 0.6
+        _Sheer_WeaveShade ("Groove Shading--{condition_show:(_Sheer_Weave>4),tooltip:''How much darker the grooves between the stitches and threads are, which is what makes a knit or a weave read from a distance.''}", Range(0,1)) = 0.4
         [HideInInspector] s_end_sheer_weave ("", Float) = 0
         [HideInInspector] s_start_sheer_lace ("Lace--{condition_show:(_UseSheer==1),tooltip:''Lays a tiling lace pattern over the fabric with raised threads and clean edges, or raises lace already painted into your Albedo.''}", Float) = 0
         [VixForgesRGBWarning][VixForgeTextureKeyword(VF_TEX_SHEERLACE)] _Sheer_LaceTex ("Pattern--{tooltip:''A black and white lace image that tiles: white is thread, black is gap. Tiling sets how small the lace is.''}", 2D) = "black" {}
@@ -799,6 +860,45 @@ Shader "VixenWear/Clothing Pro"
         _Sheer_LaceRelief ("Relief--{tooltip:''How raised the lace threads look.''}", Range(0,2)) = 0.5
         _Sheer_AlbedoRelief ("Raise Albedo Lace--{tooltip:''Raises lace that is painted into the see-through part of your Albedo so it catches the light. 0 leaves it flat.''}", Range(0,2)) = 0
         [HideInInspector] s_end_sheer_lace ("", Float) = 0
+        //ifex _Sheer_Print==0
+        [HideInInspector] s_start_sheer_print ("Print--{condition_show:(_UseSheer==1),tooltip:''A coloured pattern printed on the fabric with no texture: plaid, houndstooth, pinstripe, polka dots, gingham or checker.''}", Float) = 0
+        [VixForgeWideEnum(None, 0, Plaid, 1, Houndstooth, 2, Pinstripe, 3, Polka Dots, 4, Gingham, 5, Checker, 6)] _Sheer_Print ("Pattern--{tooltip:''Which pattern to print.''}", Float) = 0
+        [VixForgeWideEnum(Replace, 0, Multiply, 1)] _Sheer_PrintBlend ("Blend--{condition_show:(_Sheer_Print>0),tooltip:''Replace paints the print in its own colours. Multiply tints your Albedo with it, so the texture's detail shows through.''}", Float) = 0
+        _Sheer_PrintColorA ("Ground Colour--{condition_show:(_Sheer_Print>0),tooltip:''The background colour of the print.''}", Color) = (0.85, 0.82, 0.75, 1)
+        _Sheer_PrintColorB ("Pattern Colour--{condition_show:(_Sheer_Print>0),tooltip:''The colour of the stripes, checks or dots.''}", Color) = (0.12, 0.15, 0.3, 1)
+        _Sheer_PrintColorC ("Line Colour--{condition_show:(_Sheer_Print==1),tooltip:''The thin accent line in plaid.''}", Color) = (0.7, 0.1, 0.1, 1)
+        _Sheer_PrintScale ("Scale--{condition_show:(_Sheer_Print>0),tooltip:''How many repeats fit across your texture.''}", Range(1, 200)) = 12
+        _Sheer_PrintSize ("Size--{condition_show:(_Sheer_Print>0),tooltip:''How wide the bands and lines are, or how big the dots.''}", Range(0, 1)) = 0.5
+        _Sheer_PrintRot ("Rotation--{condition_show:(_Sheer_Print>0),tooltip:''Turns the print on the fabric.''}", Range(0, 180)) = 0
+        _Sheer_PrintMix ("Opacity--{condition_show:(_Sheer_Print>0),tooltip:''How strongly the print shows.''}", Range(0, 1)) = 1
+        [VixForgeWideEnum(Off, 0, R, 1, G, 2, B, 3, A, 4)] _Sheer_PrintMask ("Global Mask--{condition_show:(_Sheer_Print>0),tooltip:''Prints only where one channel of the Global Mask is light. Off prints everywhere.''}", Float) = 0
+        [HideInInspector] s_end_sheer_print ("", Float) = 0
+        //endex
+        //ifex _Sheer_QuiltOn==0
+        [HideInInspector] s_start_sheer_quilt ("Quilting--{condition_show:(_UseSheer==1),tooltip:''Padded diamonds between stitched seams, for puffer jackets, quilted leather and upholstery.''}", Float) = 0
+        [ToggleUI] _Sheer_QuiltOn ("Enable--{tooltip:''Turns quilting on.''}", Float) = 0
+        _Sheer_QuiltScale ("Scale--{condition_show:(_Sheer_QuiltOn==1),tooltip:''How many padded panels fit across your texture.''}", Range(1, 100)) = 10
+        _Sheer_QuiltRot ("Rotation--{condition_show:(_Sheer_QuiltOn==1),tooltip:''45 gives diamonds, 0 gives squares.''}", Range(0, 90)) = 45
+        _Sheer_QuiltPuff ("Puff--{condition_show:(_Sheer_QuiltOn==1),tooltip:''How padded each panel looks.''}", Range(0, 1)) = 0.6
+        _Sheer_StitchColor ("Stitch Colour--{condition_show:(_Sheer_QuiltOn==1),tooltip:''The colour of the stitching along the seams. Its alpha sets how strongly it shows.''}", Color) = (0.95, 0.9, 0.8, 1)
+        _Sheer_StitchWidth ("Stitch Width--{condition_show:(_Sheer_QuiltOn==1),tooltip:''How thick the stitching is.''}", Range(0, 1)) = 0.3
+        [VixForgeWideEnum(Off, 0, R, 1, G, 2, B, 3, A, 4)] _Sheer_QuiltMask ("Global Mask--{condition_show:(_Sheer_QuiltOn==1),tooltip:''Quilts only where one channel of the Global Mask is light. Off quilts everywhere.''}", Float) = 0
+        [HideInInspector] s_end_sheer_quilt ("", Float) = 0
+        //endex
+        //ifex _Sheer_DistressOn==0
+        [HideInInspector] s_start_sheer_distress ("Distress--{condition_show:(_UseSheer==1),tooltip:''Rips with loose threads across them, ladders running up a stocking, and eyelets. The holes need Cutout, Fade or Transparent to see through.''}", Float) = 0
+        [ToggleUI] _Sheer_DistressOn ("Enable--{tooltip:''Turns distress on.''}", Float) = 0
+        _Sheer_Rips ("Rips--{condition_show:(_Sheer_DistressOn==1),tooltip:''How much of the fabric is torn.''}", Range(0, 1)) = 0.3
+        _Sheer_RipScale ("Damage Size--{condition_show:(_Sheer_DistressOn==1),tooltip:''How many rips and ladders fit across your texture. Higher gives smaller, more frequent damage.''}", Range(1, 50)) = 6
+        _Sheer_RipFray ("Loose Threads--{condition_show:(_Sheer_DistressOn==1),tooltip:''Threads left hanging across each rip, like ripped jeans.''}", Range(0, 1)) = 0.5
+        _Sheer_Ladders ("Ladders--{condition_show:(_Sheer_DistressOn==1),tooltip:''Runs up the fabric, like a laddered stocking.''}", Range(0, 1)) = 0
+        _Sheer_Eyelets ("Eyelets--{condition_show:(_Sheer_DistressOn==1),tooltip:''Round holes with a ring round each one. 0 has none; higher gives bigger holes.''}", Range(0, 1)) = 0
+        _Sheer_EyeletSpacing ("Eyelet Count--{condition_show:(_Sheer_DistressOn==1 && _Sheer_Eyelets>0),tooltip:''How many eyelets fit across your texture. Use the Global Mask to put them only along a seam.''}", Range(1, 100)) = 20
+        _Sheer_EyeletColor ("Eyelet Ring Colour--{condition_show:(_Sheer_DistressOn==1 && _Sheer_Eyelets>0),tooltip:''The colour of the ring round each eyelet.''}", Color) = (0.75, 0.7, 0.6, 1)
+        _Sheer_DistressSeed ("Variation--{condition_show:(_Sheer_DistressOn==1),tooltip:''Moves the rips and ladders somewhere else, so two pieces of clothing do not tear the same way.''}", Range(0, 100)) = 0
+        [VixForgeWideEnum(Off, 0, R, 1, G, 2, B, 3, A, 4)] _Sheer_DistressMask ("Global Mask--{condition_show:(_Sheer_DistressOn==1),tooltip:''Damages only where one channel of the Global Mask is light. Off damages everywhere.''}", Float) = 0
+        [HideInInspector] s_end_sheer_distress ("", Float) = 0
+        //endex
         [HideInInspector] s_start_sheer_light ("Light--{condition_show:(_UseSheer==1)}", Float) = 0
         _Sheer_Backlight ("Backlight Glow--{tooltip:''Light shining through the fabric from behind, the way a curtain glows in the sun.''}", Range(0,2)) = 0.5
         _Sheer_InsideShade ("Inside Shade--{tooltip:''Darkens the inside of the garment, which gets less light than the outside. It shows where both sides draw: Cull Off, or Inside First below.''}", Range(0,1)) = 0.3
@@ -1516,29 +1616,50 @@ Shader "VixenWear/Clothing Pro"
         //endex
         [HideInInspector] m_end_glitter ("", Float) = 0
         //endex
-
-        //ifex _UseCtx==0
-        [HideInInspector] m_start_context ("Viewer Context--{reference_property:_UseCtx,tooltip:''The material knows where it is being drawn and who is looking at it. Use it for a mark that only mirrors show, a glow that comes up when someone leans in, or a detail that never lands in a photo. Everyone sees their own version at the same time, and none of it needs an animator or a menu.''}", Float) = 0
-        [HideInInspector][VixForgeToggleUI(VF_CTX)] _UseCtx ("Enable--{tooltip:''Turns this feature on. It costs nothing while it is off.''}", Float) = 0
-        //ifex _UseCtx==0
-        [HideInInspector] s_start_tog_UseCtx ("Viewer Context Settings--{condition_show:(_UseCtx==1)}", Float) = 0
-        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _Ctx_Where ("Show--{tooltip:''Where the change shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
-        [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _Ctx_Eye ("Seen By--{tooltip:''Which eye sees the change in VR. Pick one eye to show it to that eye only.''}", Float) = 0
-        [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _Ctx_DistMode ("Distance--{tooltip:''Whether it reacts to them coming closer or moving away.''}", Float) = 0
-        _Ctx_Near ("Near Distance--{tooltip:''The distance it has fully reacted by.''}", Range(0, 5)) = 0.5
-        _Ctx_Far ("Far Distance--{tooltip:''The distance it has stopped reacting by.''}", Range(0, 20)) = 3
-        _Ctx_Gaze ("Face-On Only--{tooltip:''How square on they have to be looking before it counts.''}", Range(0, 1)) = 0
-        _Ctx_Hidden ("Hidden Level--{tooltip:''How much of the effect stays where these rules hide it. 0 removes it there.''}", Range(0, 1)) = 0
-        [VixForgeWideEnum(Emission, 0, Decals, 1, Emission and Decals, 2)] _Ctx_Target ("Affects--{tooltip:''What changes when that happens.''}", Float) = 0
-        [Toggle] _Ctx_Outlines ("Also Hide Outlines--{tooltip:''Applies the same rules above to the outline passes, so a line stops showing up alone once what it traces is hidden.''}", Float) = 0
-        [HDR] _Ctx_Glow ("Reaction Glow--{tooltip:''A glow added wherever these rules let the effect show.''}", Color) = (0,0,0,1)
-        //ifex _UseCtx==0
-        [VixForgesRGBWarning][NoScaleOffset][VixForgeTextureKeyword(VF_TEX_CTXMASK)] _CtxMask ("Mask--{tooltip:''Keeps the whole effect to part of the material. White is where it applies, black is left completely alone, so one patch can vanish in mirrors while the rest stays normal. The Reaction Glow follows the mask too.''}", 2D) = "white" {}
+        
+        //ifex _UseGems==0
+        [HideInInspector] m_start_gems ("Gemstones--{reference_property:_UseGems,tooltip:''Rhinestones and gems set into the fabric: faceted stones that sparkle, throw rainbow fire and catch every light in the room, in metal settings. Paint a Mask to say where they go.''}", Float) = 0
+        [HideInInspector][VixForgeToggleUI(VF_GEMS)] _UseGems ("Enable--{tooltip:''Turns Gemstones on. It costs nothing while it is off.''}", Float) = 0
+        //ifex _UseGems==0
+        [HideInInspector] s_start_gem_layout ("Layout--{condition_show:(_UseGems==1)}", Float) = 0
+        [Enum(Grid,0,Hex,1,Diamond,2,Scatter,3,Stone Map,4)] _Gem_Pattern ("Pattern--{tooltip:''How the stones are laid out. Stone Map takes the stones from a map you paint instead.''}", Float) = 1
+        _Gem_Density ("Density--{tooltip:''How many stones fit across your texture.''}", Range(1, 400)) = 60
+        _Gem_Size ("Stone Size--{tooltip:''How much of its space each stone fills. Lower leaves fabric showing between them.''}", Range(0.2, 1)) = 0.8
+        _Gem_Rotation ("Rotation--{tooltip:''Turns the whole layout, in degrees.''}", Range(0, 360)) = 0
+        [Enum(UV0,0,UV1,1)] _Gem_UV ("UV--{tooltip:''Which UV the layout follows.''}", Float) = 0
+        [VixForgesRGBWarning][NoScaleOffset][VixForgeTextureKeyword(VF_TEX_GEMMASK)] _GemMask ("Mask--{tooltip:''Where stones go. White sets stones, black leaves the fabric bare. A stone is kept or left out whole, never cut in half.''}", 2D) = "white" {}
+        [Enum(R,0,G,1,B,2,A,3,Auto,4)] _Gem_MaskCh ("Mask Channel--{tooltip:''Which channel of the mask holds where stones go.''}", Float) = 4
+        [VixForgesRGBWarning][NoScaleOffset][VixForgeTextureKeyword(VF_TEX_GEMMAP)] _GemMap ("Stone Map--{condition_show:(_Gem_Pattern==4),tooltip:''For Stone Map: paint each stone as a soft white dome on black, brightest at its middle.''}", 2D) = "black" {}
+        [HideInInspector] s_end_gem_layout ("", Float) = 0
+        [HideInInspector] s_start_gem_stone ("Stones--{condition_show:(_UseGems==1)}", Float) = 0
+        [Enum(Round Brilliant,0,Princess,1,Emerald,2,Cabochon,3)] _Gem_Cut ("Cut--{tooltip:''The shape and facets of each stone. Cabochon is a smooth dome with no facets.''}", Float) = 0
+        _Gem_Height ("Facet Depth--{tooltip:''How steeply the facets slope. Higher catches light at wider angles.''}", Range(0, 1.5)) = 0.8
+        [HDR] _Gem_Color ("Colour--{tooltip:''The colour of the stones. White makes clear crystal.''}", Color) = (1, 1, 1, 1)
+        _Gem_ColorDepth ("Colour Depth--{tooltip:''How deep the colour goes where light travels further through the stone.''}", Range(0, 2)) = 0.5
+        _Gem_IOR ("Refraction--{tooltip:''How strongly the stone bends light. About 1.5 is glass and rhinestone, 2.4 is diamond.''}", Range(1.3, 2.6)) = 1.55
+        [HideInInspector] s_end_gem_stone ("", Float) = 0
+        [HideInInspector] s_start_gem_optics ("Sparkle--{condition_show:(_UseGems==1)}", Float) = 0
+        _Gem_Brilliance ("Brilliance--{tooltip:''How much light bounces round inside the stones and comes back out of the top.''}", Range(0, 3)) = 1
+        _Gem_Fire ("Fire--{tooltip:''Rainbow flashes from light splitting into colours inside the stone.''}", Range(0, 2)) = 0.6
+        _Gem_Scint ("Scintillation--{tooltip:''Facets flashing on and off as you move.''}", Range(0, 2)) = 0.5
+        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3,Volume,4,Peak Hold,5)] _AL_Band_Gem ("Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music makes the facets flash.''}", Float) = 3
+        _AL_Gem_Scint ("Beat Sparkle--{condition_show:(_UseAudioLink==1),tooltip:''How much the beat makes the facets flash.''}", Range(0, 2)) = 0
+        _Gem_Sparkle ("Light Sparkle--{tooltip:''Bright pinpoints where the main light catches a facet just right.''}", Range(0, 2)) = 0.5
+        _Gem_Clarity ("Inclusions--{tooltip:''Specks and cloudy flaws inside the stones. 0 is flawless.''}", Range(0, 1)) = 0
+        [HideInInspector] s_end_gem_optics ("", Float) = 0
+        [HideInInspector] s_start_gem_var ("Variance--{condition_show:(_UseGems==1)}", Float) = 0
+        _Gem_VarSize ("Size--{tooltip:''How much the stones differ in size.''}", Range(0, 1)) = 0
+        _Gem_VarHue ("Hue--{tooltip:''How far each stone strays from the stone colour, for a mixed set.''}", Range(0, 1)) = 0
+        _Gem_VarBright ("Brightness--{tooltip:''How much brighter or darker each stone is.''}", Range(0, 1)) = 0.2
+        _Gem_Missing ("Missing Stones--{tooltip:''How many stones have fallen out.''}", Range(0, 1)) = 0
+        [HideInInspector] s_end_gem_var ("", Float) = 0
+        [HideInInspector] s_start_gem_setting ("Setting--{condition_show:(_UseGems==1)}", Float) = 0
+        [Enum(None,0,Bezel,1,Four Prongs,2,Six Prongs,3)] _Gem_Setting ("Setting--{tooltip:''The metal holding each stone: a rim round it, or claws.''}", Float) = 1
+        _Gem_SettingColor ("Metal Colour--{tooltip:''The colour of the metal: silver, gold, gunmetal.''}", Color) = (0.85, 0.85, 0.88, 1)
+        _Gem_SettingWidth ("Metal Width--{tooltip:''How thick the rim or claws are.''}", Range(0.02, 0.5)) = 0.15
+        [HideInInspector] s_end_gem_setting ("", Float) = 0
         //endex
-        [Enum(R,0,G,1,B,2,A,3,Auto,4)] _Ctx_MaskCh ("Mask Channel--{tooltip:''Which channel of the mask says which parts react.''}", Float) = 4
-        [HideInInspector] s_end_tog_UseCtx ("", Float) = 0
-        //endex
-        [HideInInspector] m_end_context ("", Float) = 0
+        [HideInInspector] m_end_gems ("", Float) = 0
         //endex
 
         //ifex _UseFlipbook==0
@@ -2019,9 +2140,63 @@ Shader "VixenWear/Clothing Pro"
         [HideInInspector] m_end_outline2 ("", Float) = 0
         //endex
 
+        //ifex _OutlineRipples==0
+        [HideInInspector] m_start_outline_ripples ("Silhouette Ripples--{condition_show:(_UseOutline==1 || _UseOutline2==1),reference_property:_OutlineRipples,tooltip:''Rings that peel off your outline and travel outward, fading as they go, like sound waves or heat coming off you. They come from the outermost outline you have on.''}", Float) = 0
+        [HideInInspector][ToggleUI] _OutlineRipples ("Enable", Float) = 0
+        //ifex _OutlineRipples==0
+        [HDR] _OutlineRippleColor ("Color--{tooltip:''The colour of the rings. Its alpha sets how strong they are.''}", Color) = (1,1,1,1)
+        _OutlineRippleDist ("Distance--{tooltip:''How far the rings travel out from the line before they are gone, in metres.''}", Range(0.01, 1)) = 0.15
+        _OutlineRippleCount ("Rings--{tooltip:''How many rings fit between the line and Distance at once.''}", Range(1, 12)) = 4
+        _OutlineRippleWidth ("Ring Width--{tooltip:''How much of the gap between two rings each ring fills.''}", Range(0.02, 1)) = 0.3
+        _OutlineRippleSoft ("Softness--{tooltip:''How soft the edges of each ring are. Soft edges show best with a Fade or Transparent Rendering Mode.''}", Range(0, 1)) = 0.5
+        _OutlineRippleFade ("Fade--{tooltip:''How quickly the rings fade as they travel. 0 keeps them solid all the way out.''}", Range(0, 4)) = 1.5
+        _OutlineRippleSpeed ("Speed--{tooltip:''How fast the rings travel out. Below 0 they pull in toward you instead.''}", Range(-3, 3)) = 0.5
+        [HideInInspector] _OutlineRippleSpeed_Ph ("", Float) = 0
+        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3,Volume,4,Peak Hold,5)] _AL_Band_OutlineRipple ("AudioLink Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music the rings follow.''}", Float) = 0
+        _AL_Outline_RippleSpeed ("Beat Speed--{condition_show:(_UseAudioLink==1),tooltip:''The beat pushes the rings out faster. It adds to Speed rather than scaling it, so they gather pace without jumping.''}", Range(0, 4)) = 0
+        _AL_Outline_RippleBeat ("Beat Launch--{condition_show:(_UseAudioLink==1),tooltip:''Each hit in the music leaves your outline as a ring and rides out to Distance. At 1 the music draws every ring, and below 1 its rings mix with the steady ones. Volume and Peak Hold use Bass here. With no AudioLink in the world the steady rings carry on.''}", Range(0, 1)) = 0
+        //endex
+        [HideInInspector] m_end_outline_ripples ("", Float) = 0
+        //endex
+
+        //ifex _OutlineInk==0
+        [HideInInspector] m_start_outline_ink ("Ink Weight--{condition_show:(_UseOutline==1 || _UseOutline2==1),reference_property:_OutlineInk,tooltip:''Draws your outline the way an inker would: heavier where your body turns away from the light and lighter where the light hits it. It follows the room's main light and light probes, so the weight shifts as you walk past a lamp.''}", Float) = 0
+        [HideInInspector][ToggleUI] _OutlineInk ("Enable", Float) = 0
+        //ifex _OutlineInk==0
+        _OutlineInkLit ("Lit Side--{tooltip:''How thick the line is where the light hits it, as a share of its Width. 0 lets it vanish in full light.''}", Range(0, 1)) = 0.4
+        _OutlineInkShadow ("Shadow Side--{tooltip:''How thick the line is on the side turned away from the light, as a multiple of its Width.''}", Range(1, 3)) = 1.8
+        _OutlineInkSoft ("Softness--{tooltip:''How gradually the line thickens from the lit side round to the dark side.''}", Range(0.05, 1)) = 0.5
+        //endex
+        [HideInInspector] m_end_outline_ink ("", Float) = 0
+        //endex
+
+        //ifex _OutlineBoil==0
+        [HideInInspector] m_start_outline_boil ("Line Boil--{condition_show:(_UseOutline==1 || _UseOutline2==1),reference_property:_OutlineBoil,tooltip:''The hand-drawn wobble of classic cartoons, where every frame is traced again by hand and the line never sits quite still. Your outline redraws itself a few times a second, a little different each time.''}", Float) = 0
+        [HideInInspector][ToggleUI] _OutlineBoil ("Enable", Float) = 0
+        //ifex _OutlineBoil==0
+        _OutlineBoilAmt ("Amount--{tooltip:''How much the line wobbles. Near 1 it breaks into a sketchy, broken line in places.''}", Range(0, 1)) = 0.4
+        _OutlineBoilScale ("Scale--{tooltip:''How close together the wobbles sit. Low gives long, slow swells along the line; high gives a scratchy, jittery one.''}", Range(1, 60)) = 12
+        _OutlineBoilFPS ("Frame Rate--{tooltip:''How many times a second the line is redrawn. Cartoons boil at about 8 to 12.''}", Range(1, 30)) = 10
+        [HideInInspector] _OutlineBoilFPS_Ph ("", Float) = 0
+        //endex
+        [HideInInspector] m_end_outline_boil ("", Float) = 0
+        //endex
+
+        //ifex _OutlineSmear==0
+        [HideInInspector] m_start_outline_smear ("Velocity Smear--{condition_show:(_UseOutline==1 || _UseOutline2==1),reference_property:_OutlineSmear,tooltip:''When you move, your outline streaks out behind you like the speed lines in an anime, and snaps back when you stop. Drive Velocity below from VRChat's Velocity parameters so it knows you are moving.''}", Float) = 0
+        [HideInInspector][ToggleUI] _OutlineSmear ("Enable", Float) = 0
+        //ifex _OutlineSmear==0
+        [VixForgeVectorLabel(X, Y, Z)] _WG_Velocity ("Velocity--{tooltip:''How fast you are moving, in metres per second: X to your right, Y up, Z forward. Drive each from the matching VRChat Velocity parameter.'',tooltips:[''How fast you move to your right, in metres per second.'',''How fast you move up.'',''How fast you move forward.'']}", Vector) = (0, 0, 0, 0)
+        _OutlineSmearLen ("Length--{tooltip:''How far the line trails behind you for your speed. At 1 it trails about 10 cm at a walk and 20 cm at a run.''}", Range(0, 4)) = 1
+        _OutlineSmearStreaks ("Streaks--{tooltip:''Breaks the trail into separate speed lines. 0 drags the whole back of the line evenly.''}", Range(0, 1)) = 0.6
+        _OutlineSmearStreakScale ("Streak Count--{tooltip:''How many speed lines run across. Higher gives finer streaks.''}", Range(5, 200)) = 60
+        //endex
+        [HideInInspector] m_end_outline_smear ("", Float) = 0
+        //endex
+
         [HideInInspector] m_emissions ("EMISSIONS--{reference_properties:[_UseEmission, _UseEmission2, _UseEmission3, _UseEmission4, _UseEmission5],button_help:{action:{type:URL,data:https://vixencreations.github.io/VixenToolBox/shaderdocs.html#emissions}},tooltip:''Up to 5 glowing layers. In each layer's Map, the colour tints the glow and the alpha channel controls where it shows.''}", Float) = 0
         _Emis_Exp ("Exposure (All Layers)--{tooltip:''Raises or lowers every emission layer at once, on top of their own strengths. Useful for pulling the whole glow down in a bright world.''}", Range(-1, 10)) = 0.0
-        _AL_Clock ("Colour By Time Of Day (All Layers)--{condition_show:(_UseAudioLink==1),tooltip:''Drifts the hue of every emission layer with the real local clock, so the material glows a different colour at midnight than at noon. Needs AudioLink, which is where the time comes from.''}", Range(0, 1)) = 0
+        _AL_Clock ("Colour By Time Of Day (All Layers)--{condition_show:(_UseAudioLink==1),tooltip:''Drifts the hue of every emission layer with the real local clock, so the material glows a different colour at midnight than at noon. It takes the time from AudioLink, or from VRChat itself in a world without AudioLink.''}", Range(0, 1)) = 0
 
         [VixForgeToggle(VF_EMISSION)] _UseEmission ("Enable Layer 1--{tooltip:''Turns this emission layer on. Layers stack, so you can run several at once with different colours and masks.''}", Float) = 0
         [HideInInspector] s_start_emis1 ("Emission Layer 1--{condition_show:(_UseEmission==1)}", Float) = 0
@@ -2329,6 +2504,22 @@ Shader "VixenWear/Clothing Pro"
         [VixForgeVectorLabel(Intensity, Emission, Lit Mix, Opacity)] _MC_Sec6_Set ("Section 7--{tooltip:''Adjusts how the matcap shows in this section, on top of the layer's own settings.'',tooltips:[''Scales how strong the matcap is in this section. 1 leaves it as the layer has it.'',''Adds glow in this section only. 0 adds none.'',''Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it.'',''Scales how solid the matcap is in this section. 0 hides it here.'']}", Vector) = (1,0,1,1)
         _MC_Sec7_Tint ("Section 8 Tint--{tooltip:''Tints that slot on its own, so one atlas can serve several looks.''}", Color) = (1,1,1,1)
         [VixForgeVectorLabel(Intensity, Emission, Lit Mix, Opacity)] _MC_Sec7_Set ("Section 8--{tooltip:''Adjusts how the matcap shows in this section, on top of the layer's own settings.'',tooltips:[''Scales how strong the matcap is in this section. 1 leaves it as the layer has it.'',''Adds glow in this section only. 0 adds none.'',''Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it.'',''Scales how solid the matcap is in this section. 0 hides it here.'']}", Vector) = (1,0,1,1)
+        _MC_Sec8_Tint ("Section 9 Tint--{tooltip:''Tints that slot on its own, so one atlas can serve several looks.''}", Color) = (1,1,1,1)
+        [VixForgeVectorLabel(Intensity, Emission, Lit Mix, Opacity)] _MC_Sec8_Set ("Section 9--{tooltip:''Adjusts how the matcap shows in this section, on top of the layer's own settings.'',tooltips:[''Scales how strong the matcap is in this section. 1 leaves it as the layer has it.'',''Adds glow in this section only. 0 adds none.'',''Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it.'',''Scales how solid the matcap is in this section. 0 hides it here.'']}", Vector) = (1,0,1,1)
+        _MC_Sec9_Tint ("Section 10 Tint--{tooltip:''Tints that slot on its own, so one atlas can serve several looks.''}", Color) = (1,1,1,1)
+        [VixForgeVectorLabel(Intensity, Emission, Lit Mix, Opacity)] _MC_Sec9_Set ("Section 10--{tooltip:''Adjusts how the matcap shows in this section, on top of the layer's own settings.'',tooltips:[''Scales how strong the matcap is in this section. 1 leaves it as the layer has it.'',''Adds glow in this section only. 0 adds none.'',''Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it.'',''Scales how solid the matcap is in this section. 0 hides it here.'']}", Vector) = (1,0,1,1)
+        _MC_Sec10_Tint ("Section 11 Tint--{tooltip:''Tints that slot on its own, so one atlas can serve several looks.''}", Color) = (1,1,1,1)
+        [VixForgeVectorLabel(Intensity, Emission, Lit Mix, Opacity)] _MC_Sec10_Set ("Section 11--{tooltip:''Adjusts how the matcap shows in this section, on top of the layer's own settings.'',tooltips:[''Scales how strong the matcap is in this section. 1 leaves it as the layer has it.'',''Adds glow in this section only. 0 adds none.'',''Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it.'',''Scales how solid the matcap is in this section. 0 hides it here.'']}", Vector) = (1,0,1,1)
+        _MC_Sec11_Tint ("Section 12 Tint--{tooltip:''Tints that slot on its own, so one atlas can serve several looks.''}", Color) = (1,1,1,1)
+        [VixForgeVectorLabel(Intensity, Emission, Lit Mix, Opacity)] _MC_Sec11_Set ("Section 12--{tooltip:''Adjusts how the matcap shows in this section, on top of the layer's own settings.'',tooltips:[''Scales how strong the matcap is in this section. 1 leaves it as the layer has it.'',''Adds glow in this section only. 0 adds none.'',''Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it.'',''Scales how solid the matcap is in this section. 0 hides it here.'']}", Vector) = (1,0,1,1)
+        _MC_Sec12_Tint ("Section 13 Tint--{tooltip:''Tints that slot on its own, so one atlas can serve several looks.''}", Color) = (1,1,1,1)
+        [VixForgeVectorLabel(Intensity, Emission, Lit Mix, Opacity)] _MC_Sec12_Set ("Section 13--{tooltip:''Adjusts how the matcap shows in this section, on top of the layer's own settings.'',tooltips:[''Scales how strong the matcap is in this section. 1 leaves it as the layer has it.'',''Adds glow in this section only. 0 adds none.'',''Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it.'',''Scales how solid the matcap is in this section. 0 hides it here.'']}", Vector) = (1,0,1,1)
+        _MC_Sec13_Tint ("Section 14 Tint--{tooltip:''Tints that slot on its own, so one atlas can serve several looks.''}", Color) = (1,1,1,1)
+        [VixForgeVectorLabel(Intensity, Emission, Lit Mix, Opacity)] _MC_Sec13_Set ("Section 14--{tooltip:''Adjusts how the matcap shows in this section, on top of the layer's own settings.'',tooltips:[''Scales how strong the matcap is in this section. 1 leaves it as the layer has it.'',''Adds glow in this section only. 0 adds none.'',''Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it.'',''Scales how solid the matcap is in this section. 0 hides it here.'']}", Vector) = (1,0,1,1)
+        _MC_Sec14_Tint ("Section 15 Tint--{tooltip:''Tints that slot on its own, so one atlas can serve several looks.''}", Color) = (1,1,1,1)
+        [VixForgeVectorLabel(Intensity, Emission, Lit Mix, Opacity)] _MC_Sec14_Set ("Section 15--{tooltip:''Adjusts how the matcap shows in this section, on top of the layer's own settings.'',tooltips:[''Scales how strong the matcap is in this section. 1 leaves it as the layer has it.'',''Adds glow in this section only. 0 adds none.'',''Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it.'',''Scales how solid the matcap is in this section. 0 hides it here.'']}", Vector) = (1,0,1,1)
+        _MC_Sec15_Tint ("Section 16 Tint--{tooltip:''Tints that slot on its own, so one atlas can serve several looks.''}", Color) = (1,1,1,1)
+        [VixForgeVectorLabel(Intensity, Emission, Lit Mix, Opacity)] _MC_Sec15_Set ("Section 16--{tooltip:''Adjusts how the matcap shows in this section, on top of the layer's own settings.'',tooltips:[''Scales how strong the matcap is in this section. 1 leaves it as the layer has it.'',''Adds glow in this section only. 0 adds none.'',''Scales the layer's Lighting Mix in this section. 1 leaves it as the layer has it.'',''Scales how solid the matcap is in this section. 0 hides it here.'']}", Vector) = (1,0,1,1)
         [HideInInspector] m_end_matcap_sections ("", Float) = 0
 
         //ifex _UseCarPaint==0
@@ -2430,13 +2621,13 @@ Shader "VixenWear/Clothing Pro"
         [VixForgeHelpbox] _MatCap_AtlasHelp ("Press Build Atlas In Unity, then drop a matcap into each cell. It lays the sheet out, saves it and fills in Grid and Sections. Its second tab builds the mask too, from one black and white mask per section. Set each cell up under Atlas Sections at the top.", Float) = 0
         [VixForgeMatcapAtlasButton(1)] _MatCap_AtlasBuild ("Build Atlas In Unity--{tooltip:''Build the packed atlas here in Unity rather than supplying one you made outside it.''}", Float) = 0
         [VixForgeVectorLabel(Columns, Rows)] _MatCap_Grid ("Grid--{tooltip:''How the atlas is laid out, across and down.'',tooltips:[''How many matcaps sit across the atlas.'',''How many sit down the atlas.'']}", Vector) = (2,2,0,0)
-        _MatCap_SecCount ("Sections--{tooltip:''How many separate matcaps are packed into that atlas.''}", Range(2,8)) = 4
+        _MatCap_SecCount ("Sections--{tooltip:''How many separate matcaps are packed into that atlas.''}", Range(2,16)) = 4
         [VixForgeWideEnum(None, 0, Emission 1, 1, Emission 2, 2, Emission 3, 3, Emission 4, 4, Emission 5, 5, Matcap 1, 6, Matcap 2, 7, Matcap 3, 8, Matcap 4, 9, Matcap 5, 10)] _MatCap_SecSrc ("Section Source--{tooltip:''Where the section number is read from. None reads the Mask above. Anything else borrows that layer Map, so the atlas needs no map of its own.''}", Float) = 0
         [Enum(R,0,G,1,B,2,A,3,Auto,4)] _MatCap_SecCh ("Section Channel--{tooltip:''Which channel of the mask picks which packed matcap an area uses.''}", Float) = 0
         [VixForgeHelpbox(2)] _MatCap_SecWarn ("That layer is switched off, so the section it picks stops holding once the material is locked.--{condition_show:((_MatCap_SecSrc==1 && _UseEmission==0) || (_MatCap_SecSrc==2 && _UseEmission2==0) || (_MatCap_SecSrc==3 && _UseEmission3==0) || (_MatCap_SecSrc==4 && _UseEmission4==0) || (_MatCap_SecSrc==5 && _UseEmission5==0) || (_MatCap_SecSrc==6 && _UseMatCap1==0) || (_MatCap_SecSrc==7 && _UseMatCap2==0) || (_MatCap_SecSrc==8 && _UseMatCap3==0) || (_MatCap_SecSrc==9 && _UseMatCap4==0) || (_MatCap_SecSrc==10 && _UseMatCap5==0))}", Float) = 0
         [HideInInspector] s_end_matcap1_atlas ("", Float) = 0
         [HideInInspector] s_start_matcap1_proc ("Procedural--{condition_show:(_MatCap_Src==2)}", Float) = 0
-        [VixForgeWideEnum(Studio Rig, 0, Liquid Flow, 1, Shatter, 2, Iridescent Film, 3, Plasma, 4, Caustics, 5)] _MatCap_Proc ("Style--{tooltip:''Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns.''}", Float) = 0
+        [VixForgeWideEnum(Studio Rig, 0, Liquid Flow, 1, Shatter, 2, Iridescent Film, 3, Plasma, 4, Caustics, 5, Chladni Plate, 6, Drum Head, 7, Ripple Tank, 8, Hyperspace Tunnel, 9, Hyperspace Weave, 10, Grid, 11, Rings, 12, Starfield, 13, Spectrum, 14, Waveform, 15, Julia Fractal, 16, Nebula, 17)] _MatCap_Proc ("Style--{tooltip:''Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns. Chladni Plate, Drum Head and Ripple Tank draw vibrating plate figures, the two Hyperspace styles stream past, Grid and Rings are clean lines, Starfield twinkles, Spectrum and Waveform draw the music, Julia Fractal breathes and Nebula swirls.''}", Float) = 0
         _MatCap_ProcA ("Colour A--{condition_show:(_MatCap_Src==2),tooltip:''The first colour of the built-in matcap, used when you would rather not supply a texture at all.''}", Color) = (1,1,1,1)
         _MatCap_ProcB ("Colour B--{condition_show:(_MatCap_Src==2),tooltip:''The second colour it blends to.''}", Color) = (0.2,0.45,1,1)
         _MatCap_ProcScale ("Scale--{condition_show:(_MatCap_Src==2),tooltip:''How big the built-in pattern is.''}", Range(0.5,40)) = 6
@@ -2444,6 +2635,15 @@ Shader "VixenWear/Clothing Pro"
         [HideInInspector] _MatCap_ProcSpeed_Ph ("", Float) = 0
         _MatCap_ProcSharp ("Sharpness--{condition_show:(_MatCap_Src==2),tooltip:''How hard the edge between the two colours is.''}", Range(0,1)) = 0.5
         _MatCap_ProcWarp ("Warp--{condition_show:(_MatCap_Src==2),tooltip:''How much the built-in pattern is bent out of shape, for something more liquid than a clean gradient.''}", Range(0,1)) = 0.3
+        [VixForgeHelpbox] _MatCap_Tunnel_Attribution ("Hyperspace Tunnel uses the cosine turbulence from a shader by Yohei Nishitsuji, under MIT. Click for x.com/YoheiNishitsuji--{condition_show:(_MatCap_Src==2 && _MatCap_Proc==9),onClick:{type:URL,data:https://x.com/YoheiNishitsuji/status/2093826019346301256}}", Float) = 0
+        [VixForgeWideEnum(Flat, 0, Polar, 1, Kaleidoscope, 2, Tunnel, 3, Spiral, 4, Mirror, 5)] _MatCap_ProcSpace ("Space--{condition_show:(_MatCap_Src==2),tooltip:''Bends the pattern before it is drawn. Polar unrolls it round the middle, Kaleidoscope folds it into mirrored wedges, Tunnel rolls it down a tube, Spiral winds it inward and Mirror folds it into four. Flat leaves it as it is.''}", Float) = 0
+        [VixForgeVectorToSliders(Segments, p1, p16, Twist, n2, p2, Flow, n2, p2, Spin, n2, p2, speed_zw)] _MatCap_ProcSpaceCtl ("Space Shape--{condition_show:(_MatCap_Src==2),tooltip:''Shapes the Space you picked.'',tooltips:[''How many wedges Kaleidoscope folds into, and how many times Tunnel and Spiral wrap round.'',''Twists the pattern more the further out it is.'',''Slides the pattern outward, or down the tunnel, forever. Below 0 it runs the other way.'',''Turns the pattern round the middle, forever.'']}", Vector) = (6, 0, 0, 0)
+        [HideInInspector] _MatCap_ProcSpaceCtl_Ph ("", Vector) = (0, 0, 0, 0)
+        _MatCap_ProcDetail ("Detail--{condition_show:(_MatCap_Src==2),tooltip:''More detail for the styles that have it: the plate's figure, how many stars, the fractal's depth and the nebula's layers.''}", Range(0, 1)) = 0.5
+        [VixForgeWideEnum(Two Colour, 0, Three Colour, 1, Rainbow, 2, Palette, 3, Music Colour, 4)] _MatCap_ProcColor ("Colour--{condition_show:(_MatCap_Src==2),tooltip:''How the pattern turns into colour. Two Colour runs from Colour A to Colour B, Three Colour adds Colour C, Rainbow runs round the colour wheel, Palette makes a smooth palette that Colour A picks, and Music Colour takes the colour of the music.''}", Float) = 0
+        _MatCap_ProcC ("Colour C--{condition_show:(_MatCap_Src==2 && _MatCap_ProcColor==1),tooltip:''The third colour for Three Colour.''}", Color) = (1, 0.2, 0.6, 1)
+        [VixForgeVectorToSliders(Bands, p0, p16, Invert, p0, p1, Glow, p0, p4, Cycle, n2, p2, speed_w)] _MatCap_ProcColorCtl ("Colour Shape--{condition_show:(_MatCap_Src==2),tooltip:''Shapes the Colour you picked.'',tooltips:[''Steps the colours into flat bands. 0 or 1 keeps them smooth.'',''Swaps which end of the pattern gets which colour.'',''Makes the brightest part of the pattern glow.'',''Runs Rainbow and Palette round, forever.'']}", Vector) = (0, 0, 0, 0)
+        [HideInInspector] _MatCap_ProcColorCtl_Ph ("", Vector) = (0, 0, 0, 0)
         [HideInInspector] s_end_matcap1_proc ("", Float) = 0
         [HideInInspector] s_start_matcap1_al ("AudioLink--{condition_show:(_UseAudioLink==1)}", Float) = 0
         [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3,Volume,4,Peak Hold,5)] _AL_Band_MatCap ("Band--{tooltip:''Which part of the music this matcap reacts to.''}", Float) = 0
@@ -2451,6 +2651,8 @@ Shader "VixenWear/Clothing Pro"
         _AL_MatCap_Emis ("Emission--{tooltip:''How much the beat pushes this matcap into the glow.''}", Range(0,1)) = 0
         _AL_MatCap_Hue ("Hue--{tooltip:''How far the beat swings the colour.''}", Range(0,1)) = 0
         _AL_MatCap_Pan ("Scroll--{tooltip:''Drives Scroll from the track, so the image slides on the beat. On a Procedural layer it also pushes the pattern forward on the beat.''}", Range(0,1)) = 0
+        [VixForgeVectorToSliders(Size, p0, p2, Warp, p0, p2, Push, p0, p4, Twist, p0, p2)] _AL_MatCap_Proc ("Pattern Beat--{condition_show:(_UseAudioLink==1 && _MatCap_Src==2),tooltip:''How the music moves a procedural matcap.'',tooltips:[''The beat makes the pattern bigger.'',''The beat bends the pattern further.'',''The beat pushes the pattern forward. It adds to Speed rather than scaling it, so it never jumps.'',''The beat twists the pattern round the middle.'']}", Vector) = (0, 0, 0, 0)
+        [VixForgeVectorToSliders(Travel, p0, p1, Spectrum, p0, p1, Shake, p0, p1, Morph, p0, p1)] _AL_MatCap_Proc2 ("Pattern Beat 2--{condition_show:(_UseAudioLink==1 && _MatCap_Src==2),tooltip:''More ways the music moves a procedural matcap.'',tooltips:[''Each hit leaves the middle as a ring and travels out.'',''Lays the music out from the middle, bass at the centre.'',''The beat shakes the pattern.'',''The beat changes the shape itself: the plate's figure, the tunnel's turbulence, the fractal.'']}", Vector) = (0, 0, 0, 0)
         [HideInInspector] s_end_matcap1_al ("", Float) = 0
         [HideInInspector] s_end_tog_UseMatCap1 ("", Float) = 0
         [HideInInspector] m_end_matcap1 ("", Float) = 0
@@ -2528,13 +2730,13 @@ Shader "VixenWear/Clothing Pro"
         [VixForgeHelpbox] _MatCap2_AtlasHelp ("Press Build Atlas In Unity, then drop a matcap into each cell. It lays the sheet out, saves it and fills in Grid and Sections. Its second tab builds the mask too, from one black and white mask per section. Set each cell up under Atlas Sections at the top.", Float) = 0
         [VixForgeMatcapAtlasButton(2)] _MatCap2_AtlasBuild ("Build Atlas In Unity--{tooltip:''Build the packed atlas here in Unity rather than supplying one you made outside it.''}", Float) = 0
         [VixForgeVectorLabel(Columns, Rows)] _MatCap2_Grid ("Grid--{tooltip:''How the atlas is laid out, across and down.'',tooltips:[''How many matcaps sit across the atlas.'',''How many sit down the atlas.'']}", Vector) = (2,2,0,0)
-        _MatCap2_SecCount ("Sections--{tooltip:''How many separate matcaps are packed into that atlas.''}", Range(2,8)) = 4
+        _MatCap2_SecCount ("Sections--{tooltip:''How many separate matcaps are packed into that atlas.''}", Range(2,16)) = 4
         [VixForgeWideEnum(None, 0, Emission 1, 1, Emission 2, 2, Emission 3, 3, Emission 4, 4, Emission 5, 5, Matcap 1, 6, Matcap 2, 7, Matcap 3, 8, Matcap 4, 9, Matcap 5, 10)] _MatCap2_SecSrc ("Section Source--{tooltip:''Where the section number is read from. None reads the Mask above. Anything else borrows that layer Map, so the atlas needs no map of its own.''}", Float) = 0
         [Enum(R,0,G,1,B,2,A,3,Auto,4)] _MatCap2_SecCh ("Section Channel--{tooltip:''Which channel of the mask picks which packed matcap an area uses.''}", Float) = 0
         [VixForgeHelpbox(2)] _MatCap2_SecWarn ("That layer is switched off, so the section it picks stops holding once the material is locked.--{condition_show:((_MatCap2_SecSrc==1 && _UseEmission==0) || (_MatCap2_SecSrc==2 && _UseEmission2==0) || (_MatCap2_SecSrc==3 && _UseEmission3==0) || (_MatCap2_SecSrc==4 && _UseEmission4==0) || (_MatCap2_SecSrc==5 && _UseEmission5==0) || (_MatCap2_SecSrc==6 && _UseMatCap1==0) || (_MatCap2_SecSrc==7 && _UseMatCap2==0) || (_MatCap2_SecSrc==8 && _UseMatCap3==0) || (_MatCap2_SecSrc==9 && _UseMatCap4==0) || (_MatCap2_SecSrc==10 && _UseMatCap5==0))}", Float) = 0
         [HideInInspector] s_end_matcap2_atlas ("", Float) = 0
         [HideInInspector] s_start_matcap2_proc ("Procedural--{condition_show:(_MatCap2_Src==2)}", Float) = 0
-        [VixForgeWideEnum(Studio Rig, 0, Liquid Flow, 1, Shatter, 2, Iridescent Film, 3, Plasma, 4, Caustics, 5)] _MatCap2_Proc ("Style--{tooltip:''Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns.''}", Float) = 0
+        [VixForgeWideEnum(Studio Rig, 0, Liquid Flow, 1, Shatter, 2, Iridescent Film, 3, Plasma, 4, Caustics, 5, Chladni Plate, 6, Drum Head, 7, Ripple Tank, 8, Hyperspace Tunnel, 9, Hyperspace Weave, 10, Grid, 11, Rings, 12, Starfield, 13, Spectrum, 14, Waveform, 15, Julia Fractal, 16, Nebula, 17)] _MatCap2_Proc ("Style--{tooltip:''Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns. Chladni Plate, Drum Head and Ripple Tank draw vibrating plate figures, the two Hyperspace styles stream past, Grid and Rings are clean lines, Starfield twinkles, Spectrum and Waveform draw the music, Julia Fractal breathes and Nebula swirls.''}", Float) = 0
         _MatCap2_ProcA ("Colour A--{condition_show:(_MatCap2_Src==2),tooltip:''The first colour of the built-in matcap, used when you would rather not supply a texture at all.''}", Color) = (1,1,1,1)
         _MatCap2_ProcB ("Colour B--{condition_show:(_MatCap2_Src==2),tooltip:''The second colour it blends to.''}", Color) = (0.2,0.45,1,1)
         _MatCap2_ProcScale ("Scale--{condition_show:(_MatCap2_Src==2),tooltip:''How big the built-in pattern is.''}", Range(0.5,40)) = 6
@@ -2542,6 +2744,15 @@ Shader "VixenWear/Clothing Pro"
         [HideInInspector] _MatCap2_ProcSpeed_Ph ("", Float) = 0
         _MatCap2_ProcSharp ("Sharpness--{condition_show:(_MatCap2_Src==2),tooltip:''How hard the edge between the two colours is.''}", Range(0,1)) = 0.5
         _MatCap2_ProcWarp ("Warp--{condition_show:(_MatCap2_Src==2),tooltip:''How much the built-in pattern is bent out of shape, for something more liquid than a clean gradient.''}", Range(0,1)) = 0.3
+        [VixForgeHelpbox] _MatCap2_Tunnel_Attribution ("Hyperspace Tunnel uses the cosine turbulence from a shader by Yohei Nishitsuji, under MIT. Click for x.com/YoheiNishitsuji--{condition_show:(_MatCap2_Src==2 && _MatCap2_Proc==9),onClick:{type:URL,data:https://x.com/YoheiNishitsuji/status/2093826019346301256}}", Float) = 0
+        [VixForgeWideEnum(Flat, 0, Polar, 1, Kaleidoscope, 2, Tunnel, 3, Spiral, 4, Mirror, 5)] _MatCap2_ProcSpace ("Space--{condition_show:(_MatCap2_Src==2),tooltip:''Bends the pattern before it is drawn. Polar unrolls it round the middle, Kaleidoscope folds it into mirrored wedges, Tunnel rolls it down a tube, Spiral winds it inward and Mirror folds it into four. Flat leaves it as it is.''}", Float) = 0
+        [VixForgeVectorToSliders(Segments, p1, p16, Twist, n2, p2, Flow, n2, p2, Spin, n2, p2, speed_zw)] _MatCap2_ProcSpaceCtl ("Space Shape--{condition_show:(_MatCap2_Src==2),tooltip:''Shapes the Space you picked.'',tooltips:[''How many wedges Kaleidoscope folds into, and how many times Tunnel and Spiral wrap round.'',''Twists the pattern more the further out it is.'',''Slides the pattern outward, or down the tunnel, forever. Below 0 it runs the other way.'',''Turns the pattern round the middle, forever.'']}", Vector) = (6, 0, 0, 0)
+        [HideInInspector] _MatCap2_ProcSpaceCtl_Ph ("", Vector) = (0, 0, 0, 0)
+        _MatCap2_ProcDetail ("Detail--{condition_show:(_MatCap2_Src==2),tooltip:''More detail for the styles that have it: the plate's figure, how many stars, the fractal's depth and the nebula's layers.''}", Range(0, 1)) = 0.5
+        [VixForgeWideEnum(Two Colour, 0, Three Colour, 1, Rainbow, 2, Palette, 3, Music Colour, 4)] _MatCap2_ProcColor ("Colour--{condition_show:(_MatCap2_Src==2),tooltip:''How the pattern turns into colour. Two Colour runs from Colour A to Colour B, Three Colour adds Colour C, Rainbow runs round the colour wheel, Palette makes a smooth palette that Colour A picks, and Music Colour takes the colour of the music.''}", Float) = 0
+        _MatCap2_ProcC ("Colour C--{condition_show:(_MatCap2_Src==2 && _MatCap2_ProcColor==1),tooltip:''The third colour for Three Colour.''}", Color) = (1, 0.2, 0.6, 1)
+        [VixForgeVectorToSliders(Bands, p0, p16, Invert, p0, p1, Glow, p0, p4, Cycle, n2, p2, speed_w)] _MatCap2_ProcColorCtl ("Colour Shape--{condition_show:(_MatCap2_Src==2),tooltip:''Shapes the Colour you picked.'',tooltips:[''Steps the colours into flat bands. 0 or 1 keeps them smooth.'',''Swaps which end of the pattern gets which colour.'',''Makes the brightest part of the pattern glow.'',''Runs Rainbow and Palette round, forever.'']}", Vector) = (0, 0, 0, 0)
+        [HideInInspector] _MatCap2_ProcColorCtl_Ph ("", Vector) = (0, 0, 0, 0)
         [HideInInspector] s_end_matcap2_proc ("", Float) = 0
         [HideInInspector] s_start_matcap2_al ("AudioLink--{condition_show:(_UseAudioLink==1)}", Float) = 0
         [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3,Volume,4,Peak Hold,5)] _AL_Band_MatCap2 ("Band--{tooltip:''Which part of the music this matcap reacts to.''}", Float) = 0
@@ -2549,6 +2760,8 @@ Shader "VixenWear/Clothing Pro"
         _AL_MatCap2_Emis ("Emission--{tooltip:''How much the beat pushes this matcap into the glow.''}", Range(0,1)) = 0
         _AL_MatCap2_Hue ("Hue--{tooltip:''How far the beat swings the colour.''}", Range(0,1)) = 0
         _AL_MatCap2_Pan ("Scroll--{tooltip:''Drives Scroll from the track, so the image slides on the beat. On a Procedural layer it also pushes the pattern forward on the beat.''}", Range(0,1)) = 0
+        [VixForgeVectorToSliders(Size, p0, p2, Warp, p0, p2, Push, p0, p4, Twist, p0, p2)] _AL_MatCap2_Proc ("Pattern Beat--{condition_show:(_UseAudioLink==1 && _MatCap2_Src==2),tooltip:''How the music moves a procedural matcap.'',tooltips:[''The beat makes the pattern bigger.'',''The beat bends the pattern further.'',''The beat pushes the pattern forward. It adds to Speed rather than scaling it, so it never jumps.'',''The beat twists the pattern round the middle.'']}", Vector) = (0, 0, 0, 0)
+        [VixForgeVectorToSliders(Travel, p0, p1, Spectrum, p0, p1, Shake, p0, p1, Morph, p0, p1)] _AL_MatCap2_Proc2 ("Pattern Beat 2--{condition_show:(_UseAudioLink==1 && _MatCap2_Src==2),tooltip:''More ways the music moves a procedural matcap.'',tooltips:[''Each hit leaves the middle as a ring and travels out.'',''Lays the music out from the middle, bass at the centre.'',''The beat shakes the pattern.'',''The beat changes the shape itself: the plate's figure, the tunnel's turbulence, the fractal.'']}", Vector) = (0, 0, 0, 0)
         [HideInInspector] s_end_matcap2_al ("", Float) = 0
         [HideInInspector] s_end_tog_UseMatCap2 ("", Float) = 0
         [HideInInspector] m_end_matcap2 ("", Float) = 0
@@ -2626,13 +2839,13 @@ Shader "VixenWear/Clothing Pro"
         [VixForgeHelpbox] _MatCap3_AtlasHelp ("Press Build Atlas In Unity, then drop a matcap into each cell. It lays the sheet out, saves it and fills in Grid and Sections. Its second tab builds the mask too, from one black and white mask per section. Set each cell up under Atlas Sections at the top.", Float) = 0
         [VixForgeMatcapAtlasButton(3)] _MatCap3_AtlasBuild ("Build Atlas In Unity--{tooltip:''Build the packed atlas here in Unity rather than supplying one you made outside it.''}", Float) = 0
         [VixForgeVectorLabel(Columns, Rows)] _MatCap3_Grid ("Grid--{tooltip:''How the atlas is laid out, across and down.'',tooltips:[''How many matcaps sit across the atlas.'',''How many sit down the atlas.'']}", Vector) = (2,2,0,0)
-        _MatCap3_SecCount ("Sections--{tooltip:''How many separate matcaps are packed into that atlas.''}", Range(2,8)) = 4
+        _MatCap3_SecCount ("Sections--{tooltip:''How many separate matcaps are packed into that atlas.''}", Range(2,16)) = 4
         [VixForgeWideEnum(None, 0, Emission 1, 1, Emission 2, 2, Emission 3, 3, Emission 4, 4, Emission 5, 5, Matcap 1, 6, Matcap 2, 7, Matcap 3, 8, Matcap 4, 9, Matcap 5, 10)] _MatCap3_SecSrc ("Section Source--{tooltip:''Where the section number is read from. None reads the Mask above. Anything else borrows that layer Map, so the atlas needs no map of its own.''}", Float) = 0
         [Enum(R,0,G,1,B,2,A,3,Auto,4)] _MatCap3_SecCh ("Section Channel--{tooltip:''Which channel of the mask picks which packed matcap an area uses.''}", Float) = 0
         [VixForgeHelpbox(2)] _MatCap3_SecWarn ("That layer is switched off, so the section it picks stops holding once the material is locked.--{condition_show:((_MatCap3_SecSrc==1 && _UseEmission==0) || (_MatCap3_SecSrc==2 && _UseEmission2==0) || (_MatCap3_SecSrc==3 && _UseEmission3==0) || (_MatCap3_SecSrc==4 && _UseEmission4==0) || (_MatCap3_SecSrc==5 && _UseEmission5==0) || (_MatCap3_SecSrc==6 && _UseMatCap1==0) || (_MatCap3_SecSrc==7 && _UseMatCap2==0) || (_MatCap3_SecSrc==8 && _UseMatCap3==0) || (_MatCap3_SecSrc==9 && _UseMatCap4==0) || (_MatCap3_SecSrc==10 && _UseMatCap5==0))}", Float) = 0
         [HideInInspector] s_end_matcap3_atlas ("", Float) = 0
         [HideInInspector] s_start_matcap3_proc ("Procedural--{condition_show:(_MatCap3_Src==2)}", Float) = 0
-        [VixForgeWideEnum(Studio Rig, 0, Liquid Flow, 1, Shatter, 2, Iridescent Film, 3, Plasma, 4, Caustics, 5)] _MatCap3_Proc ("Style--{tooltip:''Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns.''}", Float) = 0
+        [VixForgeWideEnum(Studio Rig, 0, Liquid Flow, 1, Shatter, 2, Iridescent Film, 3, Plasma, 4, Caustics, 5, Chladni Plate, 6, Drum Head, 7, Ripple Tank, 8, Hyperspace Tunnel, 9, Hyperspace Weave, 10, Grid, 11, Rings, 12, Starfield, 13, Spectrum, 14, Waveform, 15, Julia Fractal, 16, Nebula, 17)] _MatCap3_Proc ("Style--{tooltip:''Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns. Chladni Plate, Drum Head and Ripple Tank draw vibrating plate figures, the two Hyperspace styles stream past, Grid and Rings are clean lines, Starfield twinkles, Spectrum and Waveform draw the music, Julia Fractal breathes and Nebula swirls.''}", Float) = 0
         _MatCap3_ProcA ("Colour A--{condition_show:(_MatCap3_Src==2),tooltip:''The first colour of the built-in matcap, used when you would rather not supply a texture at all.''}", Color) = (1,1,1,1)
         _MatCap3_ProcB ("Colour B--{condition_show:(_MatCap3_Src==2),tooltip:''The second colour it blends to.''}", Color) = (0.2,0.45,1,1)
         _MatCap3_ProcScale ("Scale--{condition_show:(_MatCap3_Src==2),tooltip:''How big the built-in pattern is.''}", Range(0.5,40)) = 6
@@ -2640,6 +2853,15 @@ Shader "VixenWear/Clothing Pro"
         [HideInInspector] _MatCap3_ProcSpeed_Ph ("", Float) = 0
         _MatCap3_ProcSharp ("Sharpness--{condition_show:(_MatCap3_Src==2),tooltip:''How hard the edge between the two colours is.''}", Range(0,1)) = 0.5
         _MatCap3_ProcWarp ("Warp--{condition_show:(_MatCap3_Src==2),tooltip:''How much the built-in pattern is bent out of shape, for something more liquid than a clean gradient.''}", Range(0,1)) = 0.3
+        [VixForgeHelpbox] _MatCap3_Tunnel_Attribution ("Hyperspace Tunnel uses the cosine turbulence from a shader by Yohei Nishitsuji, under MIT. Click for x.com/YoheiNishitsuji--{condition_show:(_MatCap3_Src==2 && _MatCap3_Proc==9),onClick:{type:URL,data:https://x.com/YoheiNishitsuji/status/2093826019346301256}}", Float) = 0
+        [VixForgeWideEnum(Flat, 0, Polar, 1, Kaleidoscope, 2, Tunnel, 3, Spiral, 4, Mirror, 5)] _MatCap3_ProcSpace ("Space--{condition_show:(_MatCap3_Src==2),tooltip:''Bends the pattern before it is drawn. Polar unrolls it round the middle, Kaleidoscope folds it into mirrored wedges, Tunnel rolls it down a tube, Spiral winds it inward and Mirror folds it into four. Flat leaves it as it is.''}", Float) = 0
+        [VixForgeVectorToSliders(Segments, p1, p16, Twist, n2, p2, Flow, n2, p2, Spin, n2, p2, speed_zw)] _MatCap3_ProcSpaceCtl ("Space Shape--{condition_show:(_MatCap3_Src==2),tooltip:''Shapes the Space you picked.'',tooltips:[''How many wedges Kaleidoscope folds into, and how many times Tunnel and Spiral wrap round.'',''Twists the pattern more the further out it is.'',''Slides the pattern outward, or down the tunnel, forever. Below 0 it runs the other way.'',''Turns the pattern round the middle, forever.'']}", Vector) = (6, 0, 0, 0)
+        [HideInInspector] _MatCap3_ProcSpaceCtl_Ph ("", Vector) = (0, 0, 0, 0)
+        _MatCap3_ProcDetail ("Detail--{condition_show:(_MatCap3_Src==2),tooltip:''More detail for the styles that have it: the plate's figure, how many stars, the fractal's depth and the nebula's layers.''}", Range(0, 1)) = 0.5
+        [VixForgeWideEnum(Two Colour, 0, Three Colour, 1, Rainbow, 2, Palette, 3, Music Colour, 4)] _MatCap3_ProcColor ("Colour--{condition_show:(_MatCap3_Src==2),tooltip:''How the pattern turns into colour. Two Colour runs from Colour A to Colour B, Three Colour adds Colour C, Rainbow runs round the colour wheel, Palette makes a smooth palette that Colour A picks, and Music Colour takes the colour of the music.''}", Float) = 0
+        _MatCap3_ProcC ("Colour C--{condition_show:(_MatCap3_Src==2 && _MatCap3_ProcColor==1),tooltip:''The third colour for Three Colour.''}", Color) = (1, 0.2, 0.6, 1)
+        [VixForgeVectorToSliders(Bands, p0, p16, Invert, p0, p1, Glow, p0, p4, Cycle, n2, p2, speed_w)] _MatCap3_ProcColorCtl ("Colour Shape--{condition_show:(_MatCap3_Src==2),tooltip:''Shapes the Colour you picked.'',tooltips:[''Steps the colours into flat bands. 0 or 1 keeps them smooth.'',''Swaps which end of the pattern gets which colour.'',''Makes the brightest part of the pattern glow.'',''Runs Rainbow and Palette round, forever.'']}", Vector) = (0, 0, 0, 0)
+        [HideInInspector] _MatCap3_ProcColorCtl_Ph ("", Vector) = (0, 0, 0, 0)
         [HideInInspector] s_end_matcap3_proc ("", Float) = 0
         [HideInInspector] s_start_matcap3_al ("AudioLink--{condition_show:(_UseAudioLink==1)}", Float) = 0
         [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3,Volume,4,Peak Hold,5)] _AL_Band_MatCap3 ("Band--{tooltip:''Which part of the music this matcap reacts to.''}", Float) = 0
@@ -2647,6 +2869,8 @@ Shader "VixenWear/Clothing Pro"
         _AL_MatCap3_Emis ("Emission--{tooltip:''How much the beat pushes this matcap into the glow.''}", Range(0,1)) = 0
         _AL_MatCap3_Hue ("Hue--{tooltip:''How far the beat swings the colour.''}", Range(0,1)) = 0
         _AL_MatCap3_Pan ("Scroll--{tooltip:''Drives Scroll from the track, so the image slides on the beat. On a Procedural layer it also pushes the pattern forward on the beat.''}", Range(0,1)) = 0
+        [VixForgeVectorToSliders(Size, p0, p2, Warp, p0, p2, Push, p0, p4, Twist, p0, p2)] _AL_MatCap3_Proc ("Pattern Beat--{condition_show:(_UseAudioLink==1 && _MatCap3_Src==2),tooltip:''How the music moves a procedural matcap.'',tooltips:[''The beat makes the pattern bigger.'',''The beat bends the pattern further.'',''The beat pushes the pattern forward. It adds to Speed rather than scaling it, so it never jumps.'',''The beat twists the pattern round the middle.'']}", Vector) = (0, 0, 0, 0)
+        [VixForgeVectorToSliders(Travel, p0, p1, Spectrum, p0, p1, Shake, p0, p1, Morph, p0, p1)] _AL_MatCap3_Proc2 ("Pattern Beat 2--{condition_show:(_UseAudioLink==1 && _MatCap3_Src==2),tooltip:''More ways the music moves a procedural matcap.'',tooltips:[''Each hit leaves the middle as a ring and travels out.'',''Lays the music out from the middle, bass at the centre.'',''The beat shakes the pattern.'',''The beat changes the shape itself: the plate's figure, the tunnel's turbulence, the fractal.'']}", Vector) = (0, 0, 0, 0)
         [HideInInspector] s_end_matcap3_al ("", Float) = 0
         [HideInInspector] s_end_tog_UseMatCap3 ("", Float) = 0
         [HideInInspector] m_end_matcap3 ("", Float) = 0
@@ -2724,13 +2948,13 @@ Shader "VixenWear/Clothing Pro"
         [VixForgeHelpbox] _MatCap4_AtlasHelp ("Press Build Atlas In Unity, then drop a matcap into each cell. It lays the sheet out, saves it and fills in Grid and Sections. Its second tab builds the mask too, from one black and white mask per section. Set each cell up under Atlas Sections at the top.", Float) = 0
         [VixForgeMatcapAtlasButton(4)] _MatCap4_AtlasBuild ("Build Atlas In Unity--{tooltip:''Build the packed atlas here in Unity rather than supplying one you made outside it.''}", Float) = 0
         [VixForgeVectorLabel(Columns, Rows)] _MatCap4_Grid ("Grid--{tooltip:''How the atlas is laid out, across and down.'',tooltips:[''How many matcaps sit across the atlas.'',''How many sit down the atlas.'']}", Vector) = (2,2,0,0)
-        _MatCap4_SecCount ("Sections--{tooltip:''How many separate matcaps are packed into that atlas.''}", Range(2,8)) = 4
+        _MatCap4_SecCount ("Sections--{tooltip:''How many separate matcaps are packed into that atlas.''}", Range(2,16)) = 4
         [VixForgeWideEnum(None, 0, Emission 1, 1, Emission 2, 2, Emission 3, 3, Emission 4, 4, Emission 5, 5, Matcap 1, 6, Matcap 2, 7, Matcap 3, 8, Matcap 4, 9, Matcap 5, 10)] _MatCap4_SecSrc ("Section Source--{tooltip:''Where the section number is read from. None reads the Mask above. Anything else borrows that layer Map, so the atlas needs no map of its own.''}", Float) = 0
         [Enum(R,0,G,1,B,2,A,3,Auto,4)] _MatCap4_SecCh ("Section Channel--{tooltip:''Which channel of the mask picks which packed matcap an area uses.''}", Float) = 0
         [VixForgeHelpbox(2)] _MatCap4_SecWarn ("That layer is switched off, so the section it picks stops holding once the material is locked.--{condition_show:((_MatCap4_SecSrc==1 && _UseEmission==0) || (_MatCap4_SecSrc==2 && _UseEmission2==0) || (_MatCap4_SecSrc==3 && _UseEmission3==0) || (_MatCap4_SecSrc==4 && _UseEmission4==0) || (_MatCap4_SecSrc==5 && _UseEmission5==0) || (_MatCap4_SecSrc==6 && _UseMatCap1==0) || (_MatCap4_SecSrc==7 && _UseMatCap2==0) || (_MatCap4_SecSrc==8 && _UseMatCap3==0) || (_MatCap4_SecSrc==9 && _UseMatCap4==0) || (_MatCap4_SecSrc==10 && _UseMatCap5==0))}", Float) = 0
         [HideInInspector] s_end_matcap4_atlas ("", Float) = 0
         [HideInInspector] s_start_matcap4_proc ("Procedural--{condition_show:(_MatCap4_Src==2)}", Float) = 0
-        [VixForgeWideEnum(Studio Rig, 0, Liquid Flow, 1, Shatter, 2, Iridescent Film, 3, Plasma, 4, Caustics, 5)] _MatCap4_Proc ("Style--{tooltip:''Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns.''}", Float) = 0
+        [VixForgeWideEnum(Studio Rig, 0, Liquid Flow, 1, Shatter, 2, Iridescent Film, 3, Plasma, 4, Caustics, 5, Chladni Plate, 6, Drum Head, 7, Ripple Tank, 8, Hyperspace Tunnel, 9, Hyperspace Weave, 10, Grid, 11, Rings, 12, Starfield, 13, Spectrum, 14, Waveform, 15, Julia Fractal, 16, Nebula, 17)] _MatCap4_Proc ("Style--{tooltip:''Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns. Chladni Plate, Drum Head and Ripple Tank draw vibrating plate figures, the two Hyperspace styles stream past, Grid and Rings are clean lines, Starfield twinkles, Spectrum and Waveform draw the music, Julia Fractal breathes and Nebula swirls.''}", Float) = 0
         _MatCap4_ProcA ("Colour A--{condition_show:(_MatCap4_Src==2),tooltip:''The first colour of the built-in matcap, used when you would rather not supply a texture at all.''}", Color) = (1,1,1,1)
         _MatCap4_ProcB ("Colour B--{condition_show:(_MatCap4_Src==2),tooltip:''The second colour it blends to.''}", Color) = (0.2,0.45,1,1)
         _MatCap4_ProcScale ("Scale--{condition_show:(_MatCap4_Src==2),tooltip:''How big the built-in pattern is.''}", Range(0.5,40)) = 6
@@ -2738,6 +2962,15 @@ Shader "VixenWear/Clothing Pro"
         [HideInInspector] _MatCap4_ProcSpeed_Ph ("", Float) = 0
         _MatCap4_ProcSharp ("Sharpness--{condition_show:(_MatCap4_Src==2),tooltip:''How hard the edge between the two colours is.''}", Range(0,1)) = 0.5
         _MatCap4_ProcWarp ("Warp--{condition_show:(_MatCap4_Src==2),tooltip:''How much the built-in pattern is bent out of shape, for something more liquid than a clean gradient.''}", Range(0,1)) = 0.3
+        [VixForgeHelpbox] _MatCap4_Tunnel_Attribution ("Hyperspace Tunnel uses the cosine turbulence from a shader by Yohei Nishitsuji, under MIT. Click for x.com/YoheiNishitsuji--{condition_show:(_MatCap4_Src==2 && _MatCap4_Proc==9),onClick:{type:URL,data:https://x.com/YoheiNishitsuji/status/2093826019346301256}}", Float) = 0
+        [VixForgeWideEnum(Flat, 0, Polar, 1, Kaleidoscope, 2, Tunnel, 3, Spiral, 4, Mirror, 5)] _MatCap4_ProcSpace ("Space--{condition_show:(_MatCap4_Src==2),tooltip:''Bends the pattern before it is drawn. Polar unrolls it round the middle, Kaleidoscope folds it into mirrored wedges, Tunnel rolls it down a tube, Spiral winds it inward and Mirror folds it into four. Flat leaves it as it is.''}", Float) = 0
+        [VixForgeVectorToSliders(Segments, p1, p16, Twist, n2, p2, Flow, n2, p2, Spin, n2, p2, speed_zw)] _MatCap4_ProcSpaceCtl ("Space Shape--{condition_show:(_MatCap4_Src==2),tooltip:''Shapes the Space you picked.'',tooltips:[''How many wedges Kaleidoscope folds into, and how many times Tunnel and Spiral wrap round.'',''Twists the pattern more the further out it is.'',''Slides the pattern outward, or down the tunnel, forever. Below 0 it runs the other way.'',''Turns the pattern round the middle, forever.'']}", Vector) = (6, 0, 0, 0)
+        [HideInInspector] _MatCap4_ProcSpaceCtl_Ph ("", Vector) = (0, 0, 0, 0)
+        _MatCap4_ProcDetail ("Detail--{condition_show:(_MatCap4_Src==2),tooltip:''More detail for the styles that have it: the plate's figure, how many stars, the fractal's depth and the nebula's layers.''}", Range(0, 1)) = 0.5
+        [VixForgeWideEnum(Two Colour, 0, Three Colour, 1, Rainbow, 2, Palette, 3, Music Colour, 4)] _MatCap4_ProcColor ("Colour--{condition_show:(_MatCap4_Src==2),tooltip:''How the pattern turns into colour. Two Colour runs from Colour A to Colour B, Three Colour adds Colour C, Rainbow runs round the colour wheel, Palette makes a smooth palette that Colour A picks, and Music Colour takes the colour of the music.''}", Float) = 0
+        _MatCap4_ProcC ("Colour C--{condition_show:(_MatCap4_Src==2 && _MatCap4_ProcColor==1),tooltip:''The third colour for Three Colour.''}", Color) = (1, 0.2, 0.6, 1)
+        [VixForgeVectorToSliders(Bands, p0, p16, Invert, p0, p1, Glow, p0, p4, Cycle, n2, p2, speed_w)] _MatCap4_ProcColorCtl ("Colour Shape--{condition_show:(_MatCap4_Src==2),tooltip:''Shapes the Colour you picked.'',tooltips:[''Steps the colours into flat bands. 0 or 1 keeps them smooth.'',''Swaps which end of the pattern gets which colour.'',''Makes the brightest part of the pattern glow.'',''Runs Rainbow and Palette round, forever.'']}", Vector) = (0, 0, 0, 0)
+        [HideInInspector] _MatCap4_ProcColorCtl_Ph ("", Vector) = (0, 0, 0, 0)
         [HideInInspector] s_end_matcap4_proc ("", Float) = 0
         [HideInInspector] s_start_matcap4_al ("AudioLink--{condition_show:(_UseAudioLink==1)}", Float) = 0
         [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3,Volume,4,Peak Hold,5)] _AL_Band_MatCap4 ("Band--{tooltip:''Which part of the music this matcap reacts to.''}", Float) = 0
@@ -2745,6 +2978,8 @@ Shader "VixenWear/Clothing Pro"
         _AL_MatCap4_Emis ("Emission--{tooltip:''How much the beat pushes this matcap into the glow.''}", Range(0,1)) = 0
         _AL_MatCap4_Hue ("Hue--{tooltip:''How far the beat swings the colour.''}", Range(0,1)) = 0
         _AL_MatCap4_Pan ("Scroll--{tooltip:''Drives Scroll from the track, so the image slides on the beat. On a Procedural layer it also pushes the pattern forward on the beat.''}", Range(0,1)) = 0
+        [VixForgeVectorToSliders(Size, p0, p2, Warp, p0, p2, Push, p0, p4, Twist, p0, p2)] _AL_MatCap4_Proc ("Pattern Beat--{condition_show:(_UseAudioLink==1 && _MatCap4_Src==2),tooltip:''How the music moves a procedural matcap.'',tooltips:[''The beat makes the pattern bigger.'',''The beat bends the pattern further.'',''The beat pushes the pattern forward. It adds to Speed rather than scaling it, so it never jumps.'',''The beat twists the pattern round the middle.'']}", Vector) = (0, 0, 0, 0)
+        [VixForgeVectorToSliders(Travel, p0, p1, Spectrum, p0, p1, Shake, p0, p1, Morph, p0, p1)] _AL_MatCap4_Proc2 ("Pattern Beat 2--{condition_show:(_UseAudioLink==1 && _MatCap4_Src==2),tooltip:''More ways the music moves a procedural matcap.'',tooltips:[''Each hit leaves the middle as a ring and travels out.'',''Lays the music out from the middle, bass at the centre.'',''The beat shakes the pattern.'',''The beat changes the shape itself: the plate's figure, the tunnel's turbulence, the fractal.'']}", Vector) = (0, 0, 0, 0)
         [HideInInspector] s_end_matcap4_al ("", Float) = 0
         [HideInInspector] s_end_tog_UseMatCap4 ("", Float) = 0
         [HideInInspector] m_end_matcap4 ("", Float) = 0
@@ -2822,13 +3057,13 @@ Shader "VixenWear/Clothing Pro"
         [VixForgeHelpbox] _MatCap5_AtlasHelp ("Press Build Atlas In Unity, then drop a matcap into each cell. It lays the sheet out, saves it and fills in Grid and Sections. Its second tab builds the mask too, from one black and white mask per section. Set each cell up under Atlas Sections at the top.", Float) = 0
         [VixForgeMatcapAtlasButton(5)] _MatCap5_AtlasBuild ("Build Atlas In Unity--{tooltip:''Build the packed atlas here in Unity rather than supplying one you made outside it.''}", Float) = 0
         [VixForgeVectorLabel(Columns, Rows)] _MatCap5_Grid ("Grid--{tooltip:''How the atlas is laid out, across and down.'',tooltips:[''How many matcaps sit across the atlas.'',''How many sit down the atlas.'']}", Vector) = (2,2,0,0)
-        _MatCap5_SecCount ("Sections--{tooltip:''How many separate matcaps are packed into that atlas.''}", Range(2,8)) = 4
+        _MatCap5_SecCount ("Sections--{tooltip:''How many separate matcaps are packed into that atlas.''}", Range(2,16)) = 4
         [VixForgeWideEnum(None, 0, Emission 1, 1, Emission 2, 2, Emission 3, 3, Emission 4, 4, Emission 5, 5, Matcap 1, 6, Matcap 2, 7, Matcap 3, 8, Matcap 4, 9, Matcap 5, 10)] _MatCap5_SecSrc ("Section Source--{tooltip:''Where the section number is read from. None reads the Mask above. Anything else borrows that layer Map, so the atlas needs no map of its own.''}", Float) = 0
         [Enum(R,0,G,1,B,2,A,3,Auto,4)] _MatCap5_SecCh ("Section Channel--{tooltip:''Which channel of the mask picks which packed matcap an area uses.''}", Float) = 0
         [VixForgeHelpbox(2)] _MatCap5_SecWarn ("That layer is switched off, so the section it picks stops holding once the material is locked.--{condition_show:((_MatCap5_SecSrc==1 && _UseEmission==0) || (_MatCap5_SecSrc==2 && _UseEmission2==0) || (_MatCap5_SecSrc==3 && _UseEmission3==0) || (_MatCap5_SecSrc==4 && _UseEmission4==0) || (_MatCap5_SecSrc==5 && _UseEmission5==0) || (_MatCap5_SecSrc==6 && _UseMatCap1==0) || (_MatCap5_SecSrc==7 && _UseMatCap2==0) || (_MatCap5_SecSrc==8 && _UseMatCap3==0) || (_MatCap5_SecSrc==9 && _UseMatCap4==0) || (_MatCap5_SecSrc==10 && _UseMatCap5==0))}", Float) = 0
         [HideInInspector] s_end_matcap5_atlas ("", Float) = 0
         [HideInInspector] s_start_matcap5_proc ("Procedural--{condition_show:(_MatCap5_Src==2)}", Float) = 0
-        [VixForgeWideEnum(Studio Rig, 0, Liquid Flow, 1, Shatter, 2, Iridescent Film, 3, Plasma, 4, Caustics, 5)] _MatCap5_Proc ("Style--{tooltip:''Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns.''}", Float) = 0
+        [VixForgeWideEnum(Studio Rig, 0, Liquid Flow, 1, Shatter, 2, Iridescent Film, 3, Plasma, 4, Caustics, 5, Chladni Plate, 6, Drum Head, 7, Ripple Tank, 8, Hyperspace Tunnel, 9, Hyperspace Weave, 10, Grid, 11, Rings, 12, Starfield, 13, Spectrum, 14, Waveform, 15, Julia Fractal, 16, Nebula, 17)] _MatCap5_Proc ("Style--{tooltip:''Studio Rig is a lit sphere with a key light and a rim, which is what most matcap images are painted to imitate. Liquid Flow churns. Shatter reads as broken foil. Iridescent Film is the oil slick sweep. Plasma and Caustics are moving light patterns. Chladni Plate, Drum Head and Ripple Tank draw vibrating plate figures, the two Hyperspace styles stream past, Grid and Rings are clean lines, Starfield twinkles, Spectrum and Waveform draw the music, Julia Fractal breathes and Nebula swirls.''}", Float) = 0
         _MatCap5_ProcA ("Colour A--{condition_show:(_MatCap5_Src==2),tooltip:''The first colour of the built-in matcap, used when you would rather not supply a texture at all.''}", Color) = (1,1,1,1)
         _MatCap5_ProcB ("Colour B--{condition_show:(_MatCap5_Src==2),tooltip:''The second colour it blends to.''}", Color) = (0.2,0.45,1,1)
         _MatCap5_ProcScale ("Scale--{condition_show:(_MatCap5_Src==2),tooltip:''How big the built-in pattern is.''}", Range(0.5,40)) = 6
@@ -2836,6 +3071,15 @@ Shader "VixenWear/Clothing Pro"
         [HideInInspector] _MatCap5_ProcSpeed_Ph ("", Float) = 0
         _MatCap5_ProcSharp ("Sharpness--{condition_show:(_MatCap5_Src==2),tooltip:''How hard the edge between the two colours is.''}", Range(0,1)) = 0.5
         _MatCap5_ProcWarp ("Warp--{condition_show:(_MatCap5_Src==2),tooltip:''How much the built-in pattern is bent out of shape, for something more liquid than a clean gradient.''}", Range(0,1)) = 0.3
+        [VixForgeHelpbox] _MatCap5_Tunnel_Attribution ("Hyperspace Tunnel uses the cosine turbulence from a shader by Yohei Nishitsuji, under MIT. Click for x.com/YoheiNishitsuji--{condition_show:(_MatCap5_Src==2 && _MatCap5_Proc==9),onClick:{type:URL,data:https://x.com/YoheiNishitsuji/status/2093826019346301256}}", Float) = 0
+        [VixForgeWideEnum(Flat, 0, Polar, 1, Kaleidoscope, 2, Tunnel, 3, Spiral, 4, Mirror, 5)] _MatCap5_ProcSpace ("Space--{condition_show:(_MatCap5_Src==2),tooltip:''Bends the pattern before it is drawn. Polar unrolls it round the middle, Kaleidoscope folds it into mirrored wedges, Tunnel rolls it down a tube, Spiral winds it inward and Mirror folds it into four. Flat leaves it as it is.''}", Float) = 0
+        [VixForgeVectorToSliders(Segments, p1, p16, Twist, n2, p2, Flow, n2, p2, Spin, n2, p2, speed_zw)] _MatCap5_ProcSpaceCtl ("Space Shape--{condition_show:(_MatCap5_Src==2),tooltip:''Shapes the Space you picked.'',tooltips:[''How many wedges Kaleidoscope folds into, and how many times Tunnel and Spiral wrap round.'',''Twists the pattern more the further out it is.'',''Slides the pattern outward, or down the tunnel, forever. Below 0 it runs the other way.'',''Turns the pattern round the middle, forever.'']}", Vector) = (6, 0, 0, 0)
+        [HideInInspector] _MatCap5_ProcSpaceCtl_Ph ("", Vector) = (0, 0, 0, 0)
+        _MatCap5_ProcDetail ("Detail--{condition_show:(_MatCap5_Src==2),tooltip:''More detail for the styles that have it: the plate's figure, how many stars, the fractal's depth and the nebula's layers.''}", Range(0, 1)) = 0.5
+        [VixForgeWideEnum(Two Colour, 0, Three Colour, 1, Rainbow, 2, Palette, 3, Music Colour, 4)] _MatCap5_ProcColor ("Colour--{condition_show:(_MatCap5_Src==2),tooltip:''How the pattern turns into colour. Two Colour runs from Colour A to Colour B, Three Colour adds Colour C, Rainbow runs round the colour wheel, Palette makes a smooth palette that Colour A picks, and Music Colour takes the colour of the music.''}", Float) = 0
+        _MatCap5_ProcC ("Colour C--{condition_show:(_MatCap5_Src==2 && _MatCap5_ProcColor==1),tooltip:''The third colour for Three Colour.''}", Color) = (1, 0.2, 0.6, 1)
+        [VixForgeVectorToSliders(Bands, p0, p16, Invert, p0, p1, Glow, p0, p4, Cycle, n2, p2, speed_w)] _MatCap5_ProcColorCtl ("Colour Shape--{condition_show:(_MatCap5_Src==2),tooltip:''Shapes the Colour you picked.'',tooltips:[''Steps the colours into flat bands. 0 or 1 keeps them smooth.'',''Swaps which end of the pattern gets which colour.'',''Makes the brightest part of the pattern glow.'',''Runs Rainbow and Palette round, forever.'']}", Vector) = (0, 0, 0, 0)
+        [HideInInspector] _MatCap5_ProcColorCtl_Ph ("", Vector) = (0, 0, 0, 0)
         [HideInInspector] s_end_matcap5_proc ("", Float) = 0
         [HideInInspector] s_start_matcap5_al ("AudioLink--{condition_show:(_UseAudioLink==1)}", Float) = 0
         [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3,Volume,4,Peak Hold,5)] _AL_Band_MatCap5 ("Band--{tooltip:''Which part of the music this matcap reacts to.''}", Float) = 0
@@ -2843,11 +3087,510 @@ Shader "VixenWear/Clothing Pro"
         _AL_MatCap5_Emis ("Emission--{tooltip:''How much the beat pushes this matcap into the glow.''}", Range(0,1)) = 0
         _AL_MatCap5_Hue ("Hue--{tooltip:''How far the beat swings the colour.''}", Range(0,1)) = 0
         _AL_MatCap5_Pan ("Scroll--{tooltip:''Drives Scroll from the track, so the image slides on the beat. On a Procedural layer it also pushes the pattern forward on the beat.''}", Range(0,1)) = 0
+        [VixForgeVectorToSliders(Size, p0, p2, Warp, p0, p2, Push, p0, p4, Twist, p0, p2)] _AL_MatCap5_Proc ("Pattern Beat--{condition_show:(_UseAudioLink==1 && _MatCap5_Src==2),tooltip:''How the music moves a procedural matcap.'',tooltips:[''The beat makes the pattern bigger.'',''The beat bends the pattern further.'',''The beat pushes the pattern forward. It adds to Speed rather than scaling it, so it never jumps.'',''The beat twists the pattern round the middle.'']}", Vector) = (0, 0, 0, 0)
+        [VixForgeVectorToSliders(Travel, p0, p1, Spectrum, p0, p1, Shake, p0, p1, Morph, p0, p1)] _AL_MatCap5_Proc2 ("Pattern Beat 2--{condition_show:(_UseAudioLink==1 && _MatCap5_Src==2),tooltip:''More ways the music moves a procedural matcap.'',tooltips:[''Each hit leaves the middle as a ring and travels out.'',''Lays the music out from the middle, bass at the centre.'',''The beat shakes the pattern.'',''The beat changes the shape itself: the plate's figure, the tunnel's turbulence, the fractal.'']}", Vector) = (0, 0, 0, 0)
         [HideInInspector] s_end_matcap5_al ("", Float) = 0
         [HideInInspector] s_end_tog_UseMatCap5 ("", Float) = 0
         [HideInInspector] m_end_matcap5 ("", Float) = 0
         //endex
 
+        //ifex _UseCtx==0
+        [HideInInspector] m_viewercontext ("VIEWER CONTEXT--{reference_property:_UseCtx,button_help:{action:{type:URL,data:https://vixencreations.github.io/VixenToolBox/shaderdocs.html#viewercontext}}}", Float) = 0
+        [HideInInspector][VixForgeToggleUI(VF_CTX)] _UseCtx ("Enable--{tooltip:''Lets any part of the material react to where it is drawn and who is looking: only in mirrors, only in photos, up close, where someone looks, under a coloured light, in the dark or on the beat. Each part below has its own rules. It costs nothing while it is off.''}", Float) = 0
+        [VixForgeHelpbox] _Ctx_Help ("Turn on a part below, then set when it shows. Every rule you use has to pass for it to show, and Hidden Level says how much stays where it does not. Everyone sees their own version at the same time.--{condition_show:(_UseCtx==1)}", Float) = 0
+        [VixForgesRGBWarning][NoScaleOffset][VixForgeTextureKeyword(VF_TEX_CTXMASK)] _CtxMask ("Mask--{condition_show:(_UseCtx==1),tooltip:''One mask every part below can use. Pick a channel in a part's Mask Channel to keep its rules to the painted area. Outside it, that part is left alone.''}", 2D) = "white" {}
+        [HideInInspector] m_start_ctx_Ink ("Hidden Ink--{reference_property:_CtxInkOn,condition_show:(_UseCtx==1),tooltip:''A hidden design that shows only when its rules say so: under a coloured light like UV-reactive ink, where someone looks, in the dark, on the beat or only in mirrors.''}", Float) = 0
+        [HideInInspector][ToggleUI] _CtxInkOn ("Enable--{tooltip:''Turns the Hidden Ink on.''}", Float) = 0
+        //ifex _CtxInkOn==0
+        [HideInInspector] s_start_tog_CtxInk ("Hidden Ink Settings--{condition_show:(_CtxInkOn==1)}", Float) = 0
+        [HideInInspector] s_start_ctx_Ink_layer ("Ink", Float) = 0
+        [VixForgesRGBWarning(gamma)][VixForgeTextureKeyword(VF_TEX_CTXINK)] _CtxInkTex ("Design--{tooltip:''The hidden design. Its colour tints the ink, and its alpha says where the ink is.''}", 2D) = "white" {}
+        [VixForgeWideEnum(UV0, 0, UV1, 1)] _CtxInkUV ("UV Set--{tooltip:''Which UV layout the design follows.''}", Float) = 0
+        [HDR] _CtxInkColor ("Colour--{tooltip:''The colour of the ink.''}", Color) = (0.2, 1, 0.6, 1)
+        [VixForgeWideEnum(Fluorescent, 0, Glow, 1, Paint, 2)] _CtxInkMode ("Mode--{tooltip:''Fluorescent glows only where light of the Light Colour below lands on it, brighter the stronger that light is, like real UV-reactive ink. Glow lights up wherever the rules let it show. Paint lays the ink on the surface like a print.''}", Float) = 0
+        _CtxInkStrength ("Strength--{condition_show:(_CtxInkMode!=2),tooltip:''How bright the glow is.''}", Range(0, 20)) = 3
+        [HideInInspector] s_end_ctx_Ink_layer ("", Float) = 0
+        [HideInInspector] s_start_ctx_Ink_where ("Where", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxInkWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxInkEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Ink_where ("", Float) = 0
+        [HideInInspector] s_start_ctx_Ink_look ("Distance & Gaze", Float) = 0
+        [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxInkDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
+        [VixForgeVectorToSliders(Near, p0, p5, Far, p0, p20)] _CtxInkDist ("Distance Range--{condition_show:(_CtxInkDistMode!=0),tooltip:''The distances it reacts between, in metres.'',tooltips:[''Fully reacted by this distance.'',''Stops reacting at this distance.'']}", Vector) = (0.5, 3, 0, 0)
+        _CtxInkGaze ("Face-On Only--{tooltip:''How square on the viewer has to be looking at this part before it shows.''}", Range(0, 1)) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Angle, p1, p60, Softness, p0, p1)] _CtxInkTorch ("Gaze Torch--{tooltip:''Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own.'',tooltips:[''How much the torch decides. 0 turns it off.'',''How wide the torch is, in degrees.'',''How soft its edge is.'']}", Vector) = (0, 12, 0.5, 0)
+        [HideInInspector] s_end_ctx_Ink_look ("", Float) = 0
+        [HideInInspector] s_start_ctx_Ink_light ("Light", Float) = 0
+        _CtxInkLightCol ("Light Colour--{tooltip:''The colour of light that makes the ink glow, like the violet of a blacklight.''}", Color) = (0.55, 0.15, 1, 1)
+        [VixForgeVectorToSliders(Amount, p0, p1, Tolerance, p1, p90, Min Brightness, p0, p2, Softness, p0, p1)] _CtxInkLight ("Light Colour Match--{tooltip:''In Fluorescent mode the ink glows by how much of this light lands on it. In the other modes it shows only where this light lands.'',tooltips:[''How much the light colour decides. 0 turns it off.'',''How close a light has to be to that colour, in degrees of hue. Lower is pickier.'',''How bright that light has to be.'',''How gently it fades in near the limits.'']}", Vector) = (1, 25, 0.02, 0.5)
+        [VixForgeVectorToSliders(Amount, p0, p1, Dark, p0, p2, Bright, p0, p4)] _CtxInkDark ("Darkness--{tooltip:''Shows it in the dark and fades it as the room gets brighter.'',tooltips:[''How much darkness decides. 0 turns it off.'',''Fully shown at or below this brightness.'',''Gone at or above this brightness.'']}", Vector) = (0, 0.05, 0.5, 0)
+        [HideInInspector] s_end_ctx_Ink_light ("", Float) = 0
+        [HideInInspector] s_start_ctx_Ink_beat ("Beat--{condition_show:(_UseAudioLink==1)}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Threshold, p0, p1, Softness, p0, p1)] _CtxInkBeat ("Beat--{condition_show:(_UseAudioLink==1),tooltip:''Shows it on the beat.'',tooltips:[''How much the beat decides. 0 turns it off.'',''How loud the band has to be.'',''How gently it fades in around that level.'']}", Vector) = (0, 0.4, 0.2, 0)
+        [VixForgeWideEnum(Bass, 0, Low Mid, 1, High Mid, 2, Treble, 3)] _CtxInkBand ("AudioLink Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music it listens to.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Ink_beat ("", Float) = 0
+        [HideInInspector] s_start_ctx_Ink_result ("Result", Float) = 0
+        [ToggleUI] _CtxInkInvert ("Invert--{tooltip:''Flips the rules, so it shows exactly where it would have been hidden.''}", Float) = 0
+        _CtxInkHidden ("Hidden Level--{tooltip:''How much stays where the rules hide it. 0 removes it there.''}", Range(0, 1)) = 0
+        [VixForgeWideEnum(Off, 0, R, 1, G, 2, B, 3, A, 4, Auto, 5)] _CtxInkMaskCh ("Mask Channel--{tooltip:''Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Ink_result ("", Float) = 0
+        [HideInInspector] s_end_tog_CtxInk ("", Float) = 0
+        //endex
+        [HideInInspector] m_end_ctx_Ink ("", Float) = 0
+        [HideInInspector] m_start_ctx_Base ("Base--{reference_property:_CtxBaseOn,condition_show:(_UseCtx==1),tooltip:''Shows or hides the whole material. Needs Rendering Mode on Cutout, Fade or Transparent.''}", Float) = 0
+        [HideInInspector][ToggleUI] _CtxBaseOn ("Enable--{tooltip:''Gives the whole material its own rules.''}", Float) = 0
+        //ifex _CtxBaseOn==0
+        [HideInInspector] s_start_tog_CtxBase ("Base Settings--{condition_show:(_CtxBaseOn==1)}", Float) = 0
+        [VixForgeHelpbox(1)] _CtxBase_Help ("Set Rendering Mode to Cutout, Fade or Transparent under RENDERING, or the material cannot be hidden.", Float) = 0
+        [HideInInspector] s_start_ctx_Base_where ("Where", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxBaseWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxBaseEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Base_where ("", Float) = 0
+        [HideInInspector] s_start_ctx_Base_look ("Distance & Gaze", Float) = 0
+        [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxBaseDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
+        [VixForgeVectorToSliders(Near, p0, p5, Far, p0, p20)] _CtxBaseDist ("Distance Range--{condition_show:(_CtxBaseDistMode!=0),tooltip:''The distances it reacts between, in metres.'',tooltips:[''Fully reacted by this distance.'',''Stops reacting at this distance.'']}", Vector) = (0.5, 3, 0, 0)
+        _CtxBaseGaze ("Face-On Only--{tooltip:''How square on the viewer has to be looking at this part before it shows.''}", Range(0, 1)) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Angle, p1, p60, Softness, p0, p1)] _CtxBaseTorch ("Gaze Torch--{tooltip:''Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own.'',tooltips:[''How much the torch decides. 0 turns it off.'',''How wide the torch is, in degrees.'',''How soft its edge is.'']}", Vector) = (0, 12, 0.5, 0)
+        [HideInInspector] s_end_ctx_Base_look ("", Float) = 0
+        [HideInInspector] s_start_ctx_Base_light ("Light", Float) = 0
+        _CtxBaseLightCol ("Light Colour--{tooltip:''The colour of light that reveals it, like the violet of a blacklight.''}", Color) = (0.55, 0.15, 1, 1)
+        [VixForgeVectorToSliders(Amount, p0, p1, Tolerance, p1, p90, Min Brightness, p0, p2, Softness, p0, p1)] _CtxBaseLight ("Light Colour Match--{tooltip:''Shows it only where light of that colour lands on it, from any light in the room.'',tooltips:[''How much the light colour decides. 0 turns it off.'',''How close a light has to be to that colour, in degrees of hue. Lower is pickier.'',''How bright that light has to be.'',''How gently it fades in near the limits.'']}", Vector) = (0, 20, 0.05, 0.5)
+        [VixForgeVectorToSliders(Amount, p0, p1, Dark, p0, p2, Bright, p0, p4)] _CtxBaseDark ("Darkness--{tooltip:''Shows it in the dark and fades it as the room gets brighter.'',tooltips:[''How much darkness decides. 0 turns it off.'',''Fully shown at or below this brightness.'',''Gone at or above this brightness.'']}", Vector) = (0, 0.05, 0.5, 0)
+        [HideInInspector] s_end_ctx_Base_light ("", Float) = 0
+        [HideInInspector] s_start_ctx_Base_beat ("Beat--{condition_show:(_UseAudioLink==1)}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Threshold, p0, p1, Softness, p0, p1)] _CtxBaseBeat ("Beat--{condition_show:(_UseAudioLink==1),tooltip:''Shows it on the beat.'',tooltips:[''How much the beat decides. 0 turns it off.'',''How loud the band has to be.'',''How gently it fades in around that level.'']}", Vector) = (0, 0.4, 0.2, 0)
+        [VixForgeWideEnum(Bass, 0, Low Mid, 1, High Mid, 2, Treble, 3)] _CtxBaseBand ("AudioLink Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music it listens to.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Base_beat ("", Float) = 0
+        [HideInInspector] s_start_ctx_Base_result ("Result", Float) = 0
+        [ToggleUI] _CtxBaseInvert ("Invert--{tooltip:''Flips the rules, so it shows exactly where it would have been hidden.''}", Float) = 0
+        _CtxBaseHidden ("Hidden Level--{tooltip:''How much stays where the rules hide it. 0 removes it there.''}", Range(0, 1)) = 0
+        [VixForgeWideEnum(Off, 0, R, 1, G, 2, B, 3, A, 4, Auto, 5)] _CtxBaseMaskCh ("Mask Channel--{tooltip:''Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Base_result ("", Float) = 0
+        [HideInInspector] s_end_tog_CtxBase ("", Float) = 0
+        //endex
+        [HideInInspector] m_end_ctx_Base ("", Float) = 0
+        [HideInInspector] m_start_ctx_Norm ("Normal Maps--{reference_property:_CtxNormOn,condition_show:(_UseCtx==1),tooltip:''Fades every normal map on the material, so its fine detail can show only up close or only in mirrors.''}", Float) = 0
+        [HideInInspector][ToggleUI] _CtxNormOn ("Enable--{tooltip:''Gives the normal maps their own rules.''}", Float) = 0
+        //ifex _CtxNormOn==0
+        [HideInInspector] s_start_tog_CtxNorm ("Normal Maps Settings--{condition_show:(_CtxNormOn==1)}", Float) = 0
+        [HideInInspector] s_start_ctx_Norm_where ("Where", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxNormWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxNormEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Norm_where ("", Float) = 0
+        [HideInInspector] s_start_ctx_Norm_look ("Distance & Gaze", Float) = 0
+        [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxNormDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
+        [VixForgeVectorToSliders(Near, p0, p5, Far, p0, p20)] _CtxNormDist ("Distance Range--{condition_show:(_CtxNormDistMode!=0),tooltip:''The distances it reacts between, in metres.'',tooltips:[''Fully reacted by this distance.'',''Stops reacting at this distance.'']}", Vector) = (0.5, 3, 0, 0)
+        _CtxNormGaze ("Face-On Only--{tooltip:''How square on the viewer has to be looking at this part before it shows.''}", Range(0, 1)) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Angle, p1, p60, Softness, p0, p1)] _CtxNormTorch ("Gaze Torch--{tooltip:''Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own.'',tooltips:[''How much the torch decides. 0 turns it off.'',''How wide the torch is, in degrees.'',''How soft its edge is.'']}", Vector) = (0, 12, 0.5, 0)
+        [HideInInspector] s_end_ctx_Norm_look ("", Float) = 0
+        [HideInInspector] s_start_ctx_Norm_light ("Light", Float) = 0
+        _CtxNormLightCol ("Light Colour--{tooltip:''The colour of light that reveals it, like the violet of a blacklight.''}", Color) = (0.55, 0.15, 1, 1)
+        [VixForgeVectorToSliders(Amount, p0, p1, Tolerance, p1, p90, Min Brightness, p0, p2, Softness, p0, p1)] _CtxNormLight ("Light Colour Match--{tooltip:''Shows it only where light of that colour lands on it, from any light in the room.'',tooltips:[''How much the light colour decides. 0 turns it off.'',''How close a light has to be to that colour, in degrees of hue. Lower is pickier.'',''How bright that light has to be.'',''How gently it fades in near the limits.'']}", Vector) = (0, 20, 0.05, 0.5)
+        [VixForgeVectorToSliders(Amount, p0, p1, Dark, p0, p2, Bright, p0, p4)] _CtxNormDark ("Darkness--{tooltip:''Shows it in the dark and fades it as the room gets brighter.'',tooltips:[''How much darkness decides. 0 turns it off.'',''Fully shown at or below this brightness.'',''Gone at or above this brightness.'']}", Vector) = (0, 0.05, 0.5, 0)
+        [HideInInspector] s_end_ctx_Norm_light ("", Float) = 0
+        [HideInInspector] s_start_ctx_Norm_beat ("Beat--{condition_show:(_UseAudioLink==1)}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Threshold, p0, p1, Softness, p0, p1)] _CtxNormBeat ("Beat--{condition_show:(_UseAudioLink==1),tooltip:''Shows it on the beat.'',tooltips:[''How much the beat decides. 0 turns it off.'',''How loud the band has to be.'',''How gently it fades in around that level.'']}", Vector) = (0, 0.4, 0.2, 0)
+        [VixForgeWideEnum(Bass, 0, Low Mid, 1, High Mid, 2, Treble, 3)] _CtxNormBand ("AudioLink Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music it listens to.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Norm_beat ("", Float) = 0
+        [HideInInspector] s_start_ctx_Norm_result ("Result", Float) = 0
+        [ToggleUI] _CtxNormInvert ("Invert--{tooltip:''Flips the rules, so it shows exactly where it would have been hidden.''}", Float) = 0
+        _CtxNormHidden ("Hidden Level--{tooltip:''How much stays where the rules hide it. 0 removes it there.''}", Range(0, 1)) = 0
+        [VixForgeWideEnum(Off, 0, R, 1, G, 2, B, 3, A, 4, Auto, 5)] _CtxNormMaskCh ("Mask Channel--{tooltip:''Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Norm_result ("", Float) = 0
+        [HideInInspector] s_end_tog_CtxNorm ("", Float) = 0
+        //endex
+        [HideInInspector] m_end_ctx_Norm ("", Float) = 0
+        [HideInInspector] m_start_ctx_Surf ("Surface--{reference_property:_CtxSurfOn,condition_show:(_UseCtx==1),tooltip:''Fades the reflections and highlights, so the material turns glossy or matte depending on who is looking.''}", Float) = 0
+        [HideInInspector][ToggleUI] _CtxSurfOn ("Enable--{tooltip:''Gives the reflections and highlights their own rules.''}", Float) = 0
+        //ifex _CtxSurfOn==0
+        [HideInInspector] s_start_tog_CtxSurf ("Surface Settings--{condition_show:(_CtxSurfOn==1)}", Float) = 0
+        [HideInInspector] s_start_ctx_Surf_where ("Where", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxSurfWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxSurfEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Surf_where ("", Float) = 0
+        [HideInInspector] s_start_ctx_Surf_look ("Distance & Gaze", Float) = 0
+        [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxSurfDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
+        [VixForgeVectorToSliders(Near, p0, p5, Far, p0, p20)] _CtxSurfDist ("Distance Range--{condition_show:(_CtxSurfDistMode!=0),tooltip:''The distances it reacts between, in metres.'',tooltips:[''Fully reacted by this distance.'',''Stops reacting at this distance.'']}", Vector) = (0.5, 3, 0, 0)
+        _CtxSurfGaze ("Face-On Only--{tooltip:''How square on the viewer has to be looking at this part before it shows.''}", Range(0, 1)) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Angle, p1, p60, Softness, p0, p1)] _CtxSurfTorch ("Gaze Torch--{tooltip:''Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own.'',tooltips:[''How much the torch decides. 0 turns it off.'',''How wide the torch is, in degrees.'',''How soft its edge is.'']}", Vector) = (0, 12, 0.5, 0)
+        [HideInInspector] s_end_ctx_Surf_look ("", Float) = 0
+        [HideInInspector] s_start_ctx_Surf_light ("Light", Float) = 0
+        _CtxSurfLightCol ("Light Colour--{tooltip:''The colour of light that reveals it, like the violet of a blacklight.''}", Color) = (0.55, 0.15, 1, 1)
+        [VixForgeVectorToSliders(Amount, p0, p1, Tolerance, p1, p90, Min Brightness, p0, p2, Softness, p0, p1)] _CtxSurfLight ("Light Colour Match--{tooltip:''Shows it only where light of that colour lands on it, from any light in the room.'',tooltips:[''How much the light colour decides. 0 turns it off.'',''How close a light has to be to that colour, in degrees of hue. Lower is pickier.'',''How bright that light has to be.'',''How gently it fades in near the limits.'']}", Vector) = (0, 20, 0.05, 0.5)
+        [VixForgeVectorToSliders(Amount, p0, p1, Dark, p0, p2, Bright, p0, p4)] _CtxSurfDark ("Darkness--{tooltip:''Shows it in the dark and fades it as the room gets brighter.'',tooltips:[''How much darkness decides. 0 turns it off.'',''Fully shown at or below this brightness.'',''Gone at or above this brightness.'']}", Vector) = (0, 0.05, 0.5, 0)
+        [HideInInspector] s_end_ctx_Surf_light ("", Float) = 0
+        [HideInInspector] s_start_ctx_Surf_beat ("Beat--{condition_show:(_UseAudioLink==1)}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Threshold, p0, p1, Softness, p0, p1)] _CtxSurfBeat ("Beat--{condition_show:(_UseAudioLink==1),tooltip:''Shows it on the beat.'',tooltips:[''How much the beat decides. 0 turns it off.'',''How loud the band has to be.'',''How gently it fades in around that level.'']}", Vector) = (0, 0.4, 0.2, 0)
+        [VixForgeWideEnum(Bass, 0, Low Mid, 1, High Mid, 2, Treble, 3)] _CtxSurfBand ("AudioLink Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music it listens to.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Surf_beat ("", Float) = 0
+        [HideInInspector] s_start_ctx_Surf_result ("Result", Float) = 0
+        [ToggleUI] _CtxSurfInvert ("Invert--{tooltip:''Flips the rules, so it shows exactly where it would have been hidden.''}", Float) = 0
+        _CtxSurfHidden ("Hidden Level--{tooltip:''How much stays where the rules hide it. 0 removes it there.''}", Range(0, 1)) = 0
+        [VixForgeWideEnum(Off, 0, R, 1, G, 2, B, 3, A, 4, Auto, 5)] _CtxSurfMaskCh ("Mask Channel--{tooltip:''Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Surf_result ("", Float) = 0
+        [HideInInspector] s_end_tog_CtxSurf ("", Float) = 0
+        //endex
+        [HideInInspector] m_end_ctx_Surf ("", Float) = 0
+        [HideInInspector] m_start_ctx_Shade ("Shading--{reference_property:_CtxShadeOn,condition_show:(_UseCtx==1),tooltip:''Fades the rim light, subsurface glow and transmission.''}", Float) = 0
+        [HideInInspector][ToggleUI] _CtxShadeOn ("Enable--{tooltip:''Gives the rim light, subsurface glow and transmission their own rules.''}", Float) = 0
+        //ifex _CtxShadeOn==0
+        [HideInInspector] s_start_tog_CtxShade ("Shading Settings--{condition_show:(_CtxShadeOn==1)}", Float) = 0
+        [HideInInspector] s_start_ctx_Shade_where ("Where", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxShadeWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxShadeEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Shade_where ("", Float) = 0
+        [HideInInspector] s_start_ctx_Shade_look ("Distance & Gaze", Float) = 0
+        [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxShadeDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
+        [VixForgeVectorToSliders(Near, p0, p5, Far, p0, p20)] _CtxShadeDist ("Distance Range--{condition_show:(_CtxShadeDistMode!=0),tooltip:''The distances it reacts between, in metres.'',tooltips:[''Fully reacted by this distance.'',''Stops reacting at this distance.'']}", Vector) = (0.5, 3, 0, 0)
+        _CtxShadeGaze ("Face-On Only--{tooltip:''How square on the viewer has to be looking at this part before it shows.''}", Range(0, 1)) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Angle, p1, p60, Softness, p0, p1)] _CtxShadeTorch ("Gaze Torch--{tooltip:''Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own.'',tooltips:[''How much the torch decides. 0 turns it off.'',''How wide the torch is, in degrees.'',''How soft its edge is.'']}", Vector) = (0, 12, 0.5, 0)
+        [HideInInspector] s_end_ctx_Shade_look ("", Float) = 0
+        [HideInInspector] s_start_ctx_Shade_light ("Light", Float) = 0
+        _CtxShadeLightCol ("Light Colour--{tooltip:''The colour of light that reveals it, like the violet of a blacklight.''}", Color) = (0.55, 0.15, 1, 1)
+        [VixForgeVectorToSliders(Amount, p0, p1, Tolerance, p1, p90, Min Brightness, p0, p2, Softness, p0, p1)] _CtxShadeLight ("Light Colour Match--{tooltip:''Shows it only where light of that colour lands on it, from any light in the room.'',tooltips:[''How much the light colour decides. 0 turns it off.'',''How close a light has to be to that colour, in degrees of hue. Lower is pickier.'',''How bright that light has to be.'',''How gently it fades in near the limits.'']}", Vector) = (0, 20, 0.05, 0.5)
+        [VixForgeVectorToSliders(Amount, p0, p1, Dark, p0, p2, Bright, p0, p4)] _CtxShadeDark ("Darkness--{tooltip:''Shows it in the dark and fades it as the room gets brighter.'',tooltips:[''How much darkness decides. 0 turns it off.'',''Fully shown at or below this brightness.'',''Gone at or above this brightness.'']}", Vector) = (0, 0.05, 0.5, 0)
+        [HideInInspector] s_end_ctx_Shade_light ("", Float) = 0
+        [HideInInspector] s_start_ctx_Shade_beat ("Beat--{condition_show:(_UseAudioLink==1)}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Threshold, p0, p1, Softness, p0, p1)] _CtxShadeBeat ("Beat--{condition_show:(_UseAudioLink==1),tooltip:''Shows it on the beat.'',tooltips:[''How much the beat decides. 0 turns it off.'',''How loud the band has to be.'',''How gently it fades in around that level.'']}", Vector) = (0, 0.4, 0.2, 0)
+        [VixForgeWideEnum(Bass, 0, Low Mid, 1, High Mid, 2, Treble, 3)] _CtxShadeBand ("AudioLink Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music it listens to.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Shade_beat ("", Float) = 0
+        [HideInInspector] s_start_ctx_Shade_result ("Result", Float) = 0
+        [ToggleUI] _CtxShadeInvert ("Invert--{tooltip:''Flips the rules, so it shows exactly where it would have been hidden.''}", Float) = 0
+        _CtxShadeHidden ("Hidden Level--{tooltip:''How much stays where the rules hide it. 0 removes it there.''}", Range(0, 1)) = 0
+        [VixForgeWideEnum(Off, 0, R, 1, G, 2, B, 3, A, 4, Auto, 5)] _CtxShadeMaskCh ("Mask Channel--{tooltip:''Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Shade_result ("", Float) = 0
+        [HideInInspector] s_end_tog_CtxShade ("", Float) = 0
+        //endex
+        [HideInInspector] m_end_ctx_Shade ("", Float) = 0
+        [HideInInspector] m_start_ctx_Decal ("Decals--{reference_property:_CtxDecalOn,condition_show:(_UseCtx==1),tooltip:''Shows or hides the decals.''}", Float) = 0
+        [HideInInspector][ToggleUI] _CtxDecalOn ("Enable--{tooltip:''Gives the decals their own rules.''}", Float) = 0
+        //ifex _CtxDecalOn==0
+        [HideInInspector] s_start_tog_CtxDecal ("Decals Settings--{condition_show:(_CtxDecalOn==1)}", Float) = 0
+        [HideInInspector] s_start_ctx_Decal_where ("Where", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxDecalWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxDecalEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Decal_where ("", Float) = 0
+        [HideInInspector] s_start_ctx_Decal_look ("Distance & Gaze", Float) = 0
+        [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxDecalDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
+        [VixForgeVectorToSliders(Near, p0, p5, Far, p0, p20)] _CtxDecalDist ("Distance Range--{condition_show:(_CtxDecalDistMode!=0),tooltip:''The distances it reacts between, in metres.'',tooltips:[''Fully reacted by this distance.'',''Stops reacting at this distance.'']}", Vector) = (0.5, 3, 0, 0)
+        _CtxDecalGaze ("Face-On Only--{tooltip:''How square on the viewer has to be looking at this part before it shows.''}", Range(0, 1)) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Angle, p1, p60, Softness, p0, p1)] _CtxDecalTorch ("Gaze Torch--{tooltip:''Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own.'',tooltips:[''How much the torch decides. 0 turns it off.'',''How wide the torch is, in degrees.'',''How soft its edge is.'']}", Vector) = (0, 12, 0.5, 0)
+        [HideInInspector] s_end_ctx_Decal_look ("", Float) = 0
+        [HideInInspector] s_start_ctx_Decal_light ("Light", Float) = 0
+        _CtxDecalLightCol ("Light Colour--{tooltip:''The colour of light that reveals it, like the violet of a blacklight.''}", Color) = (0.55, 0.15, 1, 1)
+        [VixForgeVectorToSliders(Amount, p0, p1, Tolerance, p1, p90, Min Brightness, p0, p2, Softness, p0, p1)] _CtxDecalLight ("Light Colour Match--{tooltip:''Shows it only where light of that colour lands on it, from any light in the room.'',tooltips:[''How much the light colour decides. 0 turns it off.'',''How close a light has to be to that colour, in degrees of hue. Lower is pickier.'',''How bright that light has to be.'',''How gently it fades in near the limits.'']}", Vector) = (0, 20, 0.05, 0.5)
+        [VixForgeVectorToSliders(Amount, p0, p1, Dark, p0, p2, Bright, p0, p4)] _CtxDecalDark ("Darkness--{tooltip:''Shows it in the dark and fades it as the room gets brighter.'',tooltips:[''How much darkness decides. 0 turns it off.'',''Fully shown at or below this brightness.'',''Gone at or above this brightness.'']}", Vector) = (0, 0.05, 0.5, 0)
+        [HideInInspector] s_end_ctx_Decal_light ("", Float) = 0
+        [HideInInspector] s_start_ctx_Decal_beat ("Beat--{condition_show:(_UseAudioLink==1)}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Threshold, p0, p1, Softness, p0, p1)] _CtxDecalBeat ("Beat--{condition_show:(_UseAudioLink==1),tooltip:''Shows it on the beat.'',tooltips:[''How much the beat decides. 0 turns it off.'',''How loud the band has to be.'',''How gently it fades in around that level.'']}", Vector) = (0, 0.4, 0.2, 0)
+        [VixForgeWideEnum(Bass, 0, Low Mid, 1, High Mid, 2, Treble, 3)] _CtxDecalBand ("AudioLink Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music it listens to.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Decal_beat ("", Float) = 0
+        [HideInInspector] s_start_ctx_Decal_result ("Result", Float) = 0
+        [ToggleUI] _CtxDecalInvert ("Invert--{tooltip:''Flips the rules, so it shows exactly where it would have been hidden.''}", Float) = 0
+        _CtxDecalHidden ("Hidden Level--{tooltip:''How much stays where the rules hide it. 0 removes it there.''}", Range(0, 1)) = 0
+        [HDR] _CtxDecalGlow ("Reaction Glow--{tooltip:''A glow added wherever these rules let the decals show.''}", Color) = (0, 0, 0, 1)
+        [VixForgeWideEnum(Off, 0, R, 1, G, 2, B, 3, A, 4, Auto, 5)] _CtxDecalMaskCh ("Mask Channel--{tooltip:''Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Decal_result ("", Float) = 0
+        [HideInInspector] s_end_tog_CtxDecal ("", Float) = 0
+        //endex
+        [HideInInspector] m_end_ctx_Decal ("", Float) = 0
+        [HideInInspector] m_start_ctx_Polish ("Polish--{reference_property:_CtxPolishOn,condition_show:(_UseCtx==1),tooltip:''Fades the polish coat.''}", Float) = 0
+        [HideInInspector][ToggleUI] _CtxPolishOn ("Enable--{tooltip:''Gives the polish coat its own rules.''}", Float) = 0
+        //ifex _CtxPolishOn==0
+        [HideInInspector] s_start_tog_CtxPolish ("Polish Settings--{condition_show:(_CtxPolishOn==1)}", Float) = 0
+        [HideInInspector] s_start_ctx_Polish_where ("Where", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxPolishWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxPolishEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Polish_where ("", Float) = 0
+        [HideInInspector] s_start_ctx_Polish_look ("Distance & Gaze", Float) = 0
+        [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxPolishDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
+        [VixForgeVectorToSliders(Near, p0, p5, Far, p0, p20)] _CtxPolishDist ("Distance Range--{condition_show:(_CtxPolishDistMode!=0),tooltip:''The distances it reacts between, in metres.'',tooltips:[''Fully reacted by this distance.'',''Stops reacting at this distance.'']}", Vector) = (0.5, 3, 0, 0)
+        _CtxPolishGaze ("Face-On Only--{tooltip:''How square on the viewer has to be looking at this part before it shows.''}", Range(0, 1)) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Angle, p1, p60, Softness, p0, p1)] _CtxPolishTorch ("Gaze Torch--{tooltip:''Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own.'',tooltips:[''How much the torch decides. 0 turns it off.'',''How wide the torch is, in degrees.'',''How soft its edge is.'']}", Vector) = (0, 12, 0.5, 0)
+        [HideInInspector] s_end_ctx_Polish_look ("", Float) = 0
+        [HideInInspector] s_start_ctx_Polish_light ("Light", Float) = 0
+        _CtxPolishLightCol ("Light Colour--{tooltip:''The colour of light that reveals it, like the violet of a blacklight.''}", Color) = (0.55, 0.15, 1, 1)
+        [VixForgeVectorToSliders(Amount, p0, p1, Tolerance, p1, p90, Min Brightness, p0, p2, Softness, p0, p1)] _CtxPolishLight ("Light Colour Match--{tooltip:''Shows it only where light of that colour lands on it, from any light in the room.'',tooltips:[''How much the light colour decides. 0 turns it off.'',''How close a light has to be to that colour, in degrees of hue. Lower is pickier.'',''How bright that light has to be.'',''How gently it fades in near the limits.'']}", Vector) = (0, 20, 0.05, 0.5)
+        [VixForgeVectorToSliders(Amount, p0, p1, Dark, p0, p2, Bright, p0, p4)] _CtxPolishDark ("Darkness--{tooltip:''Shows it in the dark and fades it as the room gets brighter.'',tooltips:[''How much darkness decides. 0 turns it off.'',''Fully shown at or below this brightness.'',''Gone at or above this brightness.'']}", Vector) = (0, 0.05, 0.5, 0)
+        [HideInInspector] s_end_ctx_Polish_light ("", Float) = 0
+        [HideInInspector] s_start_ctx_Polish_beat ("Beat--{condition_show:(_UseAudioLink==1)}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Threshold, p0, p1, Softness, p0, p1)] _CtxPolishBeat ("Beat--{condition_show:(_UseAudioLink==1),tooltip:''Shows it on the beat.'',tooltips:[''How much the beat decides. 0 turns it off.'',''How loud the band has to be.'',''How gently it fades in around that level.'']}", Vector) = (0, 0.4, 0.2, 0)
+        [VixForgeWideEnum(Bass, 0, Low Mid, 1, High Mid, 2, Treble, 3)] _CtxPolishBand ("AudioLink Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music it listens to.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Polish_beat ("", Float) = 0
+        [HideInInspector] s_start_ctx_Polish_result ("Result", Float) = 0
+        [ToggleUI] _CtxPolishInvert ("Invert--{tooltip:''Flips the rules, so it shows exactly where it would have been hidden.''}", Float) = 0
+        _CtxPolishHidden ("Hidden Level--{tooltip:''How much stays where the rules hide it. 0 removes it there.''}", Range(0, 1)) = 0
+        [VixForgeWideEnum(Off, 0, R, 1, G, 2, B, 3, A, 4, Auto, 5)] _CtxPolishMaskCh ("Mask Channel--{tooltip:''Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Polish_result ("", Float) = 0
+        [HideInInspector] s_end_tog_CtxPolish ("", Float) = 0
+        //endex
+        [HideInInspector] m_end_ctx_Polish ("", Float) = 0
+        [HideInInspector] m_start_ctx_Sfx ("Special Effects--{reference_property:_CtxSfxOn,condition_show:(_UseCtx==1),tooltip:''Shows or hides the special effects you pick under Reaches. How they move the mesh is left alone.''}", Float) = 0
+        [HideInInspector][ToggleUI] _CtxSfxOn ("Enable--{tooltip:''Gives the special effects their own rules.''}", Float) = 0
+        //ifex _CtxSfxOn==0
+        [HideInInspector] s_start_tog_CtxSfx ("Special Effects Settings--{condition_show:(_CtxSfxOn==1)}", Float) = 0
+        [HideInInspector] s_start_ctx_Sfx_reach ("Reaches", Float) = 0
+        [ToggleUI] _CtxSfxGlitter ("Glitter--{tooltip:''These rules show or hide the glitter.''}", Float) = 1
+        [ToggleUI] _CtxSfxOther ("Every Other Effect--{tooltip:''These rules show or hide every other special effect: Ghost, Hologram, Pearl, Eyes, Skeleton X-Ray, Sheer & Lace, Dissolve and the effects that glow.''}", Float) = 1
+        [HideInInspector] s_end_ctx_Sfx_reach ("", Float) = 0
+        [HideInInspector] s_start_ctx_Sfx_where ("Where", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxSfxWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxSfxEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Sfx_where ("", Float) = 0
+        [HideInInspector] s_start_ctx_Sfx_look ("Distance & Gaze", Float) = 0
+        [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxSfxDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
+        [VixForgeVectorToSliders(Near, p0, p5, Far, p0, p20)] _CtxSfxDist ("Distance Range--{condition_show:(_CtxSfxDistMode!=0),tooltip:''The distances it reacts between, in metres.'',tooltips:[''Fully reacted by this distance.'',''Stops reacting at this distance.'']}", Vector) = (0.5, 3, 0, 0)
+        _CtxSfxGaze ("Face-On Only--{tooltip:''How square on the viewer has to be looking at this part before it shows.''}", Range(0, 1)) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Angle, p1, p60, Softness, p0, p1)] _CtxSfxTorch ("Gaze Torch--{tooltip:''Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own.'',tooltips:[''How much the torch decides. 0 turns it off.'',''How wide the torch is, in degrees.'',''How soft its edge is.'']}", Vector) = (0, 12, 0.5, 0)
+        [HideInInspector] s_end_ctx_Sfx_look ("", Float) = 0
+        [HideInInspector] s_start_ctx_Sfx_light ("Light", Float) = 0
+        _CtxSfxLightCol ("Light Colour--{tooltip:''The colour of light that reveals it, like the violet of a blacklight.''}", Color) = (0.55, 0.15, 1, 1)
+        [VixForgeVectorToSliders(Amount, p0, p1, Tolerance, p1, p90, Min Brightness, p0, p2, Softness, p0, p1)] _CtxSfxLight ("Light Colour Match--{tooltip:''Shows it only where light of that colour lands on it, from any light in the room.'',tooltips:[''How much the light colour decides. 0 turns it off.'',''How close a light has to be to that colour, in degrees of hue. Lower is pickier.'',''How bright that light has to be.'',''How gently it fades in near the limits.'']}", Vector) = (0, 20, 0.05, 0.5)
+        [VixForgeVectorToSliders(Amount, p0, p1, Dark, p0, p2, Bright, p0, p4)] _CtxSfxDark ("Darkness--{tooltip:''Shows it in the dark and fades it as the room gets brighter.'',tooltips:[''How much darkness decides. 0 turns it off.'',''Fully shown at or below this brightness.'',''Gone at or above this brightness.'']}", Vector) = (0, 0.05, 0.5, 0)
+        [HideInInspector] s_end_ctx_Sfx_light ("", Float) = 0
+        [HideInInspector] s_start_ctx_Sfx_beat ("Beat--{condition_show:(_UseAudioLink==1)}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Threshold, p0, p1, Softness, p0, p1)] _CtxSfxBeat ("Beat--{condition_show:(_UseAudioLink==1),tooltip:''Shows it on the beat.'',tooltips:[''How much the beat decides. 0 turns it off.'',''How loud the band has to be.'',''How gently it fades in around that level.'']}", Vector) = (0, 0.4, 0.2, 0)
+        [VixForgeWideEnum(Bass, 0, Low Mid, 1, High Mid, 2, Treble, 3)] _CtxSfxBand ("AudioLink Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music it listens to.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Sfx_beat ("", Float) = 0
+        [HideInInspector] s_start_ctx_Sfx_result ("Result", Float) = 0
+        [ToggleUI] _CtxSfxInvert ("Invert--{tooltip:''Flips the rules, so it shows exactly where it would have been hidden.''}", Float) = 0
+        _CtxSfxHidden ("Hidden Level--{tooltip:''How much stays where the rules hide it. 0 removes it there.''}", Range(0, 1)) = 0
+        [VixForgeWideEnum(Off, 0, R, 1, G, 2, B, 3, A, 4, Auto, 5)] _CtxSfxMaskCh ("Mask Channel--{tooltip:''Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Sfx_result ("", Float) = 0
+        [HideInInspector] s_end_tog_CtxSfx ("", Float) = 0
+        //endex
+        [HideInInspector] m_end_ctx_Sfx ("", Float) = 0
+        [HideInInspector] m_start_ctx_Outline ("Outlines--{reference_property:_CtxOutlineOn,condition_show:(_UseCtx==1),tooltip:''Shows or hides the outlines.''}", Float) = 0
+        [HideInInspector][ToggleUI] _CtxOutlineOn ("Enable--{tooltip:''Gives the outlines their own rules.''}", Float) = 0
+        //ifex _CtxOutlineOn==0
+        [HideInInspector] s_start_tog_CtxOutline ("Outlines Settings--{condition_show:(_CtxOutlineOn==1)}", Float) = 0
+        [HideInInspector] s_start_ctx_Outline_where ("Where", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxOutlineWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxOutlineEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Outline_where ("", Float) = 0
+        [HideInInspector] s_start_ctx_Outline_look ("Distance & Gaze", Float) = 0
+        [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxOutlineDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
+        [VixForgeVectorToSliders(Near, p0, p5, Far, p0, p20)] _CtxOutlineDist ("Distance Range--{condition_show:(_CtxOutlineDistMode!=0),tooltip:''The distances it reacts between, in metres.'',tooltips:[''Fully reacted by this distance.'',''Stops reacting at this distance.'']}", Vector) = (0.5, 3, 0, 0)
+        _CtxOutlineGaze ("Face-On Only--{tooltip:''How square on the viewer has to be looking at this part before it shows.''}", Range(0, 1)) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Angle, p1, p60, Softness, p0, p1)] _CtxOutlineTorch ("Gaze Torch--{tooltip:''Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own.'',tooltips:[''How much the torch decides. 0 turns it off.'',''How wide the torch is, in degrees.'',''How soft its edge is.'']}", Vector) = (0, 12, 0.5, 0)
+        [HideInInspector] s_end_ctx_Outline_look ("", Float) = 0
+        [HideInInspector] s_start_ctx_Outline_light ("Light", Float) = 0
+        _CtxOutlineLightCol ("Light Colour--{tooltip:''The colour of light that reveals it, like the violet of a blacklight.''}", Color) = (0.55, 0.15, 1, 1)
+        [VixForgeVectorToSliders(Amount, p0, p1, Tolerance, p1, p90, Min Brightness, p0, p2, Softness, p0, p1)] _CtxOutlineLight ("Light Colour Match--{tooltip:''Shows it only where light of that colour lands on it, from any light in the room.'',tooltips:[''How much the light colour decides. 0 turns it off.'',''How close a light has to be to that colour, in degrees of hue. Lower is pickier.'',''How bright that light has to be.'',''How gently it fades in near the limits.'']}", Vector) = (0, 20, 0.05, 0.5)
+        [VixForgeVectorToSliders(Amount, p0, p1, Dark, p0, p2, Bright, p0, p4)] _CtxOutlineDark ("Darkness--{tooltip:''Shows it in the dark and fades it as the room gets brighter.'',tooltips:[''How much darkness decides. 0 turns it off.'',''Fully shown at or below this brightness.'',''Gone at or above this brightness.'']}", Vector) = (0, 0.05, 0.5, 0)
+        [HideInInspector] s_end_ctx_Outline_light ("", Float) = 0
+        [HideInInspector] s_start_ctx_Outline_beat ("Beat--{condition_show:(_UseAudioLink==1)}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Threshold, p0, p1, Softness, p0, p1)] _CtxOutlineBeat ("Beat--{condition_show:(_UseAudioLink==1),tooltip:''Shows it on the beat.'',tooltips:[''How much the beat decides. 0 turns it off.'',''How loud the band has to be.'',''How gently it fades in around that level.'']}", Vector) = (0, 0.4, 0.2, 0)
+        [VixForgeWideEnum(Bass, 0, Low Mid, 1, High Mid, 2, Treble, 3)] _CtxOutlineBand ("AudioLink Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music it listens to.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Outline_beat ("", Float) = 0
+        [HideInInspector] s_start_ctx_Outline_result ("Result", Float) = 0
+        [ToggleUI] _CtxOutlineInvert ("Invert--{tooltip:''Flips the rules, so it shows exactly where it would have been hidden.''}", Float) = 0
+        _CtxOutlineHidden ("Hidden Level--{tooltip:''How much stays where the rules hide it. 0 removes it there.''}", Range(0, 1)) = 0
+        [VixForgeWideEnum(Off, 0, R, 1, G, 2, B, 3, A, 4, Auto, 5)] _CtxOutlineMaskCh ("Mask Channel--{tooltip:''Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Outline_result ("", Float) = 0
+        [HideInInspector] s_end_tog_CtxOutline ("", Float) = 0
+        //endex
+        [HideInInspector] m_end_ctx_Outline ("", Float) = 0
+        [HideInInspector] m_start_ctx_Emis ("Emissions--{reference_property:_CtxEmisOn,condition_show:(_UseCtx==1),tooltip:''Shows or hides the emission layers.''}", Float) = 0
+        [HideInInspector][ToggleUI] _CtxEmisOn ("Enable--{tooltip:''Gives the emission layers their own rules.''}", Float) = 0
+        //ifex _CtxEmisOn==0
+        [HideInInspector] s_start_tog_CtxEmis ("Emissions Settings--{condition_show:(_CtxEmisOn==1)}", Float) = 0
+        [HideInInspector] s_start_ctx_Emis_where ("Where", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxEmisWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxEmisEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Emis_where ("", Float) = 0
+        [HideInInspector] s_start_ctx_Emis_look ("Distance & Gaze", Float) = 0
+        [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxEmisDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
+        [VixForgeVectorToSliders(Near, p0, p5, Far, p0, p20)] _CtxEmisDist ("Distance Range--{condition_show:(_CtxEmisDistMode!=0),tooltip:''The distances it reacts between, in metres.'',tooltips:[''Fully reacted by this distance.'',''Stops reacting at this distance.'']}", Vector) = (0.5, 3, 0, 0)
+        _CtxEmisGaze ("Face-On Only--{tooltip:''How square on the viewer has to be looking at this part before it shows.''}", Range(0, 1)) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Angle, p1, p60, Softness, p0, p1)] _CtxEmisTorch ("Gaze Torch--{tooltip:''Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own.'',tooltips:[''How much the torch decides. 0 turns it off.'',''How wide the torch is, in degrees.'',''How soft its edge is.'']}", Vector) = (0, 12, 0.5, 0)
+        [HideInInspector] s_end_ctx_Emis_look ("", Float) = 0
+        [HideInInspector] s_start_ctx_Emis_light ("Light", Float) = 0
+        _CtxEmisLightCol ("Light Colour--{tooltip:''The colour of light that reveals it, like the violet of a blacklight.''}", Color) = (0.55, 0.15, 1, 1)
+        [VixForgeVectorToSliders(Amount, p0, p1, Tolerance, p1, p90, Min Brightness, p0, p2, Softness, p0, p1)] _CtxEmisLight ("Light Colour Match--{tooltip:''Shows it only where light of that colour lands on it, from any light in the room.'',tooltips:[''How much the light colour decides. 0 turns it off.'',''How close a light has to be to that colour, in degrees of hue. Lower is pickier.'',''How bright that light has to be.'',''How gently it fades in near the limits.'']}", Vector) = (0, 20, 0.05, 0.5)
+        [VixForgeVectorToSliders(Amount, p0, p1, Dark, p0, p2, Bright, p0, p4)] _CtxEmisDark ("Darkness--{tooltip:''Shows it in the dark and fades it as the room gets brighter.'',tooltips:[''How much darkness decides. 0 turns it off.'',''Fully shown at or below this brightness.'',''Gone at or above this brightness.'']}", Vector) = (0, 0.05, 0.5, 0)
+        [HideInInspector] s_end_ctx_Emis_light ("", Float) = 0
+        [HideInInspector] s_start_ctx_Emis_beat ("Beat--{condition_show:(_UseAudioLink==1)}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Threshold, p0, p1, Softness, p0, p1)] _CtxEmisBeat ("Beat--{condition_show:(_UseAudioLink==1),tooltip:''Shows it on the beat.'',tooltips:[''How much the beat decides. 0 turns it off.'',''How loud the band has to be.'',''How gently it fades in around that level.'']}", Vector) = (0, 0.4, 0.2, 0)
+        [VixForgeWideEnum(Bass, 0, Low Mid, 1, High Mid, 2, Treble, 3)] _CtxEmisBand ("AudioLink Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music it listens to.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Emis_beat ("", Float) = 0
+        [HideInInspector] s_start_ctx_Emis_result ("Result", Float) = 0
+        [ToggleUI] _CtxEmisInvert ("Invert--{tooltip:''Flips the rules, so it shows exactly where it would have been hidden.''}", Float) = 0
+        _CtxEmisHidden ("Hidden Level--{tooltip:''How much stays where the rules hide it. 0 removes it there.''}", Range(0, 1)) = 0
+        [HDR] _CtxEmisGlow ("Reaction Glow--{tooltip:''A glow added wherever these rules let the emission show.''}", Color) = (0, 0, 0, 1)
+        [VixForgeWideEnum(Off, 0, R, 1, G, 2, B, 3, A, 4, Auto, 5)] _CtxEmisMaskCh ("Mask Channel--{tooltip:''Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Emis_result ("", Float) = 0
+        [HideInInspector] s_end_tog_CtxEmis ("", Float) = 0
+        //endex
+        [HideInInspector] m_end_ctx_Emis ("", Float) = 0
+        [HideInInspector] m_start_ctx_Matcap ("Matcaps--{reference_property:_CtxMatcapOn,condition_show:(_UseCtx==1),tooltip:''Fades the matcaps and Car Paint.''}", Float) = 0
+        [HideInInspector][ToggleUI] _CtxMatcapOn ("Enable--{tooltip:''Gives the matcaps their own rules.''}", Float) = 0
+        //ifex _CtxMatcapOn==0
+        [HideInInspector] s_start_tog_CtxMatcap ("Matcaps Settings--{condition_show:(_CtxMatcapOn==1)}", Float) = 0
+        [HideInInspector] s_start_ctx_Matcap_where ("Where", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxMatcapWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxMatcapEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Matcap_where ("", Float) = 0
+        [HideInInspector] s_start_ctx_Matcap_look ("Distance & Gaze", Float) = 0
+        [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxMatcapDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
+        [VixForgeVectorToSliders(Near, p0, p5, Far, p0, p20)] _CtxMatcapDist ("Distance Range--{condition_show:(_CtxMatcapDistMode!=0),tooltip:''The distances it reacts between, in metres.'',tooltips:[''Fully reacted by this distance.'',''Stops reacting at this distance.'']}", Vector) = (0.5, 3, 0, 0)
+        _CtxMatcapGaze ("Face-On Only--{tooltip:''How square on the viewer has to be looking at this part before it shows.''}", Range(0, 1)) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Angle, p1, p60, Softness, p0, p1)] _CtxMatcapTorch ("Gaze Torch--{tooltip:''Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own.'',tooltips:[''How much the torch decides. 0 turns it off.'',''How wide the torch is, in degrees.'',''How soft its edge is.'']}", Vector) = (0, 12, 0.5, 0)
+        [HideInInspector] s_end_ctx_Matcap_look ("", Float) = 0
+        [HideInInspector] s_start_ctx_Matcap_light ("Light", Float) = 0
+        _CtxMatcapLightCol ("Light Colour--{tooltip:''The colour of light that reveals it, like the violet of a blacklight.''}", Color) = (0.55, 0.15, 1, 1)
+        [VixForgeVectorToSliders(Amount, p0, p1, Tolerance, p1, p90, Min Brightness, p0, p2, Softness, p0, p1)] _CtxMatcapLight ("Light Colour Match--{tooltip:''Shows it only where light of that colour lands on it, from any light in the room.'',tooltips:[''How much the light colour decides. 0 turns it off.'',''How close a light has to be to that colour, in degrees of hue. Lower is pickier.'',''How bright that light has to be.'',''How gently it fades in near the limits.'']}", Vector) = (0, 20, 0.05, 0.5)
+        [VixForgeVectorToSliders(Amount, p0, p1, Dark, p0, p2, Bright, p0, p4)] _CtxMatcapDark ("Darkness--{tooltip:''Shows it in the dark and fades it as the room gets brighter.'',tooltips:[''How much darkness decides. 0 turns it off.'',''Fully shown at or below this brightness.'',''Gone at or above this brightness.'']}", Vector) = (0, 0.05, 0.5, 0)
+        [HideInInspector] s_end_ctx_Matcap_light ("", Float) = 0
+        [HideInInspector] s_start_ctx_Matcap_beat ("Beat--{condition_show:(_UseAudioLink==1)}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Threshold, p0, p1, Softness, p0, p1)] _CtxMatcapBeat ("Beat--{condition_show:(_UseAudioLink==1),tooltip:''Shows it on the beat.'',tooltips:[''How much the beat decides. 0 turns it off.'',''How loud the band has to be.'',''How gently it fades in around that level.'']}", Vector) = (0, 0.4, 0.2, 0)
+        [VixForgeWideEnum(Bass, 0, Low Mid, 1, High Mid, 2, Treble, 3)] _CtxMatcapBand ("AudioLink Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music it listens to.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Matcap_beat ("", Float) = 0
+        [HideInInspector] s_start_ctx_Matcap_result ("Result", Float) = 0
+        [ToggleUI] _CtxMatcapInvert ("Invert--{tooltip:''Flips the rules, so it shows exactly where it would have been hidden.''}", Float) = 0
+        _CtxMatcapHidden ("Hidden Level--{tooltip:''How much stays where the rules hide it. 0 removes it there.''}", Range(0, 1)) = 0
+        [VixForgeWideEnum(Off, 0, R, 1, G, 2, B, 3, A, 4, Auto, 5)] _CtxMatcapMaskCh ("Mask Channel--{tooltip:''Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.''}", Float) = 0
+        [HideInInspector] s_end_ctx_Matcap_result ("", Float) = 0
+        [HideInInspector] s_end_tog_CtxMatcap ("", Float) = 0
+        //endex
+        [HideInInspector] m_end_ctx_Matcap ("", Float) = 0
+        [HideInInspector] m_start_ctx_AL ("AudioLink--{reference_property:_CtxALOn,condition_show:(_UseCtx==1),tooltip:''Fades every AudioLink reaction, movement included, so the material can dance only in mirrors or only up close.''}", Float) = 0
+        [HideInInspector][ToggleUI] _CtxALOn ("Enable--{tooltip:''Gives the AudioLink reactions their own rules.''}", Float) = 0
+        //ifex _CtxALOn==0
+        [HideInInspector] s_start_tog_CtxAL ("AudioLink Settings--{condition_show:(_CtxALOn==1)}", Float) = 0
+        [HideInInspector] s_start_ctx_AL_where ("Where", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxALWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxALEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [HideInInspector] s_end_ctx_AL_where ("", Float) = 0
+        [HideInInspector] s_start_ctx_AL_look ("Distance & Gaze", Float) = 0
+        [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxALDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
+        [VixForgeVectorToSliders(Near, p0, p5, Far, p0, p20)] _CtxALDist ("Distance Range--{condition_show:(_CtxALDistMode!=0),tooltip:''The distances it reacts between, in metres.'',tooltips:[''Fully reacted by this distance.'',''Stops reacting at this distance.'']}", Vector) = (0.5, 3, 0, 0)
+        _CtxALGaze ("Face-On Only--{tooltip:''How square on the viewer has to be looking at this part before it shows.''}", Range(0, 1)) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Angle, p1, p60, Softness, p0, p1)] _CtxALTorch ("Gaze Torch--{tooltip:''Shows it only where the viewer is looking, like a torch from their eyes. Everyone sees their own.'',tooltips:[''How much the torch decides. 0 turns it off.'',''How wide the torch is, in degrees.'',''How soft its edge is.'']}", Vector) = (0, 12, 0.5, 0)
+        [HideInInspector] s_end_ctx_AL_look ("", Float) = 0
+        [HideInInspector] s_start_ctx_AL_light ("Light", Float) = 0
+        _CtxALLightCol ("Light Colour--{tooltip:''The colour of light that reveals it, like the violet of a blacklight.''}", Color) = (0.55, 0.15, 1, 1)
+        [VixForgeVectorToSliders(Amount, p0, p1, Tolerance, p1, p90, Min Brightness, p0, p2, Softness, p0, p1)] _CtxALLight ("Light Colour Match--{tooltip:''Shows it only where light of that colour lands on it, from any light in the room.'',tooltips:[''How much the light colour decides. 0 turns it off.'',''How close a light has to be to that colour, in degrees of hue. Lower is pickier.'',''How bright that light has to be.'',''How gently it fades in near the limits.'']}", Vector) = (0, 20, 0.05, 0.5)
+        [VixForgeVectorToSliders(Amount, p0, p1, Dark, p0, p2, Bright, p0, p4)] _CtxALDark ("Darkness--{tooltip:''Shows it in the dark and fades it as the room gets brighter.'',tooltips:[''How much darkness decides. 0 turns it off.'',''Fully shown at or below this brightness.'',''Gone at or above this brightness.'']}", Vector) = (0, 0.05, 0.5, 0)
+        [HideInInspector] s_end_ctx_AL_light ("", Float) = 0
+        [HideInInspector] s_start_ctx_AL_beat ("Beat--{condition_show:(_UseAudioLink==1)}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, Threshold, p0, p1, Softness, p0, p1)] _CtxALBeat ("Beat--{condition_show:(_UseAudioLink==1),tooltip:''Shows it on the beat.'',tooltips:[''How much the beat decides. 0 turns it off.'',''How loud the band has to be.'',''How gently it fades in around that level.'']}", Vector) = (0, 0.4, 0.2, 0)
+        [VixForgeWideEnum(Bass, 0, Low Mid, 1, High Mid, 2, Treble, 3)] _CtxALBand ("AudioLink Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music it listens to.''}", Float) = 0
+        [HideInInspector] s_end_ctx_AL_beat ("", Float) = 0
+        [HideInInspector] s_start_ctx_AL_result ("Result", Float) = 0
+        [ToggleUI] _CtxALInvert ("Invert--{tooltip:''Flips the rules, so it shows exactly where it would have been hidden.''}", Float) = 0
+        _CtxALHidden ("Hidden Level--{tooltip:''How much stays where the rules hide it. 0 removes it there.''}", Range(0, 1)) = 0
+        [VixForgeWideEnum(Off, 0, R, 1, G, 2, B, 3, A, 4, Auto, 5)] _CtxALMaskCh ("Mask Channel--{tooltip:''Keeps these rules to the painted part of the Mask at the top. Off uses the whole material.''}", Float) = 0
+        [HideInInspector] s_end_ctx_AL_result ("", Float) = 0
+        [HideInInspector] s_end_tog_CtxAL ("", Float) = 0
+        //endex
+        [HideInInspector] m_end_ctx_AL ("", Float) = 0
+        // Viewer Context before 2026-10-18. Read once by VixForgeContextUpgrade to move a material onto the rules above.
+        [HideInInspector] _Ctx_Where ("", Float) = 0
+        [HideInInspector] _Ctx_Eye ("", Float) = 0
+        [HideInInspector] _Ctx_DistMode ("", Float) = 0
+        [HideInInspector] _Ctx_Near ("", Float) = 0.5
+        [HideInInspector] _Ctx_Far ("", Float) = 3
+        [HideInInspector] _Ctx_Gaze ("", Float) = 0
+        [HideInInspector] _Ctx_Hidden ("", Float) = 0
+        [HideInInspector] _Ctx_Target ("", Float) = 0
+        [HideInInspector] _Ctx_Outlines ("", Float) = 0
+        [HideInInspector] _Ctx_Glow ("", Color) = (0, 0, 0, 1)
+        [HideInInspector] _Ctx_MaskCh ("", Float) = 4
+        //endex
+
+        [HideInInspector] m_touch ("TOUCH--{button_help:{action:{type:URL,data:https://vixencreations.github.io/VixenToolBox/shaderdocs.html#touch}}}", Float) = 0
+        //ifex _UseContacts==0
+        [HideInInspector] m_start_touch_contacts ("Material Contacts--{reference_property:_UseContacts,condition_enable_children:(_UseContacts==1),tooltip:''Feels real hands, fingers and heads through a VRChat contact receiver, so a touch lands exactly where it happens, in mirrors too. Touch Setup in the Shader Hub adds the receiver for you.''}", Float) = 0
+        [HideInInspector][VixForgeToggleUI(VF_CONTACTS)] _UseContacts ("Enable--{tooltip:''Turns Material Contacts on. It costs nothing while it is off or while nobody touches you.''}", Float) = 0
+        [VixForgeHelpbox] _Contacts_Help ("Needs a contact receiver set to Proximity, with Write to Shaders on and its Parameter named VF_Touch. Touch Setup (Shader Hub, Tools) adds one for you.", Float) = 0
+        [VixForgeHelpbox(2)] _Contacts_SdkWarn ("Your VRChat SDK is too old for Material Contacts, so nothing in VRChat can touch this material yet. Update the SDK to 3.10.6 or newer in the Creator Companion (the 3.10.6 betas count), then run Touch Setup. Preview Touch still works.--{condition_show:(VRCMaterialContacts==0)}", Float) = 0
+        [HideInInspector] s_start_tog_UseContacts ("Material Contacts Settings", Float) = 0
+        [ToggleUI] _Contact_Hands ("Hands--{tooltip:''Hands count as a touch.''}", Float) = 1
+        [ToggleUI] _Contact_Fingers ("Fingers--{tooltip:''Fingertips count as a touch.''}", Float) = 1
+        [ToggleUI] _Contact_Head ("Head--{tooltip:''Heads count, for a cheek against yours or a nuzzle.''}", Float) = 1
+        [ToggleUI] _Contact_Feet ("Feet--{tooltip:''Feet count as a touch.''}", Float) = 0
+        [ToggleUI] _Contact_Body ("Body--{tooltip:''Chests and hips count, for a hug.''}", Float) = 0
+        [ToggleUI] _Contact_Props ("Props--{tooltip:''Anything tagged VF_Touch counts, such as a toy or a wand.''}", Float) = 1
+        _Contact_Size ("Size--{tooltip:''How wide a touch is, in centimetres.''}", Range(0.5, 20)) = 4
+        _Contact_Reach ("Reach--{tooltip:''How far in front of you a contact still counts, in centimetres. Raise it if a touch only shows once the hand sinks in.''}", Range(0, 10)) = 1
+        [HideInInspector] s_end_tog_UseContacts ("", Float) = 0
+        [HideInInspector] m_end_touch_contacts ("", Float) = 0
+        //endex
+        //ifex _UseContacts==0
+        //ifex _UseTouchGlow==0
+        [HideInInspector] m_start_touch_glow ("Touch Glow--{reference_property:_UseTouchGlow,condition_enable_children:(_UseTouchGlow==1 && _UseContacts==1),tooltip:''Lights you up where someone touches you: a soft glow, rings rippling out, or a ring round each touch. It can also brighten, reveal or hide your emissions there. It lasts as long as the touch does. Needs Material Contacts.''}", Float) = 0
+        [HideInInspector][ToggleUI] _UseTouchGlow ("Enable--{tooltip:''Turns Touch Glow on. It costs nothing while it is off or while nobody touches you.''}", Float) = 0
+        [HideInInspector] s_start_tog_UseTouchGlow ("Touch Glow Settings", Float) = 0
+        [Enum(Glow,0,Ripple,1,Ring,2)] _TouchGlow_Mode ("Style--{tooltip:''Glow lights a soft spot under each touch, Ripple sends rings out from it, and Ring draws a ring round it.''}", Float) = 0
+        [HDR] _TouchGlow_Color ("Colour--{tooltip:''The colour of the glow. Push it past white for a brighter glow.''}", Color) = (1, 0.4, 0.8, 1)
+        _TouchGlow_Strength ("Strength--{tooltip:''How bright the glow is.''}", Range(0, 10)) = 1
+        [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3,Volume,4,Peak Hold,5)] _AL_Band_TouchGlow ("Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music brightens the glow.''}", Float) = 0
+        _AL_TouchGlow ("Beat Glow--{condition_show:(_UseAudioLink==1),tooltip:''How much the beat brightens the glow.''}", Range(0, 10)) = 0
+        _TouchGlow_Size ("Size--{tooltip:''How far the glow spreads round each touch, as a share of the touch size.''}", Range(0.2, 5)) = 1.5
+        _TouchGlow_Spacing ("Ripple Spacing--{tooltip:''The gap between ripples, in centimetres.''}", Range(0.5, 10)) = 2
+        _TouchGlow_Speed ("Ripple Speed--{tooltip:''How fast the ripples travel out.''}", Range(0, 4)) = 1
+        [HideInInspector] _TouchGlow_Speed_Ph ("", Float) = 0
+        [ToggleUI] _TouchGlow_PerPerson ("Colour Per Person--{tooltip:''Each person who touches you glows in a colour of their own. Colour then sets only the brightness.''}", Float) = 0
+        [Enum(Everyone,0,Others,1,Me,2)] _TouchGlow_Who ("Who Glows--{tooltip:''Whose touch lights you up: everyone, only other people, or only your own hands.''}", Float) = 0
+        [Enum(Off,0,Brighten,1,Reveal,2,Hide,3)] _TouchGlow_Emis ("Emissions--{tooltip:''What a touch does to your emission layers. Brighten lights them up where you are touched, Reveal shows them only there, and Hide turns them off there. It follows Style, so Ripple sends the change out in rings.''}", Float) = 0
+        _TouchGlow_EmisBoost ("Brighten By--{tooltip:''How much brighter Brighten makes your emissions under a touch.''}", Range(0, 10)) = 2
+        [HideInInspector] s_end_tog_UseTouchGlow ("", Float) = 0
+        [HideInInspector] m_end_touch_glow ("", Float) = 0
+        //endex
+        //endex
+        //ifex _UseContacts==0
+        //ifex _UseColorTouch==0
+        [HideInInspector] m_start_touch_color ("Colour Touch--{reference_property:_UseColorTouch,condition_enable_children:(_UseColorTouch==1 && _UseContacts==1),tooltip:''Changes your colour where someone touches you: a blush, a shine or a sparkle, for as long as the touch lasts. Needs Material Contacts.''}", Float) = 0
+        [HideInInspector][ToggleUI] _UseColorTouch ("Enable--{tooltip:''Turns Colour Touch on. It costs nothing while it is off or while nobody touches you.''}", Float) = 0
+        [HideInInspector] s_start_tog_UseColorTouch ("Colour Touch Settings", Float) = 0
+        [Enum(Tint,0,Paint,1)] _ColorTouch_Mode ("Mode--{tooltip:''Tint mixes the colour into yours, like a blush. Paint covers your colour with it.''}", Float) = 0
+        _ColorTouch_Tint ("Colour--{tooltip:''The colour a touch brings out. The sparkles use it too.''}", Color) = (1, 0.55, 0.6, 1)
+        _ColorTouch_Strength ("Strength--{tooltip:''How strongly the colour shows under a touch.''}", Range(0, 1)) = 0.6
+        _ColorTouch_Shine ("Shine--{tooltip:''Makes you glossier where you are touched.''}", Range(0, 1)) = 0
+        _ColorTouch_Sparkle ("Sparkle--{tooltip:''Sparkles twinkle where you are touched, in Colour.''}", Range(0, 5)) = 0
+        _ColorTouch_Size ("Size--{tooltip:''How far the change spreads round each touch, as a share of the touch size.''}", Range(0.2, 5)) = 1.5
+        [HideInInspector] s_end_tog_UseColorTouch ("", Float) = 0
+        [HideInInspector] m_end_touch_color ("", Float) = 0
+        //endex
+        //endex
+        //ifex _UseContacts==0
+        //ifex _UseOutlineTouch==0
+        [HideInInspector] m_start_touch_outline ("Outline Touch--{reference_property:_UseOutlineTouch,condition_enable_children:(_UseOutlineTouch==1 && _UseContacts==1),tooltip:''Makes your outline answer a touch: thicker or thinner, a new colour, or a glow, where someone touches you. Needs Material Contacts and an outline.''}", Float) = 0
+        [HideInInspector][ToggleUI] _UseOutlineTouch ("Enable--{tooltip:''Turns Outline Touch on. It costs nothing while it is off or while nobody touches you.''}", Float) = 0
+        [HideInInspector] s_start_tog_UseOutlineTouch ("Outline Touch Settings", Float) = 0
+        _OutlineTouch_Width ("Width--{tooltip:''How much the line thickens under a touch. Below 0 it thins, and at -1 it disappears.''}", Range(-1, 3)) = 1
+        [HDR] _OutlineTouch_Color ("Colour--{tooltip:''The colour the line turns under a touch.''}", Color) = (1, 0.4, 0.8, 1)
+        _OutlineTouch_ColorBlend ("Colour Amount--{tooltip:''How far the line turns that colour.''}", Range(0, 1)) = 0
+        _OutlineTouch_Glow ("Glow--{tooltip:''How much brighter the line gets under a touch.''}", Range(0, 10)) = 0
+        _OutlineTouch_Size ("Size--{tooltip:''How far the change spreads round each touch, as a share of the touch size.''}", Range(0.2, 5)) = 2
+        [HideInInspector] s_end_tog_UseOutlineTouch ("", Float) = 0
+        [HideInInspector] m_end_touch_outline ("", Float) = 0
+        //endex
+        //endex
+        //ifex _UseContacts==0
+        //ifex _UseSheen==0
+        [HideInInspector] m_start_touch_fabric ("Fabric Touch--{condition_enable_children:(_UseContacts==1 && _UseSheen==1),tooltip:''The fabric dents and creases under a hand. Needs Material Contacts and Fabric on.''}", Float) = 0
+        _Fabric_Press ("Press--{tooltip:''How far the fabric dents in under a hand, in metres. Turn Tessellation up for a smooth dent.''}", Range(0, 0.05)) = 0
+        _Fabric_Creases ("Creases--{tooltip:''Creases that fan out round a hand pressing into the fabric.''}", Range(0, 1)) = 0
+        [HideInInspector] m_end_touch_fabric ("", Float) = 0
+        //endex
+        //endex
+        //ifex _UseContacts==0
+        //ifex _UseFur==0
+        [HideInInspector] m_start_touch_surffur ("Surface Fur Touch--{condition_enable_children:(_UseContacts==1 && _UseFur==1),tooltip:''Surface Fur parts round a hand. Needs Material Contacts and Surface Fur on.''}", Float) = 0
+        _Fur_TouchPart ("Parting--{tooltip:''The fur parts and lies away from a hand that touches it.''}", Range(0, 1)) = 0
+        [HideInInspector] m_end_touch_surffur ("", Float) = 0
+        //endex
+        //endex
+        //ifex _UseContacts==0
+        //ifex _UseFurShell==0
+        [HideInInspector] m_start_touch_realfur ("Real Fur Touch--{condition_enable_children:(_UseContacts==1 && _UseFurShell==1),tooltip:''Real Fur parts round a hand and lies flat under it. Needs Material Contacts and Real Fur on.''}", Float) = 0
+        _FurShell_TouchPart ("Parting--{tooltip:''Hairs bend away from a hand that touches them, so the coat parts round it.''}", Range(0, 1)) = 0
+        _FurShell_TouchFlat ("Flatten--{tooltip:''Hairs under a hand lie down flat, the way a coat does when you press into it.''}", Range(0, 1)) = 0
+        [HideInInspector] m_end_touch_realfur ("", Float) = 0
+        //endex
+        //endex
         [HideInInspector] m_audiolink ("AUDIOLINK--{reference_property:_UseAudioLink,button_help:{action:{type:URL,data:https://vixencreations.github.io/VixenToolBox/shaderdocs.html#audiolink}}}", Float) = 0
         [VixForgeHelpbox] _AudioLink_Attribution ("AudioLink by llealloo, cnlohr, lox9973, pema99 & float3, under MIT. Click for github.com/llealloo/audiolink--{onClick:{type:URL,data:https://github.com/llealloo/audiolink}}", Float) = 0
         [VixForgeToggle(VF_AUDIOLINK)] _UseAudioLink ("Enable--{tooltip:''Let the material react to whatever music is playing, through AudioLink. The world needs AudioLink in it, and something has to be playing.''}", Float) = 0
@@ -3138,18 +3881,18 @@ Shader "VixenWear/Clothing Pro"
         #pragma multi_compile_instancing
         #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRECTIONAL_COOKIE POINT_COOKIE SHADOWS_CUBE SHADOWS_SOFT
         //ifex _IgnoreFog==1
-        #pragma multi_compile_fog
+        #pragma dynamic_branch _ FOG_LINEAR FOG_EXP FOG_EXP2
         //endex
         #pragma multi_compile_fwdbase novertexlight noshadowmask nodynlightmap nodirlightmap nolightmap noshadow
         #pragma shader_feature_local VF_LIGHTVOLUMES
         #pragma shader_feature_local VF_LTCGI
         #pragma shader_feature_local VF_VRSL
-        #pragma shader_feature_local VF_AUDIOLINK
         #pragma shader_feature_local VF_TEX_ALPHAMASK
         #pragma shader_feature_local VF_TEX_GLOBALMASK0
         #pragma shader_feature_local VF_TEX_CUTOUTMASK
         #pragma shader_feature_local VF_UDIMDISCARD
         #pragma shader_feature_local VF_DISSOLVE
+        #pragma shader_feature_local VF_CONTACTS
         #pragma shader_feature_local VF_TEX_DISSOLVENOISE
         #pragma shader_feature_local VF_TEX_DISSOLVETO
         #pragma shader_feature_local VF_TEX_DISSOLVEDETAIL
@@ -3157,7 +3900,23 @@ Shader "VixenWear/Clothing Pro"
         #pragma shader_feature_local VF_TEX_OUTLINE2MASK
         #pragma shader_feature_local VF_TEX_OUTLINE2TEX
         #pragma shader_feature_local VF_TEX_OUTLINEMASK
-        #pragma shader_feature_local VF_TEX_OUTLINETEX
+        #pragma shader_feature_local VF_CUTOUTMASK
+        #pragma shader_feature_local VF_ALPHAMASK
+        #pragma shader_feature_local VF_TEX_METALLICGLOSSMAP
+        #pragma shader_feature_local VF_HEIGHTMAP
+        #pragma shader_feature_local VF_TEX_HEIGHTMAP
+        #pragma shader_feature_local VF_TEX_EMISSIONMAP
+        #pragma shader_feature_local VF_TEX_EMISSIONMAP2
+        #pragma shader_feature_local VF_TEX_EMISSIONMAP3
+        #pragma shader_feature_local VF_TEX_EMISSIONMAP4
+        #pragma shader_feature_local VF_TEX_EMISSIONMAP5
+        #pragma shader_feature_local VF_TEX_MATCAPMASK
+        #pragma shader_feature_local VF_TEX_MATCAP2_MASK
+        #pragma shader_feature_local VF_TEX_MATCAP3_MASK
+        #pragma shader_feature_local VF_TEX_MATCAP4_MASK
+        #pragma shader_feature_local VF_TEX_MATCAP5_MASK
+        #pragma shader_feature_local VF_CTX
+        #pragma shader_feature_local VF_HOLO
 
         #include "UnityCG.cginc"
 
@@ -3171,6 +3930,8 @@ Shader "VixenWear/Clothing Pro"
         #define WorldReflectionVector(data,normal) data.worldRefl
         #define WorldNormalVector(data,normal) normal
 
+        #define VIXFORGE_TOON 1
+        #define VIXFORGE_CLOTHING 1
         #define OUTLINE_INDEX 2
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/LatexOutline.cginc"
         ENDCG
@@ -3196,26 +3957,41 @@ Shader "VixenWear/Clothing Pro"
         #pragma multi_compile_instancing
         #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRECTIONAL_COOKIE POINT_COOKIE SHADOWS_CUBE SHADOWS_SOFT
         //ifex _IgnoreFog==1
-        #pragma multi_compile_fog
+        #pragma dynamic_branch _ FOG_LINEAR FOG_EXP FOG_EXP2
         //endex
         #pragma multi_compile_fwdbase novertexlight noshadowmask nodynlightmap nodirlightmap nolightmap noshadow
         #pragma shader_feature_local VF_LIGHTVOLUMES
         #pragma shader_feature_local VF_LTCGI
         #pragma shader_feature_local VF_VRSL
-        #pragma shader_feature_local VF_AUDIOLINK
         #pragma shader_feature_local VF_TEX_ALPHAMASK
         #pragma shader_feature_local VF_TEX_GLOBALMASK0
         #pragma shader_feature_local VF_TEX_CUTOUTMASK
         #pragma shader_feature_local VF_UDIMDISCARD
         #pragma shader_feature_local VF_DISSOLVE
+        #pragma shader_feature_local VF_CONTACTS
         #pragma shader_feature_local VF_TEX_DISSOLVENOISE
         #pragma shader_feature_local VF_TEX_DISSOLVETO
         #pragma shader_feature_local VF_TEX_DISSOLVEDETAIL
         #pragma shader_feature_local VF_TEX_DISSOLVEMASK
-        #pragma shader_feature_local VF_TEX_OUTLINE2MASK
-        #pragma shader_feature_local VF_TEX_OUTLINE2TEX
         #pragma shader_feature_local VF_TEX_OUTLINEMASK
         #pragma shader_feature_local VF_TEX_OUTLINETEX
+        #pragma shader_feature_local VF_CUTOUTMASK
+        #pragma shader_feature_local VF_ALPHAMASK
+        #pragma shader_feature_local VF_TEX_METALLICGLOSSMAP
+        #pragma shader_feature_local VF_HEIGHTMAP
+        #pragma shader_feature_local VF_TEX_HEIGHTMAP
+        #pragma shader_feature_local VF_TEX_EMISSIONMAP
+        #pragma shader_feature_local VF_TEX_EMISSIONMAP2
+        #pragma shader_feature_local VF_TEX_EMISSIONMAP3
+        #pragma shader_feature_local VF_TEX_EMISSIONMAP4
+        #pragma shader_feature_local VF_TEX_EMISSIONMAP5
+        #pragma shader_feature_local VF_TEX_MATCAPMASK
+        #pragma shader_feature_local VF_TEX_MATCAP2_MASK
+        #pragma shader_feature_local VF_TEX_MATCAP3_MASK
+        #pragma shader_feature_local VF_TEX_MATCAP4_MASK
+        #pragma shader_feature_local VF_TEX_MATCAP5_MASK
+        #pragma shader_feature_local VF_CTX
+        #pragma shader_feature_local VF_HOLO
 
         #include "UnityCG.cginc"
 
@@ -3229,6 +4005,8 @@ Shader "VixenWear/Clothing Pro"
         #define WorldReflectionVector(data,normal) data.worldRefl
         #define WorldNormalVector(data,normal) normal
 
+        #define VIXFORGE_TOON 1
+        #define VIXFORGE_CLOTHING 1
         #define OUTLINE_INDEX 1
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/LatexOutline.cginc"
         ENDCG
@@ -3278,9 +4056,9 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_CHROMA
             #pragma shader_feature_local VF_COSMOS
             #pragma shader_feature_local VF_CTX
+            #pragma shader_feature_local VF_STRETCH
             #pragma shader_feature_local VF_DECALENABLED
             #pragma shader_feature_local VF_EMISSION
-            #pragma shader_feature_local VF_CYBER
             #pragma shader_feature_local VF_ALPHAMASK
             #pragma shader_feature_local VF_CUTOUTMASK
             #pragma shader_feature_local VF_DECAL3
@@ -3289,7 +4067,6 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_DECAL0
             #pragma shader_feature_local VF_DETAILNORMAL
             #pragma shader_feature_local VF_NORMAL2
-            #pragma shader_feature_local VF_DRIP
             #pragma shader_feature_local VF_EMISSION2
             #pragma shader_feature_local VF_EMISSION3
             #pragma shader_feature_local VF_EMISSION4
@@ -3302,8 +4079,6 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_GLIT4_ON
             #pragma shader_feature_local VF_GLIT5_ON
             #pragma shader_feature_local VF_GLITTER
-            #pragma shader_feature_local VF_GOO
-            #pragma shader_feature_local VF_GOONOISE
             #pragma shader_feature_local VF_HEIGHTMAP
             #pragma shader_feature_local VF_HYPER
             #pragma shader_feature_local VF_CYMATICS
@@ -3328,7 +4103,6 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_SONAR
             #pragma shader_feature_local VF_SPECTRUM
             #pragma shader_feature_local VF_SWARM
-            #pragma shader_feature_local VF_TOUCH
             #pragma shader_feature_local VF_VRSL
             #pragma shader_feature_local VF_VTXKINETIC
             #pragma shader_feature_local VF_TEX_ALPHAMASK
@@ -3341,9 +4115,11 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_CARPAINTMASK
             #pragma shader_feature_local VF_TEX_COSMOSMASK
             #pragma shader_feature_local VF_TEX_CTXMASK
+            #pragma shader_feature_local VF_TEX_CTXINK
             #pragma shader_feature_local VF_TEX_CUTOUTMASK
             #pragma shader_feature_local VF_UDIMDISCARD
             #pragma shader_feature_local VF_DISSOLVE
+            #pragma shader_feature_local VF_CONTACTS
             #pragma shader_feature_local VF_COLORADJUST
             #pragma shader_feature_local VF_TEX_COLORADJUSTMASK
             #pragma shader_feature_local VF_TEX_MAINTINT
@@ -3352,6 +4128,9 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_HOLO
             #pragma shader_feature_local VF_TEX_HOLORAMP
             #pragma shader_feature_local VF_PEARL
+            #pragma shader_feature_local VF_GEMS
+            #pragma shader_feature_local VF_TEX_GEMMASK
+            #pragma shader_feature_local VF_TEX_GEMMAP
             #pragma shader_feature_local VF_SKELETON
             #pragma shader_feature_local VF_TEX_SKELMASK
             #pragma shader_feature_local VF_TEX_DISSOLVENOISE
@@ -3360,7 +4139,6 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_DISSOLVEMASK
             #pragma shader_feature_local VF_TEX_DECALMASK
             #pragma shader_feature_local VF_TEX_DETAILNORMALMAP
-            #pragma shader_feature_local VF_TEX_DRIPMASK
             #pragma shader_feature_local VF_TEX_EMISSIONMAP
             #pragma shader_feature_local VF_TEX_EMISSIONMAP2
             #pragma shader_feature_local VF_TEX_EMISSIONMAP3
@@ -3375,8 +4153,6 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_GLITMASK
             #pragma shader_feature_local VF_TEX_GLIT_SHAPETEX
             #pragma shader_feature_local VF_TEX_GLOSSMAP
-            #pragma shader_feature_local VF_TEX_GOOMASK
-            #pragma shader_feature_local VF_TEX_GOO_NOISETEX
             #pragma shader_feature_local VF_TEX_HEIGHTMAP
             #pragma shader_feature_local VF_TEX_INFINITYMASK
             #pragma shader_feature_local VF_TEX_INFINITYTEX
@@ -3398,14 +4174,15 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_REGIONMASK
             #pragma shader_feature_local VF_TEX_SHADOWMASK
             #pragma shader_feature_local VF_TEX_TOONRAMP
-            #pragma shader_feature_local VF_TEX_TOUCHMASK
             #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRECTIONAL_COOKIE POINT_COOKIE SHADOWS_CUBE SHADOWS_SOFT
             #pragma multi_compile_instancing
             //ifex _IgnoreFog==1
             #pragma dynamic_branch _ FOG_LINEAR FOG_EXP FOG_EXP2
             //endex
             #pragma multi_compile_fwdbase novertexlight noshadowmask nodynlightmap nodirlightmap nolightmap
+            //ifex _LightingVertexLightingEnabled==0
             #pragma multi_compile_domain _ VERTEXLIGHT_ON
+            //endex
 
 
             #if defined(VF_SHEER_TWOPASS) && defined(VF_SHEER)
@@ -3473,9 +4250,9 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_CHROMA
             #pragma shader_feature_local VF_COSMOS
             #pragma shader_feature_local VF_CTX
+            #pragma shader_feature_local VF_STRETCH
             #pragma shader_feature_local VF_DECALENABLED
             #pragma shader_feature_local VF_EMISSION
-            #pragma shader_feature_local VF_CYBER
             #pragma shader_feature_local VF_ALPHAMASK
             #pragma shader_feature_local VF_CUTOUTMASK
             #pragma shader_feature_local VF_DECAL3
@@ -3484,7 +4261,6 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_DECAL0
             #pragma shader_feature_local VF_DETAILNORMAL
             #pragma shader_feature_local VF_NORMAL2
-            #pragma shader_feature_local VF_DRIP
             #pragma shader_feature_local VF_EMISSION2
             #pragma shader_feature_local VF_EMISSION3
             #pragma shader_feature_local VF_EMISSION4
@@ -3497,33 +4273,27 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_GLIT4_ON
             #pragma shader_feature_local VF_GLIT5_ON
             #pragma shader_feature_local VF_GLITTER
-            #pragma shader_feature_local VF_GOO
-            #pragma shader_feature_local VF_GOONOISE
             #pragma shader_feature_local VF_HEIGHTMAP
             #pragma shader_feature_local VF_HYPER
             #pragma shader_feature_local VF_CYMATICS
             #pragma shader_feature_local VF_INFINITY
             #pragma shader_feature_local VF_LIGHTVOLUMES
-            #pragma shader_feature_local VF_LTCGI
             #pragma shader_feature_local VF_MATCAP1
             #pragma shader_feature_local VF_MATCAP2
             #pragma shader_feature_local VF_MATCAP3
             #pragma shader_feature_local VF_MATCAP4
             #pragma shader_feature_local VF_MATCAP5
-            #pragma shader_feature_local VF_MULTISCATTER
             #pragma shader_feature_local VF_PACKEDMASKS
             #pragma shader_feature_local VF_PATHING
             #pragma shader_feature_local VF_POLISH
             #pragma shader_feature_local VF_REGIONMASK
             #pragma shader_feature_local VF_SHADOWMASK
-            #pragma shader_feature_local VF_SHEEN
             #pragma shader_feature_local VF_SHEER_TINT
             #pragma shader_feature_local VF_SHEER
             #pragma shader_feature_local VF_TEX_SHEERLACE
             #pragma shader_feature_local VF_SONAR
             #pragma shader_feature_local VF_SPECTRUM
             #pragma shader_feature_local VF_SWARM
-            #pragma shader_feature_local VF_TOUCH
             #pragma shader_feature_local VF_VRSL
             #pragma shader_feature_local VF_VTXKINETIC
             #pragma shader_feature_local VF_TEX_ALPHAMASK
@@ -3536,9 +4306,11 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_CARPAINTMASK
             #pragma shader_feature_local VF_TEX_COSMOSMASK
             #pragma shader_feature_local VF_TEX_CTXMASK
+            #pragma shader_feature_local VF_TEX_CTXINK
             #pragma shader_feature_local VF_TEX_CUTOUTMASK
             #pragma shader_feature_local VF_UDIMDISCARD
             #pragma shader_feature_local VF_DISSOLVE
+            #pragma shader_feature_local VF_CONTACTS
             #pragma shader_feature_local VF_COLORADJUST
             #pragma shader_feature_local VF_TEX_COLORADJUSTMASK
             #pragma shader_feature_local VF_TEX_MAINTINT
@@ -3547,6 +4319,9 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_HOLO
             #pragma shader_feature_local VF_TEX_HOLORAMP
             #pragma shader_feature_local VF_PEARL
+            #pragma shader_feature_local VF_GEMS
+            #pragma shader_feature_local VF_TEX_GEMMASK
+            #pragma shader_feature_local VF_TEX_GEMMAP
             #pragma shader_feature_local VF_SKELETON
             #pragma shader_feature_local VF_TEX_SKELMASK
             #pragma shader_feature_local VF_TEX_DISSOLVENOISE
@@ -3555,7 +4330,6 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_DISSOLVEMASK
             #pragma shader_feature_local VF_TEX_DECALMASK
             #pragma shader_feature_local VF_TEX_DETAILNORMALMAP
-            #pragma shader_feature_local VF_TEX_DRIPMASK
             #pragma shader_feature_local VF_TEX_EMISSIONMAP
             #pragma shader_feature_local VF_TEX_EMISSIONMAP2
             #pragma shader_feature_local VF_TEX_EMISSIONMAP3
@@ -3570,8 +4344,6 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_GLITMASK
             #pragma shader_feature_local VF_TEX_GLIT_SHAPETEX
             #pragma shader_feature_local VF_TEX_GLOSSMAP
-            #pragma shader_feature_local VF_TEX_GOOMASK
-            #pragma shader_feature_local VF_TEX_GOO_NOISETEX
             #pragma shader_feature_local VF_TEX_HEIGHTMAP
             #pragma shader_feature_local VF_TEX_INFINITYMASK
             #pragma shader_feature_local VF_TEX_INFINITYTEX
@@ -3593,14 +4365,15 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_REGIONMASK
             #pragma shader_feature_local VF_TEX_SHADOWMASK
             #pragma shader_feature_local VF_TEX_TOONRAMP
-            #pragma shader_feature_local VF_TEX_TOUCHMASK
             #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRECTIONAL_COOKIE POINT_COOKIE SHADOWS_CUBE SHADOWS_SOFT
             #pragma multi_compile_instancing
             //ifex _IgnoreFog==1
             #pragma dynamic_branch _ FOG_LINEAR FOG_EXP FOG_EXP2
             //endex
             #pragma multi_compile_fwdbase novertexlight noshadowmask nodynlightmap nodirlightmap nolightmap
+            //ifex _LightingVertexLightingEnabled==0
             #pragma multi_compile_domain _ VERTEXLIGHT_ON
+            //endex
 
 
             #if defined(VF_SHEER_TINT) && defined(VF_SHEER)
@@ -3668,9 +4441,9 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_CHROMA
             #pragma shader_feature_local VF_COSMOS
             #pragma shader_feature_local VF_CTX
+            #pragma shader_feature_local VF_STRETCH
             #pragma shader_feature_local VF_DECALENABLED
             #pragma shader_feature_local VF_EMISSION
-            #pragma shader_feature_local VF_CYBER
             #pragma shader_feature_local VF_ALPHAMASK
             #pragma shader_feature_local VF_CUTOUTMASK
             #pragma shader_feature_local VF_DECAL3
@@ -3679,7 +4452,6 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_DECAL0
             #pragma shader_feature_local VF_DETAILNORMAL
             #pragma shader_feature_local VF_NORMAL2
-            #pragma shader_feature_local VF_DRIP
             #pragma shader_feature_local VF_EMISSION2
             #pragma shader_feature_local VF_EMISSION3
             #pragma shader_feature_local VF_EMISSION4
@@ -3692,8 +4464,6 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_GLIT4_ON
             #pragma shader_feature_local VF_GLIT5_ON
             #pragma shader_feature_local VF_GLITTER
-            #pragma shader_feature_local VF_GOO
-            #pragma shader_feature_local VF_GOONOISE
             #pragma shader_feature_local VF_HEIGHTMAP
             #pragma shader_feature_local VF_HYPER
             #pragma shader_feature_local VF_CYMATICS
@@ -3717,7 +4487,6 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_SONAR
             #pragma shader_feature_local VF_SPECTRUM
             #pragma shader_feature_local VF_SWARM
-            #pragma shader_feature_local VF_TOUCH
             #pragma shader_feature_local VF_VRSL
             #pragma shader_feature_local VF_VTXKINETIC
             #pragma shader_feature_local VF_TEX_ALPHAMASK
@@ -3730,9 +4499,11 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_CARPAINTMASK
             #pragma shader_feature_local VF_TEX_COSMOSMASK
             #pragma shader_feature_local VF_TEX_CTXMASK
+            #pragma shader_feature_local VF_TEX_CTXINK
             #pragma shader_feature_local VF_TEX_CUTOUTMASK
             #pragma shader_feature_local VF_UDIMDISCARD
             #pragma shader_feature_local VF_DISSOLVE
+            #pragma shader_feature_local VF_CONTACTS
             #pragma shader_feature_local VF_COLORADJUST
             #pragma shader_feature_local VF_TEX_COLORADJUSTMASK
             #pragma shader_feature_local VF_TEX_MAINTINT
@@ -3741,6 +4512,9 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_HOLO
             #pragma shader_feature_local VF_TEX_HOLORAMP
             #pragma shader_feature_local VF_PEARL
+            #pragma shader_feature_local VF_GEMS
+            #pragma shader_feature_local VF_TEX_GEMMASK
+            #pragma shader_feature_local VF_TEX_GEMMAP
             #pragma shader_feature_local VF_SKELETON
             #pragma shader_feature_local VF_TEX_SKELMASK
             #pragma shader_feature_local VF_TEX_DISSOLVENOISE
@@ -3749,7 +4523,6 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_DISSOLVEMASK
             #pragma shader_feature_local VF_TEX_DECALMASK
             #pragma shader_feature_local VF_TEX_DETAILNORMALMAP
-            #pragma shader_feature_local VF_TEX_DRIPMASK
             #pragma shader_feature_local VF_TEX_EMISSIONMAP
             #pragma shader_feature_local VF_TEX_EMISSIONMAP2
             #pragma shader_feature_local VF_TEX_EMISSIONMAP3
@@ -3764,8 +4537,6 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_GLITMASK
             #pragma shader_feature_local VF_TEX_GLIT_SHAPETEX
             #pragma shader_feature_local VF_TEX_GLOSSMAP
-            #pragma shader_feature_local VF_TEX_GOOMASK
-            #pragma shader_feature_local VF_TEX_GOO_NOISETEX
             #pragma shader_feature_local VF_TEX_HEIGHTMAP
             #pragma shader_feature_local VF_TEX_INFINITYMASK
             #pragma shader_feature_local VF_TEX_INFINITYTEX
@@ -3787,14 +4558,15 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_REGIONMASK
             #pragma shader_feature_local VF_TEX_SHADOWMASK
             #pragma shader_feature_local VF_TEX_TOONRAMP
-            #pragma shader_feature_local VF_TEX_TOUCHMASK
             #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRECTIONAL_COOKIE POINT_COOKIE SHADOWS_CUBE SHADOWS_SOFT
             #pragma multi_compile_instancing
             //ifex _IgnoreFog==1
             #pragma dynamic_branch _ FOG_LINEAR FOG_EXP FOG_EXP2
             //endex
             #pragma multi_compile_fwdbase novertexlight noshadowmask nodynlightmap nodirlightmap nolightmap
+            //ifex _LightingVertexLightingEnabled==0
             #pragma multi_compile_domain _ VERTEXLIGHT_ON
+            //endex
 
 
             #include "UnityCG.cginc"
@@ -3817,6 +4589,7 @@ Shader "VixenWear/Clothing Pro"
             ENDCG
         }
 
+        //ifex _LightingAdditiveEnable==0 && isNotAnimated(_LightingAdditiveEnable)
         Pass
         {
             Name "FORWARD"
@@ -3839,12 +4612,9 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_AUDIOLINK
             #pragma shader_feature_local VF_BENTNORMAL
             #pragma shader_feature_local VF_CARPAINT
-            #pragma shader_feature_local VF_CHROMA
-            #pragma shader_feature_local VF_COSMOS
             #pragma shader_feature_local VF_CTX
+            #pragma shader_feature_local VF_STRETCH
             #pragma shader_feature_local VF_DECALENABLED
-            #pragma shader_feature_local VF_EMISSION
-            #pragma shader_feature_local VF_CYBER
             #pragma shader_feature_local VF_ALPHAMASK
             #pragma shader_feature_local VF_CUTOUTMASK
             #pragma shader_feature_local VF_DECAL3
@@ -3853,11 +4623,6 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_DECAL0
             #pragma shader_feature_local VF_DETAILNORMAL
             #pragma shader_feature_local VF_NORMAL2
-            #pragma shader_feature_local VF_DRIP
-            #pragma shader_feature_local VF_EMISSION2
-            #pragma shader_feature_local VF_EMISSION3
-            #pragma shader_feature_local VF_EMISSION4
-            #pragma shader_feature_local VF_EMISSION5
             #pragma shader_feature_local VF_FLIPBOOK
             #pragma shader_feature_local VF_FUR
             #pragma shader_feature_local VF_FURFLOW
@@ -3866,12 +4631,7 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_GLIT4_ON
             #pragma shader_feature_local VF_GLIT5_ON
             #pragma shader_feature_local VF_GLITTER
-            #pragma shader_feature_local VF_GOO
-            #pragma shader_feature_local VF_GOONOISE
             #pragma shader_feature_local VF_HEIGHTMAP
-            #pragma shader_feature_local VF_HYPER
-            #pragma shader_feature_local VF_CYMATICS
-            #pragma shader_feature_local VF_INFINITY
             #pragma shader_feature_local VF_LIGHTVOLUMES
             #pragma shader_feature_local VF_LTCGI
             #pragma shader_feature_local VF_MATCAP1
@@ -3881,17 +4641,12 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_MATCAP5
             #pragma shader_feature_local VF_MULTISCATTER
             #pragma shader_feature_local VF_PACKEDMASKS
-            #pragma shader_feature_local VF_PATHING
             #pragma shader_feature_local VF_POLISH
             #pragma shader_feature_local VF_REGIONMASK
             #pragma shader_feature_local VF_SHADOWMASK
             #pragma shader_feature_local VF_SHEEN
             #pragma shader_feature_local VF_SHEER
             #pragma shader_feature_local VF_TEX_SHEERLACE
-            #pragma shader_feature_local VF_SONAR
-            #pragma shader_feature_local VF_SPECTRUM
-            #pragma shader_feature_local VF_SWARM
-            #pragma shader_feature_local VF_TOUCH
             #pragma shader_feature_local VF_VRSL
             #pragma shader_feature_local VF_VTXKINETIC
             #pragma shader_feature_local VF_TEX_ALPHAMASK
@@ -3902,11 +4657,12 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_BUMPMAP
             #pragma shader_feature_local VF_TEX_THICKNESSMAP
             #pragma shader_feature_local VF_TEX_CARPAINTMASK
-            #pragma shader_feature_local VF_TEX_COSMOSMASK
             #pragma shader_feature_local VF_TEX_CTXMASK
+            #pragma shader_feature_local VF_TEX_CTXINK
             #pragma shader_feature_local VF_TEX_CUTOUTMASK
             #pragma shader_feature_local VF_UDIMDISCARD
             #pragma shader_feature_local VF_DISSOLVE
+            #pragma shader_feature_local VF_CONTACTS
             #pragma shader_feature_local VF_COLORADJUST
             #pragma shader_feature_local VF_TEX_COLORADJUSTMASK
             #pragma shader_feature_local VF_TEX_MAINTINT
@@ -3915,6 +4671,9 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_HOLO
             #pragma shader_feature_local VF_TEX_HOLORAMP
             #pragma shader_feature_local VF_PEARL
+            #pragma shader_feature_local VF_GEMS
+            #pragma shader_feature_local VF_TEX_GEMMASK
+            #pragma shader_feature_local VF_TEX_GEMMAP
             #pragma shader_feature_local VF_SKELETON
             #pragma shader_feature_local VF_TEX_DISSOLVENOISE
             #pragma shader_feature_local VF_TEX_DISSOLVETO
@@ -3922,7 +4681,6 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_DISSOLVEMASK
             #pragma shader_feature_local VF_TEX_DECALMASK
             #pragma shader_feature_local VF_TEX_DETAILNORMALMAP
-            #pragma shader_feature_local VF_TEX_DRIPMASK
             #pragma shader_feature_local VF_TEX_EMISSIONMAP
             #pragma shader_feature_local VF_TEX_EMISSIONMAP2
             #pragma shader_feature_local VF_TEX_EMISSIONMAP3
@@ -3937,11 +4695,7 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_GLITMASK
             #pragma shader_feature_local VF_TEX_GLIT_SHAPETEX
             #pragma shader_feature_local VF_TEX_GLOSSMAP
-            #pragma shader_feature_local VF_TEX_GOOMASK
-            #pragma shader_feature_local VF_TEX_GOO_NOISETEX
             #pragma shader_feature_local VF_TEX_HEIGHTMAP
-            #pragma shader_feature_local VF_TEX_INFINITYMASK
-            #pragma shader_feature_local VF_TEX_INFINITYTEX
             #pragma shader_feature_local VF_TEX_MATCAP
             #pragma shader_feature_local VF_TEX_MATCAP2
             #pragma shader_feature_local VF_TEX_MATCAP2_MASK
@@ -3955,13 +4709,20 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_METALLICGLOSSMAP
             #pragma shader_feature_local VF_TEX_METALLICMAP
             #pragma shader_feature_local VF_TEX_NORMAL2MAP
-            #pragma shader_feature_local VF_TEX_PATHINGMAP
             #pragma shader_feature_local VF_TEX_POLISHMASK
             #pragma shader_feature_local VF_TEX_REGIONMASK
             #pragma shader_feature_local VF_TEX_SHADOWMASK
             #pragma shader_feature_local VF_TEX_TOONRAMP
-            #pragma shader_feature_local VF_TEX_TOUCHMASK
-            #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRECTIONAL_COOKIE POINT_COOKIE SHADOWS_CUBE SHADOWS_SOFT
+            #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK
+            //ifex _LightingPointShadows==1
+            //VF_LOCK #pragma skip_variants SHADOWS_CUBE
+            //endex
+            //ifex _LightingSoftShadows==1
+            //VF_LOCK #pragma skip_variants SHADOWS_SOFT
+            //endex
+            //ifex _LightingCookies==1
+            //VF_LOCK #pragma skip_variants POINT_COOKIE DIRECTIONAL_COOKIE
+            //endex
             #pragma multi_compile_instancing
             //ifex _IgnoreFog==1
             #pragma dynamic_branch _ FOG_LINEAR FOG_EXP FOG_EXP2
@@ -3992,6 +4753,7 @@ Shader "VixenWear/Clothing Pro"
             #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/LatexForwardAdd.cginc"
             ENDCG
         }
+        //endex
 
         Pass
         {
@@ -4012,126 +4774,47 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_ALFRACTURE
             #pragma shader_feature_local VF_ALPUMP
             #pragma shader_feature_local VF_ALVORTEX
-            #pragma shader_feature_local VF_AOMAP
-            #pragma shader_feature_local VF_METALLICMAP
-            #pragma shader_feature_local VF_GLOSSMAP
             #pragma shader_feature_local VF_AUDIOLINK
-            #pragma shader_feature_local VF_BENTNORMAL
-            #pragma shader_feature_local VF_CARPAINT
-            #pragma shader_feature_local VF_CHROMA
-            #pragma shader_feature_local VF_COSMOS
             #pragma shader_feature_local VF_CTX
             #pragma shader_feature_local VF_DECALENABLED
-            #pragma shader_feature_local VF_EMISSION
-            #pragma shader_feature_local VF_CYBER
             #pragma shader_feature_local VF_ALPHAMASK
             #pragma shader_feature_local VF_CUTOUTMASK
             #pragma shader_feature_local VF_DECAL3
             #pragma shader_feature_local VF_DECAL2
             #pragma shader_feature_local VF_DECAL1
             #pragma shader_feature_local VF_DECAL0
-            #pragma shader_feature_local VF_DETAILNORMAL
-            #pragma shader_feature_local VF_NORMAL2
-            #pragma shader_feature_local VF_DRIP
-            #pragma shader_feature_local VF_EMISSION2
-            #pragma shader_feature_local VF_EMISSION3
-            #pragma shader_feature_local VF_EMISSION4
-            #pragma shader_feature_local VF_EMISSION5
-            #pragma shader_feature_local VF_FLIPBOOK
-            #pragma shader_feature_local VF_FUR
-            #pragma shader_feature_local VF_FURFLOW
-            #pragma shader_feature_local VF_GLIT2_ON
-            #pragma shader_feature_local VF_GLIT3_ON
-            #pragma shader_feature_local VF_GLIT4_ON
-            #pragma shader_feature_local VF_GLIT5_ON
-            #pragma shader_feature_local VF_GLITTER
-            #pragma shader_feature_local VF_GOO
-            #pragma shader_feature_local VF_GOONOISE
             #pragma shader_feature_local VF_HEIGHTMAP
-            #pragma shader_feature_local VF_HYPER
-            #pragma shader_feature_local VF_CYMATICS
-            #pragma shader_feature_local VF_INFINITY
-            #pragma shader_feature_local VF_LIGHTVOLUMES
-            #pragma shader_feature_local VF_LTCGI
-            #pragma shader_feature_local VF_MATCAP1
-            #pragma shader_feature_local VF_MATCAP2
-            #pragma shader_feature_local VF_MATCAP3
-            #pragma shader_feature_local VF_MATCAP4
-            #pragma shader_feature_local VF_MATCAP5
-            #pragma shader_feature_local VF_MULTISCATTER
-            #pragma shader_feature_local VF_PACKEDMASKS
-            #pragma shader_feature_local VF_PATHING
-            #pragma shader_feature_local VF_POLISH
-            #pragma shader_feature_local VF_REGIONMASK
-            #pragma shader_feature_local VF_SHADOWMASK
-            #pragma shader_feature_local VF_SHEEN
             #pragma shader_feature_local VF_SHEER
             #pragma shader_feature_local VF_TEX_SHEERLACE
-            #pragma shader_feature_local VF_SONAR
-            #pragma shader_feature_local VF_SPECTRUM
-            #pragma shader_feature_local VF_SWARM
-            #pragma shader_feature_local VF_TOUCH
             #pragma shader_feature_local VF_VRSL
             #pragma shader_feature_local VF_VTXKINETIC
             #pragma shader_feature_local VF_TEX_ALPHAMASK
             #pragma shader_feature_local VF_TEX_GLOBALMASK0
             #pragma shader_feature_local VF_TEX_AL_FXMASK
-            #pragma shader_feature_local VF_TEX_AOMAP
-            #pragma shader_feature_local VF_TEX_BENTNORMALMAP
-            #pragma shader_feature_local VF_TEX_BUMPMAP
-            #pragma shader_feature_local VF_TEX_THICKNESSMAP
-            #pragma shader_feature_local VF_TEX_CARPAINTMASK
-            #pragma shader_feature_local VF_TEX_COSMOSMASK
             #pragma shader_feature_local VF_TEX_CTXMASK
             #pragma shader_feature_local VF_TEX_CUTOUTMASK
             #pragma shader_feature_local VF_UDIMDISCARD
             #pragma shader_feature_local VF_DISSOLVE
+            #pragma shader_feature_local VF_CONTACTS
+            #pragma shader_feature_local VF_HOLO
             #pragma shader_feature_local VF_TEX_DISSOLVENOISE
             #pragma shader_feature_local VF_TEX_DISSOLVETO
             #pragma shader_feature_local VF_TEX_DISSOLVEDETAIL
             #pragma shader_feature_local VF_TEX_DISSOLVEMASK
             #pragma shader_feature_local VF_TEX_DECALMASK
-            #pragma shader_feature_local VF_TEX_DETAILNORMALMAP
-            #pragma shader_feature_local VF_TEX_DRIPMASK
             #pragma shader_feature_local VF_TEX_EMISSIONMAP
             #pragma shader_feature_local VF_TEX_EMISSIONMAP2
             #pragma shader_feature_local VF_TEX_EMISSIONMAP3
             #pragma shader_feature_local VF_TEX_EMISSIONMAP4
             #pragma shader_feature_local VF_TEX_EMISSIONMAP5
-            #pragma shader_feature_local VF_TEX_FABRICMASK
-            #pragma shader_feature_local VF_TEX_FLIPBOOKMASK
-            #pragma shader_feature_local VF_TEX_FLIPBOOKSHEET
-            #pragma shader_feature_local VF_TEX_FLIPBOOKTEX
-            #pragma shader_feature_local VF_TEX_FURFLOWMAP
-            #pragma shader_feature_local VF_TEX_FURMASK
-            #pragma shader_feature_local VF_TEX_GLITMASK
-            #pragma shader_feature_local VF_TEX_GLIT_SHAPETEX
-            #pragma shader_feature_local VF_TEX_GLOSSMAP
-            #pragma shader_feature_local VF_TEX_GOOMASK
-            #pragma shader_feature_local VF_TEX_GOO_NOISETEX
             #pragma shader_feature_local VF_TEX_HEIGHTMAP
-            #pragma shader_feature_local VF_TEX_INFINITYMASK
-            #pragma shader_feature_local VF_TEX_INFINITYTEX
-            #pragma shader_feature_local VF_TEX_MATCAP
-            #pragma shader_feature_local VF_TEX_MATCAP2
             #pragma shader_feature_local VF_TEX_MATCAP2_MASK
-            #pragma shader_feature_local VF_TEX_MATCAP3
             #pragma shader_feature_local VF_TEX_MATCAP3_MASK
-            #pragma shader_feature_local VF_TEX_MATCAP4
             #pragma shader_feature_local VF_TEX_MATCAP4_MASK
-            #pragma shader_feature_local VF_TEX_MATCAP5
             #pragma shader_feature_local VF_TEX_MATCAP5_MASK
             #pragma shader_feature_local VF_TEX_MATCAPMASK
             #pragma shader_feature_local VF_TEX_METALLICGLOSSMAP
-            #pragma shader_feature_local VF_TEX_METALLICMAP
-            #pragma shader_feature_local VF_TEX_NORMAL2MAP
-            #pragma shader_feature_local VF_TEX_PATHINGMAP
-            #pragma shader_feature_local VF_TEX_POLISHMASK
-            #pragma shader_feature_local VF_TEX_REGIONMASK
-            #pragma shader_feature_local VF_TEX_SHADOWMASK
-            #pragma shader_feature_local VF_TEX_TOONRAMP
-            #pragma shader_feature_local VF_TEX_TOUCHMASK
-            #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRECTIONAL_COOKIE POINT_COOKIE SHADOWS_CUBE SHADOWS_SOFT
+            #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRECTIONAL_COOKIE POINT_COOKIE SHADOWS_SOFT
             #pragma multi_compile_instancing
             #pragma skip_variants FOG_LINEAR FOG_EXP FOG_EXP2
             #pragma multi_compile_shadowcaster noshadowmask nodynlightmap nodirlightmap nolightmap
@@ -4323,6 +5006,20 @@ Shader "VixenWear/Clothing Pro"
 
             #endif
 
+            v2f_surf vert_notess_surf (appdata_full v)
+            {
+                UNITY_SETUP_INSTANCE_ID(v);
+                #ifdef VF_UDIMDISCARD
+                bool vfKill = VF_UDIM_POINT_KILLED(v);
+                #endif
+                disp (v);
+                v2f_surf o = vert_surf (v);
+                #ifdef VF_UDIMDISCARD
+                if (vfKill) o.pos = asfloat(-1);
+                #endif
+                return o;
+            }
+
             fixed4 frag_surf (v2f_surf IN) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(IN);
@@ -4375,35 +5072,6 @@ Shader "VixenWear/Clothing Pro"
             ENDCG
         }
 
-        Pass
-        {
-            Name "MOTIONVECTORS"
-            Tags { "LightMode" = "MotionVectors" }
-            ZTest LEqual
-            ZWrite Off
-            Cull [_CullMode]
-
-            CGPROGRAM
-            #pragma vertex vert_motion_surf
-            #pragma fragment frag_motion_surf
-            #pragma shader_feature_local VF_CUTOUTMASK
-            #pragma shader_feature_local VF_TEX_CUTOUTMASK
-            #pragma shader_feature_local VF_UDIMDISCARD
-            #pragma shader_feature_local VF_DISSOLVE
-            #pragma shader_feature_local VF_TEX_DISSOLVENOISE
-            #pragma shader_feature_local VF_TEX_DISSOLVETO
-            #pragma shader_feature_local VF_TEX_DISSOLVEDETAIL
-            #pragma shader_feature_local VF_TEX_DISSOLVEMASK
-            #pragma target 5.0
-            #pragma only_renderers d3d11 glcore vulkan
-            #pragma multi_compile_instancing
-            #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRECTIONAL_COOKIE POINT_COOKIE SHADOWS_CUBE SHADOWS_SOFT
-
-            #include "UnityCG.cginc"
-            #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/LatexMotionVectors.cginc"
-            ENDCG
-        }
-
         //ifex _UseCyber==0 && isNotAnimated(_UseCyber)
         Pass
         {
@@ -4427,7 +5095,6 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_DISSOLVEMASK
             #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeUVTileDiscard.cginc"
             #pragma target 5.0
-            #pragma shader_feature_local VF_AUDIOLINK
             #pragma shader_feature_local VF_TEX_CYBERMASK
             #pragma shader_feature_local VF_CYBERDMX
             #pragma only_renderers d3d11 glcore vulkan
@@ -5225,14 +5892,12 @@ Shader "VixenWear/Clothing Pro"
             #pragma only_renderers d3d11 glcore vulkan
             #pragma require geometry
             #pragma multi_compile_instancing
-            #pragma multi_compile_fwdbase
+            #pragma multi_compile_fwdbase novertexlight noshadowmask nodynlightmap nodirlightmap nolightmap
             #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRECTIONAL_COOKIE POINT_COOKIE SHADOWS_CUBE SHADOWS_SOFT
             #pragma shader_feature_local VF_LIGHTVOLUMES
             #pragma shader_feature_local VF_LTCGI
             #pragma shader_feature_local VF_VRSL
-            #pragma shader_feature_local VF_AUDIOLINK
             #pragma shader_feature_local VF_TEX_BUMPMAP
-            #pragma shader_feature_local VF_TEX_THICKNESSMAP
             #pragma shader_feature_local VF_TEX_EMISSIONMAP
             #pragma shader_feature_local VF_TEX_GLOSSMAP
             #pragma shader_feature_local VF_TEX_METALLICGLOSSMAP
@@ -5749,7 +6414,6 @@ Shader "VixenWear/Clothing Pro"
             #pragma shader_feature_local VF_TEX_DISSOLVEMASK
             #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeUVTileDiscard.cginc"
             #pragma target 5.0
-            #pragma shader_feature_local VF_AUDIOLINK
             #pragma only_renderers d3d11 glcore vulkan
          
             #pragma require geometry
@@ -6020,6 +6684,7 @@ Shader "VixenWear/Clothing Pro"
             #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeCutout.cginc"
             #pragma shader_feature_local VF_UDIMDISCARD
             #pragma shader_feature_local VF_DISSOLVE
+            #pragma shader_feature_local VF_CONTACTS
             #pragma shader_feature_local VF_COLORADJUST
             #pragma shader_feature_local VF_TEX_COLORADJUSTMASK
             #pragma shader_feature_local VF_TEX_MAINTINT
@@ -6031,68 +6696,12 @@ Shader "VixenWear/Clothing Pro"
             #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeUVTileDiscard.cginc"
             #pragma target 5.0
             #pragma only_renderers d3d11 glcore vulkan
-            #pragma shader_feature_local VF_ALFRACTURE
-            #pragma shader_feature_local VF_ALPUMP
-            #pragma shader_feature_local VF_ALVORTEX
-            #pragma shader_feature_local VF_AOMAP
             #pragma shader_feature_local VF_METALLICMAP
             #pragma shader_feature_local VF_GLOSSMAP
-            #pragma shader_feature_local VF_AUDIOLINK
-            #pragma shader_feature_local VF_BENTNORMAL
-            #pragma shader_feature_local VF_CARPAINT
-            #pragma shader_feature_local VF_CHROMA
-            #pragma shader_feature_local VF_COSMOS
-            #pragma shader_feature_local VF_CTX
-            #pragma shader_feature_local VF_DECALENABLED
-            #pragma shader_feature_local VF_EMISSION
-            #pragma shader_feature_local VF_CYBER
-            #pragma shader_feature_local VF_ALPHAMASK
             #pragma shader_feature_local VF_CUTOUTMASK
-            #pragma shader_feature_local VF_DECAL3
-            #pragma shader_feature_local VF_DECAL2
-            #pragma shader_feature_local VF_DECAL1
-            #pragma shader_feature_local VF_DECAL0
-            #pragma shader_feature_local VF_DETAILNORMAL
-            #pragma shader_feature_local VF_NORMAL2
-            #pragma shader_feature_local VF_DRIP
-            #pragma shader_feature_local VF_EMISSION2
-            #pragma shader_feature_local VF_EMISSION3
-            #pragma shader_feature_local VF_EMISSION4
-            #pragma shader_feature_local VF_EMISSION5
-            #pragma shader_feature_local VF_FLIPBOOK
-            #pragma shader_feature_local VF_FUR
-            #pragma shader_feature_local VF_FURFLOW
-            #pragma shader_feature_local VF_GLIT2_ON
-            #pragma shader_feature_local VF_GLIT3_ON
-            #pragma shader_feature_local VF_GLIT4_ON
-            #pragma shader_feature_local VF_GLIT5_ON
-            #pragma shader_feature_local VF_GLITTER
-            #pragma shader_feature_local VF_GOO
-            #pragma shader_feature_local VF_GOONOISE
-            #pragma shader_feature_local VF_HEIGHTMAP
-            #pragma shader_feature_local VF_HYPER
-            #pragma shader_feature_local VF_CYMATICS
-            #pragma shader_feature_local VF_INFINITY
             #pragma shader_feature_local VF_LIGHTVOLUMES
             #pragma shader_feature_local VF_LTCGI
-            #pragma shader_feature_local VF_MATCAP1
-            #pragma shader_feature_local VF_MATCAP2
-            #pragma shader_feature_local VF_MATCAP3
-            #pragma shader_feature_local VF_MATCAP4
-            #pragma shader_feature_local VF_MATCAP5
-            #pragma shader_feature_local VF_MULTISCATTER
-            #pragma shader_feature_local VF_PACKEDMASKS
-            #pragma shader_feature_local VF_PATHING
-            #pragma shader_feature_local VF_POLISH
-            #pragma shader_feature_local VF_REGIONMASK
-            #pragma shader_feature_local VF_SHADOWMASK
-            #pragma shader_feature_local VF_SHEEN
-            #pragma shader_feature_local VF_SONAR
-            #pragma shader_feature_local VF_SPECTRUM
-            #pragma shader_feature_local VF_SWARM
-            #pragma shader_feature_local VF_TOUCH
             #pragma shader_feature_local VF_VRSL
-            #pragma shader_feature_local VF_VTXKINETIC
             #pragma shader_feature_local VF_TEX_FABRICMASK
             #pragma shader_feature_local VF_TEX_FURMASK
             #pragma shader_feature_local VF_TEX_FURSHELLCOMBMAP
@@ -6104,9 +6713,9 @@ Shader "VixenWear/Clothing Pro"
             #pragma require geometry
             #pragma multi_compile_instancing
             //ifex _IgnoreFog==1
-            #pragma multi_compile_fog
+            #pragma dynamic_branch _ FOG_LINEAR FOG_EXP FOG_EXP2
             //endex
-            #pragma multi_compile_fwdbase
+            #pragma multi_compile_fwdbase novertexlight noshadowmask nodynlightmap nodirlightmap nolightmap
             #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRECTIONAL_COOKIE POINT_COOKIE SHADOWS_CUBE SHADOWS_SOFT SHADOWS_DEPTH
             #include "UnityCG.cginc"
             #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeDissolve.cginc"
@@ -6205,6 +6814,13 @@ Shader "VixenWear/Clothing Pro"
             #endif
             float _FurShell_MapShape;
             float _FurShell_Curl;
+            float _FurShell_TouchPart;
+            float _FurShell_TouchFlat;
+            //ifex _UseContacts==0
+            #ifdef VF_CONTACTS
+            #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeContacts.cginc"
+            #endif
+            //endex
             float _FurShell_BendHeight;
             float _FurShell_Ambient;
             float _FurShell_MirrorQuality;
@@ -6213,6 +6829,7 @@ Shader "VixenWear/Clothing Pro"
             // Property would let a material override the value the game is trying to tell us.
             #ifndef VF_VRC_VIEW_DECLARED
             float _VRChatMirrorMode;
+            float _VRChatFaceMirrorMode;
             #endif
             float _FurShell_Length;
             float _FurShell_Density;
@@ -6239,7 +6856,7 @@ Shader "VixenWear/Clothing Pro"
             float _Fur_Fresnel;
             float _Fur_Ambient;
             float _Fur_Scatter;
-            float _IgnoreFog;
+            #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/LatexFog.cginc"
             float _Fur_Breakup;
             float _FabricMaskCh;
             float _FurMaskCh;
@@ -6345,7 +6962,7 @@ Shader "VixenWear/Clothing Pro"
                 #endif
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
-            // 20 scalars: pos 4, uv 2, strandUV 3, wPos 3, wDir 3, wNormal 3, seed 1, fogCoord 1.
+            // 20 scalars: pos 4, uv 2, strandUV 3, wPos 3, wDir 3, wNormal 3, seed 1, fogZ 1.
             // The D3D11 geometry budget is maxvertexcount * scalars <= 1024, so 48 * 20 = 960. Check any
             // new interpolator against that before adding it.
             struct furShellG2F
@@ -6359,7 +6976,7 @@ Shader "VixenWear/Clothing Pro"
                 float3 wDir : TEXCOORD3;
                 float3 wNormal : TEXCOORD4;
                 nointerpolation float seed : TEXCOORD5;
-                UNITY_FOG_COORDS(6)
+                float fogZ : TEXCOORD6;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
@@ -6480,8 +7097,10 @@ Shader "VixenWear/Clothing Pro"
             // independent multipliers had nothing stopping them from compounding.
             #if defined(USING_STEREO_MATRICES)
             #define FURSHELL_PROJ_M11 unity_StereoCameraProjection[0]._m11
+            #define FURSHELL_CAM_POS ((unity_StereoWorldSpaceCameraPos[0] + unity_StereoWorldSpaceCameraPos[1]) * 0.5)
             #else
             #define FURSHELL_PROJ_M11 unity_CameraProjection._m11
+            #define FURSHELL_CAM_POS _WorldSpaceCameraPos
             #endif
             #define FURSHELL_MAX_HAIRS_PER_TRI 192
 
@@ -6509,7 +7128,7 @@ Shader "VixenWear/Clothing Pro"
                 //
                 // _VRChatMirrorMode is set by the game: 0 outside a mirror, 1 in a VR mirror, 2 in a
                 // desktop one. Outside VRChat it stays 0 and this whole block is inert.
-                if (_VRChatMirrorMode > 0.5)
+                if (_VRChatMirrorMode > 0.5 || _VRChatFaceMirrorMode > 0.5)
                 {
                     if (_FurShell_MirrorQuality <= 0.001) return 0;
                     hairs = max(1, (int)(hairs * _FurShell_MirrorQuality + 0.5));
@@ -6517,7 +7136,7 @@ Shader "VixenWear/Clothing Pro"
 
                 // Hard range cutoff first: it is two instructions and it is the only test that can drop a
                 // face outright.
-                if (_FurShell_LodDist > 0.0 && distance(triCentre, _WorldSpaceCameraPos) > _FurShell_LodDist) return 0;
+                if (_FurShell_LodDist > 0.0 && distance(triCentre, FURSHELL_CAM_POS) > _FurShell_LodDist) return 0;
 
                 // A vertex on or behind the eye plane makes the perspective divide meaningless, so the
                 // screen tests are skipped rather than trusted. Faces straddling the near plane are the
@@ -6911,6 +7530,17 @@ Shader "VixenWear/Clothing Pro"
                     float lenMap = max(0.0, 1.0 + (cm4.b * 2.0 - 1.0) * _FurShell_MapLength);
                     float len  = stackLen * lerp(lenU, lenG, step(h.w, _FurShell_Guard * 0.3)) * rootM
                                * lenMap;
+                    //ifex _UseContacts==0
+                    #ifdef VF_CONTACTS
+                    [branch] if (_FurShell_TouchPart + _FurShell_TouchFlat > 0.0001 && VF_ContactsLive())
+                    {
+                        float4 fct = VF_ContactField(rootP, rootN, wTan, wBit, 1.0);
+                        bendH += -(wTan * fct.z + wBit * fct.w) * (_FurShell_TouchPart * saturate(fct.x + fct.y) * 2.0);
+                        bendT  = saturate(bendT + fct.x * _FurShell_TouchFlat);
+                        len   *= 1.0 - fct.x * _FurShell_TouchFlat * 0.6;
+                    }
+                    #endif
+                    //endex
                     if (len <= 1.0e-6) continue;
 
                     // Tufting pulls the tip toward the face centre, so neighbours converge into a lock.
@@ -6957,7 +7587,7 @@ Shader "VixenWear/Clothing Pro"
                         #ifdef UNITY_PASS_SHADOWCASTER
                         o.pos = UnityApplyLinearShadowBias(o.pos);
                         #endif
-                        UNITY_TRANSFER_FOG(o, o.pos);
+                        o.fogZ = o.pos.z;
                         stream.Append(o);
 
                         o.strandUV = float3(a, 1.0, aS);
@@ -6969,7 +7599,7 @@ Shader "VixenWear/Clothing Pro"
                         #ifdef UNITY_PASS_SHADOWCASTER
                         o.pos = UnityApplyLinearShadowBias(o.pos);
                         #endif
-                        UNITY_TRANSFER_FOG(o, o.pos);
+                        o.fogZ = o.pos.z;
                         stream.Append(o);
                     }
                     stream.RestartStrip();
@@ -7245,7 +7875,7 @@ Shader "VixenWear/Clothing Pro"
                      * (_Fur_Scatter * 3.0 * fwd * backLit * lerp(0.2, 1.0, along) * furAtten);
 
                 fixed4 outCol = fixed4(lit, cover);
-                if (_IgnoreFog < 0.5) { UNITY_APPLY_FOG(i.fogCoord, outCol); }
+                VW_ApplyFog(outCol, i.fogZ);
                 return VF_POSTGUARD(outCol);
             }
             ENDCG
@@ -7274,6 +7904,7 @@ Shader "VixenWear/Clothing Pro"
             #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeCutout.cginc"
             #pragma shader_feature_local VF_UDIMDISCARD
             #pragma shader_feature_local VF_DISSOLVE
+            #pragma shader_feature_local VF_CONTACTS
             #pragma shader_feature_local VF_TEX_DISSOLVENOISE
             #pragma shader_feature_local VF_TEX_DISSOLVETO
             #pragma shader_feature_local VF_TEX_DISSOLVEDETAIL
@@ -7281,69 +7912,7 @@ Shader "VixenWear/Clothing Pro"
             #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeUVTileDiscard.cginc"
             #pragma target 5.0
             #pragma only_renderers d3d11 glcore vulkan
-            #pragma shader_feature_local VF_ALFRACTURE
-            #pragma shader_feature_local VF_ALPUMP
-            #pragma shader_feature_local VF_ALVORTEX
-            #pragma shader_feature_local VF_AOMAP
-            #pragma shader_feature_local VF_METALLICMAP
-            #pragma shader_feature_local VF_GLOSSMAP
-            #pragma shader_feature_local VF_AUDIOLINK
-            #pragma shader_feature_local VF_BENTNORMAL
-            #pragma shader_feature_local VF_CARPAINT
-            #pragma shader_feature_local VF_CHROMA
-            #pragma shader_feature_local VF_COSMOS
-            #pragma shader_feature_local VF_CTX
-            #pragma shader_feature_local VF_DECALENABLED
-            #pragma shader_feature_local VF_EMISSION
-            #pragma shader_feature_local VF_CYBER
-            #pragma shader_feature_local VF_ALPHAMASK
             #pragma shader_feature_local VF_CUTOUTMASK
-            #pragma shader_feature_local VF_DECAL3
-            #pragma shader_feature_local VF_DECAL2
-            #pragma shader_feature_local VF_DECAL1
-            #pragma shader_feature_local VF_DECAL0
-            #pragma shader_feature_local VF_DETAILNORMAL
-            #pragma shader_feature_local VF_NORMAL2
-            #pragma shader_feature_local VF_DRIP
-            #pragma shader_feature_local VF_EMISSION2
-            #pragma shader_feature_local VF_EMISSION3
-            #pragma shader_feature_local VF_EMISSION4
-            #pragma shader_feature_local VF_EMISSION5
-            #pragma shader_feature_local VF_FLIPBOOK
-            #pragma shader_feature_local VF_FUR
-            #pragma shader_feature_local VF_FURFLOW
-            #pragma shader_feature_local VF_GLIT2_ON
-            #pragma shader_feature_local VF_GLIT3_ON
-            #pragma shader_feature_local VF_GLIT4_ON
-            #pragma shader_feature_local VF_GLIT5_ON
-            #pragma shader_feature_local VF_GLITTER
-            #pragma shader_feature_local VF_GOO
-            #pragma shader_feature_local VF_GOONOISE
-            #pragma shader_feature_local VF_HEIGHTMAP
-            #pragma shader_feature_local VF_HYPER
-            #pragma shader_feature_local VF_CYMATICS
-            #pragma shader_feature_local VF_INFINITY
-            #pragma shader_feature_local VF_LIGHTVOLUMES
-            #pragma shader_feature_local VF_LTCGI
-            #pragma shader_feature_local VF_MATCAP1
-            #pragma shader_feature_local VF_MATCAP2
-            #pragma shader_feature_local VF_MATCAP3
-            #pragma shader_feature_local VF_MATCAP4
-            #pragma shader_feature_local VF_MATCAP5
-            #pragma shader_feature_local VF_MULTISCATTER
-            #pragma shader_feature_local VF_PACKEDMASKS
-            #pragma shader_feature_local VF_PATHING
-            #pragma shader_feature_local VF_POLISH
-            #pragma shader_feature_local VF_REGIONMASK
-            #pragma shader_feature_local VF_SHADOWMASK
-            #pragma shader_feature_local VF_SHEEN
-            #pragma shader_feature_local VF_SONAR
-            #pragma shader_feature_local VF_SPECTRUM
-            #pragma shader_feature_local VF_SWARM
-            #pragma shader_feature_local VF_TOUCH
-            #pragma shader_feature_local VF_VRSL
-            #pragma shader_feature_local VF_VTXKINETIC
-            #pragma shader_feature_local VF_TEX_FABRICMASK
             #pragma shader_feature_local VF_TEX_FURMASK
             #pragma shader_feature_local VF_TEX_FURSHELLCOMBMAP
             #pragma shader_feature_local VF_TEX_FURSHELLMASK
@@ -7411,6 +7980,13 @@ Shader "VixenWear/Clothing Pro"
             #endif
             float _FurShell_MapShape;
             float _FurShell_Curl;
+            float _FurShell_TouchPart;
+            float _FurShell_TouchFlat;
+            //ifex _UseContacts==0
+            #ifdef VF_CONTACTS
+            #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeContacts.cginc"
+            #endif
+            //endex
             float _FurShell_BendHeight;
             float _FurShell_Ambient;
             float _FurShell_MirrorQuality;
@@ -7419,6 +7995,7 @@ Shader "VixenWear/Clothing Pro"
             // Property would let a material override the value the game is trying to tell us.
             #ifndef VF_VRC_VIEW_DECLARED
             float _VRChatMirrorMode;
+            float _VRChatFaceMirrorMode;
             #endif
             float _FurShell_Length;
             float _FurShell_Density;
@@ -7685,8 +8262,10 @@ Shader "VixenWear/Clothing Pro"
             // independent multipliers had nothing stopping them from compounding.
             #if defined(USING_STEREO_MATRICES)
             #define FURSHELL_PROJ_M11 unity_StereoCameraProjection[0]._m11
+            #define FURSHELL_CAM_POS ((unity_StereoWorldSpaceCameraPos[0] + unity_StereoWorldSpaceCameraPos[1]) * 0.5)
             #else
             #define FURSHELL_PROJ_M11 unity_CameraProjection._m11
+            #define FURSHELL_CAM_POS _WorldSpaceCameraPos
             #endif
             #define FURSHELL_MAX_HAIRS_PER_TRI 192
 
@@ -7714,7 +8293,7 @@ Shader "VixenWear/Clothing Pro"
                 //
                 // _VRChatMirrorMode is set by the game: 0 outside a mirror, 1 in a VR mirror, 2 in a
                 // desktop one. Outside VRChat it stays 0 and this whole block is inert.
-                if (_VRChatMirrorMode > 0.5)
+                if (_VRChatMirrorMode > 0.5 || _VRChatFaceMirrorMode > 0.5)
                 {
                     if (_FurShell_MirrorQuality <= 0.001) return 0;
                     hairs = max(1, (int)(hairs * _FurShell_MirrorQuality + 0.5));
@@ -7722,7 +8301,7 @@ Shader "VixenWear/Clothing Pro"
 
                 // Hard range cutoff first: it is two instructions and it is the only test that can drop a
                 // face outright.
-                if (_FurShell_LodDist > 0.0 && distance(triCentre, _WorldSpaceCameraPos) > _FurShell_LodDist) return 0;
+                if (_FurShell_LodDist > 0.0 && distance(triCentre, FURSHELL_CAM_POS) > _FurShell_LodDist) return 0;
 
                 // A vertex on or behind the eye plane makes the perspective divide meaningless, so the
                 // screen tests are skipped rather than trusted. Faces straddling the near plane are the
@@ -8116,6 +8695,17 @@ Shader "VixenWear/Clothing Pro"
                     float lenMap = max(0.0, 1.0 + (cm4.b * 2.0 - 1.0) * _FurShell_MapLength);
                     float len  = stackLen * lerp(lenU, lenG, step(h.w, _FurShell_Guard * 0.3)) * rootM
                                * lenMap;
+                    //ifex _UseContacts==0
+                    #ifdef VF_CONTACTS
+                    [branch] if (_FurShell_TouchPart + _FurShell_TouchFlat > 0.0001 && VF_ContactsLive())
+                    {
+                        float4 fct = VF_ContactField(rootP, rootN, wTan, wBit, 1.0);
+                        bendH += -(wTan * fct.z + wBit * fct.w) * (_FurShell_TouchPart * saturate(fct.x + fct.y) * 2.0);
+                        bendT  = saturate(bendT + fct.x * _FurShell_TouchFlat);
+                        len   *= 1.0 - fct.x * _FurShell_TouchFlat * 0.6;
+                    }
+                    #endif
+                    //endex
                     if (len <= 1.0e-6) continue;
 
                     // Tufting pulls the tip toward the face centre, so neighbours converge into a lock.

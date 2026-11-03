@@ -884,6 +884,7 @@ public class VixenWearLatexEditor : VixForgeEditor.ShaderEditor
     {
         base.ValidateMaterial(material);
         if (IsLocked(material)) return;
+        VixForgeContextUpgrade.Upgrade(material);
         VixenWearMaterials.SyncKeywords(material);
         if (material.HasProperty("_Mode"))
         {
@@ -1137,13 +1138,14 @@ public class VixenWearBuildPreprocessor : IPreprocessBuildWithReport
 
             scanned++;
 
+            bool upgraded = VixForgeContextUpgrade.Upgrade(mat);
             string[] before = (string[])mat.shaderKeywords.Clone();
             MaterialGlobalIlluminationFlags giBefore = mat.globalIlluminationFlags;
             VixenWearMaterials.SyncKeywords(mat);
             string[] after = mat.shaderKeywords;
             MaterialGlobalIlluminationFlags giAfter = mat.globalIlluminationFlags;
 
-            if (!KeywordsEqual(before, after) || giBefore != giAfter)
+            if (upgraded || !KeywordsEqual(before, after) || giBefore != giAfter)
             {
                 if (saveToDisk)
                 {
@@ -1207,11 +1209,13 @@ public static class VixenWearLockSync
             if (mat == null || mat.shader == null || VixenWearLatexEditor.IsLocked(mat)) continue;
             if (!VixenWearBuildPreprocessor.IsVixenWearShader(mat.shader)) continue;
 
+            bool upgraded = VixForgeContextUpgrade.Upgrade(mat);
+            upgraded |= VixForgeTessellationGate.Apply(mat);
             string before = string.Join(" ", mat.shaderKeywords.OrderBy(k => k, StringComparer.Ordinal));
             MaterialGlobalIlluminationFlags giBefore = mat.globalIlluminationFlags;
             VixenWearMaterials.SyncKeywords(mat);
             string after = string.Join(" ", mat.shaderKeywords.OrderBy(k => k, StringComparer.Ordinal));
-            if (before != after || giBefore != mat.globalIlluminationFlags) EditorUtility.SetDirty(mat);
+            if (upgraded || before != after || giBefore != mat.globalIlluminationFlags) EditorUtility.SetDirty(mat);
         }
     }
 }

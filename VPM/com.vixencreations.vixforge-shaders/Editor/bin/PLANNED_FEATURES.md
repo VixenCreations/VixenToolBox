@@ -14,18 +14,14 @@
 ## Editor And Tools
 
 * **Update check.** *Later.* The inspector tells you when a newer version of your shader is out, with a link to get it.
-* **Presets for the Halloween effects.** *Next.* Ready-made looks built on the glitter shapes, Flame Flicker, Melt, Ember Edge, Ghost and Skeleton X-Ray, so you can start from a finished look and make it yours.
-* **Presets brought up to date.** *Next.* Rim light and highlights got more accurate in the last updates, so the presets that use them are being re-tuned to look the way they were meant to.
 * **A website you can search.** *Later.* This site moves to grouped menus with one search across every page, and every link you have saved keeps working.
 
 ## Shader Features
 
-* **Matcaps you can build yourself.** *Next.* Procedural matcaps get far more to play with: Cymatics figures, Hyperspace tunnels and weaves, rings, grids, starfields, fractals, nebulas, and spectrum bars and waveforms that move with the music. Mix any of them with mirror symmetry, tunnel and spiral shapes, colour palettes and glow, and let AudioLink drive the size, the warp, the twist and the motion. Packed Atlas will also use every cell of a 4 by 4 sheet, where it stops at 8 today.
 * **Baked self-shadowing for Micro Shading.** *Next.* A one-click bake that records how each part of your avatar shades the details around it, so creases and seams catch shadow from every light in the room.
 
 ## Lighting
 
-* **VRC Light Volumes 3.0.** *In progress.* Full support for Light Volumes 3.0 as soon as it's released.
 * **Light Volumes fog.** *Later.* REDSIM is working on fog volumes for VRC Light Volumes. When they come out, we'll check how your materials look in that fog and add whatever they need to sit in it properly.
 
 ## Worlds And The Light Baker

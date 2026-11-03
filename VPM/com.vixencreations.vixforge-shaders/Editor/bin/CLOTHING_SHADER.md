@@ -7,12 +7,14 @@ A fabric-first companion to Latex Ultra and Toon. It carries the whole VixenWear
 
 ## What it adds
 
-Everything from Latex Ultra and Toon is here, in the same sections. The cloth groups sit at the top of **SPECIAL EFFECTS**.
+Everything from Latex Ultra and Toon is here, in the same sections, except the few listed at the end. The cloth groups sit at the top of **SPECIAL EFFECTS**, and Gemstones a little further down, after Glitter.
 
 * **Fabric** is the soft edge glow cloth has. **Material Type** picks a fabric and sets Fabric and Surface Fur in one click, so start there and tune. Roughness runs from a tight satin sheen to a broad velvet bloom, Tint colours it, and Root Darkening keeps seams and folds grounded. The **Fabric Mask (B&W)** keeps it to part of the material, so you can put velvet on the collar and leave the rest plain.
 * **Surface Fur** is a strand highlight for wool and fleece, painted on with no extra geometry.
 * **Real Fur** grows standing strands on top of it.
-* **Sheer & Lace** makes see-through clothing look real: chiffon, stockings, tulle, fishnet, mesh and lace.
+* **Gemstones** sets rhinestones and gems into the fabric: pick a **Pattern** and a **Cut**, paint a **Mask** for where they go, then tune **Brilliance**, **Fire** and **Scintillation**. **Setting** holds each stone in a metal rim or claws.
+* In **TOUCH**, with **Material Contacts** on, **Fabric Touch** dents and creases the fabric under a hand, and **Surface Fur Touch** and **Real Fur Touch** part the fur round it.
+* **Sheer & Lace** makes see-through clothing look real: chiffon, stockings, tulle, fishnet, mesh and lace. It also knits, weaves and prints fabric with no texture: ribbing, cable knit, denim, satin, sports mesh, chainmail, plaid, houndstooth and more, with quilting and distress.
 
 ---
 
@@ -33,7 +35,8 @@ Clothing Pro reads as realistic PBR fabric out of the box. The stylised Shading 
 3. If straps or bands share the material, put a mask in **Global Mask** under **Alpha Options** and pick its channel in **Sheer & Lace**, so only the sheer parts go see-through.
 4. For a net, pick a **Weave** pattern and set **Scale** until the holes are the size you want. Up close you see the threads; further away it blends into an even sheer.
 5. For lace, drop a black and white lace image into **Lace > Pattern** and set its Tiling. Its own **Global Mask** pick keeps it to a hem or a cup.
-6. On a skirt or dress you can see through to its back, set **Cull** to **Off** and turn on **Inside First**, so the far side draws behind the near side.
+6. For knitwear, denim, satin, sports mesh, chainmail or perforated vinyl, pick it in **Weave > Pattern**, and raise **Groove Shading** to bring out the stitches. **Print** adds a coloured pattern, **Quilting** pads the fabric between stitched seams, and **Distress** tears rips, ladders stockings and punches eyelets. Each has its own **Global Mask** pick.
+7. On a skirt or dress you can see through to its back, set **Cull** to **Off** and turn on **Inside First**, so the far side draws behind the near side.
 
 The **Sheer** fabrics in **Material Type** (Soft Tulle, Mesh, Chiffon, Organza, Fishnet and Sheer Stockings) fill in Sheer & Lace for you. Turn Sheer & Lace on to see them.
 
@@ -43,5 +46,5 @@ The **Sheer** fabrics in **Material Type** (Soft Tulle, Mesh, Chiffon, Organza, 
 
 * **Lock before uploading.** The SDK Build button does it for you, or use Lock All in the Hub.
 * **Triangle meshes only.** Clothing Pro tessellates, so a Keep-Quads model can render torn. Turn Keep Quads off in the mesh import settings, or run **Scan for Quad Meshes** with **Mesh Fixes** in the Shader Hub.
-* **No Wet or Goo.** Those are liquid-latex effects; fabric leaves them out.
+* **No Wet, Goo, Hypno, Eyes or Tattoo Ink.** Wet and Goo are liquid-latex effects, and the others are for skin and eyes, so fabric leaves them out.
 * **Inside First and Tint Through each draw the material once more**, only while they're on.

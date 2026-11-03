@@ -118,6 +118,22 @@
         #define VW_TESS_MAX 16.0
         #define VW_MIN_ROUGH 0.045
 
+        //ifex _UseContacts==0
+        #if defined(VF_CONTACTS) && !defined(VIXFORGE_WORLD)
+        bool vw_ContactTessWanted()
+        {
+            bool wanted = false;
+            #if VF_WETGOO
+            wanted = wanted || (_UseTouch > 0.5 && _Touch_Contacts > 0.5);
+            #endif
+            #if defined(VIXFORGE_CLOTHING) && VF_HAS_SHEEN
+            wanted = wanted || (_UseSheen > 0.5 && _Fabric_Press > 0.0001);
+            #endif
+            return wanted;
+        }
+        #endif
+        //endex
+
         float4 tessEdge(appdata_full v0, appdata_full v1, appdata_full v2)
         {
             bool dispActive = (abs(_Disp_Str) > 1e-4)
@@ -162,6 +178,14 @@
                 result = float4(e, (e.x + e.y + e.z) * (1.0 / 3.0));
             }
             #endif
+            //ifex _UseContacts==0
+            #if defined(VF_CONTACTS) && !defined(VIXFORGE_WORLD)
+            [branch] if (!dispActive && _Tess_Detail > 0.001 && vw_ContactTessWanted()
+                         && VF_ContactNearPatch(mul(unity_ObjectToWorld, v0.vertex).xyz, mul(unity_ObjectToWorld, v1.vertex).xyz,
+                                                mul(unity_ObjectToWorld, v2.vertex).xyz))
+                result = tess;
+            #endif
+            //endex
             return result;
         }
 
@@ -426,7 +450,11 @@
         {
             return vw_TouchZonesActive() || (_UseTouch > 0.5 && _Touch_Native > 0.5);
         }
+        #endif
+        //endex
 
+        //ifex _UseTouch==0 && _UseWetTouch==0
+        #if defined(VF_TOUCH) || defined(VF_DRIP)
         // NATIVE TOUCH, after Warren's Fast Fur. The camera depth texture already holds every hand in the room.
         // A point on the surface projects a small ring of neighbours into it, and where the depth texture shows
         // something a little in front of the surface, a hand is there. No contact, no animator and no setup. The
@@ -513,7 +541,7 @@
             float4 outV  = 0.0;
             float3 toCam = vw_CameraPos() - wp;
             float  dist  = length(toCam);
-            [branch] if (_UseTouch > 0.5 && _Touch_Native > 0.5 && _VRChatMirrorMode < 0.5
+            [branch] if (_UseTouch > 0.5 && _Touch_Native > 0.5 && _VRChatMirrorMode < 0.5 && _VRChatFaceMirrorMode < 0.5
                          && dist < _Touch_NativeCtl.w && dot(wn, toCam) > 0.1 * dist
                          && all(abs(vw_DepthDims() - _ScreenParams.xy) < 1.5))
             {
@@ -541,6 +569,42 @@
             }
             return outV;
         }
+
+        //ifex _UseWetTouch==0
+        // Wet Touch's own Native Touch: ctl is its Sensing (strength, reach cm, radius cm, max distance m). developer_info.md, "WET TOUCH".
+        float4 vw_NativeTouchCtl(float3 wp, float3 wn, float3 wt, float3 wb, int ring, float4 ctl)
+        {
+            float4 outV  = 0.0;
+            float3 toCam = vw_CameraPos() - wp;
+            float  dist  = length(toCam);
+            [branch] if (_VRChatMirrorMode < 0.5 && _VRChatFaceMirrorMode < 0.5
+                         && dist < ctl.w && dot(wn, toCam) > 0.1 * dist
+                         && all(abs(vw_DepthDims() - _ScreenParams.xy) < 1.5))
+            {
+                float radius = max(ctl.z, 0.1) * 0.01;
+                float outer  = max(ctl.y, 0.5) * 0.01;
+                float inner  = min(0.005, outer * 0.5);
+                float ndv    = saturate(dot(wn, toCam) / max(dist, 1.0e-5));
+                #if defined(UNITY_STEREO_INSTANCING_ENABLED) && !defined(UNITY_STEREO_MULTIVIEW_ENABLED)
+                uint  eyeWas = unity_StereoEyeIndex;
+                unity_StereoEyeIndex = 0;
+                float4 e0 = vw_NTEye(wp, wt, wb, radius, inner, outer, ring, ndv);
+                unity_StereoEyeIndex = 1;
+                float4 e1 = vw_NTEye(wp, wt, wb, radius, inner, outer, ring, ndv);
+                unity_StereoEyeIndex = eyeWas;
+                float4 f = (e0 + e1) * 0.5;
+                #else
+                float4 f = vw_NTEye(wp, wt, wb, radius, inner, outer, ring, ndv);
+                #endif
+                float press = smoothstep(0.2, 0.8, f.x);
+                float ringC = smoothstep(0.2, 0.8, f.y);
+                float fade  = saturate((ctl.w - dist) / max(ctl.w * 0.2, 1.0e-3));
+                float k     = saturate(ctl.x) * fade;
+                outV = float4(press * k, saturate(ringC - press) * k, f.zw * k);
+            }
+            return outV;
+        }
+        //endex
         #endif
         //endex
         #endif

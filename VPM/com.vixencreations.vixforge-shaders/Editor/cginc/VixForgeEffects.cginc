@@ -998,18 +998,17 @@
             #else
             float m = vw_MaskRead(VF_FB_WHITE, _Infinity_MaskCh);
             #endif
-            [branch] if (m <= 0.0) return float3(0.0, 0.0, 0.0);
-
             float2 center    = _Infinity_Center.xy;
             float2 pdir      = viewDirTS.xy / max(abs(viewDirTS.z), 0.05);
-            int    count     = (int)(clamp(_Infinity_Layers, 1.0, 32.0) + 0.5);
+            int    count     = m > 0.0 ? (int)(clamp(_Infinity_Layers, 1.0, 32.0) + 0.5) : 0;
             float  zoom      = max(_Infinity_Scale, 1.0);
 
             float band = alOn ? GET_AL_BAND(amps, alExtra, _AL_Band_Infinity) : 0.0;
 
             // The portal opens as the viewer walks up to it and flattens again from across the room,
             // so the depth is something you discover rather than something the material always shows.
-            float toCam = distance(worldPos, _WorldSpaceCameraPos);
+            // Measured from the head, not the eye: per eye, the two eyes saw different depths in VR.
+            float toCam = distance(worldPos, vw_ViewerPos());
             float near  = 1.0 - saturate(pow(saturate(toCam / max(_Infinity_Near, 1.0e-3)), max(_Infinity_NearCurve, 0.01)));
             float depth = _Infinity_Depth * lerp(1.0, near, saturate(_Infinity_Approach));
 
@@ -1162,15 +1161,17 @@
         #ifdef VF_COSMOS
         float3 vw_InnerCosmos(float2 uv, float3 viewDirTS, float4 amps, float2 alExtra, float4 chronos, bool alOn)
         {
-            // Mask and Brightness first: either at 0 multiplies the whole march away, so it is skipped.
+            // Mask and Brightness first: either at 0 multiplies the whole march away, so it runs no steps. The
+            // skip sets the step count rather than returning early: an early return ahead of the loop and its
+            // break made fxc report the return value as potentially uninitialized (X4000) on Toon FORWARD.
             #ifdef VF_TEX_COSMOSMASK
             float m = vw_MaskRead(SAMPLE_MATCAP_TEX(_CosmosMask, sampler_linear_repeat, uv), _Cosmos_MaskCh);
             #else
             float m = vw_MaskRead(VF_FB_WHITE, _Cosmos_MaskCh);
             #endif
-            [branch] if (m <= 0.0 || _Cosmos_Bright == 0.0) return float3(0.0, 0.0, 0.0);
+            bool  skip    = m <= 0.0 || _Cosmos_Bright == 0.0;
 
-            int   steps   = (int)(clamp(_Cosmos_Steps, 2.0, 24.0) + 0.5);
+            int   steps   = skip ? 0 : (int)(clamp(_Cosmos_Steps, 2.0, 24.0) + 0.5);
             float scale   = _Cosmos_Scale;
             float thresh  = 1.0 - saturate(_Cosmos_Density);            // more density -> lower threshold -> more cloud
             float swirl   = _Cosmos_Swirl;
@@ -1182,7 +1183,7 @@
 
             // March into the surface along the real view ray so the volume parallaxes with the head.
             float2 pdir   = viewDirTS.xy / max(abs(viewDirTS.z), 0.05);
-            float  stepLen = (_Cosmos_Depth * 0.6) / (float)steps;
+            float  stepLen = (_Cosmos_Depth * 0.6) / (float)max(steps, 1);
             float2 center = float2(0.5, 0.5);
 
             float3 acc   = 0;
@@ -1276,7 +1277,7 @@
 
             acc *= _Cosmos_Bright * (1.0 + alAmp * _AL_Cosmos_Mod * 2.0);
 
-            return acc * m;
+            return skip ? float3(0.0, 0.0, 0.0) : acc * m;
         }
         #endif
         //endex
@@ -1416,7 +1417,8 @@
             }
             else
             {
-                src = _WorldSpaceCameraPos;
+                // The head, not the eye: centred per eye, each eye saw its own set of rings in VR.
+                src = vw_ViewerPos();
                 inside = 0.0;
             }
 

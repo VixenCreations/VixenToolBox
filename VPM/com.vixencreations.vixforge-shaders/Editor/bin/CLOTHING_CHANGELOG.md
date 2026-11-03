@@ -6,7 +6,58 @@
 Version history for the Clothing Pro shader. Clothing Pro is a companion to Latex Ultra and Toon: it shares the same lighting stack and toolkit, so that shared part tracks the Latex Ultra changelog. The inspector and its tools keep their own.
 
 ***
-## [2.6.0] - 2026-10-11
+## [2.7.0] - 2026-10-24
+
+*Rhinestones and gemstones set into the fabric, real hands that dent, crease, part and light up your clothing through Material Contacts, knits, weaves, prints, quilting and distress in Sheer & Lace, matcaps you build yourself, Halloween presets, outlines that move with your body, with four new ways to draw them, clothing that reacts as it stretches, Light Data to pick which lights reach you, and a rebuilt Viewer Context with Hidden Ink.*
+
+### Heads up
+
+* **Viewer Context has its own section now**, **VIEWER CONTEXT**, just above **AUDIOLINK**. Your settings move over by themselves. If an animation drives an old Viewer Context setting, point it at the matching setting in the new section.
+* **TOUCH needs VRChat SDK 3.10.6 or newer** (the 3.10.6 betas count). Older SDKs have no Material Contacts, so nothing in VRChat can touch your materials. **Material Contacts** shows a warning when your SDK is too old.
+
+### Added
+
+* **Silhouette Ripples** under **OUTLINES**. Rings peel off your outline and travel outward, fading as they go, like sound waves or heat coming off you. **Distance**, **Rings**, **Ring Width**, **Softness**, **Fade** and **Speed** set the look. With AudioLink, **Beat Launch** sends every hit in the music out as its own ring, and **Beat Speed** pushes them faster on the beat.
+* **Ink Weight** under **OUTLINES**. Your outline gets heavier where your body turns away from the light and lighter where the light hits it, the way an inker draws a line. It follows the room's main light and light probes, so the weight shifts as you walk past a lamp.
+* **Line Boil** under **OUTLINES**. The hand-drawn wobble of classic cartoons: your outline redraws itself a few times a second, a little different each time. **Amount**, **Scale** and **Frame Rate** set how much it moves, how close the wobbles sit and how often it redraws.
+* **Velocity Smear** under **OUTLINES**. When you move, your outline streaks out behind you like the speed lines in an anime, and snaps back when you stop. **Streaks** breaks the trail into separate lines. Drive its **Velocity** from VRChat's Velocity parameters.
+* **New fabrics in Sheer & Lace.** **Pattern** now also makes **Knit**, **Ribbing**, **Cable Knit**, **Denim Twill**, **Satin**, **Sports Mesh**, **Chainmail** and **Perforated**, with **Groove Shading** to bring out the stitches. **Print** adds plaid, houndstooth, pinstripe, polka dots, gingham and checker with no texture. **Quilting** puffs the fabric into padded diamonds between stitched seams. **Distress** tears rips with loose threads, ladders stockings and punches eyelets.
+* **Procedural matcaps you build yourself**, on any matcap layer set to **Procedural**. Twelve new styles under **Style**: **Chladni Plate**, **Drum Head**, **Ripple Tank**, **Hyperspace Tunnel**, **Hyperspace Weave**, **Grid**, **Rings**, **Starfield**, **Spectrum**, **Waveform**, **Julia Fractal** and **Nebula**. **Space** folds any style into a kaleidoscope, a tunnel, a spiral or a mirror, with **Space Shape** setting segments, twist, flow and spin. **Colour** turns the pattern into two or three colours, a rainbow, a palette or the colour of the music, and **Colour Shape** adds bands, invert, glow and cycling. With AudioLink, **Pattern Beat** and **Pattern Beat 2** let the music grow, warp, push, twist, shake and reshape the pattern, send each hit out as a ring, or lay the spectrum across it.
+* **Packed Atlas reaches all 16 cells** of a 4 by 4 sheet, where it stopped at 8, with **Sections** up to 16 and eight more section looks in **Atlas Sections**.
+* **Halloween presets.** Eleven looks under **Halloween** in **Presets**, each adding one effect on top of what you already have. **Bat Swarm**, **Pumpkin Patch**, **Skull Scatter** and **Haunted Night** scatter glitter figures over you, and **Jack-o'-Lantern** makes Emission Layer 1 flicker like a candle. **Ghost**, **Witching Hour Hologram**, **Restless Spirit** and **Vampire** make you see-through, a hologram, a flickering spirit or missing from mirrors. They switch **Rendering Mode** to Fade or Transparent, and Vampire to Cutout. **Dissolve Embers** and **Dissolve Melt** dress up a dissolve you have already set up.
+* **Stretch Response** under **SURFACE**. The material reacts to how your mesh stretches as you move: it goes paler and glossier where it pulls tight, your normal map detail flattens there and sharpens where it bunches, and creases fold in where it squashes. Put your avatar in its rest pose, run **Stretch Bake** in the Shader Hub under **Tools > Mesh Fixes**, then turn it on. **Show Stretch** colours the material so you can check the bake. It follows avatar scaling in game.
+* **Hidden Ink** in **VIEWER CONTEXT**. A design that only the right light reveals, like UV-reactive ink: pick its **Light Colour** and it glows wherever that colour of light lands on it. In **Glow** or **Paint** mode it shows by any rule you like instead, such as only in mirrors or only up close.
+* **Light Data**, a new group in **SHADING** just below **Shading Options**, picks which lights reach you. Turn off **Pixel Lights** or **Vertex Lights** to ignore the world's extra lights, and a locked material leaves them out, so it locks faster. **Point Light Shadows**, **Soft Shadows** and **Light Cookies** let point lights shadow you, give spot and point light shadows soft edges, and project a point light's or sun's cookie onto you. They start off, since each one adds lock time.
+* **Enable** on **Rim Light**, **Subsurface**, **Transmission**, **Anisotropy**, **Micro Lighting**, **Cavity Lighting** and **Micro Shading**. Untick one you don't use and a locked material leaves it out, so locking is faster.
+* **TOUCH**, a new section just above **AUDIOLINK**, lets real hands, fingers and heads touch you through VRChat's Material Contacts, so a touch lands exactly where it happens, in mirrors too. Turn on **Material Contacts**, pick which kinds of touch count, and run **Touch Setup** in the Shader Hub to add the contact receiver. It needs a VRChat SDK with Write to Shaders on contact receivers, and Touch Setup tells you if yours is too old. **Touch Glow** lights you up where you are touched: a soft **Glow**, rings that **Ripple** out, or a **Ring** round each touch, with **Colour Per Person** and **Who Glows**.
+* **Emissions** in **Touch Glow**. A touch can **Brighten** your emission layers, **Reveal** them only where you're touched, or **Hide** them there. It follows **Style**, so **Ripple** sends the change out in rings.
+* **Colour Touch** in **TOUCH**. A touch brings out a colour on you: **Tint** mixes it in like a blush, **Paint** covers your colour with it, **Shine** makes you glossier there and **Sparkle** sets sparkles twinkling. It follows **Material Contacts**.
+* **Outline Touch** in **TOUCH**. Your outline answers a touch: **Width** thickens it, or thins it away at -1, **Colour** turns it a new colour and **Glow** brightens it. It follows **Material Contacts**.
+* **Fabric Touch**, **Surface Fur Touch** and **Real Fur Touch** in **TOUCH**: the fabric dents under a hand and creases fan out round it, and the coat parts round the hand and lies flat beneath it. They all follow **Material Contacts**.
+* **Gemstones** under **SPECIAL EFFECTS**. Rhinestones and gems set into the fabric in a **Grid**, **Hex**, **Diamond** or **Scatter** layout, or from a **Stone Map** you paint, kept where your **Mask** says. Pick a **Cut** (**Round Brilliant**, **Princess**, **Emerald** or **Cabochon**) and the stones sparkle with **Brilliance**, rainbow **Fire** and **Scintillation**, catch the lights in the room, can carry **Inclusions**, and vary in size, hue and brightness. **Setting** holds each stone in a metal **Bezel** or in claws.
+
+### Changed
+
+* Light Volumes is up to date with 3.0.1, its first full 3.0 release.
+* **Faster shader compiles.** Each part of the shader no longer builds its own copy for settings it never uses, so there is less to compile after an update and when you change a material. Outlines, fur shells, and the Vertex Fracture shards build fewer copies of themselves, and a motion pass VRChat never used is gone.
+* **Best Soft preset re-tuned.** Its rim is a thin edge again, where it had spread across almost half of each limb.
+* **Viewer Context rebuilt.** Every part of the material has its own rules now, each in its own spot under **VIEWER CONTEXT**: **Base**, **Normal Maps**, **Surface**, **Shading**, **Decals**, **Polish**, **Special Effects**, **Outlines**, **Emissions**, **Matcaps** and **AudioLink**. As well as who is looking, where and how close, a rule can follow the colour of the light on you, how dark it is, the beat, or a **Gaze Torch** that shows a part only where someone looks.
+
+### Fixed
+
+* **Outlines move with your body.** When **Displacement Strength**, the AudioLink **Kinetic Modules**, VRSL movement or a **Hologram** glitch moved your body, the outline stayed where you had been, so your body poked through the line. It now moves with them.
+* **The face mirror counts as a mirror.** **Viewer Context**, **Mirrors** in Haunting and the mirror **Amount** in Dissolve's **Viewer** now read VRChat's face mirror flag as well, so your face mirror treats you the way other mirrors do.
+* **Colour By Time Of Day works in worlds without AudioLink**, taking the time from VRChat itself, and the colour now drifts smoothly through the day instead of stepping once an hour.
+* **Sonar and Infinity Mirror line up in both eyes in VR.** Sonar from **Whoever Is Looking** and the Infinity Mirror's **Opens Up Close** were measured from each eye separately, so each eye saw slightly different rings and depth.
+* **Fur matches in both eyes in VR.** Near **Detail Distance** one eye could drop hairs the other kept. Both eyes now decide together, and **Mirror Quality** applies in the face mirror too.
+* **Shadows follow the Hologram glitch.** When the **Hologram** glitch moved your body, its shadow stayed put. The shadow now moves with it.
+* **Switching a material with drips on to Clothing Pro no longer turns it pink.** A material moved over from Latex Ultra or World Surface kept its drips setting, and Clothing Pro, which has no drips, could not draw it. Clothing Pro now ignores the setting.
+
+* **UV Tile Discard turns off when an animation turns it off.** With **Enable** marked Animated, the tiles stayed hidden after the animation switched it off.
+* **Point light shadows start at the object.** The shadow this material casts from a point light used the setup meant for spot and sun shadows, which pushed it away from the object a second time. It now uses Unity's own point light shadow setup.
+***
+## [2.6.0] - 2026-10-10
+
 *Sheer and lace clothing that looks real, Hologram, Pearl for hair and Haunting for Halloween, more ways to dissolve with Shatter and Portal, Color Adjust, Alpha Options and decal alpha and hue from Poiyomi Toon, a Cull setting that works, Minimum Brightness in every world, and Volume and Peak Hold that follow the music.*
 
 ### Heads up

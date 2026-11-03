@@ -63,6 +63,10 @@ Surface Fur and Real Fur each take their own black and white mask.
 
 The Real Fur mask does more than scope: it paints how long the hairs are. White is full Length, grey is shorter, black grows nothing at all and skips the work entirely. That is how you put a fur trim on a hood without paying for a coat across the whole garment.
 
+## Touch
+
+In **TOUCH**, with **Material Contacts** on, the coat answers real hands. **Parting** in **Surface Fur Touch** and **Real Fur Touch** parts it round a hand, and **Flatten** in Real Fur Touch lays the hairs flat under it.
+
 ## Worth knowing
 
 **Fur Pro needs triangle meshes.** If your model looks torn, turn off **Keep Quads** in its import settings, or run **Scan for Quad Meshes** with **Mesh Fixes** in the Shader Hub.

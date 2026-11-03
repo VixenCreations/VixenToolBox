@@ -22,6 +22,8 @@ namespace VixForgeEditor.ShaderPatcher {
         public string searchFileName;
         public string[] excludeFolders;
         public string installHint;
+        public string packageName;
+        public string minPackageVersion;
     }
 
     [Serializable]

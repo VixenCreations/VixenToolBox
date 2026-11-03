@@ -38,6 +38,28 @@
             return lerp(lerp(nx00, nx10, f.y), lerp(nx01, nx11, f.y), f.z);
         }
 
+        // The wearer's velocity sits outside the wet and goo gate, because Velocity Smear on the outline
+        // reads it in every shader, not only the two that carry the goo.
+        #ifndef VIXFORGE_WRITHE_UNIFORMS_EXTERNAL
+        float4 _WG_Velocity;
+        #endif
+
+        // WHICH WAY THE WEARER IS MOVING, IN THE WORLD. _WG_Velocity carries VRChat's VelocityX, VelocityY and
+        // VelocityZ in metres per second, in the avatar's own frame: X right, Y up, Z forward. The renderer's
+        // axes stand in for the avatar's. A mesh exported the Blender way arrives with its Z axis up and its
+        // minus Y axis forward; one exported the Unity way has Y up and Z forward. Whichever object axis is closer
+        // to world up decides which, and right comes from a cross product so the mesh's own X sign cannot flip it.
+        float3 vw_AvatarVelocityWS()
+        {
+            float3 ay = normalize(unity_ObjectToWorld._m01_m11_m21);
+            float3 az = normalize(unity_ObjectToWorld._m02_m12_m22);
+            bool   unityWay = abs(ay.y) >= abs(az.y);
+            float3 up    = unityWay ? ay : az;
+            float3 fwd   = unityWay ? az : -ay;
+            float3 right = VF_SafeNormalize(cross(up, fwd));
+            return right * _WG_Velocity.x + up * _WG_Velocity.y + fwd * _WG_Velocity.z;
+        }
+
         #if VF_WETGOO
 
         #ifndef VIXFORGE_WRITHE_UNIFORMS_EXTERNAL
@@ -64,26 +86,9 @@
         float _AL_Goo_WritheDepth;
         float _AL_Goo_Tendril;
         float _AL_Goo_Fold;
-        float4 _WG_Velocity;
         float4 _WG_Motion;
         float _WG_Land;
         #endif
-
-        // WHICH WAY THE WEARER IS MOVING, IN THE WORLD. _WG_Velocity carries VRChat's VelocityX, VelocityY and
-        // VelocityZ in metres per second, in the avatar's own frame: X right, Y up, Z forward. The renderer's
-        // axes stand in for the avatar's. A mesh exported the Blender way arrives with its Z axis up and its
-        // minus Y axis forward; one exported the Unity way has Y up and Z forward. Whichever object axis is closer
-        // to world up decides which, and right comes from a cross product so the mesh's own X sign cannot flip it.
-        float3 vw_AvatarVelocityWS()
-        {
-            float3 ay = normalize(unity_ObjectToWorld._m01_m11_m21);
-            float3 az = normalize(unity_ObjectToWorld._m02_m12_m22);
-            bool   unityWay = abs(ay.y) >= abs(az.y);
-            float3 up    = unityWay ? ay : az;
-            float3 fwd   = unityWay ? az : -ay;
-            float3 right = VF_SafeNormalize(cross(up, fwd));
-            return right * _WG_Velocity.x + up * _WG_Velocity.y + fwd * _WG_Velocity.z;
-        }
 
         // Any of the three velocity reactions switched on, and the wearer moving. _WG_Motion is x Slosh,
         // y Sweep, z Splash and w Fling. Splash follows the landing fade, not the velocity, so it is not here.

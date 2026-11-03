@@ -93,7 +93,8 @@ namespace VixForgeEditor.ShaderPatcher {
             foreach (var token in def.tokens) {
                 if (token == null || string.IsNullOrEmpty(token.name)) continue;
 
-                var found = ResolveOneToken(token);
+                string tooOld;
+                var found = ResolveOneToken(token, out tooOld);
                 if (found != null) {
                     t.TokenValues[token.name] = found;
                     continue;
@@ -101,15 +102,22 @@ namespace VixForgeEditor.ShaderPatcher {
 
                 var label = string.IsNullOrEmpty(token.displayName) ? token.name : token.displayName;
                 var hint = string.IsNullOrEmpty(token.installHint) ? "" : " " + token.installHint;
+                if (tooOld != null) {
+                    t.MissingTokens.Add(label + " " + tooOld + " is installed, and this patch needs " + token.minPackageVersion + " or newer." + hint);
+                    continue;
+                }
                 t.MissingTokens.Add(label + " was not found in this project." + hint);
             }
         }
 
-        static string ResolveOneToken(ShaderPatchToken token) {
+        static string ResolveOneToken(ShaderPatchToken token, out string tooOld) {
+            tooOld = null;
             if (token.candidates != null) {
                 foreach (var candidate in token.candidates) {
                     if (string.IsNullOrEmpty(candidate)) continue;
-                    if (!string.IsNullOrEmpty(AssetDatabase.AssetPathToGUID(candidate))) return candidate;
+                    if (string.IsNullOrEmpty(AssetDatabase.AssetPathToGUID(candidate))) continue;
+                    if (PackageTooOld(token, candidate, ref tooOld)) continue;
+                    return candidate;
                 }
             }
 
@@ -123,10 +131,48 @@ namespace VixForgeEditor.ShaderPatcher {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
                 if (!path.EndsWith("/" + token.searchFileName, StringComparison.OrdinalIgnoreCase)) continue;
                 if (excludes.Any(x => !string.IsNullOrEmpty(x) && path.IndexOf(x, StringComparison.OrdinalIgnoreCase) >= 0)) continue;
+                if (PackageTooOld(token, path, ref tooOld)) continue;
                 return path;
             }
 
             return null;
+        }
+
+        static bool PackageTooOld(ShaderPatchToken token, string path, ref string tooOld) {
+            if (string.IsNullOrEmpty(token.packageName) || string.IsNullOrEmpty(token.minPackageVersion)) return false;
+            var info = UnityEditor.PackageManager.PackageInfo.FindForAssetPath(path);
+            if (info == null || !string.Equals(info.name, token.packageName, StringComparison.OrdinalIgnoreCase)) return false;
+            if (CompareVersions(info.version, token.minPackageVersion) >= 0) return false;
+            tooOld = info.version;
+            return true;
+        }
+
+        public static int CompareVersions(string a, string b) {
+            var pa = (a ?? "").Split(new[] { '-' }, 2);
+            var pb = (b ?? "").Split(new[] { '-' }, 2);
+            var core = CompareDotted(pa[0], pb[0]);
+            if (core != 0) return core;
+            var preA = pa.Length > 1 ? pa[1] : null;
+            var preB = pb.Length > 1 ? pb[1] : null;
+            if (preA == null && preB == null) return 0;
+            if (preA == null) return 1;
+            if (preB == null) return -1;
+            return CompareDotted(preA, preB);
+        }
+
+        static int CompareDotted(string a, string b) {
+            var xa = a.Split('.');
+            var xb = b.Split('.');
+            for (int i = 0; i < Math.Max(xa.Length, xb.Length); i++) {
+                var sa = i < xa.Length ? xa[i] : "0";
+                var sb = i < xb.Length ? xb[i] : "0";
+                int na, nb;
+                bool numA = int.TryParse(sa, out na);
+                bool numB = int.TryParse(sb, out nb);
+                int c = (numA && numB) ? na.CompareTo(nb) : string.CompareOrdinal(sa, sb);
+                if (c != 0) return c;
+            }
+            return 0;
         }
 
         static ShaderPatchDefinition Substitute(ShaderPatchDefinition def, Dictionary<string, string> values) {

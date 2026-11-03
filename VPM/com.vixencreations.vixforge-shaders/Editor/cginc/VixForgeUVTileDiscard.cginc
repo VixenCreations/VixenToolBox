@@ -4,6 +4,7 @@
 
 #ifdef VF_UDIMDISCARD
 
+float _EnableUDIMDiscardOptions;
 float _UDIMDiscardMode;
 float _UDIMDiscardUV;
 float _UDIMDiscardRow0_0;
@@ -83,7 +84,7 @@ bool VF_UDIMTileKilled(float2 uv0, float2 uv1, float2 uv2, float2 uv3)
 
 bool VF_UDIMVertexKilled(float2 uv0, float2 uv1, float2 uv2, float2 uv3)
 {
-    return (_UDIMDiscardMode < 0.5) && VF_UDIMTileKilled(uv0, uv1, uv2, uv3);
+    return (_EnableUDIMDiscardOptions > 0.5) && (_UDIMDiscardMode < 0.5) && VF_UDIMTileKilled(uv0, uv1, uv2, uv3);
 }
 
 float4 VF_UDIMFragUV(float2 uv0, float2 uv1, float2 uv2, float2 uv3)
@@ -94,13 +95,13 @@ float4 VF_UDIMFragUV(float2 uv0, float2 uv1, float2 uv2, float2 uv3)
 
 void VF_UDIMPixelClip(float2 uv)
 {
-    if (_UDIMDiscardMode > 0.5)
+    if (_EnableUDIMDiscardOptions > 0.5 && _UDIMDiscardMode > 0.5)
         clip(0.001 - VF_UDIMDiscardValue(uv));
 }
 
 void VF_UDIMFaceClip(float2 uv, float isFront)
 {
-    if (_EnableUDIMFaceDiscardOptions > 0.5 && (isFront > 0.5) == (_UDIMFaceDiscardFace > 0.5))
+    if (_EnableUDIMDiscardOptions > 0.5 && _EnableUDIMFaceDiscardOptions > 0.5 && (isFront > 0.5) == (_UDIMFaceDiscardFace > 0.5))
         clip(0.001 - VF_UDIMFaceValue(uv));
 }
 

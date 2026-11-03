@@ -3,7 +3,7 @@
 
 **VixenWear Latex Ultra** is our PBR shader for latex, rubber, vinyl, glass, metal and skin. A glossy clear coat sits over the base, with a thin film rainbow, stretched highlights, light glowing through thin parts, wet and melting goo effects, and AudioLink, VRSL, LTCGI and VRC Light Volumes built in.
 
-This guide walks through the inspector from top to bottom, one section at a time: what each part is for and how to set it up. Toon, Clothing Pro and Fur Pro share all of it. Every control also has a tooltip in the inspector, and the full control by control list is in the [Shader Docs](https://vixencreations.github.io/VixenToolBox/shaderdocs.html).
+This guide walks through the inspector from top to bottom, one section at a time: what each part is for and how to set it up. Toon, Clothing Pro and Fur Pro share nearly all of it, and a part that only some shaders have says which under its heading. World Surface and World Fur share most of it too, and the **World** page says what differs in a world. Every control also has a tooltip in the inspector, and the full control by control list is in the [Shader Docs](https://vixencreations.github.io/VixenToolBox/shaderdocs.html).
 
 New to the shader? Start with **How To Use**.
 
@@ -139,6 +139,16 @@ Matcaps keep their own masks and are not affected.
 * **Parallax Depth** makes the height map look deeper. Higher digs deeper but costs framerate, and it eases off automatically at a distance. With AudioLink, **Thump** deepens it on the beat.
 * **Displacement Strength** pushes the surface out for real, so folds and seams become geometry instead of shading. **Tessellation Detail** splits the mesh finer to carry it, smoothing displacement and goo. Higher costs framerate, and it only spends the detail on triangles that are large on screen.
 
+### Stretch Response
+
+The material reacts to how your mesh stretches as you move. Where it pulls tight it goes paler (**Thin Colour**, **Paleness**), glossier (**Gloss**) and, in Fade or Transparent, thinner (**See-Through**). Your normal map detail flattens there and sharpens where the surface bunches up (**Detail Flattening**), and creases fold in where it squashes (**Creases**).
+
+1. Put your avatar in its rest pose and run **Stretch Bake** in the Shader Hub under **Tools > Mesh Fixes**. It records that pose, so the material knows what "not stretched" looks like.
+2. Turn on **Stretch Response**. **Stretch** sets how far the surface has to stretch before it reacts and where it reacts fully, and **Squash** does the same for the creases.
+3. **Show Stretch** colours the material grey at rest, red where it stretches and blue where it bunches, so you can check the bake and set both ranges.
+
+Stretch is measured across the triangles of your mesh, so a joint with only a few triangles can show them at strong settings. A wider **Stretch** range hides them. Bake again if you change your avatar's scale in Unity; scaling in game is followed for you. The world shaders don't have Stretch Response.
+
 ### Exporting from Substance Painter
 
 1. In **File > Export Textures**, open **Output Templates** and press **+** to make a template, for example `VixenWear PBR`.
@@ -151,9 +161,22 @@ Matcaps keep their own masks and are not affected.
 
 ## SHADING
 
+### Light Data
+
+Picks which of a world's extra lights reach you. It sits at the top of **SHADING**, just after **Shading Options** on the shaders that have it.
+
+* **Pixel Lights** are the point lights, spot lights and extra suns a world sets to **Important**. **Vertex Lights** are the cheaper ones set to **Not Important**, up to four at a time. Untick either to ignore them. A locked material then leaves them out, so it locks faster, and without Pixel Lights it draws faster too.
+* **Point Light Shadows** lets point lights that cast shadows shadow you as well.
+* **Soft Shadows** gives spot and point light shadows soft edges when the light is set to soft shadows. Off keeps them hard.
+* **Light Cookies** projects the cookie texture of a point light or a sun onto you. Spot light cookies always show.
+
+The last three start off, because each one adds lock time, and they grey out while **Pixel Lights** is off.
+
 ### Lighting
 
 **Sharper Probes** adds contrast to the light from light probes, so the side facing the light reads brighter and the far side darker. It is a look rather than a closer match.
+
+**Rim Light**, **Subsurface**, **Transmission**, **Anisotropy**, **Micro Lighting**, **Cavity Lighting** and **Micro Shading** each have an **Enable** box on their header. Untick the ones you don't use and a locked material leaves them out, so it locks faster.
 
 #### Unified Light
 
@@ -227,7 +250,7 @@ Light Volumes start switched off. They make Unity builds a lot slower, so turn t
 * **Per-Light Specular:** gives every point, spot and area light its own highlight, sized by the light, with its cookie and shadow. It follows your **Anisotropy**, your clear coat and **Highlight Clamp**, the same as the lights in the room.
 * **Point Light Strength:** scales the world's point, spot and area lights on their own, without touching the baked volumes. **Light Edge** sets how strongly they catch your edges from behind and beside you.
 * **Point Light Shading:** how sharply those lights fall off around your shape. 0 turns the shaping off but keeps their shadows.
-* On Toon, **Use Shading Options** gives those lights the same style as the lights in the room.
+* On Toon, Clothing Pro and Fur Pro, **Use Shading Options** gives those lights the same style as the lights in the room.
 * **Normal Stability:** stops parallax, detail normals, wetness and drips from smearing point light shading and shadows.
 * **Normal Bias** and **Position Offset:** move where the material reads the baked volumes, so a surface does not pick up light from the far side of a thin wall.
 * **Additive-Only Mode:** keeps your normal probe lighting and adds only the extra volumes and point lights a world layers on top.
@@ -280,18 +303,20 @@ Rim Light, Subsurface and Transmission belong to **SHADING**, so they keep worki
 
 ## SPECIAL EFFECTS
 
+Clothing Pro and Fur Pro add their fabric and fur groups here, and Clothing Pro adds **Gemstones**. Their own pages cover those.
+
 ### Wet Effects
 
-Soaks the masked area like the wearer just stepped out of the shower.
+Latex Ultra only. Soaks the masked area like the wearer just stepped out of the shower.
 
-* **Soak:** **Wetness** is the overall amount. It darkens the material, turns reflections to a near mirror water film and smooths out fine detail. The film sheen rides on the clear coat, so keep **POLISH** on for the strongest highlight.
+* **Soak:** **Wetness** is the overall amount. It darkens the material, turns reflections to a near mirror water film and smooths out fine detail. The film sheen rides on the clear coat, so keep **POLISH** on for the strongest highlight. **Wet Touch** in **TOUCH** pushes the water aside under a hand.
 * **Streaks:** running water down the surface. **Gravity Flow** runs them down in the world instead of down the texture. Set the streak **Strength** to 0 for an even soak.
 * **Droplets:** real water drops that swell on downward-facing wet areas, pinch off and fall. **Surface Slide** runs a drop down the body before it falls, **Floor Splat** spreads it into a puddle at the floor height set under **Goo Effects > Floor**, and **Custom Particle** swaps the drop for your own image, such as sweat, bubbles, sparks or petals. **From Writhe** sheds drops from wherever Writhe has drawn the goo out thin.
 * The mask keeps all of it to part of the material.
 
 ### Goo Effects
 
-Makes the material sag, run and writhe like it is melting. Turn **Tessellation Detail** up for smoother strands.
+Latex Ultra only. Makes the material sag, run and writhe like it is melting. Turn **Tessellation Detail** up for smoother strands.
 
 * **Melt:** **Sag Distance** is how far it sags. **Stretch Distance**, **Strand Variation**, **Tendril Scale**, **Flow Speed** and **Underside Bias** shape the strands.
 * **Noise:** swap the built-in noise for your own texture, everywhere goo uses noise at once.
@@ -299,21 +324,12 @@ Makes the material sag, run and writhe like it is melting. Turn **Tessellation D
 * **Writhe:** swellings that crawl over the body, even while the goo hangs still. **Tendrils** picks how many places reach far, **Crawl** moves them over the surface, **Surge** gathers them into a rising wave, and **Stretch** draws them out. Reach for **Fold** first if the writhing looks like it is on a timer. **Run** makes stretched places sag and drip off their tips, and **Wetness** gives the swellings a thick, wet look.
 * **Floor:** **Melt To Ground** pulls the goo toward the floor. **Source** finds the floor from the avatar's feet, or takes **Height** as a world height, usually 0. **Collision** stops it at the floor and **Pooling** spreads it into a puddle.
 * **Formation:** animate **Amount** from 0 to 1 and the piece builds itself out of goo, climbing from the floor. It sits at 1, fully formed, so an untouched material looks normal. Set **Reach** a little taller than the piece.
-* **Slime Shading:** turns the melt into wet slime: a deep glossy film with light bleeding through where it thins. **Veins** threads glowing lines through it. Its colour and gloss also feed Writhe, Touch and Cling.
+* **Slime Shading:** turns the melt into wet slime: a deep glossy film with light bleeding through where it thins. **Veins** threads glowing lines through it. Its colour and gloss also feed Writhe, Goo Touch and Cling.
 * **Cling:** strands that reach off the body and drag whatever is behind you across the screen, so the goo looks like it is grabbing at the room. It needs a copy of the screen, so it costs more than the rest. If the strands come out empty, raise the render queue above 2500 or use a Fade rendering mode.
-
-### Touch
-
-Dents, bulges and wets the material where someone touches it. Paint up to four areas in **Zones**, one per colour channel. Then wire a VRChat contact receiver to an animator parameter, and animate the matching **Press Red**, **Press Green**, **Press Blue** or **Press Alpha** slider.
-
-* **Right-click every Press slider you animate and tick Animated (when locked).** If you don't, locking freezes them and the effect disappears.
-* **Depth** is how far it pushes in, **Spread** how wide the dent is, and **Rim** piles the material up around the edge so it reads as something soft being squeezed. **Tendrils** squeezes strands out at that edge.
-* Leave **Shading** up, or the pressed area still lights as if it were flat. **Wetness** makes it glossier where it is pressed.
-* Give each Press curve an overshoot that settles back, and the material springs like slime.
 
 ### Movement
 
-Feeds Wet and Goo with how you move: **Velocity**, the **Reactions** to it, and **Landing**. Build these with **Movement Setup** in the Shader Hub: pick the avatar and its FX controller, then press **Build Layers**.
+Latex Ultra only. Feeds Wet and Goo with how you move: **Velocity**, the **Reactions** to it, and **Landing**. Build these with **Movement Setup** in the Shader Hub: pick the avatar and its FX controller, then press **Build Layers**. **Velocity** also drives **Velocity Smear** on the outlines.
 
 ### Dissolve
 
@@ -339,6 +355,27 @@ Turns the wearer into a spirit: a clear body with glowing edges. **Glow Colour**
 ### Hologram
 
 A projection with glowing edges, rolling scanlines and a signal that breaks up. **Palette** runs colours across it from a **Gradient**, **Glitch** breaks it up (the music can set it off), and **Flicker** wavers it like a weak signal.
+
+### Hypno
+
+Latex Ultra only. A spiral that takes over your own view: as **Amount** rises the world twists toward the middle, then the spiral swims in over it. Animate **Amount** from a menu toggle to go under.
+
+* Attach it with **Hypno Setup** in the Shader Hub: it gives Hypno its own material at your eyes and a **Hypno** toggle in your menu. Only eyes inside **Radius** see it: at the default that means you, and with **Others Can Join** on, raising it lets anyone who leans in go under too. **Radius** grows and shrinks with your avatar.
+* Pick **Spiral**, **Endless Spiral**, **Rings** or **Pinwheel**. **Swirl** twists your real view, **Fill** leaves the world showing round the edges, and **Show In Photos** lets your own photos catch it.
+* With AudioLink, **Beat Spin**, **Beat Pulse** and **Music Colour** let the music drive it.
+
+### Eyes
+
+Latex Ultra and Toon. Effects for a material on an eye. Line **Iris Centres** and **Iris Size** up with the irises in your texture first.
+
+* **Hypno Iris** turns a spiral or rings inside the iris. Give it the same **Speed** as Hypno and the two turn together.
+* **Pupil Shapes** draws a heart, star, cat slit, cross, diamond or spiral pupil. **Dilate In The Dark** opens it in a dark room, and **Beat Pulse** throbs it with the music.
+* **Watcher Eyes** turns the iris toward whoever is looking at you, mirrors included. Set **Sclera Colour** to the white of your eye texture.
+* **Deep Iris** sets the iris under a glassy cornea, with a dark rim and a **Glint** that can follow the light.
+
+### Sheer & Lace
+
+Latex Ultra and Clothing Pro. See-through fabric, nets, lace and more, all without textures: **Pattern** offers fishnet, tulle, knits, ribbing, cable knit, denim, satin, sports mesh, chainmail and perforated sheets, **Print** adds plaid, houndstooth, pinstripe, dots, gingham and checker, **Quilting** pads the fabric between stitched seams, and **Distress** adds rips, ladders and eyelets. On Latex Ultra it makes procedural latex. The Clothing Pro guide walks through setting it up.
 
 ### Skeleton X-Ray
 
@@ -380,17 +417,6 @@ Everything here starts at a setting that changes nothing. **Strength** scales th
 * **Motion:** **Beat Drift**, **Beat Spin**, **Beat Swirl** and **Beat Twinkle** put the movement on the music.
 
 Flakes too small to draw on screen settle into a smooth sheen, so glitter never turns into crawling noise at a distance. Glitter sits on top of the matcap layers, so it stays visible over a matcap in any blend mode.
-
-### Viewer Context
-
-The material can tell where it is being drawn and who is looking at it, and react to that on its own. Nothing here needs an animator, a menu or a parameter.
-
-* **Show:** *Only in Mirrors* hides the effect from everyone else while you still see it in a mirror, and *Never in Mirrors* does the reverse. *Only in Photos* and *Never in Photos* catch VRChat's camera and screenshots. *Only in VR* and *Only on Desktop* split by headset and flatscreen.
-* **Seen By:** in VR you can send the effect to one eye only.
-* **Distance** fades the effect in as someone comes closer, or as they back away, between Near and Far distances in metres.
-* **Face-On Only** shows the effect only when the surface faces the viewer.
-* **Hidden Level** is what the effect drops to when the conditions are not met. 0 hides it completely.
-* **Affects** points it at your emission, your decals, or both. **Reaction Glow** adds a colour that rides along with everything above.
 
 ### Flipbook
 
@@ -467,6 +493,14 @@ Each readout has its own Enable, **Intensity**, placement and band:
 * **Lighting** and **Light Volumes** let the world's light fall on the line.
 * With AudioLink, the line can glow, widen, shift hue, scroll, take its colour from the music, run a **Travelling Pulse** or draw an **Equaliser Silhouette**.
 * **Outward Direction:** *Mesh Normal* suits almost every model. If the line splits at hard edges, run **Bake Outline Normals** in **Mesh Fixes** in the Shader Hub, which switches this to *Baked* for you. *Spherical* needs no baking and suits a round part.
+* The outline moves with everything that moves your body: Writhe and the rest of the goo, Touch, **Displacement Strength**, the music and Hologram glitches.
+
+Four effects work on both outlines at once. They show once an outline is on.
+
+* **Silhouette Ripples** sends rings off the outline that travel outward and fade, like sound waves or heat. With AudioLink, **Beat Launch** turns every hit in the music into its own ring.
+* **Ink Weight** draws the line heavier where your body turns away from the light and lighter where the light hits it, the way an inker would.
+* **Line Boil** gives the line the wobble of a hand-drawn cartoon, redrawn a few times a second.
+* **Velocity Smear** streaks the line out behind you as you move. It needs **Velocity**, which **Movement Setup** in the Shader Hub drives from your avatar. Latex Ultra and World Surface keep Velocity in **Movement** under **SPECIAL EFFECTS**; the other shaders keep it in the **Velocity Smear** group.
 
 ---
 
@@ -479,7 +513,7 @@ Strength and Hue Shift are single sliders, so one radial puppet in a menu can dr
 * **Placement & Motion** positions and moves the map. **Beat Travel** moves it on the beat.
 * **Music Reactions** pulse a layer on its own **AudioLink Band**, let the music's colour take over with **AudioLink Color Blend**, light it on a **Note**, strobe it on the beat, or warp it with the waveform.
 * **Flame Flicker** makes a layer flicker like a flame.
-* **Exposure (All Layers)** raises or lowers every layer at once, which helps in a bright world. **Colour By Time Of Day (All Layers)** drifts every layer's hue with the real clock, so the glow is a different colour at midnight than at noon. It needs AudioLink, which supplies the time.
+* **Exposure (All Layers)** raises or lowers every layer at once, which helps in a bright world. **Colour By Time Of Day (All Layers)** drifts every layer's hue with the real clock, so the glow is a different colour at midnight than at noon. It takes the time from AudioLink, or from VRChat itself in a world without AudioLink.
 
 ### Pathing
 
@@ -520,8 +554,8 @@ Lays a car paint finish over the material: a base colour, a second colour that a
 **Source** decides what a layer draws:
 
 * **Texture** reads the sphere image you drop in. This is the classic matcap.
-* **Packed Atlas** splits one image into a grid of several matcaps, and a mask picks which one shows where.
-* **Procedural** builds the look with no image at all.
+* **Packed Atlas** splits one image into a grid of up to 16 matcaps, and a mask picks which one shows where.
+* **Procedural** builds the look with no image at all, in eighteen styles under **Style**, from a lit studio sphere to Chladni plates, starfields, fractals and nebulas. **Space** folds it into a kaleidoscope, a tunnel or a spiral, **Colour** turns it into two or three colours, a rainbow, a palette or the colour of the music, and with AudioLink **Pattern Beat** lets the music move it.
 
 ### Projection
 
@@ -562,7 +596,7 @@ Lays a car paint finish over the material: a base colour, a second colour that a
 
 ### Packed Atlas
 
-One texture holds up to eight matcaps in a grid, and a mask picks which one shows where.
+One texture holds up to 16 matcaps in a grid, and a mask picks which one shows where.
 
 **Press Build Atlas In Unity and let the builder do it.** Drop a matcap into each cell and it lays out the sheet, saves it and fills in **Source**, **Grid** and **Sections** on the material. Cells run in reading order, top left first, the order the **Atlas Sections** rows follow. Its second tab builds the mask from one black and white mask per section.
 
@@ -570,7 +604,12 @@ Painting the mask yourself? The builder lists the grey value for each section ne
 
 ### Procedural
 
-No image at all. **Style** picks what gets built: *Studio Rig* (a lit sphere with key, fill and rim lights), *Liquid Flow*, *Shatter*, *Iridescent Film*, *Plasma* or *Caustics*. **Colour A** and **Colour B** set the palette, and **Scale**, **Speed**, **Sharpness** and **Warp** shape it.
+No image at all. **Style** picks what gets built, from eighteen: *Studio Rig* (a lit sphere with key, fill and rim lights), *Liquid Flow*, *Shatter*, *Iridescent Film*, *Plasma*, *Caustics*, the vibrating plates *Chladni Plate*, *Drum Head* and *Ripple Tank*, *Hyperspace Tunnel*, *Hyperspace Weave*, *Grid*, *Rings*, *Starfield*, *Spectrum* and *Waveform*, which draw the music, *Julia Fractal* and *Nebula*.
+
+* **Colour A** and **Colour B** set the palette, and **Scale**, **Speed**, **Sharpness** and **Warp** shape it. **Detail** adds more where a style has it: the plate's figure, how many stars, the fractal's depth, the nebula's layers.
+* **Space** bends the pattern before it is drawn: *Flat*, *Polar*, *Kaleidoscope*, *Tunnel*, *Spiral* or *Mirror*. **Space Shape** sets how many wedges or turns, and can twist, flow and spin it.
+* **Colour** turns it into colour: *Two Colour*, *Three Colour* (with **Colour C**), *Rainbow*, *Palette* or *Music Colour*. **Colour Shape** steps it into flat bands, swaps the ends, makes the brightest part glow, and runs Rainbow and Palette round.
+* With AudioLink, **Pattern Beat** lets the music grow, bend, push and twist it.
 
 ### AudioLink
 
@@ -579,6 +618,90 @@ Each layer picks its own **Band**, and **Intensity**, **Emission**, **Hue** and 
 A handy trick: drop the same red, blue and black region mask into two layers and pick red for one and blue for the other, so each zone shows a different matcap.
 
 ---
+
+## VIEWER CONTEXT
+
+The material can tell where it is being drawn, who is looking and what light is on it, and each part of it can react to that on its own. Nothing here needs an animator, a menu or a parameter, and everyone sees their own version at the same time.
+
+Turn on **Enable**, then open the part you want to change: **Base**, **Normal Maps**, **Surface**, **Shading**, **Decals**, **Polish**, **Special Effects**, **Outlines**, **Emissions**, **Matcaps** or **AudioLink**. Each has its own **Enable** and its own rules, and every rule you set has to pass for the part to show:
+
+* **Show:** *Only in Mirrors* hides the part from everyone else while you still see it in a mirror, and *Never in Mirrors* does the reverse. *Only in Photos* and *Never in Photos* catch VRChat's camera and screenshots. *Only in VR* and *Only on Desktop* split by headset and flatscreen.
+* **Seen By:** in VR you can send the part to one eye only.
+* **Distance** fades the part in as someone comes closer, or as they back away, between the **Distance Range** values in metres.
+* **Face-On Only** shows it only where the surface faces the viewer.
+* **Gaze Torch** shows it only where someone is looking, like a torch beam that follows their eyes.
+* **Light Colour** and **Light Colour Match** show it only under light of that colour, and **Darkness** only in the dark, or only in the light.
+* **Beat** shows it on the beat of an **AudioLink Band**.
+* **Invert** flips the result. **Hidden Level** is what the part drops to where the rules do not pass; 0 hides it completely. **Mask Channel** keeps the rules to the part of the shared **Mask** you pick.
+
+**Special Effects** chooses what its rules reach: **Glitter**, **Wet And Goo**, and **Every Other Effect**. **Emissions** and **Decals** can add a **Reaction Glow** wherever their rules let them show.
+
+### Hidden Ink
+
+A design that only the right light reveals. Give it a **Design** texture, pick its **UV Set**, **Colour** and **Strength**, then a **Mode**:
+
+* **Fluorescent** glows only where light of the **Light Colour** lands on it, brighter the stronger that light is, like real UV-reactive ink. Under ordinary white light it stays hidden.
+* **Glow** lights the design up wherever its rules pass.
+* **Paint** paints it onto the surface wherever its rules pass.
+
+## TOUCH
+
+Real hands, fingers and heads touching you, through VRChat's Material Contacts. A touch lands exactly where it happens, in mirrors too, and everyone who sees you sees it.
+
+### Material Contacts
+
+Turn on **Enable**, then run **Touch Setup** in the Shader Hub under **Tools**. It adds the contact receiver to your avatar, one for every four meshes, and **Preview Touch** lets you drag a pretend touch over the mesh in the editor. Material Contacts need VRChat SDK 3.10.6 or newer (the 3.10.6 betas count). On an older SDK, this section shows a warning and Touch Setup adds nothing.
+
+* **Hands**, **Fingers**, **Head**, **Feet**, **Body** and **Props** pick which touches count. Props are anything tagged VF_Touch, such as a toy.
+* **Size** is how wide a touch is, in centimetres.
+* **Reach** is how far in front of you a contact still counts. Raise it if a touch only shows once the hand sinks in.
+
+Material Contacts drives **Touch Glow** and the touch groups below that need real hands. Every touch control is in this section, and none of them hides: a group greys out until the features it needs are on.
+
+### Touch Glow
+
+Lights you up where you are touched, for as long as the touch lasts. **Style** picks a soft **Glow**, rings that **Ripple** out, or a **Ring** round each touch. **Colour Per Person** gives each person their own colour, and **Who Glows** can keep it to other people or to your own hands. With AudioLink, **Beat Glow** brightens it on the beat.
+
+**Emissions** lets a touch work on your emission layers too: **Brighten** lights them up under a hand by **Brighten By**, **Reveal** shows them only where you are touched, and **Hide** turns them off there. It follows **Style**, so **Ripple** sends the change out in rings. Set **Strength** to 0 if you want only the emission change and no glow of its own.
+
+### Colour Touch
+
+A touch brings out a colour on you. **Mode** picks **Tint**, which mixes **Colour** into yours like a blush, or **Paint**, which covers your colour with it, and **Strength** sets how much. **Shine** makes you glossier under a hand, and **Sparkle** sets sparkles twinkling there in the same colour. **Size** is how far it spreads round each touch.
+
+### Outline Touch
+
+Your outline answers a touch. **Width** thickens the line under a hand; below 0 it thins, and at -1 it disappears. **Colour** and **Colour Amount** turn it a new colour, **Glow** brightens it, and **Size** sets how far along the line it reaches. It works on both outlines, so turn on an outline in **OUTLINES** first.
+
+### Goo Touch
+
+Latex Ultra and World Surface. Dents, bulges and wets the material where someone touches it. It feels touch three ways, and you can use them together:
+
+* **Contacts** (Latex Ultra) reads real hands from **Material Contacts** above, with no zones to paint and no animator.
+* **Native Touch** finds hands from what the camera already sees. **Sensing** sets how hard they press and how far they reach.
+* **Zones**: paint up to four areas, one per colour channel, then wire a VRChat contact receiver to an animator parameter and animate the matching **Press Red**, **Press Green**, **Press Blue** or **Press Alpha** slider. **Right-click every Press slider you animate and tick Animated (when locked).** If you don't, locking freezes them and the effect disappears. Give each Press curve an overshoot that settles back, and the material springs like slime.
+
+**Depth** is how far it pushes in, **Spread** how wide the dent is, and **Rim** piles the material up around the edge so it reads as something soft being squeezed. **Tendrils** squeezes strands out at that edge. Leave **Shading** up, or the pressed area still lights as if it were flat. **Wetness** makes it glossier where it is pressed.
+
+### Wet Touch
+
+Latex Ultra and World Surface. Makes the water of **Wet Effects** answer a touch. Turn on **Enable** and pick how it feels hands:
+
+* **Contacts** (Latex Ultra) reads real hands from **Material Contacts** above.
+* **Native Touch** finds hands from what the camera already sees. **Sensing** sets how hard they press and how far they reach.
+* With **Goo Touch** on, Wet Touch also feels everything Goo Touch does, its **Zones** included.
+
+**Wipe** pushes the water aside, so the spot under a hand dries and the water gathers round its edge. **Wet Hands** leaves the spot wetter instead, as if the hand were wet; with both up, the water is pushed out and spread round. **Streaks** breaks the spot up so it looks pushed by fingers.
+
+Two more need **Contacts**, because they follow where each hand is:
+
+* **Ripples** sends rings out through the water round each touch. **Ripple Spacing**, **Ripple Speed** and **Ripple Reach** set the gap, how fast they leave and how far they go. They show where the skin is wet.
+* **Drip Trails** runs water down below each hand. **Trail Length** sets how far, and **Trail Speed** how fast the drops run.
+
+A material that used Touch Wipe before this update keeps wiping through Goo Touch, and looks the same until you turn **Enable** on.
+
+### Fabric Touch, Surface Fur Touch and Real Fur Touch
+
+Clothing Pro and Fur Pro. **Press** dents the fabric under a hand and **Creases** fans folds out round it; turn Tessellation up for a smooth dent. **Parting** parts Surface Fur or Real Fur round the hand, and **Flatten** lays Real Fur down under it. Each needs Material Contacts and its own feature on.
 
 ## AUDIOLINK
 

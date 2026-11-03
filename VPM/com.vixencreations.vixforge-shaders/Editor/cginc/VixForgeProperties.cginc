@@ -337,6 +337,12 @@
             half  PolishMask;
             half  ReflectionMask;
             half  SpecularMask;
+            half  CtxShadeHide;
+            half3 InkFluor;
+            #if defined(VF_TATTOO) && defined(VIXFORGE_TOON) && !defined(VIXFORGE_CLOTHING) && !defined(VIXFORGE_WORLD)
+            half3 TatUV;
+            half3 TatKey;
+            #endif
             half  CavRefl;
             #ifdef VIXFORGE_CLOTHING
             #if VF_HAS_SHEEN
@@ -368,6 +374,9 @@
             float4 vfDis1;
             float4 vfDis2;
             float4 vfDis3;
+            #endif
+            #ifdef VF_STRETCH
+            float3 vfRest;
             #endif
             //endex
             INTERNAL_DATA
@@ -922,6 +931,10 @@
         float _Sheen_Str;
         float _Sheen_Rough;
         float _Sheen_AODark;
+        #if !defined(VIXFORGE_WORLD)
+        float _Fabric_Press;
+        float _Fabric_Creases;
+        #endif
         fixed4 _Sheen_Tint;
         float _FabricMaskCh;
         #endif
@@ -939,6 +952,14 @@
         float _Fur_Breakup;
         float _UseFurFlow;
         float _FurFlow_Str;
+        #if !defined(VIXFORGE_WORLD)
+        float _Fur_TouchPart;
+        #endif
+        #if defined(VF_CONTACTS) && !defined(VIXFORGE_WORLD)
+        #define VF_FUR_PART_DIM * (1.0 - vfFurPart * 0.6)
+        #else
+        #define VF_FUR_PART_DIM
+        #endif
         float _FurMaskCh;
         #endif
         float _Trans_Str;
@@ -981,6 +1002,10 @@
         float _CC_F0;
         float _Film_Str;
         float _Film_Thick;
+
+        // Read by the goo and by Velocity Smear on the outline, which every shader has, so it sits outside
+        // the wet and goo gate.
+        float4 _WG_Velocity;
 
         #if VF_WETGOO
         float _UseDrip;
@@ -1129,10 +1154,36 @@
         float _Touch_Veins;
         float _Touch_Native;
         float4 _Touch_NativeCtl;
+        #if !defined(VIXFORGE_WORLD)
+        float _Touch_Contacts;
+        #endif
         float _Wet_TouchWipe;
+        //ifex _UseWetTouch==0
+        float  _UseWetTouch;
+        float  _WetTouch_Native;
+        float4 _WetTouch_NativeCtl;
+        float  _WetTouch_Hands;
+        float  _WetTouch_Streaks;
+        #if !defined(VIXFORGE_WORLD)
+        float  _WetTouch_Contacts;
+        float  _WetTouch_Ripples;
+        float  _WetTouch_RippleSize;
+        float  _WetTouch_RippleSpeed;
+        float  _WetTouch_RippleSpeed_Ph;
+        float  _WetTouch_RippleReach;
+        float  _WetTouch_Drips;
+        float  _WetTouch_DripLength;
+        float  _WetTouch_DripSpeed;
+        float  _WetTouch_DripSpeed_Ph;
+        #endif
+        //endex
+        #if defined(VF_CONTACTS) && !defined(VIXFORGE_WORLD)
+        #define VF_OR_CONTACT_TOUCH || (_UseTouch > 0.5 && _Touch_Contacts > 0.5 && VF_ContactsLive())
+        #else
+        #define VF_OR_CONTACT_TOUCH
+        #endif
 
-        // Wet and Goo expansion, 2026-09-18.
-        float4 _WG_Velocity;
+        // Wet and Goo expansion, 2026-09-18. _WG_Velocity is declared above the wet and goo gate.
         float4 _WG_Motion;
         float _WG_Land;
         float _Wet_Pool;
@@ -1141,7 +1192,6 @@
         float _AL_Wet_ColBlend;
         float _AL_Goo_ColBlend;
         float4 _Goo_Oobleck;
-        float _Ctx_WetGoo;
         float _Wet_BorrowSrc;       float _Wet_BorrowCh;       float _Wet_BorrowInv;
         float _Goo_BorrowSrc;       float _Goo_BorrowCh;       float _Goo_BorrowInv;
         float4 _Wet_Glint;
@@ -1389,20 +1439,249 @@
         #define VF_VRC_VIEW_DECLARED
         float _VRChatMirrorMode;
         float _VRChatCameraMode;
+        float _VRChatFaceMirrorMode;
         #endif
         float3 _VRChatMirrorCameraPos;
 
+        //ifex _UseStretch==0
+        #ifdef VF_STRETCH
+        float  _UseStretch;
+        float4 _Stretch_Range;
+        float4 _Stretch_Squash;
+        float4 _Stretch_Color;
+        float  _Stretch_Pale;
+        float  _Stretch_Gloss;
+        float  _Stretch_Clear;
+        float  _Stretch_Normal;
+        float  _Stretch_Wrinkle;
+        float4 _Stretch_WrinkleSet;
+        float  _Stretch_Debug;
+        float  _Stretch_Scale;
+        #endif
+        //endex
+
         float _UseCtx;
-        float _Ctx_Where;
-        float _Ctx_Eye;
-        float _Ctx_DistMode;
-        float _Ctx_Near;
-        float _Ctx_Far;
-        float _Ctx_Gaze;
-        float _Ctx_Hidden;
-        float _Ctx_Target;
-        float4 _Ctx_Glow;
-        float _Ctx_MaskCh;
+        //ifex _UseCtx==0
+        #ifdef VF_CTX
+        //ifex _CtxInkOn==0
+        float _CtxInkOn;
+        float _CtxInkWhere;
+        float _CtxInkEye;
+        float _CtxInkDistMode;
+        float4 _CtxInkDist;
+        float _CtxInkGaze;
+        float4 _CtxInkTorch;
+        float4 _CtxInkLightCol;
+        float4 _CtxInkLight;
+        float4 _CtxInkDark;
+        float4 _CtxInkBeat;
+        float _CtxInkBand;
+        float _CtxInkInvert;
+        float _CtxInkHidden;
+        float _CtxInkMaskCh;
+        float  _CtxInkUV;
+        float4 _CtxInkColor;
+        float  _CtxInkMode;
+        float  _CtxInkStrength;
+        #ifdef VF_TEX_CTXINK
+        UNITY_DECLARE_TEX2D_NOSAMPLER(_CtxInkTex);
+        float4 _CtxInkTex_ST;
+        #endif
+        //endex
+        //ifex _CtxBaseOn==0
+        float _CtxBaseOn;
+        float _CtxBaseWhere;
+        float _CtxBaseEye;
+        float _CtxBaseDistMode;
+        float4 _CtxBaseDist;
+        float _CtxBaseGaze;
+        float4 _CtxBaseTorch;
+        float4 _CtxBaseLightCol;
+        float4 _CtxBaseLight;
+        float4 _CtxBaseDark;
+        float4 _CtxBaseBeat;
+        float _CtxBaseBand;
+        float _CtxBaseInvert;
+        float _CtxBaseHidden;
+        float _CtxBaseMaskCh;
+        //endex
+        //ifex _CtxNormOn==0
+        float _CtxNormOn;
+        float _CtxNormWhere;
+        float _CtxNormEye;
+        float _CtxNormDistMode;
+        float4 _CtxNormDist;
+        float _CtxNormGaze;
+        float4 _CtxNormTorch;
+        float4 _CtxNormLightCol;
+        float4 _CtxNormLight;
+        float4 _CtxNormDark;
+        float4 _CtxNormBeat;
+        float _CtxNormBand;
+        float _CtxNormInvert;
+        float _CtxNormHidden;
+        float _CtxNormMaskCh;
+        //endex
+        //ifex _CtxSurfOn==0
+        float _CtxSurfOn;
+        float _CtxSurfWhere;
+        float _CtxSurfEye;
+        float _CtxSurfDistMode;
+        float4 _CtxSurfDist;
+        float _CtxSurfGaze;
+        float4 _CtxSurfTorch;
+        float4 _CtxSurfLightCol;
+        float4 _CtxSurfLight;
+        float4 _CtxSurfDark;
+        float4 _CtxSurfBeat;
+        float _CtxSurfBand;
+        float _CtxSurfInvert;
+        float _CtxSurfHidden;
+        float _CtxSurfMaskCh;
+        //endex
+        //ifex _CtxShadeOn==0
+        float _CtxShadeOn;
+        float _CtxShadeWhere;
+        float _CtxShadeEye;
+        float _CtxShadeDistMode;
+        float4 _CtxShadeDist;
+        float _CtxShadeGaze;
+        float4 _CtxShadeTorch;
+        float4 _CtxShadeLightCol;
+        float4 _CtxShadeLight;
+        float4 _CtxShadeDark;
+        float4 _CtxShadeBeat;
+        float _CtxShadeBand;
+        float _CtxShadeInvert;
+        float _CtxShadeHidden;
+        float _CtxShadeMaskCh;
+        //endex
+        //ifex _CtxDecalOn==0
+        float _CtxDecalOn;
+        float _CtxDecalWhere;
+        float _CtxDecalEye;
+        float _CtxDecalDistMode;
+        float4 _CtxDecalDist;
+        float _CtxDecalGaze;
+        float4 _CtxDecalTorch;
+        float4 _CtxDecalLightCol;
+        float4 _CtxDecalLight;
+        float4 _CtxDecalDark;
+        float4 _CtxDecalBeat;
+        float _CtxDecalBand;
+        float _CtxDecalInvert;
+        float _CtxDecalHidden;
+        float _CtxDecalMaskCh;
+        float4 _CtxDecalGlow;
+        //endex
+        //ifex _CtxPolishOn==0
+        float _CtxPolishOn;
+        float _CtxPolishWhere;
+        float _CtxPolishEye;
+        float _CtxPolishDistMode;
+        float4 _CtxPolishDist;
+        float _CtxPolishGaze;
+        float4 _CtxPolishTorch;
+        float4 _CtxPolishLightCol;
+        float4 _CtxPolishLight;
+        float4 _CtxPolishDark;
+        float4 _CtxPolishBeat;
+        float _CtxPolishBand;
+        float _CtxPolishInvert;
+        float _CtxPolishHidden;
+        float _CtxPolishMaskCh;
+        //endex
+        //ifex _CtxSfxOn==0
+        float _CtxSfxOn;
+        float _CtxSfxWhere;
+        float _CtxSfxEye;
+        float _CtxSfxDistMode;
+        float4 _CtxSfxDist;
+        float _CtxSfxGaze;
+        float4 _CtxSfxTorch;
+        float4 _CtxSfxLightCol;
+        float4 _CtxSfxLight;
+        float4 _CtxSfxDark;
+        float4 _CtxSfxBeat;
+        float _CtxSfxBand;
+        float _CtxSfxInvert;
+        float _CtxSfxHidden;
+        float _CtxSfxMaskCh;
+        float _CtxSfxGlitter;
+        float _CtxSfxWetGoo;
+        float _CtxSfxOther;
+        //endex
+        //ifex _CtxOutlineOn==0
+        float _CtxOutlineOn;
+        float _CtxOutlineWhere;
+        float _CtxOutlineEye;
+        float _CtxOutlineDistMode;
+        float4 _CtxOutlineDist;
+        float _CtxOutlineGaze;
+        float4 _CtxOutlineTorch;
+        float4 _CtxOutlineLightCol;
+        float4 _CtxOutlineLight;
+        float4 _CtxOutlineDark;
+        float4 _CtxOutlineBeat;
+        float _CtxOutlineBand;
+        float _CtxOutlineInvert;
+        float _CtxOutlineHidden;
+        float _CtxOutlineMaskCh;
+        //endex
+        //ifex _CtxEmisOn==0
+        float _CtxEmisOn;
+        float _CtxEmisWhere;
+        float _CtxEmisEye;
+        float _CtxEmisDistMode;
+        float4 _CtxEmisDist;
+        float _CtxEmisGaze;
+        float4 _CtxEmisTorch;
+        float4 _CtxEmisLightCol;
+        float4 _CtxEmisLight;
+        float4 _CtxEmisDark;
+        float4 _CtxEmisBeat;
+        float _CtxEmisBand;
+        float _CtxEmisInvert;
+        float _CtxEmisHidden;
+        float _CtxEmisMaskCh;
+        float4 _CtxEmisGlow;
+        //endex
+        //ifex _CtxMatcapOn==0
+        float _CtxMatcapOn;
+        float _CtxMatcapWhere;
+        float _CtxMatcapEye;
+        float _CtxMatcapDistMode;
+        float4 _CtxMatcapDist;
+        float _CtxMatcapGaze;
+        float4 _CtxMatcapTorch;
+        float4 _CtxMatcapLightCol;
+        float4 _CtxMatcapLight;
+        float4 _CtxMatcapDark;
+        float4 _CtxMatcapBeat;
+        float _CtxMatcapBand;
+        float _CtxMatcapInvert;
+        float _CtxMatcapHidden;
+        float _CtxMatcapMaskCh;
+        //endex
+        //ifex _CtxALOn==0
+        float _CtxALOn;
+        float _CtxALWhere;
+        float _CtxALEye;
+        float _CtxALDistMode;
+        float4 _CtxALDist;
+        float _CtxALGaze;
+        float4 _CtxALTorch;
+        float4 _CtxALLightCol;
+        float4 _CtxALLight;
+        float4 _CtxALDark;
+        float4 _CtxALBeat;
+        float _CtxALBand;
+        float _CtxALInvert;
+        float _CtxALHidden;
+        float _CtxALMaskCh;
+        //endex
+        #endif
+        //endex
 
         float _UseInfinity;
         float _Infinity_Pattern;
@@ -1643,6 +1922,16 @@
         float _MatCap_ProcSpeed;
         float _MatCap_ProcSharp;
         float _MatCap_ProcWarp;
+        float _MatCap_ProcSpace;
+        float4 _MatCap_ProcSpaceCtl;
+        float4 _MatCap_ProcSpaceCtl_Ph;
+        float _MatCap_ProcColor;
+        float4 _MatCap_ProcC;
+        float4 _MatCap_ProcColorCtl;
+        float4 _MatCap_ProcColorCtl_Ph;
+        float _MatCap_ProcDetail;
+        float4 _AL_MatCap_Proc;
+        float4 _AL_MatCap_Proc2;
         float4 _MatCap_ToneA;
         float4 _MatCap_ToneB;
         float4 _MatCap_Grid;
@@ -1690,6 +1979,16 @@
         float _MatCap2_ProcSpeed;
         float _MatCap2_ProcSharp;
         float _MatCap2_ProcWarp;
+        float _MatCap2_ProcSpace;
+        float4 _MatCap2_ProcSpaceCtl;
+        float4 _MatCap2_ProcSpaceCtl_Ph;
+        float _MatCap2_ProcColor;
+        float4 _MatCap2_ProcC;
+        float4 _MatCap2_ProcColorCtl;
+        float4 _MatCap2_ProcColorCtl_Ph;
+        float _MatCap2_ProcDetail;
+        float4 _AL_MatCap2_Proc;
+        float4 _AL_MatCap2_Proc2;
         float4 _MatCap2_ToneA;
         float4 _MatCap2_ToneB;
         float4 _MatCap2_Grid;
@@ -1737,6 +2036,16 @@
         float _MatCap3_ProcSpeed;
         float _MatCap3_ProcSharp;
         float _MatCap3_ProcWarp;
+        float _MatCap3_ProcSpace;
+        float4 _MatCap3_ProcSpaceCtl;
+        float4 _MatCap3_ProcSpaceCtl_Ph;
+        float _MatCap3_ProcColor;
+        float4 _MatCap3_ProcC;
+        float4 _MatCap3_ProcColorCtl;
+        float4 _MatCap3_ProcColorCtl_Ph;
+        float _MatCap3_ProcDetail;
+        float4 _AL_MatCap3_Proc;
+        float4 _AL_MatCap3_Proc2;
         float4 _MatCap3_ToneA;
         float4 _MatCap3_ToneB;
         float4 _MatCap3_Grid;
@@ -1784,6 +2093,16 @@
         float _MatCap4_ProcSpeed;
         float _MatCap4_ProcSharp;
         float _MatCap4_ProcWarp;
+        float _MatCap4_ProcSpace;
+        float4 _MatCap4_ProcSpaceCtl;
+        float4 _MatCap4_ProcSpaceCtl_Ph;
+        float _MatCap4_ProcColor;
+        float4 _MatCap4_ProcC;
+        float4 _MatCap4_ProcColorCtl;
+        float4 _MatCap4_ProcColorCtl_Ph;
+        float _MatCap4_ProcDetail;
+        float4 _AL_MatCap4_Proc;
+        float4 _AL_MatCap4_Proc2;
         float4 _MatCap4_ToneA;
         float4 _MatCap4_ToneB;
         float4 _MatCap4_Grid;
@@ -1831,6 +2150,16 @@
         float _MatCap5_ProcSpeed;
         float _MatCap5_ProcSharp;
         float _MatCap5_ProcWarp;
+        float _MatCap5_ProcSpace;
+        float4 _MatCap5_ProcSpaceCtl;
+        float4 _MatCap5_ProcSpaceCtl_Ph;
+        float _MatCap5_ProcColor;
+        float4 _MatCap5_ProcC;
+        float4 _MatCap5_ProcColorCtl;
+        float4 _MatCap5_ProcColorCtl_Ph;
+        float _MatCap5_ProcDetail;
+        float4 _AL_MatCap5_Proc;
+        float4 _AL_MatCap5_Proc2;
         float4 _MatCap5_ToneA;
         float4 _MatCap5_ToneB;
         float4 _MatCap5_Grid;
@@ -1849,7 +2178,7 @@
         float4 _MatCap4_TexelSize;
         float4 _MatCap5_TexelSize;
 
-        // The atlas section bank. Eight sections, shared by every layer set to Packed
+        // The atlas section bank. Sixteen sections, shared by every layer set to Packed
         // Atlas. _Set carries Intensity, Emission, Lit Mix and Opacity.
         float4 _MC_Sec0_Tint;
         float4 _MC_Sec0_Set;
@@ -1867,6 +2196,22 @@
         float4 _MC_Sec6_Set;
         float4 _MC_Sec7_Tint;
         float4 _MC_Sec7_Set;
+        float4 _MC_Sec8_Tint;
+        float4 _MC_Sec8_Set;
+        float4 _MC_Sec9_Tint;
+        float4 _MC_Sec9_Set;
+        float4 _MC_Sec10_Tint;
+        float4 _MC_Sec10_Set;
+        float4 _MC_Sec11_Tint;
+        float4 _MC_Sec11_Set;
+        float4 _MC_Sec12_Tint;
+        float4 _MC_Sec12_Set;
+        float4 _MC_Sec13_Tint;
+        float4 _MC_Sec13_Set;
+        float4 _MC_Sec14_Tint;
+        float4 _MC_Sec14_Set;
+        float4 _MC_Sec15_Tint;
+        float4 _MC_Sec15_Set;
 
         float4 _MatCap_Offset;
         float4 _MatCap2_Offset;
@@ -1875,6 +2220,133 @@
         float4 _MatCap5_Offset;
 
         float _UseLightVolumes;
+#if defined(VIXFORGE_WORLD)
+        #define VF_MUL_RIM
+        #define VF_AND_RIM
+        #define VF_MUL_SSS
+        #define VF_MUL_TRANS
+        #define VF_MUL_ANISO
+        #define VF_MUL_MICROLIGHT
+        #define VF_MUL_CAVLIGHT
+        #define VF_MUL_MICROSHADOW
+        #define VF_MUL_VERTEX
+        #define VF_IF_VERTEX
+#else
+        //ifex isNotAnimated(_LightingAdditiveEnable)
+        float _LightingAdditiveEnable;
+        //endex
+        //ifex isNotAnimated(_LightingPointShadows)
+        float _LightingPointShadows;
+        //endex
+        //ifex isNotAnimated(_LightingSoftShadows)
+        float _LightingSoftShadows;
+        //endex
+        //ifex isNotAnimated(_LightingCookies)
+        float _LightingCookies;
+        //endex
+        //ifex isNotAnimated(_LightingVertexLightingEnabled)
+        float _LightingVertexLightingEnabled;
+        #define VF_MUL_VERTEX * (_LightingVertexLightingEnabled > 0.5 ? 1.0 : 0.0)
+        #define VF_IF_VERTEX [branch] if (_LightingVertexLightingEnabled > 0.5)
+        //endex
+        //ifex _LightingVertexLightingEnabled==0
+        //VF_LOCK #ifndef VF_MUL_VERTEX
+        //VF_LOCK #define VF_MUL_VERTEX
+        //VF_LOCK #define VF_IF_VERTEX
+        //VF_LOCK #endif
+        //endex
+        #ifndef VF_MUL_VERTEX
+        #define VF_MUL_VERTEX * 0.0
+        #define VF_IF_VERTEX [branch] if (false)
+        #endif
+        //ifex isNotAnimated(_UseRim)
+        float _UseRim;
+        #define VF_MUL_RIM * _UseRim
+        #define VF_AND_RIM && _UseRim > 0.5
+        //endex
+        //ifex _UseRim==0
+        //VF_LOCK #ifndef VF_MUL_RIM
+        //VF_LOCK #define VF_MUL_RIM
+        //VF_LOCK #define VF_AND_RIM
+        //VF_LOCK #endif
+        //endex
+        #ifndef VF_MUL_RIM
+        #define VF_MUL_RIM * 0.0
+        #define VF_AND_RIM && false
+        #endif
+        //ifex isNotAnimated(_UseSSS)
+        float _UseSSS;
+        #define VF_MUL_SSS * _UseSSS
+        //endex
+        //ifex _UseSSS==0
+        //VF_LOCK #ifndef VF_MUL_SSS
+        //VF_LOCK #define VF_MUL_SSS
+        //VF_LOCK #endif
+        //endex
+        #ifndef VF_MUL_SSS
+        #define VF_MUL_SSS * 0.0
+        #endif
+        //ifex isNotAnimated(_UseTransmission)
+        float _UseTransmission;
+        #define VF_MUL_TRANS * _UseTransmission
+        //endex
+        //ifex _UseTransmission==0
+        //VF_LOCK #ifndef VF_MUL_TRANS
+        //VF_LOCK #define VF_MUL_TRANS
+        //VF_LOCK #endif
+        //endex
+        #ifndef VF_MUL_TRANS
+        #define VF_MUL_TRANS * 0.0
+        #endif
+        //ifex isNotAnimated(_UseAniso)
+        float _UseAniso;
+        #define VF_MUL_ANISO * _UseAniso
+        //endex
+        //ifex _UseAniso==0
+        //VF_LOCK #ifndef VF_MUL_ANISO
+        //VF_LOCK #define VF_MUL_ANISO
+        //VF_LOCK #endif
+        //endex
+        #ifndef VF_MUL_ANISO
+        #define VF_MUL_ANISO * 0.0
+        #endif
+        //ifex isNotAnimated(_UseMicroLight)
+        float _UseMicroLight;
+        #define VF_MUL_MICROLIGHT * _UseMicroLight
+        //endex
+        //ifex _UseMicroLight==0
+        //VF_LOCK #ifndef VF_MUL_MICROLIGHT
+        //VF_LOCK #define VF_MUL_MICROLIGHT
+        //VF_LOCK #endif
+        //endex
+        #ifndef VF_MUL_MICROLIGHT
+        #define VF_MUL_MICROLIGHT * 0.0
+        #endif
+        //ifex isNotAnimated(_UseCavLight)
+        float _UseCavLight;
+        #define VF_MUL_CAVLIGHT * _UseCavLight
+        //endex
+        //ifex _UseCavLight==0
+        //VF_LOCK #ifndef VF_MUL_CAVLIGHT
+        //VF_LOCK #define VF_MUL_CAVLIGHT
+        //VF_LOCK #endif
+        //endex
+        #ifndef VF_MUL_CAVLIGHT
+        #define VF_MUL_CAVLIGHT * 0.0
+        #endif
+        //ifex isNotAnimated(_UseMicroShadow)
+        float _UseMicroShadow;
+        #define VF_MUL_MICROSHADOW * _UseMicroShadow
+        //endex
+        //ifex _UseMicroShadow==0
+        //VF_LOCK #ifndef VF_MUL_MICROSHADOW
+        //VF_LOCK #define VF_MUL_MICROSHADOW
+        //VF_LOCK #endif
+        //endex
+        #ifndef VF_MUL_MICROSHADOW
+        #define VF_MUL_MICROSHADOW * 0.0
+        #endif
+#endif
 #if defined(VIXFORGE_WORLD)
         float _LM_Bicubic;
         float _LM_Specular;

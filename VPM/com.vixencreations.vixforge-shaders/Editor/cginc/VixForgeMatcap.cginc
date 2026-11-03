@@ -94,6 +94,17 @@
             float  procWarp;
             float3 procA;
             float3 procB;
+
+            float  procSpace;
+            float4 procSpaceCtl;
+            float4 procSpacePh;
+            float  procColor;
+            float3 procC;
+            float4 procColorCtl;
+            float4 procColorPh;
+            float  procDetail;
+            float4 alProc;
+            float4 alProc2;
         };
 
         // An oblique projection matrix means a mirror. One comparison, and it needs no marker pixel
@@ -203,7 +214,7 @@
             return uv;
         }
 
-        // Eight sections, picked arithmetically rather than by branching. The index comes from a
+        // Sixteen sections, picked arithmetically rather than by branching. The index comes from a
         // painted mask so it is not uniform across a quad, and a real branch on it would diverge.
         void vw_MCSection(float sec, out float4 tint, out float4 set)
         {
@@ -217,6 +228,14 @@
             w = step(abs(sec - 5.0), 0.5); tint = lerp(tint, _MC_Sec5_Tint, w); set = lerp(set, _MC_Sec5_Set, w);
             w = step(abs(sec - 6.0), 0.5); tint = lerp(tint, _MC_Sec6_Tint, w); set = lerp(set, _MC_Sec6_Set, w);
             w = step(abs(sec - 7.0), 0.5); tint = lerp(tint, _MC_Sec7_Tint, w); set = lerp(set, _MC_Sec7_Set, w);
+            w = step(abs(sec - 8.0), 0.5); tint = lerp(tint, _MC_Sec8_Tint, w); set = lerp(set, _MC_Sec8_Set, w);
+            w = step(abs(sec - 9.0), 0.5); tint = lerp(tint, _MC_Sec9_Tint, w); set = lerp(set, _MC_Sec9_Set, w);
+            w = step(abs(sec - 10.0), 0.5); tint = lerp(tint, _MC_Sec10_Tint, w); set = lerp(set, _MC_Sec10_Set, w);
+            w = step(abs(sec - 11.0), 0.5); tint = lerp(tint, _MC_Sec11_Tint, w); set = lerp(set, _MC_Sec11_Set, w);
+            w = step(abs(sec - 12.0), 0.5); tint = lerp(tint, _MC_Sec12_Tint, w); set = lerp(set, _MC_Sec12_Set, w);
+            w = step(abs(sec - 13.0), 0.5); tint = lerp(tint, _MC_Sec13_Tint, w); set = lerp(set, _MC_Sec13_Set, w);
+            w = step(abs(sec - 14.0), 0.5); tint = lerp(tint, _MC_Sec14_Tint, w); set = lerp(set, _MC_Sec14_Set, w);
+            w = step(abs(sec - 15.0), 0.5); tint = lerp(tint, _MC_Sec15_Tint, w); set = lerp(set, _MC_Sec15_Set, w);
         }
 
         // The atlas cell, mapped the same way the Flipbook sheet maps its frames. Two details there
@@ -241,13 +260,230 @@
         //ifex _MatCap_Src!=2 && _MatCap2_Src!=2 && _MatCap3_Src!=2 && _MatCap4_Src!=2 && _MatCap5_Src!=2
         // Content built from mathematics instead of read from a sphere image. The layer's Texture slot
         // is not sampled at all in this mode, so a procedural layer costs no texture memory.
+        // PROCEDURAL MATCAPS YOU BUILD, 2026-10-16 (TODO section 4 item 12). Three stages round the styles:
+        // a Space stage that bends the coordinate first, the styles themselves (0 to 5 as they were, 6 and up
+        // new), and a Colour stage that turns a style's 0 to 1 value into colour. AudioLink reaches all three.
+        // Every new control defaults to doing nothing, so a material made before keeps its look.
+
+        // The space a style is drawn in. p runs -1 to 1 across the matcap disc. Flat turns and flows it,
+        // Polar unrolls it, Kaleidoscope folds it into Segments mirrored wedges, Tunnel rolls it down a tube,
+        // Spiral winds it into a log spiral and Mirror folds it into four. Flow and Spin are speeds with
+        // phase partners, so changing them never jumps the pattern.
+        float2 vw_MCSpace(float2 p, float space, float4 ctl, float4 ph, float twistAdd)
+        {
+            float flow = ctl.z * _Time.y + ph.z;
+            float spin = ctl.w * _Time.y + ph.w;
+            float r = length(p);
+            float a = (r > 1.0e-6) ? atan2(p.y, p.x) : 0.0;
+            a += (spin + (ctl.y + twistAdd) * r) * 6.2831853;
+            float n = max(round(ctl.x), 1.0);
+            float2 q;
+            if (space < 0.5)
+            {
+                q = float2(cos(a), sin(a)) * r + float2(0.0, flow);
+            }
+            else if (space < 1.5)
+            {
+                q = float2(a * (1.0 / UNITY_PI), r * 2.0 - 1.0 - flow);
+            }
+            else if (space < 2.5)
+            {
+                float seg = 6.2831853 / n;
+                float af = abs(frac(a / seg) - 0.5) * seg;
+                q = float2(cos(af), sin(af)) * r - float2(flow, 0.0);
+            }
+            else if (space < 3.5)
+            {
+                q = float2(a * (n / UNITY_PI), 0.35 / max(r, 0.03) + flow);
+            }
+            else if (space < 4.5)
+            {
+                float lr = log2(max(r, 1.0e-4));
+                q = float2(a * (n / UNITY_PI) + lr * 0.5, lr + flow);
+            }
+            else
+            {
+                q = abs(float2(cos(a), sin(a)) * r) + float2(0.0, flow);
+            }
+            return q;
+        }
+
+        float vw_MCFbm(float2 p, float oct)
+        {
+            float v = 0.0;
+            float amp = 0.5;
+            float norm = 0.0;
+            [unroll] for (int i = 0; i < 5; i++)
+            {
+                if ((float)i < oct)
+                {
+                    v += gooNoise3(float3(p, (float)i * 1.7)) * amp;
+                    norm += amp;
+                }
+                p *= 2.03;
+                amp *= 0.5;
+            }
+            return v / max(norm, 1.0e-4);
+        }
+
+        // The new styles, as a value from 0 to 1. q is the coordinate after the Space stage and quv the same
+        // point as 0 to 1. Morph is the music bending each style its own way: the plate's mode, the tunnel's
+        // turbulence, the fractal's constant.
+        float vw_MCStyleValue(float style, float2 q, float2 quv, float scale, float t, float sh, float warp, float detail, float morph)
+        {
+            float v = 0.0;
+            [branch] if (style < 8.5)
+            {
+                // Chladni Plate 6, Drum Head 7 and Ripple Tank 8, from the same field Cymatics draws.
+                float nm = 2.0 + floor(saturate(detail) * 6.0);
+                float mm = nm + 1.0 + floor(morph * 3.0);
+                float f  = vw_CymField(q * (scale / 6.0), nm, mm, style - 6.0, t);
+                float lineW = lerp(0.45, 0.04, sh);
+                float half_w = max(0.5 * (1.0 - sh), 0.02);
+                v = (style < 7.5) ? 1.0 - smoothstep(0.0, lineW, abs(f))
+                                  : smoothstep(0.5 - half_w, 0.5 + half_w, saturate(f * 0.33 + 0.5));
+            }
+            else if (style < 10.5)
+            {
+                float2 w = q * scale * 0.25;
+                [branch] if (style < 9.5)
+                {
+                    // Hyperspace Tunnel: the cosine octaves of Yohei Nishitsuji's tunnel push the rings about.
+                    float s = 1.0;
+                    [unroll] for (int o = 0; o < 4; o++)
+                    {
+                        w += cos(w.yx * s + t) * ((warp + morph) / s);
+                        s += s;
+                    }
+                    v = 0.05 / (abs(sin(w.y * UNITY_PI)) + 0.05);
+                }
+                else
+                {
+                    // Hyperspace Weave: strands on a repeating grid, bent along their length as they stream past.
+                    w.x += sin(w.y * 0.6 + t) * (warp + morph);
+                    w.y -= t;
+                    float2 g = abs(frac(w) - 0.5);
+                    v = 0.04 / (min(g.x, g.y) + 0.04);
+                }
+                v = saturate(v * lerp(0.4, 1.2, sh));
+            }
+            else if (style < 11.5)
+            {
+                float2 g = abs(frac(q * scale + 0.5) - 0.5);
+                float d = min(g.x, g.y);
+                float wl = lerp(0.2, 0.015, sh);
+                v = 1.0 - smoothstep(wl, wl + max(fwidth(d), 1.0e-4), d);
+            }
+            else if (style < 12.5)
+            {
+                float tri = abs(frac(length(q) * scale - t) - 0.5) * 2.0;
+                v = smoothstep(lerp(0.0, 0.48, sh), lerp(1.0, 0.52, sh), tri);
+            }
+            else if (style < 13.5)
+            {
+                // Starfield: one star in some cells, at a random spot, twinkling. Detail sets how many cells have one.
+                float2 g  = q * scale;
+                float3 h  = vw_Hash33(float3(floor(g), 7.7));
+                float2 dp = (frac(g) - 0.5) - (h.xy - 0.5) * 0.7;
+                float  sz = lerp(0.004, 0.0008, sh);
+                float  on = step(h.z, lerp(0.15, 0.9, saturate(detail)));
+                v = saturate(on * sz / (dot(dp, dp) + sz) * (0.6 + 0.4 * sin(t * 3.0 + h.z * 40.0)));
+            }
+            else if (style < 14.5)
+            {
+                // Spectrum: the music's frequency bars across the disc, bass on the left.
+                float amp = AudioLinkIsAvailable() ? AudioLinkLerpMultiline(ALPASS_DFT + float2(saturate(quv.x) * (AUDIOLINK_ETOTALBINS - 1.0), 0.0)).r : 0.0;
+                float yy = saturate(quv.y);
+                v = saturate((amp - yy) / max(fwidth(yy), 1.0e-4) + 0.5);
+            }
+            else if (style < 15.5)
+            {
+                // Waveform: the live audio drawn as a line across the disc.
+                float wv = AudioLinkIsAvailable() ? AudioLinkLerpMultiline(ALPASS_WAVEFORM + float2(saturate(quv.x) * 1022.0, 0.0)).r : 0.0;
+                float d = abs(quv.y - (0.5 + wv * 0.4));
+                float wl = lerp(0.08, 0.008, sh);
+                v = 1.0 - smoothstep(wl, wl + max(fwidth(d), 1.0e-4), d);
+            }
+            else if (style < 16.5)
+            {
+                // Julia Fractal. Time and Morph drift the constant, so the set breathes; Detail adds iterations.
+                float2 z  = q * (3.0 / max(scale * 0.25, 0.1));
+                float2 cc = float2(-0.745 + 0.06 * sin(t * 0.3) + morph * 0.08, 0.113 + 0.06 * cos(t * 0.21));
+                float iters = 8.0 + floor(saturate(detail) * 40.0);
+                float i = 0.0;
+                [loop] for (int k = 0; k < 48; k++)
+                {
+                    if ((float)k >= iters || dot(z, z) > 16.0) break;
+                    z = float2(z.x * z.x - z.y * z.y, 2.0 * z.x * z.y) + cc;
+                    i += 1.0;
+                }
+                float zz = dot(z, z);
+                v = (zz > 4.0) ? saturate((i - log2(max(log2(zz), 1.0e-4)) + 1.0) / iters) : 0.0;
+                v = pow(v, lerp(1.5, 0.4, sh));
+            }
+            else
+            {
+                // Nebula: fractal noise warped by itself twice, after Inigo Quilez's domain warping.
+                float2 w = q * scale * 0.2;
+                float oct = 2.0 + floor(saturate(detail) * 3.0);
+                float2 o1 = float2(vw_MCFbm(w + float2(0.0, t * 0.1), oct), vw_MCFbm(w + float2(5.2, 1.3), oct));
+                float2 o2 = float2(vw_MCFbm(w + 4.0 * o1 + float2(1.7, 9.2) + t * 0.15, oct), vw_MCFbm(w + 4.0 * o1 + float2(8.3, 2.8), oct));
+                v = vw_MCFbm(w + (warp + morph) * 4.0 * o2, oct);
+                v = pow(saturate(v), lerp(2.0, 0.6, sh));
+            }
+            return saturate(v);
+        }
+
+        // The Colour stage: Bands posterises, Invert flips, then Two Colour, Three Colour, Rainbow, a cosine
+        // Palette after Inigo Quilez (Colour A picks the palette) or the colour of the music. Glow lifts the
+        // bright end. Cycle is a speed with a phase partner.
+        half3 vw_MCColour(VF_MCLayer L, float v)
+        {
+            float bands = floor(L.procColorCtl.x);
+            [branch] if (bands > 1.5)
+                v = floor(saturate(v) * bands * 0.9999) / (bands - 1.0);
+            v = lerp(v, 1.0 - v, saturate(L.procColorCtl.y));
+            float cyc = L.procColorCtl.w * _Time.y + L.procColorPh.w;
+            half3 col;
+            [branch] if (L.procColor < 0.5)      col = lerp(L.procA, L.procB, v);
+            else if (L.procColor < 1.5)          col = (v < 0.5) ? lerp(L.procA, L.procB, v * 2.0) : lerp(L.procB, L.procC, v * 2.0 - 1.0);
+            else if (L.procColor < 2.5)          col = vw_HSVtoRGB(float3(frac(v + cyc), 0.9, 1.0)) * lerp(0.1, 1.0, v);
+            else if (L.procColor < 3.5)          col = 0.5 + 0.5 * cos(6.2831853 * (v + cyc + L.procA));
+            else                                 col = lerp(L.procA, AL_MusicColor(_AL_ColorMode, _AL_Strip_Pos, 0.0), v);
+            return col * (1.0 + L.procColorCtl.z * v * v);
+        }
+
         half3 vw_MCProcedural(VF_MCCtx c, VF_MCLayer L, float2 uv, float3 n, float alAmp)
         {
             float t   = _Time.y * L.procSpeed + L.procPh + alAmp * L.alPan * 2.0;
+
+            // The music routes. Each defaults to 0, and at 0 leaves the pattern exactly as it was: Size multiplies
+            // by exactly 1, Warp adds exactly 0, and the rest sit behind their own test.
+            bool alLive = AL_Active();
+            [branch] if (alLive && L.alProc.z > 0.001)
+                t += AL_BeatClock(L.alBand) * L.alProc.z;
+            L.procScale *= 1.0 + alAmp * L.alProc.x;
+            L.procWarp  += alAmp * L.alProc.y;
+
             float sh  = saturate(L.procSharp);
             float2 p  = uv * 2.0 - 1.0;
+            [branch] if (alLive && L.alProc2.z > 0.001)
+            {
+                p += (vw_Hash33(float3(floor(_Time.y * 20.0), 1.3, L.alBand)).xy - 0.5) * (alAmp * L.alProc2.z * 0.2);
+                uv = p * 0.5 + 0.5;
+            }
+
+            // The Space stage. Flat with no Twist, Flow, Spin or Beat Twist skips it, so the styles get the
+            // coordinate they always got.
+            float rr = length(p);
+            [branch] if (L.procSpace > 0.5 || any(abs(L.procSpaceCtl.yzw) > 1.0e-4) || (alLive && L.alProc.w > 0.001))
+            {
+                p  = vw_MCSpace(p, L.procSpace, L.procSpaceCtl, L.procSpacePh, alLive ? alAmp * L.alProc.w : 0.0);
+                uv = p * 0.5 + 0.5;
+            }
             float  r2 = dot(p, p);
             half3  col = half3(0, 0, 0);
+            float  styleV = 0.0;
 
             [branch] if (L.proc < 0.5)
             {
@@ -309,7 +545,7 @@
                 v = saturate(v * 0.25 * (sh * 2.0 + 0.5) + 0.5);
                 col = lerp(L.procA, L.procB, v);
             }
-            else
+            else if (L.proc < 5.5)
             {
                 float2 q = uv * L.procScale;
                 float  v = 0.0;
@@ -322,6 +558,32 @@
                 v = saturate(pow(v * 0.34, sh * 5.0 + 1.0));
                 col = lerp(L.procA, L.procB, v);
             }
+            else
+            {
+                float morph = alLive ? alAmp * L.alProc2.w : 0.0;
+                styleV = vw_MCStyleValue(L.proc, p, uv, L.procScale, t, sh, L.procWarp, L.procDetail, morph);
+            }
+
+            // An older style joins the Colour stage once its Colour is moved off Two Colour, through its
+            // brightness against the brighter of its two colours. At Two Colour it keeps its own colour.
+            // Every style goes through this one call: a second call fed by the older styles overflowed fxc's stack.
+            [branch] if (L.proc > 5.5 || L.procColor > 0.5)
+            {
+                [branch] if (L.proc < 5.5)
+                {
+                    const float3 lw = float3(0.2126, 0.7152, 0.0722);
+                    float refLum = max(max(dot(L.procA, lw), dot(L.procB, lw)), 1.0e-3);
+                    styleV = saturate(dot(col, lw) / refLum);
+                }
+                col = vw_MCColour(L, styleV);
+            }
+
+            // Travel runs the band's history out from the middle, so each hit leaves as a ring. Spectrum lays
+            // the frequencies out from the middle, bass at the centre.
+            [branch] if (alLive && L.alProc2.x > 0.001)
+                col *= lerp(1.0, AL_Shape(AL_BandDelayed(L.alBand, saturate(rr) * 126.0)) * 2.0, saturate(L.alProc2.x));
+            [branch] if (alLive && L.alProc2.y > 0.001 && AudioLinkIsAvailable())
+                col *= lerp(1.0, AudioLinkLerpMultiline(ALPASS_DFT + float2(saturate(rr) * (AUDIOLINK_ETOTALBINS - 1.0), 0.0)).r * 2.0, saturate(L.alProc2.y));
 
             return col;
         }
@@ -399,7 +661,7 @@
 
             [branch] if (L.src > 0.5 && L.src < 1.5)
             {
-                float count = clamp(floor(L.secCount), 1.0, 8.0);
+                float count = clamp(floor(L.secCount), 1.0, 16.0);
                 float sec   = clamp(floor(sectionRaw * count), 0.0, count - 1.0);
                 float4 sTint, sSet;
                 vw_MCSection(sec, sTint, sSet);
@@ -511,7 +773,11 @@
             L.grid = P##_Grid.xy; L.secSrc = P##_SecSrc; L.secCh = P##_SecCh; L.secCount = P##_SecCount; \
             L.proc = P##_Proc; L.procScale = P##_ProcScale; L.procSpeed = P##_ProcSpeed; L.procPh = P##_ProcSpeed_Ph; \
             L.procSharp = P##_ProcSharp; L.procWarp = P##_ProcWarp; \
-            L.procA = P##_ProcA.rgb; L.procB = P##_ProcB.rgb;
+            L.procA = P##_ProcA.rgb; L.procB = P##_ProcB.rgb; \
+            L.procSpace = P##_ProcSpace; L.procSpaceCtl = P##_ProcSpaceCtl; L.procSpacePh = P##_ProcSpaceCtl_Ph; \
+            L.procColor = P##_ProcColor; L.procC = P##_ProcC.rgb; L.procColorCtl = P##_ProcColorCtl; \
+            L.procColorPh = P##_ProcColorCtl_Ph; L.procDetail = P##_ProcDetail; \
+            L.alProc = _AL##P##_Proc; L.alProc2 = _AL##P##_Proc2;
 
         // Texture mode reads with a bias so the hardware keeps choosing the mip and Blur only nudges
         // it. Atlas mode has to use explicit gradients: the cell index comes from a painted mask, so
@@ -524,7 +790,7 @@
                 float2 _mcG    = max(floor(LAY.grid), float2(1.0, 1.0));                             \
                 float2 _mcDx   = ddx(UV) / _mcG * exp2(_mcBias);                                     \
                 float2 _mcDy   = ddy(UV) / _mcG * exp2(_mcBias);                                     \
-                float  _mcCnt  = clamp(floor(LAY.secCount), 1.0, 8.0);                               \
+                float  _mcCnt  = clamp(floor(LAY.secCount), 1.0, 16.0);                              \
                 float  _mcSec  = clamp(floor(SEC * _mcCnt), 0.0, _mcCnt - 1.0);                      \
                 float2 _mcAuv  = vw_MCAtlasUV(UV, LAY.grid, _mcSec, TEX##_TexelSize.xy);             \
                 [branch] if (LAY.src < 0.5)                                                          \

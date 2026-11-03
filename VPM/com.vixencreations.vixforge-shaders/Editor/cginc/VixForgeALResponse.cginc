@@ -129,12 +129,31 @@
             return outVal;
         }
 
-        // The real local time of day, as a 0 to 1 trip round the clock.
+        // VRChat hands every shader the local time of day itself (VRCTime.cginc in the base SDK): local hours in
+        // bits 17 to 21 of _VRChatTimeEncoded1, minutes in 22 to 27, seconds in 11 to 16. It reads 0, midnight,
+        // outside the client. The guard keeps one declaration if a program ever includes VRChat's own file.
+        #ifndef VRCTIME_CGINC
+        uint _VRChatTimeEncoded1;
+        #endif
+
+        float AL_VRCLocalHours()
+        {
+            uint t1 = asuint(_VRChatTimeEncoded1);
+            return (float)((t1 >> 17) & 0x1Fu) + (float)((t1 >> 22) & 0x3Fu) / 60.0 + (float)((t1 >> 11) & 0x3Fu) / 3600.0;
+        }
+
+        // The real local time of day, as a 0 to 1 trip round the clock. AudioLink's clock when the world has
+        // AudioLink, VRChat's otherwise, so the clock no longer needs AudioLink. Both are read to the second:
+        // the old read took whole hours from AudioLink, so the hue jumped once an hour instead of drifting.
         float AL_ClockHue()
         {
             float outVal = 0.0;
-            [branch] if (_AL_Clock > 0.001 && AudioLinkIsAvailable())
-                outVal = frac(AudioLinkGetTimeOfDay().x / 24.0) * _AL_Clock;
+            [branch] if (_AL_Clock > 0.001)
+            {
+                float hours = AudioLinkIsAvailable() ? AudioLinkDecodeDataAsSeconds(ALPASS_GENERALVU_UNIX_SECONDS) / 3600.0
+                                                     : AL_VRCLocalHours();
+                outVal = frac(hours / 24.0) * _AL_Clock;
+            }
             return outVal;
         }
 

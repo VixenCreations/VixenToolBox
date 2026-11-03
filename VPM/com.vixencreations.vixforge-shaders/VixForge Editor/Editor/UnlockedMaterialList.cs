@@ -59,7 +59,8 @@ namespace VixForgeEditor
                         continue;
                     }
 
-                    if (!m.shader.IsBroken() && (ShaderOptimizer.IsShaderUsingVixForgeOptimizer(m.shader) || ShaderTranslations.ShaderFamilies.IsThryFamily(m)))
+                    if (!m.shader.IsBroken() && !ShaderOptimizer.IsPresetMaterial(m)
+                        && (ShaderOptimizer.IsShaderUsingVixForgeOptimizer(m.shader) || ShaderTranslations.ShaderFamilies.IsThryFamily(m)))
                         unlockedMaterials.Add(m);
                 }
                 f = f + step;

@@ -16,8 +16,8 @@ or a paper we learned from.
   Notice: `LICENSE-VRSL.md`.
 - **ThryEditor** by Thryrallo. VixForge Editor, the material inspector and locking, is a fork of it.
   github.com/Thryrallo/ThryEditor. Notice: `LICENSE-ThryEditor.md`.
-- **Hyperspace, Tunnel style**, adapted from a shader by **Yohei Nishitsuji** (@YoheiNishitsuji).
-  Notice: `LICENSE-Nishitsuji.md`.
+- **Hyperspace, Tunnel style**, adapted from a shader by **Yohei Nishitsuji** (@YoheiNishitsuji). The
+  Hyperspace Tunnel style of procedural matcaps uses the same cosine turbulence. Notice: `LICENSE-Nishitsuji.md`.
 - **Filamented** by **Silent**. Smooth Filter on World Surface and World Fur is adapted from its bicubic
   filter. gitlab.com/s-ilent/filamented. Notice: `LICENSE-Filamented.md`.
 - **Poiyomi Toon** by **Poiyomi** (Poiyomi Labs). Dissolve, Color Adjust and Alpha Options (its Global Mask
@@ -29,9 +29,11 @@ or a paper we learned from.
   Notice: `LICENSE-Ottosson.md`.
 - **alwan** by **Soufiane Khiat**. The Okhsv conversion in Hue Shift is adapted from this colour science
   library. Notice: `LICENSE-alwan.md`.
+- **Inigo Quilez**. The Heart, Star and Cross pupil shapes in Eyes are adapted from his 2D distance
+  functions. iquilezles.org/articles/distfunctions2d. Notice: `LICENSE-IQ-SDF.md`.
 - **Unity's built-in shaders** by Unity Technologies. The shaders started as the output of Unity's surface
-  shader compiler, and the lightmapped light setup follows `UnityGI_Base`. Notice:
-  `LICENSE-UnityBuiltinShaders.md`.
+  shader compiler, the lightmapped light setup follows `UnityGI_Base`, and hard spot and point light shadows
+  with **Soft Shadows** off copy `UnityComputeForwardShadows`. Notice: `LICENSE-UnityBuiltinShaders.md`.
 
 ## Inside VixForge Editor, carried over from ThryEditor
 
@@ -55,6 +57,9 @@ ThryEditor brought in work by other people, and it keeps their credit here:
   from vrcfury.com.
 - **ProTV** by ArchiTechVR. The Director can take its music from ProTV.
 - **UdonSharp** by MerlinVR. The Director's world scripts are written in it.
+- **VRChat Material Contacts**, in the VRChat SDK. TOUCH reads what a contact receiver with Write to Shaders
+  writes, in the layout the SDK's `VRCContacts.cginc` sets out. The shaders declare it themselves, so nothing
+  from the SDK ships. creators.vrchat.com/common-components/contacts.
 - **Translate Materials** reads materials made for Unity Standard, REDSIM's Light Volume PBR, Poiyomi, lilToon
   and VRChat's Toon Standard, and the packed map setup button reads the Poiyomi and Mochie Metallic Maps layout.
   The lilToon decal conversion follows lilToon's own decal placement, github.com/lilxyzw/lilToon.
@@ -76,6 +81,9 @@ ThryEditor brought in work by other people, and it keeps their credit here:
   no Fast Fur code is used. warrenwolfy.gumroad.com/l/atntv.
 - **Poiyomi** and **Razgriz**, who built UV Tile Discard for Poiyomi Toon. Ours keeps the same property names
   so toggles made for theirs work on ours, and its tile test is written from scratch.
+  github.com/poiyomi/PoiyomiToonShader.
+- **Poiyomi**, for the Light Data section in Poiyomi Toon. Our Light Data group in SHADING follows it, with the same property names
+  for Pixel Lights and Vertex Lights so toggles made for theirs work on ours. Its code is our own.
   github.com/poiyomi/PoiyomiToonShader.
 - **Poiyomi** and **lilToon**. The rim light rebuild started from a look at how they draw a rim, and GPU
   instancing through tessellation follows the way lilToon carries the instance ID. github.com/lilxyzw/lilToon.
@@ -101,5 +109,9 @@ ThryEditor brought in work by other people, and it keeps their credit here:
   cosine of the viewing angle.
 - Sheer & Lace Tulle: the nearest-centre hexagon tiling shared on Shadertoy by Shane, with the hexagon
   distance Inigo Quilez describes at iquilezles.org.
+- Procedural matcaps: the Palette colour follows the cosine palettes, and the Nebula style the domain
+  warping, that Inigo Quilez describes at iquilezles.org/articles/palettes and iquilezles.org/articles/warp.
+- Sheer & Lace Houndstooth: built the way the weave is usually described, a two by two checker whose other
+  two squares carry diagonal stripes.
 - Unified Light: the research page at vixencreations.github.io/VixenToolBox/research.html lists every
   reference behind it.

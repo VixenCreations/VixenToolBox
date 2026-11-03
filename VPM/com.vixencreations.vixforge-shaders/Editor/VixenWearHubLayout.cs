@@ -63,9 +63,10 @@ public partial class VixenWearHub
     private void FitToSize(Rect r)
     {
         VisualElement root = rootVisualElement;
-        root.EnableInClassList("hub-narrow", r.width < NarrowWidth || r.height < 520f);
-        root.EnableInClassList("hub-tiny", r.width < TinyWidth || r.height < 360f);
-        SetDrawerMode(r.width < DrawerWidth);
+        float s = _lookScale;
+        root.EnableInClassList("hub-narrow", _lookCompact || r.width < NarrowWidth * s || r.height < 520f * s);
+        root.EnableInClassList("hub-tiny", r.width < TinyWidth * s || r.height < 360f * s);
+        SetDrawerMode(r.width < (DrawerWidth + _lookSidebar - DefaultSidebarWidth) * s);
     }
 
     private VisualElement BuildFrameButtons(string className)
@@ -133,11 +134,12 @@ public partial class VixenWearHub
             {
                 _restoreRect = position;
                 _restoreMinSize = minSize;
-                minSize = new Vector2(240f, BarHeight);
+                float bar = Mathf.Round(BarHeight * _lookScale);
+                minSize = new Vector2(240f, bar);
                 Rect r = position;
                 Rect main = EditorGUIUtility.GetMainWindowPosition();
                 bool onBottom = Mathf.Abs(r.yMax - main.yMax) < 48f;
-                position = new Rect(r.x, onBottom ? r.yMax - BarHeight : r.y, r.width, BarHeight);
+                position = new Rect(r.x, onBottom ? r.yMax - bar : r.y, r.width, bar);
             }
             else
             {

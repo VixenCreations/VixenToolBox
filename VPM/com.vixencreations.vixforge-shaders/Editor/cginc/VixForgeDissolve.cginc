@@ -162,6 +162,7 @@ float  _DissolveViewerCamera;
 #define VF_VRC_VIEW_DECLARED
 float  _VRChatMirrorMode;
 float  _VRChatCameraMode;
+float  _VRChatFaceMirrorMode;
 #endif
 //endex
 
@@ -460,7 +461,7 @@ float VF_DisViewer()
 {
     float v = 0.0;
     [branch] if (_DissolveViewerEnabled > 0.5)
-        v = (_VRChatMirrorMode > 0.5) ? _DissolveViewerMirror
+        v = (_VRChatMirrorMode > 0.5 || _VRChatFaceMirrorMode > 0.5) ? _DissolveViewerMirror
           : (_VRChatCameraMode > 0.5) ? _DissolveViewerCamera
           : _DissolveViewerMain;
     return v;

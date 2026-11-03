@@ -11,7 +11,7 @@
     "9d0507a234de54bb5046bbaf6e5b1ee9a4499fd4d082d55299c4c332f10ff90d"
   ],
   "notes": [
-    "Needs the free VRC Light Volumes package.",
+    "Needs the free VRC Light Volumes package, 3.0.1 or newer. With an older one installed, the patch uses the copy that comes with VixForge.",
     "Light Volume Intensity 0 falls back to light probes, so the patch is safe in worlds with no volumes."
   ],
   "tokens": [
@@ -28,7 +28,9 @@
         "liltoon",
         "lilToon"
       ],
-      "installHint": "Install VRC Light Volumes (red.sim.lightvolumes) from the VRChat Creator Companion or https://github.com/REDSIM/VRCLightVolumes"
+      "installHint": "Install VRC Light Volumes 3.0.1 or newer (red.sim.lightvolumes) from the VRChat Creator Companion or https://github.com/REDSIM/VRCLightVolumes",
+      "packageName": "red.sim.lightvolumes",
+      "minPackageVersion": "3.0.1"
     }
   ],
   "operations": [

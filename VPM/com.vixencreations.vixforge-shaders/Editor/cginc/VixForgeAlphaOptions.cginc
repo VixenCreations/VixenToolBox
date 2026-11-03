@@ -20,7 +20,28 @@ UNITY_DECLARE_TEX2D_NOSAMPLER(_GlobalMaskTexture0);
 #ifdef VF_SHEER
 float  _Sheer_GlobalMask;
 float  _Sheer_LaceMask;
-#define VF_SHEER_GMPICKS + _Sheer_GlobalMask + _Sheer_LaceMask
+//ifex _Sheer_Print==0
+float  _Sheer_PrintMask;
+#define VF_SHEER_GM_PRINT + _Sheer_PrintMask
+//endex
+//ifex _Sheer_DistressOn==0
+float  _Sheer_DistressMask;
+#define VF_SHEER_GM_DISTRESS + _Sheer_DistressMask
+//endex
+//ifex _Sheer_QuiltOn==0
+float  _Sheer_QuiltMask;
+#define VF_SHEER_GM_QUILT + _Sheer_QuiltMask
+//endex
+#ifndef VF_SHEER_GM_PRINT
+#define VF_SHEER_GM_PRINT
+#endif
+#ifndef VF_SHEER_GM_DISTRESS
+#define VF_SHEER_GM_DISTRESS
+#endif
+#ifndef VF_SHEER_GM_QUILT
+#define VF_SHEER_GM_QUILT
+#endif
+#define VF_SHEER_GMPICKS + _Sheer_GlobalMask + _Sheer_LaceMask VF_SHEER_GM_PRINT VF_SHEER_GM_DISTRESS VF_SHEER_GM_QUILT
 #endif
 //endex
 #ifndef VF_SHEER_GMPICKS
@@ -81,6 +102,7 @@ float  _AlphaHauntMirror;
 #define VF_VRC_VIEW_DECLARED
 float  _VRChatMirrorMode;
 float  _VRChatCameraMode;
+float  _VRChatFaceMirrorMode;
 #endif
 //endex
 
@@ -158,7 +180,7 @@ float VF_AlphaHaunt(float3 worldPos, float3 viewer)
     }
     [branch] if (_AlphaHauntMirror > 0.5)
     {
-        bool inMirror = _VRChatMirrorMode > 0.5;
+        bool inMirror = _VRChatMirrorMode > 0.5 || _VRChatFaceMirrorMode > 0.5;
         k *= (((_AlphaHauntMirror < 1.5) ? !inMirror : inMirror)) ? 1.0 : 0.0;
     }
     return k;

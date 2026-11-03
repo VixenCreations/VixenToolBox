@@ -40,6 +40,7 @@ public partial class VixenWearHub
         public string Category;
         public string Description;
         public Type WindowType;
+        public Action<VixenWearHub, VisualElement> Page;
         public Action FirstOpen;
         public bool Wide;
         public bool UIToolkit;
@@ -201,8 +202,10 @@ public partial class VixenWearHub
             {
                 Id = "decal", Title = "Decal Placement", Category = ToolCatTextures,
                 WindowType = typeof(VixForgeEditor.DecalTool),
-                Description = "Places a decal by clicking where it goes on the model in the Scene view.",
-                EmptyHint = "Open it from the placement button of a decal in the material inspector.",
+                Description = "Moves, sizes and turns a decal on its texture: drag it into place. It also places the "
+                    + "images from Hub Settings on the Hub.",
+                EmptyHint = "Open it from the placement button of a decal in the material inspector, or from Place Image "
+                    + "in Hub Settings.",
             },
             new HubTool
             {
@@ -232,8 +235,29 @@ public partial class VixenWearHub
             {
                 Id = "movement", Title = "Movement Setup", Category = ToolCatAvatar,
                 WindowType = typeof(VixForgeMovementSetup), FirstOpen = VixForgeMovementSetup.Open,
-                Description = "Feeds the Movement group of Wet and Goo from your avatar. Pick the avatar and its FX "
-                    + "controller, then press Build Layers.",
+                Description = "Feeds how you move to your materials: Wet and Goo on Latex Ultra, and Velocity Smear on "
+                    + "every shader's outlines. Pick the avatar and its FX controller, then press Build Layers.",
+            },
+            new HubTool
+            {
+                Id = "hypno-setup", Title = "Hypno Setup", Category = ToolCatAvatar,
+                WindowType = typeof(VixForgeHypnoSetup), FirstOpen = VixForgeHypnoSetup.Open,
+                Description = "Attaches Latex Ultra's Hypno to your avatar: an anchor at your eyes, its own material and a "
+                    + "menu toggle that takes you under and brings you back. Pick the avatar, then press Attach Hypno.",
+            },
+            new HubTool
+            {
+                Id = "touch-setup", Title = "Touch Setup", Category = ToolCatAvatar,
+                WindowType = typeof(VixForgeTouchSetup), FirstOpen = VixForgeTouchSetup.Open,
+                Description = "Adds the contact receiver that TOUCH reads, so hands, fingers and heads can touch your materials. "
+                    + "Pick the avatar and the meshes, then press Add Touch Receivers. Preview Touch shows a touch in the editor.",
+            },
+            new HubTool
+            {
+                Id = "preset-toggle", Title = "Preset Toggle", Category = ToolCatAvatar,
+                WindowType = typeof(VixForgePresetToggle), FirstOpen = VixForgePresetToggle.Open,
+                Description = "Turns a preset into a toggle or radial in your avatar's menu, with a picture of the preset as "
+                    + "its icon. In game the material fades to the preset and back.",
             },
             new HubTool
             {
@@ -265,9 +289,23 @@ public partial class VixenWearHub
                     new HubAction
                     {
                         Label = "Restore Original Meshes", Alt = true,
-                        Tooltip = "Puts the model's own meshes back on the selected avatar, undoing Bake Outline Normals. "
+                        Tooltip = "Puts the model's own meshes back on the selected avatar, undoing Bake Outline Normals and Stretch Bake. "
                             + "Also undoes bakes from older versions, which wrote over vertex colours or UV4.",
                         Run = VixForgeOutlineNormals.RestoreFromMenu,
+                    },
+                    new HubAction
+                    {
+                        Label = "Stretch Bake", Alt = true,
+                        Tooltip = "Records the selected avatar as it stands now, blendshapes included, as the pose where "
+                            + "nothing is stretched. Stretch Response needs it. Put the avatar in its rest pose first.",
+                        Run = VixForgeStretchBake.BakeFromMenu,
+                    },
+                    new HubAction
+                    {
+                        Label = "Remove Stretch Bake", Alt = true,
+                        Tooltip = "Takes the stretch bake off the selected avatar. A mesh that also has an outline bake "
+                            + "keeps it; the others get the model's own mesh back.",
+                        Run = VixForgeStretchBake.RemoveFromMenu,
                     },
                     new HubAction
                     {
@@ -335,6 +373,13 @@ public partial class VixenWearHub
                     },
                 },
             },
+            new HubTool
+            {
+                Id = SettingsTabId, Title = "Hub Settings", Category = ToolCatEditor,
+                Page = (hub, page) => hub.BuildSettingsPage(page),
+                Description = "Make the Hub your own: colours, buttons, background images, font, size and layout, and how "
+                    + "it behaves. Your picks apply in every project on this computer.",
+            },
         };
     }
 
@@ -353,6 +398,7 @@ public partial class VixenWearHub
     private Label _toolTitle;
     private Label _toolDescription;
     private IMGUIContainer _toolContainer;
+    private ScrollView _toolPage;
 
     internal static EditorWindow HostTool(Type type)
     {
@@ -403,6 +449,7 @@ public partial class VixenWearHub
         _hosted.Clear();
         _hostedGUI.Clear();
         _hostedUIBuilt.Clear();
+        ReleaseLook();
     }
 
     private bool HasLiveInstance(HubTool tool)
@@ -449,7 +496,7 @@ public partial class VixenWearHub
         if (_minimized) SetMinimized(false);
         if (runFirstOpen && tool.FirstOpen != null && !HasLiveInstance(tool)) tool.FirstOpen();
         if (tool.WindowType != null && string.IsNullOrEmpty(tool.EmptyHint)) GetOrCreateHosted(tool);
-        minSize = tool.Wide ? WideMinSize : NormalMinSize;
+        minSize = tool.Wide && GrowForWideTools() ? WideMinSize : NormalMinSize;
         ApplyMode();
         RefreshToolUI();
     }
@@ -504,6 +551,10 @@ public partial class VixenWearHub
         _toolContainer.style.flexGrow = 1;
         _toolContainer.style.overflow = Overflow.Hidden;
         _toolHostArea.Add(_toolContainer);
+        _toolPage = new ScrollView(ScrollViewMode.Vertical) { name = "tool-page" };
+        HideHorizontalScroller(_toolPage);
+        _toolPage.style.display = DisplayStyle.None;
+        _toolHostArea.Add(_toolPage);
         area.Add(_toolHostArea);
 
         _toolActions.schedule.Execute(RefreshActionStates).Every(500);
@@ -570,7 +621,11 @@ public partial class VixenWearHub
                 _toolHostArea.Remove(w.rootVisualElement);
         }
         bool uiToolkit = tool.UIToolkit && HasLiveInstance(tool);
-        _toolContainer.style.display = uiToolkit ? DisplayStyle.None : DisplayStyle.Flex;
+        bool page = tool.Page != null;
+        _toolContainer.style.display = uiToolkit || page ? DisplayStyle.None : DisplayStyle.Flex;
+        _toolPage.style.display = page ? DisplayStyle.Flex : DisplayStyle.None;
+        _toolPage.Clear();
+        if (page) tool.Page(this, _toolPage);
         if (uiToolkit) AttachUIToolkitTool(tool);
         _toolContainer.MarkDirtyRepaint();
         RefreshNav();

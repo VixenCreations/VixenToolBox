@@ -110,8 +110,9 @@ public class VixForgeMovementSetup : EditorWindow
 
     void OnGUI()
     {
-        EditorGUILayout.HelpBox("Feeds the Movement group of Wet and Goo from your avatar. Pick the avatar and its FX controller, " +
-                                "tick the meshes that use Wet or Goo, then Build. VRChat's Velocity parameters drive Slosh, Sweep " +
+        EditorGUILayout.HelpBox("Feeds how you move to your materials: the Movement group of Wet and Goo on Latex Ultra, and " +
+                                "Velocity Smear on every shader's outlines. Pick the avatar and its FX controller, tick the meshes, " +
+                                "then press Build Layers. VRChat's Velocity parameters drive Slosh, Sweep " +
                                 "and Fling, and Grounded drives Splash. Run it again any time to rebuild.", MessageType.Info);
 
         EditorGUI.BeginChangeCheck();

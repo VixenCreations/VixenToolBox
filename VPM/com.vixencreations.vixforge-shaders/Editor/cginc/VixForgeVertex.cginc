@@ -66,6 +66,11 @@
             #endif
             //endex
 
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            float3 vfALPre = v.vertex.xyz;
+            #endif
+            //endex
             if (AL_Active() && _UseVtxKinetic > 0.5)
             {
                 float4 amps; float2 alExtra;
@@ -100,6 +105,28 @@
                 }
 
             }
+            //ifex _UseCtx==0
+            #ifdef VF_CTX_LIVE
+            //ifex _CtxALOn==0
+            [branch] if (_UseCtx > 0.5 && _CtxALOn > 0.5 && AL_Active() && _UseVtxKinetic > 0.5)
+            {
+                float3 aWP  = mul(unity_ObjectToWorld, float4(vfALPre, 1.0)).xyz;
+                float3 aN   = UnityObjectToWorldNormal(v.normal);
+                float4 aTex = VF_FB_WHITE;
+                #ifdef VF_TEX_CTXMASK
+                [branch] if (_CtxALMaskCh > 0.5)
+                    aTex = SAMPLE_TEX_LOD(_CtxMask, sampler_linear_repeat, uv, 0);
+                #endif
+                float3 aL = 0.0;
+                [branch] if (_CtxALLight.x + _CtxALDark.x > 0.0)
+                    aL = vw_CtxLightBasic(aWP, aN);
+                VFCtxView aV = vw_CtxView(aWP, aN, aL, float4(AL_Band(0), AL_Band(1), AL_Band(2), AL_Band(3)), aTex);
+                float2 aR = vw_CtxRule(aV, _CtxALWhere, _CtxALEye, _CtxALDistMode, _CtxALDist, _CtxALGaze, _CtxALTorch, _CtxALLightCol, _CtxALLight, _CtxALDark, _CtxALBeat, _CtxALBand, _CtxALInvert, _CtxALHidden, _CtxALMaskCh, 1.0);
+                v.vertex.xyz = lerp(vfALPre, v.vertex.xyz, lerp(1.0, aR.x, aR.y));
+            }
+            //endex
+            #endif
+            //endex
 
             #if VF_WETGOO
             //ifex _UseGoo==0
@@ -133,21 +160,27 @@
                 #endif
                         * vw_BorrowMaskLod(_Goo_BorrowSrc, _Goo_BorrowCh, _Goo_BorrowInv, uv);
 
-                // Viewer Context holds the goo's SHAPE back as well as its shading, or a viewer the rules hide
-                // it from would still see the body melt and writhe with nothing on it. Keyword gated only: an
-                // ifex pair here would nest inside the goo's own, and the locker keeps those pairs flat.
+                //ifex _UseCtx==0
                 #ifdef VF_CTX
-                [branch] if (_UseCtx > 0.5 && _Ctx_WetGoo > 0.5)
+                //ifex _CtxSfxOn==0
+                [branch] if (_UseCtx > 0.5 && _CtxSfxOn > 0.5 && _CtxSfxWetGoo > 0.5)
                 {
+                    float4 cTex = VF_FB_WHITE;
                     #ifdef VF_TEX_CTXMASK
-                    float cTex = vw_MaskRead(SAMPLE_TEX_LOD(_CtxMask, sampler_linear_repeat, uv, 0), _Ctx_MaskCh);
-                    #else
-                    float cTex = vw_MaskRead(VF_FB_WHITE, _Ctx_MaskCh);
+                    [branch] if (_CtxSfxMaskCh > 0.5)
+                        cTex = SAMPLE_TEX_LOD(_CtxMask, sampler_linear_repeat, uv, 0);
                     #endif
-                    float cRaw = vw_ContextMask(mul(unity_ObjectToWorld, v.vertex).xyz, UnityObjectToWorldNormal(v.normal));
-                    gooMask *= lerp(1.0, cRaw, cTex);
+                    float3 cL = 0.0;
+                    [branch] if (_CtxSfxLight.x + _CtxSfxDark.x > 0.0)
+                        cL = vw_CtxLightBasic(mul(unity_ObjectToWorld, v.vertex).xyz, UnityObjectToWorldNormal(v.normal));
+                    float4 cB = AL_Active() ? float4(AL_Band(0), AL_Band(1), AL_Band(2), AL_Band(3)) : float4(0.0, 0.0, 0.0, 0.0);
+                    VFCtxView cV = vw_CtxView(mul(unity_ObjectToWorld, v.vertex).xyz, UnityObjectToWorldNormal(v.normal), cL, cB, cTex);
+                    float2 cR = vw_CtxRule(cV, _CtxSfxWhere, _CtxSfxEye, _CtxSfxDistMode, _CtxSfxDist, _CtxSfxGaze, _CtxSfxTorch, _CtxSfxLightCol, _CtxSfxLight, _CtxSfxDark, _CtxSfxBeat, _CtxSfxBand, _CtxSfxInvert, _CtxSfxHidden, _CtxSfxMaskCh, 1.0);
+                    gooMask *= lerp(1.0, cR.x, cR.y);
                 }
+                //endex
                 #endif
+                //endex
 
                 #ifdef VF_DISSOLVE
                 gooMask = VF_DIS_GOO_LOD(gooMask, vfDisRest, v.normal, float4(v.texcoord.xy, v.texcoord1.xy),
@@ -477,7 +510,7 @@
             //ifex _UseTouch==0
             #ifdef VF_TOUCH
             [branch]
-            if (vw_TouchActive())
+            if (vw_TouchActive() VF_OR_CONTACT_TOUCH)
             {
                 float4 tf = 0.0;
                 [branch] if (vw_TouchZonesActive())
@@ -497,6 +530,20 @@
                     tf.w = max(tf.w, nt.y);
                 }
                 #endif
+                //ifex _UseContacts==0
+                #if defined(VF_CONTACTS) && !defined(VIXFORGE_WORLD)
+                [branch] if (_Touch_Contacts > 0.5)
+                {
+                    float3 ctN  = UnityObjectToWorldNormal(v.normal);
+                    float3 ctT  = VF_SafeNormalize(UnityObjectToWorldDir(v.tangent.xyz));
+                    float3 ctB  = VF_SafeNormalize(cross(ctN, ctT)) * (v.tangent.w * unity_WorldTransformParams.w);
+                    float3 ctWP = mul(unity_ObjectToWorld, float4(v.vertex.xyz + v.normal * d, 1.0)).xyz;
+                    float4 ct   = VF_ContactField(ctWP, ctN, ctT, ctB, _Touch_Spread);
+                    tf.x = max(tf.x, ct.x);
+                    tf.w = max(tf.w, ct.y);
+                }
+                #endif
+                //endex
 
                 if (tf.x > 0.001 || tf.w > 0.001)
                 {
@@ -526,6 +573,22 @@
             #endif
             //endex
             #endif
+
+            //ifex _UseContacts==0
+            #if defined(VF_CONTACTS) && defined(VIXFORGE_CLOTHING) && VF_HAS_SHEEN && !defined(VIXFORGE_WORLD)
+            //ifex _UseSheen==0
+            [branch] if (_UseSheen > 0.5 && _Fabric_Press > 0.0001 && VF_ContactsLive())
+            {
+                float3 fpN  = UnityObjectToWorldNormal(v.normal);
+                float3 fpT  = VF_SafeNormalize(UnityObjectToWorldDir(v.tangent.xyz));
+                float3 fpB  = VF_SafeNormalize(cross(fpN, fpT)) * (v.tangent.w * unity_WorldTransformParams.w);
+                float3 fpWP = mul(unity_ObjectToWorld, float4(v.vertex.xyz + v.normal * d, 1.0)).xyz;
+                float4 fp   = VF_ContactField(fpWP, fpN, fpT, fpB, 0.6);
+                v.vertex.xyz += mul((float3x3)unity_WorldToObject, fpN * ((fp.y * 0.3 - fp.x) * _Fabric_Press));
+            }
+            //endex
+            #endif
+            //endex
 
             v.vertex.xyz += v.normal * d;
 

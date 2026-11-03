@@ -11,7 +11,7 @@
     "f12bdd87af5b6fada0eb534b34a5c5b992b1c600cd2e4bf6578944ee3c317c98"
   ],
   "notes": [
-    "Needs the free VRC Light Volumes package.",
+    "Needs the free VRC Light Volumes package, 3.0.1 or newer. With an older one installed, the patch uses the copy that comes with VixForge.",
     "Set Corrected Reflection Vector to 0 to keep the original reflection direction.",
     "Set Fresnel to 0 to keep the original flat reflection response."
   ],
@@ -29,7 +29,9 @@
         "liltoon",
         "lilToon"
       ],
-      "installHint": "Install VRC Light Volumes (red.sim.lightvolumes) from the VRChat Creator Companion or https://github.com/REDSIM/VRCLightVolumes"
+      "installHint": "Install VRC Light Volumes 3.0.1 or newer (red.sim.lightvolumes) from the VRChat Creator Companion or https://github.com/REDSIM/VRCLightVolumes",
+      "packageName": "red.sim.lightvolumes",
+      "minPackageVersion": "3.0.1"
     }
   ],
   "operations": [

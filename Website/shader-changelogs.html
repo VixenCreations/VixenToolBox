@@ -232,6 +232,38 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
+                <div class="changelog-entry" data-version="worldsurface-1.6.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / World Surface 1.6.0 - 2026-11-02</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Wet streaks run like water with new Caustics, Viewer Context counts the world's vertex lights, and Color Adjust, Dissolve and shard colours keep their hue.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Check materials that use Saturation above 0, Chromatize or Tint.</strong> Colours that used to clip into a neighbouring hue now keep their own, so strong colours can look a little different. Nudge the slider if you liked them punchier.</li>
+                        <li class="mb-2"><strong>Check materials that use Streaks in Wet Effects.</strong> They now wander and run like water instead of standing in straight lines, so they look different. <strong>Density</strong>, <strong>Thinness</strong> and <strong>Coverage</strong> still set how many there are, how thin they are and how much they cover.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Caustics</strong> under <strong>Wet Effects</strong> drifts a moving net of light down through the wet, like sun through running water. It starts off.</li>
+                        <li class="mb-2"><strong>Keep Hue</strong> under <strong>Color Adjust</strong> lets colours that <strong>Clamp</strong> stops at white fade toward white instead of turning a neighbouring hue. It starts off.</li>
+                        <li class="mb-2"><strong>Exact sRGB</strong> under <strong>Color Grading</strong> reads the gradient map with exact sRGB, so a plain black to white strip leaves your colour as it was. It starts off, so your gradient maps look the same until you turn it on.</li>
+                        <li class="mb-2"><strong>Luma</strong> under <strong>Rendering</strong> picks how colours fade to grey in <strong>Saturation</strong> and the other places that do it, like glitter, Tattoo ageing and the music colour. <strong>Rec.709</strong> matches how bright each colour really is, so blues fade darker and greens lighter. <strong>Classic</strong> keeps your current look and stays the default.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Viewer Context</strong> rules that use <strong>Light Colour Match</strong> or <strong>Darkness</strong> now count the world's vertex lights, the cheaper lights a world sets to <strong>Not Important</strong>.</li>
+                        <li class="mb-2"><strong>Saturation</strong> above 0 keeps each colour's hue. It used to push colours below black, which turned them toward a neighbouring hue and, with <strong>Clamp</strong> off, could make the material darker than black.</li>
+                        <li class="mb-2"><strong>Chromatize</strong> now does what its tooltip says: colours stop at their most vivid without changing hue or lightness. Strong settings used to clip them into a different hue, and some greys turned black.</li>
+                        <li class="mb-2"><strong>Tint</strong> keeps its hue on vivid colours, and a black <strong>Tint</strong> colour no longer turns the whole material black. It drains the colour to grey like any other grey, so use <strong>Brightness</strong> to darken.</li>
+                        <li class="mb-2"><strong>Hue Shift</strong> in <strong>Okhsv</strong> no longer tints pure blue red or green, even at <strong>Shift</strong> 0.</li>
+                        <li class="mb-2"><strong>Hue Shift</strong> in <strong>OKLab</strong> under <strong>Dissolve</strong> and <strong>Edge Line</strong> keeps the hue on strong colours, and some greys no longer turn black.</li>
+                        <li class="mb-2"><strong>Shard Hue Shift</strong> and the outline's <strong>AudioLink Hue</strong> no longer push colours below black, so a turned colour keeps its hue.</li>
+                        <li class="mb-2"><strong>Hyperspace</strong> <strong>Tunnel</strong> no longer breaks into black pixels when an animation sets <strong>Distance</strong> below its slider.</li>
+                        <li class="mb-2"><strong>Streaks</strong> in <strong>Wet Effects</strong> look like running water instead of seams. Each one wanders, swells and thins, leaves a wet trail, and carries slugs of water down it. They now run down instead of up. Where they run straight down the texture they also tile, so a layout that repeats the texture shows no line where the copies meet. New materials start with fewer, wider streaks: <strong>Density</strong> 16 and <strong>Thinness</strong> 35.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="worldsurface-1.5.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / World Surface 1.5.0 - 2026-10-24</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A Wet Touch that wipes or wets the water under a hand, matcaps you build yourself, outlines that move with everything that moves the surface, with four new ways to draw them, and a rebuilt Viewer Context with Hidden Ink.</em></p>
@@ -584,6 +616,35 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="worldfur-1.6.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / World Fur 1.6.0 - 2026-11-02</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Viewer Context now counts the world's vertex lights, and Color Adjust, Dissolve and shard colours keep their hue.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Check materials that use Saturation above 0, Chromatize or Tint.</strong> Colours that used to clip into a neighbouring hue now keep their own, so strong colours can look a little different. Nudge the slider if you liked them punchier.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Keep Hue</strong> under <strong>Color Adjust</strong> lets colours that <strong>Clamp</strong> stops at white fade toward white instead of turning a neighbouring hue. It starts off.</li>
+                        <li class="mb-2"><strong>Exact sRGB</strong> under <strong>Color Grading</strong> reads the gradient map with exact sRGB, so a plain black to white strip leaves your colour as it was. It starts off, so your gradient maps look the same until you turn it on.</li>
+                        <li class="mb-2"><strong>Luma</strong> under <strong>Rendering</strong> picks how colours fade to grey in <strong>Saturation</strong> and the other places that do it, like glitter, Tattoo ageing and the music colour. <strong>Rec.709</strong> matches how bright each colour really is, so blues fade darker and greens lighter. <strong>Classic</strong> keeps your current look and stays the default.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Viewer Context</strong> rules that use <strong>Light Colour Match</strong> or <strong>Darkness</strong> now count the world's vertex lights, the cheaper lights a world sets to <strong>Not Important</strong>.</li>
+                        <li class="mb-2"><strong>Saturation</strong> above 0 keeps each colour's hue. It used to push colours below black, which turned them toward a neighbouring hue and, with <strong>Clamp</strong> off, could make the material darker than black.</li>
+                        <li class="mb-2"><strong>Chromatize</strong> now does what its tooltip says: colours stop at their most vivid without changing hue or lightness. Strong settings used to clip them into a different hue, and some greys turned black.</li>
+                        <li class="mb-2"><strong>Tint</strong> keeps its hue on vivid colours, and a black <strong>Tint</strong> colour no longer turns the whole material black. It drains the colour to grey like any other grey, so use <strong>Brightness</strong> to darken.</li>
+                        <li class="mb-2"><strong>Hue Shift</strong> in <strong>Okhsv</strong> no longer tints pure blue red or green, even at <strong>Shift</strong> 0.</li>
+                        <li class="mb-2"><strong>Hue Shift</strong> in <strong>OKLab</strong> under <strong>Dissolve</strong> and <strong>Edge Line</strong> keeps the hue on strong colours, and some greys no longer turn black.</li>
+                        <li class="mb-2"><strong>Shard Hue Shift</strong> and the outline's <strong>AudioLink Hue</strong> no longer push colours below black, so a turned colour keeps its hue.</li>
+                        <li class="mb-2"><strong>Hyperspace</strong> <strong>Tunnel</strong> no longer breaks into black pixels when an animation sets <strong>Distance</strong> below its slider.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="worldfur-1.5.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / World Fur 1.5.0 - 2026-10-24</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Matcaps you build yourself, fur that matches in both eyes, outlines that move with everything that moves the surface, with four new ways to draw them, and a rebuilt Viewer Context with Hidden Ink.</em></p>
@@ -918,6 +979,41 @@
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>The first lock after a bake takes a while.</strong> Supporting lightmaps, shadowmask and soft shadows means more shader variants to build. It is working, not stuck, so let it finish.</li>
                         <li class="mb-2"><strong>No Wet or Goo here, on purpose.</strong> A carpet has no use for them and the textures are not free, so they are left out to keep the shader lighter. World Surface has both if you want a wet floor next to the rug.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="toon-2.8.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Toon 2.8.0 - 2026-11-02</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Touches on your hair and head now land, the kinds of touch you pick now count, and a new Mirror Light keeps your shading in VRChat's personal mirror.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Run Touch Setup again, then unlock and lock your TOUCH materials.</strong> Press <strong>Add Touch Receivers</strong> in <strong>Touch Setup</strong> so your receivers move next to your meshes, and re-lock each material with <strong>Material Contacts</strong> on so it picks up the fix.</li>
+                        <li class="mb-2"><strong>Check materials that use Saturation above 0, Chromatize or Tint.</strong> Colours that used to clip into a neighbouring hue now keep their own, so strong colours can look a little different. Nudge the slider if you liked them punchier.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Mirror Light</strong> in <strong>Light Data</strong> keeps your shading in mirrors. VRChat's personal mirror leaves out the world's lights unless you set it to show the world, so you looked flat in it. Turn it on and a mirror with no light in it lights you from where the light probes say the light comes from, and <strong>Mirror Light Strength</strong> sets how much. It starts off, so nothing changes until you turn it on.</li>
+                        <li class="mb-2"><strong>Keep Hue</strong> under <strong>Color Adjust</strong> lets colours that <strong>Clamp</strong> stops at white fade toward white instead of turning a neighbouring hue. It starts off.</li>
+                        <li class="mb-2"><strong>Exact sRGB</strong> under <strong>Color Grading</strong> reads the gradient map with exact sRGB, so a plain black to white strip leaves your colour as it was. It starts off, so your gradient maps look the same until you turn it on.</li>
+                        <li class="mb-2"><strong>Luma</strong> under <strong>Rendering</strong> picks how colours fade to grey in <strong>Saturation</strong> and the other places that do it, like glitter, Tattoo ageing and the music colour. <strong>Rec.709</strong> matches how bright each colour really is, so blues fade darker and greens lighter. <strong>Classic</strong> keeps your current look and stays the default.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Touches on your hair, hood and head now show.</strong> A touch far from your hips, like a headpat, often did nothing at all, for you, for everyone watching and in mirrors. VRChat only passes on the eight touches nearest each receiver, and your own hands at your sides took every place. <strong>Touch Setup</strong> now puts a receiver on your head, chest or hips, next to the meshes it serves.</li>
+                        <li class="mb-2"><strong>The kinds of touch you pick now count.</strong> On some graphics cards every touch counted, whatever you ticked under <strong>Material Contacts</strong>. <strong>Who Glows</strong> set to <strong>Me</strong> lit nothing up, <strong>Others</strong> lit up for your own hands too, and <strong>Colour Per Person</strong> gave everyone the same colour.</li>
+                        <li class="mb-2"><strong>Your own head and chest no longer count as a touch</strong> on the meshes around them, so your hair or hood doesn't glow where it sits on you.</li>
+                        <li class="mb-2"><strong>Viewer Context</strong> rules that use <strong>Light Colour Match</strong> or <strong>Darkness</strong> now count the world's vertex lights, the cheaper lights a world sets to <strong>Not Important</strong>.</li>
+                        <li class="mb-2"><strong>Saturation</strong> above 0 keeps each colour's hue. It used to push colours below black, which turned them toward a neighbouring hue and, with <strong>Clamp</strong> off, could make the material darker than black.</li>
+                        <li class="mb-2"><strong>Chromatize</strong> now does what its tooltip says: colours stop at their most vivid without changing hue or lightness. Strong settings used to clip them into a different hue, and some greys turned black.</li>
+                        <li class="mb-2"><strong>Tint</strong> keeps its hue on vivid colours, and a black <strong>Tint</strong> colour no longer turns the whole material black. It drains the colour to grey like any other grey, so use <strong>Brightness</strong> to darken.</li>
+                        <li class="mb-2"><strong>Hue Shift</strong> in <strong>Okhsv</strong> no longer tints pure blue red or green, even at <strong>Shift</strong> 0.</li>
+                        <li class="mb-2"><strong>Hue Shift</strong> in <strong>OKLab</strong> under <strong>Dissolve</strong> and <strong>Edge Line</strong> keeps the hue on strong colours, and some greys no longer turn black.</li>
+                        <li class="mb-2"><strong>Shard Hue Shift</strong> and the outline's <strong>AudioLink Hue</strong> no longer push colours below black, so a turned colour keeps its hue.</li>
+                        <li class="mb-2"><strong>Hyperspace</strong> <strong>Tunnel</strong> no longer breaks into black pixels when an animation sets <strong>Distance</strong> below its slider.</li>
+                        <li class="mb-2"><strong>Hypno Iris</strong> with <strong>Rainbow</strong> on no longer jumps. With <strong>Arms</strong> above 1, the colours snapped back part way round the colour wheel each time the stripes moved on by one, at any <strong>Speed</strong>.</li>
                     </ul>
                 </div>
 
@@ -1609,6 +1705,46 @@
                         <li class="mb-2"><strong>Lock your materials before uploading</strong>, the same three ways as Latex Ultra. The SDK Build button does it for you.</li>
                         <li class="mb-2"><strong>Toon needs triangle meshes.</strong> If a model looks torn or shredded, turn off <strong>Keep Quads</strong> in its import settings, or run <strong>VixenTools &gt; VixForge Mesh Fixes &gt; Scan for Quad Meshes</strong>.</li>
                         <li class="mb-2"><strong>Light Volumes and LTCGI start off</strong>, because they make Unity builds much slower. Turn them on only if your world uses them.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-5.8.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 5.8.0 - 2026-11-02</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Touches on your hair and head now land, a new Mirror Light keeps your shading in VRChat's personal mirror, Hypno opens a Focus window, and wet streaks run like water with new Caustics.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Run Touch Setup again, then unlock and lock your TOUCH materials.</strong> Press <strong>Add Touch Receivers</strong> in <strong>Touch Setup</strong> so your receivers move next to your meshes, and re-lock each material with <strong>Material Contacts</strong> on so it picks up the fix.</li>
+                        <li class="mb-2"><strong>Check materials that use Saturation above 0, Chromatize or Tint.</strong> Colours that used to clip into a neighbouring hue now keep their own, so strong colours can look a little different. Nudge the slider if you liked them punchier.</li>
+                        <li class="mb-2"><strong>Check materials that use Streaks in Wet Effects.</strong> They now wander and run like water instead of standing in straight lines, so they look different. <strong>Density</strong>, <strong>Thinness</strong> and <strong>Coverage</strong> still set how many there are, how thin they are and how much they cover.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Mirror Light</strong> in <strong>Light Data</strong> keeps your shading in mirrors. VRChat's personal mirror leaves out the world's lights unless you set it to show the world, so you looked flat in it. Turn it on and a mirror with no light in it lights you from where the light probes say the light comes from, and <strong>Mirror Light Strength</strong> sets how much. It starts off, so nothing changes until you turn it on.</li>
+                        <li class="mb-2"><strong>Keep Hue</strong> under <strong>Color Adjust</strong> lets colours that <strong>Clamp</strong> stops at white fade toward white instead of turning a neighbouring hue. It starts off.</li>
+                        <li class="mb-2"><strong>Exact sRGB</strong> under <strong>Color Grading</strong> reads the gradient map with exact sRGB, so a plain black to white strip leaves your colour as it was. It starts off, so your gradient maps look the same until you turn it on.</li>
+                        <li class="mb-2"><strong>Luma</strong> under <strong>Rendering</strong> picks how colours fade to grey in <strong>Saturation</strong> and the other places that do it, like glitter, Tattoo ageing and the music colour. <strong>Rec.709</strong> matches how bright each colour really is, so blues fade darker and greens lighter. <strong>Classic</strong> keeps your current look and stays the default.</li>
+                        <li class="mb-2"><strong>Focus</strong> under <strong>Hypno</strong> opens a clear window in the middle of your view, so you still see who's in front of you while the spiral fills the rest. <strong>Focus Glow</strong> rims the window with <strong>Color A</strong>, and <strong>Focus Edge</strong> softens it. <strong>Wobble</strong> makes the stripes ripple like water. Both start off.</li>
+                        <li class="mb-2"><strong>Caustics</strong> under <strong>Wet Effects</strong> drifts a moving net of light down through the wet, like sun through running water. It starts off.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Touches on your hair, hood and head now show.</strong> A touch far from your hips, like a headpat, often did nothing at all, for you, for everyone watching and in mirrors. VRChat only passes on the eight touches nearest each receiver, and your own hands at your sides took every place. <strong>Touch Setup</strong> now puts a receiver on your head, chest or hips, next to the meshes it serves.</li>
+                        <li class="mb-2"><strong>The kinds of touch you pick now count.</strong> On some graphics cards every touch counted, whatever you ticked under <strong>Material Contacts</strong>. <strong>Who Glows</strong> set to <strong>Me</strong> lit nothing up, <strong>Others</strong> lit up for your own hands too, <strong>Colour Per Person</strong> gave everyone the same colour, and <strong>Wet Touch</strong> drew the same <strong>Streaks</strong> and <strong>Drip Trails</strong> for everyone.</li>
+                        <li class="mb-2"><strong>Your own head and chest no longer count as a touch</strong> on the meshes around them, so your hood doesn't glow or dent where it sits on you.</li>
+                        <li class="mb-2"><strong>Viewer Context</strong> rules that use <strong>Light Colour Match</strong> or <strong>Darkness</strong> now count the world's vertex lights, the cheaper lights a world sets to <strong>Not Important</strong>.</li>
+                        <li class="mb-2"><strong>Saturation</strong> above 0 keeps each colour's hue. It used to push colours below black, which turned them toward a neighbouring hue and, with <strong>Clamp</strong> off, could make the material darker than black.</li>
+                        <li class="mb-2"><strong>Chromatize</strong> now does what its tooltip says: colours stop at their most vivid without changing hue or lightness. Strong settings used to clip them into a different hue, and some greys turned black.</li>
+                        <li class="mb-2"><strong>Tint</strong> keeps its hue on vivid colours, and a black <strong>Tint</strong> colour no longer turns the whole material black. It drains the colour to grey like any other grey, so use <strong>Brightness</strong> to darken.</li>
+                        <li class="mb-2"><strong>Hue Shift</strong> in <strong>Okhsv</strong> no longer tints pure blue red or green, even at <strong>Shift</strong> 0.</li>
+                        <li class="mb-2"><strong>Hue Shift</strong> in <strong>OKLab</strong> under <strong>Dissolve</strong> and <strong>Edge Line</strong> keeps the hue on strong colours, and some greys no longer turn black.</li>
+                        <li class="mb-2"><strong>Shard Hue Shift</strong> and the outline's <strong>AudioLink Hue</strong> no longer push colours below black, so a turned colour keeps its hue.</li>
+                        <li class="mb-2"><strong>Hyperspace</strong> <strong>Tunnel</strong> no longer breaks into black pixels when an animation sets <strong>Distance</strong> below its slider.</li>
+                        <li class="mb-2"><strong>Hypno</strong> and <strong>Hypno Iris</strong> with <strong>Rainbow</strong> on no longer jump. With <strong>Arms</strong> above 1, the colours snapped back part way round the colour wheel each time the stripes moved on by one, at any <strong>Speed</strong>.</li>
+                        <li class="mb-2"><strong>Streaks</strong> in <strong>Wet Effects</strong> look like running water instead of seams. Each one wanders, swells and thins, leaves a wet trail, and carries slugs of water down it. They now run down instead of up. Where they run straight down the texture they also tile, so a layout that repeats the texture shows no line where the copies meet. New materials start with fewer, wider streaks: <strong>Density</strong> 16 and <strong>Thinness</strong> 35.</li>
+                        <li class="mb-2"><strong>VRCFury SPS plugs now work with Latex Ultra.</strong> VRCFury couldn't add SPS to the material, so the avatar failed to build in Play mode with <strong>Lock In Play Mode</strong> off, and on upload when <strong>Sheer &amp; Lace</strong> used <strong>Inside First</strong> or <strong>Tint Through</strong>.</li>
                     </ul>
                 </div>
 
@@ -2743,6 +2879,41 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="clothingpro-2.8.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Clothing Pro 2.8.0 - 2026-11-02</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Touches on your hair and head now land, the kinds of touch you pick now count, and a new Mirror Light keeps your shading in VRChat's personal mirror.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Run Touch Setup again, then unlock and lock your TOUCH materials.</strong> Press <strong>Add Touch Receivers</strong> in <strong>Touch Setup</strong> so your receivers move next to your meshes, and re-lock each material with <strong>Material Contacts</strong> on so it picks up the fix.</li>
+                        <li class="mb-2"><strong>Check materials that use Saturation above 0, Chromatize or Tint.</strong> Colours that used to clip into a neighbouring hue now keep their own, so strong colours can look a little different. Nudge the slider if you liked them punchier.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Mirror Light</strong> in <strong>Light Data</strong> keeps your shading in mirrors. VRChat's personal mirror leaves out the world's lights unless you set it to show the world, so you looked flat in it. Turn it on and a mirror with no light in it lights you and your fur from where the light probes say the light comes from, and <strong>Mirror Light Strength</strong> sets how much. It starts off, so nothing changes until you turn it on.</li>
+                        <li class="mb-2"><strong>Keep Hue</strong> under <strong>Color Adjust</strong> lets colours that <strong>Clamp</strong> stops at white fade toward white instead of turning a neighbouring hue. It starts off.</li>
+                        <li class="mb-2"><strong>Exact sRGB</strong> under <strong>Color Grading</strong> reads the gradient map with exact sRGB, so a plain black to white strip leaves your colour as it was. It starts off, so your gradient maps look the same until you turn it on.</li>
+                        <li class="mb-2"><strong>Luma</strong> under <strong>Rendering</strong> picks how colours fade to grey in <strong>Saturation</strong> and the other places that do it, like glitter, Tattoo ageing and the music colour. <strong>Rec.709</strong> matches how bright each colour really is, so blues fade darker and greens lighter. <strong>Classic</strong> keeps your current look and stays the default.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Touches on your hair, hood and head now show.</strong> A touch far from your hips, like a headpat, often did nothing at all, for you, for everyone watching and in mirrors. VRChat only passes on the eight touches nearest each receiver, and your own hands at your sides took every place. <strong>Touch Setup</strong> now puts a receiver on your head, chest or hips, next to the meshes it serves.</li>
+                        <li class="mb-2"><strong>The kinds of touch you pick now count.</strong> On some graphics cards every touch counted, whatever you ticked under <strong>Material Contacts</strong>. <strong>Who Glows</strong> set to <strong>Me</strong> lit nothing up, <strong>Others</strong> lit up for your own hands too, and <strong>Colour Per Person</strong> gave everyone the same colour.</li>
+                        <li class="mb-2"><strong>Your own head and chest no longer count as a touch</strong> on the meshes around them, so your hair or hood doesn't glow, press or part where it sits on you.</li>
+                        <li class="mb-2"><strong>Viewer Context</strong> rules that use <strong>Light Colour Match</strong> or <strong>Darkness</strong> now count the world's vertex lights, the cheaper lights a world sets to <strong>Not Important</strong>.</li>
+                        <li class="mb-2"><strong>Saturation</strong> above 0 keeps each colour's hue. It used to push colours below black, which turned them toward a neighbouring hue and, with <strong>Clamp</strong> off, could make the material darker than black.</li>
+                        <li class="mb-2"><strong>Chromatize</strong> now does what its tooltip says: colours stop at their most vivid without changing hue or lightness. Strong settings used to clip them into a different hue, and some greys turned black.</li>
+                        <li class="mb-2"><strong>Tint</strong> keeps its hue on vivid colours, and a black <strong>Tint</strong> colour no longer turns the whole material black. It drains the colour to grey like any other grey, so use <strong>Brightness</strong> to darken.</li>
+                        <li class="mb-2"><strong>Hue Shift</strong> in <strong>Okhsv</strong> no longer tints pure blue red or green, even at <strong>Shift</strong> 0.</li>
+                        <li class="mb-2"><strong>Hue Shift</strong> in <strong>OKLab</strong> under <strong>Dissolve</strong> and <strong>Edge Line</strong> keeps the hue on strong colours, and some greys no longer turn black.</li>
+                        <li class="mb-2"><strong>Shard Hue Shift</strong> and the outline's <strong>AudioLink Hue</strong> no longer push colours below black, so a turned colour keeps its hue.</li>
+                        <li class="mb-2"><strong>Hyperspace</strong> <strong>Tunnel</strong> no longer breaks into black pixels when an animation sets <strong>Distance</strong> below its slider.</li>
+                        <li class="mb-2"><strong>VRCFury SPS plugs now work with Clothing Pro.</strong> VRCFury couldn't add SPS to the material, so the avatar failed to build in Play mode with <strong>Lock In Play Mode</strong> off, and on upload when <strong>Sheer &amp; Lace</strong> used <strong>Inside First</strong> or <strong>Tint Through</strong>.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="clothingpro-2.7.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Clothing Pro 2.7.0 - 2026-10-24</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Rhinestones and gemstones set into the fabric, real hands that dent, crease, part and light up your clothing through Material Contacts, knits, weaves, prints, quilting and distress in Sheer &amp; Lace, matcaps you build yourself, Halloween presets, outlines that move with your body, with four new ways to draw them, clothing that reacts as it stretches, Light Data to pick which lights reach you, and a rebuilt Viewer Context with Hidden Ink.</em></p>
@@ -3344,6 +3515,40 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="furpro-2.8.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Fur Pro 2.8.0 - 2026-11-02</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Touches on your hair and head now land, the kinds of touch you pick now count, and a new Mirror Light keeps your shading in VRChat's personal mirror.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Run Touch Setup again, then unlock and lock your TOUCH materials.</strong> Press <strong>Add Touch Receivers</strong> in <strong>Touch Setup</strong> so your receivers move next to your meshes, and re-lock each material with <strong>Material Contacts</strong> on so it picks up the fix.</li>
+                        <li class="mb-2"><strong>Check materials that use Saturation above 0, Chromatize or Tint.</strong> Colours that used to clip into a neighbouring hue now keep their own, so strong colours can look a little different. Nudge the slider if you liked them punchier.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Mirror Light</strong> in <strong>Light Data</strong> keeps your shading in mirrors. VRChat's personal mirror leaves out the world's lights unless you set it to show the world, so you and your coat looked flat in it. Turn it on and a mirror with no light in it lights you and your fur from where the light probes say the light comes from, and <strong>Mirror Light Strength</strong> sets how much. It starts off, so nothing changes until you turn it on.</li>
+                        <li class="mb-2"><strong>Keep Hue</strong> under <strong>Color Adjust</strong> lets colours that <strong>Clamp</strong> stops at white fade toward white instead of turning a neighbouring hue. It starts off.</li>
+                        <li class="mb-2"><strong>Exact sRGB</strong> under <strong>Color Grading</strong> reads the gradient map with exact sRGB, so a plain black to white strip leaves your colour as it was. It starts off, so your gradient maps look the same until you turn it on.</li>
+                        <li class="mb-2"><strong>Luma</strong> under <strong>Rendering</strong> picks how colours fade to grey in <strong>Saturation</strong> and the other places that do it, like glitter, Tattoo ageing and the music colour. <strong>Rec.709</strong> matches how bright each colour really is, so blues fade darker and greens lighter. <strong>Classic</strong> keeps your current look and stays the default.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Touches on your hair, hood and head now show.</strong> A touch far from your hips, like a headpat, often did nothing at all, for you, for everyone watching and in mirrors. VRChat only passes on the eight touches nearest each receiver, and your own hands at your sides took every place. <strong>Touch Setup</strong> now puts a receiver on your head, chest or hips, next to the meshes it serves.</li>
+                        <li class="mb-2"><strong>The kinds of touch you pick now count.</strong> On some graphics cards every touch counted, whatever you ticked under <strong>Material Contacts</strong>. <strong>Who Glows</strong> set to <strong>Me</strong> lit nothing up, <strong>Others</strong> lit up for your own hands too, and <strong>Colour Per Person</strong> gave everyone the same colour.</li>
+                        <li class="mb-2"><strong>Your own head and chest no longer count as a touch</strong> on the fur around them, so your coat doesn't glow or part where it sits on you.</li>
+                        <li class="mb-2"><strong>Viewer Context</strong> rules that use <strong>Light Colour Match</strong> or <strong>Darkness</strong> now count the world's vertex lights, the cheaper lights a world sets to <strong>Not Important</strong>.</li>
+                        <li class="mb-2"><strong>Saturation</strong> above 0 keeps each colour's hue. It used to push colours below black, which turned them toward a neighbouring hue and, with <strong>Clamp</strong> off, could make the material darker than black.</li>
+                        <li class="mb-2"><strong>Chromatize</strong> now does what its tooltip says: colours stop at their most vivid without changing hue or lightness. Strong settings used to clip them into a different hue, and some greys turned black.</li>
+                        <li class="mb-2"><strong>Tint</strong> keeps its hue on vivid colours, and a black <strong>Tint</strong> colour no longer turns the whole material black. It drains the colour to grey like any other grey, so use <strong>Brightness</strong> to darken.</li>
+                        <li class="mb-2"><strong>Hue Shift</strong> in <strong>Okhsv</strong> no longer tints pure blue red or green, even at <strong>Shift</strong> 0.</li>
+                        <li class="mb-2"><strong>Hue Shift</strong> in <strong>OKLab</strong> under <strong>Dissolve</strong> and <strong>Edge Line</strong> keeps the hue on strong colours, and some greys no longer turn black.</li>
+                        <li class="mb-2"><strong>Shard Hue Shift</strong> and the outline's <strong>AudioLink Hue</strong> no longer push colours below black, so a turned colour keeps its hue.</li>
+                        <li class="mb-2"><strong>Hyperspace</strong> <strong>Tunnel</strong> no longer breaks into black pixels when an animation sets <strong>Distance</strong> below its slider.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="furpro-2.7.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Fur Pro 2.7.0 - 2026-10-24</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Real hands that part your coat and light up your emissions, outline and colour where they touch, through Material Contacts, matcaps you build yourself, Halloween presets, fur that matches in both eyes, outlines that move with your body, with four new ways to draw them, a material that reacts as it stretches, Light Data to pick which lights reach you, and a rebuilt Viewer Context with Hidden Ink.</em></p>
@@ -3934,6 +4139,25 @@
                         <li class="mb-2"><strong>Lock your materials before uploading.</strong> The SDK Build button does it for you.</li>
                         <li class="mb-2"><strong>Fur Pro needs triangle meshes.</strong> Like the others it tessellates, so if a model looks torn, turn off <strong>Keep Quads</strong> in its import settings, or run <strong>VixenTools &gt; VixForge Mesh Fixes &gt; Scan for Quad Meshes</strong>.</li>
                         <li class="mb-2"><strong>Light Volumes and LTCGI start off</strong>, because they make Unity builds much slower. Turn them on only if your world uses them.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="editor-2.9.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Editor 2.9.0 - 2026-11-02</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Touch Setup puts each touch receiver next to the meshes it serves, and Preset Toggle and Hypno Setup are ready for VRChat SDK 3.10.6.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Press Add Touch Receivers in Touch Setup once more</strong> to move your receivers to their new places.</li>
+                        <li class="mb-2"><strong>Made a radial with Preset Toggle on VRChat SDK 3.10.6? Press Add Preset Toggle once more</strong> so it moves smoothly for other players.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Touch Setup puts a receiver on your head, chest or hips, next to the meshes it serves</strong>, where it put one big one on your hips. VRChat only passes on the eight touches nearest each receiver, and your own hands at your sides took every place, so a headpat on your hair never landed. Your avatar may get one receiver more than before.</li>
+                        <li class="mb-2"><strong>Preset Toggle radials move smoothly for other players on VRChat SDK 3.10.6.</strong> One added to a new parameter list only had four steps, and a new toggle could copy the bit width, range and smoothing of the parameter above it, which could also stop VRCFury from building when it had to squeeze your parameters. Preset Toggle and Hypno Setup now start every parameter from VRChat's own settings.</li>
+                        <li class="mb-2"><strong>Hypno Setup and Preset Toggle count your parameter memory the same way VRChat does</strong>, so an avatar that uses smaller parameters isn't called full too early.</li>
+                        <li class="mb-2"><strong>Unity's background import workers no longer rebuild the preset list.</strong> After a script change each one rebuilt it next to the editor, which slowed imports and could make them fight over the same file. The editor still keeps the list up to date.</li>
                     </ul>
                 </div>
 

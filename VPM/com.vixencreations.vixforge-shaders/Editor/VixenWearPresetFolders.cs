@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class VixenWearPresetFolders : AssetPostprocessor
 {
-    const string PresetsRoot = "Packages/com.vixencreations.vixforge-shaders/Presets";
+    static string PresetsRoot => VixForgePaths.Root + "Presets";
     const string ScannedKey = "VixForge.PresetFolders.Scanned";
 
     static readonly Dictionary<string, string> FolderShader = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)

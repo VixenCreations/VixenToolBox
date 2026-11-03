@@ -284,7 +284,7 @@ public static class VixForgeSwitchboard
             if (showProgress && i % 50 == 0
                 && EditorUtility.DisplayCancelableProgressBar("Switchboard", "Reading materials", (float)i / guids.Length)) break;
             string path = AssetDatabase.GUIDToAssetPath(guids[i]);
-            if (path.StartsWith("Packages/com.vixencreations.vixforge-shaders/Presets/", StringComparison.Ordinal)) continue;
+            if (path.StartsWith(VixForgePaths.Root + "Presets/", StringComparison.Ordinal)) continue;
             Material m = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (m != null && m.shader != null && FamilyOf(m) != null) list.Add(m);
         }

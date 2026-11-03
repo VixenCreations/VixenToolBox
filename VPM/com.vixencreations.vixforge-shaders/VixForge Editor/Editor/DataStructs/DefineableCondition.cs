@@ -53,7 +53,7 @@ namespace VixForgeEditor
 
         private class ComparisonData
         {
-            enum DataType { FLOAT, MATERIAL_PROPERTY, CONDITION, VIXFORGE_EDITOR_VERSION, VRC_SDK_VERSION, RENDERQUEUE }
+            enum DataType { FLOAT, MATERIAL_PROPERTY, CONDITION, VIXFORGE_EDITOR_VERSION, VRC_SDK_VERSION, RENDERQUEUE, VRC_MATERIAL_CONTACTS }
 
             private DataType _type;
             private DefineableCondition _condition;
@@ -75,6 +75,7 @@ namespace VixForgeEditor
                         if (VRCInterface.Get().Sdk_information.type == VRCInterface.VRC_SDK_Type.NONE) return 0f;
                         return VRCInterface.Get().Sdk_information.installed_version;
                     }
+                    if (_type == DataType.VRC_MATERIAL_CONTACTS) return VRCInterface.HasMaterialContacts ? 1f : 0f;
                     if (_type == DataType.RENDERQUEUE)
                     {
                         if (_materialReference.Material == null) return 0f;
@@ -129,6 +130,11 @@ namespace VixForgeEditor
                     _type = DataType.VIXFORGE_EDITOR_VERSION;
                     _isConstant = true;
                 }
+                else if (data == "VRCMaterialContacts")
+                {
+                    _type = DataType.VRC_MATERIAL_CONTACTS;
+                    _isConstant = true;
+                }
                 else if (BooleanCondition.TryParse(data, out BooleanCondition condition, _materialReference))
                 {
                     _condition = condition;
@@ -178,6 +184,8 @@ namespace VixForgeEditor
                         return "VRCSDK";
                     case DataType.RENDERQUEUE:
                         return "RenderQueue";
+                    case DataType.VRC_MATERIAL_CONTACTS:
+                        return "VRCMaterialContacts";
                     default:
                         return "Unknown";
                 }

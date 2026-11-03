@@ -6,7 +6,47 @@
 Version history for the World Fur shader. World Fur shares its lighting stack and toolkit with Latex Ultra, Toon, Clothing Pro and Fur Pro, so that shared part tracks the Latex Ultra changelog. The inspector and its tools keep their own.
 
 ***
-## [1.4.0] - 2026-10-11
+## [1.5.0] - 2026-10-24
+
+*Matcaps you build yourself, fur that matches in both eyes, outlines that move with everything that moves the surface, with four new ways to draw them, and a rebuilt Viewer Context with Hidden Ink.*
+
+### Heads up
+
+* **Viewer Context has its own section now**, **VIEWER CONTEXT**, just above **AUDIOLINK**. Your settings move over by themselves. If an animation drives an old Viewer Context setting, point it at the matching setting in the new section.
+
+### Added
+
+* **Silhouette Ripples** under **OUTLINES**. Rings peel off the outline and travel outward, fading as they go, like sound waves or heat coming off the surface. **Distance**, **Rings**, **Ring Width**, **Softness**, **Fade** and **Speed** set the look. With AudioLink, **Beat Launch** sends every hit in the music out as its own ring, and **Beat Speed** pushes them faster on the beat.
+* **Ink Weight** under **OUTLINES**. The outline gets heavier where the surface turns away from the light and lighter where the light hits it, the way an inker draws a line. It follows the main light and light probes, so the weight shifts as the object moves past a lamp.
+* **Line Boil** under **OUTLINES**. The hand-drawn wobble of classic cartoons: the outline redraws itself a few times a second, a little different each time. **Amount**, **Scale** and **Frame Rate** set how much it moves, how close the wobbles sit and how often it redraws.
+* **Velocity Smear** under **OUTLINES**. When the object moves, its outline streaks out behind it like the speed lines in an anime, and snaps back when it stops. **Streaks** breaks the trail into separate lines. An Udon script sets its **Velocity**.
+* **Procedural matcaps you build yourself**, on any matcap layer set to **Procedural**. Twelve new styles under **Style**: **Chladni Plate**, **Drum Head**, **Ripple Tank**, **Hyperspace Tunnel**, **Hyperspace Weave**, **Grid**, **Rings**, **Starfield**, **Spectrum**, **Waveform**, **Julia Fractal** and **Nebula**. **Space** folds any style into a kaleidoscope, a tunnel, a spiral or a mirror, with **Space Shape** setting segments, twist, flow and spin. **Colour** turns the pattern into two or three colours, a rainbow, a palette or the colour of the music, and **Colour Shape** adds bands, invert, glow and cycling. With AudioLink, **Pattern Beat** and **Pattern Beat 2** let the music grow, warp, push, twist, shake and reshape the pattern, send each hit out as a ring, or lay the spectrum across it.
+* **Packed Atlas reaches all 16 cells** of a 4 by 4 sheet, where it stopped at 8, with **Sections** up to 16 and eight more section looks in **Atlas Sections**.
+* **Hidden Ink** in **VIEWER CONTEXT**. A design that only the right light reveals, like UV-reactive ink: pick its **Light Colour** and it glows wherever that colour of light lands on it. In **Glow** or **Paint** mode it shows by any rule you like instead, such as only in mirrors or only up close.
+* **A World guide in the Shader Hub**, under **Shaders**. It covers what World Surface and World Fur add for a world, from triplanar projection and tiling breakup to baking your lighting, Light Volumes and LTCGI, and what they leave out. The Latex Ultra guide now comes with them too, for everything they share.
+
+### Changed
+
+* Light Volumes is up to date with 3.0.1, its first full 3.0 release.
+* **Faster shader compiles.** Each part of the shader no longer builds its own copy for settings it never uses, so there is less to compile after an update and when you change a material. Outlines, fur shells, and the Vertex Fracture shards build fewer copies of themselves, and a motion pass VRChat never used is gone.
+* **Viewer Context rebuilt.** Every part of the material has its own rules now, each in its own spot under **VIEWER CONTEXT**: **Base**, **Normal Maps**, **Surface**, **Shading**, **Decals**, **Polish**, **Special Effects**, **Outlines**, **Emissions**, **Matcaps** and **AudioLink**. As well as who is looking, where and how close, a rule can follow the colour of the light on you, how dark it is, the beat, or a **Gaze Torch** that shows a part only where someone looks.
+
+### Fixed
+
+* **Outlines move with the surface.** When **Displacement Strength**, the AudioLink **Kinetic Modules**, VRSL movement or a **Hologram** glitch moved the surface, the outline stayed where it had been, so the surface poked through the line. It now moves with them.
+* **The face mirror counts as a mirror.** **Viewer Context**, **Mirrors** in Haunting and the mirror **Amount** in Dissolve's **Viewer** now read VRChat's face mirror flag as well, so your face mirror treats you the way other mirrors do.
+* **Colour By Time Of Day works in worlds without AudioLink**, taking the time from VRChat itself, and the colour now drifts smoothly through the day instead of stepping once an hour.
+* **Sonar and Infinity Mirror line up in both eyes in VR.** Sonar from **Whoever Is Looking** and the Infinity Mirror's **Opens Up Close** were measured from each eye separately, so each eye saw slightly different rings and depth.
+* **Fur matches in both eyes in VR.** Near **Detail Distance** one eye could drop hairs the other kept. Both eyes now decide together, and **Mirror Quality** applies in the face mirror too.
+* **Shadows follow the Hologram glitch.** When the **Hologram** glitch moved your body, its shadow stayed put. The shadow now moves with it.
+* **Switching a material with drips on to World Fur no longer turns it pink.** A material moved over from World Surface or Latex Ultra kept its drips setting, and World Fur, which has no drips, could not draw it. World Fur now ignores the setting.
+
+* **UV Tile Discard turns off when an animation turns it off.** With **Enable** marked Animated, the tiles stayed hidden after the animation switched it off.
+* **Point light shadows start at the object.** The shadow this material casts from a point light used the setup meant for spot and sun shadows, which pushed it away from the object a second time. It now uses Unity's own point light shadow setup.
+* **Extra Mixed lights keep their baked shadows.** In a scene baked with Shadowmask, a Mixed spot or point light other than the main light lit straight through walls onto this material once it was past the shadow distance. It now uses its baked shadows there, the way Unity's own shaders do.
+***
+## [1.4.0] - 2026-10-10
+
 *Hologram, Pearl for hair and Haunting for Halloween, more ways to dissolve with Shatter and Portal, Color Adjust, Alpha Options and decal alpha and hue from Poiyomi Toon, a Cull setting that works, Minimum Brightness in every world, and Volume and Peak Hold that follow the music.*
 
 ### Heads up

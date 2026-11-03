@@ -2,19 +2,13 @@
 #ifndef VIXENWEAR_LATEX_OUTLINE_INCLUDED
 #define VIXENWEAR_LATEX_OUTLINE_INCLUDED
 
-        #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeSamplers.cginc"
-        #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeProbeVolume.cginc"
-        #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeUVTileDiscard.cginc"
-        #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeDissolve.cginc"
-
-        sampler2D _MainTex;
-        float4 _MainTex_ST;
-        float _MainTilingOnly;
-        float _SpeedX;
-        float _SpeedY;
-        float _SpeedX_Ph;
-        float _SpeedY_Ph;
-        float _UV_Rot;
+        // The outline takes the whole core, the way the ShadowCaster does, so its vertex stage can run the
+        // body's own disp() and ride every displacement the body has. Everything declared below is a
+        // uniform the core does not declare. The shader names itself (VIXFORGE_TOON and the rest) before
+        // it includes this file, exactly as it does before its ShadowCaster includes the core.
+        #define LTCGI_SPECULAR_OFF
+        #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/LatexCore.cginc"
+        #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/LatexFog.cginc"
 
         inline float2 OL_BaseUV(float2 uv)
         {
@@ -30,23 +24,6 @@
             }
             return uv;
         }
-        fixed4 _Color;
-        half _CutOff;
-        #ifdef VF_TEX_CUTOUTMASK
-        UNITY_DECLARE_TEX2D_NOSAMPLER(_CutoutMask);
-        #endif
-        #ifdef VF_TEX_ALPHAMASK
-        UNITY_DECLARE_TEX2D_NOSAMPLER(_AlphaMask);
-        #endif
-        float _UseAlphaMask;
-        float _AlphaMask_Ch;
-        float _AlphaMask_Inv;
-        float _Transparency;
-        float _AlphaMod;
-        float _IgnoreFog;
-        float _CutoutMaskCh;
-        float _UseCutoutMask;
-        float _Mode;
 
         float _OutlineNormalSrc;
         float4 _OutlineSphPivot;
@@ -111,32 +88,67 @@
 
         // Both outline passes may follow the Viewer Context rules the forward pass uses, so an outline
         // that traces a mirror-only emission can be hidden with it rather than sitting there alone.
-        float _Ctx_Outlines;
-        #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeContext.cginc"
-        #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeAlphaOptions.cginc"
 
-        // The Color Source the rest of the material uses, so an outline's Music Colour matches the body.
-        float _AL_ColorMode;
-        float _AL_Strip_Pos;
-
-        // Light Volumes for Outline Lighting. The include, these uniforms and the call site in the fragment
-        // are stripped in one piece at lock unless Light Volumes is on and at least one outline's Light
-        // Volumes slider is above 0, so a material that never uses it pays nothing for it.
+        // Light Volumes for Outline Lighting. These uniforms and the call site in the fragment are
+        // stripped in one piece at lock unless Light Volumes is on and at least one outline's Light
+        // Volumes slider is above 0. The core brings the include and the body's Light Volumes uniforms.
         //ifex _UseLightVolumes==0 || (_OutlineLV==0 && _Outline2LV==0)
         #ifdef VF_LIGHTVOLUMES
-        #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/LightVolumes.cginc"
-        float _UseLightVolumes;
-        float _LV_Int;
-        float _LV_Pt_Int;
-        float _LV_AdditiveOnly;
-        float4 _LV_PosOffset;
         float _OutlineLV;
         float _Outline2LV;
         #endif
         //endex
 
-        #define LTCGI_SPECULAR_OFF
+        // The core already declares the LTCGI and VRSL uniforms this file reads.
+        #define VIXFORGE_EXTRALIGHT_UNIFORMS_EXTERNAL
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeExtraLight.cginc"
+
+        // SHARED BY BOTH OUTLINES. Silhouette Ripples, Ink Weight, Line Boil and Velocity Smear each act on
+        // the whole outline rather than one layer, so the outer line stays stacked on the inner wherever
+        // they act. Each block is stripped at lock with its toggle off, and its OL_*_ON define with it,
+        // which is what takes the ripple ribbon and its interpolator out of the geometry stage.
+        //ifex _OutlineRipples==0
+        #define OL_RIPPLE_ON 1
+        float _OutlineRipples;
+        float4 _OutlineRippleColor;
+        float _OutlineRippleDist;
+        float _OutlineRippleCount;
+        float _OutlineRippleWidth;
+        float _OutlineRippleSoft;
+        float _OutlineRippleSpeed;
+        float _OutlineRippleSpeed_Ph;
+        float _OutlineRippleFade;
+        float _AL_Band_OutlineRipple;
+        float _AL_Outline_RippleBeat;
+        float _AL_Outline_RippleSpeed;
+        //endex
+
+        //ifex _OutlineInk==0
+        #define OL_INK_ON 1
+        float _OutlineInk;
+        float _OutlineInkLit;
+        float _OutlineInkShadow;
+        float _OutlineInkSoft;
+        //endex
+
+        //ifex _OutlineBoil==0
+        #define OL_BOIL_ON 1
+        float _OutlineBoil;
+        float _OutlineBoilAmt;
+        float _OutlineBoilScale;
+        float _OutlineBoilFPS;
+        float _OutlineBoilFPS_Ph;
+        //endex
+
+        // Velocity Smear reads _WG_Velocity, which the core declares in every shader. Latex Ultra and World
+        // Surface show it in Movement under Special Effects; the others show it inside the Smear group.
+        //ifex _OutlineSmear==0
+        #define OL_SMEAR_ON 1
+        float _OutlineSmear;
+        float _OutlineSmearLen;
+        float _OutlineSmearStreaks;
+        float _OutlineSmearStreakScale;
+        //endex
 
         #if OUTLINE_INDEX == 2
             #define OL_Use        _UseOutline2
@@ -256,11 +268,14 @@
             return mul(m, c);
         }
 
-        struct Input
+        // Not called Input: the core's surface pass already owns that name. ripple is -1 on the line and
+        // runs 0 to 1 across the Silhouette Ripples ribbon.
+        struct OL_Input
         {
             float2 uv_MainTex;
             float3 worldPos;
             float3 worldNormal;
+            float  ripple;
         };
 
         // Enum(R,0,G,1,B,2,A,3,Auto,4), the convention _CutoutMaskCh and _AlphaMask_Ch use. Auto is
@@ -429,15 +444,156 @@
             w += wInner;
             #endif
 
+            //ifex _UseContacts==0
+            #if defined(VF_CONTACTS) && !defined(VIXFORGE_WORLD)
+            //ifex _UseOutlineTouch==0
+            [branch] if (_UseOutlineTouch > 0.5 && abs(_OutlineTouch_Width) > 0.001 && VF_ContactsLive())
+            {
+                float olTouchW = max(0.0, 1.0 + VF_ContactNear(mul(unity_ObjectToWorld, v.vertex).xyz, _OutlineTouch_Size) * _OutlineTouch_Width);
+                w      *= olTouchW;
+                wInner *= olTouchW;
+            }
+            //endex
+            #endif
+            //endex
+
             return w;
         }
+
+        // appdata_outline carries UV8 on top of appdata_full; disp() takes the plain struct.
+        inline appdata_full OL_ToAppdataFull(appdata_outline v)
+        {
+            appdata_full d;
+            UNITY_INITIALIZE_OUTPUT(appdata_full, d);
+            d.vertex    = v.vertex;
+            d.tangent   = v.tangent;
+            d.normal    = v.normal;
+            d.texcoord  = v.texcoord;
+            d.texcoord1 = v.texcoord1;
+            d.texcoord2 = v.texcoord2;
+            d.texcoord3 = v.texcoord3;
+            d.color     = v.color;
+            UNITY_TRANSFER_INSTANCE_ID(v, d);
+            return d;
+        }
+
+        // INK WEIGHT. An inker draws the line heavier where a form turns away from the light and lighter
+        // where the light hits it, which is what makes a flat line read as volume. The direction comes
+        // from every source that can give one: the scene light weighted by its brightness, and the
+        // dominant direction of the probes (or the proxy volume). With no direction at all the line is
+        // left alone rather than given an arbitrary weight. n is the welded outward direction, not the
+        // mesh normal, so split vertices agree and the hull does not tear.
+        #ifdef OL_INK_ON
+        inline float OL_InkWeight(float3 restOS, float3 outwardOS)
+        {
+            float3 wp = mul(unity_ObjectToWorld, float4(restOS, 1.0)).xyz;
+            float3 n  = UnityObjectToWorldNormal(outwardOS);
+            const float3 lw = float3(0.2126, 0.7152, 0.0722);
+
+            float3 L = float3(0.0, 0.0, 0.0);
+            [branch] if (any(_WorldSpaceLightPos0.xyz))
+            {
+                float3 ld = (_WorldSpaceLightPos0.w > 0.5) ? (_WorldSpaceLightPos0.xyz - wp) : _WorldSpaceLightPos0.xyz;
+                L += VF_SafeNormalize(ld) * dot(_LightColor0.rgb, lw);
+            }
+            float3 shVec;
+            float  shL0;
+            vw_SHDominantRaw(wp, shVec, shL0);
+            L += shVec;
+
+            float len2 = dot(L, L);
+            float k = 1.0;
+            [branch] if (len2 > 1.0e-8)
+            {
+                float ndl   = dot(n, L * rsqrt(len2));
+                float soft  = max(_OutlineInkSoft, 0.01);
+                float shade = smoothstep(-soft, soft, -ndl);
+                k = lerp(_OutlineInkLit, _OutlineInkShadow, shade);
+            }
+            return k;
+        }
+        #endif
+
+        // One factor for both layers' width from Ink Weight and Line Boil. 1 when neither is on.
+        inline float OL_SharedWidth(float3 restOS, float3 outwardOS)
+        {
+            float k = 1.0;
+
+            #ifdef OL_INK_ON
+            [branch] if (_OutlineInk > 0.5)
+                k *= OL_InkWeight(restOS, outwardOS);
+            #endif
+
+            // LINE BOIL. Hand-drawn animation redraws every line on every drawing, and no two tracings
+            // agree, so the line crawls. That is a held frame of noise, swapped a few times a second: the
+            // noise sits still on the body between frames and jumps to a fresh offset on the next. The
+            // offset is a golden-ratio walk, so it stays small however long the world has been running.
+            #ifdef OL_BOIL_ON
+            [branch] if (_OutlineBoil > 0.5 && _OutlineBoilAmt > 0.001)
+            {
+                float  frame = floor(_OutlineBoilFPS * _Time.y + _OutlineBoilFPS_Ph);
+                float3 hop   = frac(frame * float3(0.6180339, 0.4142136, 0.7320508)) * 97.0;
+                float  n     = gooNoise3(restOS * _OutlineBoilScale + hop);
+                k *= max(1.0 + (n * 2.0 - 1.0) * _OutlineBoilAmt * 1.5, 0.0);
+            }
+            #endif
+
+            return k;
+        }
+
+        // VELOCITY SMEAR. The line on the side facing away from the way the wearer moves is dragged back
+        // along the motion, the way an animator smears a fast drawing. Streaks breaks it into speed lines:
+        // the noise is read across the motion only, so each streak runs along it. Returned in object
+        // space; the velocity is held to 6 metres per second so a teleport cannot fling the line away.
+        #ifdef OL_SMEAR_ON
+        inline float3 OL_Smear(float3 restOS, float3 outwardOS)
+        {
+            float3 vWS = vw_AvatarVelocityWS();
+            float  sp  = length(vWS);
+            float3 offOS = float3(0.0, 0.0, 0.0);
+            [branch] if (sp > 0.05)
+            {
+                float3 backWS = -vWS / sp;
+                float  trail  = saturate(dot(UnityObjectToWorldNormal(outwardOS), backWS));
+                float3 backOS = VF_SafeNormalize(mul((float3x3)unity_WorldToObject, backWS));
+                float3 across = restOS - backOS * dot(restOS, backOS);
+                float  streak = saturate((gooNoise3(across * _OutlineSmearStreakScale) - 0.3) * 2.5);
+                float  dist   = min(sp, 6.0) * _OutlineSmearLen * 0.05 * trail * lerp(1.0, streak, saturate(_OutlineSmearStreaks));
+                offOS = mul((float3x3)unity_WorldToObject, backWS * dist);
+            }
+            return offOS;
+        }
+        #endif
+
+        // SILHOUETTE RIPPLES. u is 0 at the line and 1 at Distance. The rings are a repeating band that
+        // slides outward with time. Beat Launch replaces them with the band's own history, read further
+        // back the further out the point is, so every hit leaves the body as a ring and rides out to
+        // Distance. With no AudioLink in the world it falls back to the timed rings.
+        #ifdef OL_RIPPLE_ON
+        inline float OL_RippleIntensity(float u)
+        {
+            float t = _OutlineRippleSpeed * _Time.y + _OutlineRippleSpeed_Ph;
+            [branch] if (_AL_Outline_RippleSpeed > 0.001 && AL_Active())
+                t += AL_BeatClock(_AL_Band_OutlineRipple) * _AL_Outline_RippleSpeed;
+
+            float d    = abs(frac(u * max(_OutlineRippleCount, 1.0) - frac(t)) - 0.5) * 2.0;
+            float hw   = saturate(_OutlineRippleWidth);
+            float lo   = hw * (1.0 - saturate(_OutlineRippleSoft));
+            float ring = 1.0 - smoothstep(lo, max(hw, lo + 1.0e-4), d);
+
+            [branch] if (_AL_Outline_RippleBeat > 0.001 && AL_Active() && AudioLinkIsAvailable())
+                ring = lerp(ring, AL_Shape(AL_BandDelayed(_AL_Band_OutlineRipple, saturate(u) * 126.0)), saturate(_AL_Outline_RippleBeat));
+
+            return ring * pow(max(1.0 - u, 1.0e-4), max(_OutlineRippleFade, 0.0));
+        }
+        #endif
 
         inline half4 LightingOutline(SurfaceOutput s, half3 lightDir, half atten)
         {
             return half4(0, 0, 0, s.Alpha);
         }
 
-        void outlineSurf(Input IN, inout SurfaceOutput o)
+        void outlineSurf(OL_Input IN, inout SurfaceOutput o)
         {
             if (OL_Use < 0.5)
             {
@@ -445,7 +601,7 @@
             }
 
             float2 mainUV = OL_BaseUV(IN.uv_MainTex);
-            fixed4 mainSample = tex2D(_MainTex, (_MainTilingOnly > 0.5) ? mainUV * _MainTex_ST.xy + _MainTex_ST.zw : mainUV) * _Color;
+            fixed4 mainSample = UNITY_SAMPLE_TEX2D(_MainTex, (_MainTilingOnly > 0.5) ? mainUV * _MainTex_ST.xy + _MainTex_ST.zw : mainUV) * _Color;
             // mainUV, not IN.uv_MainTex: the main pass samples both maps with _MainTex_ST applied, so
             // reading them raw here put the outline on different texels whenever the albedo tiled.
             float outlineAlpha = mainSample.a;
@@ -456,25 +612,31 @@
             if ((int)_Mode >= 1)
             {
                 olGM = VF_AlphaGlobalMask(IN.uv_MainTex, IN.uv_MainTex);
-                olAlphaMul = VF_AlphaViewMul(IN.worldPos, VF_AOSafeNorm(IN.worldNormal, float3(0.0, 1.0, 0.0)), olGM);
+                olAlphaMul = VF_AlphaViewMul(IN.worldPos.xyz, VF_AOSafeNorm(IN.worldNormal, float3(0.0, 1.0, 0.0)), olGM);
                 //ifex _AlphaAudioLinkEnabled==0
                 [branch] if (_AlphaAudioLinkEnabled > 0.5)
                     olAlphaAdd = lerp(_AlphaAudioLinkAddRange.x, _AlphaAudioLinkAddRange.y, OL_ALAmp(_AlphaAudioLinkAddBand));
                 //endex
                 //ifex _AlphaDithering==0
                 [branch] if (_AlphaDithering > 0.5)
-                    olDither = VF_AlphaDitherValue(IN.worldPos);
+                    olDither = VF_AlphaDitherValue(IN.worldPos.xyz);
                 //endex
             }
             if ((int)_Mode == 1)
             {
-                float outlineCut = (_UseCutoutMask > 0.5)
+                // Gated the way the body's surface pass gates it, because the core only declares the
+                // mask texture while the Use Mask Texture keyword is on.
+                float outlineCut = mainSample.a;
+                //ifex _UseCutoutMask==0
+                #ifdef VF_CUTOUTMASK
+                [branch] if (_UseCutoutMask > 0.5)
                     #ifdef VF_TEX_CUTOUTMASK
-                    ? OL_MaskRead(SAMPLE_MATCAP_TEX(_CutoutMask, sampler_linear_repeat, mainUV), _CutoutMaskCh)
+                    outlineCut = OL_MaskRead(SAMPLE_MATCAP_TEX(_CutoutMask, sampler_linear_repeat, mainUV), _CutoutMaskCh);
                     #else
-                    ? OL_MaskRead(VF_FB_WHITE, _CutoutMaskCh)
+                    outlineCut = OL_MaskRead(VF_FB_WHITE, _CutoutMaskCh);
                     #endif
-                    : mainSample.a;
+                #endif
+                //endex
                 outlineCut = VF_AlphaShape(outlineCut, olAlphaMul, olAlphaAdd, olGM);
                 //ifex _AlphaDithering==0
                 outlineCut = VF_AlphaDither(outlineCut, olDither);
@@ -483,19 +645,43 @@
             }
             else if ((int)_Mode >= 2)
             {
-                #ifdef VF_TEX_ALPHAMASK
-                float aRaw  = OL_MaskRead(SAMPLE_MATCAP_TEX(_AlphaMask, sampler_linear_repeat, mainUV), _AlphaMask_Ch);
-                #else
-                float aRaw  = OL_MaskRead(VF_FB_BLACK, _AlphaMask_Ch);
+                float aSrc = mainSample.a;
+                //ifex _UseAlphaMask==0
+                #ifdef VF_ALPHAMASK
+                [branch] if (_UseAlphaMask > 0.5)
+                {
+                    #ifdef VF_TEX_ALPHAMASK
+                    float aRaw = OL_MaskRead(SAMPLE_MATCAP_TEX(_AlphaMask, sampler_linear_repeat, mainUV), _AlphaMask_Ch);
+                    #else
+                    float aRaw = OL_MaskRead(VF_FB_BLACK, _AlphaMask_Ch);
+                    #endif
+                    float aM   = (_AlphaMask_Inv > 0.5) ? aRaw : (1.0 - aRaw);
+                    aSrc = aM * _Color.a;
+                }
                 #endif
-                float aM    = (_AlphaMask_Inv > 0.5) ? aRaw : (1.0 - aRaw);
-                float fadeA = VF_AlphaShape((_UseAlphaMask > 0.5) ? aM * _Color.a : mainSample.a, olAlphaMul, olAlphaAdd, olGM);
+                //endex
+                float fadeA = VF_AlphaShape(aSrc, olAlphaMul, olAlphaAdd, olGM);
                 //ifex _AlphaDithering==0
                 fadeA = VF_AlphaDither(fadeA, olDither);
                 //endex
                 clip(fadeA - 0.001);
                 outlineAlpha = fadeA * (1.0 - _Transparency);
             }
+
+            // The ripple ribbon takes its own colour and none of the line's texture, masks or music. In
+            // Opaque and Cutout the blend cannot fade, so a ring is cut at half strength; in the fade
+            // modes its strength is its opacity.
+            #ifdef OL_RIPPLE_ON
+            [branch] if (IN.ripple >= 0.0)
+            {
+                float ri = OL_RippleIntensity(IN.ripple) * _OutlineRippleColor.a;
+                clip(ri - (((int)_Mode >= 2) ? 0.004 : 0.5));
+                o.Albedo   = 0;
+                o.Emission = _OutlineRippleColor.rgb;
+                o.Alpha    = outlineAlpha * (((int)_Mode >= 2) ? ri : 1.0);
+                return;
+            }
+            #endif
 
             float olAmp = OL_ALAmp(OL_AL_Band);
 
@@ -527,6 +713,19 @@
             [branch] if (OL_AlbedoTint > 0.001)
                 outlineCol = lerp(outlineCol, outlineCol * mainSample.rgb, OL_AlbedoTint);
 
+            //ifex _UseContacts==0
+            #if defined(VF_CONTACTS) && !defined(VIXFORGE_WORLD)
+            //ifex _UseOutlineTouch==0
+            [branch] if (_UseOutlineTouch > 0.5 && _OutlineTouch_ColorBlend + _OutlineTouch_Glow > 0.001 && VF_ContactsLive())
+            {
+                float olTouchF = VF_ContactNear(IN.worldPos, _OutlineTouch_Size);
+                outlineCol = lerp(outlineCol, _OutlineTouch_Color.rgb * olTex, saturate(olTouchF * _OutlineTouch_ColorBlend));
+                outlineCol *= 1.0 + olTouchF * _OutlineTouch_Glow;
+            }
+            //endex
+            #endif
+            //endex
+
             half3 alBoost = OL_Emis.rgb * olTex * olAmp * OL_AL_Mod;
 
             // The width mask and the fade mask are two channels of ONE texture, so fading the line
@@ -556,6 +755,9 @@
             float3 worldNormal : TEXCOORD1;
             float4 worldPos : TEXCOORD2;
             DECLARE_LIGHT_COORDS(3)
+            #ifdef OL_RIPPLE_ON
+            float olRipple : TEXCOORD5;
+            #endif
             #ifdef VF_UDIMDISCARD
             float2 vfUdim : TEXCOORD6;
             #endif
@@ -576,9 +778,11 @@
             UNITY_POSITION(pos);
             float2 pack0 : TEXCOORD0;
             float3 worldNormal : TEXCOORD1;
-            float3 worldPos : TEXCOORD2;
-            UNITY_FOG_COORDS(3)
+            float4 worldPos : TEXCOORD2;
             DECLARE_LIGHT_COORDS(4)
+            #ifdef OL_RIPPLE_ON
+            float olRipple : TEXCOORD5;
+            #endif
             #ifdef VF_UDIMDISCARD
             float2 vfUdim : TEXCOORD6;
             #endif
@@ -617,6 +821,7 @@
             float4 vfDis3 : TEXCOORD11;
             #endif
             //endex
+            float3 smearOS : TEXCOORD12;
             UNITY_VERTEX_INPUT_INSTANCE_ID
         };
 
@@ -632,26 +837,42 @@
             o.vfUdim = VF_UDIMFragUV(v.texcoord.xy, v.texcoord1.xy, v.texcoord2.xy, v.texcoord3.xy).xy;
             #endif
 
-            float3 disOff = float3(0.0, 0.0, 0.0);
-            //ifex _EnableDissolve==0
-            #ifdef VF_DISSOLVE
-            VF_DisTransfer(v.vertex.xyz, v.texcoord, v.texcoord1, v.texcoord2, v.texcoord3, v.color, o.vfDis0, o.vfDis1, o.vfDis2, o.vfDis3);
-            disOff = VF_DissolveVertexOffset(v.vertex.xyz, v.normal, o.vfDis1, o.vfDis2, o.vfDis3);
-            #endif
-            //endex
-
             float3 outward = float3(0.0, 0.0, 0.0);
             float w = 0.0;
             float wInner = 0.0;
+            float3 smear = float3(0.0, 0.0, 0.0);
+            appdata_full d = OL_ToAppdataFull(v);
             [branch] if (OL_Use > 0.5)
             {
+                // Direction, width and the shared effects are all read at the rest pose, the same place
+                // the writhe reads its field, so neighbours that started together stay together.
                 outward = OL_OutwardNormal(v);
                 w = OL_LayerWidth(v, wInner);
+                float sharedWidth = OL_SharedWidth(v.vertex.xyz, outward);
+                w *= sharedWidth;
+                wInner *= sharedWidth;
+                #ifdef OL_SMEAR_ON
+                [branch] if (_OutlineSmear > 0.5 && _OutlineSmearLen > 0.001)
+                    smear = OL_Smear(v.vertex.xyz, outward);
+                #endif
+
+                // THE BODY'S OWN DISPLACEMENT. The line used to sit on the rest pose while the body
+                // writhed, melted, sloshed and dented under it, so the body pushed through the line or
+                // left it behind. Running the same disp() puts the line on the moved surface. Dissolve's
+                // offset is part of disp() now, so it is no longer added here.
+                disp(d);
             }
 
-            o.baseOS = v.vertex.xyz + disOff;
-            o.hullOS = o.baseOS + outward * w;
+            //ifex _EnableDissolve==0
+            #ifdef VF_DISSOLVE
+            VF_DisTransfer(d.vertex.xyz, d.texcoord, d.texcoord1, d.texcoord2, d.texcoord3, d.color, o.vfDis0, o.vfDis1, o.vfDis2, o.vfDis3);
+            #endif
+            //endex
+
+            o.baseOS = d.vertex.xyz;
+            o.hullOS = o.baseOS + outward * w + smear;
             o.outward = outward;
+            o.smearOS = smear;
             o.uv = v.texcoord.xy;
             o.worldNormal = UnityObjectToWorldNormal(v.normal);
             o.widthBack = float2(w, OL_HUG_BACK * (w + wInner));
@@ -667,6 +888,7 @@
             o.uv = lerp(a.uv, b.uv, t);
             o.worldNormal = lerp(a.worldNormal, b.worldNormal, t);
             o.widthBack = lerp(a.widthBack, b.widthBack, t);
+            o.smearOS = lerp(a.smearOS, b.smearOS, t);
             #ifdef VF_UDIMDISCARD
             o.vfUdim = lerp(a.vfUdim, b.vfUdim, t);
             #endif
@@ -687,7 +909,7 @@
             float4 vertex;
         };
 
-        v2f_outlineSurf OL_Emit(v2g_outline g, float3 posOS)
+        v2f_outlineSurf OL_Emit(v2g_outline g, float3 posOS, float ripple)
         {
             v2f_outlineSurf o;
             UNITY_INITIALIZE_OUTPUT(v2f_outlineSurf,o);
@@ -696,6 +918,9 @@
 
             o.pos = UnityObjectToClipPos(float4(posOS, 1.0));
             o.pack0.xy = g.uv;
+            #ifdef OL_RIPPLE_ON
+            o.olRipple = ripple;
+            #endif
             o.worldPos.xyz = mul(unity_ObjectToWorld, float4(posOS, 1.0)).xyz;
             o.worldNormal = g.worldNormal;
             #ifdef VF_UDIMDISCARD
@@ -713,11 +938,7 @@
             OL_LightCoordIn v;
             v.vertex = float4(posOS, 1.0);
             COMPUTE_LIGHT_COORDS(o);
-            #ifdef FOG_COMBINED_WITH_WORLD_POS
-                UNITY_TRANSFER_FOG_COMBINED_WITH_WORLD_POS(o,o.pos);
-            #else
-                UNITY_TRANSFER_FOG(o,o.pos);
-            #endif
+            o.worldPos.w = o.pos.z;
             return o;
         }
 
@@ -732,16 +953,38 @@
         }
 
         // One end of a silhouette strip: the corner tucked just inside the silhouette, and the corner a
-        // full width out, both set back along the view ray. `ray` is returned for the winding test.
-        inline void OL_StripEnd(v2g_outline c, float3 camOS, out float3 tuck, out float3 edge, out float3 ray)
+        // full width out (dragged by Velocity Smear), both set back along the view ray. `ray` is returned
+        // for the winding test and `side` for the ripple ribbon.
+        inline void OL_StripEnd(v2g_outline c, float3 camOS, out float3 tuck, out float3 edge, out float3 ray, out float3 side)
         {
             ray = OL_RayOS(c.baseOS, camOS);
-            float3 side = c.outward - dot(c.outward, ray) * ray;
+            side = c.outward - dot(c.outward, ray) * ray;
             float len2 = dot(side, side);
             side = (len2 > 1.0e-12) ? side * rsqrt(len2) : float3(0.0, 0.0, 0.0);
             float3 back = ray * c.widthBack.y;
             tuck = c.baseOS - side * (c.widthBack.x * OL_HUG_TUCK) + back;
-            edge = c.baseOS + side * c.widthBack.x + back;
+            edge = c.baseOS + side * c.widthBack.x + c.smearOS + back;
+        }
+
+        // One quad between two strip ends, wound to face away from the camera, which is what this pass's
+        // Cull Front keeps. ripple is -1 for the line and runs inner to outer across the ribbon.
+        void OL_EmitQuad(inout TriangleStream<v2f_outlineSurf> stream, v2g_outline c0, v2g_outline c1,
+                         float3 a0, float3 e0, float3 a1, float3 e1, bool awayFirst, float rIn, float rOut)
+        {
+            if (awayFirst)
+            {
+                stream.Append(OL_Emit(c0, a0, rIn));
+                stream.Append(OL_Emit(c0, e0, rOut));
+                stream.Append(OL_Emit(c1, a1, rIn));
+                stream.Append(OL_Emit(c1, e1, rOut));
+            }
+            else
+            {
+                stream.Append(OL_Emit(c0, a0, rIn));
+                stream.Append(OL_Emit(c1, a1, rIn));
+                stream.Append(OL_Emit(c0, e0, rOut));
+                stream.Append(OL_Emit(c1, e1, rOut));
+            }
         }
 
         // WHY THE OUTLINE IS A HULL PLUS A SILHOUETTE STRIP.
@@ -762,7 +1005,18 @@
         //
         // The hull is still drawn. Where faces are flat-shaded no silhouette runs through a triangle, and
         // there the hull is the whole outline, exactly as before.
+        //
+        // SILHOUETTE RIPPLES ride the same silhouette: a ribbon from the line's outer edge out to Distance,
+        // with the rings drawn on it in the fragment, so any number of rings costs four vertices. Each
+        // corner is pushed back along its own view ray by Distance, which leaves it where it was on
+        // screen and puts it behind nearby parts of the body, so ripples off an arm do not paint over the
+        // chest in front of it. Only the outermost outline that is on draws them. With ripples stripped
+        // at lock the stage keeps its old seven-vertex budget.
+        #ifdef OL_RIPPLE_ON
+        [maxvertexcount(11)]
+        #else
         [maxvertexcount(7)]
+        #endif
         void geom_outlineSurf(triangle v2g_outline p[3], inout TriangleStream<v2f_outlineSurf> stream)
         {
             if (OL_Use < 0.5) return;
@@ -771,9 +1025,9 @@
             #endif
             UNITY_SETUP_INSTANCE_ID(p[0]);
 
-            stream.Append(OL_Emit(p[0], p[0].hullOS));
-            stream.Append(OL_Emit(p[1], p[1].hullOS));
-            stream.Append(OL_Emit(p[2], p[2].hullOS));
+            stream.Append(OL_Emit(p[0], p[0].hullOS, -1.0));
+            stream.Append(OL_Emit(p[1], p[1].hullOS, -1.0));
+            stream.Append(OL_Emit(p[2], p[2].hullOS, -1.0));
             stream.RestartStrip();
 
             float3 camOS = mul(unity_WorldToObject, float4(_WorldSpaceCameraPos, 1.0)).xyz;
@@ -803,27 +1057,32 @@
                 c0 = OL_LerpV(p[2], p[0], f2 / (f2 - f0));
                 c1 = OL_LerpV(p[2], p[1], f2 / (f2 - f1));
             }
-            if (c0.widthBack.x + c1.widthBack.x < 1.0e-6) return;
+            float3 a0, e0, r0, d0, a1, e1, r1, d1;
+            OL_StripEnd(c0, camOS, a0, e0, r0, d0);
+            OL_StripEnd(c1, camOS, a1, e1, r1, d1);
 
-            float3 a0, e0, r0, a1, e1, r1;
-            OL_StripEnd(c0, camOS, a0, e0, r0);
-            OL_StripEnd(c1, camOS, a1, e1, r1);
+            if (c0.widthBack.x + c1.widthBack.x >= 1.0e-6)
+            {
+                bool away = dot(cross(e0 - a0, a1 - a0), r0) > 0.0;
+                OL_EmitQuad(stream, c0, c1, a0, e0, a1, e1, away, -1.0, -1.0);
+            }
 
-            // Wound to face away from the camera, which is what this pass's Cull Front keeps.
-            if (dot(cross(e0 - a0, a1 - a0), r0) > 0.0)
+            #ifdef OL_RIPPLE_ON
+            [branch] if (_OutlineRipples > 0.5 && _OutlineRippleDist > 0.0001 && (OUTLINE_INDEX == 2 || _UseOutline2 < 0.5))
             {
-                stream.Append(OL_Emit(c0, a0));
-                stream.Append(OL_Emit(c0, e0));
-                stream.Append(OL_Emit(c1, a1));
-                stream.Append(OL_Emit(c1, e1));
+                // Distance is in metres; the hull works in the mesh's own units.
+                float  reach = _OutlineRippleDist / max(length(unity_ObjectToWorld._m00_m10_m20), 1.0e-6);
+                float3 i0 = e0 + OL_RayOS(e0, camOS) * reach;
+                float3 i1 = e1 + OL_RayOS(e1, camOS) * reach;
+                float3 o0 = e0 + d0 * reach;
+                float3 o1 = e1 + d1 * reach;
+                o0 += OL_RayOS(o0, camOS) * reach;
+                o1 += OL_RayOS(o1, camOS) * reach;
+                bool away = dot(cross(o0 - i0, i1 - i0), r0) > 0.0;
+                stream.RestartStrip();
+                OL_EmitQuad(stream, c0, c1, i0, o0, i1, o1, away, 0.0, 1.0);
             }
-            else
-            {
-                stream.Append(OL_Emit(c0, a0));
-                stream.Append(OL_Emit(c1, a1));
-                stream.Append(OL_Emit(c0, e0));
-                stream.Append(OL_Emit(c1, e1));
-            }
+            #endif
         }
 
         fixed4 frag_outlineSurf (v2f_outlineSurf IN) : SV_Target
@@ -846,16 +1105,21 @@
             #endif
             //endex
 
-            Input surfIN;
+            OL_Input surfIN;
             #ifdef FOG_COMBINED_WITH_WORLD_POS
                 UNITY_EXTRACT_FOG_FROM_WORLD_POS(IN);
             #else
                 UNITY_EXTRACT_FOG(IN);
             #endif
-            UNITY_INITIALIZE_OUTPUT(Input,surfIN);
+            UNITY_INITIALIZE_OUTPUT(OL_Input,surfIN);
             surfIN.uv_MainTex = IN.pack0.xy;
             surfIN.worldPos = IN.worldPos.xyz;
             surfIN.worldNormal = IN.worldNormal;
+            #ifdef OL_RIPPLE_ON
+            surfIN.ripple = IN.olRipple;
+            #else
+            surfIN.ripple = -1.0;
+            #endif
 
             float3 worldPos = IN.worldPos.xyz;
             #ifndef USING_DIRECTIONAL_LIGHT
@@ -900,7 +1164,7 @@
             // the proxy volume when the renderer uses one and from the probe otherwise. This hull
             // is inverted, so its normals point INTO the mesh, and a real N dot L would light the line
             // from the wrong side and darken it wherever the material is brightest.
-            [branch] if (OL_Lighting > 0.001)
+            [branch] if (OL_Lighting > 0.001 && surfIN.ripple < 0.0)
             {
                 half3 amb = VF_ShadeSH9(half4(0, 0, 0, 1), worldPos);
                 float lvShare = 0.0;
@@ -937,21 +1201,32 @@
                 c.rgb = lerp(c.rgb, c.rgb * saturate(lit), OL_Lighting);
             }
 
-            // VIEWER CONTEXT. Same gate the forward pass uses, from the shared VixForgeContext.cginc,
-            // so an outline hides on the same terms as the emission it traces. The geometry normal is
-            // the un-extruded one, which is what Face-On Only wants to measure against.
             //ifex _UseCtx==0
             #ifdef VF_CTX
-            [branch] if (_UseCtx > 0.5 && _Ctx_Outlines > 0.5)
+            //ifex _CtxOutlineOn==0
+            [branch] if (_UseCtx > 0.5 && _CtxOutlineOn > 0.5)
             {
-                float ctx = vw_ContextMask(worldPos, normalize(IN.worldNormal));
+                float3 olCtxN = normalize(IN.worldNormal);
+                float4 olCtxMask = VF_FB_WHITE;
+                #ifdef VF_TEX_CTXMASK
+                [branch] if (_CtxOutlineMaskCh > 0.5)
+                    olCtxMask = SAMPLE_MATCAP_TEX(_CtxMask, sampler_linear_repeat, IN.uv);
+                #endif
+                float3 olCtxLight = 0.0;
+                [branch] if (_CtxOutlineLight.x + _CtxOutlineDark.x > 0.0)
+                    olCtxLight = vw_CtxLightDirect(worldPos, olCtxN) + max(VF_ShadeSH9(half4(olCtxN, 1.0), worldPos), 0.0);
+                float4 olCtxBands = AL_Active() ? float4(AL_Band(0), AL_Band(1), AL_Band(2), AL_Band(3)) : float4(0.0, 0.0, 0.0, 0.0);
+                VFCtxView olCtxV = vw_CtxView(worldPos, olCtxN, olCtxLight, olCtxBands, olCtxMask);
+                float2 olCtxR = vw_CtxRule(olCtxV, _CtxOutlineWhere, _CtxOutlineEye, _CtxOutlineDistMode, _CtxOutlineDist, _CtxOutlineGaze, _CtxOutlineTorch, _CtxOutlineLightCol, _CtxOutlineLight, _CtxOutlineDark, _CtxOutlineBeat, _CtxOutlineBand, _CtxOutlineInvert, _CtxOutlineHidden, _CtxOutlineMaskCh, 1.0);
+                float ctx = lerp(1.0, olCtxR.x, olCtxR.y);
                 c.rgb *= ctx;
                 c.a   *= ctx;
             }
+            //endex
             #endif
             //endex
 
-            if (_IgnoreFog < 0.5) { UNITY_APPLY_FOG(_unity_fogCoord, c); }
+            VW_ApplyFog(c, IN.worldPos.w);
             return VF_POSTGUARD(c);
         }
 
