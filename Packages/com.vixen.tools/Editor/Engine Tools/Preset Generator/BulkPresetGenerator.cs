@@ -279,7 +279,9 @@ namespace VixenTools.Editor
             EnsureDirectoryExists(_outputDirectory);
 
             string phantomPath = "Assets/VixenTools_PhantomTexture.png";
-            File.WriteAllBytes(phantomPath, new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A });
+            var phantomTexture = new Texture2D(4, 4, TextureFormat.RGBA32, false);
+            File.WriteAllBytes(phantomPath, phantomTexture.EncodeToPNG());
+            DestroyImmediate(phantomTexture);
             AssetDatabase.ImportAsset(phantomPath, ImportAssetOptions.ForceUpdate);
 
             TextureImporter importer = AssetImporter.GetAtPath(phantomPath) as TextureImporter;

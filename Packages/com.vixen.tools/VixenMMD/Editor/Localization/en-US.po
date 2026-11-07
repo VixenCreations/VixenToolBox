@@ -1,0 +1,1041 @@
+msgid ""
+msgstr ""
+"Language: en-US\n"
+
+msgid "Put VixenMMD inside an avatar. It needs a VRC Avatar Descriptor above it."
+msgstr "Put VixenMMD inside an avatar. It needs a VRC Avatar Descriptor above it."
+
+msgid "This avatar has {0} VixenMMD components. Keep one; only the first one is used."
+msgstr "This avatar has {0} VixenMMD components. Keep one; only the first one is used."
+
+msgid "Make It MMD is also set up on this avatar. Both tools would edit the face. Convert its settings into VixenMMD, then you can remove Make It MMD."
+msgstr "Make It MMD is also set up on this avatar. Both tools would edit the face. Convert its settings into VixenMMD, then you can remove Make It MMD."
+
+msgid "Convert"
+msgstr "Convert"
+
+msgid "No face mesh. Set one here, or set the viseme mesh on the avatar descriptor."
+msgstr "No face mesh. Set one here, or set the viseme mesh on the avatar descriptor."
+
+msgid "The face mesh has no blend shapes."
+msgstr "The face mesh has no blend shapes."
+
+msgid "The face mesh is not part of this avatar."
+msgstr "The face mesh is not part of this avatar."
+
+msgid "MMD worlds only animate a mesh called \"Body\". Your face mesh is \"{0}\"."
+msgstr "MMD worlds only animate a mesh called \"Body\". Your face mesh is \"{0}\"."
+
+msgid "Rename on upload"
+msgstr "Rename on upload"
+
+msgid "MMD worlds only find the face mesh when it sits right under the avatar root."
+msgstr "MMD worlds only find the face mesh when it sits right under the avatar root."
+
+msgid "Move on upload"
+msgstr "Move on upload"
+
+msgid "\"Body\" is already taken by another object. On upload it becomes \"Body (Original)\"."
+msgstr "\"Body\" is already taken by another object. On upload it becomes \"Body (Original)\"."
+
+msgid "{0} (use {1})"
+msgstr "{0} (use {1})"
+
+msgid "Dances will not drive these names, because a digit or mark is off: {0}."
+msgstr "Dances will not drive these names, because a digit or mark is off: {0}."
+
+msgid "Some FX states have Write Defaults off. MMD worlds such as Nero3D ask for Write Defaults on. Force it on for the upload, then test your toggles."
+msgstr "Some FX states have Write Defaults off. MMD worlds such as Nero3D ask for Write Defaults on. Force it on for the upload, then test your toggles."
+
+msgid "Force Write Defaults"
+msgstr "Force Write Defaults"
+
+msgid "MMD dances move your hips around the stage. These meshes have a Root Bone that doesn't follow them, so they can disappear mid-dance: {0}. Set each Root Bone to Hips or Chest, then run Auto-Fit Mesh Bounds in the Optimization Suite."
+msgstr "MMD dances move your hips around the stage. These meshes have a Root Bone that doesn't follow them, so they can disappear mid-dance: {0}. Set each Root Bone to Hips or Chest, then run Auto-Fit Mesh Bounds in the Optimization Suite."
+
+msgid "The MMD world guard is on, but no layers are picked. Pick your hand gesture layers."
+msgstr "The MMD world guard is on, but no layers are picked. Pick your hand gesture layers."
+
+msgid "Not in your FX controller right now: {0}. That's fine if another tool adds them on upload."
+msgstr "Not in your FX controller right now: {0}. That's fine if another tool adds them on upload."
+
+msgid "VRCFury MMD Compatibility is on this avatar too. Use one of the two, not both."
+msgstr "VRCFury MMD Compatibility is on this avatar too. Use one of the two, not both."
+
+msgid "VRCFury Blendshape Optimizer will remove your MMD shapes on upload, and VixenMMD can't stop it: {0} Turn the optimizer off for this avatar."
+msgstr "VRCFury Blendshape Optimizer will remove your MMD shapes on upload, and VixenMMD can't stop it: {0} Turn the optimizer off for this avatar."
+
+msgid "VRCFury Blendshape Optimizer is on. VixenMMD keeps every MMD shape on your face safe from it when you upload."
+msgstr "VRCFury Blendshape Optimizer is on. VixenMMD keeps every MMD shape on your face safe from it when you upload."
+
+msgid "d4rk Avatar Optimizer has MMD Compatibility off, so it can remove your MMD shapes."
+msgstr "d4rk Avatar Optimizer has MMD Compatibility off, so it can remove your MMD shapes."
+
+msgid "d4rk Avatar Optimizer may remove these, because they are not on its MMD list: {0}."
+msgstr "d4rk Avatar Optimizer may remove these, because they are not on its MMD list: {0}."
+
+msgid "The face mesh is missing."
+msgstr "The face mesh is missing."
+
+msgid "\"{0}\" already has an Animator."
+msgstr "\"{0}\" already has an Animator."
+
+msgid "\"{0}\" has a VRCFury component, and VRCFury removes Animators from objects that have one."
+msgstr "\"{0}\" has a VRCFury component, and VRCFury removes Animators from objects that have one."
+
+msgid "Open VixenMMD to set up the MMD blend shapes for this avatar."
+msgstr "Open VixenMMD to set up the MMD blend shapes for this avatar."
+
+msgid "Builds {0} MMD blend shapes on the face when you upload or enter Play Mode. Your avatar files are not changed."
+msgstr "Builds {0} MMD blend shapes on the face when you upload or enter Play Mode. Your avatar files are not changed."
+
+msgid "Open VixenMMD"
+msgstr "Open VixenMMD"
+
+msgid "Face"
+msgstr "Face"
+
+msgid "Face Mesh"
+msgstr "Face Mesh"
+
+msgid "Leave empty to use the viseme mesh from the avatar descriptor."
+msgstr "Leave empty to use the viseme mesh from the avatar descriptor."
+
+msgid "Using {0}"
+msgstr "Using {0}"
+
+msgid "Rename To Body"
+msgstr "Rename To Body"
+
+msgid "MMD worlds only animate a mesh called Body."
+msgstr "MMD worlds only animate a mesh called Body."
+
+msgid "Move To Avatar Root"
+msgstr "Move To Avatar Root"
+
+msgid "MMD worlds only find Body right under the avatar root."
+msgstr "MMD worlds only find Body right under the avatar root."
+
+msgid "MMD Worlds"
+msgstr "MMD Worlds"
+
+msgid "Layer Guard"
+msgstr "Layer Guard"
+
+msgid "In MMD worlds, switches off the FX layers you pick, so hand gestures don't fight the dance. They switch back on everywhere else."
+msgstr "In MMD worlds, switches off the FX layers you pick, so hand gestures don't fight the dance. They switch back on everywhere else."
+
+msgid "Switch Off In MMD Worlds"
+msgstr "Switch Off In MMD Worlds"
+
+msgid "Advanced"
+msgstr "Advanced"
+
+msgid "Remove From Upload"
+msgstr "Remove From Upload"
+
+msgid "Turns Write Defaults on for every FX state on upload."
+msgstr "Turns Write Defaults on for every FX state on upload."
+
+msgid "Gimmicks built for Write Defaults off can break with this on. Test your toggles after upload."
+msgstr "Gimmicks built for Write Defaults off can break with this on. Test your toggles after upload."
+
+msgid "Import .json"
+msgstr "Import .json"
+
+msgid "Export .json"
+msgstr "Export .json"
+
+msgid "Reads and writes Make It MMD presets too."
+msgstr "Reads and writes Make It MMD presets too."
+
+msgid "Remove"
+msgstr "Remove"
+
+msgid "Add an FX layer..."
+msgstr "Add an FX layer..."
+
+msgid "No FX controller found."
+msgstr "No FX controller found."
+
+msgid "Every FX layer is listed."
+msgstr "Every FX layer is listed."
+
+msgid "Add Name"
+msgstr "Add Name"
+
+msgid "Its recipe is missing."
+msgstr "Its recipe is missing."
+
+msgid "No shape for the {0} viseme."
+msgstr "No shape for the {0} viseme."
+
+msgid "Needs shapes for \"{0}\"."
+msgstr "Needs shapes for \"{0}\"."
+
+msgid "No matching shapes on this face."
+msgstr "No matching shapes on this face."
+
+msgid "Left out {0}: this face only has a shape for both sides."
+msgstr "Left out {0}: this face only has a shape for both sides."
+
+msgid "No shape for {0}."
+msgstr "No shape for {0}."
+
+msgid "Only the left side has a shape for {0}."
+msgstr "Only the left side has a shape for {0}."
+
+msgid "Only the right side has a shape for {0}."
+msgstr "Only the right side has a shape for {0}."
+
+msgid "The face already has this shape."
+msgstr "The face already has this shape."
+
+msgid "Already set up on this component."
+msgstr "Already set up on this component."
+
+msgid "This name is listed twice. Only the first one is built."
+msgstr "This name is listed twice. Only the first one is built."
+
+msgid "The face mesh has no shape called {0}. Another tool may have removed it. This MMD shape is not built."
+msgstr "The face mesh has no shape called {0}. Another tool may have removed it. This MMD shape is not built."
+
+msgid "Mouth"
+msgstr "Mouth"
+
+msgid "Eyes"
+msgstr "Eyes"
+
+msgid "Brows"
+msgstr "Brows"
+
+msgid "Other"
+msgstr "Other"
+
+msgid "Smile expression"
+msgstr "Smile expression"
+
+msgid "Blush"
+msgstr "Blush"
+
+msgid "Pleading or worried face"
+msgstr "Pleading or worried face"
+
+msgid "Angry expression"
+msgstr "Angry expression"
+
+msgid "Happy expression"
+msgstr "Happy expression"
+
+msgid "Sad expression"
+msgstr "Sad expression"
+
+msgid "Surprised expression"
+msgstr "Surprised expression"
+
+msgid "Furrowed brows"
+msgstr "Furrowed brows"
+
+msgid "Squint expression"
+msgstr "Squint expression"
+
+msgid "Hide eye shine"
+msgstr "Hide eye shine"
+
+msgid "Hide eye lens"
+msgstr "Hide eye lens"
+
+msgid "Showing {0} of {1}. Type more to narrow it down."
+msgstr "Showing {0} of {1}. Type more to narrow it down."
+
+msgid "0 shapes"
+msgstr "0 shapes"
+
+msgid "1 shape. Enter picks the first one."
+msgstr "1 shape. Enter picks the first one."
+
+msgid "{0} shapes. Enter picks the first one."
+msgstr "{0} shapes. Enter picks the first one."
+
+msgid "The file is empty."
+msgstr "The file is empty."
+
+msgid "The file is not a Make It MMD or VixenMMD .json file."
+msgstr "The file is not a Make It MMD or VixenMMD .json file."
+
+msgid "The file has no MMD shapes in it."
+msgstr "The file has no MMD shapes in it."
+
+msgid "The file comes from a newer version of Make It MMD than VixenMMD can read."
+msgstr "The file comes from a newer version of Make It MMD than VixenMMD can read."
+
+msgid "Import MMD shapes (.json)"
+msgstr "Import MMD shapes (.json)"
+
+msgid "Could not read the file."
+msgstr "Could not read the file."
+
+msgid "OK"
+msgstr "OK"
+
+msgid "This file has {0} MMD shapes. This component already has {1}."
+msgstr "This file has {0} MMD shapes. This component already has {1}."
+
+msgid "Replace all"
+msgstr "Replace all"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Add and update"
+msgstr "Add and update"
+
+msgid "Imported {0} MMD shapes."
+msgstr "Imported {0} MMD shapes."
+
+msgid "Export MMD shapes (.json)"
+msgstr "Export MMD shapes (.json)"
+
+msgid "This Unity editor cannot read Japanese (Shift-JIS) text, so the morph names cannot be read."
+msgstr "This Unity editor cannot read Japanese (Shift-JIS) text, so the morph names cannot be read."
+
+msgid "This is not a VMD motion file."
+msgstr "This is not a VMD motion file."
+
+msgid "The file is damaged."
+msgstr "The file is damaged."
+
+msgid "Morphs"
+msgstr "Morphs"
+
+msgid "Auto-fill"
+msgstr "Auto-fill"
+
+msgid "Dance Check"
+msgstr "Dance Check"
+
+msgid "All"
+msgstr "All"
+
+msgid "Set up here"
+msgstr "Set up here"
+
+msgid "On the face already"
+msgstr "On the face already"
+
+msgid "Missing"
+msgstr "Missing"
+
+msgid "Used by most dances"
+msgstr "Used by most dances"
+
+msgid "This avatar has no face mesh. Set one on the VixenMMD component, or set the viseme mesh on the avatar descriptor."
+msgstr "This avatar has no face mesh. Set one on the VixenMMD component, or set the viseme mesh on the avatar descriptor."
+
+msgid "No avatar"
+msgstr "No avatar"
+
+msgid "Face: {0} ({1} shapes)"
+msgstr "Face: {0} ({1} shapes)"
+
+msgid "Face: none"
+msgstr "Face: none"
+
+msgid "Select an avatar in the Hierarchy to set up MMD dancing for it."
+msgstr "Select an avatar in the Hierarchy to set up MMD dancing for it."
+
+msgid "{0} is set up with Make It MMD. VixenMMD can take over its MMD shapes and settings."
+msgstr "{0} is set up with Make It MMD. VixenMMD can take over its MMD shapes and settings."
+
+msgid "Convert Make It MMD Setup"
+msgstr "Convert Make It MMD Setup"
+
+msgid "Add VixenMMD to {0}"
+msgstr "Add VixenMMD to {0}"
+
+msgid "{0} (not on this face)"
+msgstr "{0} (not on this face)"
+
+msgid "Click to pick a different shape."
+msgstr "Click to pick a different shape."
+
+msgid "(click to add a shape)"
+msgstr "(click to add a shape)"
+
+msgid "Add another shape..."
+msgstr "Add another shape..."
+
+msgid "replaces face"
+msgstr "replaces face"
+
+msgid "1 shape"
+msgstr "1 shape"
+
+msgid "{0} shapes"
+msgstr "{0} shapes"
+
+msgid "on the face"
+msgstr "on the face"
+
+msgid "Custom"
+msgstr "Custom"
+
+msgid "Pick an MMD morph on the left. Use Auto-fill to set most of them up from your face tracking shapes in one go."
+msgstr "Pick an MMD morph on the left. Use Auto-fill to set most of them up from your face tracking shapes in one go."
+
+msgid "Standard MMD name"
+msgstr "Standard MMD name"
+
+msgid "From the InochiPM chart"
+msgstr "From the InochiPM chart"
+
+msgid "Extended name"
+msgstr "Extended name"
+
+msgid "Dances use \"{0}\". A digit or mark in this name is off, so dances will not drive it."
+msgstr "Dances use \"{0}\". A digit or mark in this name is off, so dances will not drive it."
+
+msgid "Preview on the avatar"
+msgstr "Preview on the avatar"
+
+msgid "Your face already has this shape. Dances will use it as it is."
+msgstr "Your face already has this shape. Dances will use it as it is."
+
+msgid "Not set up yet."
+msgstr "Not set up yet."
+
+msgid "Replace It With My Own"
+msgstr "Replace It With My Own"
+
+msgid "Set Up This Morph"
+msgstr "Set Up This Morph"
+
+msgid "Your face already has this shape. On upload, VixenMMD's version takes its place."
+msgstr "Your face already has this shape. On upload, VixenMMD's version takes its place."
+
+msgid "Build this morph"
+msgstr "Build this morph"
+
+msgid "Remove From List"
+msgstr "Remove From List"
+
+msgid "Made From"
+msgstr "Made From"
+
+msgid "No shapes yet. Add some below."
+msgstr "No shapes yet. Add some below."
+
+msgid "The face has no shape with this name."
+msgstr "The face has no shape with this name."
+
+msgid "Face Tracking Recipe"
+msgstr "Face Tracking Recipe"
+
+msgid "Same as {0}:"
+msgstr "Same as {0}:"
+
+msgid "Untested starting point. Check it with Preview."
+msgstr "Untested starting point. Check it with Preview."
+
+msgid "Fill From Face Tracking"
+msgstr "Fill From Face Tracking"
+
+msgid "viseme {0}"
+msgstr "viseme {0}"
+
+msgid "(left)"
+msgstr "(left)"
+
+msgid "(right)"
+msgstr "(right)"
+
+msgid "Add A Shape"
+msgstr "Add A Shape"
+
+msgid "Reads face tracking from your avatar's face tracking settings. Found {0} face tracking shapes and {1} of 15 visemes."
+msgstr "Reads face tracking from your avatar's face tracking settings. Found {0} face tracking shapes and {1} of 15 visemes."
+
+msgid "Reads face tracking from blend shape names (Unified Expressions, ARKit and similar). Found {0} face tracking shapes and {1} of 15 visemes."
+msgstr "Reads face tracking from blend shape names (Unified Expressions, ARKit and similar). Found {0} face tracking shapes and {1} of 15 visemes."
+
+msgid "VixenMMD found no face tracking shapes on this face. Visemes still fill the mouth shapes, and you can set up the rest by hand."
+msgstr "VixenMMD found no face tracking shapes on this face. Visemes still fill the mouth shapes, and you can set up the rest by hand."
+
+msgid "Options"
+msgstr "Options"
+
+msgid "Keep MMD shapes the face already has"
+msgstr "Keep MMD shapes the face already has"
+
+msgid "Redo morphs that are already set up"
+msgstr "Redo morphs that are already set up"
+
+msgid "Add the InochiPM chart names too"
+msgstr "Add the InochiPM chart names too"
+
+msgid "Add untested chart morphs"
+msgstr "Add untested chart morphs"
+
+msgid "Expression Shapes"
+msgstr "Expression Shapes"
+
+msgid "Guess Empty Ones"
+msgstr "Guess Empty Ones"
+
+msgid "Guess All"
+msgstr "Guess All"
+
+msgid "Replace the shapes of every expression with VixenMMD's guess?"
+msgstr "Replace the shapes of every expression with VixenMMD's guess?"
+
+msgid "Replace"
+msgstr "Replace"
+
+msgid "Some MMD morphs need an expression that face tracking can't make. Build each one from one or more of your shapes, with an amount for each, or leave it empty."
+msgstr "Some MMD morphs need an expression that face tracking can't make. Build each one from one or more of your shapes, with an amount for each, or leave it empty."
+
+msgid "(none)"
+msgstr "(none)"
+
+msgid "Viseme Shapes"
+msgstr "Viseme Shapes"
+
+msgid "The mouth morphs start from your visemes. Add shapes to a viseme to build it your own way, for example a jaw shape and a lip shape together."
+msgstr "The mouth morphs start from your visemes. Add shapes to a viseme to build it your own way, for example a jaw shape and a lip shape together."
+
+msgid "No shape found"
+msgstr "No shape found"
+
+msgid "Viseme {0}"
+msgstr "Viseme {0}"
+
+msgid "Preview Changes"
+msgstr "Preview Changes"
+
+msgid "Apply (Preview First)"
+msgstr "Apply (Preview First)"
+
+msgid "Nothing To Apply"
+msgstr "Nothing To Apply"
+
+msgid "Apply 1 Morph"
+msgstr "Apply 1 Morph"
+
+msgid "Apply {0} Morphs"
+msgstr "Apply {0} Morphs"
+
+msgid "Set up {0} morphs. Undo reverses this."
+msgstr "Set up {0} morphs. Undo reverses this."
+
+msgid "{0} morphs will be set up, {1} left as they are."
+msgstr "{0} morphs will be set up, {1} left as they are."
+
+msgid "untested"
+msgstr "untested"
+
+msgid "chart name"
+msgstr "chart name"
+
+msgid "MMD Shapes On The Face"
+msgstr "MMD Shapes On The Face"
+
+msgid "None. That's normal for most VRChat avatars."
+msgstr "None. That's normal for most VRChat avatars."
+
+msgid "\"{0}\" looks like the MMD shape \"{1}\", but a digit or mark is off, so dances will not drive it."
+msgstr "\"{0}\" looks like the MMD shape \"{1}\", but a digit or mark is off, so dances will not drive it."
+
+msgid "Add \"{0}\" As A Copy"
+msgstr "Add \"{0}\" As A Copy"
+
+msgid "Find Which Ones Copy Another Shape"
+msgstr "Find Which Ones Copy Another Shape"
+
+msgid "None of them is an exact copy of another shape."
+msgstr "None of them is an exact copy of another shape."
+
+msgid "{0}  is a copy of  {1}"
+msgstr "{0}  is a copy of  {1}"
+
+msgid "Add Them As Editable Morphs"
+msgstr "Add Them As Editable Morphs"
+
+msgid "Reading shapes"
+msgstr "Reading shapes"
+
+msgid "Check which MMD shapes a dance needs, and whether this avatar has them."
+msgstr "Check which MMD shapes a dance needs, and whether this avatar has them."
+
+msgid "Add Motion (.vmd)"
+msgstr "Add Motion (.vmd)"
+
+msgid "Add a VMD motion"
+msgstr "Add a VMD motion"
+
+msgid "Clear"
+msgstr "Clear"
+
+msgid "no face keys (camera or body only)"
+msgstr "no face keys (camera or body only)"
+
+msgid "{0} morphs used, made for {1}"
+msgstr "{0} morphs used, made for {1}"
+
+msgid "This avatar covers {0} of the {1} MMD shapes these dances use."
+msgstr "This avatar covers {0} of the {1} MMD shapes these dances use."
+
+msgid "(up to {0}%)"
+msgstr "(up to {0}%)"
+
+msgid "Set Up The Missing Ones From Face Tracking"
+msgstr "Set Up The Missing Ones From Face Tracking"
+
+msgid "Set up {0} morphs."
+msgstr "Set up {0} morphs."
+
+msgid "{0} have no face tracking recipe or matching shapes. Set them up by hand on the Morphs tab."
+msgstr "{0} have no face tracking recipe or matching shapes. Set them up by hand on the Morphs tab."
+
+msgid "VixenMMD builds it"
+msgstr "VixenMMD builds it"
+
+msgid "missing: you have \"{0}\", which is off by a digit or mark"
+msgstr "missing: you have \"{0}\", which is off by a digit or mark"
+
+msgid "missing"
+msgstr "missing"
+
+msgid "vixenmmd.several"
+msgstr "VixenMMD: more than one VixenMMD component"
+
+msgid "vixenmmd.several:description"
+msgstr "This avatar has {0} VixenMMD components. Only the one on \"{1}\" is used. Remove the others."
+
+msgid "vixenmmd.noface"
+msgstr "VixenMMD: no face mesh"
+
+msgid "vixenmmd.noface:description"
+msgstr "Set the face mesh on the VixenMMD component, or set the viseme mesh on the avatar descriptor."
+
+msgid "vixenmmd.skipped"
+msgstr "VixenMMD: \"{0}\" was not built"
+
+msgid "vixenmmd.skipped:description"
+msgstr "{1}"
+
+msgid "vixenmmd.nofx"
+msgstr "VixenMMD: no FX controller"
+
+msgid "vixenmmd.nofx:description"
+msgstr "The FX layer options need an FX controller on the avatar descriptor. They were left out."
+
+msgid "vixenmmd.layersmissing"
+msgstr "VixenMMD: FX layers not found"
+
+msgid "vixenmmd.layersmissing:description"
+msgstr "These layers are not in the FX controller at build time: {0}."
+
+msgid "vixenmmd.guardnothing"
+msgstr "VixenMMD: MMD world guard has nothing to switch off"
+
+msgid "vixenmmd.guardnothing:description"
+msgstr "None of the guard layers exist in the FX controller, so the guard was left out. Your hand layers stay as they are."
+
+msgid "vixenmmd.mim"
+msgstr "VixenMMD: Make It MMD is also on this avatar"
+
+msgid "vixenmmd.mim:description"
+msgstr "Both tools edit the face mesh. Convert the Make It MMD components from the VixenMMD inspector, then remove Make It MMD."
+
+msgid "vixenmmd.vrcfnokeep"
+msgstr "VixenMMD: VRCFury will remove your MMD shapes"
+
+msgid "vixenmmd.vrcfnokeep:description"
+msgstr "VRCFury Blendshape Optimizer removes blend shapes your animations don't use, and MMD worlds animate theirs from outside your avatar. VixenMMD can't keep them safe: {0} Turn the optimizer off for this avatar."
+
+msgid "mmd:あ"
+msgstr "Mouth open, \"ah\""
+
+msgid "mmd:い"
+msgstr "Mouth wide, \"ee\""
+
+msgid "mmd:う"
+msgstr "Lips pushed out, \"oo\""
+
+msgid "mmd:え"
+msgstr "Mouth half open, \"eh\""
+
+msgid "mmd:お"
+msgstr "Mouth round, \"oh\""
+
+msgid "mmd:にやり"
+msgstr "Smirk"
+
+msgid "mmd:∧"
+msgstr "Frown mouth"
+
+msgid "mmd:ワ"
+msgstr "Big open smile, \"wa\""
+
+msgid "mmd:ω"
+msgstr "Cat mouth"
+
+msgid "mmd:▲"
+msgstr "Triangle mouth"
+
+msgid "mmd:口角上げ"
+msgstr "Mouth corners up"
+
+msgid "mmd:口角下げ"
+msgstr "Mouth corners down"
+
+msgid "mmd:口横広げ"
+msgstr "Mouth stretched wide"
+
+msgid "mmd:にやり２"
+msgstr "Smirk 2"
+
+msgid "mmd:ん"
+msgstr "Mouth closed, \"n\""
+
+msgid "mmd:あ２"
+msgstr "Mouth wide open, \"ah\" 2"
+
+msgid "mmd:□"
+msgstr "Square mouth, shouting"
+
+msgid "mmd:ω□"
+msgstr "Open cat mouth"
+
+msgid "mmd:にっこり"
+msgstr "Smiling mouth"
+
+msgid "mmd:ぺろっ"
+msgstr "Tongue out"
+
+msgid "mmd:てへぺろ"
+msgstr "Playful tongue out"
+
+msgid "mmd:てへぺろ２"
+msgstr "Playful tongue out 2"
+
+msgid "mmd:あ３"
+msgstr "\"Ah\" 3"
+
+msgid "mmd:ワアアア!"
+msgstr "Screaming mouth"
+
+msgid "mmd:ええ!"
+msgstr "Shocked \"eh!\""
+
+msgid "mmd:ええ？"
+msgstr "Puzzled \"eh?\""
+
+msgid "mmd:あ狂った"
+msgstr "\"Ah\", gone wild"
+
+msgid "mmd:お小さい"
+msgstr "Small \"oh\""
+
+msgid "mmd:キッス"
+msgstr "Kiss lips"
+
+msgid "mmd:トップリップ"
+msgstr "Top lip"
+
+msgid "mmd:ボトムリップ"
+msgstr "Bottom lip"
+
+msgid "mmd:いー！"
+msgstr "Gritted teeth, \"eee!\""
+
+msgid "mmd:Ｖ"
+msgstr "V-shaped mouth"
+
+msgid "mmd:口下げ"
+msgstr "Mouth down"
+
+msgid "mmd:口上げ"
+msgstr "Mouth up"
+
+msgid "mmd:口すぼめる"
+msgstr "Pursed lips"
+
+msgid "mmd:上歯上げ"
+msgstr "Upper teeth up"
+
+msgid "mmd:下歯下げ"
+msgstr "Lower teeth down"
+
+msgid "mmd:上歯を隠す"
+msgstr "Hide upper teeth"
+
+msgid "mmd:犬歯右"
+msgstr "Right fang"
+
+msgid "mmd:犬歯左"
+msgstr "Left fang"
+
+msgid "mmd:歯右２"
+msgstr "Right teeth 2"
+
+msgid "mmd:歯左２"
+msgstr "Left teeth 2"
+
+msgid "mmd:まばたき"
+msgstr "Blink, both eyes closed"
+
+msgid "mmd:笑い"
+msgstr "Smiling closed eyes"
+
+msgid "mmd:はぅ"
+msgstr "Eyes squeezed shut, ><"
+
+msgid "mmd:瞳小"
+msgstr "Small pupils"
+
+msgid "mmd:ｳｨﾝｸ２右"
+msgstr "Wink right 2"
+
+msgid "mmd:ウィンク２"
+msgstr "Wink left 2"
+
+msgid "mmd:ウィンク"
+msgstr "Wink left"
+
+msgid "mmd:ウィンク右"
+msgstr "Wink right"
+
+msgid "mmd:なごみ"
+msgstr "Relaxed eyes, ^^"
+
+msgid "mmd:じと目"
+msgstr "Half-lidded stare"
+
+msgid "mmd:びっくり"
+msgstr "Eyes wide open"
+
+msgid "mmd:ｷﾘｯ"
+msgstr "Sharp, serious eyes"
+
+msgid "mmd:はぁと"
+msgstr "Heart eyes"
+
+msgid "mmd:星目"
+msgstr "Star eyes"
+
+msgid "mmd:恐ろしい子！"
+msgstr "Shocked blank eyes"
+
+msgid "mmd:はちゅ目"
+msgstr "Round dot eyes"
+
+msgid "mmd:瞳縦潰れ"
+msgstr "Pupils squashed tall"
+
+msgid "mmd:光下"
+msgstr "Eye highlight lower"
+
+msgid "mmd:ハイライト消"
+msgstr "Hide eye highlight"
+
+msgid "mmd:映り込み消"
+msgstr "Hide eye reflection"
+
+msgid "mmd:喜び"
+msgstr "Joyful eyes"
+
+msgid "mmd:わぉ!?"
+msgstr "\"Wow!?\" eyes"
+
+msgid "mmd:なごみω"
+msgstr "Relaxed eyes with cat mouth"
+
+msgid "mmd:悲しむ"
+msgstr "Sad eyes"
+
+msgid "mmd:敵意"
+msgstr "Hostile glare"
+
+msgid "mmd:瞳全消し"
+msgstr "Hide pupils completely"
+
+msgid "mmd:はちゅ目縦潰れ"
+msgstr "Dot eyes squashed tall"
+
+msgid "mmd:はちゅ目横潰れ"
+msgstr "Dot eyes squashed wide"
+
+msgid "mmd:はんっ！"
+msgstr "Scoff, \"hmph!\""
+
+msgid "mmd:がーん"
+msgstr "Shocked dismay"
+
+msgid "mmd:青ざめる"
+msgstr "Turn pale"
+
+msgid "mmd:赤面"
+msgstr "Deep blush"
+
+msgid "mmd:照れ1"
+msgstr "Blush 1"
+
+msgid "mmd:照れ2"
+msgstr "Blush 2"
+
+msgid "mmd:テレ"
+msgstr "Blush"
+
+msgid "mmd:頬染め"
+msgstr "Rosy cheeks"
+
+msgid "mmd:目の幅涙"
+msgstr "Streaming tears"
+
+msgid "mmd:涙目"
+msgstr "Teary eyes"
+
+msgid "mmd:下まぶた上げ"
+msgstr "Lower eyelids up"
+
+msgid "mmd:恐ろしい"
+msgstr "Scary eyes"
+
+msgid "mmd:星目１"
+msgstr "Star eyes 1"
+
+msgid "mmd:星目２"
+msgstr "Star eyes 2"
+
+msgid "mmd:スターライト"
+msgstr "Starlight eyes"
+
+msgid "mmd:丸い目"
+msgstr "Round eyes"
+
+msgid "mmd:瞳横潰れ"
+msgstr "Pupils squashed wide"
+
+msgid "mmd:ｺｯﾁﾐﾝﾅ"
+msgstr "\"Don't look at me\" stare"
+
+msgid "mmd:にこり"
+msgstr "Cheerful brows"
+
+msgid "mmd:上"
+msgstr "Brows up"
+
+msgid "mmd:下"
+msgstr "Brows down"
+
+msgid "mmd:真面目"
+msgstr "Serious brows"
+
+msgid "mmd:困る"
+msgstr "Worried brows"
+
+msgid "mmd:怒り"
+msgstr "Angry brows"
+
+msgid "mmd:前"
+msgstr "Brows forward"
+
+msgid "mmd:にこり_R"
+msgstr "Cheerful brow, right"
+
+msgid "mmd:にこり_L"
+msgstr "Cheerful brow, left"
+
+msgid "mmd:上_R"
+msgstr "Right brow up"
+
+msgid "mmd:上_L"
+msgstr "Left brow up"
+
+msgid "mmd:下_R"
+msgstr "Right brow down"
+
+msgid "mmd:下_L"
+msgstr "Left brow down"
+
+msgid "mmd:真面目_R"
+msgstr "Serious brow, right"
+
+msgid "mmd:真面目_L"
+msgstr "Serious brow, left"
+
+msgid "mmd:困る_R"
+msgstr "Worried brow, right"
+
+msgid "mmd:困る_L"
+msgstr "Worried brow, left"
+
+msgid "mmd:怒り_R"
+msgstr "Angry brow, right"
+
+msgid "mmd:怒り_L"
+msgstr "Angry brow, left"
+
+msgid "mmd:眉頭左"
+msgstr "Inner left brow"
+
+msgid "mmd:眉頭右"
+msgstr "Inner right brow"
+
+msgid "mmd:怒り眉"
+msgstr "Angry brows"
+
+msgid "mmd:失望した"
+msgstr "Disappointed brows"
+
+msgid "mmd:にこり眉"
+msgstr "Smiling brows"
+
+msgid "mmd:困った"
+msgstr "Troubled brows"
+
+msgid "mmd:動揺"
+msgstr "Flustered brows"
+
+msgid "mmd:眉上"
+msgstr "Brows up"
+
+msgid "mmd:眉下"
+msgstr "Brows down"
+
+msgid "mmd:眉毛を前方に"
+msgstr "Brows forward"
+
+msgid "mmd:照れ"
+msgstr "Blush"
+
+msgid "mmd:歯無し下"
+msgstr "Hide lower teeth"
+
+msgid "mmd:歯無し上"
+msgstr "Hide upper teeth"
+
+msgid "mmd:涙"
+msgstr "Tears"
+
+msgid "mmd:しいたけ"
+msgstr "Cross-shaped sparkle eyes"
+
+msgid "mmd:眼鏡"
+msgstr "Glasses"
+
+msgid "mmd:眼鏡の骨"
+msgstr "Glasses frame"
+
+msgid "mmd:メガネスケール"
+msgstr "Glasses size"
+
+msgid "mmd:みっぱい"
+msgstr "Full"
+
+msgid "mmd:右怒筋"
+msgstr "Anger mark, right"
+
+msgid "mmd:左怒筋"
+msgstr "Anger mark, left"

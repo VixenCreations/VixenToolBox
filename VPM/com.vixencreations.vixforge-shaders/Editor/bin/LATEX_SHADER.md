@@ -48,10 +48,10 @@ Changes the colour of your Albedo before any lighting. It works like Poiyomi's C
 
 * **Mask** limits each change to part of the material: red holds **Hue Shift** and **Chromatize**, green **Brightness**, blue **Saturation** and alpha **Gamma**. Leave it empty to change everything.
 * **Saturation** drains the colour below 0 and strengthens it above. **Chromatize** makes colours more vivid but stops before they clip.
-* **Brightness** and **Gamma** darken or lift the colour. **Clamp** keeps the result between black and white.
+* **Brightness** and **Gamma** darken or lift the colour. **Clamp** keeps the result between black and white. Turn on **Keep Hue** and colours that go past white fade toward white instead of turning a neighbouring hue.
 * **Tint** recolours the material toward its **Color** and keeps the material's own light and dark. The colour's alpha sets how strongly.
 * **Hue Shift** turns the colour round the wheel: by hand with **Shift**, over time with **Speed**, or with the music through **Beat Hue Run**. **Color Space** picks how: *OKLab* keeps the brightness even, *HSV* is the classic wheel, and *Okhsv* keeps every colour as vivid as it was, so a strong red becomes an equally strong blue. With Okhsv, **Colorize** lets greys, whites and pale colours take the hue too. A hue shift can't colour black, so a colour picker texture that runs through black and grey only changes where it has colour.
-* **Color Grading** remaps the colour through a **Gradient Map** strip.
+* **Color Grading** remaps the colour through a **Gradient Map** strip. **Exact sRGB** reads the strip exactly, so a plain black to white strip changes nothing; leave it off to keep the look your maps already have.
 * Real Fur takes the adjusted colour too, except for **Beat Hue Run**.
 
 ### UV Tile Discard
@@ -171,6 +171,8 @@ Picks which of a world's extra lights reach you. It sits at the top of **SHADING
 * **Light Cookies** projects the cookie texture of a point light or a sun onto you. Spot light cookies always show.
 
 The last three start off, because each one adds lock time, and they grey out while **Pixel Lights** is off.
+
+* **Mirror Light** lights you in a mirror that has no light in it, from where the light probes say the light comes from. VRChat's personal mirror leaves out the world's lights unless you set it to show the world, so without this you look flat there. **Mirror Light Strength** sets how much of the probe light it takes. It starts off.
 
 ### Lighting
 
@@ -310,7 +312,7 @@ Clothing Pro and Fur Pro add their fabric and fur groups here, and Clothing Pro 
 Latex Ultra only. Soaks the masked area like the wearer just stepped out of the shower.
 
 * **Soak:** **Wetness** is the overall amount. It darkens the material, turns reflections to a near mirror water film and smooths out fine detail. The film sheen rides on the clear coat, so keep **POLISH** on for the strongest highlight. **Wet Touch** in **TOUCH** pushes the water aside under a hand.
-* **Streaks:** running water down the surface. **Gravity Flow** runs them down in the world instead of down the texture. Set the streak **Strength** to 0 for an even soak.
+* **Streaks:** running water down the surface. **Gravity Flow** runs them down in the world instead of down the texture, and **Caustics** drifts a net of light through the wet. Set the streak **Strength** to 0 for an even soak.
 * **Droplets:** real water drops that swell on downward-facing wet areas, pinch off and fall. **Surface Slide** runs a drop down the body before it falls, **Floor Splat** spreads it into a puddle at the floor height set under **Goo Effects > Floor**, and **Custom Particle** swaps the drop for your own image, such as sweat, bubbles, sparks or petals. **From Writhe** sheds drops from wherever Writhe has drawn the goo out thin.
 * The mask keeps all of it to part of the material.
 
@@ -362,6 +364,7 @@ Latex Ultra only. A spiral that takes over your own view: as **Amount** rises th
 
 * Attach it with **Hypno Setup** in the Shader Hub: it gives Hypno its own material at your eyes and a **Hypno** toggle in your menu. Only eyes inside **Radius** see it: at the default that means you, and with **Others Can Join** on, raising it lets anyone who leans in go under too. **Radius** grows and shrinks with your avatar.
 * Pick **Spiral**, **Endless Spiral**, **Rings** or **Pinwheel**. **Swirl** twists your real view, **Fill** leaves the world showing round the edges, and **Show In Photos** lets your own photos catch it.
+* **Focus** opens a clear window in the middle, so you still see who's in front of you, and **Focus Glow** rims it with **Color A**. **Wobble** makes the stripes ripple.
 * With AudioLink, **Beat Spin**, **Beat Pulse** and **Music Colour** let the music drive it.
 
 ### Eyes
@@ -650,7 +653,7 @@ Real hands, fingers and heads touching you, through VRChat's Material Contacts. 
 
 ### Material Contacts
 
-Turn on **Enable**, then run **Touch Setup** in the Shader Hub under **Tools**. It adds the contact receiver to your avatar, one for every four meshes, and **Preview Touch** lets you drag a pretend touch over the mesh in the editor. Material Contacts need VRChat SDK 3.10.6 or newer (the 3.10.6 betas count). On an older SDK, this section shows a warning and Touch Setup adds nothing.
+Turn on **Enable**, then run **Touch Setup** in the Shader Hub under **Tools**. It adds the contact receivers to your avatar, one on your head, chest or hips next to the meshes it serves, and **Preview Touch** lets you drag a pretend touch over the mesh in the editor. Material Contacts need VRChat SDK 3.10.6 or newer (the 3.10.6 betas count). On an older SDK, this section shows a warning and Touch Setup adds nothing.
 
 * **Hands**, **Fingers**, **Head**, **Feet**, **Body** and **Props** pick which touches count. Props are anything tagged VF_Touch, such as a toy.
 * **Size** is how wide a touch is, in centimetres.
@@ -764,6 +767,7 @@ Leave this section alone unless you know you need it.
 * **Cull** picks which sides draw. Set it to **Off** to see both sides of a single-sided part.
 * **Alpha To Coverage** smooths cut-out edges in Cutout mode.
 * **Noise Pattern:** *Classic* keeps random patterns like glitch slices and car paint flakes exactly as they are. *Fast* makes a locked material a little lighter to draw, but every pattern comes out in a new arrangement.
+* **Luma:** how colours fade to grey in **Saturation**, glitter, Tattoo ageing and the music colour. *Classic* keeps your current look. *Rec.709* matches how bright each colour really is, so blues fade darker and greens lighter.
 * **Enable GPU Instancing** lets Unity draw many copies of a mesh together.
 * **Blending** and **Stencil** are the raw render state, for effects like see-through masks.
 * **Shadow & Depth** sets how the shadow draws. **Match Rendering** keeps it in step with the settings above. **Ignore Fog** keeps your own colour in a foggy world instead of fading with everything else.

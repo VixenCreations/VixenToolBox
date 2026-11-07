@@ -265,7 +265,12 @@
                        + float3x3( 0.168,  0.330, -0.497,
                                   -0.328,  0.035,  0.292,
                                    1.250, -1.050, -0.203) * s;
-            return mul(m, c);
+            float3 rgb = mul(m, c);
+            float y = dot(rgb, float3(0.299, 0.587, 0.114));
+            float lo = min(rgb.r, min(rgb.g, rgb.b));
+            if (lo < 0.0)
+                rgb = (y > 0.0) ? y + (rgb - y) * (y / (y - lo)) : 0.0;
+            return rgb;
         }
 
         // Not called Input: the core's surface pass already owns that name. ripple is -1 on the line and

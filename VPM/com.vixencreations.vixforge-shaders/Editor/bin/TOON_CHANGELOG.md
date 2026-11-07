@@ -6,6 +6,37 @@
 Version history for the Toon shader. Toon is a companion to Latex Ultra: it shares the same lighting stack and toolkit, so that shared part tracks the Latex Ultra changelog. The inspector and its tools keep their own.
 
 ***
+## [2.8.0] - 2026-11-02
+
+*Touches on your hair and head now land, the kinds of touch you pick now count, and a new Mirror Light keeps your shading in VRChat's personal mirror.*
+
+### Heads up
+
+* **Run Touch Setup again, then unlock and lock your TOUCH materials.** Press **Add Touch Receivers** in **Touch Setup** so your receivers move next to your meshes, and re-lock each material with **Material Contacts** on so it picks up the fix.
+* **Check materials that use Saturation above 0, Chromatize or Tint.** Colours that used to clip into a neighbouring hue now keep their own, so strong colours can look a little different. Nudge the slider if you liked them punchier.
+
+### Added
+
+* **Mirror Light** in **Light Data** keeps your shading in mirrors. VRChat's personal mirror leaves out the world's lights unless you set it to show the world, so you looked flat in it. Turn it on and a mirror with no light in it lights you from where the light probes say the light comes from, and **Mirror Light Strength** sets how much. It starts off, so nothing changes until you turn it on.
+* **Keep Hue** under **Color Adjust** lets colours that **Clamp** stops at white fade toward white instead of turning a neighbouring hue. It starts off.
+* **Exact sRGB** under **Color Grading** reads the gradient map with exact sRGB, so a plain black to white strip leaves your colour as it was. It starts off, so your gradient maps look the same until you turn it on.
+* **Luma** under **Rendering** picks how colours fade to grey in **Saturation** and the other places that do it, like glitter, Tattoo ageing and the music colour. **Rec.709** matches how bright each colour really is, so blues fade darker and greens lighter. **Classic** keeps your current look and stays the default.
+
+### Fixed
+
+* **Touches on your hair, hood and head now show.** A touch far from your hips, like a headpat, often did nothing at all, for you, for everyone watching and in mirrors. VRChat only passes on the eight touches nearest each receiver, and your own hands at your sides took every place. **Touch Setup** now puts a receiver on your head, chest or hips, next to the meshes it serves.
+* **The kinds of touch you pick now count.** On some graphics cards every touch counted, whatever you ticked under **Material Contacts**. **Who Glows** set to **Me** lit nothing up, **Others** lit up for your own hands too, and **Colour Per Person** gave everyone the same colour.
+* **Your own head and chest no longer count as a touch** on the meshes around them, so your hair or hood doesn't glow where it sits on you.
+* **Viewer Context** rules that use **Light Colour Match** or **Darkness** now count the world's vertex lights, the cheaper lights a world sets to **Not Important**.
+* **Saturation** above 0 keeps each colour's hue. It used to push colours below black, which turned them toward a neighbouring hue and, with **Clamp** off, could make the material darker than black.
+* **Chromatize** now does what its tooltip says: colours stop at their most vivid without changing hue or lightness. Strong settings used to clip them into a different hue, and some greys turned black.
+* **Tint** keeps its hue on vivid colours, and a black **Tint** colour no longer turns the whole material black. It drains the colour to grey like any other grey, so use **Brightness** to darken.
+* **Hue Shift** in **Okhsv** no longer tints pure blue red or green, even at **Shift** 0.
+* **Hue Shift** in **OKLab** under **Dissolve** and **Edge Line** keeps the hue on strong colours, and some greys no longer turn black.
+* **Shard Hue Shift** and the outline's **AudioLink Hue** no longer push colours below black, so a turned colour keeps its hue.
+* **Hyperspace** **Tunnel** no longer breaks into black pixels when an animation sets **Distance** below its slider.
+* **Hypno Iris** with **Rainbow** on no longer jumps. With **Arms** above 1, the colours snapped back part way round the colour wheel each time the stripes moved on by one, at any **Speed**.
+***
 ## [2.7.0] - 2026-10-24
 
 *Real hands that touch you through Material Contacts and light up your emissions, outline and colour, tattoos that sit in your skin like real ink, eyes that hypnotise, follow and glint, matcaps you build yourself, Halloween presets, outlines that move with your body, with four new ways to draw them, a material that reacts as it stretches, Light Data to pick which lights reach you, and a rebuilt Viewer Context with Hidden Ink.*

@@ -5,6 +5,39 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.21.0] - 2026-11-07
+*VixenMMD gets your avatar dancing in MMD worlds, and takes over from Make It MMD.*
+
+### Added
+
+* **VixenMMD** (`VixenTools/Avatars/VixenMMD`, or **Add Component > VixenTools > VixenMMD**): builds the MMD blend shapes that MMD worlds animate, from shapes your avatar already has. It runs when you upload or enter Play Mode, so your avatar files never change. It needs NDMF, which comes with Modular Avatar.
+* **Auto-fill** sets up most MMD morphs in one go from your face tracking shapes and visemes. It reads your avatar's own face tracking settings, or Unified Expressions and ARKit shape names. Press **Preview Changes**, then **Apply**.
+* **Expression Shapes** cover the expressions face tracking can't make, like a smile or a blush. Build each one from one or more of your shapes, with an amount for each. **Guess Empty Ones** fills them in from your shape names, brows, eyes and mouth together.
+* **Viseme Shapes** let you build a viseme from several shapes, for bases whose mouth needs a jaw shape and a lip shape together.
+* Every shape list has a search box. Type any part of a name to find it, even on a face with hundreds of shapes.
+* **Morphs** lists every MMD name by mouth, eyes, brows and other, with the shapes each one is made from. **Preview on the avatar** shows a morph in the Scene view.
+* **Dance Check**: add a dance's `.vmd` file to see which MMD shapes it uses and which ones your avatar is missing. **Set Up The Missing Ones From Face Tracking** fills the gaps.
+* **Rename To Body** and **Move To Avatar Root** put your face mesh where MMD worlds look for it.
+* **Layer Guard** switches off the FX layers you pick, like your hand gestures, only while you're in an MMD world.
+* The VixenMMD inspector warns you about what stops a dance: a face mesh that isn't **Body**, Write Defaults off, a mesh whose **Root Bone** doesn't follow your hips, and an MMD name that's off by a digit or mark.
+* **VRCFury's Blendshape Optimizer leaves your MMD shapes alone.** It used to remove MMD shapes your own animations don't use, including rare ones its MMD list doesn't know. VixenMMD now keeps every MMD shape on your face, the ones it builds and the ones you already had.
+* **VixenMMD in Japanese, Chinese and Korean.** The window, the inspector, the checks and the build messages come in English, Japanese, Simplified Chinese and Korean. Pick one with **Editor Language** in the VixenMMD window or inspector; it's the same setting NDMF and Modular Avatar use.
+* **Every MMD name says what it does.** Each shape in the Morphs list shows a plain meaning in your language, like あ "Mouth open, ah" or 困る "Worried brows", and the search finds shapes by their meaning too.
+* **Make It MMD presets work.** **Import .json** and **Export .json** read and write Make It MMD's files, and **Convert Make It MMD Setup** moves an avatar's Make It MMD settings into VixenMMD in one click.
+* VixenMMD builds the same shapes Make It MMD does. It also keeps the face's other blend shapes in their places, and it can combine shapes that have more than one frame.
+* The Hub has a **VixenMMD** card.
+
+### Fixed
+
+* **PhysBone Blueprints keep colliders, ignore lists and root transforms.** Saving a blueprint used to leave them out, so an applied blueprint came back with empty collider and ignore lists. They are now saved by path and put back when you apply. Two PhysBones on the same bone stay apart instead of merging into one, and an apply is a single undo step. Blueprints saved before this still apply, without those links.
+* **The World Engine no longer leaves Unity's asset importing paused.** Closing the window, or a script reload, while it was still applying fixes could leave importing switched off until Unity restarted.
+* **Live Surface Snapping keeps a prefab's new position.** It used to move prefab instances without recording the change, so reopening the scene could put them back where they were.
+* **The Accessory Engine's Auto-Rig leaves meshes already skinned to several bones as they were.** It used to bind them to a single bone, so they stopped bending with the body. The Console lists the meshes it left alone.
+* **Undo after mounting accessories takes back only the mount.** It used to undo the change you made just before it as well.
+* **Badge Studio's UV mapper** frees the temporary mesh it makes for a skinned badge, and keeps the pixel position inside the texture when you click outside its UVs.
+* **The Pipeline Preset Manager** builds its temporary texture from a complete image. It used to write an unfinished image file.
+
+***
 ## [2.20.2] - 2026-10-23
 *The Avatar Validator's clean-up no longer breaks VRChat Constraints.*
 

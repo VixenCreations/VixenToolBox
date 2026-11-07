@@ -533,6 +533,14 @@ namespace VixenTools.Editor
             list.Add(MenuTool(GroupAvatar, "PhysBone Blueprints", "VixenTools/Avatars/PhysBone Blueprints", "Saves an avatar's PhysBones and puts them back on another one."));
             list.Add(MenuTool(GroupAvatar, "Accessory Mounting Engine", "VixenTools/Avatars/Accessory Engine", "Mounts accessories onto a clean copy of your armature."));
             list.Add(MenuTool(GroupAvatar, "Badge Studio", "VixenTools/Avatars/Badge Studio", "Builds VRChat convention badges, Furality included."));
+            list.Add(new HubAction
+            {
+                Group = GroupAvatar,
+                Title = "VixenMMD",
+                Where = VixenMmdMenuPath,
+                Description = "Gives your avatar MMD blend shapes, built from its face tracking shapes, so it dances in MMD worlds.",
+                Run = OpenVixenMmd
+            });
 #else
             list.Add(MenuTool(GroupWorld, "Vixen World Engine", "VixenTools/Scene/Vixen World Engine", "Runs more than 160 checks on your world and fixes the ones you tick."));
             list.Add(MenuTool(GroupWorld, "Quest World Converter", "VixenTools/Scene/Quest World Converter", "Makes Quest copies of your world's materials and leaves the originals alone."));
@@ -586,6 +594,14 @@ namespace VixenTools.Editor
                 Description = description,
                 Run = () => EditorApplication.ExecuteMenuItem(menuPath)
             };
+        }
+
+        private const string VixenMmdMenuPath = "VixenTools/Avatars/VixenMMD";
+
+        private static void OpenVixenMmd()
+        {
+            if (EditorApplication.ExecuteMenuItem(VixenMmdMenuPath)) return;
+            EditorUtility.DisplayDialog("VixenMMD", "VixenMMD needs NDMF 1.7 or newer. Add Modular Avatar or NDMF to this project in the VRChat Creator Companion, then open VixenMMD again.", "OK");
         }
 
         private static HubAction MenuToggle(string group, string title, string menuPath, string description)

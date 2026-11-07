@@ -2,7 +2,7 @@
 
 A free set of Unity editor tools for VRChat avatars and worlds. It checks your work against VRChat's limits, fixes what it can in one click, and takes the repetitive setup off your hands.
 
-* **Package:** `com.vixencreations.vixens-toolbox` (v2.20.2)
+* **Package:** `com.vixencreations.vixens-toolbox` (v2.21.0)
 * **Needs:** Unity 2022.3.22f1 and VRChat SDK 3.10.3 or newer
 * **Docs and install:** [vixencreations.github.io/VixenToolBox](https://vixencreations.github.io/VixenToolBox/)
 
@@ -42,6 +42,7 @@ Everything lives under the **VixenTools** menu. The **Hub** (`VixenTools/Hub Das
 * **Material Conflict Finder** (`VixenTools/Avatars/Material Conflict Finder`): finds materials whose toggles disagree, shader keywords left on after their toggle was switched off, and toggles your animations or VRCFury fight over. **Sync All to 0.0 (OFF)**, **Sync All to 1.0 (ON)** and **Fix All Keywords** settle them.
 * **Animator Forge** (`VixenTools/Avatars/Animator Forge`): **RUN DIAGNOSTICS** finds undefined and missing parameters, mixed Write Defaults, empty layers, overfull menus and more. **FORGE RIG** builds toggles, sliders, swaps and exclusive groups for you.
 * **Accessory Mounting Engine** (`VixenTools/Avatars/Accessory Engine`): clones a clean armature and mounts accessories onto it, either by re-rigging them or with parent constraints. Press **MOUNT ACCESSORIES**.
+* **VixenMMD** (`VixenTools/Avatars/VixenMMD`): gives your avatar the MMD blend shapes that MMD worlds animate, built from its face tracking shapes and visemes when you upload. **Auto-fill** sets most of them up at once, **Dance Check** shows what a `.vmd` dance needs, and **Import .json** reads Make It MMD presets. Needs NDMF, which comes with Modular Avatar.
 * **Badge Studio** (`VixenTools/Avatars/Badge Studio`): builds VRChat convention badges, Furality included, for Poiyomi, lilToon and VRChat Mobile shaders. **Author Master Template** sets up a template, **Compile High-Fidelity Badge** builds the badge, and **ACTIVATE SCENE MAPPING** lets you place text on a curved badge right in the Scene view.
 
 ### 5. Scene Tools

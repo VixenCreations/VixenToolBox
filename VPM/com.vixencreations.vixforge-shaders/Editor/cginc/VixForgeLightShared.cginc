@@ -69,7 +69,7 @@
                 FetchVRSLChannel(giBase + colOff + 2, grid, texelSize))
                 : half3(1, 1, 1);
             col *= dim;
-            half lum = dot(col, half3(0.299, 0.587, 0.114));
+            half lum = dot(col, VF_LUMA_W(half3(0.299, 0.587, 0.114)));
             return lerp(lum.xxx, col, saturate(saturation));
         }
 

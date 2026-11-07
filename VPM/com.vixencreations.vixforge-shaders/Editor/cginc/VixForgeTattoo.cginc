@@ -145,7 +145,7 @@ void VF_TattooShade(VFTatIn t, float3 N, float3 V, float3 L, float3 lightCol, in
     float3 inkCol = t.ink.rgb * t.color.rgb;
     [branch] if (t.age > 0.001)
     {
-        float lum = dot(inkCol, float3(0.299, 0.587, 0.114));
+        float lum = dot(inkCol, VF_LUMA_W(float3(0.299, 0.587, 0.114)));
         inkCol = lerp(inkCol, lum * float3(0.75, 0.9, 0.95) + float3(0.02, 0.05, 0.06), t.age * 0.7);
         a *= 1.0 - t.age * 0.45;
     }

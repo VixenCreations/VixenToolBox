@@ -1083,6 +1083,7 @@ Material:
     - _DripMaskCh: 0
     - _Drip_Angle: 0
     - _Drip_BodyFollow: 0
+    - _Drip_Caustics: 0
     - _Drip_Coverage: 0.4
     - _Drip_Density: 40
     - _Drip_FloorCollide: 0
@@ -1520,6 +1521,7 @@ Material:
     - _LV_Spec_Dominant: 1
     - _LV_Spec_Fresnel: 0
     - _LV_Spec_Mix: 1
+    - _LumaRec709: 0
     - _MC_SecHelp: 0
     - _ML_Ambient: 1
     - _ML_Direct: 1
@@ -1537,8 +1539,10 @@ Material:
     - _MainBrightness: 0
     - _MainChromatize: 0
     - _MainColorAdjustClamp: 1
+    - _MainColorAdjustClampKeepHue: 0
     - _MainColorAdjustToggle: 0
     - _MainGamma: 1
+    - _MainGradationExactSRGB: 0
     - _MainGradationMaskChannel: 0
     - _MainGradationStrength: 0
     - _MainHueALCTEnabled: 0

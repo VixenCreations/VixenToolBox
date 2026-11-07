@@ -1750,7 +1750,7 @@
             // total glow follows the distance marched, so the divisor carries the stride too.
             // That keeps Quality and Distance from changing how bright the effect reads. The gain
             // lands after the tonemap so there is still headroom above white for bloom to catch.
-            float3 outc = tanh(max(acc, 0.0) / max((float)steps * stride * 2.8, 1.0));
+            float3 outc = tanh(min(max(acc, 0.0) / max((float)steps * stride * 2.8, 1.0), 15.0));
             return outc * _Hyper_Bright * _Hyper_Tint.rgb;
         }
         #endif
@@ -1854,7 +1854,7 @@
 
             [branch] if (alOn && _Cym_Hue.w > 0.001)
             {
-                float lum = dot(col, float3(0.299, 0.587, 0.114));
+                float lum = dot(col, VF_LUMA_W(float3(0.299, 0.587, 0.114)));
                 col = lerp(col, lum * AL_MusicColor(_AL_ColorMode, _AL_Strip_Pos, _AL_Band_Cym) * 2.0, saturate(_Cym_Hue.w));
             }
 

@@ -426,6 +426,11 @@ fixed4 frag_surf (v2f_surf IN, fixed vface : VFACE) : SV_Target {
   gi.indirect.specular = 0;
   gi.light.color = _LightColor0.rgb;
   gi.light.dir = lightDir;
+  //ifex _LightingMirrorLight==0
+  #if !defined(VIXFORGE_WORLD) && defined(UNITY_PASS_FORWARDBASE)
+  [branch] if (VF_MirrorKeyLight(worldPos, gi.light)) atten = 1.0;
+  #endif
+  //endex
   UnityGIInput giInput;
   UNITY_INITIALIZE_OUTPUT(UnityGIInput, giInput);
   giInput.light = gi.light;

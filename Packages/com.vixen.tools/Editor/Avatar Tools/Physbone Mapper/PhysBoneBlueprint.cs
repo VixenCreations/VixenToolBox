@@ -12,6 +12,13 @@ namespace VixenTools.Editor
         {
             public string bonePath;
             public Preset preset;
+            public int componentIndex;
+            public bool hasReferences;
+            public bool hasRootTransform;
+            public string rootTransformPath = "";
+            public List<string> ignoreTransformPaths = new List<string>();
+            public List<string> colliderPaths = new List<string>();
+            public List<int> colliderIndices = new List<int>();
         }
         public List<Node> nodes = new List<Node>();
     }

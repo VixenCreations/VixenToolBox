@@ -5,10 +5,29 @@
 // TOUCH: VRChat Material Contacts read by every touch reaction. Layout and rules: developer_info.md, "MATERIAL CONTACTS".
 #if !defined(VIXFORGE_WORLD)
 
-#define VF_CONTACT_SELF 8
+// VRChat's Material Contacts interface by its own names, under its own guard: the SDK file VRCContacts.cginc
+// (com.vrchat.base 3.10.6) declares the same, but older SDKs do not ship it. developer_info.md, "TOUCH RECEIVER PLACEMENT".
+#ifndef VRCCONTACTS_CGINC
+#define VRCCONTACTS_CGINC
+#define VRC_CONTACT_MAX_TARGETS 8
+#define VRC_CONTACT_MAX_TAGS 16
+#define VRC_CONTACT_BUFFER_SIZE 9
+#define VRC_CONTACT_SELF_INDEX VRC_CONTACT_MAX_TARGETS
+#define VRC_CONTACT_DECLARE(name) uniform float4x4 _VRChatContact_Transforms_##name[VRC_CONTACT_BUFFER_SIZE]; uniform float4 _VRChatContact_Data_##name[VRC_CONTACT_BUFFER_SIZE]
+#define VRC_CONTACT_TARGETCOUNT(name) (asint(_VRChatContact_Data_##name[VRC_CONTACT_SELF_INDEX].y))
+#define VRC_CONTACT_TRANSFORM(name, i) (_VRChatContact_Transforms_##name[i])
+#define VRC_CONTACT_TRANSFORM_SELF(name) VRC_CONTACT_TRANSFORM(name, VRC_CONTACT_SELF_INDEX)
+#define VRC_CONTACT_WORLDPOS(name, i) (_VRChatContact_Transforms_##name[i]._m03_m13_m23)
+#define VRC_CONTACT_WORLDPOS_SELF(name) VRC_CONTACT_WORLDPOS(name, VRC_CONTACT_SELF_INDEX)
+#define VRC_CONTACT_PLAYERID(name, i) (asint(_VRChatContact_Data_##name[i].x))
+#define VRC_CONTACT_PLAYERID_SELF(name) VRC_CONTACT_PLAYERID(name, VRC_CONTACT_SELF_INDEX)
+#define VRC_CONTACT_TAGS(name, i) (asuint(_VRChatContact_Data_##name[i].y))
+#define VRC_CONTACT_GET_TAG(name, i, tagIndex) ((VRC_CONTACT_TAGS(name, i) >> tagIndex) & 1)
+#endif
 
-uniform float4x4 _VRChatContact_Transforms_VF_Touch[9];
-uniform float4   _VRChatContact_Data_VF_Touch[9];
+#define VF_CONTACT_SELF VRC_CONTACT_SELF_INDEX
+
+VRC_CONTACT_DECLARE(VF_Touch);
 
 float  _UseContacts;
 float  _Contact_Hands;
@@ -56,7 +75,7 @@ float  _ColorTouch_Size;
 
 uint VF_ContactCount()
 {
-    return (uint)clamp(asint(_VRChatContact_Data_VF_Touch[VF_CONTACT_SELF].y), 0, 8);
+    return (uint)clamp(VRC_CONTACT_TARGETCOUNT(VF_Touch), 0, VRC_CONTACT_MAX_TARGETS);
 }
 
 bool VF_ContactsLive()
@@ -66,12 +85,25 @@ bool VF_ContactsLive()
 
 float3 VF_ContactPos(uint i)
 {
-    return _VRChatContact_Transforms_VF_Touch[i]._m03_m13_m23;
+    return VRC_CONTACT_WORLDPOS(VF_Touch, i);
+}
+
+// Player id in .x and tag bits in .y, read with constant indices only: a read at a loop index let the GPU flush these
+// small integers, which VRChat packs as float bits, to 0. developer_info.md, "TOUCH RECEIVER PLACEMENT".
+uint2 VF_ContactWords(uint i)
+{
+    uint2 w = 0u;
+    [unroll] for (uint k = 0u; k < VRC_CONTACT_MAX_TARGETS; k++)
+    {
+        uint sel = k == i ? 0xFFFFFFFFu : 0u;
+        w |= uint2((uint)VRC_CONTACT_PLAYERID(VF_Touch, k), VRC_CONTACT_TAGS(VF_Touch, k)) & sel;
+    }
+    return w;
 }
 
 int VF_ContactPlayer(uint i)
 {
-    return asint(_VRChatContact_Data_VF_Touch[i].x);
+    return (int)VF_ContactWords(i).x;
 }
 
 uint VF_ContactTagMask()
@@ -80,10 +112,13 @@ uint VF_ContactTagMask()
          | (_Contact_Feet > 0.5 ? 8u : 0u) | (_Contact_Body > 0.5 ? 16u : 0u) | (_Contact_Props > 0.5 ? 32u : 0u);
 }
 
+// Your own head and chest senders sit inside the meshes they would touch, so they never count. developer_info.md, "TOUCH RECEIVER PLACEMENT".
 bool VF_ContactCounts(uint i, uint mask)
 {
-    uint tags = asuint(_VRChatContact_Data_VF_Touch[i].y);
-    return tags == 0u || (tags & mask) != 0u;
+    uint2 w    = VF_ContactWords(i);
+    uint  tags = w.y;
+    bool  self = tags != 0u && (tags & ~20u) == 0u && (int)w.x == VRC_CONTACT_PLAYERID_SELF(VF_Touch);
+    return !self && (tags == 0u || (tags & mask) != 0u);
 }
 
 // The contact matrix carries the sender transform's scale, not its shape's radius, so every touch uses Size.
@@ -259,8 +294,11 @@ bool VF_ContactNearPatch(float3 a, float3 b, float3 c)
         float3 ctr  = (a + b + c) * (1.0 / 3.0);
         float  size = sqrt(max(max(dot(a - ctr, a - ctr), dot(b - ctr, b - ctr)), dot(c - ctr, c - ctr)));
         float  reach = _Contact_Reach * 0.01;
+        uint   mask = VF_ContactTagMask();
         [loop] for (uint i = 0u; i < n; i++)
         {
+            [branch] if (!VF_ContactCounts(i, mask))
+                continue;
             float lim = size + VF_ContactRadius(i) * 4.0 + reach;
             float3 v = VF_ContactPos(i) - ctr;
             near = near || dot(v, v) < lim * lim;
@@ -284,7 +322,7 @@ float4 VF_TouchGlow(float3 wp, float alBeat)
     [branch] if (_UseContacts > 0.5 && _UseTouchGlow > 0.5 && n > 0u && (_TouchGlow_Strength + _AL_TouchGlow > 0.0 || _TouchGlow_Emis > 0.5))
     {
         uint  mask  = VF_ContactTagMask();
-        int   selfId = VF_ContactPlayer(VF_CONTACT_SELF);
+        int   selfId = VRC_CONTACT_PLAYERID_SELF(VF_Touch);
         float reach = _Contact_Reach * 0.01;
         float t     = _TouchGlow_Speed * _Time.y + _TouchGlow_Speed_Ph;
         float space = max(_TouchGlow_Spacing, 0.1) * 0.01;

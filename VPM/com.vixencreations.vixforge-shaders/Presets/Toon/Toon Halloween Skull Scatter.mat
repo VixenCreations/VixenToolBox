@@ -642,6 +642,7 @@ Material:
     - _Contact_Reach: 1
     - _Contact_Size: 4
     - _Contacts_Help: 0
+    - _Contacts_SdkWarn: 0
     - _ContinuousDissolveBlend: 0
     - _ContinuousDissolveEnabled: 0
     - _ContinuousDissolvePhase: 0
@@ -1379,9 +1380,12 @@ Material:
     - _LightData_Attribution: 0
     - _LightingAdditiveEnable: 1
     - _LightingCookies: 0
+    - _LightingMirrorLight: 0
+    - _LightingMirrorLightStrength: 1
     - _LightingPointShadows: 0
     - _LightingSoftShadows: 0
     - _LightingVertexLightingEnabled: 1
+    - _LumaRec709: 0
     - _MC_SecHelp: 0
     - _ML_Ambient: 1
     - _ML_Direct: 1
@@ -1399,8 +1403,10 @@ Material:
     - _MainBrightness: 0
     - _MainChromatize: 0
     - _MainColorAdjustClamp: 1
+    - _MainColorAdjustClampKeepHue: 0
     - _MainColorAdjustToggle: 0
     - _MainGamma: 1
+    - _MainGradationExactSRGB: 0
     - _MainGradationMaskChannel: 0
     - _MainGradationStrength: 0
     - _MainHueALCTEnabled: 0

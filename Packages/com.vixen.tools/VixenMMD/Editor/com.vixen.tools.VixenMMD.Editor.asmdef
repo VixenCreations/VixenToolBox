@@ -1,0 +1,38 @@
+{
+    "name": "com.vixen.tools.VixenMMD.Editor",
+    "rootNamespace": "VixenTools.MMD.Editor",
+    "references": [
+        "com.vixen.tools.VixenMMD",
+        "nadena.dev.ndmf",
+        "nadena.dev.ndmf.runtime",
+        "VRC.SDK3A",
+        "VRC.SDK3A.Editor",
+        "VRC.SDKBase",
+        "VRC.SDKBase.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "VIXEN_VRC_AVATARS",
+        "VIXEN_NDMF"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.vrchat.avatars",
+            "expression": "",
+            "define": "VIXEN_VRC_AVATARS"
+        },
+        {
+            "name": "nadena.dev.ndmf",
+            "expression": "1.7.0",
+            "define": "VIXEN_NDMF"
+        }
+    ],
+    "noEngineReferences": false
+}

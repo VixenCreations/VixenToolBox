@@ -134,6 +134,7 @@ Shader "VixenWear/Clothing Pro"
         _MainBrightness ("Brightness--{tooltip:''Below 0 darkens the colour. Above 0 brightens it.''}", Range(-1, 2)) = 0
         _MainGamma ("Gamma--{tooltip:''Above 1 deepens the darker colours, below 1 lifts them. 1 leaves them as they are.''}", Range(0.01, 5)) = 1
         [ToggleUI] _MainColorAdjustClamp ("Clamp--{tooltip:''Keeps the changed colour between black and white, so a big Brightness or Saturation cannot push it past white.''}", Float) = 1
+        [ToggleUI] _MainColorAdjustClampKeepHue ("Keep Hue--{condition_show:(_MainColorAdjustClamp==1),tooltip:''Colours pushed past white fade toward white and keep their hue. Off cuts each channel at white, which can turn a bright colour toward a neighbouring one.''}", Float) = 0
 
         [HideInInspector] s_start_MainTint ("Tint--{tooltip:''Recolours the material and keeps its own light and dark.''}", Float) = 0
         _MainTintColor ("Color--{tooltip:''The colour to tint toward. Its alpha is how strongly: 0 leaves the material alone.''}", Color) = (1, 1, 1, 0)
@@ -160,6 +161,7 @@ Shader "VixenWear/Clothing Pro"
         [VixForgesRGBWarning][NoScaleOffset][VixForgeTextureKeyword(VF_TEX_GRADATION)] _MainGradationTex ("Gradient Map--{tooltip:''A strip read from left to right. Each channel of your colour picks the same channel from the strip, dark on the left and bright on the right.''}", 2D) = "white" {}
         [VixForgeWideEnum(None, 0, R, 1, G, 2, B, 3, A, 4)] _MainGradationMaskChannel ("Mask Channel--{tooltip:''Which channel of the Mask limits the gradient map. None applies it everywhere.''}", Float) = 0
         _MainGradationStrength ("Strength--{tooltip:''How much of the gradient map shows. 0 is off.''}", Range(0, 1)) = 0
+        [ToggleUI] _MainGradationExactSRGB ("Exact sRGB--{tooltip:''Reads the gradient map with exact sRGB, so a plain black to white strip leaves your colour as it was. Off keeps the classic reading, which is a little darker in the shadows.''}", Float) = 0
         [HideInInspector] s_end_ColorAdjustColorGrading ("", Float) = 0
         [HideInInspector] m_end_coloradjust ("", Float) = 0
         //endex
@@ -404,6 +406,8 @@ Shader "VixenWear/Clothing Pro"
         [HideInInspector] s_start_lightdata_lights ("Lights", Float) = 0
         [ToggleUI] _LightingAdditiveEnable ("Pixel Lights--{tooltip:''Point lights, spot lights and extra suns that the world set to Important. Off ignores them, and a locked material then saves the lock time and framerate they cost.''}", Float) = 1
         [ToggleUI] _LightingVertexLightingEnabled ("Vertex Lights--{tooltip:''The cheaper lights the world set to Not Important, up to four at a time. Off ignores them, and a locked material then locks faster.''}", Float) = 1
+        [ToggleUI] _LightingMirrorLight ("Mirror Light--{tooltip:''VRChat's personal mirror leaves out the world's lights unless you set it to show the world, so you look flat in it. Turn this on and any mirror with no light in it lights you and your fur from where the light probes say the light comes from. A world with no light probes still looks flat.''}", Float) = 0
+        _LightingMirrorLightStrength ("Mirror Light Strength--{condition_show:(_LightingMirrorLight==1),tooltip:''How much of the probe light becomes the mirror light. Lower it to keep more of the light soft.''}", Range(0,1)) = 1
         [HideInInspector] s_end_lightdata_lights ("", Float) = 0
         [HideInInspector] s_start_lightdata_shadows ("Shadows and Cookies--{condition_enable_children:(_LightingAdditiveEnable==1)}", Float) = 0
         [DoNotAnimate][ToggleUI] _LightingPointShadows ("Point Light Shadows--{tooltip:''Point lights that cast shadows also shadow you. It adds lock time, so it is off until you want it.''}", Float) = 0
@@ -3797,6 +3801,7 @@ Shader "VixenWear/Clothing Pro"
         [Enum(Off,0,On,1)] _ZClip ("Z Clip--{tooltip:''Whether the far edge of the view cuts the mesh off. Leave it on.''}", Float) = 1
         [Toggle] _AlphaToMask ("Alpha To Coverage--{tooltip:''Smooths the edges of cutout transparency instead of leaving them jagged. Costs nothing and usually looks better.''}", Float) = 0
         [Enum(Classic,0,Fast,1)] _HashMode ("Noise Pattern--{tooltip:''Classic keeps random patterns like glitch slices, fracture and car paint flakes exactly as they are. Fast builds them with cheaper maths, so a locked material is a little lighter to draw, but every pattern comes out in a new arrangement.''}", Float) = 0
+        [VixForgeWideEnum(Classic, 0, Rec.709, 1)] _LumaRec709 ("Luma--{tooltip:''How colours are weighed when something fades them toward grey, like Saturation, glitter, Tattoo ageing and the music colour. Classic keeps your current look. Rec.709 matches how bright each colour really is, so blues fade darker and greens lighter.''}", Float) = 0
         [DoNotAnimate][HideInInspector] Instancing ("Instancing--{tooltip:''Draws every copy of this material in one go when the same material sits on lots of separate meshes, which can be much faster. It does nothing on a skinned mesh. Leave it off unless you reuse one material across many separate meshes, because turning it on makes the shader build the extra versions instancing needs.''}", Float) = 0
 
         [HideInInspector] m_start_blending ("Blending", Float) = 0
@@ -6017,7 +6022,12 @@ Shader "VixenWear/Clothing Pro"
                 float3x3 toRGB = float3x3(1.0, 0.956, 0.621, 1.0, -0.272, -0.647, 1.0, -1.106, 1.703);
                 float3 yiq = mul(toYIQ, col);
                 float2 iq = float2(yiq.y * c - yiq.z * s, yiq.y * s + yiq.z * c);
-                return mul(toRGB, float3(yiq.x, iq.x, iq.y));
+                float3 rgb = mul(toRGB, float3(yiq.x, iq.x, iq.y));
+                float y = dot(rgb, float3(0.299, 0.587, 0.114));
+                float lo = min(rgb.r, min(rgb.g, rgb.b));
+                if (lo < 0.0)
+                    rgb = (y > 0.0) ? y + (rgb - y) * (y / (y - lo)) : 0.0;
+                return rgb;
             }
 
             void shardMotion(float3 center, float3 faceN, float h, float shardProg,
@@ -6456,7 +6466,12 @@ Shader "VixenWear/Clothing Pro"
                 float3x3 toRGB = float3x3(1.0, 0.956, 0.621, 1.0, -0.272, -0.647, 1.0, -1.106, 1.703);
                 float3 yiq = mul(toYIQ, col);
                 float2 iq = float2(yiq.y * c - yiq.z * s, yiq.y * s + yiq.z * c);
-                return mul(toRGB, float3(yiq.x, iq.x, iq.y));
+                float3 rgb = mul(toRGB, float3(yiq.x, iq.x, iq.y));
+                float y = dot(rgb, float3(0.299, 0.587, 0.114));
+                float lo = min(rgb.r, min(rgb.g, rgb.b));
+                if (lo < 0.0)
+                    rgb = (y > 0.0) ? y + (rgb - y) * (y / (y - lo)) : 0.0;
+                return rgb;
             }
 
             void shardMotion(float3 center, float3 faceN, float h, float shardProg,
@@ -6756,6 +6771,10 @@ Shader "VixenWear/Clothing Pro"
             float4 _LV_PosOffset;
             #define LTCGI_SPECULAR_OFF
             #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeExtraLight.cginc"
+            //ifex _LightingMirrorLight==0
+            float _LightingMirrorLight;
+            float _LightingMirrorLightStrength;
+            //endex
             #ifdef VF_TEX_FURSHELLMASK
             Texture2D _FurShellMask;
             #endif
@@ -7721,6 +7740,15 @@ Shader "VixenWear/Clothing Pro"
                 float3 kL, kC;
                 VF_KeyLight(i.wPos, _WorldSpaceLightPos0.xyz, _LightColor0.rgb, kL, kC);
                 float3 L = VF_SafeNormalize(kL);
+                //ifex _LightingMirrorLight==0
+                // Mirror Probe Light: the probe key lights the coat where a VRChat mirror left no realtime light. developer_info.md, "MIRROR PROBE LIGHT".
+                float furMirrorKey = (_LightingMirrorLight > 0.5 && max(_VRChatMirrorMode, _VRChatFaceMirrorMode) > 0.5
+                                   && dot(_LightColor0.rgb, float3(0.2126, 0.7152, 0.0722)) < 1.0e-4) ? saturate(_LightingMirrorLightStrength) : 0.0;
+                #define VF_FUR_DIRECT (_LightColor0.rgb + kC * furMirrorKey)
+                //endex
+                #ifndef VF_FUR_DIRECT
+                #define VF_FUR_DIRECT _LightColor0.rgb
+                #endif
 
                 // Cylinder normal across the ribbon. The ribbon is a flat billboard, so without this a
                 // hair shades as a paper shaving. `across` is exactly the normalised offset from the
@@ -7815,12 +7843,19 @@ Shader "VixenWear/Clothing Pro"
                 float3 xDiff = 0, xSpec = 0;
                 VF_ExtraLight(i.wPos, Nf, V, 1.0, lvShare, xDiff, xSpec);
                 amb += xDiff;
+                //ifex _LightingMirrorLight==0
+                [branch] if (furMirrorKey > 0.0)
+                {
+                    float mkCos = dot(Nf, L);
+                    amb = max(amb - kC * furMirrorKey * max(0.25 + 0.5 * mkCos + 0.15625 * (3.0 * mkCos * mkCos - 1.0), 0.0), 0.0);
+                }
+                //endex
                 amb *= skyOcc;
 
                 // Real Fur has its OWN ambient strength. _Fur_Ambient belongs to Surface Fur, and a user
                 // who turns that down to tame a painted sheen was unintentionally switching off the only
                 // fill light the grown hairs had. Default 1 means "as lit as the world says".
-                float3 lit = albedo * (_LightColor0.rgb * wrap * shadow + amb * _FurShell_Ambient);
+                float3 lit = albedo * (VF_FUR_DIRECT * wrap * shadow + amb * _FurShell_Ambient);
                 // FOLLOW PBR MAP. The coat took its shine from Shine alone, so a hair sitting over
                 // a glossy patch of the material looked exactly like one over a matte patch.
                 // Smoothness scales the highlight and metallic tints it toward the hair's own

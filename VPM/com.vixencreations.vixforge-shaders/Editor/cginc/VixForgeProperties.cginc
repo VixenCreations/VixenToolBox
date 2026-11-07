@@ -1024,6 +1024,7 @@
         float _Drip_Water;
         float4 _Drip_WaterColor;
         float _Drip_WaterDepth;
+        float _Drip_Caustics;
         float _Wet_Amount;
         float _Wet_Darken;
         float _Wet_Smoothness;
@@ -2231,6 +2232,7 @@
         #define VF_MUL_MICROSHADOW
         #define VF_MUL_VERTEX
         #define VF_IF_VERTEX
+        #define VF_AND_NO_MIRROR_KEY
 #else
         //ifex isNotAnimated(_LightingAdditiveEnable)
         float _LightingAdditiveEnable;
@@ -2345,6 +2347,17 @@
         //endex
         #ifndef VF_MUL_MICROSHADOW
         #define VF_MUL_MICROSHADOW * 0.0
+        #endif
+        //ifex _LightingMirrorLight==0
+        float _LightingMirrorLight;
+        float _LightingMirrorLightStrength;
+        // Mirror Probe Light: LatexForwardBase writes the key it built (linear colour), every other pass leaves it at zero. developer_info.md, "MIRROR PROBE LIGHT".
+        static float3 vwMirrorKeyDir = 0;
+        static half3  vwMirrorKeyCol = 0;
+        #define VF_AND_NO_MIRROR_KEY && !any(vwMirrorKeyCol > 0.0)
+        //endex
+        #ifndef VF_AND_NO_MIRROR_KEY
+        #define VF_AND_NO_MIRROR_KEY
         #endif
 #endif
 #if defined(VIXFORGE_WORLD)

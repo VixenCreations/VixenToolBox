@@ -6,6 +6,34 @@
 Version history for the World Surface shader. World Surface shares its lighting stack and toolkit with Latex Ultra, Toon, Clothing Pro and Fur Pro, so that shared part tracks the Latex Ultra changelog. The inspector and its tools keep their own.
 
 ***
+## [1.6.0] - 2026-11-02
+
+*Wet streaks run like water with new Caustics, Viewer Context counts the world's vertex lights, and Color Adjust, Dissolve and shard colours keep their hue.*
+
+### Heads up
+
+* **Check materials that use Saturation above 0, Chromatize or Tint.** Colours that used to clip into a neighbouring hue now keep their own, so strong colours can look a little different. Nudge the slider if you liked them punchier.
+* **Check materials that use Streaks in Wet Effects.** They now wander and run like water instead of standing in straight lines, so they look different. **Density**, **Thinness** and **Coverage** still set how many there are, how thin they are and how much they cover.
+
+### Added
+
+* **Caustics** under **Wet Effects** drifts a moving net of light down through the wet, like sun through running water. It starts off.
+* **Keep Hue** under **Color Adjust** lets colours that **Clamp** stops at white fade toward white instead of turning a neighbouring hue. It starts off.
+* **Exact sRGB** under **Color Grading** reads the gradient map with exact sRGB, so a plain black to white strip leaves your colour as it was. It starts off, so your gradient maps look the same until you turn it on.
+* **Luma** under **Rendering** picks how colours fade to grey in **Saturation** and the other places that do it, like glitter, Tattoo ageing and the music colour. **Rec.709** matches how bright each colour really is, so blues fade darker and greens lighter. **Classic** keeps your current look and stays the default.
+
+### Fixed
+
+* **Viewer Context** rules that use **Light Colour Match** or **Darkness** now count the world's vertex lights, the cheaper lights a world sets to **Not Important**.
+* **Saturation** above 0 keeps each colour's hue. It used to push colours below black, which turned them toward a neighbouring hue and, with **Clamp** off, could make the material darker than black.
+* **Chromatize** now does what its tooltip says: colours stop at their most vivid without changing hue or lightness. Strong settings used to clip them into a different hue, and some greys turned black.
+* **Tint** keeps its hue on vivid colours, and a black **Tint** colour no longer turns the whole material black. It drains the colour to grey like any other grey, so use **Brightness** to darken.
+* **Hue Shift** in **Okhsv** no longer tints pure blue red or green, even at **Shift** 0.
+* **Hue Shift** in **OKLab** under **Dissolve** and **Edge Line** keeps the hue on strong colours, and some greys no longer turn black.
+* **Shard Hue Shift** and the outline's **AudioLink Hue** no longer push colours below black, so a turned colour keeps its hue.
+* **Hyperspace** **Tunnel** no longer breaks into black pixels when an animation sets **Distance** below its slider.
+* **Streaks** in **Wet Effects** look like running water instead of seams. Each one wanders, swells and thins, leaves a wet trail, and carries slugs of water down it. They now run down instead of up. Where they run straight down the texture they also tile, so a layout that repeats the texture shows no line where the copies meet. New materials start with fewer, wider streaks: **Density** 16 and **Thinness** 35.
+***
 ## [1.5.0] - 2026-10-24
 
 *A Wet Touch that wipes or wets the water under a hand, matcaps you build yourself, outlines that move with everything that moves the surface, with four new ways to draw them, and a rebuilt Viewer Context with Hidden Ink.*

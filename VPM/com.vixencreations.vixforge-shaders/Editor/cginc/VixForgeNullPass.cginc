@@ -2,7 +2,9 @@
 #ifndef VIXFORGE_NULLPASS_INCLUDED
 #define VIXFORGE_NULLPASS_INCLUDED
 
-struct VFNullCP
+#define VF_NULL_ENTRY(a, b) a##b
+
+struct InternalTessInterp_appdata_full
 {
     float4 vertex : INTERNALTESSPOS;
 };
@@ -13,19 +15,14 @@ struct VFNullTF
     float inside  : SV_InsideTessFactor;
 };
 
-struct VFNullIn
+InternalTessInterp_appdata_full VF_NULL_ENTRY(tessvert, _surf) (appdata_full v)
 {
-    float4 vertex : POSITION;
-};
-
-VFNullCP tessvert_surf (VFNullIn v)
-{
-    VFNullCP o;
+    InternalTessInterp_appdata_full o;
     o.vertex = v.vertex;
     return o;
 }
 
-VFNullTF hsconst_surf (InputPatch<VFNullCP, 3> v)
+VFNullTF hsconst_surf (InputPatch<InternalTessInterp_appdata_full, 3> v)
 {
     VFNullTF o;
     o.edge[0] = 0.0;
@@ -40,13 +37,13 @@ VFNullTF hsconst_surf (InputPatch<VFNullCP, 3> v)
 [outputtopology("triangle_cw")]
 [patchconstantfunc("hsconst_surf")]
 [outputcontrolpoints(3)]
-VFNullCP hs_surf (InputPatch<VFNullCP, 3> v, uint id : SV_OutputControlPointID)
+InternalTessInterp_appdata_full hs_surf (InputPatch<InternalTessInterp_appdata_full, 3> v, uint id : SV_OutputControlPointID)
 {
     return v[id];
 }
 
 [domain("tri")]
-float4 ds_surf (VFNullTF f, const OutputPatch<VFNullCP, 3> v, float3 bary : SV_DomainLocation) : SV_POSITION
+float4 ds_surf (VFNullTF f, const OutputPatch<InternalTessInterp_appdata_full, 3> v, float3 bary : SV_DomainLocation) : SV_POSITION
 {
     return float4(0.0, 0.0, 0.0, 1.0);
 }

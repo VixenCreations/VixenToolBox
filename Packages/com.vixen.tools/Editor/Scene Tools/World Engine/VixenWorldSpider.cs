@@ -81,6 +81,33 @@ namespace VixenTools.Editor
             minSize = new Vector2(650, 850);
         }
 
+        private void OnDisable()
+        {
+            if (!_isProcessingQueue) return;
+            EditorApplication.update -= ProcessQueueTick;
+            try
+            {
+                while (_workQueue.Count > 0)
+                {
+                    try
+                    {
+                        _workQueue.Dequeue().Invoke();
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError($"[VixForge] An asset in the queue failed: {e.Message}");
+                    }
+                }
+            }
+            finally
+            {
+                AssetDatabase.StopAssetEditing();
+                _isProcessingQueue = false;
+                EditorUtility.ClearProgressBar();
+            }
+            SaveLookupCache();
+        }
+
         private void CreateGUI()
         {
             EnsureDictionariesExist();

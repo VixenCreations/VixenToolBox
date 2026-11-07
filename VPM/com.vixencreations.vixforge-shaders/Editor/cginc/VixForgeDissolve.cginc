@@ -347,6 +347,36 @@ float3 VF_DisHSVtoRGB(float3 c)
     return c.z * lerp(K.xxx, saturate(p - K.xxx), c.y);
 }
 
+float VF_DisMaxSat(float a, float b)
+{
+    float4 k = float4(1.35733652, -0.00915799, -1.15130210, -0.50559606);
+    float k4 = 0.00692167;
+    float3 w = float3(-0.0041960863, -0.7034186147, 1.7076147010);
+    float rR = -1.88170328 * a - 0.80936493 * b;
+    float rG = 1.81444104 * a - 1.19445276 * b;
+    bool corner = abs(rR - 1.0) < 1.0e-5 && abs(rG - 1.0) < 1.0e-5;
+    [flatten] if (rR > 1.0 && !corner)
+    {
+        k = float4(1.19086277, 1.76576728, 0.59662641, 0.75515197);
+        k4 = 0.56771245;
+        w = float3(4.0767416621, -3.3077115913, 0.2309699292);
+    }
+    else if (rG > 1.0 || corner)
+    {
+        k = float4(0.73956515, -0.45954404, 0.08285427, 0.12541070);
+        k4 = 0.14503204;
+        w = float3(-1.2684380046, 2.6097574011, -0.3413193965);
+    }
+    float S = k.x + k.y * a + k.z * b + k.w * a * a + k4 * a * b;
+    float3 kk = float3(0.3963377774 * a + 0.2158037573 * b, -0.1055613458 * a - 0.0638541728 * b, -0.0894841775 * a - 1.2914855480 * b);
+    float3 q = 1.0 + S * kk;
+    float f  = dot(w, q * q * q);
+    float f1 = dot(w, 3.0 * kk * q * q);
+    float f2 = dot(w, 6.0 * kk * kk * q);
+    float den = f1 * f1 - 0.5 * f * f2;
+    return S - f * f1 / ((abs(den) > 1.0e-12) ? den : 1.0e-12);
+}
+
 float3 VF_DisHue(float3 c, float shift, float space, float shiftMode)
 {
     float3 outC;
@@ -360,10 +390,17 @@ float3 VF_DisHue(float3 c, float shift, float space, float shiftMode)
     {
         float3 lab = VF_DisLinToOklab(c);
         float ch = length(lab.yz);
-        float h = (shiftMode > 0.5) ? atan2(lab.z, lab.y) + shift * 6.2831853 : shift * 6.2831853;
+        float h0 = (abs(lab.y) + abs(lab.z) > 0.0) ? atan2(lab.z, lab.y) : 0.0;
+        float h = (shiftMode > 0.5) ? h0 + shift * 6.2831853 : shift * 6.2831853;
         float sn, cs;
         sincos(h, sn, cs);
-        outC = max(VF_DisOklabToLin(float3(lab.x, ch * cs, ch * sn)), 0.0);
+        float3 rot = VF_DisOklabToLin(float3(lab.x, ch * cs, ch * sn));
+        [branch] if (min(rot.r, min(rot.g, rot.b)) < 0.0)
+        {
+            float cl = min(ch, lab.x * VF_DisMaxSat(cs, sn));
+            rot = VF_DisOklabToLin(float3(lab.x, cl * cs, cl * sn));
+        }
+        outC = max(rot, 0.0);
     }
     return outC;
 }

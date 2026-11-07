@@ -36,7 +36,7 @@ float3 VF_CARGBtoHSV(float3 c)
     float4 p = lerp(float4(c.bg, K.wz), float4(c.gb, K.xy), step(c.b, c.g));
     float4 q = lerp(float4(p.xyw, c.r), float4(c.r, p.yzx), step(p.x, c.r));
     float d = q.x - min(q.w, q.y);
-    return float3(abs(q.z + (q.w - q.y) / (6.0 * d + 1.0e-4)), d / (q.x + 1.0e-4), q.x);
+    return float3(abs(q.z + (q.w - q.y) / (6.0 * d + 1.0e-10)), d / (q.x + 1.0e-10), q.x);
 }
 
 float3 VF_CAHSVtoRGB(float3 c)
@@ -71,13 +71,16 @@ float VF_OkMaxSat(float a, float b)
     float4 k = float4(1.35733652, -0.00915799, -1.15130210, -0.50559606);
     float k4 = 0.00692167;
     float3 w = VF_OK_LMS_TO_LIN[2];
-    [flatten] if (-1.88170328 * a - 0.80936493 * b > 1.0)
+    float rR = -1.88170328 * a - 0.80936493 * b;
+    float rG = 1.81444104 * a - 1.19445276 * b;
+    bool corner = abs(rR - 1.0) < 1.0e-5 && abs(rG - 1.0) < 1.0e-5;
+    [flatten] if (rR > 1.0 && !corner)
     {
         k = float4(1.19086277, 1.76576728, 0.59662641, 0.75515197);
         k4 = 0.56771245;
         w = VF_OK_LMS_TO_LIN[0];
     }
-    else if (1.81444104 * a - 1.19445276 * b > 1.0)
+    else if (rG > 1.0 || corner)
     {
         k = float4(0.73956515, -0.45954404, 0.08285427, 0.12541070);
         k4 = 0.14503204;
@@ -241,6 +244,7 @@ float  _MainChromatize;
 float  _MainBrightness;
 float  _MainGamma;
 float  _MainColorAdjustClamp;
+float  _MainColorAdjustClampKeepHue;
 float4 _MainTintColor;
 float  _MainHueShiftToggle;
 float  _MainHueShiftColorSpace;
@@ -257,6 +261,7 @@ float  _MainHueALMotionSpeed;
 float  _ColorGradingToggle;
 float  _MainGradationMaskChannel;
 float  _MainGradationStrength;
+float  _MainGradationExactSRGB;
 #ifdef VF_TEX_COLORADJUSTMASK
 UNITY_DECLARE_TEX2D_NOSAMPLER(_MainColorAdjustTexture);
 #endif
@@ -278,8 +283,8 @@ float3 VF_CAChromatize(float3 lin, float amount)
     float3 lab = VF_CALinToOklab(lin);
     float ch = min(length(lab.yz) * (1.0 + amount), maxChroma);
     float sn, cs;
-    sincos(atan2(lab.z, lab.y), sn, cs);
-    return VF_CAOklabToLin(float3(lab.x, ch * cs, ch * sn));
+    sincos((abs(lab.y) + abs(lab.z) > 0.0) ? atan2(lab.z, lab.y) : 0.0, sn, cs);
+    return VF_OkGamutClip(VF_CAOklabToLin(float3(lab.x, ch * cs, ch * sn)));
 }
 
 #ifdef VIX_FORGE_AL_RESPONSE_INCLUDED
@@ -310,6 +315,26 @@ float3 VF_FromGamma(float3 c)
 {
     #if !defined(UNITY_COLORSPACE_GAMMA)
     return GammaToLinearSpace(c);
+    #else
+    return c;
+    #endif
+}
+
+float3 VF_ToGammaExact(float3 c)
+{
+    #if !defined(UNITY_COLORSPACE_GAMMA)
+    c = max(c, 0.0);
+    return (c <= 0.0031308) ? c * 12.92 : 1.055 * pow(c, 1.0 / 2.4) - 0.055;
+    #else
+    return c;
+    #endif
+}
+
+float3 VF_FromGammaExact(float3 c)
+{
+    #if !defined(UNITY_COLORSPACE_GAMMA)
+    c = max(c, 0.0);
+    return (c <= 0.04045) ? c / 12.92 : pow((c + 0.055) / 1.055, 2.4);
     #else
     return c;
     #endif
@@ -357,7 +382,7 @@ float3 VF_ColorAdjust(float3 col, float2 uv)
 
     [branch] if (_MainGradationStrength > 0.0 && _ColorGradingToggle > 0.5)
     {
-        float3 g = VF_ToGamma(col);
+        float3 g = (_MainGradationExactSRGB > 0.5) ? VF_ToGammaExact(col) : VF_ToGamma(col);
         #ifdef VF_TEX_GRADATION
         float hx = 0.5 * _MainGradationTex_TexelSize.x;
         g.r = SAMPLE_TEX_LOD(_MainGradationTex, sampler_linear_repeat, float2(clamp(g.r, hx, 1.0 - hx), 0.5), 0).r;
@@ -366,7 +391,7 @@ float3 VF_ColorAdjust(float3 col, float2 uv)
         #else
         g = VF_FB_WHITE.rgb;
         #endif
-        g = VF_FromGamma(g);
+        g = (_MainGradationExactSRGB > 0.5) ? VF_FromGammaExact(g) : VF_FromGamma(g);
         int gc = (int)_MainGradationMaskChannel;
         float gm = (gc == 1) ? m.r : (gc == 2) ? m.g : (gc == 3) ? m.b : (gc == 4) ? m.a : 1.0;
         col = lerp(col, g, _MainGradationStrength * gm);
@@ -375,7 +400,12 @@ float3 VF_ColorAdjust(float3 col, float2 uv)
     [branch] if (_MainGamma != 1.0)
         col = lerp(col, sign(col) * pow(abs(col), _MainGamma), m.a);
 
-    col = lerp(col, dot(col, float3(0.3, 0.59, 0.11)).xxx, -_Saturation * m.b);
+    float3 satW = VF_LUMA_W(float3(0.3, 0.59, 0.11));
+    col = lerp(col, dot(col, satW).xxx, -_Saturation * m.b);
+    float satY  = dot(col, satW);
+    float satLo = min(col.r, min(col.g, col.b));
+    [branch] if (satLo < 0.0)
+        col = (satY > 0.0) ? satY + (col - satY) * (satY / (satY - satLo)) : max(col, 0.0);
 
     [branch] if (_MainChromatize != 0.0)
         col = saturate(VF_FromLin(VF_CAChromatize(VF_ToLin(col), _MainChromatize * m.r)));
@@ -397,14 +427,20 @@ float3 VF_ColorAdjust(float3 col, float2 uv)
         float3 inLab   = VF_CALinToOklab(inLin);
         float  newC    = length(inLab.yz) * satF;
         float sn, cs;
-        sincos(atan2(tintLab.z, tintLab.y), sn, cs);
-        float3 tinted  = saturate(VF_CAOklabToLin(float3(inLab.x, newC * cs, newC * sn)));
+        sincos((abs(tintLab.y) + abs(tintLab.z) > 0.0) ? atan2(tintLab.z, tintLab.y) : 0.0, sn, cs);
+        float3 tinted  = saturate(VF_OkGamutClip(VF_CAOklabToLin(float3(inLab.x, newC * cs, newC * sn))));
         col = VF_FromLin(lerp(inLin, tinted, tintA));
     }
 
     col = lerp(col, col * (_MainBrightness + 1.0), m.g);
     if (_MainColorAdjustClamp > 0.5)
+    {
+        float cY  = dot(col, satW);
+        float cHi = max(col.r, max(col.g, col.b));
+        [branch] if (_MainColorAdjustClampKeepHue > 0.5 && cHi > 1.0)
+            col = (cY < 1.0) ? cY + (col - cY) * ((1.0 - cY) / (cHi - cY)) : 1.0;
         col = saturate(col);
+    }
     return col;
 }
 #endif

@@ -1,0 +1,1041 @@
+msgid ""
+msgstr ""
+"Language: zh-Hans\n"
+
+msgid "Put VixenMMD inside an avatar. It needs a VRC Avatar Descriptor above it."
+msgstr "请把 VixenMMD 放在模型内部。它的上级需要有 VRC Avatar Descriptor。"
+
+msgid "This avatar has {0} VixenMMD components. Keep one; only the first one is used."
+msgstr "这个模型上有 {0} 个 VixenMMD 组件。只保留一个即可，只会使用第一个。"
+
+msgid "Make It MMD is also set up on this avatar. Both tools would edit the face. Convert its settings into VixenMMD, then you can remove Make It MMD."
+msgstr "这个模型上也设置了 Make It MMD。两个工具会同时修改脸部。先把它的设置转换到 VixenMMD，然后就可以移除 Make It MMD。"
+
+msgid "Convert"
+msgstr "转换"
+
+msgid "No face mesh. Set one here, or set the viseme mesh on the avatar descriptor."
+msgstr "没有脸部网格。请在这里设置，或者在 Avatar Descriptor 中设置口型网格。"
+
+msgid "The face mesh has no blend shapes."
+msgstr "脸部网格没有形态键。"
+
+msgid "The face mesh is not part of this avatar."
+msgstr "脸部网格不属于这个模型。"
+
+msgid "MMD worlds only animate a mesh called \"Body\". Your face mesh is \"{0}\"."
+msgstr "MMD 世界只会驱动名为 \"Body\" 的网格。你的脸部网格叫 \"{0}\"。"
+
+msgid "Rename on upload"
+msgstr "上传时重命名"
+
+msgid "MMD worlds only find the face mesh when it sits right under the avatar root."
+msgstr "只有当脸部网格直接位于模型根物体下时，MMD 世界才能找到它。"
+
+msgid "Move on upload"
+msgstr "上传时移动"
+
+msgid "\"Body\" is already taken by another object. On upload it becomes \"Body (Original)\"."
+msgstr "\"Body\" 这个名字已被其他物体使用。上传时它会变成 \"Body (Original)\"。"
+
+msgid "{0} (use {1})"
+msgstr "{0}（请用 {1}）"
+
+msgid "Dances will not drive these names, because a digit or mark is off: {0}."
+msgstr "以下名称的数字或符号不对，舞蹈不会驱动它们：{0}。"
+
+msgid "Some FX states have Write Defaults off. MMD worlds such as Nero3D ask for Write Defaults on. Force it on for the upload, then test your toggles."
+msgstr "部分 FX 状态关闭了 Write Defaults。Nero3D 等 MMD 世界要求开启 Write Defaults。上传时强制开启，然后测试你的开关。"
+
+msgid "Force Write Defaults"
+msgstr "强制 Write Defaults"
+
+msgid "MMD dances move your hips around the stage. These meshes have a Root Bone that doesn't follow them, so they can disappear mid-dance: {0}. Set each Root Bone to Hips or Chest, then run Auto-Fit Mesh Bounds in the Optimization Suite."
+msgstr "MMD 舞蹈会让你的臀部在舞台上移动。以下网格的 Root Bone 不跟随臀部，可能会在跳舞时消失：{0}。请把每个 Root Bone 设为 Hips 或 Chest，然后在 Optimization Suite 中运行 Auto-Fit Mesh Bounds。"
+
+msgid "The MMD world guard is on, but no layers are picked. Pick your hand gesture layers."
+msgstr "MMD 世界保护已开启，但没有选择任何层。请选择你的手势层。"
+
+msgid "Not in your FX controller right now: {0}. That's fine if another tool adds them on upload."
+msgstr "目前不在你的 FX 控制器中：{0}。如果有其他工具在上传时添加它们，就没问题。"
+
+msgid "VRCFury MMD Compatibility is on this avatar too. Use one of the two, not both."
+msgstr "这个模型上也有 VRCFury MMD Compatibility。两者只用其一，不要同时使用。"
+
+msgid "VRCFury Blendshape Optimizer will remove your MMD shapes on upload, and VixenMMD can't stop it: {0} Turn the optimizer off for this avatar."
+msgstr "上传时 VRCFury Blendshape Optimizer 会移除你的 MMD 形态键，而 VixenMMD 无法阻止：{0} 请为这个模型关闭该优化器。"
+
+msgid "VRCFury Blendshape Optimizer is on. VixenMMD keeps every MMD shape on your face safe from it when you upload."
+msgstr "VRCFury Blendshape Optimizer 已开启。上传时 VixenMMD 会保护你脸上所有的 MMD 形态键不被移除。"
+
+msgid "d4rk Avatar Optimizer has MMD Compatibility off, so it can remove your MMD shapes."
+msgstr "d4rk Avatar Optimizer 的 MMD Compatibility 已关闭，因此它可能会移除你的 MMD 形态键。"
+
+msgid "d4rk Avatar Optimizer may remove these, because they are not on its MMD list: {0}."
+msgstr "以下形态键不在 d4rk Avatar Optimizer 的 MMD 列表中，可能会被移除：{0}。"
+
+msgid "The face mesh is missing."
+msgstr "找不到脸部网格。"
+
+msgid "\"{0}\" already has an Animator."
+msgstr "\"{0}\" 上已经有 Animator。"
+
+msgid "\"{0}\" has a VRCFury component, and VRCFury removes Animators from objects that have one."
+msgstr "\"{0}\" 上有 VRCFury 组件，而 VRCFury 会移除这类物体上的 Animator。"
+
+msgid "Open VixenMMD to set up the MMD blend shapes for this avatar."
+msgstr "打开 VixenMMD，为这个模型设置 MMD 形态键。"
+
+msgid "Builds {0} MMD blend shapes on the face when you upload or enter Play Mode. Your avatar files are not changed."
+msgstr "在上传或进入 Play 模式时，在脸上生成 {0} 个 MMD 形态键。你的模型文件不会被修改。"
+
+msgid "Open VixenMMD"
+msgstr "打开 VixenMMD"
+
+msgid "Face"
+msgstr "脸部"
+
+msgid "Face Mesh"
+msgstr "脸部网格"
+
+msgid "Leave empty to use the viseme mesh from the avatar descriptor."
+msgstr "留空则使用 Avatar Descriptor 中的口型网格。"
+
+msgid "Using {0}"
+msgstr "正在使用 {0}"
+
+msgid "Rename To Body"
+msgstr "重命名为 Body"
+
+msgid "MMD worlds only animate a mesh called Body."
+msgstr "MMD 世界只会驱动名为 Body 的网格。"
+
+msgid "Move To Avatar Root"
+msgstr "移动到模型根部"
+
+msgid "MMD worlds only find Body right under the avatar root."
+msgstr "MMD 世界只能找到直接位于模型根部下的 Body。"
+
+msgid "MMD Worlds"
+msgstr "MMD 世界"
+
+msgid "Layer Guard"
+msgstr "层保护"
+
+msgid "In MMD worlds, switches off the FX layers you pick, so hand gestures don't fight the dance. They switch back on everywhere else."
+msgstr "在 MMD 世界中关闭你选择的 FX 层，让手势不和舞蹈冲突。在其他地方会自动恢复。"
+
+msgid "Switch Off In MMD Worlds"
+msgstr "在 MMD 世界中关闭"
+
+msgid "Advanced"
+msgstr "高级"
+
+msgid "Remove From Upload"
+msgstr "上传时移除"
+
+msgid "Turns Write Defaults on for every FX state on upload."
+msgstr "上传时为所有 FX 状态开启 Write Defaults。"
+
+msgid "Gimmicks built for Write Defaults off can break with this on. Test your toggles after upload."
+msgstr "为 Write Defaults 关闭而制作的机关在开启后可能会失效。上传后请测试你的开关。"
+
+msgid "Import .json"
+msgstr "导入 .json"
+
+msgid "Export .json"
+msgstr "导出 .json"
+
+msgid "Reads and writes Make It MMD presets too."
+msgstr "也可以读写 Make It MMD 的预设。"
+
+msgid "Remove"
+msgstr "移除"
+
+msgid "Add an FX layer..."
+msgstr "添加 FX 层..."
+
+msgid "No FX controller found."
+msgstr "未找到 FX 控制器。"
+
+msgid "Every FX layer is listed."
+msgstr "所有 FX 层都已列出。"
+
+msgid "Add Name"
+msgstr "添加名称"
+
+msgid "Its recipe is missing."
+msgstr "缺少配方。"
+
+msgid "No shape for the {0} viseme."
+msgstr "没有 {0} 口型的形态键。"
+
+msgid "Needs shapes for \"{0}\"."
+msgstr "需要 \"{0}\" 的形态键。"
+
+msgid "No matching shapes on this face."
+msgstr "这张脸上没有匹配的形态键。"
+
+msgid "Left out {0}: this face only has a shape for both sides."
+msgstr "已省略 {0}：这张脸只有左右两侧共用的形态键。"
+
+msgid "No shape for {0}."
+msgstr "没有 {0} 的形态键。"
+
+msgid "Only the left side has a shape for {0}."
+msgstr "{0} 只有左侧有形态键。"
+
+msgid "Only the right side has a shape for {0}."
+msgstr "{0} 只有右侧有形态键。"
+
+msgid "The face already has this shape."
+msgstr "脸上已经有这个形态键。"
+
+msgid "Already set up on this component."
+msgstr "已在这个组件中设置。"
+
+msgid "This name is listed twice. Only the first one is built."
+msgstr "这个名称出现了两次。只会生成第一个。"
+
+msgid "The face mesh has no shape called {0}. Another tool may have removed it. This MMD shape is not built."
+msgstr "脸部网格中没有名为 {0} 的形态键，可能被其他工具移除了。这个 MMD 形态键不会生成。"
+
+msgid "Mouth"
+msgstr "嘴"
+
+msgid "Eyes"
+msgstr "眼睛"
+
+msgid "Brows"
+msgstr "眉毛"
+
+msgid "Other"
+msgstr "其他"
+
+msgid "Smile expression"
+msgstr "微笑表情"
+
+msgid "Blush"
+msgstr "脸红"
+
+msgid "Pleading or worried face"
+msgstr "恳求或担心的表情"
+
+msgid "Angry expression"
+msgstr "生气表情"
+
+msgid "Happy expression"
+msgstr "开心表情"
+
+msgid "Sad expression"
+msgstr "难过表情"
+
+msgid "Surprised expression"
+msgstr "惊讶表情"
+
+msgid "Furrowed brows"
+msgstr "皱眉"
+
+msgid "Squint expression"
+msgstr "眯眼表情"
+
+msgid "Hide eye shine"
+msgstr "隐藏眼睛高光"
+
+msgid "Hide eye lens"
+msgstr "隐藏眼睛镜片"
+
+msgid "Showing {0} of {1}. Type more to narrow it down."
+msgstr "显示 {1} 个中的 {0} 个。继续输入以缩小范围。"
+
+msgid "0 shapes"
+msgstr "0 个形态键"
+
+msgid "1 shape. Enter picks the first one."
+msgstr "1 个形态键。按 Enter 选择第一个。"
+
+msgid "{0} shapes. Enter picks the first one."
+msgstr "{0} 个形态键。按 Enter 选择第一个。"
+
+msgid "The file is empty."
+msgstr "文件是空的。"
+
+msgid "The file is not a Make It MMD or VixenMMD .json file."
+msgstr "这不是 Make It MMD 或 VixenMMD 的 .json 文件。"
+
+msgid "The file has no MMD shapes in it."
+msgstr "文件中没有 MMD 形态键。"
+
+msgid "The file comes from a newer version of Make It MMD than VixenMMD can read."
+msgstr "这个文件来自比 VixenMMD 能读取的更新版本的 Make It MMD。"
+
+msgid "Import MMD shapes (.json)"
+msgstr "导入 MMD 形态键 (.json)"
+
+msgid "Could not read the file."
+msgstr "无法读取文件。"
+
+msgid "OK"
+msgstr "确定"
+
+msgid "This file has {0} MMD shapes. This component already has {1}."
+msgstr "这个文件有 {0} 个 MMD 形态键。这个组件已经有 {1} 个。"
+
+msgid "Replace all"
+msgstr "全部替换"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Add and update"
+msgstr "添加并更新"
+
+msgid "Imported {0} MMD shapes."
+msgstr "已导入 {0} 个 MMD 形态键。"
+
+msgid "Export MMD shapes (.json)"
+msgstr "导出 MMD 形态键 (.json)"
+
+msgid "This Unity editor cannot read Japanese (Shift-JIS) text, so the morph names cannot be read."
+msgstr "这个 Unity 编辑器无法读取日文 (Shift-JIS) 文本，因此无法读取表情名称。"
+
+msgid "This is not a VMD motion file."
+msgstr "这不是 VMD 动作文件。"
+
+msgid "The file is damaged."
+msgstr "文件已损坏。"
+
+msgid "Morphs"
+msgstr "表情"
+
+msgid "Auto-fill"
+msgstr "自动填充"
+
+msgid "Dance Check"
+msgstr "舞蹈检查"
+
+msgid "All"
+msgstr "全部"
+
+msgid "Set up here"
+msgstr "已在此设置"
+
+msgid "On the face already"
+msgstr "脸上已有"
+
+msgid "Missing"
+msgstr "缺少"
+
+msgid "Used by most dances"
+msgstr "大多数舞蹈会用到"
+
+msgid "This avatar has no face mesh. Set one on the VixenMMD component, or set the viseme mesh on the avatar descriptor."
+msgstr "这个模型没有脸部网格。请在 VixenMMD 组件上设置，或在 Avatar Descriptor 中设置口型网格。"
+
+msgid "No avatar"
+msgstr "无模型"
+
+msgid "Face: {0} ({1} shapes)"
+msgstr "脸部：{0}（{1} 个形态键）"
+
+msgid "Face: none"
+msgstr "脸部：无"
+
+msgid "Select an avatar in the Hierarchy to set up MMD dancing for it."
+msgstr "在 Hierarchy 中选择一个模型，为它设置 MMD 舞蹈。"
+
+msgid "{0} is set up with Make It MMD. VixenMMD can take over its MMD shapes and settings."
+msgstr "{0} 使用 Make It MMD 设置。VixenMMD 可以接管它的 MMD 形态键和设置。"
+
+msgid "Convert Make It MMD Setup"
+msgstr "转换 Make It MMD 设置"
+
+msgid "Add VixenMMD to {0}"
+msgstr "为 {0} 添加 VixenMMD"
+
+msgid "{0} (not on this face)"
+msgstr "{0}（这张脸上没有）"
+
+msgid "Click to pick a different shape."
+msgstr "点击选择其他形态键。"
+
+msgid "(click to add a shape)"
+msgstr "（点击添加形态键）"
+
+msgid "Add another shape..."
+msgstr "再添加一个形态键..."
+
+msgid "replaces face"
+msgstr "替换脸上的"
+
+msgid "1 shape"
+msgstr "1 个形态键"
+
+msgid "{0} shapes"
+msgstr "{0} 个形态键"
+
+msgid "on the face"
+msgstr "脸上已有"
+
+msgid "Custom"
+msgstr "自定义"
+
+msgid "Pick an MMD morph on the left. Use Auto-fill to set most of them up from your face tracking shapes in one go."
+msgstr "在左侧选择一个 MMD 表情。使用自动填充，可以根据面部追踪形态键一次设置好大部分表情。"
+
+msgid "Standard MMD name"
+msgstr "标准 MMD 名称"
+
+msgid "From the InochiPM chart"
+msgstr "来自 InochiPM 表"
+
+msgid "Extended name"
+msgstr "扩展名称"
+
+msgid "Dances use \"{0}\". A digit or mark in this name is off, so dances will not drive it."
+msgstr "舞蹈使用的是 \"{0}\"。这个名称的数字或符号不对，舞蹈不会驱动它。"
+
+msgid "Preview on the avatar"
+msgstr "在模型上预览"
+
+msgid "Your face already has this shape. Dances will use it as it is."
+msgstr "脸上已经有这个形态键。舞蹈会直接使用它。"
+
+msgid "Not set up yet."
+msgstr "尚未设置。"
+
+msgid "Replace It With My Own"
+msgstr "替换为我自己的"
+
+msgid "Set Up This Morph"
+msgstr "设置这个表情"
+
+msgid "Your face already has this shape. On upload, VixenMMD's version takes its place."
+msgstr "脸上已经有这个形态键。上传时会被 VixenMMD 的版本替换。"
+
+msgid "Build this morph"
+msgstr "生成这个表情"
+
+msgid "Remove From List"
+msgstr "从列表移除"
+
+msgid "Made From"
+msgstr "由以下组成"
+
+msgid "No shapes yet. Add some below."
+msgstr "还没有形态键。请在下方添加。"
+
+msgid "The face has no shape with this name."
+msgstr "脸上没有这个名称的形态键。"
+
+msgid "Face Tracking Recipe"
+msgstr "面部追踪配方"
+
+msgid "Same as {0}:"
+msgstr "与 {0} 相同："
+
+msgid "Untested starting point. Check it with Preview."
+msgstr "未经测试的起点，请用预览检查。"
+
+msgid "Fill From Face Tracking"
+msgstr "从面部追踪填充"
+
+msgid "viseme {0}"
+msgstr "口型 {0}"
+
+msgid "(left)"
+msgstr "（左）"
+
+msgid "(right)"
+msgstr "（右）"
+
+msgid "Add A Shape"
+msgstr "添加形态键"
+
+msgid "Reads face tracking from your avatar's face tracking settings. Found {0} face tracking shapes and {1} of 15 visemes."
+msgstr "从你的模型的面部追踪设置读取。找到 {0} 个面部追踪形态键，以及 15 个口型中的 {1} 个。"
+
+msgid "Reads face tracking from blend shape names (Unified Expressions, ARKit and similar). Found {0} face tracking shapes and {1} of 15 visemes."
+msgstr "从形态键名称（Unified Expressions、ARKit 等）读取。找到 {0} 个面部追踪形态键，以及 15 个口型中的 {1} 个。"
+
+msgid "VixenMMD found no face tracking shapes on this face. Visemes still fill the mouth shapes, and you can set up the rest by hand."
+msgstr "VixenMMD 在这张脸上没有找到面部追踪形态键。口型仍然可以填充嘴部形态键，其余可以手动设置。"
+
+msgid "Options"
+msgstr "选项"
+
+msgid "Keep MMD shapes the face already has"
+msgstr "保留脸上已有的 MMD 形态键"
+
+msgid "Redo morphs that are already set up"
+msgstr "重新设置已设置的表情"
+
+msgid "Add the InochiPM chart names too"
+msgstr "同时添加 InochiPM 表中的名称"
+
+msgid "Add untested chart morphs"
+msgstr "添加未经测试的表中表情"
+
+msgid "Expression Shapes"
+msgstr "表情形态键"
+
+msgid "Guess Empty Ones"
+msgstr "猜测空白项"
+
+msgid "Guess All"
+msgstr "全部猜测"
+
+msgid "Replace the shapes of every expression with VixenMMD's guess?"
+msgstr "要用 VixenMMD 的猜测替换所有表情的形态键吗？"
+
+msgid "Replace"
+msgstr "替换"
+
+msgid "Some MMD morphs need an expression that face tracking can't make. Build each one from one or more of your shapes, with an amount for each, or leave it empty."
+msgstr "有些 MMD 表情需要面部追踪做不出的表情。你可以用一个或多个自己的形态键组合，并为每个设定数值，也可以留空。"
+
+msgid "(none)"
+msgstr "（无）"
+
+msgid "Viseme Shapes"
+msgstr "口型形态键"
+
+msgid "The mouth morphs start from your visemes. Add shapes to a viseme to build it your own way, for example a jaw shape and a lip shape together."
+msgstr "嘴部表情以你的口型为基础。给口型添加形态键即可按你的方式组合，例如把下巴和嘴唇的形态键放在一起。"
+
+msgid "No shape found"
+msgstr "未找到形态键"
+
+msgid "Viseme {0}"
+msgstr "口型 {0}"
+
+msgid "Preview Changes"
+msgstr "预览更改"
+
+msgid "Apply (Preview First)"
+msgstr "应用（请先预览）"
+
+msgid "Nothing To Apply"
+msgstr "没有可应用的内容"
+
+msgid "Apply 1 Morph"
+msgstr "应用 1 个表情"
+
+msgid "Apply {0} Morphs"
+msgstr "应用 {0} 个表情"
+
+msgid "Set up {0} morphs. Undo reverses this."
+msgstr "已设置 {0} 个表情。撤销 (Undo) 可以还原。"
+
+msgid "{0} morphs will be set up, {1} left as they are."
+msgstr "将设置 {0} 个表情，{1} 个保持不变。"
+
+msgid "untested"
+msgstr "未测试"
+
+msgid "chart name"
+msgstr "表中名称"
+
+msgid "MMD Shapes On The Face"
+msgstr "脸上的 MMD 形态键"
+
+msgid "None. That's normal for most VRChat avatars."
+msgstr "没有。大多数 VRChat 模型都是这样。"
+
+msgid "\"{0}\" looks like the MMD shape \"{1}\", but a digit or mark is off, so dances will not drive it."
+msgstr "\"{0}\" 看起来像 MMD 形态键 \"{1}\"，但数字或符号不对，舞蹈不会驱动它。"
+
+msgid "Add \"{0}\" As A Copy"
+msgstr "将 \"{0}\" 添加为副本"
+
+msgid "Find Which Ones Copy Another Shape"
+msgstr "查找哪些是其他形态键的副本"
+
+msgid "None of them is an exact copy of another shape."
+msgstr "它们都不是其他形态键的完全副本。"
+
+msgid "{0}  is a copy of  {1}"
+msgstr "{0}  是  {1}  的副本"
+
+msgid "Add Them As Editable Morphs"
+msgstr "添加为可编辑的表情"
+
+msgid "Reading shapes"
+msgstr "正在读取形态键"
+
+msgid "Check which MMD shapes a dance needs, and whether this avatar has them."
+msgstr "检查舞蹈需要哪些 MMD 形态键，以及这个模型是否具备。"
+
+msgid "Add Motion (.vmd)"
+msgstr "添加动作 (.vmd)"
+
+msgid "Add a VMD motion"
+msgstr "添加 VMD 动作"
+
+msgid "Clear"
+msgstr "清除"
+
+msgid "no face keys (camera or body only)"
+msgstr "没有表情关键帧（只有镜头或身体）"
+
+msgid "{0} morphs used, made for {1}"
+msgstr "使用 {0} 个表情，为 {1} 制作"
+
+msgid "This avatar covers {0} of the {1} MMD shapes these dances use."
+msgstr "这些舞蹈使用 {1} 个 MMD 形态键，这个模型具备其中 {0} 个。"
+
+msgid "(up to {0}%)"
+msgstr "（最高 {0}%）"
+
+msgid "Set Up The Missing Ones From Face Tracking"
+msgstr "用面部追踪设置缺少的部分"
+
+msgid "Set up {0} morphs."
+msgstr "已设置 {0} 个表情。"
+
+msgid "{0} have no face tracking recipe or matching shapes. Set them up by hand on the Morphs tab."
+msgstr "有 {0} 个没有面部追踪配方或匹配的形态键。请在表情页手动设置。"
+
+msgid "VixenMMD builds it"
+msgstr "由 VixenMMD 生成"
+
+msgid "missing: you have \"{0}\", which is off by a digit or mark"
+msgstr "缺少：你有 \"{0}\"，但数字或符号不对"
+
+msgid "missing"
+msgstr "缺少"
+
+msgid "vixenmmd.several"
+msgstr "VixenMMD：有多个 VixenMMD 组件"
+
+msgid "vixenmmd.several:description"
+msgstr "这个模型上有 {0} 个 VixenMMD 组件。只会使用 \"{1}\" 上的那个，请移除其他的。"
+
+msgid "vixenmmd.noface"
+msgstr "VixenMMD：没有脸部网格"
+
+msgid "vixenmmd.noface:description"
+msgstr "请在 VixenMMD 组件上设置脸部网格，或在 Avatar Descriptor 中设置口型网格。"
+
+msgid "vixenmmd.skipped"
+msgstr "VixenMMD：未生成 \"{0}\""
+
+msgid "vixenmmd.skipped:description"
+msgstr "{1}"
+
+msgid "vixenmmd.nofx"
+msgstr "VixenMMD：没有 FX 控制器"
+
+msgid "vixenmmd.nofx:description"
+msgstr "FX 层选项需要 Avatar Descriptor 上有 FX 控制器。这些选项已被跳过。"
+
+msgid "vixenmmd.layersmissing"
+msgstr "VixenMMD：找不到 FX 层"
+
+msgid "vixenmmd.layersmissing:description"
+msgstr "构建时以下层不在 FX 控制器中：{0}。"
+
+msgid "vixenmmd.guardnothing"
+msgstr "VixenMMD：MMD 世界保护没有可关闭的层"
+
+msgid "vixenmmd.guardnothing:description"
+msgstr "FX 控制器中不存在任何保护层，因此没有添加保护。你的手势层保持不变。"
+
+msgid "vixenmmd.mim"
+msgstr "VixenMMD：这个模型上也有 Make It MMD"
+
+msgid "vixenmmd.mim:description"
+msgstr "两个工具都会修改脸部网格。请在 VixenMMD 的 Inspector 中转换 Make It MMD 组件，然后移除 Make It MMD。"
+
+msgid "vixenmmd.vrcfnokeep"
+msgstr "VixenMMD：VRCFury 会移除你的 MMD 形态键"
+
+msgid "vixenmmd.vrcfnokeep:description"
+msgstr "VRCFury Blendshape Optimizer 会移除你的动画没有用到的形态键，而 MMD 世界是从模型外部驱动它们的。VixenMMD 无法保护它们：{0} 请为这个模型关闭该优化器。"
+
+msgid "mmd:あ"
+msgstr "张嘴发 \"啊\" 音"
+
+msgid "mmd:い"
+msgstr "咧嘴发 \"伊\" 音"
+
+msgid "mmd:う"
+msgstr "嘟嘴发 \"乌\" 音"
+
+msgid "mmd:え"
+msgstr "半张嘴发 \"诶\" 音"
+
+msgid "mmd:お"
+msgstr "圆嘴发 \"哦\" 音"
+
+msgid "mmd:にやり"
+msgstr "坏笑"
+
+msgid "mmd:∧"
+msgstr "倒 V 形撇嘴"
+
+msgid "mmd:ワ"
+msgstr "张大嘴笑"
+
+msgid "mmd:ω"
+msgstr "猫嘴"
+
+msgid "mmd:▲"
+msgstr "三角形嘴"
+
+msgid "mmd:口角上げ"
+msgstr "嘴角上扬"
+
+msgid "mmd:口角下げ"
+msgstr "嘴角下垂"
+
+msgid "mmd:口横広げ"
+msgstr "嘴向两侧拉宽"
+
+msgid "mmd:にやり２"
+msgstr "坏笑 2"
+
+msgid "mmd:ん"
+msgstr "闭嘴发 \"嗯\" 音"
+
+msgid "mmd:あ２"
+msgstr "张大嘴 \"啊\" 2"
+
+msgid "mmd:□"
+msgstr "方形大嘴（喊叫）"
+
+msgid "mmd:ω□"
+msgstr "张开的猫嘴"
+
+msgid "mmd:にっこり"
+msgstr "微笑的嘴"
+
+msgid "mmd:ぺろっ"
+msgstr "吐舌头"
+
+msgid "mmd:てへぺろ"
+msgstr "调皮吐舌"
+
+msgid "mmd:てへぺろ２"
+msgstr "调皮吐舌 2"
+
+msgid "mmd:あ３"
+msgstr "\"啊\" 3"
+
+msgid "mmd:ワアアア!"
+msgstr "大叫的嘴"
+
+msgid "mmd:ええ!"
+msgstr "震惊的 \"诶！\""
+
+msgid "mmd:ええ？"
+msgstr "疑惑的 \"诶？\""
+
+msgid "mmd:あ狂った"
+msgstr "变形的 \"啊\""
+
+msgid "mmd:お小さい"
+msgstr "小 \"哦\" 嘴"
+
+msgid "mmd:キッス"
+msgstr "亲吻嘴"
+
+msgid "mmd:トップリップ"
+msgstr "上嘴唇"
+
+msgid "mmd:ボトムリップ"
+msgstr "下嘴唇"
+
+msgid "mmd:いー！"
+msgstr "咬牙 \"咿！\""
+
+msgid "mmd:Ｖ"
+msgstr "V 字形嘴"
+
+msgid "mmd:口下げ"
+msgstr "嘴向下移"
+
+msgid "mmd:口上げ"
+msgstr "嘴向上移"
+
+msgid "mmd:口すぼめる"
+msgstr "噘嘴"
+
+msgid "mmd:上歯上げ"
+msgstr "上牙上移"
+
+msgid "mmd:下歯下げ"
+msgstr "下牙下移"
+
+msgid "mmd:上歯を隠す"
+msgstr "隐藏上牙"
+
+msgid "mmd:犬歯右"
+msgstr "右虎牙"
+
+msgid "mmd:犬歯左"
+msgstr "左虎牙"
+
+msgid "mmd:歯右２"
+msgstr "右侧牙齿 2"
+
+msgid "mmd:歯左２"
+msgstr "左侧牙齿 2"
+
+msgid "mmd:まばたき"
+msgstr "眨眼（闭眼）"
+
+msgid "mmd:笑い"
+msgstr "笑眯眯的眼睛"
+
+msgid "mmd:はぅ"
+msgstr "紧闭的眼睛 ><"
+
+msgid "mmd:瞳小"
+msgstr "瞳孔缩小"
+
+msgid "mmd:ｳｨﾝｸ２右"
+msgstr "右眼眨眼 2"
+
+msgid "mmd:ウィンク２"
+msgstr "左眼眨眼 2"
+
+msgid "mmd:ウィンク"
+msgstr "左眼眨眼"
+
+msgid "mmd:ウィンク右"
+msgstr "右眼眨眼"
+
+msgid "mmd:なごみ"
+msgstr "放松的眼睛 ^^"
+
+msgid "mmd:じと目"
+msgstr "半眯着的鄙视眼"
+
+msgid "mmd:びっくり"
+msgstr "睁大眼睛（吃惊）"
+
+msgid "mmd:ｷﾘｯ"
+msgstr "认真的锐利眼神"
+
+msgid "mmd:はぁと"
+msgstr "爱心眼"
+
+msgid "mmd:星目"
+msgstr "星星眼"
+
+msgid "mmd:恐ろしい子！"
+msgstr "惊吓的空白眼"
+
+msgid "mmd:はちゅ目"
+msgstr "圆点眼"
+
+msgid "mmd:瞳縦潰れ"
+msgstr "瞳孔纵向压扁"
+
+msgid "mmd:光下"
+msgstr "高光下移"
+
+msgid "mmd:ハイライト消"
+msgstr "隐藏眼睛高光"
+
+msgid "mmd:映り込み消"
+msgstr "隐藏眼睛反射"
+
+msgid "mmd:喜び"
+msgstr "喜悦的眼睛"
+
+msgid "mmd:わぉ!?"
+msgstr "\"哇!?\" 的眼睛"
+
+msgid "mmd:なごみω"
+msgstr "放松眼 ω"
+
+msgid "mmd:悲しむ"
+msgstr "悲伤的眼睛"
+
+msgid "mmd:敵意"
+msgstr "敌意的眼神"
+
+msgid "mmd:瞳全消し"
+msgstr "完全隐藏瞳孔"
+
+msgid "mmd:はちゅ目縦潰れ"
+msgstr "圆点眼纵向压扁"
+
+msgid "mmd:はちゅ目横潰れ"
+msgstr "圆点眼横向压扁"
+
+msgid "mmd:はんっ！"
+msgstr "嗤之以鼻 \"哼！\""
+
+msgid "mmd:がーん"
+msgstr "大受打击"
+
+msgid "mmd:青ざめる"
+msgstr "脸色发青"
+
+msgid "mmd:赤面"
+msgstr "满脸通红"
+
+msgid "mmd:照れ1"
+msgstr "害羞脸红 1"
+
+msgid "mmd:照れ2"
+msgstr "害羞脸红 2"
+
+msgid "mmd:テレ"
+msgstr "害羞脸红"
+
+msgid "mmd:頬染め"
+msgstr "脸颊泛红"
+
+msgid "mmd:目の幅涙"
+msgstr "宽面条泪"
+
+msgid "mmd:涙目"
+msgstr "泪眼汪汪"
+
+msgid "mmd:下まぶた上げ"
+msgstr "下眼睑上提"
+
+msgid "mmd:恐ろしい"
+msgstr "可怕的眼神"
+
+msgid "mmd:星目１"
+msgstr "星星眼 1"
+
+msgid "mmd:星目２"
+msgstr "星星眼 2"
+
+msgid "mmd:スターライト"
+msgstr "星光眼"
+
+msgid "mmd:丸い目"
+msgstr "圆眼睛"
+
+msgid "mmd:瞳横潰れ"
+msgstr "瞳孔横向压扁"
+
+msgid "mmd:ｺｯﾁﾐﾝﾅ"
+msgstr "\"别看我\" 的瞪眼"
+
+msgid "mmd:にこり"
+msgstr "开心的眉毛"
+
+msgid "mmd:上"
+msgstr "眉毛上扬"
+
+msgid "mmd:下"
+msgstr "眉毛下压"
+
+msgid "mmd:真面目"
+msgstr "严肃的眉毛"
+
+msgid "mmd:困る"
+msgstr "为难的眉毛"
+
+msgid "mmd:怒り"
+msgstr "生气的眉毛"
+
+msgid "mmd:前"
+msgstr "眉毛前移"
+
+msgid "mmd:にこり_R"
+msgstr "开心的右眉"
+
+msgid "mmd:にこり_L"
+msgstr "开心的左眉"
+
+msgid "mmd:上_R"
+msgstr "右眉上扬"
+
+msgid "mmd:上_L"
+msgstr "左眉上扬"
+
+msgid "mmd:下_R"
+msgstr "右眉下压"
+
+msgid "mmd:下_L"
+msgstr "左眉下压"
+
+msgid "mmd:真面目_R"
+msgstr "严肃的右眉"
+
+msgid "mmd:真面目_L"
+msgstr "严肃的左眉"
+
+msgid "mmd:困る_R"
+msgstr "为难的右眉"
+
+msgid "mmd:困る_L"
+msgstr "为难的左眉"
+
+msgid "mmd:怒り_R"
+msgstr "生气的右眉"
+
+msgid "mmd:怒り_L"
+msgstr "生气的左眉"
+
+msgid "mmd:眉頭左"
+msgstr "左眉头"
+
+msgid "mmd:眉頭右"
+msgstr "右眉头"
+
+msgid "mmd:怒り眉"
+msgstr "生气的眉毛"
+
+msgid "mmd:失望した"
+msgstr "失望的眉毛"
+
+msgid "mmd:にこり眉"
+msgstr "微笑的眉毛"
+
+msgid "mmd:困った"
+msgstr "苦恼的眉毛"
+
+msgid "mmd:動揺"
+msgstr "慌乱的眉毛"
+
+msgid "mmd:眉上"
+msgstr "眉毛上扬"
+
+msgid "mmd:眉下"
+msgstr "眉毛下压"
+
+msgid "mmd:眉毛を前方に"
+msgstr "眉毛向前"
+
+msgid "mmd:照れ"
+msgstr "害羞脸红"
+
+msgid "mmd:歯無し下"
+msgstr "隐藏下牙"
+
+msgid "mmd:歯無し上"
+msgstr "隐藏上牙"
+
+msgid "mmd:涙"
+msgstr "眼泪"
+
+msgid "mmd:しいたけ"
+msgstr "香菇眼（十字闪光）"
+
+msgid "mmd:眼鏡"
+msgstr "眼镜"
+
+msgid "mmd:眼鏡の骨"
+msgstr "眼镜框"
+
+msgid "mmd:メガネスケール"
+msgstr "眼镜大小"
+
+msgid "mmd:みっぱい"
+msgstr "Full"
+
+msgid "mmd:右怒筋"
+msgstr "右侧生气青筋"
+
+msgid "mmd:左怒筋"
+msgstr "左侧生气青筋"

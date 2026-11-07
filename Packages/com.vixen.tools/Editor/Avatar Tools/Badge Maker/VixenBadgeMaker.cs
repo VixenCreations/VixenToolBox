@@ -97,6 +97,7 @@ namespace VixenTools.Editor
 
         private GameObject _mapperTargetMesh;
         private MeshCollider _tempCollider;
+        private Mesh _tempBakedMesh;
         private int _mapperTexWidth = 4096;
         private int _mapperTexHeight = 4096;
         private int _lastPixelX = 0;
@@ -1140,6 +1141,11 @@ namespace VixenTools.Editor
                 DestroyImmediate(_tempCollider);
                 _tempCollider = null;
             }
+            if (_tempBakedMesh != null)
+            {
+                DestroyImmediate(_tempBakedMesh);
+                _tempBakedMesh = null;
+            }
         }
 
         private void ToggleMapping()
@@ -1215,9 +1221,10 @@ namespace VixenTools.Editor
                     SkinnedMeshRenderer smr = _mapperTargetMesh.GetComponent<SkinnedMeshRenderer>();
                     if (smr != null)
                     {
-                        Mesh bakedMesh = new Mesh();
-                        smr.BakeMesh(bakedMesh);
-                        _tempCollider.sharedMesh = bakedMesh;
+                        if (_tempBakedMesh != null) DestroyImmediate(_tempBakedMesh);
+                        _tempBakedMesh = new Mesh { hideFlags = HideFlags.DontSave };
+                        smr.BakeMesh(_tempBakedMesh);
+                        _tempCollider.sharedMesh = _tempBakedMesh;
                     }
 
                     ValidateCollider();
@@ -1273,8 +1280,8 @@ namespace VixenTools.Editor
                 {
                     Vector2 uv = hit.textureCoord;
 
-                    _lastPixelX = Mathf.RoundToInt(uv.x * _mapperTexWidth);
-                    _lastPixelY = Mathf.RoundToInt(_mapperTexHeight - (uv.y * _mapperTexHeight));
+                    _lastPixelX = Mathf.Clamp(Mathf.RoundToInt(uv.x * _mapperTexWidth), 0, _mapperTexWidth);
+                    _lastPixelY = Mathf.Clamp(Mathf.RoundToInt(_mapperTexHeight - (uv.y * _mapperTexHeight)), 0, _mapperTexHeight);
 
                     if (_coordLabelX != null) _coordLabelX.text = _lastPixelX.ToString();
                     if (_coordLabelY != null) _coordLabelY.text = _lastPixelY.ToString();

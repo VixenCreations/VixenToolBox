@@ -189,7 +189,7 @@
             //ifex _EyeHypno==0
             [branch] if (_EyeHypno > 0.5 && e.iris > 0.001)
             {
-                float phase = frac(_EyeHypno_Speed * _Time.y + _EyeHypno_Speed_Ph);
+                float phase = _EyeHypno_Speed * _Time.y + _EyeHypno_Speed_Ph;
                 [branch] if (_AL_EyeHypno_Spin > 0.001 && AL_Active())
                     phase += AL_BeatClock(_AL_Band_EyeHypno) * _AL_EyeHypno_Spin;
                 float hueC;

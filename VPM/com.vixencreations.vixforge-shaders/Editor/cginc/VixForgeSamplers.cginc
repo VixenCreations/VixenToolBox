@@ -2,6 +2,8 @@
 #ifndef VIXFORGE_SAMPLERS_INCLUDED
 #define VIXFORGE_SAMPLERS_INCLUDED
         float _VixForgeUnset;
+        float _LumaRec709;
+        #define VF_LUMA_W(classic) ((_LumaRec709 > 0.5) ? float3(0.2126, 0.7152, 0.0722) : (classic))
         #define VF_FB_WHITE (float4(1.0, 1.0, 1.0, 1.0) + _VixForgeUnset)
         #define VF_FB_BLACK (float4(0.0, 0.0, 0.0, 0.0) + _VixForgeUnset)
         #define VF_FB_GREY  (float4(0.5, 0.5, 0.5, 0.5) + _VixForgeUnset)

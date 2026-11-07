@@ -26,6 +26,9 @@
         float _Hypno_Amount;
         float _Hypno_Radius;
         float _Hypno_Fill;
+        float _Hypno_Focus;
+        float _Hypno_FocusEdge;
+        float _Hypno_FocusGlow;
         float _Hypno_Opacity;
         float _Hypno_Swirl;
         float _Hypno_Pattern;
@@ -37,6 +40,9 @@
         float4 _Hypno_ColorA;
         float4 _Hypno_ColorB;
         float _Hypno_Soft;
+        float _Hypno_Wobble;
+        float _Hypno_WobbleSpeed;
+        float _Hypno_WobbleSpeed_Ph;
         float _Hypno_Rainbow;
         float _Hypno_CycleSpeed;
         float _Hypno_CycleSpeed_Ph;
@@ -95,6 +101,19 @@
             UNITY_TRANSFER_INSTANCE_ID(v, o);
             o.vertex = v.vertex;
             return o;
+        }
+
+        // WOBBLE. Three plane waves crossing at different angles, in stripe units, so the ripples keep one size
+        // all the way out and no angle seam can show. Each wave runs a whole number of cycles per turn of t, so
+        // frac(t) never jumps. They fade over the first two stripes, where the pattern is too fine to ripple.
+        inline float vw_HypnoRipple(float2 p, float tight, float t)
+        {
+            float f = 5.0 * max(tight, 0.5);
+            float w = 6.2831853 * frac(t);
+            float s = sin(dot(p, float2(0.94, 0.33)) * f + w) * 0.5
+                    + sin(dot(p, float2(-0.41, 0.91)) * f * 1.37 - w) * 0.3
+                    + sin(dot(p, float2(0.68, -0.73)) * f * 0.71 + w * 2.0) * 0.2;
+            return s * saturate(length(p) * max(tight, 0.5) * 0.5);
         }
 
         // Whose view this is, and how far into the effect they are. The distance is from the viewer's own head
@@ -167,11 +186,14 @@
             // AMOUNT IS ONE SLIDER FOR GOING UNDER. As it rises the world starts to twist toward the middle, then
             // the spiral fades in over it. A menu toggle that animates Amount plays the whole thing.
             float amt = saturate(_Hypno_Amount) * i.fade;
+            float focusR = _Hypno_Focus;
+            float rqW = fwidth(rq);
 
             float3 view = 0.0;
             #ifdef VF_HYPNO_GRAB
             {
                 float sw = _Hypno_Swirl * smoothstep(0.0, 0.6, amt) * 6.2831853 * exp(-rq * 1.5);
+                sw *= (focusR > 0.001) ? saturate((rq - focusR) / focusR) : 1.0;
                 float ss, sc;
                 sincos(sw, ss, sc);
                 float2 q2 = float2(q.x * sc - q.y * ss, q.x * ss + q.y * sc);
@@ -192,9 +214,11 @@
             float zoom = 1.0 + _Hypno_Pulse * sin(frac(pulseT) * 6.2831853) + alAmp * _AL_Hypno_Pulse;
             float2 p = q / (max(_Hypno_Size, 0.05) * max(zoom, 0.05));
 
-            float phase = frac(_Hypno_Speed * _Time.y + _Hypno_Speed_Ph);
+            float phase = _Hypno_Speed * _Time.y + _Hypno_Speed_Ph;
             [branch] if (_AL_Hypno_Spin > 0.001 && AL_Active())
                 phase += AL_BeatClock(_AL_Band_Hypno) * _AL_Hypno_Spin;
+            [branch] if (_Hypno_Wobble > 0.001)
+                phase -= _Hypno_Wobble * vw_HypnoRipple(p, _Hypno_Twist, _Hypno_WobbleSpeed * _Time.y + _Hypno_WobbleSpeed_Ph);
 
             float hueC;
             float tri = vw_HypnoWave(p, _Hypno_Pattern, _Hypno_Arms, _Hypno_Twist, phase, hueC);
@@ -208,6 +232,18 @@
             float fillR = lerp(0.15, 3.0, saturate(_Hypno_Fill));
             float fillM = (_Hypno_Fill > 0.999) ? 1.0 : 1.0 - smoothstep(fillR * 0.7, fillR, rq);
             float take = smoothstep(0.3, 1.0, amt) * saturate(_Hypno_Opacity) * fillM;
+
+            // FOCUS opens a clear window in the middle, the inverse of Fill, with Color A glowing just inside its
+            // edge. Swirl is held off inside it above, so what is in front of you stays still.
+            [branch] if (focusR > 0.001)
+            {
+                float fe = max(saturate(_Hypno_FocusEdge) * focusR * 0.5, rqW);
+                float outside = smoothstep(focusR - fe, focusR + fe, rq);
+                float rim = saturate(1.0 - (focusR - rq) / (focusR * 0.4));
+                float glow = saturate(_Hypno_FocusGlow) * rim * rim * (1.0 - outside);
+                pat = lerp(_Hypno_ColorA.rgb, pat, outside);
+                take *= lerp(glow, 1.0, outside);
+            }
 
             #ifdef VF_HYPNO_GRAB
             float4 c = float4(lerp(view, pat, take), 1.0);

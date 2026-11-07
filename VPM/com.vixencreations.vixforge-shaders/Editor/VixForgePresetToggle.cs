@@ -389,7 +389,7 @@ public class VixForgePresetToggle : EditorWindow
             if (string.IsNullOrEmpty(name) || name == except) continue;
             SerializedProperty synced = e.FindPropertyRelative("networkSynced");
             if (synced != null && !synced.boolValue) continue;
-            cost += VixForgeHypnoSetup.EnumName(e.FindPropertyRelative("valueType")) == "Bool" ? 1 : 8;
+            cost += VixForgeHypnoSetup.ParameterBits(e);
         }
         return cost;
     }
@@ -398,14 +398,17 @@ public class VixForgePresetToggle : EditorWindow
     {
         SerializedProperty list = so.FindProperty("parameters");
         int i = IndexByName(list, "name", name);
-        if (i < 0)
+        bool added = i < 0;
+        if (added)
         {
             i = list.arraySize;
             list.InsertArrayElementAtIndex(i);
         }
         SerializedProperty e = list.GetArrayElementAtIndex(i);
+        string type = radial ? "Float" : "Bool";
+        if (added || !VixForgeHypnoSetup.KeepsEncoding(e, type)) VixForgeHypnoSetup.ResetParameter(e);
         e.FindPropertyRelative("name").stringValue = name;
-        VixForgeHypnoSetup.SetEnum(e.FindPropertyRelative("valueType"), radial ? "Float" : "Bool");
+        VixForgeHypnoSetup.SetEnum(e.FindPropertyRelative("valueType"), type);
         e.FindPropertyRelative("saved").boolValue = true;
         e.FindPropertyRelative("defaultValue").floatValue = 0f;
         SerializedProperty ns = e.FindPropertyRelative("networkSynced");

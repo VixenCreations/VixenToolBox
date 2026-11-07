@@ -710,6 +710,7 @@ Material:
     - _Contact_Reach: 1
     - _Contact_Size: 4
     - _Contacts_Help: 0
+    - _Contacts_SdkWarn: 0
     - _ContinuousDissolveBlend: 0
     - _ContinuousDissolveEnabled: 0
     - _ContinuousDissolvePhase: 0
@@ -1118,6 +1119,7 @@ Material:
     - _DripMaskCh: 0
     - _Drip_Angle: 0
     - _Drip_BodyFollow: 0
+    - _Drip_Caustics: 0
     - _Drip_Coverage: 0.4
     - _Drip_Density: 40
     - _Drip_FloorCollide: 0
@@ -1538,6 +1540,9 @@ Material:
     - _Hypno_CycleSpeed: 0.2
     - _Hypno_CycleSpeed_Ph: 0
     - _Hypno_Fill: 1
+    - _Hypno_Focus: 0
+    - _Hypno_FocusEdge: 0.3
+    - _Hypno_FocusGlow: 0.5
     - _Hypno_Opacity: 1
     - _Hypno_Pattern: 0
     - _Hypno_Photos: 0
@@ -1553,6 +1558,9 @@ Material:
     - _Hypno_Speed_Ph: 0
     - _Hypno_Swirl: 1
     - _Hypno_Twist: 6
+    - _Hypno_Wobble: 0
+    - _Hypno_WobbleSpeed: 1
+    - _Hypno_WobbleSpeed_Ph: 0
     - _IgnoreFog: 1
     - _Infinity_Approach: 0
     - _Infinity_Attribution: 0
@@ -1590,9 +1598,12 @@ Material:
     - _LightData_Attribution: 0
     - _LightingAdditiveEnable: 1
     - _LightingCookies: 0
+    - _LightingMirrorLight: 0
+    - _LightingMirrorLightStrength: 1
     - _LightingPointShadows: 0
     - _LightingSoftShadows: 0
     - _LightingVertexLightingEnabled: 1
+    - _LumaRec709: 0
     - _MC_SecHelp: 0
     - _ML_Ambient: 1
     - _ML_Direct: 1
@@ -1610,8 +1621,10 @@ Material:
     - _MainBrightness: 0
     - _MainChromatize: 0
     - _MainColorAdjustClamp: 1
+    - _MainColorAdjustClampKeepHue: 0
     - _MainColorAdjustToggle: 0
     - _MainGamma: 1
+    - _MainGradationExactSRGB: 0
     - _MainGradationMaskChannel: 0
     - _MainGradationStrength: 0
     - _MainHueALCTEnabled: 0

@@ -134,6 +134,7 @@ Shader "VixForge/World Surface"
         _MainBrightness ("Brightness--{tooltip:''Below 0 darkens the colour. Above 0 brightens it.''}", Range(-1, 2)) = 0
         _MainGamma ("Gamma--{tooltip:''Above 1 deepens the darker colours, below 1 lifts them. 1 leaves them as they are.''}", Range(0.01, 5)) = 1
         [ToggleUI] _MainColorAdjustClamp ("Clamp--{tooltip:''Keeps the changed colour between black and white, so a big Brightness or Saturation cannot push it past white.''}", Float) = 1
+        [ToggleUI] _MainColorAdjustClampKeepHue ("Keep Hue--{condition_show:(_MainColorAdjustClamp==1),tooltip:''Colours pushed past white fade toward white and keep their hue. Off cuts each channel at white, which can turn a bright colour toward a neighbouring one.''}", Float) = 0
 
         [HideInInspector] s_start_MainTint ("Tint--{tooltip:''Recolours the material and keeps its own light and dark.''}", Float) = 0
         _MainTintColor ("Color--{tooltip:''The colour to tint toward. Its alpha is how strongly: 0 leaves the material alone.''}", Color) = (1, 1, 1, 0)
@@ -160,6 +161,7 @@ Shader "VixForge/World Surface"
         [VixForgesRGBWarning][NoScaleOffset][VixForgeTextureKeyword(VF_TEX_GRADATION)] _MainGradationTex ("Gradient Map--{tooltip:''A strip read from left to right. Each channel of your colour picks the same channel from the strip, dark on the left and bright on the right.''}", 2D) = "white" {}
         [VixForgeWideEnum(None, 0, R, 1, G, 2, B, 3, A, 4)] _MainGradationMaskChannel ("Mask Channel--{tooltip:''Which channel of the Mask limits the gradient map. None applies it everywhere.''}", Float) = 0
         _MainGradationStrength ("Strength--{tooltip:''How much of the gradient map shows. 0 is off.''}", Range(0, 1)) = 0
+        [ToggleUI] _MainGradationExactSRGB ("Exact sRGB--{tooltip:''Reads the gradient map with exact sRGB, so a plain black to white strip leaves your colour as it was. Off keeps the classic reading, which is a little darker in the shadows.''}", Float) = 0
         [HideInInspector] s_end_ColorAdjustColorGrading ("", Float) = 0
         [HideInInspector] m_end_coloradjust ("", Float) = 0
         //endex
@@ -818,8 +820,8 @@ Shader "VixForge/World Surface"
         [HideInInspector] m_end_drip_soak ("", Float) = 0
 
         [HideInInspector] m_start_drip_streaks ("Streaks--{condition_show:(_UseDrip==1),tooltip:''Streaks of water running down over the soak. Higher Thinness gives narrower streaks. Set Strength to 0 for a still, evenly soaked look.''}", Float) = 0
-        _Drip_Density ("Density--{tooltip:''How many of them there are.''}", Range(2, 200)) = 40
-        _Drip_Width ("Thinness--{tooltip:''How thin each one is.''}", Range(1, 300)) = 90
+        _Drip_Density ("Density--{tooltip:''How many of them there are.''}", Range(2, 200)) = 16
+        _Drip_Width ("Thinness--{tooltip:''How thin each one is.''}", Range(1, 300)) = 35
         _Drip_Coverage ("Coverage--{tooltip:''How much of the surface they cover.''}", Range(0, 1)) = 0.4
         _Drip_Angle ("Run Direction--{tooltip:''Turns the runs away from straight down. In degrees.''}", Range(-180, 180)) = 0
         [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3,Volume,4,Peak Hold,5)] _AL_Band_Wet ("AudioLink Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music this reacts to.''}", Float) = 0
@@ -834,6 +836,7 @@ Shader "VixForge/World Surface"
         _Drip_Water ("Water Look--{tooltip:''Turns each streak from a darker, glossier patch of the material into clear running water with its own colour, depth and highlight. 0 keeps the classic look.''}", Range(0, 1)) = 0
         _Drip_WaterColor ("Water Colour--{condition_show:(_Drip_Water>0),tooltip:''The colour of the water. It shows most where a streak runs deep.''}", Color) = (0.45, 0.75, 1, 1)
         _Drip_WaterDepth ("Water Depth--{condition_show:(_Drip_Water>0),tooltip:''How deep the water looks. Deeper water holds more of its colour and bulges more, so it catches a rounder highlight.''}", Range(0, 1)) = 0.5
+        _Drip_Caustics ("Caustics--{tooltip:''A moving net of light that drifts down through the wet, like sun through running water.''}", Range(0, 1)) = 0
         _Drip_WorldFlow ("Gravity Flow--{tooltip:''At 0 the streaks run down the texture. Turn it up and they run down in the world instead, so they stay vertical however the UVs are laid out and however you tilt.''}", Range(0, 1)) = 0
         [HideInInspector] m_end_drip_streaks ("", Float) = 0
 
@@ -3820,6 +3823,7 @@ Shader "VixForge/World Surface"
         [Enum(Off,0,On,1)] _ZClip ("Z Clip--{tooltip:''Whether the far edge of the view cuts the mesh off. Leave it on.''}", Float) = 1
         [Toggle] _AlphaToMask ("Alpha To Coverage--{tooltip:''Smooths the edges of cutout transparency instead of leaving them jagged. Costs nothing and usually looks better.''}", Float) = 0
         [Enum(Classic,0,Fast,1)] _HashMode ("Noise Pattern--{tooltip:''Classic keeps random patterns like glitch slices, fracture and car paint flakes exactly as they are. Fast builds them with cheaper maths, so a locked material is a little lighter to draw, but every pattern comes out in a new arrangement.''}", Float) = 0
+        [VixForgeWideEnum(Classic, 0, Rec.709, 1)] _LumaRec709 ("Luma--{tooltip:''How colours are weighed when something fades them toward grey, like Saturation, glitter, Tattoo ageing and the music colour. Classic keeps your current look. Rec.709 matches how bright each colour really is, so blues fade darker and greens lighter.''}", Float) = 0
         [DoNotAnimate][HideInInspector] Instancing ("Instancing--{tooltip:''Draws every copy of this material in one go when the same material sits on lots of separate meshes, which can be much faster. It does nothing on a skinned mesh. Leave it off unless you reuse one material across many separate meshes, because turning it on makes the shader build the extra versions instancing needs.''}", Float) = 0
 
         [HideInInspector] m_start_blending ("Blending", Float) = 0
@@ -5853,7 +5857,12 @@ Shader "VixForge/World Surface"
                 float3x3 toRGB = float3x3(1.0, 0.956, 0.621, 1.0, -0.272, -0.647, 1.0, -1.106, 1.703);
                 float3 yiq = mul(toYIQ, col);
                 float2 iq = float2(yiq.y * c - yiq.z * s, yiq.y * s + yiq.z * c);
-                return mul(toRGB, float3(yiq.x, iq.x, iq.y));
+                float3 rgb = mul(toRGB, float3(yiq.x, iq.x, iq.y));
+                float y = dot(rgb, float3(0.299, 0.587, 0.114));
+                float lo = min(rgb.r, min(rgb.g, rgb.b));
+                if (lo < 0.0)
+                    rgb = (y > 0.0) ? y + (rgb - y) * (y / (y - lo)) : 0.0;
+                return rgb;
             }
 
             void shardMotion(float3 center, float3 faceN, float h, float shardProg,
@@ -6292,7 +6301,12 @@ Shader "VixForge/World Surface"
                 float3x3 toRGB = float3x3(1.0, 0.956, 0.621, 1.0, -0.272, -0.647, 1.0, -1.106, 1.703);
                 float3 yiq = mul(toYIQ, col);
                 float2 iq = float2(yiq.y * c - yiq.z * s, yiq.y * s + yiq.z * c);
-                return mul(toRGB, float3(yiq.x, iq.x, iq.y));
+                float3 rgb = mul(toRGB, float3(yiq.x, iq.x, iq.y));
+                float y = dot(rgb, float3(0.299, 0.587, 0.114));
+                float lo = min(rgb.r, min(rgb.g, rgb.b));
+                if (lo < 0.0)
+                    rgb = (y > 0.0) ? y + (rgb - y) * (y / (y - lo)) : 0.0;
+                return rgb;
             }
 
             void shardMotion(float3 center, float3 faceN, float h, float shardProg,

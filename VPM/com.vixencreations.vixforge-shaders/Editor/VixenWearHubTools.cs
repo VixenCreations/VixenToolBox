@@ -249,7 +249,8 @@ public partial class VixenWearHub
             {
                 Id = "touch-setup", Title = "Touch Setup", Category = ToolCatAvatar,
                 WindowType = typeof(VixForgeTouchSetup), FirstOpen = VixForgeTouchSetup.Open,
-                Description = "Adds the contact receiver that TOUCH reads, so hands, fingers and heads can touch your materials. "
+                Description = "Adds the contact receivers that TOUCH reads, one on your head, chest or hips next to the meshes "
+                    + "it serves, so hands, fingers and heads can touch your materials. "
                     + "Pick the avatar and the meshes, then press Add Touch Receivers. Preview Touch shows a touch in the editor.",
             },
             new HubTool

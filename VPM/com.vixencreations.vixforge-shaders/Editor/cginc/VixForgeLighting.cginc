@@ -561,7 +561,7 @@
 
         half3 vw_GlitTint(half3 lightCol)
         {
-            half lum = dot(lightCol, half3(0.299, 0.587, 0.114));
+            half lum = dot(lightCol, VF_LUMA_W(half3(0.299, 0.587, 0.114)));
             return lerp(lum.xxx, lightCol, saturate(_Glit_LightTint));
         }
 
@@ -735,6 +735,21 @@
             #endif
             //endex
 
+            //ifex _LightingMirrorLight==0
+            #if !defined(VIXFORGE_WORLD) && defined(UNITY_PASS_FORWARDBASE)
+            [branch] if (any(vwMirrorKeyCol > 0.0))
+            {
+                half  mkCos   = dot(N, vwMirrorKeyDir);
+                half3 mkShare = vwMirrorKeyCol * max(0.25 + 0.5 * mkCos + 0.15625 * (3.0 * mkCos * mkCos - 1.0), 0.0);
+            #ifdef UNITY_COLORSPACE_GAMMA
+                mkShare = LinearToGammaSpace(mkShare);
+            #endif
+                ambPlain    = max(ambPlain - mkShare, 0.0);
+                ambOccluded = max(ambOccluded - mkShare * shOcc, 0.0);
+            }
+            #endif
+            //endex
+
             #if !defined(UNITY_PASS_FORWARDADD)
             //ifex _UnifiedLight==0
             [branch] if (_UnifiedLight > 0.5 && _UL_LeakDim > 0.0)
@@ -897,7 +912,7 @@
                         sssColor     += diffColor * vCol * ((vWrap * 0.6 + vBack * 0.4) * _SSS_Str VF_MUL_SSS * finalSSSMask) * sssProfile;
                     }
                 }
-                [branch] if (_UL_ProbeSpec > 0.0 && s.LVActive < 0.5)
+                [branch] if (_UL_ProbeSpec > 0.0 && s.LVActive < 0.5 VF_AND_NO_MIRROR_KEY)
                 {
                     half4 phR, phG, phB;
                     VF_ProbeSHCoefficients(s.WorldPos, phR, phG, phB);
@@ -1697,6 +1712,51 @@
             return o_gi;
         }
         #endif
+
+        //ifex _LightingMirrorLight==0
+        #if !defined(VIXFORGE_WORLD) && defined(UNITY_PASS_FORWARDBASE)
+        // Mirror Probe Light: a key light from the probe where a VRChat mirror left no realtime light. developer_info.md, "MIRROR PROBE LIGHT".
+        bool VF_MirrorKeyLight(float3 worldPos, inout UnityLight light)
+        {
+            bool on = false;
+            [branch] if (_LightingMirrorLight > 0.5 && max(_VRChatMirrorMode, _VRChatFaceMirrorMode) > 0.5
+                         && dot(light.color, half3(0.2126, 0.7152, 0.0722)) < 1.0e-4)
+            {
+                half4 shR, shG, shB;
+                VF_ProbeSHCoefficients(worldPos, shR, shG, shB);
+                float3 l0  = float3(shR.w, shG.w, shB.w);
+                float3 l1r = shR.xyz;
+                float3 l1g = shG.xyz;
+                float3 l1b = shB.xyz;
+                //ifex _UseLightVolumes==0
+                #if defined(VRC_LIGHT_VOLUMES_INCLUDED)
+                [branch] if (_UseLightVolumes > 0.5 && _LV_Int > 0.001 && LightVolumesEnabled() > 0.5)
+                {
+                    float3 v0, vr, vg, vb;
+                    LightVolumeSH(worldPos, v0, vr, vg, vb);
+                    float k = saturate(_LV_Int);
+                    l0  = lerp(l0,  v0, k);
+                    l1r = lerp(l1r, vr, k);
+                    l1g = lerp(l1g, vg, k);
+                    l1b = lerp(l1b, vb, k);
+                }
+                #endif
+                //endex
+                float3 dir, col;
+                VF_KeyFromSH(l0, l1r, l1g, l1b, dir, col);
+                vwMirrorKeyDir = dir;
+                vwMirrorKeyCol = col * saturate(_LightingMirrorLightStrength);
+                on = any(vwMirrorKeyCol > 0.0);
+                light.dir   = dir;
+                light.color = vwMirrorKeyCol;
+            #ifdef UNITY_COLORSPACE_GAMMA
+                light.color = LinearToGammaSpace(light.color);
+            #endif
+            }
+            return on;
+        }
+        #endif
+        //endex
 
         void LightingStandardLatex_GI(SurfaceOutputStandardLatex s, UnityGIInput data, inout UnityGI gi)
         {

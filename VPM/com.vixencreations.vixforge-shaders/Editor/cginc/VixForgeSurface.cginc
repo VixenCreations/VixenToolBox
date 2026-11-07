@@ -9,26 +9,94 @@
 
         //ifex _UseDrip==0
         #if VF_WETGOO && defined(VF_DRIP)
-        void vw_DripLattice(float2 uv, float ang, float dripT, out float riv, out float slope, out float2 across)
+        // STREAKS. Each column of the lattice holds one streak. Its path wanders across the column and back, it
+        // swells and thins along its length, and slugs of water run down it with wetter and drier stretches.
+        // The column count and every frequency are whole numbers per UV unit, and the column index wraps on the
+        // count, so the pattern meets itself where the UVs wrap. A pixel reads its own column and both
+        // neighbours, so a wide or wandering streak never stops at a column edge. dAlong points up the run, so
+        // the flow adds dripT and the water runs down.
+        void vw_DripStreak(float colF, float c, float n, float y, float dripT, float2 dAlong, float2 across,
+                           inout float riv, inout float2 bump)
+        {
+            float  cw  = c - n * floor(c / n);
+            float3 hf  = vw_HashFast3(float3(cw, 0.0, 0.0));
+            float  hx  = vw_NoisePick(hf.x, frac(sin(cw * 91.17) * 43758.5453));
+            float2 hyz = vw_NoisePick(hf.yz, frac(sin(cw * float2(47.31, 13.97)) * 43758.5453));
+            [branch] if (hx < 1.0 - saturate(_Drip_Coverage))
+                return;
+            float wander = (0.16 + 0.14 * hyz.y) * (sin(6.2831853 * (max(round(n / 7.0), 1.0) * y + hyz.x)) * 0.75
+                                                  + sin(6.2831853 * (max(round(n / 11.0), 1.0) * y + hyz.y)) * 0.25);
+            float x      = colF - (c + 0.5 + wander);
+            float thick  = 0.7 + 0.3 * sin(6.2831853 * (max(round(n / 5.0), 1.0) * y + hx));
+            float f      = y + dripT * (0.6 + hx) + hx * 7.0;
+            float slugK  = max(round(n / 8.0), 1.0);
+            float sp     = 6.2831853 * slugK * f;
+            float s      = 0.5 + 0.5 * sin(sp);
+            float slug   = s * s * s;
+            float pres   = 0.35 + 0.65 * smoothstep(0.3, 0.7, 0.5 + 0.5 * sin(6.2831853 * (max(round(n / 20.0), 1.0) * f + hyz.y)));
+            float swell  = thick * (1.0 + 0.6 * slug);
+            float wid    = _Drip_Width / (swell * swell);
+            float r      = exp(-x * x * wid);
+            float a      = r * pres * (0.55 + 0.45 * slug);
+            riv  += max(a, exp(-x * x * wid * 0.06) * 0.35 * (0.4 + 0.6 * pres));
+            bump += clamp(2.0 * x * wid * a, -4.0, 4.0) * across
+                  + clamp(r * pres * 0.45 * 1.5 * s * s * cos(sp) * 6.2831853 * slugK / n, -4.0, 4.0) * dAlong;
+        }
+
+        // CAUSTICS. The bright net that sun makes under moving water is where two cells of a moving Voronoi
+        // lattice meet: the light is exp(-12 (F2 - F1)). The points circle inside their cells, the lattice is
+        // warped a little so the cells are not square, and it drifts down with the streaks. The cell ids wrap on
+        // a whole-number count and the warp is whole cycles per cell, so it tiles; the circling uses frac, so it
+        // loops without a jump.
+        float vw_DripCaustic(float2 uv, float2 dAlong, float2 dAcross, float n, float dripT)
+        {
+            float  nc = max(round(n * 0.25), 1.0);
+            float2 cp = float2(dot(uv, dAcross), dot(uv, dAlong) + dripT * 0.8) * nc;
+            cp += 0.12 * sin(6.2831853 * cp.yx);
+            float2 ci = floor(cp);
+            float2 cf = cp - ci;
+            float  tt = frac(dripT * 0.5);
+            float  f1 = 8.0;
+            float  f2 = 8.0;
+            [unroll] for (int j = -1; j <= 1; j++)
+            {
+                [unroll] for (int i = -1; i <= 1; i++)
+                {
+                    float2 g  = float2(i, j);
+                    float2 id = ci + g;
+                    id -= nc * floor(id / nc);
+                    float2 h  = vw_NoisePick(vw_HashFast3(float3(id, 3.0)).xy,
+                                             frac(sin(float2(dot(id, float2(127.1, 311.7)), dot(id, float2(269.5, 183.3)))) * 43758.5453));
+                    float2 o  = 0.5 + 0.38 * float2(sin(6.2831853 * (tt + h.x)), cos(6.2831853 * (tt + h.y)));
+                    float  d  = length(g + o - cf);
+                    f2 = (d < f1) ? f1 : min(f2, d);
+                    f1 = min(f1, d);
+                }
+            }
+            return exp(-(f2 - f1) * 12.0);
+        }
+
+        void vw_DripLattice(float2 uv, float ang, float dripT, out float riv, out float2 bump, out float caus)
         {
             float dsn, dcs;
             sincos(ang, dsn, dcs);
             float2 dAlong = mul(normalize(float2(0, 1) + 1e-6), float2x2(dcs, -dsn, dsn, dcs));
             float2 dAcross= float2(dAlong.y, -dAlong.x);
-            float colF    = dot(uv, dAcross) * _Drip_Density;
-            float col     = floor(colF);
-            float colHash = vw_NoisePick(vw_HashFast3(float3(col, 0.0, 0.0)).x, frac(sin(col * 91.17) * 43758.5453));
-            float hasCol  = step(1.0 - saturate(_Drip_Coverage), colHash);
-            float xInCol  = frac(colF) - 0.5;
-            float ridge   = exp(-xInCol * xInCol * _Drip_Width);
-            float flow    = dot(uv, dAlong) - dripT * (0.6 + colHash) - colHash * 7.0;
-            float bead    = sin(flow * 18.0) * 0.5 + 0.5;
-            bead          = bead * bead;
-            riv           = ridge * hasCol * saturate(0.35 + bead) * _Drip_Strength;
-            slope         = clamp(2.0 * xInCol * _Drip_Width * ridge * hasCol, -4.0, 4.0);
-            across        = float2(dcs, -dsn);
+            float2 across = float2(dcs, -dsn);
+            float  n      = max(round(_Drip_Density), 1.0);
+            float  colF   = dot(uv, dAcross) * n;
+            float  col    = floor(colF);
+            float  y      = dot(uv, dAlong);
+            riv  = 0.0;
+            bump = 0.0;
+            caus = 0.0;
+            [unroll] for (int k = -1; k <= 1; k++)
+                vw_DripStreak(colF, col + k, n, y, dripT, dAlong, across, riv, bump);
+            riv *= _Drip_Strength;
             [branch] if (AL_Active() && _AL_Wet_Travel.x > 0.001)
                 riv *= AL_TravelPulse(_AL_Band_Wet, saturate(0.5 + dot(uv - 0.5, dAlong)), _AL_Wet_Travel);
+            [branch] if (_Drip_Caustics > 0.001)
+                caus = vw_DripCaustic(uv, dAlong, dAcross, n, dripT) * _Drip_Caustics;
         }
         #endif
         //endex
@@ -40,12 +108,10 @@
             float3 c = vw_CtxLightDirect(worldPos, N);
             #if defined(UNITY_PASS_FORWARDBASE)
             c += max(VF_ShadeSH9(half4(N, 1.0), worldPos), 0.0);
-            #if defined(VERTEXLIGHT_ON)
             VF_IF_VERTEX
             c += Shade4PointLights(unity_4LightPosX0, unity_4LightPosY0, unity_4LightPosZ0,
                                    unity_LightColor[0].rgb, unity_LightColor[1].rgb, unity_LightColor[2].rgb, unity_LightColor[3].rgb,
                                    unity_4LightAtten0, worldPos, N);
-            #endif
             //ifex _UseVRSL==0
             #ifdef VF_VRSL
             [branch] if (_UseVRSL > 0.5 && _VRSL_GI_Int > 0.001 && _Udon_DMXGridRenderTexture_TexelSize.z > 16.0)
@@ -1378,7 +1444,7 @@
                 if (_ReflMask_Inv > 0.5) reflMaskV = 1.0 - reflMaskV;
                 reflMaskV = saturate(reflMaskV * _ReflMask_Str);
 
-                half baseLum      = dot(o.Albedo, half3(0.299, 0.587, 0.114));
+                half baseLum      = dot(o.Albedo, VF_LUMA_W(half3(0.299, 0.587, 0.114)));
                 half normalDetail = saturate(length(normalTS.xy));
                 half synthRough   = saturate(_ReflFromMask_Rough + normalDetail * 0.5 + (1.0 - baseLum) * 0.15);
 
@@ -1568,6 +1634,7 @@
                 {
                     float rivulet = 0;
                     float2 rivuletBump = 0;
+                    float caustic = 0;
                     if (_Drip_Strength > 0.0001)
                     {
                         float3 gravW = float3(0, -1, 0);
@@ -1589,18 +1656,15 @@
                         float dripK    = floor(dripDev / dripStep);
                         float dripW    = dripDev / dripStep - dripK;
                         float baseRad  = _Drip_Angle * (UNITY_PI / 180.0);
-                        float rivA, slopeA;
-                        float2 acrossA;
-                        vw_DripLattice(finalUV, baseRad + dripK * dripStep, dripT, rivA, slopeA, acrossA);
-                        rivulet     = rivA;
-                        rivuletBump = slopeA * acrossA;
+                        vw_DripLattice(finalUV, baseRad + dripK * dripStep, dripT, rivulet, rivuletBump, caustic);
                         [branch] if (dripW > 0.0)
                         {
-                            float rivB, slopeB;
-                            float2 acrossB;
-                            vw_DripLattice(finalUV, baseRad + (dripK + 1.0) * dripStep, dripT, rivB, slopeB, acrossB);
-                            rivulet     = lerp(rivA, rivB, dripW);
-                            rivuletBump = lerp(rivuletBump, slopeB * acrossB, dripW);
+                            float rivB, causB;
+                            float2 bumpB;
+                            vw_DripLattice(finalUV, baseRad + (dripK + 1.0) * dripStep, dripT, rivB, bumpB, causB);
+                            rivulet     = lerp(rivulet, rivB, dripW);
+                            rivuletBump = lerp(rivuletBump, bumpB, dripW);
+                            caustic     = lerp(caustic, causB, dripW);
                         }
                     }
 
@@ -1746,6 +1810,9 @@
                         }
                         else
                             o.Albedo *= wetDark;
+                        [branch] if (caustic > 0.0)
+                            o.Albedo = saturate(o.Albedo * (1.0 + 1.5 * caustic * wetness)
+                                              + (0.12 * caustic * wetness) * lerp(1.0.xxx, _Drip_WaterColor.rgb, saturate(_Drip_Water)));
                         o.Smoothness    = lerp(o.Smoothness, _Wet_Smoothness, wetness);
                         o.BaseRoughness = 1.0 - o.Smoothness;
                         o.Normal = normalize(lerp(o.Normal, float3(0,0,1), wetness * _Wet_Flatten));

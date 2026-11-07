@@ -221,6 +221,8 @@ namespace VixenTools.Editor
                 if (Vector3.Distance(t.position, targetPos) > 0.005f)
                 {
                     t.position = targetPos;
+                    if (PrefabUtility.IsPartOfPrefabInstance(t)) PrefabUtility.RecordPrefabInstancePropertyModifications(t);
+                    if (t.gameObject.scene.IsValid()) UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(t.gameObject.scene);
                     var udonBehaviour = t.GetComponent("VRC.Udon.UdonBehaviour");
                     if (udonBehaviour != null) EditorUtility.SetDirty(udonBehaviour);
                 }

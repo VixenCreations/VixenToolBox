@@ -14,11 +14,16 @@
         // number of arms, the jump is a whole number of stripes, so frac() hides it. A fractional arm count
         // would leave a visible seam running out from the centre. hueCoord is divided by the arm count for the
         // same reason: the jump becomes exactly one, and frac() hides that too.
+        //
+        // WHY THE PHASE WRAPS ON n TURNS. Callers pass the phase unwrapped. Wrapped on one turn, hueCoord would
+        // jump back by 1/n of the colour wheel every turn, so Rainbow snapped at any Speed with more than one
+        // arm. Wrapped on n turns, the jump is exactly one again.
         inline float vw_HypnoWave(float2 p, float pattern, float arms, float tight, float phase, out float hueCoord)
         {
             float r = length(p);
             float a = (r > 1.0e-6) ? atan2(p.y, p.x) * (0.5 / UNITY_PI) : 0.0;
             float n = max(round(arms), 1.0);
+            phase -= n * floor(phase / n);
 
             float v;
             if (pattern < 0.5)      v = r * tight + a * n;

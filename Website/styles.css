@@ -1,21 +1,37 @@
 :root {
     color-scheme: dark;
-    /* Signature Vixforge Palette - Superheated */
-    --neon-pink: #ff0055; /* Shifted to a hotter, aggressive magenta/crimson */
-    --neon-pink-glow: rgba(255, 0, 85, 0.6);
-    --neon-cyan: #00e5ff;
-    --neon-cyan-glow: rgba(0, 229, 255, 0.4);
-    /* The Forge Elements */
-    --forge-fire: #ff4500; /* Molten orange */
-    --forge-fire-glow: rgba(255, 69, 0, 0.6);
-    --forge-core: #ffaa00; /* White-hot amber center */
-    /* Scorched Metal Base */
-    --dark-void: #050304; /* Deep, heated charcoal */
-    --glass-bg: rgba(14, 8, 10, 0.85); /* Acrylic with a subtle ambient warmth */
-    --glass-border: rgba(255, 69, 0, 0.25);
-    /* Fluent UI Base Variable Overrides */
-    --neutral-foreground-rest: #d1d5db;
-    --fill-color: #050304;
+    --pink: #ff3d8b;
+    --pink-rgb: 255, 61, 139;
+    --pink-soft: #ff8db8;
+    --cyan: #3fe3ff;
+    --cyan-rgb: 63, 227, 255;
+    --bg: #09080d;
+    --surface: rgba(19, 17, 26, 0.82);
+    --surface-2: rgba(27, 24, 36, 0.9);
+    --surface-solid: #13111a;
+    --border: rgba(255, 255, 255, 0.07);
+    --border-strong: rgba(255, 255, 255, 0.14);
+    --text: #e7e6ee;
+    --text-muted: #a8a6b8;
+    --text-dim: #75738a;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    --font: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", sans-serif;
+    --mono: "Cascadia Code", Consolas, "SF Mono", Menlo, monospace;
+    /* Older names, kept so page styles that still use them pick up the new palette. */
+    --neon-pink: var(--pink);
+    --neon-pink-glow: rgba(var(--pink-rgb), 0.28);
+    --neon-cyan: var(--cyan);
+    --neon-cyan-glow: rgba(var(--cyan-rgb), 0.25);
+    --forge-fire: var(--pink);
+    --forge-fire-glow: rgba(var(--pink-rgb), 0.28);
+    --forge-core: var(--pink-soft);
+    --dark-void: var(--bg);
+    --glass-bg: var(--surface);
+    --glass-border: var(--border);
+    --neutral-foreground-rest: var(--text);
+    --fill-color: var(--bg);
     --base-layer-luminance: 0.10;
 }
 
@@ -28,7 +44,7 @@
 }
 
 html {
-    background-color: var(--dark-void);
+    background-color: var(--bg);
 }
 
 body {
@@ -36,40 +52,81 @@ body {
     transition: opacity 0.15s ease-out;
     padding: 0;
     margin: 0;
-    min-width: 100vw;
+    min-width: 100%;
     min-height: 100vh;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     background-color: transparent;
-    font-family: 'Segoe UI', SFMono-Regular, Consolas, sans-serif;
-    color: var(--neutral-foreground-rest);
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text);
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
 }
 
     body.app-ready {
         opacity: 1;
     }
 
-/* Custom Webkit Scrollbars - Liquid Metal Aesthetic */
+::selection {
+    background: rgba(var(--pink-rgb), 0.35);
+    color: #fff;
+}
+
+a {
+    color: var(--cyan);
+    text-underline-offset: 3px;
+}
+
+    a:hover {
+        color: #fff;
+    }
+
+:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+}
+
+code {
+    font-family: var(--mono);
+    font-size: 0.88em;
+    padding: 0.1em 0.4em;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border);
+    color: #f3d6e4;
+    overflow-wrap: anywhere;
+}
+
+pre code {
+    padding: 0;
+    border: none;
+    background: none;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+}
+
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.8);
-    border-left: 1px solid rgba(255, 69, 0, 0.1);
+    background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(to bottom, var(--forge-fire), var(--neon-pink));
-    border-radius: 0px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
 }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: var(--forge-core);
-        box-shadow: 0 0 10px var(--forge-fire-glow);
+        background: rgba(var(--pink-rgb), 0.5);
     }
 
 .background-art {
@@ -81,11 +138,11 @@ body {
     background-image: url('background.jpg');
     background-size: cover;
     background-position: center;
-    filter: blur(12px) brightness(0.2) contrast(1.2);
+    filter: blur(18px) brightness(0.14) saturate(1.1);
     z-index: -1;
 }
 
-/* === VIXFORGE SIDEBAR NAVIGATION === */
+/* Sidebar navigation */
 .sidebar {
     width: 260px;
     height: 100vh;
@@ -94,62 +151,70 @@ body {
     top: 0;
     display: flex;
     flex-direction: column;
-    background: rgba(8, 4, 5, 0.98);
-    border-right: 1px solid rgba(255, 69, 0, 0.2);
-    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.9), inset -2px 0 15px rgba(255, 69, 0, 0.05);
+    background: rgba(12, 11, 17, 0.94);
+    border-right: 1px solid var(--border);
     z-index: 100;
+    overflow-y: auto;
 }
 
 .sidebar-brand {
-    padding: 1.15rem 1rem 1rem;
-    background: rgba(0, 0, 0, 0.6);
-    border-bottom: 2px solid var(--forge-fire);
-    margin-bottom: 1rem;
+    padding: 1.25rem 1.1rem 1rem;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(255, 69, 0, 0.1);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.75rem;
 }
 
 .brand-logo-link {
     display: block;
     line-height: 0;
-    margin-bottom: 0.7rem;
+    margin-bottom: 0.75rem;
 }
 
 .sidebar-brand-logo {
     display: block;
     width: 100%;
     height: auto;
-    border-radius: 6px;
-    border: 1px solid rgba(255, 69, 0, 0.25);
-    box-shadow: 0 0 18px rgba(255, 69, 0, 0.22), 0 0 12px rgba(0, 229, 255, 0.12);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
     .brand-logo-link:hover .sidebar-brand-logo {
         transform: translateY(-1px);
-        box-shadow: 0 0 26px rgba(255, 69, 0, 0.35), 0 0 16px rgba(0, 229, 255, 0.2);
+        border-color: rgba(var(--pink-rgb), 0.4);
     }
 
     .sidebar-brand h2 {
-        font-size: 1.15rem;
+        font-size: 1.05rem;
         margin: 0;
-        letter-spacing: 2px;
-        font-weight: 800;
-        background: linear-gradient(90deg, var(--forge-core), var(--forge-fire));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        filter: drop-shadow(0 0 8px var(--forge-fire-glow));
+        letter-spacing: 0.04em;
+        font-weight: 700;
+        color: #fff;
     }
 
 .nav-links {
     display: flex;
     flex-direction: column;
     width: 100%;
+    padding: 0 0.6rem 1rem;
 }
+
+.nav-group-label {
+    padding: 1rem 0.9rem 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 650;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+
+    .nav-group-label:first-child {
+        padding-top: 0.25rem;
+    }
 
 .nav-item {
     width: 100%;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
 }
 
     .nav-item::part(control) {
@@ -157,45 +222,47 @@ body {
         align-items: center;
         justify-content: flex-start;
         width: 100%;
-        padding: 1rem 1.5rem;
+        padding: 0.6rem 0.9rem;
         background: transparent;
         border: none;
-        border-left: 3px solid transparent;
-        border-radius: 0;
-        color: #8c97a8;
-        font-size: 0.95rem;
+        border-radius: var(--radius-sm);
+        color: var(--text-muted);
+        font-size: 0.92rem;
         font-weight: 500;
-        transition: all 0.2s ease-in-out;
+        transition: background 0.15s ease, color 0.15s ease;
     }
 
     .nav-item:hover::part(control) {
-        background: linear-gradient(90deg, rgba(255, 69, 0, 0.05) 0%, transparent 100%);
+        background: rgba(255, 255, 255, 0.05);
         color: #fff;
-        text-shadow: 0 0 5px var(--forge-fire-glow);
     }
 
-    /* Active State - Ignited */
     .nav-item.active::part(control) {
-        border-left: 3px solid var(--forge-core);
-        background: linear-gradient(90deg, rgba(255, 69, 0, 0.15) 0%, transparent 100%);
-        color: var(--forge-core);
-        font-weight: 700;
-        box-shadow: inset 5px 0 15px rgba(255, 69, 0, 0.1);
+        background: rgba(var(--pink-rgb), 0.12);
+        color: #fff;
+        font-weight: 600;
+        box-shadow: inset 2px 0 0 var(--pink);
     }
 
     .nav-item svg {
         margin-right: 12px;
+        opacity: 0.85;
     }
 
-/* === MAIN CONTENT WRAPPER === */
+    .nav-item.active svg {
+        color: var(--pink);
+        opacity: 1;
+    }
+
+/* Main content */
 .main-wrapper {
     margin-left: 260px;
-    width: calc(100vw - 260px);
+    width: calc(100% - 260px);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 3rem 2rem;
+    padding: 3rem 2.5rem;
     box-sizing: border-box;
 }
 
@@ -204,15 +271,14 @@ body {
     width: 100%;
     margin: 0;
     padding: 2.5rem;
-    background: var(--glass-bg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
-    border-radius: 4px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), inset 0 2px 20px rgba(255, 69, 0, 0.08);
+    background: var(--surface);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
 }
 
-/* Layout Utilities */
 .row {
     display: flex;
     flex-direction: row;
@@ -251,14 +317,6 @@ body {
     margin: 0;
 }
 
-.m-1 {
-    margin: 0.25rem;
-}
-
-.m-2 {
-    margin: 0.5rem;
-}
-
 .mt-1 {
     margin-top: 0.25rem;
 }
@@ -291,10 +349,6 @@ body {
     margin-left: 0.5rem;
 }
 
-.ms-4 {
-    margin-left: 1.5rem;
-}
-
 .me-2 {
     margin-right: 0.5rem;
 }
@@ -311,117 +365,132 @@ body {
     padding-left: 2rem;
 }
 
-/* Typography */
-h1 {
-    margin: 0;
-    font-size: 2.3rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+/* Type */
+h1, h2, h3, h4, h5 {
     color: #fff;
-    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
 }
 
-h3, h5 {
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #fff;
+h1 {
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 750;
+}
+
+h2 {
+    font-size: 1.6rem;
     font-weight: 700;
+}
+
+h3 {
+    font-size: 1.15rem;
+    font-weight: 650;
+}
+
+h4 {
+    font-size: 1rem;
+    font-weight: 650;
+}
+
+h5 {
+    font-size: 1rem;
+    font-weight: 650;
+}
+
+p {
+    color: var(--text-muted);
+}
+
+strong {
+    color: var(--text);
+    font-weight: 650;
 }
 
 .caption1 {
     font-size: 0.95rem;
-    color: #9ca3af;
+    color: var(--text-muted);
 }
 
 .caption2 {
     font-size: 0.85rem;
-    color: #6b7280;
+    color: var(--text-dim);
 }
 
-/* Glow Classes */
 .text-glow-pink {
-    text-shadow: 0 0 15px var(--neon-pink-glow), 0 0 30px var(--neon-pink-glow);
-    color: var(--neon-pink);
+    color: var(--pink);
+    text-shadow: 0 0 22px rgba(var(--pink-rgb), 0.22);
 }
 
 .text-glow-cyan {
-    text-shadow: 0 0 12px var(--neon-cyan-glow);
-    color: var(--neon-cyan);
+    color: var(--cyan);
+    text-shadow: 0 0 22px rgba(var(--cyan-rgb), 0.18);
 }
 
 .text-glow-fire {
-    text-shadow: 0 0 15px var(--forge-fire-glow), 0 0 30px var(--forge-fire);
-    color: var(--forge-core);
+    color: var(--pink-soft);
 }
 
 .neon-icon-cyan {
-    color: var(--neon-cyan);
-    filter: drop-shadow(0 0 6px var(--neon-cyan-glow));
+    color: var(--cyan);
 }
 
 .neon-link {
-    color: var(--forge-core);
+    color: var(--cyan);
     text-decoration: none;
-    font-weight: 700;
-    transition: all 0.2s ease;
-    border-bottom: 1px solid rgba(255, 170, 0, 0.3);
+    font-weight: 600;
+    border-bottom: 1px solid rgba(var(--cyan-rgb), 0.35);
+    transition: color 0.15s ease, border-color 0.15s ease;
 }
 
     .neon-link:hover {
         color: #fff;
-        border-bottom: 1px solid var(--forge-core);
-        text-shadow: 0 0 10px var(--forge-fire-glow);
+        border-bottom-color: #fff;
     }
 
-/* Badges & Package Specifics */
+/* Badges */
 .packageName {
-    font-size: 1.15rem;
-    font-weight: 800;
+    font-size: 1.1rem;
+    font-weight: 700;
     color: #fff;
     margin-bottom: 4px;
-    text-shadow: 0 0 8px rgba(255, 69, 0, 0.4);
 }
 
 .id-badge {
-    font-family: 'Consolas', monospace;
-    background: rgba(0, 0, 0, 0.8);
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    background: rgba(255, 255, 255, 0.04);
     padding: 3px 8px;
-    border: 1px solid rgba(255, 69, 0, 0.3);
-    border-radius: 2px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
     display: inline-block;
     margin-top: 4px;
-    box-shadow: inset 0 0 5px rgba(255, 69, 0, 0.2);
+    color: var(--text-muted);
 }
 
-.type-badge {
-    background: linear-gradient(135deg, rgba(255, 69, 0, 0.15), rgba(255, 0, 85, 0.15));
-    border: 1px solid var(--forge-fire);
-    padding: 4px 12px;
-    border-radius: 2px;
-    font-size: 0.85rem;
-    color: var(--forge-core);
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    box-shadow: 0 0 10px rgba(255, 69, 0, 0.1);
+.type-badge,
+.badge {
+    display: inline-block;
+    background: rgba(var(--pink-rgb), 0.1);
+    border: 1px solid rgba(var(--pink-rgb), 0.35);
+    color: var(--pink-soft);
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 .badge {
-    background: rgba(255, 69, 0, 0.1);
-    border: 1px solid var(--forge-fire);
-    color: var(--forge-core);
-    padding: 2px 8px;
-    border-radius: 2px;
-    font-family: 'Consolas', monospace;
-    font-size: 0.85rem;
+    font-family: var(--mono);
 }
 
-/* Live repo stat cards (hero) */
+/* Stat cards */
 .stat-cards {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 1.25rem;
+    gap: 1rem;
     width: 100%;
     margin: 0.5rem 0 1.75rem;
 }
@@ -430,57 +499,48 @@ h3, h5 {
     position: relative;
     display: block;
     min-width: 220px;
-    padding: 1.4rem 2.5rem;
+    padding: 1.3rem 2.25rem;
     text-align: center;
     text-decoration: none;
-    background: var(--glass-bg);
-    border: 1px solid rgba(255, 69, 0, 0.2);
-    border-top: 2px solid var(--forge-fire);
-    border-radius: 6px;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(255, 69, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
     .stat-card:hover {
-        transform: translateY(-4px);
-        border-color: rgba(255, 69, 0, 0.45);
-        box-shadow: 0 16px 55px rgba(0, 0, 0, 0.9), 0 0 28px rgba(255, 69, 0, 0.18);
+        transform: translateY(-2px);
+        border-color: var(--border-strong);
     }
 
 .stat-value {
-    font-size: 2.75rem;
-    font-weight: 800;
+    font-size: 2.6rem;
+    font-weight: 750;
     line-height: 1;
-    letter-spacing: 1px;
     font-variant-numeric: tabular-nums;
 }
 
 .stat-label {
     margin-top: 0.6rem;
-    font-family: 'Consolas', monospace;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--neutral-foreground-rest);
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
 }
 
 .stat-sub {
     margin-top: 0.15rem;
-    font-size: 0.68rem;
-    letter-spacing: 0.5px;
-    color: #9ca3af;
+    font-size: 0.75rem;
+    color: var(--text-dim);
 }
 
-.stat-card-pink .stat-label,
-.stat-card-pink .stat-sub {
-    color: var(--neon-pink);
+.stat-card-pink .stat-label {
+    color: var(--pink-soft);
 }
 
-.stat-card-cyan .stat-label,
-.stat-card-cyan .stat-sub {
-    color: var(--neon-cyan);
+.stat-card-cyan .stat-label {
+    color: var(--cyan);
 }
 
 @media (max-width: 560px) {
@@ -495,17 +555,16 @@ h3, h5 {
     }
 }
 
-/* Fluent Form Controls */
+/* Form controls */
 fluent-text-field::part(root) {
-    background: rgba(4, 3, 5, 0.9) !important;
-    border: 1px solid rgba(255, 69, 0, 0.4);
-    border-radius: 2px;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.35) !important;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
 }
 
 fluent-text-field::part(control) {
     color: #fff !important;
-    font-family: 'Consolas', monospace;
+    font-family: var(--mono);
 }
 
 .vccUrlField {
@@ -523,60 +582,53 @@ fluent-text-field::part(control) {
     }
 
         .searchBlock fluent-text-field::part(root) {
-            border-color: rgba(255, 69, 0, 0.2);
-            border-width: 1px;
-            transition: all 0.2s;
+            border-color: var(--border-strong);
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
 
         .searchBlock fluent-text-field:focus-within::part(root) {
-            border-color: var(--forge-fire);
-            box-shadow: 0 0 15px rgba(255, 69, 0, 0.2), inset 0 0 5px rgba(255, 69, 0, 0.1);
+            border-color: rgba(var(--cyan-rgb), 0.6);
+            box-shadow: 0 0 0 3px rgba(var(--cyan-rgb), 0.12);
         }
 
-/* Custom Button Mapping - Heated Metal */
 .custom-accent-btn::part(control) {
-    background: linear-gradient(135deg, var(--forge-fire), var(--neon-pink));
+    background: var(--pink);
     color: #fff;
-    border: 1px solid var(--forge-core);
-    border-radius: 2px;
-    font-weight: 700;
-    box-shadow: 0 4px 15px var(--forge-fire-glow), inset 0 0 10px rgba(255, 255, 255, 0.2);
-    transition: all 0.2s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    font-weight: 650;
+    transition: background 0.15s ease, transform 0.15s ease;
 }
 
 .custom-accent-btn:hover::part(control) {
-    background: linear-gradient(135deg, var(--forge-core), var(--neon-pink));
-    box-shadow: 0 6px 25px var(--forge-fire-glow), inset 0 0 15px rgba(255, 255, 255, 0.4);
-    transform: translateY(-2px);
+    background: #ff5c9e;
+    transform: translateY(-1px);
 }
 
 .custom-stealth-btn::part(control) {
-    background: rgba(255, 69, 0, 0.05);
-    color: #d1d5db;
-    border: 1px solid rgba(255, 69, 0, 0.2);
-    border-radius: 2px;
-    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 .custom-stealth-btn:hover::part(control) {
-    background: rgba(255, 69, 0, 0.15);
-    border-color: var(--forge-fire);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.25);
     color: #fff;
-    box-shadow: 0 0 15px rgba(255, 69, 0, 0.2);
 }
 
 .close-btn::part(control) {
     background: transparent;
     border: none;
-    color: var(--forge-fire);
+    color: var(--text-muted);
     box-shadow: none;
 }
 
 .close-btn:hover::part(control) {
-    background: rgba(255, 69, 0, 0.15);
-    color: var(--forge-core);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
 }
 
 .add-btn::part(control) {
@@ -595,7 +647,7 @@ fluent-text-field::part(control) {
     align-items: center;
 }
 
-/* Grid & Cards */
+/* Panels and grids */
 fluent-card {
     --neutral-layer-card-container: transparent;
     --neutral-fill-layer-rest: transparent;
@@ -605,11 +657,10 @@ fluent-card {
 .glass-panel {
     width: 100%;
     margin-top: 1rem;
-    background: rgba(14, 8, 10, 0.85) !important;
-    border: 1px solid rgba(255, 69, 0, 0.2) !important;
-    border-top: 2px solid var(--forge-fire) !important;
-    border-radius: 4px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(255, 69, 0, 0.05);
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
     overflow: hidden;
 }
 
@@ -620,33 +671,38 @@ fluent-card {
 }
 
 fluent-data-grid-row {
-    border-bottom: 1px solid rgba(255, 69, 0, 0.1) !important;
+    height: auto !important;
+    min-height: 64px;
+    border-bottom: 1px solid var(--border) !important;
     background: transparent !important;
     transition: background 0.1s ease;
 }
 
     fluent-data-grid-row:hover {
-        background: rgba(255, 69, 0, 0.05) !important;
+        background: rgba(255, 255, 255, 0.03) !important;
     }
 
 fluent-data-grid-cell {
-    color: var(--neutral-foreground-rest) !important;
+    color: var(--text) !important;
     padding: 16px !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    align-items: flex-start !important;
 }
 
 fluent-data-grid-row.grid-header fluent-data-grid-cell {
-    color: var(--forge-core) !important;
-    font-weight: 700;
+    color: var(--text-muted) !important;
+    font-size: 0.8rem;
+    font-weight: 650;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    border-bottom: 2px solid rgba(255, 69, 0, 0.4);
-    background: rgba(0, 0, 0, 0.6);
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--border-strong);
+    background: rgba(0, 0, 0, 0.25);
 }
 
-/* Modals & Dialogs */
 fluent-dialog::part(overlay) {
-    background: rgba(0, 0, 0, 0.9);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
 }
 
 fluent-dialog::part(control) {
@@ -659,14 +715,11 @@ fluent-dialog::part(control) {
 }
 
 .glass-dialog {
-    background: rgba(14, 8, 10, 0.98);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--forge-fire);
-    border-top: 3px solid var(--forge-core);
-    box-shadow: 0 20px 80px rgba(255, 69, 0, 0.2);
-    border-radius: 4px;
-    color: #fff;
+    background: var(--surface-solid);
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+    border-radius: var(--radius);
+    color: var(--text);
     padding: 2rem;
     width: 650px;
     max-width: 90vw;
@@ -674,59 +727,44 @@ fluent-dialog::part(control) {
     overflow-y: auto;
 }
 
-/* Context Menus */
 #rowMoreMenu {
     position: absolute;
     z-index: 100;
 }
 
 .glass-menu {
-    background: rgba(14, 8, 10, 0.98) !important;
-    border: 1px solid var(--forge-fire) !important;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9) !important;
-    border-radius: 2px !important;
-    backdrop-filter: blur(15px);
+    background: var(--surface-solid) !important;
+    border: 1px solid var(--border-strong) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6) !important;
+    border-radius: var(--radius-sm) !important;
 }
 
 .glass-menu-item {
-    color: #d1d5db !important;
+    color: var(--text) !important;
     font-size: 0.9rem !important;
-    font-weight: 600 !important;
-    transition: all 0.1s ease;
+    font-weight: 500 !important;
+    transition: background 0.1s ease;
 }
 
     .glass-menu-item:hover {
-        background: rgba(255, 69, 0, 0.2) !important;
-        color: var(--forge-core) !important;
+        background: rgba(var(--pink-rgb), 0.14) !important;
+        color: #fff !important;
     }
 
-/* Lists */
 ul.custom-list {
     padding-left: 1.2rem;
 }
 
     ul.custom-list li {
-        color: #9ca3af;
+        color: var(--text-muted);
         position: relative;
         margin-bottom: 8px;
-        line-height: 1.5;
+        line-height: 1.6;
     }
 
         ul.custom-list li::marker {
-            color: var(--forge-fire);
+            color: rgba(var(--pink-rgb), 0.7);
         }
-
-/* Fluent UI Shadow DOM Overrides */
-fluent-data-grid-row {
-    height: auto !important;
-    min-height: 64px;
-}
-
-fluent-data-grid-cell {
-    white-space: normal !important;
-    word-wrap: break-word !important;
-    align-items: flex-start !important;
-}
 
 fluent-tooltip {
     white-space: nowrap !important;
@@ -739,140 +777,122 @@ fluent-tooltip {
         width: max-content !important;
         max-width: none !important;
         white-space: nowrap !important;
-        background: rgba(0,0,0,0.95) !important;
-        border: 1px solid var(--forge-fire);
-        color: var(--forge-core);
-        font-weight: 600;
+        background: var(--surface-solid) !important;
+        border: 1px solid var(--border-strong);
+        color: var(--text);
+        font-weight: 500;
     }
 
-/* SUPPORT PAGE GRID & CARDS */
+/* Support page */
 .support-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.5rem;
+    gap: 1rem;
     margin-top: 1rem;
 }
 
 .support-card {
-    background: rgba(14, 8, 10, 0.85);
-    border: 1px solid rgba(255, 69, 0, 0.15);
-    border-radius: 4px;
-    padding: 1.5rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.4rem;
     display: flex;
     align-items: center;
     text-decoration: none;
-    transition: all 0.2s ease;
-    color: #fff;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    color: var(--text);
+    transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
 }
 
     .support-card:hover {
         transform: translateY(-2px);
-        background: rgba(20, 10, 12, 0.95);
-        border-color: var(--forge-fire);
-        box-shadow: 0 10px 30px rgba(255, 69, 0, 0.15), inset 0 0 20px rgba(255, 69, 0, 0.05);
+        border-color: rgba(var(--pink-rgb), 0.45);
+        background: rgba(34, 29, 44, 0.95);
+        color: #fff;
     }
 
     .support-card svg {
-        width: 32px;
-        height: 32px;
-        margin-right: 1.25rem;
-        color: #6b7280;
-        transition: all 0.2s ease;
+        width: 30px;
+        height: 30px;
+        flex: 0 0 auto;
+        margin-right: 1.1rem;
+        color: var(--text-dim);
+        transition: color 0.15s ease;
     }
 
     .support-card:hover svg {
-        color: var(--forge-core);
-        filter: drop-shadow(0 0 10px var(--forge-fire-glow));
+        color: var(--pink);
     }
 
     .support-card .title {
-        font-size: 1.15rem;
-        font-weight: 800;
+        font-size: 1.05rem;
+        font-weight: 650;
         display: block;
         margin-bottom: 2px;
-        letter-spacing: 1px;
     }
 
     .support-card .desc {
-        font-size: 0.85rem;
-        color: #8c97a8;
+        font-size: 0.87rem;
+        color: var(--text-muted);
     }
 
 .support-blockquote {
-    background: rgba(0, 0, 0, 0.5);
-    border-left: 4px solid var(--forge-fire);
-    padding: 1.5rem;
-    border-radius: 0 4px 4px 0;
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid var(--pink);
+    padding: 1.25rem 1.5rem;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     margin-top: 2rem;
-    font-style: italic;
-    color: #d1d5db;
-    line-height: 1.6;
+    color: var(--text);
+    line-height: 1.65;
     font-size: 0.95rem;
-    box-shadow: inset 20px 0 40px -20px rgba(255, 69, 0, 0.1);
 }
 
-/* COMPETITIVE CARD SYSTEM */
+/* Comparison cards */
 .competitive-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
+    gap: 1.25rem;
     width: 100%;
     margin-top: 1rem;
 }
 
 .comp-card {
-    background: rgba(14, 8, 10, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 4px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     padding: 1.5rem;
     position: relative;
     overflow: hidden;
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    transition: border-color 0.15s ease;
     display: flex;
     flex-direction: column;
 }
 
     .comp-card:hover {
-        transform: translateY(-3px);
-        border-color: rgba(255, 69, 0, 0.4);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(255, 69, 0, 0.05);
-    }
-
-    /* Molten top accent line */
-    .comp-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink), var(--forge-core));
+        border-color: var(--border-strong);
     }
 
 .comp-header {
     display: flex;
     align-items: center;
-    margin-bottom: 1.25rem;
-    border-bottom: 1px solid rgba(255, 69, 0, 0.15);
+    margin-bottom: 1.1rem;
+    border-bottom: 1px solid var(--border);
     padding-bottom: 0.75rem;
 }
 
     .comp-header svg {
-        color: var(--forge-core);
+        color: var(--pink);
         margin-right: 12px;
-        filter: drop-shadow(0 0 5px var(--forge-fire-glow));
+        flex: 0 0 auto;
     }
 
     .comp-header h3 {
         margin: 0;
-        font-size: 1.15rem;
+        font-size: 1.1rem;
         color: #fff;
-        font-weight: 800;
     }
 
 .comp-section {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
     padding-left: 1rem;
     border-left: 2px solid;
     flex-grow: 1;
@@ -882,47 +902,38 @@ fluent-tooltip {
         margin-bottom: 0;
     }
 
-/* The Vixforge Advantage Block */
 .comp-vixen {
-    border-left-color: var(--forge-fire);
-    background: linear-gradient(90deg, rgba(255, 69, 0, 0.1) 0%, transparent 100%);
-    padding: 1rem;
-    border-radius: 0 4px 4px 0;
-    box-shadow: inset 3px 0 0 var(--forge-core);
+    border-left-color: var(--pink);
+    background: rgba(var(--pink-rgb), 0.06);
+    padding: 0.9rem 1rem;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 
     .comp-vixen h4 {
-        margin: 0 0 0.5rem 0;
-        color: var(--forge-core);
-        text-transform: uppercase;
+        margin: 0 0 0.4rem 0;
+        color: var(--pink-soft);
         font-size: 0.85rem;
-        letter-spacing: 1px;
-        text-shadow: 0 0 8px var(--forge-fire-glow);
     }
 
     .comp-vixen .comp-text {
-        color: #fff;
+        color: var(--text);
         font-size: 0.95rem;
-        font-weight: 500;
     }
 
-/* The Competitor Block */
 .comp-standard {
-    border-left-color: rgba(255, 255, 255, 0.1);
+    border-left-color: var(--border-strong);
     padding: 0.5rem 1rem;
 }
 
     .comp-standard h4 {
-        margin: 0 0 0.5rem 0;
-        color: #6b7280;
-        text-transform: uppercase;
-        font-size: 0.8rem;
-        letter-spacing: 1px;
+        margin: 0 0 0.4rem 0;
+        color: var(--text-dim);
+        font-size: 0.85rem;
     }
 
     .comp-standard .comp-text {
-        color: #9ca3af;
-        font-size: 0.85rem;
+        color: var(--text-muted);
+        font-size: 0.9rem;
     }
 
 .comp-text {
@@ -930,38 +941,37 @@ fluent-tooltip {
     margin: 0;
 }
 
-/* TOOL SHOWCASE CARDS */
+/* Tool cards */
 .tools-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
+    gap: 1.5rem;
     width: 100%;
     margin-top: 2rem;
 }
 
 .tool-card {
-    background: rgba(10, 6, 8, 0.9);
-    border: 1px solid rgba(255, 69, 0, 0.15);
-    border-radius: 4px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
     .tool-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 69, 0, 0.1);
-        border-color: var(--forge-fire);
+        transform: translateY(-2px);
+        border-color: var(--border-strong);
     }
 
 .tool-image-container {
     width: 100%;
     height: 240px;
-    border-bottom: 2px solid var(--forge-fire);
+    border-bottom: 1px solid var(--border);
     position: relative;
     overflow: hidden;
-    background: var(--dark-void);
+    background: var(--bg);
 }
 
     .tool-image-container img {
@@ -969,9 +979,8 @@ fluent-tooltip {
         height: 100%;
         object-fit: cover;
         object-position: top left;
-        opacity: 0.6;
+        opacity: 0.85;
         transition: opacity 0.3s ease, transform 0.3s ease;
-        filter: contrast(1.1);
     }
 
 .tool-card:hover .tool-image-container img {
@@ -983,12 +992,11 @@ fluent-tooltip {
     width: 100%;
     max-width: 1100px;
     height: 350px;
-    border-radius: 4px;
-    border: 2px solid var(--forge-fire);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(255, 69, 0, 0.15);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
     margin: 2rem 0 1rem 0;
     overflow: hidden;
-    background: var(--dark-void);
+    background: var(--bg);
 }
 
     .comparison-banner img {
@@ -997,12 +1005,6 @@ fluent-tooltip {
         object-fit: cover;
         object-position: center 20%;
         display: block;
-        transition: transform 0.3s ease, opacity 0.3s ease;
-    }
-
-    .comparison-banner:hover img {
-        transform: scale(1.02);
-        opacity: 0.95;
     }
 
 .tool-content {
@@ -1013,26 +1015,26 @@ fluent-tooltip {
 }
 
     .tool-content h3 {
-        margin: 0 0 0.75rem 0;
-        font-size: 1.3rem;
-        color: var(--forge-core);
+        margin: 0 0 0.6rem 0;
+        font-size: 1.2rem;
+        color: #fff;
     }
 
     .tool-content p {
-        margin: 0 0 1.25rem 0;
-        line-height: 1.5;
-        color: #9ca3af;
+        margin: 0 0 1.1rem 0;
+        line-height: 1.6;
+        color: var(--text-muted);
         font-size: 0.95rem;
     }
 
 .tool-card ul.custom-list li {
-    font-size: 0.85rem;
-    margin-bottom: 8px;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
 }
 
-/* LIGHTBOX PREVIEW SYSTEM */
+/* Image lightbox */
 .preview-trigger {
-    cursor: pointer;
+    cursor: zoom-in;
 }
 
 .lightbox-overlay {
@@ -1041,9 +1043,9 @@ fluent-tooltip {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     z-index: 99999;
     display: flex;
     justify-content: center;
@@ -1062,10 +1064,10 @@ fluent-tooltip {
     position: relative;
     max-width: 90vw;
     max-height: 90vh;
-    border: 2px solid var(--forge-fire);
-    border-radius: 2px;
-    box-shadow: 0 20px 80px rgba(255, 69, 0, 0.2);
-    background: var(--dark-void);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+    background: var(--bg);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1076,36 +1078,33 @@ fluent-tooltip {
     max-height: 85vh;
     display: block;
     object-fit: contain;
+    border-radius: var(--radius-sm);
 }
 
 .lightbox-close {
     position: absolute;
-    top: -20px;
-    right: -20px;
-    background: var(--dark-void);
-    border: 2px solid var(--forge-fire);
-    color: var(--forge-core);
-    width: 45px;
-    height: 45px;
+    top: -18px;
+    right: -18px;
+    background: var(--surface-solid);
+    border: 1px solid var(--border-strong);
+    color: #fff;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 26px;
+    font-size: 24px;
     cursor: pointer;
     z-index: 100000;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+    transition: background 0.15s ease;
 }
 
     .lightbox-close:hover {
-        background: var(--forge-fire);
-        color: #000;
-        box-shadow: 0 0 20px var(--forge-fire-glow);
-        transform: scale(1.1);
+        background: var(--pink);
     }
 
-/* CHANGELOG PAGINATION & DROPDOWN OVERRIDES */
+/* Changelog picker */
 .changelog-fade {
     animation: fadeInVersion 0.2s ease-in-out;
 }
@@ -1127,42 +1126,39 @@ fluent-select {
 }
 
     fluent-select::part(listbox) {
-        background: rgba(14, 8, 10, 0.98) !important;
-        border: 1px solid var(--forge-fire) !important;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9) !important;
-        border-radius: 2px !important;
+        background: var(--surface-solid) !important;
+        border: 1px solid var(--border-strong) !important;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6) !important;
+        border-radius: var(--radius-sm) !important;
         max-height: 250px !important;
         padding: 4px;
     }
 
 fluent-option {
     background: transparent;
-    color: #d1d5db;
+    color: var(--text);
     padding: 8px 12px;
-    border-radius: 2px;
+    border-radius: 6px;
     margin-bottom: 2px;
-    transition: all 0.1s ease;
-    font-family: 'Consolas', monospace;
+    font-family: var(--mono);
     font-size: 0.85rem;
 }
 
     fluent-option:hover, fluent-option[aria-selected="true"] {
-        background: rgba(255, 69, 0, 0.15) !important;
-        color: var(--forge-core) !important;
-        font-weight: 700;
+        background: rgba(var(--pink-rgb), 0.14) !important;
+        color: #fff !important;
     }
 
-/* JUMP TO TOP BUTTON */
 .jump-to-top {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 50px;
-    height: 50px;
-    border-radius: 4px;
-    background: rgba(14, 8, 10, 0.9);
-    border: 1px solid rgba(255, 69, 0, 0.4);
-    color: var(--forge-core);
+    bottom: 28px;
+    right: 28px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--surface-solid);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1170,8 +1166,8 @@ fluent-option {
     z-index: 9999;
     opacity: 0;
     pointer-events: none;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s ease;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
 }
 
     .jump-to-top.visible {
@@ -1180,21 +1176,18 @@ fluent-option {
     }
 
     .jump-to-top:hover {
-        background: rgba(255, 69, 0, 0.15);
-        border-color: var(--forge-fire);
-        box-shadow: 0 0 20px var(--forge-fire-glow);
-        transform: translateY(-3px);
+        background: var(--pink);
+        color: #fff;
+        transform: translateY(-2px);
     }
 
-/* RESPONSIVE VIDEO EMBED */
 .video-container {
     position: relative;
     padding-bottom: 56.25%;
     height: 0;
     overflow: hidden;
-    border-radius: 4px;
-    border: 1px solid var(--forge-fire);
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(255, 69, 0, 0.1);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
     background: #000;
 }
 
@@ -1206,7 +1199,6 @@ fluent-option {
         height: 100%;
     }
 
-/* TOOL MATRIX FLEXBOX FIX */
 .matrix-grid {
     display: flex;
     flex-wrap: wrap;
@@ -1225,9 +1217,9 @@ fluent-option {
 
     .matrix-column h4 {
         margin-bottom: 10px;
-        color: var(--forge-core);
-        border-bottom: 1px solid rgba(255, 69, 0, 0.2);
-        padding-bottom: 4px;
+        color: #fff;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 6px;
     }
 
     .matrix-column ul {
@@ -1238,18 +1230,16 @@ fluent-option {
 @media (max-width: 900px) {
     .matrix-column {
         flex: 1 1 100%;
+        min-width: 0;
     }
 }
 
-/* Mobile nav toggle is injected by app.js; hidden on desktop. */
+/* The mobile menu button is added by app.js and only shows on small screens. */
 .nav-toggle {
     display: none;
 }
 
-/* === MOBILE / TABLET: collapse the fixed sidebar into a dropdown menu === */
 @media (max-width: 900px) {
-    /* body is a flex row on desktop with a fixed sidebar; stack it on mobile */
-    /* so the now-static sidebar sits on top instead of beside the content. */
     body {
         flex-direction: column;
     }
@@ -1259,8 +1249,8 @@ fluent-option {
         width: 100%;
         height: auto;
         border-right: none;
-        border-bottom: 1px solid rgba(255, 69, 0, 0.25);
-        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.9);
+        border-bottom: 1px solid var(--border);
+        overflow-y: visible;
     }
 
     .sidebar-brand {
@@ -1269,7 +1259,7 @@ fluent-option {
     }
 
     .sidebar-brand-logo {
-        max-width: 260px;
+        max-width: 240px;
         margin: 0 auto;
     }
 
@@ -1278,29 +1268,26 @@ fluent-option {
         align-items: center;
         gap: 10px;
         width: 100%;
-        padding: 0.95rem 1.5rem;
-        background: rgba(0, 0, 0, 0.45);
+        padding: 0.9rem 1.4rem;
+        background: transparent;
         border: none;
-        border-top: 1px solid rgba(255, 69, 0, 0.15);
-        color: var(--forge-core);
+        border-top: 1px solid var(--border);
+        color: #fff;
         font-family: inherit;
         font-size: 0.95rem;
-        font-weight: 700;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
+        font-weight: 600;
         cursor: pointer;
-        transition: background 0.2s ease;
     }
 
     .nav-toggle:hover {
-        background: rgba(255, 69, 0, 0.12);
+        background: rgba(255, 255, 255, 0.04);
     }
 
-    /* Once app.js wires the toggle (.js-nav), the tab list becomes a dropdown. */
-    /* Without JS the list stays visible, so navigation never disappears. */
+    /* Without app.js the list stays open, so navigation never disappears. */
     .sidebar.js-nav .nav-links {
         display: none;
-        border-top: 1px solid rgba(255, 69, 0, 0.15);
+        border-top: 1px solid var(--border);
+        padding-top: 0.5rem;
     }
 
     .sidebar.js-nav.nav-open .nav-links {
@@ -1310,7 +1297,7 @@ fluent-option {
     .main-wrapper {
         margin-left: 0;
         width: 100%;
-        padding: 1.75rem 1.1rem;
+        padding: 1.5rem 1rem;
     }
 
     .content {
@@ -1319,21 +1306,16 @@ fluent-option {
 }
 
 @media (max-width: 560px) {
-    .sidebar-brand h2 {
-        font-size: 1rem;
-    }
-
     .main-wrapper {
-        padding: 1.25rem 0.75rem;
+        padding: 1rem 0.75rem;
     }
 
     .content {
-        padding: 1.2rem 0.9rem;
+        padding: 1.2rem 1rem;
     }
 }
 
-/* Index page: the VCC add flow is desktop-only, so on mobile keep just the */
-/* Downloads and Latest Release stat cards plus a notice. */
+/* Index page: adding to VCC needs a desktop, so phones get a short notice instead. */
 .mobile-vcc-notice {
     display: none;
 }
@@ -1350,22 +1332,20 @@ fluent-option {
         margin: 1.5rem auto 0;
         padding: 1.1rem 1.25rem;
         text-align: center;
-        background: rgba(0, 0, 0, 0.45);
-        border: 1px solid rgba(0, 229, 255, 0.3);
-        border-radius: 6px;
-        box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.06);
+        background: rgba(var(--cyan-rgb), 0.05);
+        border: 1px solid rgba(var(--cyan-rgb), 0.25);
+        border-radius: var(--radius);
     }
 
     .mobile-vcc-notice-title {
-        color: var(--neon-cyan);
-        font-weight: 800;
-        letter-spacing: 0.5px;
+        color: var(--cyan);
+        font-weight: 650;
         margin-bottom: 0.4rem;
     }
 
     .mobile-vcc-notice p {
-        color: #bfa8d2;
-        font-size: 0.9rem;
+        color: var(--text-muted);
+        font-size: 0.92rem;
         line-height: 1.6;
         margin: 0 0 0.6rem;
     }
@@ -1374,14 +1354,9 @@ fluent-option {
         display: block;
         word-break: break-all;
         font-size: 0.8rem;
-        color: #d1d5db;
-        background: rgba(4, 3, 5, 0.8);
-        border: 1px solid rgba(255, 69, 0, 0.25);
-        border-radius: 3px;
         padding: 0.5rem 0.6rem;
     }
 
-    /* Shrink content to fit small screens across every tab. */
     img,
     video,
     canvas {
@@ -1398,8 +1373,7 @@ fluent-option {
     .news-body,
     .glass-panel,
     .caption1,
-    .opt-note,
-    .md-p {
+    .opt-note {
         overflow-wrap: break-word;
     }
 
@@ -1412,15 +1386,13 @@ fluent-option {
     }
 
     h3 {
-        font-size: 1.15rem;
+        font-size: 1.1rem;
     }
 }
 
-/* Narrow phones: keep the stat card numbers on one line. */
 @media (max-width: 430px) {
     .stat-value {
         font-size: 1.5rem;
-        letter-spacing: 0;
     }
 
     .stat-card {
@@ -1428,12 +1400,9 @@ fluent-option {
     }
 }
 
-/* Ecosystem block: other VixForge products, the VRChat group, and the Discord widget. */
-/* The registry page carries a table and a sidebar, so it gets more room than the */
-/* text-led pages that share .content. */
+/* Registry page: a table plus the Discord widget, so it gets a wider column. */
 .content-wide {
     max-width: 1600px;
-    /* Positioning context for the Discord widget pinned at the top right. */
     position: relative;
 }
 
@@ -1455,10 +1424,7 @@ fluent-option {
     text-align: center;
 }
 
-/* Wide screens: pin the Discord widget to the top right of the page. The page content */
-/* reserves a gutter the same width, so nothing can ever run underneath the widget. */
-/* Padding on the container does not move the widget: an absolutely positioned child */
-/* anchored with right:0 sits against the padding box edge. */
+/* Wide screens pin the Discord widget top right, and the page keeps a gutter for it. */
 @media (min-width: 1201px) {
     .content-wide {
         padding-right: 374px;
@@ -1488,22 +1454,16 @@ fluent-option {
     }
 }
 
-.ecosystem-block {
-    width: 100%;
-    margin-top: 3rem;
-    text-align: center;
-}
-
 .ecosystem-intro {
-    color: #bfa8d2;
+    color: var(--text-muted);
     max-width: 640px;
     margin: 0 auto;
 }
 
 .ecosystem-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    gap: 1rem;
     width: 100%;
     margin: 1.5rem auto 0;
 }
@@ -1511,68 +1471,56 @@ fluent-option {
 .ecosystem-card {
     display: flex;
     flex-direction: column;
-    padding: 1.5rem;
+    padding: 1.4rem;
     text-align: left;
     text-decoration: none;
     color: inherit;
-    background: var(--glass-bg);
-    border: 1px solid rgba(255, 69, 0, 0.2);
-    border-top: 2px solid var(--forge-fire);
-    border-radius: 6px;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(255, 69, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
     .ecosystem-card:hover {
-        transform: translateY(-4px);
-        border-color: rgba(255, 69, 0, 0.45);
-        box-shadow: 0 16px 55px rgba(0, 0, 0, 0.9), 0 0 28px rgba(255, 69, 0, 0.18);
+        transform: translateY(-2px);
+        border-color: rgba(var(--pink-rgb), 0.4);
+        color: inherit;
     }
 
 .ecosystem-tag {
     align-self: flex-start;
-    font-family: 'Consolas', monospace;
-    font-size: 0.62rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    padding: 0.2rem 0.55rem;
-    border-radius: 3px;
-    color: var(--neon-pink);
-    border: 1px solid rgba(255, 0, 170, 0.35);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    color: var(--pink-soft);
+    border: 1px solid rgba(var(--pink-rgb), 0.35);
 }
 
 .ecosystem-tag-cyan {
-    color: var(--neon-cyan);
-    border-color: rgba(0, 229, 255, 0.35);
+    color: var(--cyan);
+    border-color: rgba(var(--cyan-rgb), 0.35);
 }
 
 .ecosystem-name {
-    margin: 0.75rem 0 0.5rem;
-    font-size: 1.15rem;
+    margin: 0.75rem 0 0.4rem;
+    font-size: 1.1rem;
 }
 
 .ecosystem-desc {
     margin: 0;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     line-height: 1.6;
-    color: #bfa8d2;
+    color: var(--text-muted);
     flex-grow: 1;
 }
 
 .ecosystem-cta {
     margin-top: 1rem;
-    font-family: 'Consolas', monospace;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--neon-cyan);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--cyan);
 }
-
-    .ecosystem-card:hover .ecosystem-cta {
-        text-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
-    }
 
 .discord-embed {
     width: 100%;
@@ -1585,6 +1533,12 @@ fluent-option {
         width: 100%;
         height: 500px;
         border: 0;
-        border-radius: 6px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+        border-radius: var(--radius);
     }
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+}

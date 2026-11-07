@@ -998,6 +998,7 @@ namespace VixForgeEditor
         [InitializeOnLoadMethod]
         static void CheckPresetCache()
         {
+            if (Application.isBatchMode) return;
             // Check if any chached presets do not exist anymore
             InitializeDataStructures();
             bool cacheInvalid = PresetCollections.Values.Any(c => c.Paths.Any(p => string.IsNullOrWhiteSpace(p)));

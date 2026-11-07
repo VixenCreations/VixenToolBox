@@ -83,7 +83,41 @@ public class VixForgeHypnoSetup : EditorWindow
     internal static int SdkConst(Type t, string name, int fallback)
     {
         FieldInfo f = t != null ? t.GetField(name, BindingFlags.Public | BindingFlags.Static) : null;
-        return f != null && f.GetValue(null) is int v ? v : fallback;
+        object v = f != null ? f.GetValue(null) : null;
+        return v is int || v is byte ? Convert.ToInt32(v) : fallback;
+    }
+
+    internal static int ParameterBits(SerializedProperty e)
+    {
+        if (EnumName(e.FindPropertyRelative("valueType")) == "Bool") return 1;
+        SerializedProperty width = e.FindPropertyRelative("bitWidth");
+        if (width == null) return 8;
+        Type t = e.serializedObject.targetObject.GetType().GetNestedType("Parameter");
+        return Mathf.Clamp(width.intValue, SdkConst(t, "MinBitWidth", 2), SdkConst(t, "MaxBitWidth", 8));
+    }
+
+    internal static bool KeepsEncoding(SerializedProperty e, string type)
+    {
+        if (EnumName(e.FindPropertyRelative("valueType")) != type) return false;
+        SerializedProperty width = e.FindPropertyRelative("bitWidth");
+        Type t = e.serializedObject.targetObject.GetType().GetNestedType("Parameter");
+        return width == null || width.intValue >= SdkConst(t, "MinBitWidth", 2);
+    }
+
+    internal static void ResetParameter(SerializedProperty e)
+    {
+        Type t = e.serializedObject.targetObject.GetType().GetNestedType("Parameter");
+        object fresh = t != null ? Activator.CreateInstance(t) : null;
+        if (fresh == null) return;
+        foreach (FieldInfo f in t.GetFields(BindingFlags.Public | BindingFlags.Instance))
+        {
+            SerializedProperty p = e.FindPropertyRelative(f.Name);
+            object v = f.GetValue(fresh);
+            if (p == null || v == null) continue;
+            if (p.propertyType == SerializedPropertyType.Boolean) p.boolValue = (bool)v;
+            else if (p.propertyType == SerializedPropertyType.Integer) p.intValue = Convert.ToInt32(v);
+            else if (p.propertyType == SerializedPropertyType.Float) p.floatValue = Convert.ToSingle(v);
+        }
     }
 
     internal static bool SetEnum(SerializedProperty p, string name)
@@ -211,7 +245,7 @@ public class VixForgeHypnoSetup : EditorWindow
             if (string.IsNullOrEmpty(name) || name == ParamName) continue;
             SerializedProperty synced = e.FindPropertyRelative("networkSynced");
             if (synced != null && !synced.boolValue) continue;
-            cost += EnumName(e.FindPropertyRelative("valueType")) == "Bool" ? 1 : 8;
+            cost += ParameterBits(e);
         }
         return cost;
     }
@@ -220,12 +254,14 @@ public class VixForgeHypnoSetup : EditorWindow
     {
         SerializedProperty list = so.FindProperty("parameters");
         int i = IndexOfParameter(list);
-        if (i < 0)
+        bool added = i < 0;
+        if (added)
         {
             i = list.arraySize;
             list.InsertArrayElementAtIndex(i);
         }
         SerializedProperty e = list.GetArrayElementAtIndex(i);
+        if (added || !KeepsEncoding(e, "Bool")) ResetParameter(e);
         e.FindPropertyRelative("name").stringValue = ParamName;
         SetEnum(e.FindPropertyRelative("valueType"), "Bool");
         e.FindPropertyRelative("saved").boolValue = false;

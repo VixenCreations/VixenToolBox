@@ -45,6 +45,7 @@ The Hub shows the tools your project can use: avatar projects get the avatar too
 * **Material Conflict Finder:** finds materials whose toggles disagree and settles them.
 * **PhysBone Blueprints:** saves an avatar's PhysBones and puts them back on another one.
 * **Accessory Mounting Engine:** mounts accessories onto a clean copy of your armature.
+* **VixenMMD:** gives your avatar MMD blend shapes, built from its face tracking shapes, so it dances in MMD worlds.
 * **Badge Studio:** builds VRChat convention badges, Furality included.
 
 ### Unity editor

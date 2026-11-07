@@ -124,10 +124,12 @@ namespace VixenTools.Editor
 
             VRCPhysBone[] physBones = _sourceAvatar.GetComponentsInChildren<VRCPhysBone>(true);
             int count = 0;
+            int outside = 0;
+            Transform root = _sourceAvatar.transform;
 
             foreach (var pb in physBones)
             {
-                string relativePath = AnimationUtility.CalculateTransformPath(pb.transform, _sourceAvatar.transform);
+                string relativePath = AnimationUtility.CalculateTransformPath(pb.transform, root);
 
                 Preset pbPreset = new Preset(pb);
                 string cleanPathName = relativePath.Replace("/", "_");
@@ -136,13 +138,43 @@ namespace VixenTools.Editor
                 string presetPath = AssetDatabase.GenerateUniqueAssetPath($"{baseDir}/Presets/{cleanPathName}.preset");
                 AssetDatabase.CreateAsset(pbPreset, presetPath);
 
-                blueprint.nodes.Add(new PhysBoneBlueprint.Node {
+                var node = new PhysBoneBlueprint.Node
+                {
                     bonePath = relativePath,
-                    preset = pbPreset
-                });
+                    preset = pbPreset,
+                    componentIndex = System.Array.IndexOf(pb.GetComponents<VRCPhysBone>(), pb),
+                    hasReferences = true,
+                    hasRootTransform = pb.rootTransform != null
+                };
+                if (pb.rootTransform != null)
+                {
+                    if (pb.rootTransform.IsChildOf(root)) node.rootTransformPath = AnimationUtility.CalculateTransformPath(pb.rootTransform, root);
+                    else { node.hasRootTransform = false; outside++; }
+                }
+                if (pb.ignoreTransforms != null)
+                {
+                    foreach (var t in pb.ignoreTransforms)
+                    {
+                        if (t == null) continue;
+                        if (t.IsChildOf(root)) node.ignoreTransformPaths.Add(AnimationUtility.CalculateTransformPath(t, root));
+                        else outside++;
+                    }
+                }
+                if (pb.colliders != null)
+                {
+                    foreach (var c in pb.colliders)
+                    {
+                        if (c == null) continue;
+                        if (!c.transform.IsChildOf(root)) { outside++; continue; }
+                        node.colliderPaths.Add(AnimationUtility.CalculateTransformPath(c.transform, root));
+                        node.colliderIndices.Add(System.Array.IndexOf(c.GetComponents<VRC.Dynamics.VRCPhysBoneColliderBase>(), c));
+                    }
+                }
+                blueprint.nodes.Add(node);
 
                 count++;
             }
+            if (outside > 0) Debug.LogWarning($"[VixForge] {outside} PhysBone links point outside {_sourceAvatar.name}, so the blueprint leaves them out.");
 
             string blueprintPath = AssetDatabase.GenerateUniqueAssetPath($"{baseDir}/{_blueprintName}.asset");
             AssetDatabase.CreateAsset(blueprint, blueprintPath);
@@ -162,34 +194,75 @@ namespace VixenTools.Editor
 
             int successCount = 0;
             int failCount = 0;
+            int missingLinks = 0;
+            bool oldBlueprint = false;
+            Transform root = _targetAvatar.transform;
+            Undo.IncrementCurrentGroup();
+            Undo.SetCurrentGroupName("Apply PhysBone Blueprint");
+            int undoGroup = Undo.GetCurrentGroup();
 
             foreach (var node in _loadedBlueprint.nodes)
             {
-                Transform targetBone = _targetAvatar.transform.Find(node.bonePath);
-
-                if (string.IsNullOrEmpty(node.bonePath))
-                    targetBone = _targetAvatar.transform;
-
-                if (targetBone != null)
-                {
-                    VRCPhysBone pb = targetBone.GetComponent<VRCPhysBone>();
-                    if (pb == null)
-                    {
-                        pb = targetBone.gameObject.AddComponent<VRCPhysBone>();
-                    }
-
-                    node.preset.ApplyTo(pb);
-                    successCount++;
-                }
-                else
+                Transform targetBone = string.IsNullOrEmpty(node.bonePath) ? root : root.Find(node.bonePath);
+                if (targetBone == null || node.preset == null)
                 {
                     Debug.LogWarning($"[VixForge] Bone not found on target: {node.bonePath}. Skipping.");
                     failCount++;
+                    continue;
                 }
+
+                int index = Mathf.Max(0, node.componentIndex);
+                var existing = targetBone.GetComponents<VRCPhysBone>();
+                while (existing.Length <= index)
+                {
+                    Undo.AddComponent<VRCPhysBone>(targetBone.gameObject);
+                    existing = targetBone.GetComponents<VRCPhysBone>();
+                }
+                VRCPhysBone pb = existing[index];
+                Undo.RecordObject(pb, "Apply PhysBone Blueprint");
+                node.preset.ApplyTo(pb);
+
+                if (node.hasReferences)
+                {
+                    pb.rootTransform = null;
+                    if (node.hasRootTransform)
+                    {
+                        pb.rootTransform = string.IsNullOrEmpty(node.rootTransformPath) ? root : root.Find(node.rootTransformPath);
+                        if (pb.rootTransform == null) missingLinks++;
+                    }
+                    pb.ignoreTransforms = new List<Transform>();
+                    foreach (var path in node.ignoreTransformPaths)
+                    {
+                        var t = string.IsNullOrEmpty(path) ? root : root.Find(path);
+                        if (t != null) pb.ignoreTransforms.Add(t);
+                        else missingLinks++;
+                    }
+                    pb.colliders = new List<VRC.Dynamics.VRCPhysBoneColliderBase>();
+                    for (int i = 0; i < node.colliderPaths.Count; i++)
+                    {
+                        var t = string.IsNullOrEmpty(node.colliderPaths[i]) ? root : root.Find(node.colliderPaths[i]);
+                        var cols = t != null ? t.GetComponents<VRC.Dynamics.VRCPhysBoneColliderBase>() : new VRC.Dynamics.VRCPhysBoneColliderBase[0];
+                        int ci = i < node.colliderIndices.Count ? node.colliderIndices[i] : 0;
+                        if (ci >= 0 && ci < cols.Length) pb.colliders.Add(cols[ci]);
+                        else missingLinks++;
+                    }
+                }
+                else
+                {
+                    oldBlueprint = true;
+                    if (pb.ignoreTransforms != null) pb.ignoreTransforms.RemoveAll(t => t == null);
+                    if (pb.colliders != null) pb.colliders.RemoveAll(c => c == null);
+                }
+
+                if (PrefabUtility.IsPartOfPrefabInstance(pb)) PrefabUtility.RecordPrefabInstancePropertyModifications(pb);
+                EditorUtility.SetDirty(pb);
+                successCount++;
             }
 
-            EditorUtility.SetDirty(_targetAvatar);
+            Undo.CollapseUndoOperations(undoGroup);
             Debug.Log($"[VixForge] Injection Complete! Applied {successCount} presets. Failed/Skipped: {failCount}.");
+            if (missingLinks > 0) Debug.LogWarning($"[VixForge] {missingLinks} collider, ignore or root bone links could not be found on {_targetAvatar.name}. Check those PhysBones.");
+            if (oldBlueprint) Debug.LogWarning("[VixForge] This blueprint was saved by an older version, so it has no collider, ignore or root bone links. Save it again from the source avatar to keep them.");
         }
 #else
         private void BuildMissingSdkUI(VisualElement container)

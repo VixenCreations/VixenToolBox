@@ -144,6 +144,7 @@ namespace VixenTools.Editor
                 return;
             }
 
+            Undo.IncrementCurrentGroup();
             Undo.SetCurrentGroupName("Mount Accessories");
             int undoGroup = Undo.GetCurrentGroup();
 
@@ -183,7 +184,7 @@ namespace VixenTools.Editor
                 }
                 else
                 {
-                    Debug.LogWarning($"[VixForge] Could not resolve a mapping for [{mapping.targetBone.name}]. Ensure it exists in the sterile root.");
+                    Debug.LogWarning($"[VixForge] Could not resolve a mapping for [{mapping.targetBone.name}]. Check that it exists in the cloned armature.");
                 }
             }
 
@@ -265,10 +266,20 @@ namespace VixenTools.Editor
             List<System.Tuple<GameObject, Mesh, Material[]>> targetMeshes = new List<System.Tuple<GameObject, Mesh, Material[]>>();
 
             var smrs = accessoryRoot.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+            var keptSkinning = new List<string>();
             foreach (var smr in smrs)
             {
-                if (smr != null && smr.sharedMesh != null)
-                    targetMeshes.Add(new System.Tuple<GameObject, Mesh, Material[]>(smr.gameObject, smr.sharedMesh, smr.sharedMaterials));
+                if (smr == null || smr.sharedMesh == null) continue;
+                if (smr.bones != null && smr.bones.Length > 1)
+                {
+                    keptSkinning.Add(smr.name);
+                    continue;
+                }
+                targetMeshes.Add(new System.Tuple<GameObject, Mesh, Material[]>(smr.gameObject, smr.sharedMesh, smr.sharedMaterials));
+            }
+            if (keptSkinning.Count > 0)
+            {
+                Debug.LogWarning($"[VixForge] Left {keptSkinning.Count} mesh(es) on [{accessoryRoot.name}] as they were, because they are already skinned to several bones: {string.Join(", ", keptSkinning)}. Auto-Rig binds a mesh to one bone. Use Modular Avatar Merge Armature or VRCFury Armature Link for clothing that has to bend with the body.");
             }
 
             var meshFilters = accessoryRoot.GetComponentsInChildren<MeshFilter>(true);

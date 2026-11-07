@@ -1,0 +1,1041 @@
+msgid ""
+msgstr ""
+"Language: ko-KR\n"
+
+msgid "Put VixenMMD inside an avatar. It needs a VRC Avatar Descriptor above it."
+msgstr "VixenMMD를 아바타 안에 넣어 주세요. 상위에 VRC Avatar Descriptor가 있어야 합니다."
+
+msgid "This avatar has {0} VixenMMD components. Keep one; only the first one is used."
+msgstr "이 아바타에 VixenMMD 컴포넌트가 {0}개 있습니다. 하나만 남겨 주세요. 첫 번째 것만 사용됩니다."
+
+msgid "Make It MMD is also set up on this avatar. Both tools would edit the face. Convert its settings into VixenMMD, then you can remove Make It MMD."
+msgstr "이 아바타에는 Make It MMD도 설정되어 있습니다. 두 도구가 모두 얼굴을 수정하게 됩니다. 설정을 VixenMMD로 변환한 뒤 Make It MMD를 제거하세요."
+
+msgid "Convert"
+msgstr "변환"
+
+msgid "No face mesh. Set one here, or set the viseme mesh on the avatar descriptor."
+msgstr "얼굴 메시가 없습니다. 여기서 지정하거나 Avatar Descriptor에서 Viseme 메시를 지정하세요."
+
+msgid "The face mesh has no blend shapes."
+msgstr "얼굴 메시에 블렌드쉐이프가 없습니다."
+
+msgid "The face mesh is not part of this avatar."
+msgstr "얼굴 메시가 이 아바타에 속해 있지 않습니다."
+
+msgid "MMD worlds only animate a mesh called \"Body\". Your face mesh is \"{0}\"."
+msgstr "MMD 월드는 \"Body\"라는 이름의 메시만 움직입니다. 지금 얼굴 메시 이름은 \"{0}\"입니다."
+
+msgid "Rename on upload"
+msgstr "업로드할 때 이름 변경"
+
+msgid "MMD worlds only find the face mesh when it sits right under the avatar root."
+msgstr "얼굴 메시가 아바타 루트 바로 아래에 있을 때만 MMD 월드가 찾을 수 있습니다."
+
+msgid "Move on upload"
+msgstr "업로드할 때 이동"
+
+msgid "\"Body\" is already taken by another object. On upload it becomes \"Body (Original)\"."
+msgstr "\"Body\"라는 이름은 이미 다른 오브젝트가 쓰고 있습니다. 업로드할 때 그 오브젝트는 \"Body (Original)\"이 됩니다."
+
+msgid "{0} (use {1})"
+msgstr "{0} ({1} 사용)"
+
+msgid "Dances will not drive these names, because a digit or mark is off: {0}."
+msgstr "숫자나 기호가 달라서 댄스가 이 이름들을 움직이지 않습니다: {0}."
+
+msgid "Some FX states have Write Defaults off. MMD worlds such as Nero3D ask for Write Defaults on. Force it on for the upload, then test your toggles."
+msgstr "일부 FX 스테이트에서 Write Defaults가 꺼져 있습니다. Nero3D 같은 MMD 월드는 Write Defaults 켜짐을 요구합니다. 업로드할 때 강제로 켜고 토글을 테스트하세요."
+
+msgid "Force Write Defaults"
+msgstr "Write Defaults 강제"
+
+msgid "MMD dances move your hips around the stage. These meshes have a Root Bone that doesn't follow them, so they can disappear mid-dance: {0}. Set each Root Bone to Hips or Chest, then run Auto-Fit Mesh Bounds in the Optimization Suite."
+msgstr "MMD 댄스는 골반을 무대 위에서 움직입니다. 다음 메시는 Root Bone이 골반을 따라가지 않아 춤추는 도중 사라질 수 있습니다: {0}. 각 Root Bone을 Hips나 Chest로 설정한 뒤 Optimization Suite에서 Auto-Fit Mesh Bounds를 실행하세요."
+
+msgid "The MMD world guard is on, but no layers are picked. Pick your hand gesture layers."
+msgstr "MMD 월드 가드가 켜져 있지만 선택된 레이어가 없습니다. 손 제스처 레이어를 선택하세요."
+
+msgid "Not in your FX controller right now: {0}. That's fine if another tool adds them on upload."
+msgstr "지금 FX 컨트롤러에 없습니다: {0}. 업로드할 때 다른 도구가 추가한다면 괜찮습니다."
+
+msgid "VRCFury MMD Compatibility is on this avatar too. Use one of the two, not both."
+msgstr "이 아바타에는 VRCFury MMD Compatibility도 있습니다. 둘 중 하나만 사용하세요."
+
+msgid "VRCFury Blendshape Optimizer will remove your MMD shapes on upload, and VixenMMD can't stop it: {0} Turn the optimizer off for this avatar."
+msgstr "업로드할 때 VRCFury Blendshape Optimizer가 MMD 쉐이프를 지우며, VixenMMD가 막을 수 없습니다: {0} 이 아바타에서는 옵티마이저를 끄세요."
+
+msgid "VRCFury Blendshape Optimizer is on. VixenMMD keeps every MMD shape on your face safe from it when you upload."
+msgstr "VRCFury Blendshape Optimizer가 켜져 있습니다. 업로드할 때 VixenMMD가 얼굴의 모든 MMD 쉐이프를 지켜 줍니다."
+
+msgid "d4rk Avatar Optimizer has MMD Compatibility off, so it can remove your MMD shapes."
+msgstr "d4rk Avatar Optimizer의 MMD Compatibility가 꺼져 있어 MMD 쉐이프가 지워질 수 있습니다."
+
+msgid "d4rk Avatar Optimizer may remove these, because they are not on its MMD list: {0}."
+msgstr "d4rk Avatar Optimizer의 MMD 목록에 없어서 다음 쉐이프가 지워질 수 있습니다: {0}."
+
+msgid "The face mesh is missing."
+msgstr "얼굴 메시가 없습니다."
+
+msgid "\"{0}\" already has an Animator."
+msgstr "\"{0}\"에 이미 Animator가 있습니다."
+
+msgid "\"{0}\" has a VRCFury component, and VRCFury removes Animators from objects that have one."
+msgstr "\"{0}\"에 VRCFury 컴포넌트가 있고, VRCFury는 그런 오브젝트의 Animator를 제거합니다."
+
+msgid "Open VixenMMD to set up the MMD blend shapes for this avatar."
+msgstr "VixenMMD를 열어 이 아바타의 MMD 블렌드쉐이프를 설정하세요."
+
+msgid "Builds {0} MMD blend shapes on the face when you upload or enter Play Mode. Your avatar files are not changed."
+msgstr "업로드하거나 Play 모드에 들어갈 때 얼굴에 MMD 블렌드쉐이프 {0}개를 만듭니다. 아바타 파일은 바뀌지 않습니다."
+
+msgid "Open VixenMMD"
+msgstr "VixenMMD 열기"
+
+msgid "Face"
+msgstr "얼굴"
+
+msgid "Face Mesh"
+msgstr "얼굴 메시"
+
+msgid "Leave empty to use the viseme mesh from the avatar descriptor."
+msgstr "비워 두면 Avatar Descriptor의 Viseme 메시를 사용합니다."
+
+msgid "Using {0}"
+msgstr "{0} 사용 중"
+
+msgid "Rename To Body"
+msgstr "Body로 이름 변경"
+
+msgid "MMD worlds only animate a mesh called Body."
+msgstr "MMD 월드는 Body라는 이름의 메시만 움직입니다."
+
+msgid "Move To Avatar Root"
+msgstr "아바타 루트로 이동"
+
+msgid "MMD worlds only find Body right under the avatar root."
+msgstr "MMD 월드는 아바타 루트 바로 아래의 Body만 찾을 수 있습니다."
+
+msgid "MMD Worlds"
+msgstr "MMD 월드"
+
+msgid "Layer Guard"
+msgstr "레이어 가드"
+
+msgid "In MMD worlds, switches off the FX layers you pick, so hand gestures don't fight the dance. They switch back on everywhere else."
+msgstr "MMD 월드에서는 선택한 FX 레이어를 꺼서 손 제스처가 댄스와 충돌하지 않게 합니다. 다른 곳에서는 다시 켜집니다."
+
+msgid "Switch Off In MMD Worlds"
+msgstr "MMD 월드에서 끄기"
+
+msgid "Advanced"
+msgstr "고급"
+
+msgid "Remove From Upload"
+msgstr "업로드에서 제외"
+
+msgid "Turns Write Defaults on for every FX state on upload."
+msgstr "업로드할 때 모든 FX 스테이트의 Write Defaults를 켭니다."
+
+msgid "Gimmicks built for Write Defaults off can break with this on. Test your toggles after upload."
+msgstr "Write Defaults 꺼짐을 전제로 만든 기믹은 이 옵션을 켜면 망가질 수 있습니다. 업로드 후 토글을 테스트하세요."
+
+msgid "Import .json"
+msgstr ".json 가져오기"
+
+msgid "Export .json"
+msgstr ".json 내보내기"
+
+msgid "Reads and writes Make It MMD presets too."
+msgstr "Make It MMD 프리셋도 읽고 쓸 수 있습니다."
+
+msgid "Remove"
+msgstr "제거"
+
+msgid "Add an FX layer..."
+msgstr "FX 레이어 추가..."
+
+msgid "No FX controller found."
+msgstr "FX 컨트롤러를 찾을 수 없습니다."
+
+msgid "Every FX layer is listed."
+msgstr "모든 FX 레이어가 목록에 있습니다."
+
+msgid "Add Name"
+msgstr "이름 추가"
+
+msgid "Its recipe is missing."
+msgstr "레시피가 없습니다."
+
+msgid "No shape for the {0} viseme."
+msgstr "Viseme {0}의 쉐이프가 없습니다."
+
+msgid "Needs shapes for \"{0}\"."
+msgstr "\"{0}\"의 쉐이프가 필요합니다."
+
+msgid "No matching shapes on this face."
+msgstr "이 얼굴에는 맞는 쉐이프가 없습니다."
+
+msgid "Left out {0}: this face only has a shape for both sides."
+msgstr "{0}은(는) 제외했습니다: 이 얼굴에는 양쪽을 함께 움직이는 쉐이프만 있습니다."
+
+msgid "No shape for {0}."
+msgstr "{0}의 쉐이프가 없습니다."
+
+msgid "Only the left side has a shape for {0}."
+msgstr "{0}의 쉐이프는 왼쪽에만 있습니다."
+
+msgid "Only the right side has a shape for {0}."
+msgstr "{0}의 쉐이프는 오른쪽에만 있습니다."
+
+msgid "The face already has this shape."
+msgstr "얼굴에 이미 이 쉐이프가 있습니다."
+
+msgid "Already set up on this component."
+msgstr "이 컴포넌트에서 이미 설정되어 있습니다."
+
+msgid "This name is listed twice. Only the first one is built."
+msgstr "이 이름이 두 번 등록되어 있습니다. 첫 번째 것만 만들어집니다."
+
+msgid "The face mesh has no shape called {0}. Another tool may have removed it. This MMD shape is not built."
+msgstr "얼굴 메시에 {0}라는 쉐이프가 없습니다. 다른 도구가 지웠을 수 있습니다. 이 MMD 쉐이프는 만들어지지 않습니다."
+
+msgid "Mouth"
+msgstr "입"
+
+msgid "Eyes"
+msgstr "눈"
+
+msgid "Brows"
+msgstr "눈썹"
+
+msgid "Other"
+msgstr "기타"
+
+msgid "Smile expression"
+msgstr "미소 표정"
+
+msgid "Blush"
+msgstr "홍조"
+
+msgid "Pleading or worried face"
+msgstr "애원하거나 걱정하는 표정"
+
+msgid "Angry expression"
+msgstr "화난 표정"
+
+msgid "Happy expression"
+msgstr "기쁜 표정"
+
+msgid "Sad expression"
+msgstr "슬픈 표정"
+
+msgid "Surprised expression"
+msgstr "놀란 표정"
+
+msgid "Furrowed brows"
+msgstr "찌푸린 눈썹"
+
+msgid "Squint expression"
+msgstr "실눈 표정"
+
+msgid "Hide eye shine"
+msgstr "눈 하이라이트 숨기기"
+
+msgid "Hide eye lens"
+msgstr "눈 렌즈 숨기기"
+
+msgid "Showing {0} of {1}. Type more to narrow it down."
+msgstr "{1}개 중 {0}개를 표시 중입니다. 더 입력해서 좁혀 보세요."
+
+msgid "0 shapes"
+msgstr "쉐이프 0개"
+
+msgid "1 shape. Enter picks the first one."
+msgstr "쉐이프 1개. Enter를 누르면 첫 번째 것을 고릅니다."
+
+msgid "{0} shapes. Enter picks the first one."
+msgstr "쉐이프 {0}개. Enter를 누르면 첫 번째 것을 고릅니다."
+
+msgid "The file is empty."
+msgstr "파일이 비어 있습니다."
+
+msgid "The file is not a Make It MMD or VixenMMD .json file."
+msgstr "Make It MMD나 VixenMMD의 .json 파일이 아닙니다."
+
+msgid "The file has no MMD shapes in it."
+msgstr "파일에 MMD 쉐이프가 없습니다."
+
+msgid "The file comes from a newer version of Make It MMD than VixenMMD can read."
+msgstr "VixenMMD가 읽을 수 있는 것보다 새로운 버전의 Make It MMD로 만든 파일입니다."
+
+msgid "Import MMD shapes (.json)"
+msgstr "MMD 쉐이프 가져오기 (.json)"
+
+msgid "Could not read the file."
+msgstr "파일을 읽을 수 없습니다."
+
+msgid "OK"
+msgstr "확인"
+
+msgid "This file has {0} MMD shapes. This component already has {1}."
+msgstr "이 파일에는 MMD 쉐이프가 {0}개 있습니다. 이 컴포넌트에는 이미 {1}개 있습니다."
+
+msgid "Replace all"
+msgstr "모두 바꾸기"
+
+msgid "Cancel"
+msgstr "취소"
+
+msgid "Add and update"
+msgstr "추가하고 업데이트"
+
+msgid "Imported {0} MMD shapes."
+msgstr "MMD 쉐이프 {0}개를 가져왔습니다."
+
+msgid "Export MMD shapes (.json)"
+msgstr "MMD 쉐이프 내보내기 (.json)"
+
+msgid "This Unity editor cannot read Japanese (Shift-JIS) text, so the morph names cannot be read."
+msgstr "이 Unity 에디터는 일본어(Shift-JIS) 텍스트를 읽을 수 없어 모프 이름을 읽을 수 없습니다."
+
+msgid "This is not a VMD motion file."
+msgstr "VMD 모션 파일이 아닙니다."
+
+msgid "The file is damaged."
+msgstr "파일이 손상되었습니다."
+
+msgid "Morphs"
+msgstr "모프"
+
+msgid "Auto-fill"
+msgstr "자동 채우기"
+
+msgid "Dance Check"
+msgstr "댄스 체크"
+
+msgid "All"
+msgstr "전체"
+
+msgid "Set up here"
+msgstr "여기서 설정됨"
+
+msgid "On the face already"
+msgstr "얼굴에 이미 있음"
+
+msgid "Missing"
+msgstr "없음"
+
+msgid "Used by most dances"
+msgstr "대부분의 댄스에서 사용"
+
+msgid "This avatar has no face mesh. Set one on the VixenMMD component, or set the viseme mesh on the avatar descriptor."
+msgstr "이 아바타에는 얼굴 메시가 없습니다. VixenMMD 컴포넌트에서 지정하거나 Avatar Descriptor에서 Viseme 메시를 지정하세요."
+
+msgid "No avatar"
+msgstr "아바타 없음"
+
+msgid "Face: {0} ({1} shapes)"
+msgstr "얼굴: {0} (쉐이프 {1}개)"
+
+msgid "Face: none"
+msgstr "얼굴: 없음"
+
+msgid "Select an avatar in the Hierarchy to set up MMD dancing for it."
+msgstr "MMD 댄스를 설정하려면 Hierarchy에서 아바타를 선택하세요."
+
+msgid "{0} is set up with Make It MMD. VixenMMD can take over its MMD shapes and settings."
+msgstr "{0}은(는) Make It MMD로 설정되어 있습니다. VixenMMD가 그 MMD 쉐이프와 설정을 이어받을 수 있습니다."
+
+msgid "Convert Make It MMD Setup"
+msgstr "Make It MMD 설정 변환"
+
+msgid "Add VixenMMD to {0}"
+msgstr "{0}에 VixenMMD 추가"
+
+msgid "{0} (not on this face)"
+msgstr "{0} (이 얼굴에 없음)"
+
+msgid "Click to pick a different shape."
+msgstr "클릭해서 다른 쉐이프를 고르세요."
+
+msgid "(click to add a shape)"
+msgstr "(클릭해서 쉐이프 추가)"
+
+msgid "Add another shape..."
+msgstr "쉐이프 더 추가..."
+
+msgid "replaces face"
+msgstr "얼굴 것을 대체"
+
+msgid "1 shape"
+msgstr "쉐이프 1개"
+
+msgid "{0} shapes"
+msgstr "쉐이프 {0}개"
+
+msgid "on the face"
+msgstr "얼굴에 있음"
+
+msgid "Custom"
+msgstr "사용자 지정"
+
+msgid "Pick an MMD morph on the left. Use Auto-fill to set most of them up from your face tracking shapes in one go."
+msgstr "왼쪽에서 MMD 모프를 고르세요. 자동 채우기를 쓰면 페이스 트래킹 쉐이프로 대부분을 한 번에 설정할 수 있습니다."
+
+msgid "Standard MMD name"
+msgstr "표준 MMD 이름"
+
+msgid "From the InochiPM chart"
+msgstr "InochiPM 표에서"
+
+msgid "Extended name"
+msgstr "확장 이름"
+
+msgid "Dances use \"{0}\". A digit or mark in this name is off, so dances will not drive it."
+msgstr "댄스가 쓰는 이름은 \"{0}\"입니다. 이 이름은 숫자나 기호가 달라서 댄스가 움직이지 않습니다."
+
+msgid "Preview on the avatar"
+msgstr "아바타에서 미리보기"
+
+msgid "Your face already has this shape. Dances will use it as it is."
+msgstr "얼굴에 이미 이 쉐이프가 있습니다. 댄스는 그대로 사용합니다."
+
+msgid "Not set up yet."
+msgstr "아직 설정되지 않았습니다."
+
+msgid "Replace It With My Own"
+msgstr "내 것으로 바꾸기"
+
+msgid "Set Up This Morph"
+msgstr "이 모프 설정"
+
+msgid "Your face already has this shape. On upload, VixenMMD's version takes its place."
+msgstr "얼굴에 이미 이 쉐이프가 있습니다. 업로드할 때 VixenMMD 버전으로 바뀝니다."
+
+msgid "Build this morph"
+msgstr "이 모프 만들기"
+
+msgid "Remove From List"
+msgstr "목록에서 제거"
+
+msgid "Made From"
+msgstr "구성"
+
+msgid "No shapes yet. Add some below."
+msgstr "아직 쉐이프가 없습니다. 아래에서 추가하세요."
+
+msgid "The face has no shape with this name."
+msgstr "얼굴에 이 이름의 쉐이프가 없습니다."
+
+msgid "Face Tracking Recipe"
+msgstr "페이스 트래킹 레시피"
+
+msgid "Same as {0}:"
+msgstr "{0}와(과) 같음:"
+
+msgid "Untested starting point. Check it with Preview."
+msgstr "검증되지 않은 시작점입니다. 미리보기로 확인하세요."
+
+msgid "Fill From Face Tracking"
+msgstr "페이스 트래킹으로 채우기"
+
+msgid "viseme {0}"
+msgstr "Viseme {0}"
+
+msgid "(left)"
+msgstr "(왼쪽)"
+
+msgid "(right)"
+msgstr "(오른쪽)"
+
+msgid "Add A Shape"
+msgstr "쉐이프 추가"
+
+msgid "Reads face tracking from your avatar's face tracking settings. Found {0} face tracking shapes and {1} of 15 visemes."
+msgstr "아바타의 페이스 트래킹 설정에서 읽습니다. 페이스 트래킹 쉐이프 {0}개, Viseme 15개 중 {1}개를 찾았습니다."
+
+msgid "Reads face tracking from blend shape names (Unified Expressions, ARKit and similar). Found {0} face tracking shapes and {1} of 15 visemes."
+msgstr "블렌드쉐이프 이름(Unified Expressions, ARKit 등)에서 읽습니다. 페이스 트래킹 쉐이프 {0}개, Viseme 15개 중 {1}개를 찾았습니다."
+
+msgid "VixenMMD found no face tracking shapes on this face. Visemes still fill the mouth shapes, and you can set up the rest by hand."
+msgstr "이 얼굴에서 페이스 트래킹 쉐이프를 찾지 못했습니다. 입 쉐이프는 Viseme로 채울 수 있고, 나머지는 직접 설정할 수 있습니다."
+
+msgid "Options"
+msgstr "옵션"
+
+msgid "Keep MMD shapes the face already has"
+msgstr "얼굴에 이미 있는 MMD 쉐이프 유지"
+
+msgid "Redo morphs that are already set up"
+msgstr "이미 설정된 모프도 다시 하기"
+
+msgid "Add the InochiPM chart names too"
+msgstr "InochiPM 표의 이름도 추가"
+
+msgid "Add untested chart morphs"
+msgstr "검증되지 않은 표의 모프도 추가"
+
+msgid "Expression Shapes"
+msgstr "표정 쉐이프"
+
+msgid "Guess Empty Ones"
+msgstr "빈 칸 추측"
+
+msgid "Guess All"
+msgstr "모두 추측"
+
+msgid "Replace the shapes of every expression with VixenMMD's guess?"
+msgstr "모든 표정의 쉐이프를 VixenMMD의 추측으로 바꿀까요?"
+
+msgid "Replace"
+msgstr "바꾸기"
+
+msgid "Some MMD morphs need an expression that face tracking can't make. Build each one from one or more of your shapes, with an amount for each, or leave it empty."
+msgstr "일부 MMD 모프에는 페이스 트래킹으로 만들 수 없는 표정이 필요합니다. 각각을 내 쉐이프 하나 이상과 양을 정해 만들거나 비워 두세요."
+
+msgid "(none)"
+msgstr "(없음)"
+
+msgid "Viseme Shapes"
+msgstr "Viseme 쉐이프"
+
+msgid "The mouth morphs start from your visemes. Add shapes to a viseme to build it your own way, for example a jaw shape and a lip shape together."
+msgstr "입 모프는 Viseme에서 시작합니다. Viseme에 쉐이프를 추가하면 턱 쉐이프와 입술 쉐이프를 함께 쓰는 식으로 원하는 대로 만들 수 있습니다."
+
+msgid "No shape found"
+msgstr "쉐이프를 찾을 수 없음"
+
+msgid "Viseme {0}"
+msgstr "Viseme {0}"
+
+msgid "Preview Changes"
+msgstr "변경 사항 미리보기"
+
+msgid "Apply (Preview First)"
+msgstr "적용 (먼저 미리보기)"
+
+msgid "Nothing To Apply"
+msgstr "적용할 것이 없음"
+
+msgid "Apply 1 Morph"
+msgstr "모프 1개 적용"
+
+msgid "Apply {0} Morphs"
+msgstr "모프 {0}개 적용"
+
+msgid "Set up {0} morphs. Undo reverses this."
+msgstr "모프 {0}개를 설정했습니다. 실행 취소(Undo)로 되돌릴 수 있습니다."
+
+msgid "{0} morphs will be set up, {1} left as they are."
+msgstr "모프 {0}개를 설정하고 {1}개는 그대로 둡니다."
+
+msgid "untested"
+msgstr "미검증"
+
+msgid "chart name"
+msgstr "표 이름"
+
+msgid "MMD Shapes On The Face"
+msgstr "얼굴에 있는 MMD 쉐이프"
+
+msgid "None. That's normal for most VRChat avatars."
+msgstr "없습니다. 대부분의 VRChat 아바타는 그렇습니다."
+
+msgid "\"{0}\" looks like the MMD shape \"{1}\", but a digit or mark is off, so dances will not drive it."
+msgstr "\"{0}\"은(는) MMD 쉐이프 \"{1}\"와(과) 비슷하지만 숫자나 기호가 달라서 댄스가 움직이지 않습니다."
+
+msgid "Add \"{0}\" As A Copy"
+msgstr "\"{0}\"을(를) 복사본으로 추가"
+
+msgid "Find Which Ones Copy Another Shape"
+msgstr "다른 쉐이프의 복사본 찾기"
+
+msgid "None of them is an exact copy of another shape."
+msgstr "어느 것도 다른 쉐이프의 완전한 복사본이 아닙니다."
+
+msgid "{0}  is a copy of  {1}"
+msgstr "{0}  은(는)  {1}  의 복사본입니다"
+
+msgid "Add Them As Editable Morphs"
+msgstr "편집 가능한 모프로 추가"
+
+msgid "Reading shapes"
+msgstr "쉐이프를 읽는 중"
+
+msgid "Check which MMD shapes a dance needs, and whether this avatar has them."
+msgstr "댄스에 필요한 MMD 쉐이프와 이 아바타에 그것이 있는지 확인합니다."
+
+msgid "Add Motion (.vmd)"
+msgstr "모션 추가 (.vmd)"
+
+msgid "Add a VMD motion"
+msgstr "VMD 모션 추가"
+
+msgid "Clear"
+msgstr "지우기"
+
+msgid "no face keys (camera or body only)"
+msgstr "표정 키 없음 (카메라나 몸만)"
+
+msgid "{0} morphs used, made for {1}"
+msgstr "모프 {0}개 사용, {1}용"
+
+msgid "This avatar covers {0} of the {1} MMD shapes these dances use."
+msgstr "이 댄스들이 쓰는 MMD 쉐이프 {1}개 중 이 아바타는 {0}개를 갖추고 있습니다."
+
+msgid "(up to {0}%)"
+msgstr "(최대 {0}%)"
+
+msgid "Set Up The Missing Ones From Face Tracking"
+msgstr "없는 것을 페이스 트래킹으로 설정"
+
+msgid "Set up {0} morphs."
+msgstr "모프 {0}개를 설정했습니다."
+
+msgid "{0} have no face tracking recipe or matching shapes. Set them up by hand on the Morphs tab."
+msgstr "{0}개는 페이스 트래킹 레시피나 맞는 쉐이프가 없습니다. 모프 탭에서 직접 설정하세요."
+
+msgid "VixenMMD builds it"
+msgstr "VixenMMD가 만듦"
+
+msgid "missing: you have \"{0}\", which is off by a digit or mark"
+msgstr "없음: \"{0}\"은(는) 있지만 숫자나 기호가 다릅니다"
+
+msgid "missing"
+msgstr "없음"
+
+msgid "vixenmmd.several"
+msgstr "VixenMMD: VixenMMD 컴포넌트가 여러 개 있습니다"
+
+msgid "vixenmmd.several:description"
+msgstr "이 아바타에 VixenMMD 컴포넌트가 {0}개 있습니다. \"{1}\"에 있는 것만 사용됩니다. 나머지는 제거하세요."
+
+msgid "vixenmmd.noface"
+msgstr "VixenMMD: 얼굴 메시가 없습니다"
+
+msgid "vixenmmd.noface:description"
+msgstr "VixenMMD 컴포넌트에서 얼굴 메시를 지정하거나 Avatar Descriptor에서 Viseme 메시를 지정하세요."
+
+msgid "vixenmmd.skipped"
+msgstr "VixenMMD: \"{0}\"이(가) 만들어지지 않았습니다"
+
+msgid "vixenmmd.skipped:description"
+msgstr "{1}"
+
+msgid "vixenmmd.nofx"
+msgstr "VixenMMD: FX 컨트롤러가 없습니다"
+
+msgid "vixenmmd.nofx:description"
+msgstr "FX 레이어 옵션에는 Avatar Descriptor의 FX 컨트롤러가 필요합니다. 이 옵션들은 적용되지 않았습니다."
+
+msgid "vixenmmd.layersmissing"
+msgstr "VixenMMD: FX 레이어를 찾을 수 없습니다"
+
+msgid "vixenmmd.layersmissing:description"
+msgstr "빌드할 때 다음 레이어가 FX 컨트롤러에 없습니다: {0}."
+
+msgid "vixenmmd.guardnothing"
+msgstr "VixenMMD: MMD 월드 가드가 끌 레이어가 없습니다"
+
+msgid "vixenmmd.guardnothing:description"
+msgstr "가드할 레이어가 FX 컨트롤러에 하나도 없어서 가드를 추가하지 않았습니다. 손 레이어는 그대로입니다."
+
+msgid "vixenmmd.mim"
+msgstr "VixenMMD: 이 아바타에는 Make It MMD도 있습니다"
+
+msgid "vixenmmd.mim:description"
+msgstr "두 도구 모두 얼굴 메시를 수정합니다. VixenMMD 인스펙터에서 Make It MMD 컴포넌트를 변환한 뒤 Make It MMD를 제거하세요."
+
+msgid "vixenmmd.vrcfnokeep"
+msgstr "VixenMMD: VRCFury가 MMD 쉐이프를 지웁니다"
+
+msgid "vixenmmd.vrcfnokeep:description"
+msgstr "VRCFury Blendshape Optimizer는 애니메이션에서 쓰지 않는 블렌드쉐이프를 지우는데, MMD 월드는 아바타 밖에서 움직입니다. VixenMMD가 지킬 수 없습니다: {0} 이 아바타에서는 옵티마이저를 끄세요."
+
+msgid "mmd:あ"
+msgstr "입을 벌린 \"아\""
+
+msgid "mmd:い"
+msgstr "옆으로 벌린 \"이\""
+
+msgid "mmd:う"
+msgstr "입술을 내민 \"우\""
+
+msgid "mmd:え"
+msgstr "반쯤 벌린 \"에\""
+
+msgid "mmd:お"
+msgstr "둥글게 벌린 \"오\""
+
+msgid "mmd:にやり"
+msgstr "씨익 웃는 입"
+
+msgid "mmd:∧"
+msgstr "∧ 모양 입 (뾰로통)"
+
+msgid "mmd:ワ"
+msgstr "크게 벌린 웃는 입"
+
+msgid "mmd:ω"
+msgstr "고양이 입"
+
+msgid "mmd:▲"
+msgstr "삼각형 입"
+
+msgid "mmd:口角上げ"
+msgstr "입꼬리 올리기"
+
+msgid "mmd:口角下げ"
+msgstr "입꼬리 내리기"
+
+msgid "mmd:口横広げ"
+msgstr "입을 옆으로 넓히기"
+
+msgid "mmd:にやり２"
+msgstr "씨익 웃는 입 2"
+
+msgid "mmd:ん"
+msgstr "입을 다문 \"응\""
+
+msgid "mmd:あ２"
+msgstr "크게 벌린 \"아\" 2"
+
+msgid "mmd:□"
+msgstr "네모난 입 (외침)"
+
+msgid "mmd:ω□"
+msgstr "벌린 고양이 입"
+
+msgid "mmd:にっこり"
+msgstr "방긋 웃는 입"
+
+msgid "mmd:ぺろっ"
+msgstr "혀 내밀기"
+
+msgid "mmd:てへぺろ"
+msgstr "장난스럽게 혀 내밀기"
+
+msgid "mmd:てへぺろ２"
+msgstr "장난스럽게 혀 내밀기 2"
+
+msgid "mmd:あ３"
+msgstr "\"아\" 3"
+
+msgid "mmd:ワアアア!"
+msgstr "비명 지르는 입"
+
+msgid "mmd:ええ!"
+msgstr "놀란 \"에에!\""
+
+msgid "mmd:ええ？"
+msgstr "의아한 \"에에?\""
+
+msgid "mmd:あ狂った"
+msgstr "일그러진 \"아\""
+
+msgid "mmd:お小さい"
+msgstr "작은 \"오\""
+
+msgid "mmd:キッス"
+msgstr "키스하는 입"
+
+msgid "mmd:トップリップ"
+msgstr "윗입술"
+
+msgid "mmd:ボトムリップ"
+msgstr "아랫입술"
+
+msgid "mmd:いー！"
+msgstr "이를 악문 \"이-!\""
+
+msgid "mmd:Ｖ"
+msgstr "V자 입"
+
+msgid "mmd:口下げ"
+msgstr "입 내리기"
+
+msgid "mmd:口上げ"
+msgstr "입 올리기"
+
+msgid "mmd:口すぼめる"
+msgstr "입 오므리기"
+
+msgid "mmd:上歯上げ"
+msgstr "윗니 올리기"
+
+msgid "mmd:下歯下げ"
+msgstr "아랫니 내리기"
+
+msgid "mmd:上歯を隠す"
+msgstr "윗니 숨기기"
+
+msgid "mmd:犬歯右"
+msgstr "오른쪽 송곳니"
+
+msgid "mmd:犬歯左"
+msgstr "왼쪽 송곳니"
+
+msgid "mmd:歯右２"
+msgstr "오른쪽 이 2"
+
+msgid "mmd:歯左２"
+msgstr "왼쪽 이 2"
+
+msgid "mmd:まばたき"
+msgstr "눈 깜빡임 (감기)"
+
+msgid "mmd:笑い"
+msgstr "웃는 눈 (감은 눈웃음)"
+
+msgid "mmd:はぅ"
+msgstr "질끈 감은 눈 ><"
+
+msgid "mmd:瞳小"
+msgstr "작은 눈동자"
+
+msgid "mmd:ｳｨﾝｸ２右"
+msgstr "오른쪽 윙크 2"
+
+msgid "mmd:ウィンク２"
+msgstr "왼쪽 윙크 2"
+
+msgid "mmd:ウィンク"
+msgstr "왼쪽 윙크"
+
+msgid "mmd:ウィンク右"
+msgstr "오른쪽 윙크"
+
+msgid "mmd:なごみ"
+msgstr "편안한 눈 ^^"
+
+msgid "mmd:じと目"
+msgstr "게슴츠레한 눈"
+
+msgid "mmd:びっくり"
+msgstr "놀라서 크게 뜬 눈"
+
+msgid "mmd:ｷﾘｯ"
+msgstr "날카롭고 진지한 눈"
+
+msgid "mmd:はぁと"
+msgstr "하트 눈"
+
+msgid "mmd:星目"
+msgstr "별 눈"
+
+msgid "mmd:恐ろしい子！"
+msgstr "충격받은 흰자 눈"
+
+msgid "mmd:はちゅ目"
+msgstr "동그란 점 눈"
+
+msgid "mmd:瞳縦潰れ"
+msgstr "눈동자 세로로 납작"
+
+msgid "mmd:光下"
+msgstr "하이라이트 아래로"
+
+msgid "mmd:ハイライト消"
+msgstr "하이라이트 숨기기"
+
+msgid "mmd:映り込み消"
+msgstr "눈 반사 숨기기"
+
+msgid "mmd:喜び"
+msgstr "기쁜 눈"
+
+msgid "mmd:わぉ!?"
+msgstr "\"와우!?\" 눈"
+
+msgid "mmd:なごみω"
+msgstr "편안한 눈 ω"
+
+msgid "mmd:悲しむ"
+msgstr "슬픈 눈"
+
+msgid "mmd:敵意"
+msgstr "적의 어린 눈빛"
+
+msgid "mmd:瞳全消し"
+msgstr "눈동자 전부 숨기기"
+
+msgid "mmd:はちゅ目縦潰れ"
+msgstr "점 눈 세로로 납작"
+
+msgid "mmd:はちゅ目横潰れ"
+msgstr "점 눈 가로로 납작"
+
+msgid "mmd:はんっ！"
+msgstr "코웃음 \"흥!\""
+
+msgid "mmd:がーん"
+msgstr "충격 (가-앙)"
+
+msgid "mmd:青ざめる"
+msgstr "창백해지기"
+
+msgid "mmd:赤面"
+msgstr "얼굴 붉히기"
+
+msgid "mmd:照れ1"
+msgstr "수줍은 홍조 1"
+
+msgid "mmd:照れ2"
+msgstr "수줍은 홍조 2"
+
+msgid "mmd:テレ"
+msgstr "수줍은 홍조"
+
+msgid "mmd:頬染め"
+msgstr "볼 물들이기"
+
+msgid "mmd:目の幅涙"
+msgstr "폭포 눈물"
+
+msgid "mmd:涙目"
+msgstr "눈물 고인 눈"
+
+msgid "mmd:下まぶた上げ"
+msgstr "아래 눈꺼풀 올리기"
+
+msgid "mmd:恐ろしい"
+msgstr "무서운 눈"
+
+msgid "mmd:星目１"
+msgstr "별 눈 1"
+
+msgid "mmd:星目２"
+msgstr "별 눈 2"
+
+msgid "mmd:スターライト"
+msgstr "별빛 눈"
+
+msgid "mmd:丸い目"
+msgstr "동그란 눈"
+
+msgid "mmd:瞳横潰れ"
+msgstr "눈동자 가로로 납작"
+
+msgid "mmd:ｺｯﾁﾐﾝﾅ"
+msgstr "\"쳐다보지 마\" 눈"
+
+msgid "mmd:にこり"
+msgstr "밝은 눈썹"
+
+msgid "mmd:上"
+msgstr "눈썹 올리기"
+
+msgid "mmd:下"
+msgstr "눈썹 내리기"
+
+msgid "mmd:真面目"
+msgstr "진지한 눈썹"
+
+msgid "mmd:困る"
+msgstr "곤란한 눈썹"
+
+msgid "mmd:怒り"
+msgstr "화난 눈썹"
+
+msgid "mmd:前"
+msgstr "눈썹 앞으로"
+
+msgid "mmd:にこり_R"
+msgstr "밝은 오른쪽 눈썹"
+
+msgid "mmd:にこり_L"
+msgstr "밝은 왼쪽 눈썹"
+
+msgid "mmd:上_R"
+msgstr "오른쪽 눈썹 올리기"
+
+msgid "mmd:上_L"
+msgstr "왼쪽 눈썹 올리기"
+
+msgid "mmd:下_R"
+msgstr "오른쪽 눈썹 내리기"
+
+msgid "mmd:下_L"
+msgstr "왼쪽 눈썹 내리기"
+
+msgid "mmd:真面目_R"
+msgstr "진지한 오른쪽 눈썹"
+
+msgid "mmd:真面目_L"
+msgstr "진지한 왼쪽 눈썹"
+
+msgid "mmd:困る_R"
+msgstr "곤란한 오른쪽 눈썹"
+
+msgid "mmd:困る_L"
+msgstr "곤란한 왼쪽 눈썹"
+
+msgid "mmd:怒り_R"
+msgstr "화난 오른쪽 눈썹"
+
+msgid "mmd:怒り_L"
+msgstr "화난 왼쪽 눈썹"
+
+msgid "mmd:眉頭左"
+msgstr "왼쪽 눈썹 안쪽"
+
+msgid "mmd:眉頭右"
+msgstr "오른쪽 눈썹 안쪽"
+
+msgid "mmd:怒り眉"
+msgstr "화난 눈썹"
+
+msgid "mmd:失望した"
+msgstr "실망한 눈썹"
+
+msgid "mmd:にこり眉"
+msgstr "웃는 눈썹"
+
+msgid "mmd:困った"
+msgstr "난처한 눈썹"
+
+msgid "mmd:動揺"
+msgstr "당황한 눈썹"
+
+msgid "mmd:眉上"
+msgstr "눈썹 올리기"
+
+msgid "mmd:眉下"
+msgstr "눈썹 내리기"
+
+msgid "mmd:眉毛を前方に"
+msgstr "눈썹 앞으로"
+
+msgid "mmd:照れ"
+msgstr "수줍은 홍조"
+
+msgid "mmd:歯無し下"
+msgstr "아랫니 숨기기"
+
+msgid "mmd:歯無し上"
+msgstr "윗니 숨기기"
+
+msgid "mmd:涙"
+msgstr "눈물"
+
+msgid "mmd:しいたけ"
+msgstr "시이타케 눈 (십자 반짝임)"
+
+msgid "mmd:眼鏡"
+msgstr "안경"
+
+msgid "mmd:眼鏡の骨"
+msgstr "안경테"
+
+msgid "mmd:メガネスケール"
+msgstr "안경 크기"
+
+msgid "mmd:みっぱい"
+msgstr "Full"
+
+msgid "mmd:右怒筋"
+msgstr "오른쪽 분노 마크"
+
+msgid "mmd:左怒筋"
+msgstr "왼쪽 분노 마크"

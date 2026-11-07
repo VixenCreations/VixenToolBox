@@ -1,0 +1,29 @@
+{
+    "name": "com.vixen.tools.VixenMMD",
+    "rootNamespace": "VixenTools.MMD",
+    "references": [
+        "VRC.SDKBase"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "VIXEN_VRC_AVATARS"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.vrchat.avatars",
+            "expression": "",
+            "define": "VIXEN_VRC_AVATARS"
+        },
+        {
+            "name": "nadena.dev.ndmf",
+            "expression": "1.7.0",
+            "define": "VIXEN_NDMF"
+        }
+    ],
+    "noEngineReferences": false
+}

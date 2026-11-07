@@ -6,6 +6,22 @@
 Version history for the material inspector and the tools that ship with it. These are the editor's own version numbers, starting at 1.0.0 when the VixForge Editor was first built. They do not track the shader releases; shader changes live in the Latex Ultra and Toon changelogs.
 
 ***
+## [2.9.0] - 2026-11-02
+
+*Touch Setup puts each touch receiver next to the meshes it serves, and Preset Toggle and Hypno Setup are ready for VRChat SDK 3.10.6.*
+
+### Heads up
+
+* **Press Add Touch Receivers in Touch Setup once more** to move your receivers to their new places.
+* **Made a radial with Preset Toggle on VRChat SDK 3.10.6? Press Add Preset Toggle once more** so it moves smoothly for other players.
+
+### Fixed
+
+* **Touch Setup puts a receiver on your head, chest or hips, next to the meshes it serves**, where it put one big one on your hips. VRChat only passes on the eight touches nearest each receiver, and your own hands at your sides took every place, so a headpat on your hair never landed. Your avatar may get one receiver more than before.
+* **Preset Toggle radials move smoothly for other players on VRChat SDK 3.10.6.** One added to a new parameter list only had four steps, and a new toggle could copy the bit width, range and smoothing of the parameter above it, which could also stop VRCFury from building when it had to squeeze your parameters. Preset Toggle and Hypno Setup now start every parameter from VRChat's own settings.
+* **Hypno Setup and Preset Toggle count your parameter memory the same way VRChat does**, so an avatar that uses smaller parameters isn't called full too early.
+* **Unity's background import workers no longer rebuild the preset list.** After a script change each one rebuilt it next to the editor, which slowed imports and could make them fight over the same file. The editor still keeps the list up to date.
+***
 ## [2.8.0] - 2026-10-24
 
 *Hypno Setup attaches Hypno to your avatar in one go, Touch Setup adds the contact receiver that TOUCH reads, Hub Settings lets you make the Hub your own with colours, images and fonts, the Preset List gets a new look, the Shader Patcher is ready for VRC Light Volumes 3.0.1, Build Atlas packs 16 matcaps, Stretch Bake gets your avatar ready for Stretch Response, and Preset Toggle turns any preset into a menu toggle with its own picture.*

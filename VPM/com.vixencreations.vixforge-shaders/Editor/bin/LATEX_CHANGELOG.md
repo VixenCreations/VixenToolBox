@@ -6,6 +6,42 @@
 Version history for the Latex Ultra shader. The inspector and the tools that ship with it keep their own changelog, as does the Toon shader.
 
 ***
+## [5.8.0] - 2026-11-02
+
+*Touches on your hair and head now land, a new Mirror Light keeps your shading in VRChat's personal mirror, Hypno opens a Focus window, and wet streaks run like water with new Caustics.*
+
+### Heads up
+
+* **Run Touch Setup again, then unlock and lock your TOUCH materials.** Press **Add Touch Receivers** in **Touch Setup** so your receivers move next to your meshes, and re-lock each material with **Material Contacts** on so it picks up the fix.
+* **Check materials that use Saturation above 0, Chromatize or Tint.** Colours that used to clip into a neighbouring hue now keep their own, so strong colours can look a little different. Nudge the slider if you liked them punchier.
+* **Check materials that use Streaks in Wet Effects.** They now wander and run like water instead of standing in straight lines, so they look different. **Density**, **Thinness** and **Coverage** still set how many there are, how thin they are and how much they cover.
+
+### Added
+
+* **Mirror Light** in **Light Data** keeps your shading in mirrors. VRChat's personal mirror leaves out the world's lights unless you set it to show the world, so you looked flat in it. Turn it on and a mirror with no light in it lights you from where the light probes say the light comes from, and **Mirror Light Strength** sets how much. It starts off, so nothing changes until you turn it on.
+* **Keep Hue** under **Color Adjust** lets colours that **Clamp** stops at white fade toward white instead of turning a neighbouring hue. It starts off.
+* **Exact sRGB** under **Color Grading** reads the gradient map with exact sRGB, so a plain black to white strip leaves your colour as it was. It starts off, so your gradient maps look the same until you turn it on.
+* **Luma** under **Rendering** picks how colours fade to grey in **Saturation** and the other places that do it, like glitter, Tattoo ageing and the music colour. **Rec.709** matches how bright each colour really is, so blues fade darker and greens lighter. **Classic** keeps your current look and stays the default.
+* **Focus** under **Hypno** opens a clear window in the middle of your view, so you still see who's in front of you while the spiral fills the rest. **Focus Glow** rims the window with **Color A**, and **Focus Edge** softens it. **Wobble** makes the stripes ripple like water. Both start off.
+* **Caustics** under **Wet Effects** drifts a moving net of light down through the wet, like sun through running water. It starts off.
+
+### Fixed
+
+* **Touches on your hair, hood and head now show.** A touch far from your hips, like a headpat, often did nothing at all, for you, for everyone watching and in mirrors. VRChat only passes on the eight touches nearest each receiver, and your own hands at your sides took every place. **Touch Setup** now puts a receiver on your head, chest or hips, next to the meshes it serves.
+* **The kinds of touch you pick now count.** On some graphics cards every touch counted, whatever you ticked under **Material Contacts**. **Who Glows** set to **Me** lit nothing up, **Others** lit up for your own hands too, **Colour Per Person** gave everyone the same colour, and **Wet Touch** drew the same **Streaks** and **Drip Trails** for everyone.
+* **Your own head and chest no longer count as a touch** on the meshes around them, so your hood doesn't glow or dent where it sits on you.
+* **Viewer Context** rules that use **Light Colour Match** or **Darkness** now count the world's vertex lights, the cheaper lights a world sets to **Not Important**.
+* **Saturation** above 0 keeps each colour's hue. It used to push colours below black, which turned them toward a neighbouring hue and, with **Clamp** off, could make the material darker than black.
+* **Chromatize** now does what its tooltip says: colours stop at their most vivid without changing hue or lightness. Strong settings used to clip them into a different hue, and some greys turned black.
+* **Tint** keeps its hue on vivid colours, and a black **Tint** colour no longer turns the whole material black. It drains the colour to grey like any other grey, so use **Brightness** to darken.
+* **Hue Shift** in **Okhsv** no longer tints pure blue red or green, even at **Shift** 0.
+* **Hue Shift** in **OKLab** under **Dissolve** and **Edge Line** keeps the hue on strong colours, and some greys no longer turn black.
+* **Shard Hue Shift** and the outline's **AudioLink Hue** no longer push colours below black, so a turned colour keeps its hue.
+* **Hyperspace** **Tunnel** no longer breaks into black pixels when an animation sets **Distance** below its slider.
+* **Hypno** and **Hypno Iris** with **Rainbow** on no longer jump. With **Arms** above 1, the colours snapped back part way round the colour wheel each time the stripes moved on by one, at any **Speed**.
+* **Streaks** in **Wet Effects** look like running water instead of seams. Each one wanders, swells and thins, leaves a wet trail, and carries slugs of water down it. They now run down instead of up. Where they run straight down the texture they also tile, so a layout that repeats the texture shows no line where the copies meet. New materials start with fewer, wider streaks: **Density** 16 and **Thinness** 35.
+* **VRCFury SPS plugs now work with Latex Ultra.** VRCFury couldn't add SPS to the material, so the avatar failed to build in Play mode with **Lock In Play Mode** off, and on upload when **Sheer & Lace** used **Inside First** or **Tint Through**.
+***
 ## [5.7.0] - 2026-10-24
 
 *Real hands that touch you through Material Contacts and light up your emissions, outline and colour, a Wet Touch that wipes, wets, ripples and drips, Hypno that takes over your own view, eyes that hypnotise, follow and glint, Sheer & Lace with new fabrics for procedural latex, matcaps you build yourself, Halloween presets, outlines that move with your body, with four new ways to draw them, latex that reacts as it stretches, Light Data to pick which lights reach you, and a rebuilt Viewer Context with Hidden Ink.*

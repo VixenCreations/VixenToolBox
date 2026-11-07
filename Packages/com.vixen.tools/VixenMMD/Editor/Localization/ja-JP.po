@@ -1,0 +1,1041 @@
+msgid ""
+msgstr ""
+"Language: ja-JP\n"
+
+msgid "Put VixenMMD inside an avatar. It needs a VRC Avatar Descriptor above it."
+msgstr "VixenMMD をアバターの中に入れてください。上の階層に VRC Avatar Descriptor が必要です。"
+
+msgid "This avatar has {0} VixenMMD components. Keep one; only the first one is used."
+msgstr "このアバターには VixenMMD コンポーネントが {0} 個あります。1 つだけ残してください。使われるのは最初の 1 つだけです。"
+
+msgid "Make It MMD is also set up on this avatar. Both tools would edit the face. Convert its settings into VixenMMD, then you can remove Make It MMD."
+msgstr "このアバターには Make It MMD も設定されています。両方のツールが顔を編集してしまいます。設定を VixenMMD に変換してから、Make It MMD を外してください。"
+
+msgid "Convert"
+msgstr "変換"
+
+msgid "No face mesh. Set one here, or set the viseme mesh on the avatar descriptor."
+msgstr "顔のメッシュがありません。ここで設定するか、Avatar Descriptor でビゼーム用メッシュを設定してください。"
+
+msgid "The face mesh has no blend shapes."
+msgstr "顔のメッシュにブレンドシェイプがありません。"
+
+msgid "The face mesh is not part of this avatar."
+msgstr "顔のメッシュがこのアバターの一部ではありません。"
+
+msgid "MMD worlds only animate a mesh called \"Body\". Your face mesh is \"{0}\"."
+msgstr "MMD ワールドが動かすのは \"Body\" という名前のメッシュだけです。あなたの顔のメッシュは \"{0}\" です。"
+
+msgid "Rename on upload"
+msgstr "アップロード時に名前を変更"
+
+msgid "MMD worlds only find the face mesh when it sits right under the avatar root."
+msgstr "MMD ワールドは、顔のメッシュがアバターのルート直下にある時だけ見つけられます。"
+
+msgid "Move on upload"
+msgstr "アップロード時に移動"
+
+msgid "\"Body\" is already taken by another object. On upload it becomes \"Body (Original)\"."
+msgstr "\"Body\" という名前は別のオブジェクトが使っています。アップロード時にそちらは \"Body (Original)\" になります。"
+
+msgid "{0} (use {1})"
+msgstr "{0}（{1} を使用）"
+
+msgid "Dances will not drive these names, because a digit or mark is off: {0}."
+msgstr "数字か記号が違うため、ダンスはこれらの名前を動かしません: {0}。"
+
+msgid "Some FX states have Write Defaults off. MMD worlds such as Nero3D ask for Write Defaults on. Force it on for the upload, then test your toggles."
+msgstr "一部の FX ステートで Write Defaults がオフです。Nero3D などの MMD ワールドは Write Defaults オンを求めています。アップロード時に強制的にオンにして、トグルを確認してください。"
+
+msgid "Force Write Defaults"
+msgstr "Write Defaults を強制"
+
+msgid "MMD dances move your hips around the stage. These meshes have a Root Bone that doesn't follow them, so they can disappear mid-dance: {0}. Set each Root Bone to Hips or Chest, then run Auto-Fit Mesh Bounds in the Optimization Suite."
+msgstr "MMD のダンスは腰をステージ中で動かします。次のメッシュは Root Bone が腰についていかないため、踊っている途中で消えることがあります: {0}。それぞれの Root Bone を Hips か Chest にしてから、Optimization Suite の Auto-Fit Mesh Bounds を実行してください。"
+
+msgid "The MMD world guard is on, but no layers are picked. Pick your hand gesture layers."
+msgstr "MMD ワールドのガードはオンですが、レイヤーが選ばれていません。ハンドジェスチャーのレイヤーを選んでください。"
+
+msgid "Not in your FX controller right now: {0}. That's fine if another tool adds them on upload."
+msgstr "今は FX コントローラーにありません: {0}。アップロード時に別のツールが追加するなら問題ありません。"
+
+msgid "VRCFury MMD Compatibility is on this avatar too. Use one of the two, not both."
+msgstr "このアバターには VRCFury の MMD Compatibility も付いています。どちらか一方だけを使ってください。"
+
+msgid "VRCFury Blendshape Optimizer will remove your MMD shapes on upload, and VixenMMD can't stop it: {0} Turn the optimizer off for this avatar."
+msgstr "アップロード時に VRCFury の Blendshape Optimizer が MMD のシェイプを消してしまい、VixenMMD では止められません: {0} このアバターではオプティマイザーをオフにしてください。"
+
+msgid "VRCFury Blendshape Optimizer is on. VixenMMD keeps every MMD shape on your face safe from it when you upload."
+msgstr "VRCFury の Blendshape Optimizer がオンです。アップロード時、VixenMMD が顔の MMD シェイプをすべて守ります。"
+
+msgid "d4rk Avatar Optimizer has MMD Compatibility off, so it can remove your MMD shapes."
+msgstr "d4rk Avatar Optimizer の MMD Compatibility がオフなので、MMD のシェイプが消されることがあります。"
+
+msgid "d4rk Avatar Optimizer may remove these, because they are not on its MMD list: {0}."
+msgstr "d4rk Avatar Optimizer の MMD リストにないため、次のシェイプは消されるかもしれません: {0}。"
+
+msgid "The face mesh is missing."
+msgstr "顔のメッシュがありません。"
+
+msgid "\"{0}\" already has an Animator."
+msgstr "\"{0}\" にはすでに Animator があります。"
+
+msgid "\"{0}\" has a VRCFury component, and VRCFury removes Animators from objects that have one."
+msgstr "\"{0}\" に VRCFury コンポーネントがあり、VRCFury はそのようなオブジェクトから Animator を取り除きます。"
+
+msgid "Open VixenMMD to set up the MMD blend shapes for this avatar."
+msgstr "VixenMMD を開いて、このアバターの MMD ブレンドシェイプを設定しましょう。"
+
+msgid "Builds {0} MMD blend shapes on the face when you upload or enter Play Mode. Your avatar files are not changed."
+msgstr "アップロード時か Play モードに入った時に、顔に MMD ブレンドシェイプを {0} 個作ります。アバターのファイルは変更されません。"
+
+msgid "Open VixenMMD"
+msgstr "VixenMMD を開く"
+
+msgid "Face"
+msgstr "顔"
+
+msgid "Face Mesh"
+msgstr "顔のメッシュ"
+
+msgid "Leave empty to use the viseme mesh from the avatar descriptor."
+msgstr "空にすると Avatar Descriptor のビゼーム用メッシュを使います。"
+
+msgid "Using {0}"
+msgstr "{0} を使用中"
+
+msgid "Rename To Body"
+msgstr "Body に名前を変更"
+
+msgid "MMD worlds only animate a mesh called Body."
+msgstr "MMD ワールドが動かすのは Body という名前のメッシュだけです。"
+
+msgid "Move To Avatar Root"
+msgstr "アバターのルートへ移動"
+
+msgid "MMD worlds only find Body right under the avatar root."
+msgstr "MMD ワールドは、アバターのルート直下にある Body しか見つけられません。"
+
+msgid "MMD Worlds"
+msgstr "MMD ワールド"
+
+msgid "Layer Guard"
+msgstr "レイヤーガード"
+
+msgid "In MMD worlds, switches off the FX layers you pick, so hand gestures don't fight the dance. They switch back on everywhere else."
+msgstr "MMD ワールドの中では、選んだ FX レイヤーをオフにして、ハンドジェスチャーがダンスの邪魔をしないようにします。それ以外の場所では元に戻ります。"
+
+msgid "Switch Off In MMD Worlds"
+msgstr "MMD ワールドでオフにする"
+
+msgid "Advanced"
+msgstr "詳細設定"
+
+msgid "Remove From Upload"
+msgstr "アップロードから除外"
+
+msgid "Turns Write Defaults on for every FX state on upload."
+msgstr "アップロード時、すべての FX ステートで Write Defaults をオンにします。"
+
+msgid "Gimmicks built for Write Defaults off can break with this on. Test your toggles after upload."
+msgstr "Write Defaults オフ前提で作られたギミックは、これをオンにすると壊れることがあります。アップロード後にトグルを確認してください。"
+
+msgid "Import .json"
+msgstr ".json を読み込む"
+
+msgid "Export .json"
+msgstr ".json に書き出す"
+
+msgid "Reads and writes Make It MMD presets too."
+msgstr "Make It MMD のプリセットも読み書きできます。"
+
+msgid "Remove"
+msgstr "削除"
+
+msgid "Add an FX layer..."
+msgstr "FX レイヤーを追加..."
+
+msgid "No FX controller found."
+msgstr "FX コントローラーが見つかりません。"
+
+msgid "Every FX layer is listed."
+msgstr "すべての FX レイヤーがリストにあります。"
+
+msgid "Add Name"
+msgstr "名前を追加"
+
+msgid "Its recipe is missing."
+msgstr "レシピがありません。"
+
+msgid "No shape for the {0} viseme."
+msgstr "ビゼーム {0} のシェイプがありません。"
+
+msgid "Needs shapes for \"{0}\"."
+msgstr "\"{0}\" のシェイプが必要です。"
+
+msgid "No matching shapes on this face."
+msgstr "この顔には合うシェイプがありません。"
+
+msgid "Left out {0}: this face only has a shape for both sides."
+msgstr "{0} は除外しました: この顔には両側をまとめたシェイプしかありません。"
+
+msgid "No shape for {0}."
+msgstr "{0} のシェイプがありません。"
+
+msgid "Only the left side has a shape for {0}."
+msgstr "{0} のシェイプは左側にしかありません。"
+
+msgid "Only the right side has a shape for {0}."
+msgstr "{0} のシェイプは右側にしかありません。"
+
+msgid "The face already has this shape."
+msgstr "顔にはすでにこのシェイプがあります。"
+
+msgid "Already set up on this component."
+msgstr "このコンポーネントで設定済みです。"
+
+msgid "This name is listed twice. Only the first one is built."
+msgstr "この名前は 2 回登録されています。作られるのは最初のものだけです。"
+
+msgid "The face mesh has no shape called {0}. Another tool may have removed it. This MMD shape is not built."
+msgstr "顔のメッシュに {0} というシェイプがありません。別のツールが消したのかもしれません。この MMD シェイプは作られません。"
+
+msgid "Mouth"
+msgstr "口"
+
+msgid "Eyes"
+msgstr "目"
+
+msgid "Brows"
+msgstr "眉"
+
+msgid "Other"
+msgstr "その他"
+
+msgid "Smile expression"
+msgstr "笑顔"
+
+msgid "Blush"
+msgstr "照れ（頬の赤み）"
+
+msgid "Pleading or worried face"
+msgstr "お願い顔・困り顔"
+
+msgid "Angry expression"
+msgstr "怒り顔"
+
+msgid "Happy expression"
+msgstr "喜び顔"
+
+msgid "Sad expression"
+msgstr "悲しい顔"
+
+msgid "Surprised expression"
+msgstr "驚き顔"
+
+msgid "Furrowed brows"
+msgstr "しかめ眉"
+
+msgid "Squint expression"
+msgstr "目を細めた顔"
+
+msgid "Hide eye shine"
+msgstr "目のハイライトを消す"
+
+msgid "Hide eye lens"
+msgstr "目のレンズを消す"
+
+msgid "Showing {0} of {1}. Type more to narrow it down."
+msgstr "{1} 件中 {0} 件を表示中。さらに入力して絞り込んでください。"
+
+msgid "0 shapes"
+msgstr "シェイプ 0 個"
+
+msgid "1 shape. Enter picks the first one."
+msgstr "シェイプ 1 個。Enter で最初のものを選びます。"
+
+msgid "{0} shapes. Enter picks the first one."
+msgstr "シェイプ {0} 個。Enter で最初のものを選びます。"
+
+msgid "The file is empty."
+msgstr "ファイルが空です。"
+
+msgid "The file is not a Make It MMD or VixenMMD .json file."
+msgstr "Make It MMD か VixenMMD の .json ファイルではありません。"
+
+msgid "The file has no MMD shapes in it."
+msgstr "ファイルに MMD シェイプが入っていません。"
+
+msgid "The file comes from a newer version of Make It MMD than VixenMMD can read."
+msgstr "VixenMMD が読めるより新しいバージョンの Make It MMD で作られたファイルです。"
+
+msgid "Import MMD shapes (.json)"
+msgstr "MMD シェイプを読み込む (.json)"
+
+msgid "Could not read the file."
+msgstr "ファイルを読めませんでした。"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "This file has {0} MMD shapes. This component already has {1}."
+msgstr "このファイルには MMD シェイプが {0} 個あります。このコンポーネントにはすでに {1} 個あります。"
+
+msgid "Replace all"
+msgstr "すべて置き換え"
+
+msgid "Cancel"
+msgstr "キャンセル"
+
+msgid "Add and update"
+msgstr "追加して更新"
+
+msgid "Imported {0} MMD shapes."
+msgstr "MMD シェイプを {0} 個読み込みました。"
+
+msgid "Export MMD shapes (.json)"
+msgstr "MMD シェイプを書き出す (.json)"
+
+msgid "This Unity editor cannot read Japanese (Shift-JIS) text, so the morph names cannot be read."
+msgstr "この Unity エディターは日本語 (Shift-JIS) を読めないため、モーフ名を読み取れません。"
+
+msgid "This is not a VMD motion file."
+msgstr "VMD モーションファイルではありません。"
+
+msgid "The file is damaged."
+msgstr "ファイルが壊れています。"
+
+msgid "Morphs"
+msgstr "モーフ"
+
+msgid "Auto-fill"
+msgstr "自動設定"
+
+msgid "Dance Check"
+msgstr "ダンスチェック"
+
+msgid "All"
+msgstr "すべて"
+
+msgid "Set up here"
+msgstr "ここで設定済み"
+
+msgid "On the face already"
+msgstr "顔にすでにある"
+
+msgid "Missing"
+msgstr "ないもの"
+
+msgid "Used by most dances"
+msgstr "多くのダンスで使用"
+
+msgid "This avatar has no face mesh. Set one on the VixenMMD component, or set the viseme mesh on the avatar descriptor."
+msgstr "このアバターには顔のメッシュがありません。VixenMMD コンポーネントで設定するか、Avatar Descriptor でビゼーム用メッシュを設定してください。"
+
+msgid "No avatar"
+msgstr "アバターなし"
+
+msgid "Face: {0} ({1} shapes)"
+msgstr "顔: {0}（シェイプ {1} 個）"
+
+msgid "Face: none"
+msgstr "顔: なし"
+
+msgid "Select an avatar in the Hierarchy to set up MMD dancing for it."
+msgstr "MMD ダンスを設定するには、Hierarchy でアバターを選んでください。"
+
+msgid "{0} is set up with Make It MMD. VixenMMD can take over its MMD shapes and settings."
+msgstr "{0} は Make It MMD で設定されています。VixenMMD がその MMD シェイプと設定を引き継げます。"
+
+msgid "Convert Make It MMD Setup"
+msgstr "Make It MMD の設定を変換"
+
+msgid "Add VixenMMD to {0}"
+msgstr "{0} に VixenMMD を追加"
+
+msgid "{0} (not on this face)"
+msgstr "{0}（この顔にはありません）"
+
+msgid "Click to pick a different shape."
+msgstr "クリックして別のシェイプを選びます。"
+
+msgid "(click to add a shape)"
+msgstr "（クリックしてシェイプを追加）"
+
+msgid "Add another shape..."
+msgstr "シェイプをさらに追加..."
+
+msgid "replaces face"
+msgstr "顔のものを置き換え"
+
+msgid "1 shape"
+msgstr "シェイプ 1 個"
+
+msgid "{0} shapes"
+msgstr "シェイプ {0} 個"
+
+msgid "on the face"
+msgstr "顔にある"
+
+msgid "Custom"
+msgstr "カスタム"
+
+msgid "Pick an MMD morph on the left. Use Auto-fill to set most of them up from your face tracking shapes in one go."
+msgstr "左から MMD モーフを選んでください。自動設定を使えば、フェイストラッキングのシェイプからほとんどを一度に設定できます。"
+
+msgid "Standard MMD name"
+msgstr "標準の MMD 名"
+
+msgid "From the InochiPM chart"
+msgstr "InochiPM の表から"
+
+msgid "Extended name"
+msgstr "拡張名"
+
+msgid "Dances use \"{0}\". A digit or mark in this name is off, so dances will not drive it."
+msgstr "ダンスが使うのは \"{0}\" です。この名前は数字か記号が違うため、ダンスでは動きません。"
+
+msgid "Preview on the avatar"
+msgstr "アバターでプレビュー"
+
+msgid "Your face already has this shape. Dances will use it as it is."
+msgstr "顔にはすでにこのシェイプがあります。ダンスはそのまま使います。"
+
+msgid "Not set up yet."
+msgstr "まだ設定されていません。"
+
+msgid "Replace It With My Own"
+msgstr "自分のものに置き換える"
+
+msgid "Set Up This Morph"
+msgstr "このモーフを設定"
+
+msgid "Your face already has this shape. On upload, VixenMMD's version takes its place."
+msgstr "顔にはすでにこのシェイプがあります。アップロード時に VixenMMD 版に置き換わります。"
+
+msgid "Build this morph"
+msgstr "このモーフを作る"
+
+msgid "Remove From List"
+msgstr "リストから削除"
+
+msgid "Made From"
+msgstr "元のシェイプ"
+
+msgid "No shapes yet. Add some below."
+msgstr "まだシェイプがありません。下で追加してください。"
+
+msgid "The face has no shape with this name."
+msgstr "顔にこの名前のシェイプはありません。"
+
+msgid "Face Tracking Recipe"
+msgstr "フェイストラッキングのレシピ"
+
+msgid "Same as {0}:"
+msgstr "{0} と同じ:"
+
+msgid "Untested starting point. Check it with Preview."
+msgstr "未検証の出発点です。プレビューで確認してください。"
+
+msgid "Fill From Face Tracking"
+msgstr "フェイストラッキングから設定"
+
+msgid "viseme {0}"
+msgstr "ビゼーム {0}"
+
+msgid "(left)"
+msgstr "（左）"
+
+msgid "(right)"
+msgstr "（右）"
+
+msgid "Add A Shape"
+msgstr "シェイプを追加"
+
+msgid "Reads face tracking from your avatar's face tracking settings. Found {0} face tracking shapes and {1} of 15 visemes."
+msgstr "アバターのフェイストラッキング設定から読み取ります。フェイストラッキングのシェイプが {0} 個、ビゼームが 15 個中 {1} 個見つかりました。"
+
+msgid "Reads face tracking from blend shape names (Unified Expressions, ARKit and similar). Found {0} face tracking shapes and {1} of 15 visemes."
+msgstr "ブレンドシェイプの名前 (Unified Expressions、ARKit など) から読み取ります。フェイストラッキングのシェイプが {0} 個、ビゼームが 15 個中 {1} 個見つかりました。"
+
+msgid "VixenMMD found no face tracking shapes on this face. Visemes still fill the mouth shapes, and you can set up the rest by hand."
+msgstr "この顔にはフェイストラッキングのシェイプが見つかりませんでした。口のシェイプはビゼームから作れます。残りは手で設定できます。"
+
+msgid "Options"
+msgstr "オプション"
+
+msgid "Keep MMD shapes the face already has"
+msgstr "顔にすでにある MMD シェイプはそのまま"
+
+msgid "Redo morphs that are already set up"
+msgstr "設定済みのモーフもやり直す"
+
+msgid "Add the InochiPM chart names too"
+msgstr "InochiPM の表の名前も追加"
+
+msgid "Add untested chart morphs"
+msgstr "未検証の表のモーフも追加"
+
+msgid "Expression Shapes"
+msgstr "表情シェイプ"
+
+msgid "Guess Empty Ones"
+msgstr "空欄を推測"
+
+msgid "Guess All"
+msgstr "すべて推測"
+
+msgid "Replace the shapes of every expression with VixenMMD's guess?"
+msgstr "すべての表情のシェイプを VixenMMD の推測で置き換えますか？"
+
+msgid "Replace"
+msgstr "置き換え"
+
+msgid "Some MMD morphs need an expression that face tracking can't make. Build each one from one or more of your shapes, with an amount for each, or leave it empty."
+msgstr "MMD モーフの中には、フェイストラッキングでは作れない表情が必要なものがあります。それぞれを自分のシェイプ 1 つ以上から量を決めて作るか、空のままにしてください。"
+
+msgid "(none)"
+msgstr "（なし）"
+
+msgid "Viseme Shapes"
+msgstr "ビゼームシェイプ"
+
+msgid "The mouth morphs start from your visemes. Add shapes to a viseme to build it your own way, for example a jaw shape and a lip shape together."
+msgstr "口のモーフはビゼームから作られます。ビゼームにシェイプを追加すると、たとえば顎と唇のシェイプを組み合わせて、自分好みに作れます。"
+
+msgid "No shape found"
+msgstr "シェイプが見つかりません"
+
+msgid "Viseme {0}"
+msgstr "ビゼーム {0}"
+
+msgid "Preview Changes"
+msgstr "変更をプレビュー"
+
+msgid "Apply (Preview First)"
+msgstr "適用（先にプレビュー）"
+
+msgid "Nothing To Apply"
+msgstr "適用するものはありません"
+
+msgid "Apply 1 Morph"
+msgstr "1 個のモーフを適用"
+
+msgid "Apply {0} Morphs"
+msgstr "{0} 個のモーフを適用"
+
+msgid "Set up {0} morphs. Undo reverses this."
+msgstr "モーフを {0} 個設定しました。元に戻す (Undo) で取り消せます。"
+
+msgid "{0} morphs will be set up, {1} left as they are."
+msgstr "{0} 個のモーフを設定し、{1} 個はそのままにします。"
+
+msgid "untested"
+msgstr "未検証"
+
+msgid "chart name"
+msgstr "表の名前"
+
+msgid "MMD Shapes On The Face"
+msgstr "顔にある MMD シェイプ"
+
+msgid "None. That's normal for most VRChat avatars."
+msgstr "ありません。ほとんどの VRChat アバターでは普通のことです。"
+
+msgid "\"{0}\" looks like the MMD shape \"{1}\", but a digit or mark is off, so dances will not drive it."
+msgstr "\"{0}\" は MMD シェイプ \"{1}\" に似ていますが、数字か記号が違うため、ダンスでは動きません。"
+
+msgid "Add \"{0}\" As A Copy"
+msgstr "\"{0}\" をコピーとして追加"
+
+msgid "Find Which Ones Copy Another Shape"
+msgstr "別のシェイプのコピーを探す"
+
+msgid "None of them is an exact copy of another shape."
+msgstr "どれも別のシェイプの完全なコピーではありません。"
+
+msgid "{0}  is a copy of  {1}"
+msgstr "{0}  は  {1}  のコピーです"
+
+msgid "Add Them As Editable Morphs"
+msgstr "編集できるモーフとして追加"
+
+msgid "Reading shapes"
+msgstr "シェイプを読み込み中"
+
+msgid "Check which MMD shapes a dance needs, and whether this avatar has them."
+msgstr "ダンスに必要な MMD シェイプと、このアバターにそれがあるかを確認します。"
+
+msgid "Add Motion (.vmd)"
+msgstr "モーションを追加 (.vmd)"
+
+msgid "Add a VMD motion"
+msgstr "VMD モーションを追加"
+
+msgid "Clear"
+msgstr "クリア"
+
+msgid "no face keys (camera or body only)"
+msgstr "表情のキーなし（カメラか体だけ）"
+
+msgid "{0} morphs used, made for {1}"
+msgstr "モーフ {0} 個を使用、{1} 用"
+
+msgid "This avatar covers {0} of the {1} MMD shapes these dances use."
+msgstr "このダンスが使う MMD シェイプ {1} 個のうち、このアバターは {0} 個に対応しています。"
+
+msgid "(up to {0}%)"
+msgstr "（最大 {0}%）"
+
+msgid "Set Up The Missing Ones From Face Tracking"
+msgstr "足りないものをフェイストラッキングから設定"
+
+msgid "Set up {0} morphs."
+msgstr "モーフを {0} 個設定しました。"
+
+msgid "{0} have no face tracking recipe or matching shapes. Set them up by hand on the Morphs tab."
+msgstr "{0} 個はフェイストラッキングのレシピか合うシェイプがありません。モーフタブで手動で設定してください。"
+
+msgid "VixenMMD builds it"
+msgstr "VixenMMD が作る"
+
+msgid "missing: you have \"{0}\", which is off by a digit or mark"
+msgstr "なし: \"{0}\" はありますが、数字か記号が違います"
+
+msgid "missing"
+msgstr "なし"
+
+msgid "vixenmmd.several"
+msgstr "VixenMMD: VixenMMD コンポーネントが複数あります"
+
+msgid "vixenmmd.several:description"
+msgstr "このアバターには VixenMMD コンポーネントが {0} 個あります。使われるのは \"{1}\" のものだけです。ほかは外してください。"
+
+msgid "vixenmmd.noface"
+msgstr "VixenMMD: 顔のメッシュがありません"
+
+msgid "vixenmmd.noface:description"
+msgstr "VixenMMD コンポーネントで顔のメッシュを設定するか、Avatar Descriptor でビゼーム用メッシュを設定してください。"
+
+msgid "vixenmmd.skipped"
+msgstr "VixenMMD: \"{0}\" は作られませんでした"
+
+msgid "vixenmmd.skipped:description"
+msgstr "{1}"
+
+msgid "vixenmmd.nofx"
+msgstr "VixenMMD: FX コントローラーがありません"
+
+msgid "vixenmmd.nofx:description"
+msgstr "FX レイヤーのオプションには、Avatar Descriptor に FX コントローラーが必要です。これらは適用されませんでした。"
+
+msgid "vixenmmd.layersmissing"
+msgstr "VixenMMD: FX レイヤーが見つかりません"
+
+msgid "vixenmmd.layersmissing:description"
+msgstr "ビルド時、次のレイヤーは FX コントローラーにありません: {0}。"
+
+msgid "vixenmmd.guardnothing"
+msgstr "VixenMMD: MMD ワールドのガードでオフにするものがありません"
+
+msgid "vixenmmd.guardnothing:description"
+msgstr "ガード対象のレイヤーが FX コントローラーに 1 つもないため、ガードは追加されませんでした。手のレイヤーはそのままです。"
+
+msgid "vixenmmd.mim"
+msgstr "VixenMMD: このアバターには Make It MMD もあります"
+
+msgid "vixenmmd.mim:description"
+msgstr "両方のツールが顔のメッシュを編集します。VixenMMD のインスペクターで Make It MMD のコンポーネントを変換してから、Make It MMD を外してください。"
+
+msgid "vixenmmd.vrcfnokeep"
+msgstr "VixenMMD: VRCFury が MMD シェイプを消します"
+
+msgid "vixenmmd.vrcfnokeep:description"
+msgstr "VRCFury の Blendshape Optimizer はアニメーションで使われていないブレンドシェイプを消しますが、MMD ワールドはアバターの外から動かします。VixenMMD では守れません: {0} このアバターではオプティマイザーをオフにしてください。"
+
+msgid "mmd:あ"
+msgstr "口を開けた「あ」"
+
+msgid "mmd:い"
+msgstr "横に開いた「い」"
+
+msgid "mmd:う"
+msgstr "口をすぼめた「う」"
+
+msgid "mmd:え"
+msgstr "半開きの「え」"
+
+msgid "mmd:お"
+msgstr "丸く開けた「お」"
+
+msgid "mmd:にやり"
+msgstr "にやり笑い"
+
+msgid "mmd:∧"
+msgstr "への字口"
+
+msgid "mmd:ワ"
+msgstr "大きく開けた笑い口「ワ」"
+
+msgid "mmd:ω"
+msgstr "猫口"
+
+msgid "mmd:▲"
+msgstr "三角口"
+
+msgid "mmd:口角上げ"
+msgstr "口角を上げる"
+
+msgid "mmd:口角下げ"
+msgstr "口角を下げる"
+
+msgid "mmd:口横広げ"
+msgstr "口を横に広げる"
+
+msgid "mmd:にやり２"
+msgstr "にやり笑い 2"
+
+msgid "mmd:ん"
+msgstr "口を閉じた「ん」"
+
+msgid "mmd:あ２"
+msgstr "大きく開けた「あ」2"
+
+msgid "mmd:□"
+msgstr "四角い口（叫び）"
+
+msgid "mmd:ω□"
+msgstr "開いた猫口"
+
+msgid "mmd:にっこり"
+msgstr "にっこり口"
+
+msgid "mmd:ぺろっ"
+msgstr "舌を出す"
+
+msgid "mmd:てへぺろ"
+msgstr "てへぺろ（舌出し）"
+
+msgid "mmd:てへぺろ２"
+msgstr "てへぺろ 2"
+
+msgid "mmd:あ３"
+msgstr "「あ」3"
+
+msgid "mmd:ワアアア!"
+msgstr "叫ぶ口「ワアアア!」"
+
+msgid "mmd:ええ!"
+msgstr "驚いた「ええ!」"
+
+msgid "mmd:ええ？"
+msgstr "不思議そうな「ええ？」"
+
+msgid "mmd:あ狂った"
+msgstr "崩れた「あ」"
+
+msgid "mmd:お小さい"
+msgstr "小さい「お」"
+
+msgid "mmd:キッス"
+msgstr "キス口"
+
+msgid "mmd:トップリップ"
+msgstr "上唇"
+
+msgid "mmd:ボトムリップ"
+msgstr "下唇"
+
+msgid "mmd:いー！"
+msgstr "歯を食いしばる「いー！」"
+
+msgid "mmd:Ｖ"
+msgstr "V字口"
+
+msgid "mmd:口下げ"
+msgstr "口を下げる"
+
+msgid "mmd:口上げ"
+msgstr "口を上げる"
+
+msgid "mmd:口すぼめる"
+msgstr "口をすぼめる"
+
+msgid "mmd:上歯上げ"
+msgstr "上の歯を上げる"
+
+msgid "mmd:下歯下げ"
+msgstr "下の歯を下げる"
+
+msgid "mmd:上歯を隠す"
+msgstr "上の歯を隠す"
+
+msgid "mmd:犬歯右"
+msgstr "右の八重歯"
+
+msgid "mmd:犬歯左"
+msgstr "左の八重歯"
+
+msgid "mmd:歯右２"
+msgstr "右の歯 2"
+
+msgid "mmd:歯左２"
+msgstr "左の歯 2"
+
+msgid "mmd:まばたき"
+msgstr "まばたき（目を閉じる）"
+
+msgid "mmd:笑い"
+msgstr "笑い目"
+
+msgid "mmd:はぅ"
+msgstr "ぎゅっと閉じた目 ><"
+
+msgid "mmd:瞳小"
+msgstr "瞳を小さく"
+
+msgid "mmd:ｳｨﾝｸ２右"
+msgstr "ウィンク右 2"
+
+msgid "mmd:ウィンク２"
+msgstr "ウィンク 2（左）"
+
+msgid "mmd:ウィンク"
+msgstr "ウィンク（左）"
+
+msgid "mmd:ウィンク右"
+msgstr "ウィンク右"
+
+msgid "mmd:なごみ"
+msgstr "なごみ目 ^^"
+
+msgid "mmd:じと目"
+msgstr "じと目"
+
+msgid "mmd:びっくり"
+msgstr "びっくり目"
+
+msgid "mmd:ｷﾘｯ"
+msgstr "キリッとした目"
+
+msgid "mmd:はぁと"
+msgstr "ハートの目"
+
+msgid "mmd:星目"
+msgstr "星の目"
+
+msgid "mmd:恐ろしい子！"
+msgstr "白目（恐ろしい子！）"
+
+msgid "mmd:はちゅ目"
+msgstr "はちゅ目（丸い目）"
+
+msgid "mmd:瞳縦潰れ"
+msgstr "瞳を縦につぶす"
+
+msgid "mmd:光下"
+msgstr "ハイライトを下に"
+
+msgid "mmd:ハイライト消"
+msgstr "ハイライトを消す"
+
+msgid "mmd:映り込み消"
+msgstr "映り込みを消す"
+
+msgid "mmd:喜び"
+msgstr "喜びの目"
+
+msgid "mmd:わぉ!?"
+msgstr "「わぉ!?」の目"
+
+msgid "mmd:なごみω"
+msgstr "なごみ目 ω"
+
+msgid "mmd:悲しむ"
+msgstr "悲しむ目"
+
+msgid "mmd:敵意"
+msgstr "敵意の目"
+
+msgid "mmd:瞳全消し"
+msgstr "瞳を全部消す"
+
+msgid "mmd:はちゅ目縦潰れ"
+msgstr "はちゅ目を縦につぶす"
+
+msgid "mmd:はちゅ目横潰れ"
+msgstr "はちゅ目を横につぶす"
+
+msgid "mmd:はんっ！"
+msgstr "「はんっ！」と鼻で笑う"
+
+msgid "mmd:がーん"
+msgstr "がーん（ショック）"
+
+msgid "mmd:青ざめる"
+msgstr "青ざめる"
+
+msgid "mmd:赤面"
+msgstr "赤面"
+
+msgid "mmd:照れ1"
+msgstr "照れ 1"
+
+msgid "mmd:照れ2"
+msgstr "照れ 2"
+
+msgid "mmd:テレ"
+msgstr "テレ（照れ）"
+
+msgid "mmd:頬染め"
+msgstr "頬染め"
+
+msgid "mmd:目の幅涙"
+msgstr "目の幅の涙"
+
+msgid "mmd:涙目"
+msgstr "涙目"
+
+msgid "mmd:下まぶた上げ"
+msgstr "下まぶたを上げる"
+
+msgid "mmd:恐ろしい"
+msgstr "恐ろしい目"
+
+msgid "mmd:星目１"
+msgstr "星の目 1"
+
+msgid "mmd:星目２"
+msgstr "星の目 2"
+
+msgid "mmd:スターライト"
+msgstr "スターライトの目"
+
+msgid "mmd:丸い目"
+msgstr "丸い目"
+
+msgid "mmd:瞳横潰れ"
+msgstr "瞳を横につぶす"
+
+msgid "mmd:ｺｯﾁﾐﾝﾅ"
+msgstr "こっち見んな目"
+
+msgid "mmd:にこり"
+msgstr "にこり眉"
+
+msgid "mmd:上"
+msgstr "眉を上げる"
+
+msgid "mmd:下"
+msgstr "眉を下げる"
+
+msgid "mmd:真面目"
+msgstr "真面目な眉"
+
+msgid "mmd:困る"
+msgstr "困り眉"
+
+msgid "mmd:怒り"
+msgstr "怒り眉"
+
+msgid "mmd:前"
+msgstr "眉を前に"
+
+msgid "mmd:にこり_R"
+msgstr "にこり眉（右）"
+
+msgid "mmd:にこり_L"
+msgstr "にこり眉（左）"
+
+msgid "mmd:上_R"
+msgstr "右眉を上げる"
+
+msgid "mmd:上_L"
+msgstr "左眉を上げる"
+
+msgid "mmd:下_R"
+msgstr "右眉を下げる"
+
+msgid "mmd:下_L"
+msgstr "左眉を下げる"
+
+msgid "mmd:真面目_R"
+msgstr "真面目な眉（右）"
+
+msgid "mmd:真面目_L"
+msgstr "真面目な眉（左）"
+
+msgid "mmd:困る_R"
+msgstr "困り眉（右）"
+
+msgid "mmd:困る_L"
+msgstr "困り眉（左）"
+
+msgid "mmd:怒り_R"
+msgstr "怒り眉（右）"
+
+msgid "mmd:怒り_L"
+msgstr "怒り眉（左）"
+
+msgid "mmd:眉頭左"
+msgstr "左の眉頭"
+
+msgid "mmd:眉頭右"
+msgstr "右の眉頭"
+
+msgid "mmd:怒り眉"
+msgstr "怒り眉"
+
+msgid "mmd:失望した"
+msgstr "がっかりした眉"
+
+msgid "mmd:にこり眉"
+msgstr "にこり眉"
+
+msgid "mmd:困った"
+msgstr "困った眉"
+
+msgid "mmd:動揺"
+msgstr "動揺した眉"
+
+msgid "mmd:眉上"
+msgstr "眉を上げる"
+
+msgid "mmd:眉下"
+msgstr "眉を下げる"
+
+msgid "mmd:眉毛を前方に"
+msgstr "眉を前に出す"
+
+msgid "mmd:照れ"
+msgstr "照れ"
+
+msgid "mmd:歯無し下"
+msgstr "下の歯を消す"
+
+msgid "mmd:歯無し上"
+msgstr "上の歯を消す"
+
+msgid "mmd:涙"
+msgstr "涙"
+
+msgid "mmd:しいたけ"
+msgstr "しいたけ目（十字のきらめき）"
+
+msgid "mmd:眼鏡"
+msgstr "眼鏡"
+
+msgid "mmd:眼鏡の骨"
+msgstr "眼鏡のフレーム"
+
+msgid "mmd:メガネスケール"
+msgstr "眼鏡の大きさ"
+
+msgid "mmd:みっぱい"
+msgstr "みっぱい"
+
+msgid "mmd:右怒筋"
+msgstr "右の怒りマーク"
+
+msgid "mmd:左怒筋"
+msgstr "左の怒りマーク"
