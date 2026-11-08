@@ -218,7 +218,7 @@
                 <p class="text-glow-cyan" style="font-size: 1.1rem; max-width: 850px; margin: 0 auto; line-height: 1.6;">
                     What our website, the Vixens Toolbox, our shaders, VixForge Camera Pro, our Discord server and its bot, and our supporter platforms do with your information. Most of it collects nothing at all. The Discord bot is the one that keeps records, and this page says exactly what it keeps.
                 </p>
-                <p class="legal-updated">Last updated 29 October 2026. Read it with our <a href="terms.html">Terms of Service</a>.</p>
+                <p class="legal-updated">Last updated 7 November 2026. Read it with our <a href="terms.html">Terms of Service</a>.</p>
             </div>
 
             <div class="competitive-grid" style="margin-top: 2rem;">
@@ -291,8 +291,8 @@
                                     </tr>
                                     <tr>
                                         <td>Discord server and bot</td>
-                                        <td>Messages you post, your username and user ID, moderation records, ticket transcripts, and your game scores, pets and adventure saves. No AI ever sees any of it.</td>
-                                        <td>A computer we run ourselves, and Discord</td>
+                                        <td>Messages you post, voice channel joins and leaves, your username and user ID, the member list, moderation records, ticket transcripts, your game scores, pets, adventure saves and voice time, and your PiShock link if you make one. No AI ever sees any of it.</td>
+                                        <td>A computer we run ourselves, Discord, and PiShock if you link it</td>
                                     </tr>
                                     <tr>
                                         <td>Supporting or buying</td>
@@ -403,7 +403,8 @@
                             <li>the text, up to 2,000 characters;</li>
                             <li>the name, link, type and size of each attachment;</li>
                             <li>the title, link, image link and the start of the description of each embed;</li>
-                            <li>stickers, poll questions and answers, forwarded messages, which message you replied to, how many people and roles you mentioned, and whether it was a voice message.</li>
+                            <li>stickers, poll questions and answers, forwarded messages, which message you replied to, how many people and roles you mentioned, and whether it was a voice message;</li>
+                            <li>when you join, leave or move between voice channels, are muted or deafened by staff, or start or stop streaming. Muting or deafening yourself isn't logged.</li>
                         </ul>
                         <p class="comp-text">The log is a set of files on the bot's computer. Once the current file reaches 10 MB a new one starts, and only the three files before it are kept, so the oldest entries are deleted as new ones come in.</p>
 
@@ -412,7 +413,7 @@
                             <li>It compares images and stickers with a folder of known scam images, using a fingerprint it works out on its own computer. It only downloads images from Discord's own servers, up to 12 MB each, and no outside service sees them.</li>
                             <li>It checks text, links, forwarded messages and polls for known scam sites and phrases, and counts mass mentions.</li>
                             <li>It counts how fast each person posts and spots the same message repeated across channels. These counts live only in memory and are gone when the bot restarts.</li>
-                            <li>When we switch it on, a join check looks at how old a new member's Discord account is, and a raid mode acts on everyone who joins during a sudden wave of joins.</li>
+                            <li>A join check looks at how old a new member's Discord account is and tells staff when it's less than a day old. During a sudden wave of joins, raid mode removes everyone who joins for a few minutes.</li>
                         </ul>
                         <p class="comp-text">When a check is triggered, the bot can delete the message and time out, kick or ban the account. It posts a record of what it did (the account, the action, the channel and the reason) to a private staff channel. Members with moderator permissions are never checked.</p>
 
@@ -420,7 +421,25 @@
 
                         <p class="comp-text mt-2"><strong>GitHub updates.</strong> GitHub sends news of activity in our public repositories (new code, releases, issues and pull requests) through a relay service, smee.io, and the bot posts it in a channel. The bot keeps the raw notices in files on its computer, up to 64 MB per file with the two files before it kept. They hold what GitHub sends: the public activity itself and the GitHub usernames of the people involved.</p>
 
-                        <p class="comp-text mt-2"><strong>Chat, reactions and fun commands.</strong> The bot reads a message to decide whether to answer it when you @ it, reply to one of its messages, or mention it by name (like "thanks bot" or "the bot is cute"). It also adds an emoji reaction to some short messages, stickers and pic posts. When you ask it to pass a message to "them", it looks at the channel's last 15 messages to work out who you mean. The cooldowns and counters behind all this live only in memory. Apart from the message log above, none of it is saved.</p>
+                        <p class="comp-text mt-2"><strong>Chat, reactions and fun commands.</strong> The bot reads a message to decide whether to answer it when you @ it, reply to one of its messages, or mention it by name (like "thanks bot" or "the bot is cute"). It also says hi back when you greet the room, and adds an emoji reaction to some short messages, emojis, stickers and pic posts. When you ask it to pass a message to "them", it looks at the channel's last 15 messages to work out who you mean. The cooldowns and counters behind all this live only in memory. Apart from the message log above, none of it is saved.</p>
+
+                        <p class="comp-text mt-2"><strong>Welcomes.</strong> When you join, the bot welcomes you by name in the welcome channel, and its status can show your name for 15 minutes.</p>
+
+                        <p class="comp-text mt-2"><strong>Voice.</strong> The bot can join a voice channel and play soundboard sounds, but it can't hear anyone, so nothing said in voice is recorded. It adds up how long you spend in voice: your total time, how many hangouts, your longest one and when you were last there. <code>/voice time</code> and <code>/voice top</code> show those totals to anyone in the server.</p>
+
+                        <p class="comp-text mt-2"><strong>PiShock.</strong> If you link a PiShock with <code>/pishock link</code>, the bot saves your PiShock username and API key, encrypted so only the bot can read them. It also saves your PiShock user ID, your devices, when you linked, and your settings: which modes are on, your limits and level, who you allow, your penalties and whether you've paused it. It sends your username and key to PiShock to check them, and again each time it sends a command to your device. When someone sends to your device, the bot posts who sent what in the channel. <code>/pishock unlink</code> deletes all of it.</p>
+
+                        <p class="comp-text mt-2"><strong>Server snapshot.</strong> Each time the bot starts, it saves a snapshot of the server so we can check how it's set up:</p>
+                        <ul class="legal-list comp-text">
+                            <li>the server's settings, channels and roles;</li>
+                            <li>its emojis, stickers and sounds, and who added them;</li>
+                            <li>scheduled events and how many people are interested;</li>
+                            <li>the member list: each member's user ID, username, display name, nickname, roles, when they joined and whether they boost the server;</li>
+                            <li>the ban list with the reasons, and invite links with who made them and how often they were used;</li>
+                            <li>the AutoMod, onboarding and connected app settings;</li>
+                            <li>up to 200 of the newest audit log entries: what was done, by whom, to what, and the reason.</li>
+                        </ul>
+                        <p class="comp-text">The member list covers everyone in the server, not only people who use the bot. Each new snapshot replaces the last one.</p>
 
                         <p class="comp-text mt-2"><strong>Pic ratings.</strong> When you ask the bot to rate or comment on a pic, it never opens or downloads the image, so it can't see what's in it. The score comes from the attachment's ID, which is why the same pic always gets the same score.</p>
 
@@ -437,7 +456,7 @@
 
                         <p class="comp-text mt-2"><strong>Discord AutoMod.</strong> When Discord's own AutoMod acts on a message, the bot posts a note to the private staff channel with the account, the channel, the rule, what it matched and part of the message.</p>
 
-                        <p class="comp-text mt-2"><strong>The bot's working log.</strong> A separate log records errors, the actions the bot took, and the bot leaving servers it was not meant to be in. It notes which commands, buttons and replies each person used (your username, user ID and the channel, not your message), plus up to 300 characters of a deleted ghost ping and of a message Discord AutoMod acted on. It keeps one current file of up to 5 MB and the two before it. When we switch on detailed logging to track a problem, it also records each message's author, channel and size (not its text) and each new member's account age.</p>
+                        <p class="comp-text mt-2"><strong>The bot's working logs.</strong> Separate logs record errors, the actions the bot took, and the bot leaving servers it was not meant to be in. They note which commands, buttons and replies each person used (your username, user ID and the channel, not your message), plus up to 300 characters of a deleted ghost ping and of a message Discord AutoMod acted on. When the join check flags a new account, they note the account, its user ID and its age. They also hold notices from the software the bot is built on, such as Discord connection and rate limit messages. Everything goes into one combined log, and each part of the bot also has its own log. When we switch on detailed logging to track a problem, they also record each message's author, channel and size (not its text), each new member's account age, and the member names and newest audit log entries from each start-up snapshot.</p>
 
                         <p class="comp-text mt-2"><strong>Supporter roles.</strong> If you link Patreon or Ko-fi to Discord, their own integrations give you your supporter role. That link is between you, Discord and that platform.</p>
                     </div>
@@ -493,9 +512,9 @@
                     <div class="comp-section comp-vixen">
                         <p class="comp-text">We use information only for these reasons. If you are in the European Economic Area or the United Kingdom, the legal basis for each is in brackets.</p>
                         <ul class="legal-list comp-text">
-                            <li><strong>Keeping the Discord server safe</strong>: the message log, automatic moderation, join checks and staff records (our legitimate interest in protecting members from scams, spam and raids).</li>
+                            <li><strong>Keeping the Discord server safe</strong>: the message log, automatic moderation, join checks, the server snapshot and staff records (our legitimate interest in protecting members from scams, spam and raids, and in running the server well).</li>
                             <li><strong>Helping you</strong>: tickets, transcripts, emails and messages (our legitimate interest in giving support, and performing our agreement with you when you are a supporter).</li>
-                            <li><strong>Running the bot's games and chat</strong>: scores, pets, adventure saves and your 18+ choice (our legitimate interest in running the features you choose to use).</li>
+                            <li><strong>Running the bot's games, chat and extras</strong>: scores, pets, adventure saves, voice time, your 18+ choice and your PiShock link (our legitimate interest in running the features you choose to use).</li>
                             <li><strong>Delivering what you paid for</strong>: purchase and membership records and Discord roles (performing our agreement with you).</li>
                             <li><strong>Keeping financial records</strong> that tax law requires (legal obligation).</li>
                             <li><strong>Thanking supporters</strong> on the supporter wall (our legitimate interest, and you can opt out at any time).</li>
@@ -511,8 +530,9 @@
                     </div>
                     <div class="comp-section comp-vixen">
                         <ul class="legal-list comp-text">
-                            <li><strong>The services we use</strong>, each for its own part: Discord, GitHub, smee.io, Gumroad, Jinxxy, Patreon, Ko-fi, PayPal, Cash App, and Google when you use Auto Translate.</li>
-                            <li><strong>Our server staff</strong> see the moderation records in the staff channel and the tickets they are added to.</li>
+                            <li><strong>The services we use</strong>, each for its own part: Discord, GitHub, smee.io, Gumroad, Jinxxy, Patreon, Ko-fi, PayPal, Cash App, Google when you use Auto Translate, and <a href="https://pishock.com/" target="_blank" rel="noopener">PiShock</a> when you link a device, under its own terms.</li>
+                            <li><strong>Our server staff</strong> see the moderation records in the staff channel, including new-account alerts, and the tickets they are added to.</li>
+                            <li><strong>Other members</strong> see what the bot posts in the server, such as welcomes, leaderboards, voice time and PiShock sends.</li>
                             <li><strong>Discord</strong>, if we report an account for breaking its rules.</li>
                             <li><strong>The authorities</strong>, if the law requires it, or if it is needed to protect someone's safety.</li>
                             <li><strong>Whoever takes over a project</strong>, if one is ever handed on. We would tell you first.</li>
@@ -541,8 +561,12 @@
                                         <td>Until it is pushed out: the current file plus three older ones, 10 MB each. The oldest entries go first.</td>
                                     </tr>
                                     <tr>
-                                        <td>Bot working log</td>
-                                        <td>The current file plus two older ones, 5 MB each, oldest first.</td>
+                                        <td>Bot working logs</td>
+                                        <td>The combined log: the current file plus three older ones, 10 MB each. Each part's own log: the current file plus two older ones, 5 MB each. Oldest first.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Server snapshot</td>
+                                        <td>Until the next start-up snapshot replaces it.</td>
                                     </tr>
                                     <tr>
                                         <td>GitHub update notices</td>
@@ -553,8 +577,12 @@
                                         <td>Until we delete them.</td>
                                     </tr>
                                     <tr>
-                                        <td>Game scores, pets, adventure saves and your 18+ choice</td>
+                                        <td>Game scores, pets, adventure saves, voice time and your 18+ choice</td>
                                         <td>Until you ask us to delete them, or we reset the feature.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PiShock link and settings</td>
+                                        <td>Until you run <code>/pishock unlink</code> or ask us to delete them.</td>
                                     </tr>
                                     <tr>
                                         <td>Adventure submissions</td>
@@ -593,7 +621,7 @@
                         <ul class="legal-list comp-text">
                             <li>tell you what we hold about you and give you a copy;</li>
                             <li>correct anything that is wrong;</li>
-                            <li>delete it, including your entries in the bot's logs, your ticket transcripts, and your scores, pets and adventure saves;</li>
+                            <li>delete it, including your entries in the bot's logs and server snapshot, your ticket transcripts, your scores, pets, adventure saves and voice time, and your PiShock link;</li>
                             <li>stop using it for a purpose, or take you off the supporter wall.</li>
                         </ul>
                         <p class="comp-text">
@@ -615,7 +643,7 @@
                     </div>
                     <div class="comp-section comp-vixen">
                         <p class="comp-text">
-                            The bot's logs and transcripts stay on a private computer we control. They are never published, and only we can open them. The bot's Discord access key is kept private. No setup is perfectly secure, so if something ever goes wrong in a way that affects you, we'll tell you and, where the law requires it, the authorities.
+                            The bot's logs, transcripts, snapshot and saved records stay on a private computer we control. They are never published, and only we can open them. The bot's Discord access key is kept private, and PiShock API keys are stored encrypted. No setup is perfectly secure, so if something ever goes wrong in a way that affects you, we'll tell you and, where the law requires it, the authorities.
                         </p>
                     </div>
                 </div>
