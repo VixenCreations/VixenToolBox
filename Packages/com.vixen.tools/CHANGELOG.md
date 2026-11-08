@@ -5,6 +5,22 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.21.1] - 2026-11-08
+*Auto-fill works one morph at a time too, and it keeps the MMD shapes your face already has.*
+
+### Added
+
+* **Auto-fill This Morph** in the **Morphs** tab sets up the morph you picked in one click. It copies your face's own version of the shape if it has one, or builds the morph from your face tracking shapes and visemes, and guesses any expression shapes it needs. **Set Up This Morph** is now **Set Up By Hand**.
+* **More of the InochiPM chart can be set up.** The star and heart eyes, teeth, fangs and anger marks now have a starting point, so every chart name except 眼鏡 does. They're untested: **Auto-fill This Morph** uses them, and so does the **Auto-fill** tab with **Add untested chart morphs** on. Check each one with **Preview on the avatar**.
+
+### Fixed
+
+* **Auto-fill keeps your face's own MMD shapes when a digit or mark in the name is off**, like にやり2 for にやり２. It used to build a new にやり２ from your smile and blush shapes instead. If that already happened on your avatar, press **Make "にやり２" A Copy Of "にやり2"** under **MMD Shapes On The Face** in the **Auto-fill** tab.
+* **Auto-fill reads shape names the way Japanese avatars write them.** `brow_up_L`, `Brow Up L` and `browupl` now count as the same shape, numbered sets like `brow_sad_1` work, and so do common rig words like `brow_sad` for worried brows or `mouth_pero` for a tongue out. Faces that already matched keep the shapes they had
+* **Morphs like 困った copy your face's 困る** when your face has it, instead of saying no shapes match
+* **Lip, teeth and fang morphs** find shapes like `mouth_center_up`, `tooth_top_x` and `mouth_yaeba(tooth)_top_L` on avatars that use those names
+
+***
 ## [2.21.0] - 2026-11-07
 *VixenMMD gets your avatar dancing in MMD worlds, and takes over from Make It MMD.*
 

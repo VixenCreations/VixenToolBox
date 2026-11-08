@@ -407,8 +407,20 @@ msgstr "아직 설정되지 않았습니다."
 msgid "Replace It With My Own"
 msgstr "내 것으로 바꾸기"
 
-msgid "Set Up This Morph"
-msgstr "이 모프 설정"
+msgid "Set Up By Hand"
+msgstr "직접 설정"
+
+msgid "Auto-fill This Morph"
+msgstr "이 모프 자동 채우기"
+
+msgid "VixenMMD has no recipe for this morph. Add its shapes below."
+msgstr "VixenMMD에는 이 모프의 레시피가 없습니다. 아래에서 쉐이프를 추가하세요."
+
+msgid "Guessed the shapes for \"{0}\". Check it with Preview."
+msgstr "\"{0}\"의 쉐이프를 추측했습니다. 미리보기로 확인하세요."
+
+msgid "Copies \"{0}\", your face's own version of this shape."
+msgstr "얼굴에 있는 이 쉐이프 \"{0}\"을(를) 복사합니다."
 
 msgid "Your face already has this shape. On upload, VixenMMD's version takes its place."
 msgstr "얼굴에 이미 이 쉐이프가 있습니다. 업로드할 때 VixenMMD 버전으로 바뀝니다."
@@ -547,6 +559,9 @@ msgstr "\"{0}\"은(는) MMD 쉐이프 \"{1}\"와(과) 비슷하지만 숫자나 
 
 msgid "Add \"{0}\" As A Copy"
 msgstr "\"{0}\"을(를) 복사본으로 추가"
+
+msgid "Make \"{0}\" A Copy Of \"{1}\""
+msgstr "\"{0}\"을(를) \"{1}\"의 복사본으로 만들기"
 
 msgid "Find Which Ones Copy Another Shape"
 msgstr "다른 쉐이프의 복사본 찾기"

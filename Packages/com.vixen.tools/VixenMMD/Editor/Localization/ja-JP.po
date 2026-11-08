@@ -407,8 +407,20 @@ msgstr "まだ設定されていません。"
 msgid "Replace It With My Own"
 msgstr "自分のものに置き換える"
 
-msgid "Set Up This Morph"
-msgstr "このモーフを設定"
+msgid "Set Up By Hand"
+msgstr "手動で設定"
+
+msgid "Auto-fill This Morph"
+msgstr "このモーフを自動設定"
+
+msgid "VixenMMD has no recipe for this morph. Add its shapes below."
+msgstr "VixenMMD にはこのモーフのレシピがありません。下でシェイプを追加してください。"
+
+msgid "Guessed the shapes for \"{0}\". Check it with Preview."
+msgstr "\"{0}\" のシェイプを推測しました。プレビューで確認してください。"
+
+msgid "Copies \"{0}\", your face's own version of this shape."
+msgstr "顔にあるこのシェイプ \"{0}\" をコピーします。"
 
 msgid "Your face already has this shape. On upload, VixenMMD's version takes its place."
 msgstr "顔にはすでにこのシェイプがあります。アップロード時に VixenMMD 版に置き換わります。"
@@ -547,6 +559,9 @@ msgstr "\"{0}\" は MMD シェイプ \"{1}\" に似ていますが、数字か�
 
 msgid "Add \"{0}\" As A Copy"
 msgstr "\"{0}\" をコピーとして追加"
+
+msgid "Make \"{0}\" A Copy Of \"{1}\""
+msgstr "\"{0}\" を \"{1}\" のコピーにする"
 
 msgid "Find Which Ones Copy Another Shape"
 msgstr "別のシェイプのコピーを探す"

@@ -429,13 +429,18 @@ namespace VixenTools.MMD.Editor
             if (morph == null)
             {
                 EditorGUILayout.HelpBox(native ? L("Your face already has this shape. Dances will use it as it is.") : L("Not set up yet."), MessageType.None);
-                if (GUILayout.Button(native ? L("Replace It With My Own") : L("Set Up This Morph")))
+                using (new EditorGUILayout.HorizontalScope())
                 {
-                    Undo.RecordObject(_target, "VixenMMD");
-                    morph = new VixenMMDMorph(_selected);
-                    _target.morphs.Add(morph);
-                    EditorUtility.SetDirty(_target);
+                    if (!native && GUILayout.Button(L("Auto-fill This Morph"))) AutoFillSelected(null);
+                    if (GUILayout.Button(native ? L("Replace It With My Own") : L("Set Up By Hand")))
+                    {
+                        Undo.RecordObject(_target, "VixenMMD");
+                        morph = new VixenMMDMorph(_selected);
+                        _target.morphs.Add(morph);
+                        EditorUtility.SetDirty(_target);
+                    }
                 }
+                if (morph == null) DrawFillNotes();
             }
             if (morph != null)
             {
@@ -449,6 +454,7 @@ namespace VixenTools.MMD.Editor
                     EditorUtility.SetDirty(_target);
                 }
                 DrawSources(morph);
+                DrawFillNotes();
                 DrawRecipe(morph);
                 DrawShapePicker(morph);
                 EditorGUILayout.Space();
@@ -466,7 +472,11 @@ namespace VixenTools.MMD.Editor
         {
             EditorGUILayout.Space();
             EditorGUILayout.LabelField(L("Made From"), EditorStyles.boldLabel);
-            if (morph.sources.Count == 0) EditorGUILayout.LabelField(L("No shapes yet. Add some below."), EditorStyles.miniLabel);
+            if (morph.sources.Count == 0)
+            {
+                EditorGUILayout.LabelField(L("No shapes yet. Add some below."), EditorStyles.miniLabel);
+                if (GUILayout.Button(L("Auto-fill This Morph"), GUILayout.ExpandWidth(false))) AutoFillSelected(morph);
+            }
             for (int i = 0; i < morph.sources.Count; i++)
             {
                 var s = morph.sources[i];
@@ -518,7 +528,32 @@ namespace VixenTools.MMD.Editor
                 }
                 else _recipeNotes.Insert(0, plan.Skipped);
             }
+        }
+
+        private void DrawFillNotes()
+        {
             if (_recipeNotes != null && _recipeNotes.Count > 0) EditorGUILayout.HelpBox(string.Join("\n", _recipeNotes), MessageType.Info);
+        }
+
+        private void AutoFillSelected(VixenMMDMorph morph)
+        {
+            var plan = VixenMMDAutoFill.PlanBest(_selected, Resolver, AutoFillInputs.From(_target));
+            _recipeNotes = plan.Notes.ToList();
+            if (plan.WillApply)
+            {
+                Undo.RecordObject(_target, "VixenMMD auto-fill");
+                if (morph == null)
+                {
+                    morph = new VixenMMDMorph(_selected);
+                    _target.morphs.Add(morph);
+                }
+                morph.sources = plan.Sources.Select(s => new VixenMMDSource(s.shape, s.scale)).ToList();
+                morph.enabled = true;
+                EditorUtility.SetDirty(_target);
+                _plan = null;
+            }
+            else _recipeNotes.Insert(0, plan.Skipped);
+            GUIUtility.ExitGUI();
         }
 
         private static string TermText(RecipeTerm t)
@@ -676,14 +711,22 @@ namespace VixenTools.MMD.Editor
             EditorGUILayout.LabelField(native.Count == 0 ? L("None. That's normal for most VRChat avatars.") : string.Join("  ", native), EditorStyles.wordWrappedLabel);
             foreach (var (n, v) in wrongWidth)
             {
+                var copy = _target.FindMorph(v);
+                if (copy != null && copy.enabled && copy.sources != null && copy.sources.Any(s => s != null && s.shape == n)) continue;
                 EditorGUILayout.HelpBox(L("\"{0}\" looks like the MMD shape \"{1}\", but a digit or mark is off, so dances will not drive it.", n, v), MessageType.Warning);
-                if (!r.Has(v) && _target.FindMorph(v) == null && GUILayout.Button(L("Add \"{0}\" As A Copy", v), GUILayout.Width(260)))
+                if (r.Has(v)) continue;
+                if (GUILayout.Button(copy == null ? L("Add \"{0}\" As A Copy", v) : L("Make \"{0}\" A Copy Of \"{1}\"", v, n), GUILayout.ExpandWidth(false)))
                 {
                     Undo.RecordObject(_target, "VixenMMD");
-                    var m = new VixenMMDMorph(v);
-                    m.sources.Add(new VixenMMDSource(n, 1f));
-                    _target.morphs.Add(m);
+                    if (copy == null)
+                    {
+                        copy = new VixenMMDMorph(v);
+                        _target.morphs.Add(copy);
+                    }
+                    copy.sources = new List<VixenMMDSource> { new VixenMMDSource(n, 1f) };
+                    copy.enabled = true;
                     EditorUtility.SetDirty(_target);
+                    GUIUtility.ExitGUI();
                 }
             }
             if (native.Count == 0) return;

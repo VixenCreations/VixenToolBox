@@ -407,8 +407,20 @@ msgstr "尚未设置。"
 msgid "Replace It With My Own"
 msgstr "替换为我自己的"
 
-msgid "Set Up This Morph"
-msgstr "设置这个表情"
+msgid "Set Up By Hand"
+msgstr "手动设置"
+
+msgid "Auto-fill This Morph"
+msgstr "自动填充这个表情"
+
+msgid "VixenMMD has no recipe for this morph. Add its shapes below."
+msgstr "VixenMMD 没有这个表情的配方。请在下方添加形态键。"
+
+msgid "Guessed the shapes for \"{0}\". Check it with Preview."
+msgstr "已猜测 \"{0}\" 的形态键，请用预览检查。"
+
+msgid "Copies \"{0}\", your face's own version of this shape."
+msgstr "复制脸上已有的这个形态键 \"{0}\"。"
 
 msgid "Your face already has this shape. On upload, VixenMMD's version takes its place."
 msgstr "脸上已经有这个形态键。上传时会被 VixenMMD 的版本替换。"
@@ -547,6 +559,9 @@ msgstr "\"{0}\" 看起来像 MMD 形态键 \"{1}\"，但数字或符号不对，
 
 msgid "Add \"{0}\" As A Copy"
 msgstr "将 \"{0}\" 添加为副本"
+
+msgid "Make \"{0}\" A Copy Of \"{1}\""
+msgstr "将 \"{0}\" 设为 \"{1}\" 的副本"
 
 msgid "Find Which Ones Copy Another Shape"
 msgstr "查找哪些是其他形态键的副本"

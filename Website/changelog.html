@@ -245,6 +245,25 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
+                <div class="changelog-entry" data-version="v2.21.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v 2.21.1 - 2026-11-08</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Auto-fill works one morph at a time too, and it keeps the MMD shapes your face already has.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Auto-fill This Morph</strong> in the <strong>Morphs</strong> tab sets up the morph you picked in one click. It copies your face's own version of the shape if it has one, or builds the morph from your face tracking shapes and visemes, and guesses any expression shapes it needs. <strong>Set Up This Morph</strong> is now <strong>Set Up By Hand</strong>.</li>
+                        <li class="mb-2"><strong>More of the InochiPM chart can be set up.</strong> The star and heart eyes, teeth, fangs and anger marks now have a starting point, so every chart name except 眼鏡 does. They're untested: <strong>Auto-fill This Morph</strong> uses them, and so does the <strong>Auto-fill</strong> tab with <strong>Add untested chart morphs</strong> on. Check each one with <strong>Preview on the avatar</strong>.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Auto-fill keeps your face's own MMD shapes when a digit or mark in the name is off</strong>, like にやり2 for にやり２. It used to build a new にやり２ from your smile and blush shapes instead. If that already happened on your avatar, press <strong>Make "にやり２" A Copy Of "にやり2"</strong> under <strong>MMD Shapes On The Face</strong> in the <strong>Auto-fill</strong> tab.</li>
+                        <li class="mb-2"><strong>Auto-fill reads shape names the way Japanese avatars write them.</strong> <code>brow_up_L</code>, <code>Brow Up L</code> and <code>browupl</code> now count as the same shape, numbered sets like <code>brow_sad_1</code> work, and so do common rig words like <code>brow_sad</code> for worried brows or <code>mouth_pero</code> for a tongue out. Faces that already matched keep the shapes they had</li>
+                        <li class="mb-2"><strong>Morphs like 困った copy your face's 困る</strong> when your face has it, instead of saying no shapes match</li>
+                        <li class="mb-2"><strong>Lip, teeth and fang morphs</strong> find shapes like <code>mouth_center_up</code>, <code>tooth_top_x</code> and <code>mouth_yaeba(tooth)_top_L</code> on avatars that use those names</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="v2.21.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.21.0 - 2026-11-07</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>VixenMMD gets your avatar dancing in MMD worlds, and takes over from Make It MMD.</em></p>

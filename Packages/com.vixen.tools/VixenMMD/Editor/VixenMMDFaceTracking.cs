@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 using VRC.SDK3.Avatars.Components;
@@ -35,10 +36,31 @@ namespace VixenTools.MMD.Editor
             { "MouthFrown", new[] { "MouthSad" } }, { "MouthUpper", new[] { "Mouth" } }, { "MouthLower", new[] { "Mouth" } },
         };
 
+        private static readonly string[] CornerUpStyle = { "MouthCornerAngleUp", "MouthHappy" };
+
+        private static readonly Dictionary<string, string[]> JapaneseStyle = new Dictionary<string, string[]>
+        {
+            { "BrowInnerUp", new[] { "BrowSad", "BrowTrouble", "BrowHeadUp" } }, { "BrowOuterUp", new[] { "BrowTailUp" } },
+            { "EyeClosed", new[] { "EyeClose", "Blink" } }, { "EyeWide", new[] { "EyelidUp" } }, { "EyeSquint", new[] { "EyeUnderUp" } },
+            { "EyeLookIn", new[] { "EyeLookNear" } }, { "EyeConstrict", new[] { "PupilSmall" } }, { "EyeDilation", new[] { "PupilBig" } },
+            { "JawOpen", new[] { "MouthA" } }, { "LipFunnel", new[] { "MouthO" } }, { "LipPucker", new[] { "MouthU" } }, { "MouthPress", new[] { "MouthM" } },
+            { "MouthCornerPull", CornerUpStyle }, { "MouthCornerSlant", CornerUpStyle }, { "MouthFrown", new[] { "MouthCornerAngleDown" } },
+            { "MouthUpperUp", new[] { "MouthCenterUp", "MouthTopUp" } }, { "MouthLowerDown", new[] { "MouthCenterDown", "MouthUnderDown" } },
+            { "MouthStretch", new[] { "MouthWide" } }, { "MouthTightener", new[] { "MouthNarrow" } }, { "MouthDimple", new[] { "MouthCornerBack" } },
+            { "TongueOut", new[] { "MouthPero", "TonguePero" } }, { "TongueUp", new[] { "TonguePositionUp" } }, { "TongueDown", new[] { "TonguePositionDown" } },
+        };
+
+        private static readonly Dictionary<string, string> JapaneseVowels = new Dictionary<string, string>
+        {
+            { "aa", "a" }, { "ih", "i" }, { "ou", "u" }, { "E", "e" }, { "oh", "o" },
+        };
+
         private readonly SkinnedMeshRenderer _face;
         private readonly string[] _names;
         private readonly HashSet<string> _exact;
         private readonly Dictionary<string, string> _lower = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _squashed = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _unnumbered = new Dictionary<string, string>();
         private readonly Dictionary<string, (string shape, float mult)> _native = new Dictionary<string, (string, float)>();
         private readonly string[] _visemes = new string[VisemeOrder.Length];
 
@@ -64,12 +86,37 @@ namespace VixenTools.MMD.Editor
             {
                 string k = n.ToLowerInvariant();
                 if (!_lower.ContainsKey(k)) _lower[k] = n;
+                if (IsDivider(n)) continue;
+                string squashed = Squash(n, false);
+                if (!_squashed.ContainsKey(squashed)) _squashed[squashed] = n;
+                string unnumbered = Squash(n, true);
+                if (!_unnumbered.ContainsKey(unnumbered)) _unnumbered[unnumbered] = n;
             }
             FindSdkMatcher();
             ReadDescriptor(descriptor);
         }
 
         public bool Has(string shape) => shape != null && _exact.Contains(shape);
+
+        private Dictionary<string, string> _nearByMmd;
+
+        public string NearShape(string mmdName)
+        {
+            if (_nearByMmd == null)
+            {
+                _nearByMmd = new Dictionary<string, string>(StringComparer.Ordinal);
+                foreach (var n in _names)
+                {
+                    string v = VixenMMDNames.FindNearName(n);
+                    if (v != null && !_exact.Contains(v) && !_nearByMmd.ContainsKey(v)) _nearByMmd[v] = n;
+                }
+            }
+            if (mmdName == null) return null;
+            if (_nearByMmd.TryGetValue(mmdName, out string hit)) return hit;
+            var recipe = VixenMMDRecipes.Find(mmdName);
+            var source = recipe != null && recipe.Kind == RecipeKind.Alias ? VixenMMDRecipes.Resolve(recipe) : null;
+            return source != null && _exact.Contains(source.Name) ? source.Name : null;
+        }
 
         public IEnumerable<string> UsableShapeNames => _names.Where(n => !IsDivider(n));
 
@@ -79,12 +126,15 @@ namespace VixenTools.MMD.Editor
             int run = 0;
             foreach (char c in name)
             {
-                bool mark = c == '-' || c == '=' || c == '#' || c == '*' || c == '~' || (c == '_' && run > 0);
+                bool mark = IsDividerMark(c) || (c == '_' && run > 0);
                 run = mark ? run + 1 : 0;
                 if (run >= 3) return true;
             }
-            return false;
+            string t = name.Trim();
+            return t.Length >= 4 && IsDividerMark(t[0]) && IsDividerMark(t[1]) && IsDividerMark(t[t.Length - 1]) && IsDividerMark(t[t.Length - 2]);
         }
+
+        private static bool IsDividerMark(char c) => c == '-' || c == '=' || c == '#' || c == '*' || c == '~';
 
         public bool TryViseme(string viseme, out string shape)
         {
@@ -101,10 +151,36 @@ namespace VixenTools.MMD.Editor
             {
                 if (_lower.TryGetValue(cand, out shape)) return true;
             }
+            foreach (var cand in new[] { "vrc.v_" + v, "v_" + v, "viseme_" + v, "vrc.v_" + v + v })
+            {
+                if (FindFramed(cand, out shape)) return true;
+            }
+            if (JapaneseVowels.TryGetValue(viseme, out string vowel) && FindFramed("mouth_" + vowel, out shape)) return true;
+            shape = null;
             return false;
         }
 
         public bool TryKey(string key, out string shape, out float multiplier, out bool combined)
+        {
+            if (TryKeyExact(key, out shape, out multiplier, out combined)) return true;
+            if (string.IsNullOrEmpty(key)) return false;
+            var framed = Candidates(key, true).ToList();
+            foreach (bool sidedOnly in new[] { true, false })
+            {
+                foreach (var (cand, isCombined) in framed)
+                {
+                    if (!FindFramed(cand, out shape)) continue;
+                    bool both = isCombined || IsCombinedFor(key, shape);
+                    if (sidedOnly && both) continue;
+                    combined = both;
+                    return true;
+                }
+            }
+            shape = null;
+            return false;
+        }
+
+        private bool TryKeyExact(string key, out string shape, out float multiplier, out bool combined)
         {
             multiplier = 1f;
             combined = false;
@@ -134,7 +210,7 @@ namespace VixenTools.MMD.Editor
                 {
                 }
             }
-            foreach (var (cand, isCombined) in Candidates(key))
+            foreach (var (cand, isCombined) in Candidates(key, false))
             {
                 if (_lower.TryGetValue(cand.ToLowerInvariant(), out shape))
                 {
@@ -162,6 +238,7 @@ namespace VixenTools.MMD.Editor
             var names = new List<string>();
             if (bases.Count == 1) names.Add(bases.First());
             if (stripped.Count == 1) names.Add(stripped.First());
+            int ownNames = names.Count;
             var syn = stripped.Select(b => Synonyms.TryGetValue(b, out var s) ? s[0] : null).Distinct().ToList();
             if (syn.Count == 1 && syn[0] != null) names.Add(syn[0]);
             var ark = stripped.Select(b => ArkitBase.TryGetValue(b, out var a) ? a : null).Distinct().ToList();
@@ -172,14 +249,55 @@ namespace VixenTools.MMD.Editor
                 if (_lower.TryGetValue(n.ToLowerInvariant(), out shape)) return true;
             }
             shape = null;
+            if (keys.Any(k => TryKeyExact(k, out _, out _, out _))) return false;
+            var style = stripped.Select(b => JapaneseStyle.TryGetValue(b, out var j) ? j : null).Distinct().ToList();
+            if (style.Count == 1 && style[0] != null) names.InsertRange(ownNames, style[0]);
+            foreach (var n in names)
+            {
+                if (n != "Mouth" && FindFramed(n, out shape)) return true;
+            }
+            shape = null;
             return false;
+        }
+
+        internal bool FindFramed(string name, out string shape) => _squashed.TryGetValue(Squash(name, false), out shape) || _unnumbered.TryGetValue(Squash(name, true), out shape);
+
+        internal static string Squash(string name, bool dropNumbers)
+        {
+            string text = name;
+            try
+            {
+                text = name.Normalize(NormalizationForm.FormKC);
+            }
+            catch (ArgumentException)
+            {
+            }
+            var whole = new StringBuilder(text.Length);
+            var word = new StringBuilder();
+            foreach (char c in text)
+            {
+                if (IsNameSeparator(c)) AppendWord(whole, word, dropNumbers);
+                else word.Append(char.ToLowerInvariant(c));
+            }
+            AppendWord(whole, word, dropNumbers);
+            return whole.ToString();
+        }
+
+        private static bool IsNameSeparator(char c) => c == ' ' || c == '_' || c == '-' || c == '.' || c == (char)0x30FB;
+
+        private static void AppendWord(StringBuilder whole, StringBuilder word, bool dropNumbers)
+        {
+            bool number = word.Length > 0;
+            for (int i = 0; number && i < word.Length; i++) number = char.IsDigit(word[i]);
+            if (!dropNumbers || !number) whole.Append(word);
+            word.Clear();
         }
 
         private static bool IsCombinedFor(string key, string shape)
         {
             if (!HasSide(key, out _, out _)) return false;
             string s = shape.ToLowerInvariant();
-            if (s.Contains("left") || s.Contains("right")) return false;
+            if (s.Contains("left") || s.Contains("right") || s.Contains("_l_") || s.Contains("_r_")) return false;
             foreach (var suffix in new[] { "_l", "_r", ".l", ".r", "-l", "-r" })
             {
                 if (s.EndsWith(suffix)) return false;
@@ -196,13 +314,14 @@ namespace VixenTools.MMD.Editor
             return false;
         }
 
-        private static IEnumerable<(string, bool)> Candidates(string key)
+        private static IEnumerable<(string, bool)> Candidates(string key, bool framed)
         {
             yield return (key, false);
             bool sided = HasSide(key, out string b, out string side);
             string s1 = side == "Left" ? "L" : side == "Right" ? "R" : "";
             var bases = new List<string> { b };
             if (b.EndsWith("Upper") || b.EndsWith("Lower")) bases.Add(b.Substring(0, b.Length - 5));
+            if (framed) bases.AddRange(bases.ToArray().SelectMany(own => JapaneseStyle.TryGetValue(own, out var style) ? style : Array.Empty<string>()));
             if (Synonyms.TryGetValue(b, out var syn)) bases.AddRange(syn);
             foreach (var bb in bases)
             {
@@ -331,6 +450,13 @@ namespace VixenTools.MMD.Editor
 
     internal static class VixenMMDAutoFill
     {
+        private static readonly Dictionary<string, string> RigShapes = new Dictionary<string, string>
+        {
+            { "上歯上げ", "tooth_top_position_up" }, { "下歯下げ", "tooth_under_position_down" }, { "上歯を隠す", "tooth_top_x" },
+            { "犬歯右", "mouth_yaeba(tooth)_top_R" }, { "犬歯左", "mouth_yaeba(tooth)_top_L" },
+            { "歯右２", "mouth_yaeba(tooth)_under_R" }, { "歯左２", "mouth_yaeba(tooth)_under_L" },
+        };
+
         internal static PlannedMorph PlanOne(Recipe recipe, string morphName, FaceShapeResolver resolver, AutoFillInputs inputs)
         {
             var plan = new PlannedMorph { Name = morphName, Kind = recipe.Kind };
@@ -364,6 +490,11 @@ namespace VixenTools.MMD.Editor
             {
                 float s = Mathf.Round(acc[shape] * 1000f) / 1000f;
                 if (Mathf.Abs(s) > 0.0005f) plan.Sources.Add(new VixenMMDSource(shape, s));
+            }
+            if (plan.Sources.Count == 0 && RigShapes.TryGetValue(source.Name, out string rigName) && resolver.FindFramed(rigName, out string rigShape))
+            {
+                plan.Notes.Clear();
+                plan.Sources.Add(new VixenMMDSource(rigShape, 1f));
             }
             if (plan.Sources.Count == 0) plan.Skipped = VixenMMDText.L("No matching shapes on this face.");
             return plan;
@@ -445,6 +576,10 @@ namespace VixenTools.MMD.Editor
                 {
                     plan.Skipped = VixenMMDText.L("The face already has this shape.");
                 }
+                else if (options.SkipMeshShapes && resolver.NearShape(recipe.Name) is string near)
+                {
+                    plan = CopyOf(recipe.Name, recipe.Kind, near);
+                }
                 var existing = target != null ? target.FindMorph(recipe.Name) : null;
                 if (plan.Skipped == null && existing != null && existing.sources != null && existing.sources.Count > 0 && !options.ReplaceSetUp)
                 {
@@ -453,6 +588,45 @@ namespace VixenTools.MMD.Editor
                 result.Add(plan);
             }
             return result;
+        }
+
+        internal static PlannedMorph PlanBest(string name, FaceShapeResolver resolver, AutoFillInputs inputs)
+        {
+            var recipe = VixenMMDRecipes.Find(name);
+            var kind = recipe != null ? recipe.Kind : RecipeKind.Tuned;
+            string near = resolver.NearShape(name);
+            if (near != null) return CopyOf(name, kind, near);
+            if (recipe == null) return new PlannedMorph { Name = name, Kind = kind, Skipped = VixenMMDText.L("VixenMMD has no recipe for this morph. Add its shapes below.") };
+            var guessed = GuessMissingSlots(VixenMMDRecipes.Resolve(recipe), resolver, inputs);
+            var plan = PlanOne(recipe, name, resolver, inputs);
+            foreach (var slot in guessed) plan.Notes.Add(VixenMMDText.L("Guessed the shapes for \"{0}\". Check it with Preview.", VixenMMDRecipes.SlotLabel(slot)));
+            return plan;
+        }
+
+        private static PlannedMorph CopyOf(string name, RecipeKind kind, string shape)
+        {
+            var plan = new PlannedMorph { Name = name, Kind = kind == RecipeKind.Proposal ? RecipeKind.Tuned : kind };
+            plan.Sources.Add(new VixenMMDSource(shape, 1f));
+            plan.Notes.Add(VixenMMDText.L("Copies \"{0}\", your face's own version of this shape.", shape));
+            return plan;
+        }
+
+        private static List<string> GuessMissingSlots(Recipe recipe, FaceShapeResolver resolver, AutoFillInputs inputs)
+        {
+            var guessed = new List<string>();
+            if (recipe == null || inputs == null) return guessed;
+            HashSet<string> mmdNames = null;
+            foreach (var term in recipe.Terms)
+            {
+                if (term.Kind != RecipeTermKind.Slot) continue;
+                if (inputs.Expressions.TryGetValue(term.Name, out var set) && set.Any(s => resolver.Has(s.shape))) continue;
+                if (mmdNames == null) mmdNames = new HashSet<string>(VixenMMDNames.All.Select(n => n.Name));
+                var guess = GuessExpression(term.Name, resolver, mmdNames);
+                if (guess.Count == 0) continue;
+                inputs.Expressions[term.Name] = guess;
+                guessed.Add(term.Name);
+            }
+            return guessed;
         }
 
         internal static int Apply(VixenMMD target, IEnumerable<PlannedMorph> plan)
@@ -484,11 +658,12 @@ namespace VixenTools.MMD.Editor
             foreach (var n in resolver.UsableShapeNames)
             {
                 string l = n.ToLowerInvariant();
+                string squashed = FaceShapeResolver.Squash(n, false);
                 int score = 0;
                 foreach (var h in hints)
                 {
-                    if (l == h) score = Math.Max(score, 100);
-                    else if (l.Contains(h)) score = Math.Max(score, 10);
+                    if (l == h || squashed == h) score = Math.Max(score, 100);
+                    else if (l.Contains(h) || (h.Length >= 6 && squashed.Contains(h))) score = Math.Max(score, 10);
                 }
                 if (score == 0) continue;
                 if (score < 100 && ((mmdNames != null && mmdNames.Contains(n)) || l.StartsWith("vrc."))) continue;

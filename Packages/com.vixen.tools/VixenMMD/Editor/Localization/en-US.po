@@ -407,8 +407,20 @@ msgstr "Not set up yet."
 msgid "Replace It With My Own"
 msgstr "Replace It With My Own"
 
-msgid "Set Up This Morph"
-msgstr "Set Up This Morph"
+msgid "Set Up By Hand"
+msgstr "Set Up By Hand"
+
+msgid "Auto-fill This Morph"
+msgstr "Auto-fill This Morph"
+
+msgid "VixenMMD has no recipe for this morph. Add its shapes below."
+msgstr "VixenMMD has no recipe for this morph. Add its shapes below."
+
+msgid "Guessed the shapes for \"{0}\". Check it with Preview."
+msgstr "Guessed the shapes for \"{0}\". Check it with Preview."
+
+msgid "Copies \"{0}\", your face's own version of this shape."
+msgstr "Copies \"{0}\", your face's own version of this shape."
 
 msgid "Your face already has this shape. On upload, VixenMMD's version takes its place."
 msgstr "Your face already has this shape. On upload, VixenMMD's version takes its place."
@@ -547,6 +559,9 @@ msgstr "\"{0}\" looks like the MMD shape \"{1}\", but a digit or mark is off, so
 
 msgid "Add \"{0}\" As A Copy"
 msgstr "Add \"{0}\" As A Copy"
+
+msgid "Make \"{0}\" A Copy Of \"{1}\""
+msgstr "Make \"{0}\" A Copy Of \"{1}\""
 
 msgid "Find Which Ones Copy Another Shape"
 msgstr "Find Which Ones Copy Another Shape"
