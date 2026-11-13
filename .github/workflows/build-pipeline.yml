@@ -1,0 +1,109 @@
+name: Build Full Pipeline
+
+# Runs the Toolbox, shader and VixenMMD releases, then the VPM listing, then the download badges, one after another.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A run is never cancelled partway through a release.
+concurrency:
+  group: build-pipeline
+  cancel-in-progress: false
+
+jobs:
+
+  # A package whose current version already has its release files is skipped, so a re-run never replaces a published zip or resets its download count.
+  plan:
+    name: Check Versions
+    runs-on: ubuntu-latest
+    outputs:
+      toolbox: ${{ steps.check.outputs.toolbox }}
+      shaders: ${{ steps.check.outputs.shaders }}
+      mmd: ${{ steps.check.outputs.mmd }}
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac
+
+      - name: Check Releases
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TOOLBOX: ${{ vars.PACKAGE_NAME }}
+        run: |
+          set -euo pipefail
+          echo "| Package | Version | This run |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
+          check() {
+            local key="$1" label="$2" dir="$3" tag_prefix="$4" base="$5"
+            shift 5
+            if [ ! -f "$dir/package.json" ]; then
+              echo "::warning::$label is skipped because $dir/package.json is missing."
+              echo "$key=false" >> "$GITHUB_OUTPUT"
+              echo "| $label | none | skipped, no package.json |" >> "$GITHUB_STEP_SUMMARY"
+              return
+            fi
+            local version assets ext missing=""
+            version="$(jq -r .version "$dir/package.json")"
+            assets="$(gh release view "$tag_prefix$version" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name' 2>/dev/null || true)"
+            grep -qxF "package.json" <<< "$assets" || missing="package.json"
+            for ext in "$@"; do
+              grep -qxF "$base-$version.$ext" <<< "$assets" || missing="$missing $base-$version.$ext"
+            done
+            if [ -z "$missing" ]; then
+              echo "::notice::$label $version is already released, so it is skipped. Bump its version to release it."
+              echo "$key=false" >> "$GITHUB_OUTPUT"
+              echo "| $label | $version | already released, skipped |" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "$key=true" >> "$GITHUB_OUTPUT"
+              echo "| $label | $version | to release |" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          }
+          check toolbox "Vixens Toolbox" "Packages/$TOOLBOX" "" "$TOOLBOX" zip unitypackage
+          check shaders "VixForge Shaders" VPM/com.vixencreations.vixforge-shaders vixforge-shaders- com.vixencreations.vixforge-shaders zip
+          check mmd "VixenMMD" Packages/com.vixencreations.vixen-mmd vixen-mmd- com.vixencreations.vixen-mmd zip
+
+  toolbox:
+    name: Vixens Toolbox Release
+    needs: plan
+    if: needs.plan.outputs.toolbox == 'true'
+    uses: ./.github/workflows/release.yml
+    permissions:
+      contents: write
+
+  # !failure() lets a step run after a skipped one, but never after one that failed.
+  shaders:
+    name: VixForge Shaders Release
+    needs: [plan, toolbox]
+    if: ${{ !cancelled() && !failure() && needs.plan.outputs.shaders == 'true' }}
+    uses: ./.github/workflows/release-shaders.yml
+    permissions:
+      contents: write
+
+  mmd:
+    name: VixenMMD Release
+    needs: [plan, toolbox, shaders]
+    if: ${{ !cancelled() && !failure() && needs.plan.outputs.mmd == 'true' }}
+    uses: ./.github/workflows/release-mmd.yml
+    permissions:
+      contents: write
+
+  listing:
+    name: Repo Listing
+    needs: [toolbox, shaders, mmd]
+    if: ${{ !cancelled() && !failure() }}
+    uses: ./.github/workflows/build-listing.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+  badge:
+    name: Downloads Badge
+    needs: [toolbox, shaders, mmd, listing]
+    if: ${{ !cancelled() && !failure() }}
+    uses: ./.github/workflows/badge-downloads.yml
+    permissions:
+      contents: write

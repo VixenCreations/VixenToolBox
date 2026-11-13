@@ -7,7 +7,7 @@ namespace VixenTools.MMD.Editor
 {
     internal static class VixenMMDText
     {
-        private const string Folder = "Packages/com.vixencreations.vixens-toolbox/VixenMMD/Editor/Localization/";
+        private const string Folder = "Packages/com.vixencreations.vixen-mmd/Editor/Localization/";
         private static readonly string[] Guids = { "dc741e5b284c459c929984ebda741c55", "e42c2b23d3854b1789fdb37058eb4d61", "78d2e97eef724ce7a26274f16ca2dfcd", "f53f105886dc4256b4b91e2fc1cd658c" };
         private static readonly string[] Files = { "en-US.po", "ja-JP.po", "zh-Hans.po", "ko-KR.po" };
         private static Localizer _localizer;

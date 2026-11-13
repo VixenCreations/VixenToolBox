@@ -6,8 +6,9 @@ env:
   
 on: 
   workflow_dispatch:
+  workflow_call:
   workflow_run:
-    workflows: [Build Release, Build Shader Release]
+    workflows: [Build Release, Build Shader Release, Build VixenMMD Release]
     types:
       - completed
   release:

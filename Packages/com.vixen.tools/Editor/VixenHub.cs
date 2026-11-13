@@ -538,7 +538,7 @@ namespace VixenTools.Editor
                 Group = GroupAvatar,
                 Title = "VixenMMD",
                 Where = VixenMmdMenuPath,
-                Description = "Gives your avatar MMD blend shapes, built from its face tracking shapes, so it dances in MMD worlds.",
+                Description = "Gives your avatar MMD blend shapes, built from its face tracking shapes, so it dances in MMD worlds. It's its own package in the Creator Companion.",
                 Run = OpenVixenMmd
             });
 #else
@@ -600,8 +600,14 @@ namespace VixenTools.Editor
 
         private static void OpenVixenMmd()
         {
+            if (System.Type.GetType("VixenTools.MMD.VixenMMD, com.vixen.tools.VixenMMD") == null)
+            {
+                if (EditorUtility.DisplayDialog("VixenMMD", "VixenMMD has its own package now. Add VixenMMD to this project from the Vixens Toolbox listing in the VRChat Creator Companion, then open it again.", "Open The Listing", "Close"))
+                    Application.OpenURL(SiteRoot);
+                return;
+            }
             if (EditorApplication.ExecuteMenuItem(VixenMmdMenuPath)) return;
-            EditorUtility.DisplayDialog("VixenMMD", "VixenMMD needs NDMF 1.7 or newer. Add Modular Avatar or NDMF to this project in the VRChat Creator Companion, then open VixenMMD again.", "OK");
+            EditorUtility.DisplayDialog("VixenMMD", "VixenMMD needs NDMF 1.14.7 or newer. Add or update Modular Avatar or NDMF in the VRChat Creator Companion, then open VixenMMD again.", "OK");
         }
 
         private static HubAction MenuToggle(string group, string title, string menuPath, string description)

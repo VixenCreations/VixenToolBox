@@ -197,7 +197,8 @@ namespace VixenTools.Editor
                 if (comp != null) protectedTransforms.Add(comp.transform);
             }
 
-            HashSet<Transform> referencedTransforms = CollectReferencedTransforms(avatarRoot, descriptor);
+            var animatedEnabled = new Dictionary<Transform, List<System.Type>>();
+            HashSet<Transform> referencedTransforms = CollectReferencedTransforms(avatarRoot, descriptor, animatedEnabled);
             protectedTransforms.UnionWith(referencedTransforms);
 
             List<Transform> orphanedTransforms = new List<Transform>();
@@ -213,7 +214,7 @@ namespace VixenTools.Editor
                 {
                     ID = "FLATTEN_HIERARCHY",
                     Label = $"Delete {orphanedTransforms.Count} Unused Empty Objects",
-                    Description = "Destroys GameObjects that hold nothing: no components beyond their Transform, no children, no vertex weights. Before anything is listed here it is checked against every animation clip on the avatar (both your playable layers and any clip VRCFury brings with it), every object reference held by a VRCFury component, PhysBone and collider roots, contact senders and receivers, and anything a Unity or VRChat constraint moves or follows. If a path is animated or referenced anywhere, it stays.",
+                    Description = "Destroys GameObjects that hold nothing: no components beyond their Transform, no children, no vertex weights. Before anything is listed here it is checked against every animation clip on the avatar (your playable layers, any other Animator, and any clip VRCFury or Modular Avatar brings with it), every object a VRCFury or Modular Avatar component points at, mesh probe anchors and root bones, PhysBone and collider roots, contact senders and receivers, and anything a Unity or VRChat constraint moves or follows. If a path is animated or referenced anywhere, it stays.",
                     ComputeSignature = () => "orphans:" + orphanedTransforms.Count(t => t != null),
                     Execute = () => {
                         int culled = 0;
@@ -226,7 +227,10 @@ namespace VixenTools.Editor
             List<Behaviour> disabledComponents = new List<Behaviour>();
             foreach (var b in avatarRoot.GetComponentsInChildren<Behaviour>(true))
             {
-                if (!b.enabled && !(b is Animator)) disabledComponents.Add(b);
+                if (b == null || b.enabled || b is Animator) continue;
+                if (b is VRC.SDKBase.IEditorOnly || IsBuildTimeTool(b.GetType())) continue;
+                if (IsTurnedOnByAnimation(b, animatedEnabled)) continue;
+                disabledComponents.Add(b);
             }
 
             if (disabledComponents.Count > 0)
@@ -235,7 +239,7 @@ namespace VixenTools.Editor
                 {
                     ID = "STRIP_DISABLED_COMPS",
                     Label = $"Remove {disabledComponents.Count} Disabled Components",
-                    Description = "Deletes components you have left disabled. Makes the avatar a little lighter to load.",
+                    Description = "Deletes components you have left disabled. Makes the avatar a little lighter to load. Components an animation turns on stay, and so do VRCFury, Modular Avatar and other components that never reach the upload.",
                     ComputeSignature = () => "disabled:" + disabledComponents.Count(b => b != null),
                     Execute = () => {
                         int culled = 0;
@@ -343,7 +347,7 @@ namespace VixenTools.Editor
                 {
                     ID = "COLLAPSE_LEAF_BONES",
                     Label = $"<color=#ff0033>Collapse {deepLeafBones.Count} Unused End Bones</color>",
-                    Description = "<color=#ff0033>Destructive.</color> Clones each affected mesh, then folds the vertex weights of dead-end bones into their parents. Humanoid bones, anything a PhysBone touches, and any bone that is animated or referenced by a VRCFury component, a constraint or a contact are all left alone. Your meshes are replaced with patched copies, so keep an eye on the result before you save.",
+                    Description = "<color=#ff0033>Destructive.</color> Clones each affected mesh, then folds the vertex weights of dead-end bones into their parents. Humanoid bones, anything a PhysBone touches, and any bone that is animated or referenced by a VRCFury or Modular Avatar component, a mesh's root bone or probe anchor, a constraint or a contact are all left alone. Your meshes are replaced with patched copies, so keep an eye on the result before you save.",
                     ComputeSignature = () => "collapse:" + string.Join("|", deepLeafBones
                         .Where(b => b != null)
                         .Select(b => AnimationUtility.CalculateTransformPath(b, avatarRoot.transform))
@@ -385,9 +389,10 @@ namespace VixenTools.Editor
                             originalTotal += smr.sharedMesh.vertexCount;
 
                             HashSet<int> protectedSlots = new HashSet<int>();
-                            for (int m = 0; m < smr.sharedMaterials.Length; m++)
+                            var slotMaterials = smr.sharedMaterials;
+                            for (int m = 0; m < slotMaterials.Length; m++)
                             {
-                                var mat = smr.sharedMaterials[m];
+                                var mat = slotMaterials[m];
                                 if (mat != null && shieldKeywords.Any(k => mat.name.ToLower().Contains(k))) protectedSlots.Add(m);
                             }
 
@@ -756,63 +761,153 @@ namespace VixenTools.Editor
             return report;
         }
 
-        private static HashSet<Transform> CollectReferencedTransforms(GameObject avatarRoot, VRCAvatarDescriptor descriptor)
+        private const string ModularAvatarAvatarRoot = "$$$AVATAR_ROOT$$$";
+
+        private static bool IsBuildTimeTool(System.Type type)
+        {
+            if (type == null) return false;
+            if (type.Name.Contains("VRCFury")) return true;
+            return type.Namespace != null && type.Namespace.StartsWith("nadena.dev.modular_avatar");
+        }
+
+        private static bool IsTurnedOnByAnimation(Behaviour behaviour, Dictionary<Transform, List<System.Type>> animatedEnabled)
+        {
+            if (animatedEnabled == null || !animatedEnabled.TryGetValue(behaviour.transform, out var types)) return false;
+            var type = behaviour.GetType();
+            foreach (var animatedType in types)
+                if (animatedType != null && animatedType.IsAssignableFrom(type)) return true;
+            return false;
+        }
+
+        private static HashSet<Transform> CollectReferencedTransforms(GameObject avatarRoot, VRCAvatarDescriptor descriptor, Dictionary<Transform, List<System.Type>> animatedEnabled)
         {
             var referenced = new HashSet<Transform>();
-            var clips = new HashSet<AnimationClip>();
+            var clipRoots = new Dictionary<AnimationClip, HashSet<Transform>>();
+            Transform avatar = avatarRoot.transform;
+            var avatarOnly = new[] { avatar };
 
-            void CollectFrom(RuntimeAnimatorController controller)
+            void AddClip(AnimationClip clip, IEnumerable<Transform> roots)
+            {
+                if (clip == null) return;
+                if (!clipRoots.TryGetValue(clip, out var set)) clipRoots[clip] = set = new HashSet<Transform>();
+                foreach (var r in roots) if (r != null) set.Add(r);
+            }
+
+            void AddMotion(Motion motion, IEnumerable<Transform> roots)
+            {
+                if (motion is AnimationClip clip) AddClip(clip, roots);
+                else if (motion is UnityEditor.Animations.BlendTree tree)
+                    foreach (var child in tree.children) AddMotion(child.motion, roots);
+            }
+
+            void CollectFrom(RuntimeAnimatorController controller, IEnumerable<Transform> roots)
             {
                 if (controller == null) return;
-                foreach (var clip in controller.animationClips) if (clip != null) clips.Add(clip);
+                foreach (var clip in controller.animationClips) AddClip(clip, roots);
+            }
+
+            Transform Resolve(string path)
+            {
+                if (string.IsNullOrEmpty(path)) return null;
+                return path == ModularAvatarAvatarRoot ? avatar : avatar.Find(path);
             }
 
             foreach (var anim in avatarRoot.GetComponentsInChildren<Animator>(true))
-                CollectFrom(anim.runtimeAnimatorController);
+                CollectFrom(anim.runtimeAnimatorController, new[] { anim.transform, avatar });
 
             if (descriptor != null)
             {
                 if (descriptor.baseAnimationLayers != null)
-                    foreach (var layer in descriptor.baseAnimationLayers) CollectFrom(layer.animatorController);
+                    foreach (var layer in descriptor.baseAnimationLayers) CollectFrom(layer.animatorController, avatarOnly);
                 if (descriptor.specialAnimationLayers != null)
-                    foreach (var layer in descriptor.specialAnimationLayers) CollectFrom(layer.animatorController);
+                    foreach (var layer in descriptor.specialAnimationLayers) CollectFrom(layer.animatorController, avatarOnly);
             }
 
             foreach (var mono in avatarRoot.GetComponentsInChildren<MonoBehaviour>(true))
             {
-                if (mono == null || !mono.GetType().Name.Contains("VRCFury")) continue;
+                if (mono == null || !IsBuildTimeTool(mono.GetType())) continue;
 
-                foreach (var dep in EditorUtility.CollectDependencies(new UnityEngine.Object[] { mono }))
+                if (mono.GetType().Name.Contains("VRCFury"))
                 {
-                    if (dep is AnimationClip depClip) clips.Add(depClip);
-                    else if (dep is RuntimeAnimatorController depController) CollectFrom(depController);
+                    foreach (var dep in EditorUtility.CollectDependencies(new UnityEngine.Object[] { mono }))
+                    {
+                        if (dep is AnimationClip depClip) AddClip(depClip, avatarOnly);
+                        else if (dep is RuntimeAnimatorController depController) CollectFrom(depController, avatarOnly);
+                    }
                 }
 
+                var roots = new HashSet<Transform> { avatar, mono.transform };
+                var motions = new List<UnityEngine.Object>();
                 var serialized = new SerializedObject(mono);
                 var iterator = serialized.GetIterator();
-                while (iterator.NextVisible(true))
+                while (iterator.Next(true))
                 {
+                    if (iterator.propertyType == SerializedPropertyType.String)
+                    {
+                        if (iterator.name != "referencePath") continue;
+                        var target = Resolve(iterator.stringValue);
+                        if (target == null) continue;
+                        referenced.Add(target);
+                        if (iterator.propertyPath.IndexOf("relativePathRoot", System.StringComparison.OrdinalIgnoreCase) >= 0) roots.Add(target);
+                        continue;
+                    }
                     if (iterator.propertyType != SerializedPropertyType.ObjectReference) continue;
                     var obj = iterator.objectReferenceValue;
-                    if (obj is GameObject go) referenced.Add(go.transform);
-                    else if (obj is Component comp) referenced.Add(comp.transform);
+                    if (obj == null) continue;
+                    if (obj is GameObject go)
+                    {
+                        if (!go.transform.IsChildOf(avatar)) continue;
+                        referenced.Add(go.transform);
+                        if (iterator.name == "rootObjOverride") roots.Add(go.transform);
+                    }
+                    else if (obj is Component comp)
+                    {
+                        if (comp.transform.IsChildOf(avatar)) referenced.Add(comp.transform);
+                    }
+                    else if (obj is Motion || obj is RuntimeAnimatorController)
+                    {
+                        motions.Add(obj);
+                    }
+                }
+
+                foreach (var motion in motions)
+                {
+                    if (motion is RuntimeAnimatorController controller) CollectFrom(controller, roots);
+                    else AddMotion((Motion)motion, roots);
                 }
             }
 
-            foreach (var clip in clips)
+            foreach (var pair in clipRoots)
             {
-                foreach (var binding in AnimationUtility.GetCurveBindings(clip))
+                foreach (var binding in AnimationUtility.GetCurveBindings(pair.Key))
+                {
+                    bool isEnabled = animatedEnabled != null && binding.propertyName == "m_Enabled";
+                    foreach (var root in pair.Value)
+                    {
+                        Transform bound = string.IsNullOrEmpty(binding.path) ? root : root.Find(binding.path);
+                        if (bound == null) continue;
+                        if (!string.IsNullOrEmpty(binding.path)) referenced.Add(bound);
+                        if (!isEnabled) continue;
+                        if (!animatedEnabled.TryGetValue(bound, out var types)) animatedEnabled[bound] = types = new List<System.Type>();
+                        if (!types.Contains(binding.type)) types.Add(binding.type);
+                    }
+                }
+                foreach (var binding in AnimationUtility.GetObjectReferenceCurveBindings(pair.Key))
                 {
                     if (string.IsNullOrEmpty(binding.path)) continue;
-                    Transform bound = avatarRoot.transform.Find(binding.path);
-                    if (bound != null) referenced.Add(bound);
+                    foreach (var root in pair.Value)
+                    {
+                        Transform bound = root.Find(binding.path);
+                        if (bound != null) referenced.Add(bound);
+                    }
                 }
-                foreach (var binding in AnimationUtility.GetObjectReferenceCurveBindings(clip))
-                {
-                    if (string.IsNullOrEmpty(binding.path)) continue;
-                    Transform bound = avatarRoot.transform.Find(binding.path);
-                    if (bound != null) referenced.Add(bound);
-                }
+            }
+
+            foreach (var renderer in avatarRoot.GetComponentsInChildren<Renderer>(true))
+            {
+                if (renderer == null) continue;
+                if (renderer.probeAnchor != null && renderer.probeAnchor.IsChildOf(avatar)) referenced.Add(renderer.probeAnchor);
+                if (renderer is SkinnedMeshRenderer skinned && skinned.rootBone != null && skinned.rootBone.IsChildOf(avatar)) referenced.Add(skinned.rootBone);
             }
 
             foreach (var sender in avatarRoot.GetComponentsInChildren<VRCContactSender>(true))

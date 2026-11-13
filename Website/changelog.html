@@ -245,8 +245,31 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
+                <div class="changelog-entry" data-version="v2.22.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.22.0 - 2026-11-13</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>VixenMMD has its own package now, and the Optimization Suite stops deleting what Modular Avatar still needs.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Heads up</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Using VixenMMD? Add it in the Creator Companion when you update.</strong> This update takes VixenMMD out of the toolbox. Add <strong>VixenMMD</strong> from the Vixens Toolbox listing at the same time, and your avatars keep their VixenMMD settings.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>VixenMMD is its own package</strong>, next to the toolbox in the Vixens Toolbox listing. Projects that don't use it no longer load it, and an avatar project can add it without the rest of the toolbox.</li>
+                        <li class="mb-2">The Hub's <strong>VixenMMD</strong> card tells you how to add VixenMMD when your project doesn't have it.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The Optimization Suite leaves Modular Avatar setups alone.</strong> <strong>Delete Unused Empty Objects</strong> and <strong>Collapse Unused End Bones</strong> keep every object and bone a Modular Avatar component points at or animates, like a Bone Proxy target or an object a Merge Animator toggles.</li>
+                        <li class="mb-2"><strong>They also keep what a VRCFury Full Controller animates on a prop</strong>, what another Animator on the avatar animates, and a mesh's probe anchor or root bone. Empty Anchor Override objects used to be deleted.</li>
+                        <li class="mb-2"><strong>Remove Disabled Components keeps components an animation turns on</strong>, like a PhysBone or contact that a toggle switches on. It also leaves VRCFury and Modular Avatar components alone, since they never reach the upload anyway.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="v2.21.1">
-                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v 2.21.1 - 2026-11-08</h5>
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.21.1 - 2026-11-08</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Auto-fill works one morph at a time too, and it keeps the MMD shapes your face already has.</em></p>
 
                     <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>

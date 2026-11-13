@@ -5,6 +5,25 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.22.0] - 2026-11-13
+*VixenMMD has its own package now, and the Optimization Suite stops deleting what Modular Avatar still needs.*
+
+### Heads up
+
+* **Using VixenMMD? Add it in the Creator Companion when you update.** This update takes VixenMMD out of the toolbox. Add **VixenMMD** from the Vixens Toolbox listing at the same time, and your avatars keep their VixenMMD settings.
+
+### Changed
+
+* **VixenMMD is its own package**, next to the toolbox in the Vixens Toolbox listing. Projects that don't use it no longer load it, and an avatar project can add it without the rest of the toolbox.
+* The Hub's **VixenMMD** card tells you how to add VixenMMD when your project doesn't have it.
+
+### Fixed
+
+* **The Optimization Suite leaves Modular Avatar setups alone.** **Delete Unused Empty Objects** and **Collapse Unused End Bones** keep every object and bone a Modular Avatar component points at or animates, like a Bone Proxy target or an object a Merge Animator toggles.
+* **They also keep what a VRCFury Full Controller animates on a prop**, what another Animator on the avatar animates, and a mesh's probe anchor or root bone. Empty Anchor Override objects used to be deleted.
+* **Remove Disabled Components keeps components an animation turns on**, like a PhysBone or contact that a toggle switches on. It also leaves VRCFury and Modular Avatar components alone, since they never reach the upload anyway.
+
+***
 ## [2.21.1] - 2026-11-08
 *Auto-fill works one morph at a time too, and it keeps the MMD shapes your face already has.*
 

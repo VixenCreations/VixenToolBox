@@ -1,0 +1,33 @@
+{
+  "name": "com.vixencreations.vixen-mmd",
+  "version": "1.0.0",
+  "displayName": "VixenMMD",
+  "description": "Gets your avatar dancing in MMD worlds. Builds the MMD face shapes those worlds animate from your avatar's face tracking shapes and visemes when you upload, so your avatar files never change. Needs NDMF, which comes with Modular Avatar.",
+  "unity": "2022.3",
+  "unityRelease": "22f1",
+  "vpmDependencies": {
+    "com.vrchat.avatars": ">=3.10.6 <4.0.0-a",
+    "nadena.dev.ndmf": ">=1.14.7 <2.0.0-a"
+  },
+  "author": {
+    "name": "VixenCreations",
+    "email": "Vixenlicious@outlook.com",
+    "url": "https://github.com/VixenCreations"
+  },
+  "keywords": [
+    "mmd",
+    "dance",
+    "blendshapes",
+    "face tracking",
+    "ndmf"
+  ],
+  "url": "https://github.com/VixenCreations/VixenToolBox",
+  "changelogUrl": "https://github.com/VixenCreations/VixenToolBox/blob/main/Packages/com.vixencreations.vixen-mmd/CHANGELOG.md",
+  "documentationUrl": "https://vixencreations.github.io/VixenToolBox/tools.html#vixenmmd",
+  "license": "MIT",
+  "licensesUrl": "https://github.com/VixenCreations/VixenToolBox/blob/main/LICENSE",
+  "legacyFolders": {
+    "Packages\\com.vixencreations.vixens-toolbox\\VixenMMD": "9fa4867bf0454624badba854eedeef22"
+  },
+  "legacyFiles": {}
+}

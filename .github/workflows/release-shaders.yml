@@ -2,6 +2,7 @@ name: Build Shader Release
 
 on:
   workflow_dispatch:
+  workflow_call:
 
 env:
   shaderPackage: com.vixencreations.vixforge-shaders
@@ -59,3 +60,4 @@ jobs:
             ${{ env.zipFile }}
             ${{ env.packagePath }}/package.json
           tag_name: "vixforge-shaders-${{ env.version }}"
+          make_latest: false
