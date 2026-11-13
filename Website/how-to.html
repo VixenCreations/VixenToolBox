@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary SEO -->
+    <title>How To</title>
+    <meta name="description" content="Quick how-to guides for the Vixens Toolbox: install it, find each tool, set up VixenMMD, and get help when you're stuck.">
+    <meta name="keywords" content="VixForge Interactive, Vixens Toolbox, VRChat Creator Companion, VPM tools, Unity 2022.3 scripting, UdonSharp development, C# development, Rust spatial engines, Vixenlicous, VRChat networking">
+    <meta name="author" content="VixForge Interactive">
+    <meta name="theme-color" content="#ff00aa">
+
+    <!-- Canonical URL -->
+    <!-- GitHub Organization links -->
+    <link rel="canonical" href="https://vixencreations.github.io/VixenToolBox/how-to.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/how-to.html">
+    <meta property="og:title" content="Vixens Toolbox | How To">
+    <meta property="og:description" content="Quick how-to guides for the Vixens Toolbox: install it, find each tool, set up VixenMMD, and get help when you're stuck.">
+    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <meta property="og:site_name" content="VixForge Interactive | Vixens Toolbox">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://vixencreations.github.io/VixenToolBox/how-to.html">
+    <meta name="twitter:title" content="Vixens Toolbox | How To">
+    <meta name="twitter:description" content="Quick how-to guides for the Vixens Toolbox: install it, find each tool, set up VixenMMD, and get help when you're stuck.">
+    <meta name="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <meta name="twitter:site" content="@VixForge">
+
+    <!-- Structured Data for Google Rich Results -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://vixencreations.github.io/VixenToolBox/how-to.html"
+          },
+          "name": "How To",
+          "description": "Quick how-to guides for the Vixens Toolbox: install it, find each tool, set up VixenMMD, and get help when you're stuck.",
+          "url": "https://vixencreations.github.io/VixenToolBox/how-to.html",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "@id": "https://vixencreations.github.io/VixenToolBox/#organization"
+          },
+          "mainEntity": {
+            "@type": "Organization",
+            "@id": "https://vixencreations.github.io/VixenToolBox/#organization"
+          },
+          "about": {
+            "@type": "SoftwareApplication",
+            "@id": "https://vixencreations.github.io/VixenToolBox/#software"
+          },
+          "keywords": "VixForge Interactive, Vixenlicious, VRChat creator, Unity 2022.3 developer, Vixens Toolbox"
+        }
+    </script>
+
+    <!-- Brand entity: ties every storefront and channel to one identity -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://vixencreations.github.io/VixenToolBox/#organization",
+          "name": "VixForge Interactive",
+          "alternateName": ["VixenCreations"],
+          "url": "https://vixencreations.github.io/VixenToolBox/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "description": "VixForge Interactive builds avatar and world shaders with Unity editor tooling for VRChat, for Unity 2022.3 on the Built-in Render Pipeline.",
+          "founder": {
+            "@type": "Person",
+            "@id": "https://vixencreations.github.io/VixenToolBox/#founder",
+            "name": "Vixenlicious",
+            "alternateName": ["Vixenlicous"],
+            "jobTitle": "Lead Developer & Creative Director",
+            "url": "https://github.com/VixenCreations"
+          },
+          "knowsAbout": [
+            "VRChat avatar shaders",
+            "Unity 2022.3",
+            "Built-in Render Pipeline",
+            "AudioLink",
+            "VRC Light Volumes",
+            "LTCGI",
+            "VRSL",
+            "VRCFury",
+            "Modular Avatar",
+            "UdonSharp",
+            "HLSL"
+          ],
+          "sameAs": [
+            "https://x.com/VixForge",
+            "https://www.youtube.com/@vixenlicous",
+            "https://vixenlicous.gumroad.com",
+            "https://jinxxy.com/Vixenlicious",
+            "https://github.com/VixenCreations",
+            "https://www.patreon.com/cw/Vixenlicious",
+            "https://ko-fi.com/vixenlicous"
+          ]
+        }
+    </script>
+
+    <!-- Icons -->
+    <link rel="icon" href="./favicon.ico">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+
+    <!-- UI Framework -->
+    <script type="module" src="web-components.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="background-art"></div>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <a href="index.html" class="brand-logo-link"><img src="banner.png" class="sidebar-brand-logo" width="1536" height="665" alt="VixForge Interactive - Shaders, Worlds, Haptics" /></a>
+            <h2 class="text-glow-cyan">VIXENS TOOLBOX</h2>
+            <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">by VixForge Interactive</div>
+        </div>
+
+        <div class="nav-links">
+            <div class="nav-group-label">Toolbox</div>
+            <fluent-anchor href="index.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2.5L2 8.5H4V16.5H8V11.5H12V16.5H16V8.5H18L10 2.5Z" /></svg>
+                VPM Registry
+            </fluent-anchor>
+            <fluent-anchor href="tools.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2ZM11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14V10C9 9.44772 9.44772 9 10 9C10.5523 9 11 9.44772 11 10V14ZM10 8C9.44772 8 9 7.55228 9 7C9 6.44772 9.44772 6 10 6C10.5523 6 11 6.44772 11 7C11 7.55228 10.5523 8 10 8Z" /></svg>
+                List of Tools
+            </fluent-anchor>
+            <fluent-anchor href="why-choose-us.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                Why Choose Us?
+            </fluent-anchor>
+            <fluent-anchor href="changelog.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Toolbox Changes
+            </fluent-anchor>
+            <div class="nav-group-label">Help</div>
+            <fluent-anchor href="how-to.html" class="nav-item active">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                How To
+            </fluent-anchor>
+            <fluent-anchor href="support.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                Support the Projects
+            </fluent-anchor>
+            <div class="nav-group-label">Shaders</div>
+            <fluent-anchor href="shaderdocs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M7 9.5a5.5 5.5 0 0 1 5-3"></path><circle cx="9.5" cy="9.5" r="1.2" fill="currentColor" stroke="none"></circle></svg>
+                Shader Docs
+            </fluent-anchor>
+            <fluent-anchor href="shader-changelogs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                Shader Changelogs
+            </fluent-anchor>
+            <div class="nav-group-label">Coming up</div>
+            <fluent-anchor href="upcoming-changes.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Upcoming Changes
+            </fluent-anchor>
+            <fluent-anchor href="planned-features.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                Planned Features
+            </fluent-anchor>
+            <div class="nav-group-label">Studio</div>
+            <fluent-anchor href="about.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                About Us
+            </fluent-anchor>
+            <fluent-anchor href="products.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                Our Products
+            </fluent-anchor>
+            <fluent-anchor href="news.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v13H4a2 2 0 0 0-2 2 2 2 0 0 0 2 2z"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8z"></path></svg>
+                News
+            </fluent-anchor>
+            <fluent-anchor href="behind-the-forge.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+                Behind The Forge
+            </fluent-anchor>
+            <fluent-anchor href="research.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"></path><path d="M8.5 2h7"></path><path d="M7 16h10"></path></svg>
+                Research
+            </fluent-anchor>
+            <div class="nav-group-label">Policies</div>
+            <fluent-anchor href="ai-transparency.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                AI Transparency
+            </fluent-anchor>
+            <fluent-anchor href="privacy.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><rect x="9" y="11" width="6" height="5" rx="1"></rect><path d="M10 11V9a2 2 0 0 1 4 0v2"></path></svg>
+                Privacy Policy
+            </fluent-anchor>
+            <fluent-anchor href="terms.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><polyline points="9 15 11 17 15 13"></polyline></svg>
+                Terms of Service
+            </fluent-anchor>
+        </div>
+    </nav>
+
+    <main class="main-wrapper">
+        <div class="col align-items-center content" style="max-width: 1000px;">
+
+            <div class="col w-100 text-center mb-4">
+                <h1 class="text-glow-pink">How To</h1>
+                <p class="caption1 mt-2" style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">Quick guides for installing the toolbox, using the tools, and getting help when you're stuck.</p>
+            </div>
+
+            <div class="glass-panel w-100" style="padding: 2.5rem;">
+
+                <h3 id="get-started" class="text-glow-cyan mb-3">How to Get Started</h3>
+                <p class="caption1 mb-4" style="font-size: 1rem; color: #bfa8d2;">
+                    New here? This walkthrough shows what the toolbox does and how the tools fit together.
+                </p>
+
+                <div class="video-container mb-4">
+                    <iframe src="https://www.youtube.com/embed/rocsw2FazGg?si=LrW_FVgcVXUGyNdC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+
+                <hr style="border-color: rgba(255,0,170,0.2); margin: 2.5rem 0 2rem 0;">
+
+                <h3 id="install" class="text-glow-cyan mb-3">How to Install the Toolbox</h3>
+                <ol class="custom-list mb-3" style="font-size: 1rem;">
+                    <li>Open the <a href="index.html" class="neon-link">VPM Registry</a> page and click <strong>Add to VCC</strong>.</li>
+                    <li>In the VRChat Creator Companion, open your project and add the <strong>Vixens Toolbox</strong> package.</li>
+                    <li>In Unity, open <strong>VixenTools &gt; Hub Dashboard</strong>.</li>
+                </ol>
+                <p class="caption1 mb-4" style="font-size: 1rem; color: #bfa8d2;">
+                    You'll only see the tools your project can use: avatar projects get the avatar tools, world projects get the world tools, and both get the Unity tools.
+                </p>
+
+                <hr style="border-color: rgba(255,0,170,0.2); margin: 2.5rem 0 2rem 0;">
+
+                <h3 id="find-a-tool" class="text-glow-cyan mb-3">How to Find a Tool</h3>
+                <p class="caption1 mb-4" style="font-size: 1rem; color: #bfa8d2;">
+                    Every tool sits under the <strong>VixenTools</strong> menu in Unity, split into <strong>Avatars</strong>, <strong>Scene</strong> and <strong>Unity Engine</strong>. Each one has its own guide here on the site.
+                </p>
+
+                <div class="support-grid mb-4">
+                    <a href="tools.html" class="support-card">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                        <div class="col">
+                            <span class="title">Tool Reference</span>
+                            <span class="desc">What every tool does and how to use it.</span>
+                        </div>
+                    </a>
+
+                    <a href="shaderdocs.html" class="support-card">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M7 9.5a5.5 5.5 0 0 1 5-3"></path><circle cx="9.5" cy="9.5" r="1.2" fill="currentColor" stroke="none"></circle></svg>
+                        <div class="col">
+                            <span class="title">Shader Docs</span>
+                            <span class="desc">A control-by-control reference for the Latex Ultra shader.</span>
+                        </div>
+                    </a>
+                </div>
+
+                <hr style="border-color: rgba(255,0,170,0.2); margin: 2.5rem 0 2rem 0;">
+
+                <h3 id="vixenmmd" class="text-glow-cyan mb-3">How to Set Up VixenMMD</h3>
+                <p class="caption1 mb-4" style="font-size: 1rem; color: #bfa8d2;">
+                    VixenMMD gets your avatar's face moving in MMD dance worlds. It builds the MMD face shapes from your face tracking shapes and visemes when you upload or enter Play Mode, so your avatar files never change.
+                </p>
+
+                <div class="video-container mb-4">
+                    <iframe src="https://www.youtube.com/embed/u1jzsvWVFXw?si=5ATE8c95wtX_QuUj" title="Vixen MMD Tool Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+
+                <ol class="custom-list mb-4" style="font-size: 1rem;">
+                    <li>In the Creator Companion, add <strong>VixenMMD</strong> to your avatar project. It's its own package and doesn't need the rest of the toolbox. It installs NDMF, so add the Modular Avatar listing (<code>https://vpm.nadena.dev/vpm.json</code>) first if you don't have it.</li>
+                    <li>Select your avatar and open <strong>VixenTools &gt; Avatars &gt; VixenMMD</strong>, or use <strong>Add Component &gt; VixenTools &gt; VixenMMD</strong>.</li>
+                    <li>Coming from Make It MMD? Press <strong>Convert Make It MMD Setup</strong> and you're done.</li>
+                    <li>Otherwise, open <strong>Auto-fill</strong>, press <strong>Guess Empty Ones</strong>, then <strong>Preview Changes</strong> and apply.</li>
+                    <li>Before a dance night, add the dances' <code>.vmd</code> files to <strong>Dance Check</strong> and fill in whatever's missing.</li>
+                </ol>
+
+                <div class="support-grid mb-4">
+                    <a href="tools.html#vixenmmd" class="support-card">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                        <div class="col">
+                            <span class="title">VixenMMD Guide</span>
+                            <span class="desc">The full VixenMMD guide in the Tool Reference.</span>
+                        </div>
+                    </a>
+                </div>
+
+                <hr style="border-color: rgba(255,0,170,0.2); margin: 2.5rem 0 2rem 0;">
+
+                <h3 id="get-help" class="text-glow-cyan mb-3">How to Get Help</h3>
+                <p class="caption1 mb-4" style="font-size: 1rem; color: #bfa8d2;">
+                    The fastest answers come from the community. Hop into Discord, say what you're trying to do, and someone (often me) will help you sort it out.
+                </p>
+
+                <div class="support-grid mb-4">
+                    <a href="https://discord.com/invite/3vbJCKcPtJ" target="_blank" class="support-card">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        <div class="col">
+                            <span class="title">Ask on Discord</span>
+                            <span class="desc">The fastest place to get help and ask questions.</span>
+                        </div>
+                    </a>
+
+                    <a href="https://vrchat.com/home/group/grp_10099934-42e2-4ab4-bd7e-007f0709be5d" target="_blank" class="support-card">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        <div class="col">
+                            <span class="title">VRChat Group</span>
+                            <span class="desc">Join the in-game group for updates and community events.</span>
+                        </div>
+                    </a>
+                </div>
+
+                <hr style="border-color: rgba(255,0,170,0.2); margin: 2.5rem 0 2rem 0;">
+
+                <h3 id="report-a-bug" class="text-glow-cyan mb-3">How to Report a Bug or Ask for a Feature</h3>
+                <p class="caption1 mb-4" style="font-size: 1rem; color: #bfa8d2;">
+                    Open a GitHub issue. Tell me what you expected, what happened instead, and your Unity and VRChat SDK versions. That's all I need to start fixing it.
+                </p>
+
+                <div class="support-grid mb-4">
+                    <a href="https://github.com/VixenCreations/VixenToolBox/issues" target="_blank" class="support-card">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        <div class="col">
+                            <span class="title">Report an Issue</span>
+                            <span class="desc">Report a bug or request a new feature.</span>
+                        </div>
+                    </a>
+
+                    <a href="https://github.com/VixenCreations/VixenToolBox" target="_blank" class="support-card">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                        <div class="col">
+                            <span class="title">Browse the Source</span>
+                            <span class="desc">Read the code and track releases on GitHub.</span>
+                        </div>
+                    </a>
+                </div>
+
+                <hr style="border-color: rgba(255,0,170,0.2); margin: 2.5rem 0 2rem 0;">
+
+                <h3 id="keep-up" class="text-glow-cyan mb-3">How to Keep Up With Updates</h3>
+                <p class="caption1 mb-4" style="font-size: 1rem; color: #bfa8d2;">
+                    Want to know when new tools and fixes come out? Follow along here.
+                </p>
+
+                <div class="support-grid">
+                    <a href="https://www.youtube.com/@vixenlicous" target="_blank" class="support-card">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                        <div class="col">
+                            <span class="title">YouTube</span>
+                            <span class="desc">Tutorials, technical breakdowns, and development logs.</span>
+                        </div>
+                    </a>
+
+                    <a href="https://x.com/VixForge" target="_blank" class="support-card">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+                        <div class="col">
+                            <span class="title">Twitter / X</span>
+                            <span class="desc">Day-to-day updates and community chatter.</span>
+                        </div>
+                    </a>
+
+                    <a href="changelog.html" class="support-card">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        <div class="col">
+                            <span class="title">Changelog</span>
+                            <span class="desc">Every version, documented in detail.</span>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <button id="jumpToTopBtn" class="jump-to-top" title="Back to top">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+            </svg>
+        </button>
+
+    </main>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

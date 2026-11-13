@@ -29,7 +29,7 @@
 - [About](https://vixencreations.github.io/VixenToolBox/about.html): who makes this.
 - [AI transparency](https://vixencreations.github.io/VixenToolBox/ai-transparency.html): where AI was and was not used in building these tools.
 - [Support](https://vixencreations.github.io/VixenToolBox/support.html): help, and how to support the work.
-- [Community and links](https://vixencreations.github.io/VixenToolBox/social.html): Discord, X, YouTube and the store fronts.
+- [How To](https://vixencreations.github.io/VixenToolBox/how-to.html): install the toolbox, find a tool, set up VixenMMD, and get help on Discord or GitHub.
 - [Privacy Policy](https://vixencreations.github.io/VixenToolBox/privacy.html): what the website, tools, shaders, Discord server and bot do with your information.
 - [Terms of Service](https://vixencreations.github.io/VixenToolBox/terms.html): the rules for using the website, products, Discord server, bot and memberships.
 

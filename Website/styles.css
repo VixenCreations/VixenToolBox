@@ -751,18 +751,18 @@ fluent-dialog::part(control) {
         color: #fff !important;
     }
 
-ul.custom-list {
+ul.custom-list, ol.custom-list {
     padding-left: 1.2rem;
 }
 
-    ul.custom-list li {
+    ul.custom-list li, ol.custom-list li {
         color: var(--text-muted);
         position: relative;
         margin-bottom: 8px;
         line-height: 1.6;
     }
 
-        ul.custom-list li::marker {
+        ul.custom-list li::marker, ol.custom-list li::marker {
             color: rgba(var(--pink-rgb), 0.7);
         }
 
