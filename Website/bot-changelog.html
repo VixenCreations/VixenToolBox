@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary SEO -->
+    <title>VixForge Bot Changelog</title>
+    <meta name="description" content="Every update to VixForge Bot, the bot in the VixForge Discord server: chat, games, voice, moderation and fixes.">
+    <meta name="keywords" content="VixForge Bot changelog, VixForge Discord bot, Discord bot release notes, VixForge Interactive, Vixenlicious">
+    <meta name="author" content="VixForge Interactive">
+    <meta name="theme-color" content="#ff00aa">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://vixencreations.github.io/VixenToolBox/bot-changelog.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://vixencreations.github.io/VixenToolBox/bot-changelog.html">
+    <meta property="og:title" content="VixForge Bot | Changelog and Version History">
+    <meta property="og:description" content="Every update to VixForge Bot, the bot in the VixForge Discord server: chat, games, voice, moderation and fixes.">
+    <meta property="og:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <meta property="og:site_name" content="VixForge Interactive | Vixens Toolbox">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://vixencreations.github.io/VixenToolBox/bot-changelog.html">
+    <meta name="twitter:title" content="VixForge Bot | Changelog and Version History">
+    <meta name="twitter:description" content="Every update to VixForge Bot, the bot in the VixForge Discord server: chat, games, voice, moderation and fixes.">
+    <meta name="twitter:image" content="https://vixencreations.github.io/VixenToolBox/banner.png">
+    <meta name="twitter:site" content="@VixForge">
+
+    <!-- Structured Data for Google Rich Results -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "TechArticle",
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://vixencreations.github.io/VixenToolBox/bot-changelog.html"
+          },
+          "headline": "VixForge Bot Changelog",
+          "description": "Every update to VixForge Bot, the bot in the VixForge Discord server: chat, games, voice, moderation and fixes.",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "datePublished": "2026-11-17T00:00:00+00:00",
+          "dateModified": "2026-11-17T00:00:00+00:00",
+          "author": {
+            "@type": "Organization",
+            "name": "VixForge Interactive",
+            "url": "https://vixencreations.github.io/VixenToolBox/"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "VixForge Interactive",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://vixencreations.github.io/VixenToolBox/banner.png"
+            }
+          },
+          "about": {
+            "@type": "SoftwareApplication",
+            "name": "VixForge Bot",
+            "applicationCategory": "CommunicationApplication",
+            "operatingSystem": "Discord",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          },
+          "keywords": "VixForge Bot changelog, VixForge Discord bot, Discord bot release notes"
+        }
+    </script>
+
+    <!-- Brand entity: ties every storefront and channel to one identity -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://vixencreations.github.io/VixenToolBox/#organization",
+          "name": "VixForge Interactive",
+          "alternateName": ["VixenCreations"],
+          "url": "https://vixencreations.github.io/VixenToolBox/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://vixencreations.github.io/VixenToolBox/banner.png",
+            "width": "1200",
+            "height": "630"
+          },
+          "description": "VixForge Interactive builds avatar and world shaders with Unity editor tooling for VRChat, for Unity 2022.3 on the Built-in Render Pipeline.",
+          "founder": {
+            "@type": "Person",
+            "@id": "https://vixencreations.github.io/VixenToolBox/#founder",
+            "name": "Vixenlicious",
+            "alternateName": ["Vixenlicous"],
+            "jobTitle": "Lead Developer & Creative Director",
+            "url": "https://github.com/VixenCreations"
+          },
+          "knowsAbout": [
+            "VRChat avatar shaders",
+            "Unity 2022.3",
+            "Built-in Render Pipeline",
+            "AudioLink",
+            "VRC Light Volumes",
+            "LTCGI",
+            "VRSL",
+            "VRCFury",
+            "Modular Avatar",
+            "UdonSharp",
+            "HLSL"
+          ],
+          "sameAs": [
+            "https://x.com/VixForge",
+            "https://www.youtube.com/@vixenlicous",
+            "https://vixenlicous.gumroad.com",
+            "https://jinxxy.com/Vixenlicious",
+            "https://github.com/VixenCreations",
+            "https://www.patreon.com/cw/Vixenlicious",
+            "https://ko-fi.com/vixenlicous"
+          ]
+        }
+    </script>
+
+    <!-- Icons -->
+    <link rel="icon" href="./favicon.ico">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+
+    <!-- UI Framework -->
+    <script type="module" src="web-components.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="docs-shell.css">
+</head>
+
+<body class="docs-shell">
+    <div class="background-art"></div>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <a href="index.html" class="brand-logo-link"><img src="banner.png" class="sidebar-brand-logo" width="1536" height="665" alt="VixForge Interactive - Shaders, Worlds, Haptics" /></a>
+            <h2 class="text-glow-cyan">VIXENS TOOLBOX</h2>
+            <div class="caption1 text-glow-pink" style="letter-spacing: 1px;">by VixForge Interactive</div>
+        </div>
+
+        <div class="nav-links">
+            <div class="nav-group-label">Toolbox</div>
+            <fluent-anchor href="index.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2.5L2 8.5H4V16.5H8V11.5H12V16.5H16V8.5H18L10 2.5Z" /></svg>
+                VPM Registry
+            </fluent-anchor>
+            <fluent-anchor href="tools.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2ZM11 14C11 14.5523 10.5523 15 10 15C9.44772 15 9 14.5523 9 14V10C9 9.44772 9.44772 9 10 9C10.5523 9 11 9.44772 11 10V14ZM10 8C9.44772 8 9 7.55228 9 7C9 6.44772 9.44772 6 10 6C10.5523 6 11 6.44772 11 7C11 7.55228 10.5523 8 10 8Z" /></svg>
+                List of Tools
+            </fluent-anchor>
+            <fluent-anchor href="why-choose-us.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                Why Choose Us?
+            </fluent-anchor>
+            <fluent-anchor href="changelog.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Toolbox Changes
+            </fluent-anchor>
+            <div class="nav-group-label">Help</div>
+            <fluent-anchor href="how-to.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                How To
+            </fluent-anchor>
+            <fluent-anchor href="support.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                Support the Projects
+            </fluent-anchor>
+            <div class="nav-group-label">Shaders</div>
+            <fluent-anchor href="shaderdocs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M7 9.5a5.5 5.5 0 0 1 5-3"></path><circle cx="9.5" cy="9.5" r="1.2" fill="currentColor" stroke="none"></circle></svg>
+                Shader Docs
+            </fluent-anchor>
+            <fluent-anchor href="shader-changelogs.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                Shader Changelogs
+            </fluent-anchor>
+            <div class="nav-group-label">VixForge Bot</div>
+            <fluent-anchor href="bot-features.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                What It Can Do
+            </fluent-anchor>
+            <fluent-anchor href="bot-changelog.html" class="nav-item active">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                Bot Changelog
+            </fluent-anchor>
+            <div class="nav-group-label">Coming up</div>
+            <fluent-anchor href="upcoming-changes.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Upcoming Changes
+            </fluent-anchor>
+            <fluent-anchor href="planned-features.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                Planned Features
+            </fluent-anchor>
+            <div class="nav-group-label">Studio</div>
+            <fluent-anchor href="about.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                About Us
+            </fluent-anchor>
+            <fluent-anchor href="products.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                Our Products
+            </fluent-anchor>
+            <fluent-anchor href="news.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v13H4a2 2 0 0 0-2 2 2 2 0 0 0 2 2z"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8z"></path></svg>
+                News
+            </fluent-anchor>
+            <fluent-anchor href="behind-the-forge.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+                Behind The Forge
+            </fluent-anchor>
+            <fluent-anchor href="research.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"></path><path d="M8.5 2h7"></path><path d="M7 16h10"></path></svg>
+                Research
+            </fluent-anchor>
+            <div class="nav-group-label">Policies</div>
+            <fluent-anchor href="ai-transparency.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                AI Transparency
+            </fluent-anchor>
+            <fluent-anchor href="privacy.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><rect x="9" y="11" width="6" height="5" rx="1"></rect><path d="M10 11V9a2 2 0 0 1 4 0v2"></path></svg>
+                Privacy Policy
+            </fluent-anchor>
+            <fluent-anchor href="terms.html" class="nav-item">
+                <svg slot="start" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><polyline points="9 15 11 17 15 13"></polyline></svg>
+                Terms of Service
+            </fluent-anchor>
+        </div>
+    </nav>
+
+    <main class="main-wrapper">
+        <div class="docs-layout">
+        <div class="docs-main" data-chip-label="Version" data-shell-sections=".changelog-entry" data-shell-heading="h5" data-shell-mode="picker" data-chip-attr="data-version" data-chip-mode="major" data-search-label="Filter releases&hellip;">
+        <div class="col align-items-center content">
+
+            <div class="row align-items-center w-100 justify-content-between mb-4">
+                <h1 class="m-0 text-glow-pink">VixForge Bot Changelog</h1>
+                <fluent-anchor href="https://discord.gg/3vbJCKcPtJ" target="_blank" rel="noopener noreferrer" appearance="accent" class="custom-accent-btn">Join the Discord</fluent-anchor>
+            </div>
+
+            <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
+
+<div class="changelog-entry" data-version="v1.9.0">
+    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Bot 1.9.0 - 2026-11-17</h5>
+    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Staff get real tools: moderation commands, a server log, events, giveaways, announcements and polls.</em></p>
+
+    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+        <li class="mb-2"><strong>/mod.</strong> Warn, time out, kick, ban and unban with a reason the member gets by DM. <strong>/mod history</strong> shows a member's warnings and actions from the last 90 days.</li>
+        <li class="mb-2"><strong>Channel controls.</strong> <strong>/mod purge</strong> clears recent messages, <strong>/mod slowmode</strong> slows a channel down, and <strong>/mod lock</strong> closes it until <strong>/mod unlock</strong>.</li>
+        <li class="mb-2"><strong>A mod log.</strong> Every staff action is posted to a staff channel.</li>
+        <li class="mb-2"><strong>/serverlog.</strong> A staff-only log of deleted and edited messages, joins, leaves, bans and role changes. Posts are removed after 90 days.</li>
+        <li class="mb-2"><strong>Server events.</strong> <strong>/event create</strong> plans an event, the bot announces it, pings interested members before it starts, and can start and end it on time.</li>
+        <li class="mb-2"><strong>Giveaways.</strong> <strong>/giveaway start</strong> posts a giveaway with an Enter button and draws the winners when time runs out. End early, reroll or cancel any time.</li>
+        <li class="mb-2"><strong>/announce</strong> posts a formatted announcement as the bot, and <strong>/poll</strong> starts a Discord poll.</li>
+    </ul>
+</div>
+
+<div class="changelog-entry" data-version="v1.8.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Bot 1.8.0 - 2026-11-17</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>You can DM the bot now, and it keeps a conversation going instead of going quiet.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>DM the bot.</strong> Members of the server can chat with the bot in DMs, the same way as pinging it in a channel.</li>
+                        <li class="mb-2"><strong>"Again", "another one" and "one more"</strong> get you another line of whatever the bot just said, like another story or another trick.</li>
+                        <li class="mb-2"><strong>The bot answers its own questions' answers.</strong> Say "good", "meh" or "hbu" after it asks how you are, and it replies properly.</li>
+                        <li class="mb-2"><strong>No more silent replies.</strong> Reply to the bot with a full sentence and it answers, even when it has nothing specific to say.</li>
+                        <li class="mb-2"><strong>More things to talk about</strong>: ask if it can hear you in voice, what its job is, its star sign or the meaning of life. Tell it you're at the gym, going on a date, on vacation or moving. Bring up the seasons, sports, books, tabletop games, cars, plushies or your favourite species.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>"Isn't that right?"</strong> gets the bot backing you up instead of an 8-ball answer.</li>
+                        <li class="mb-2"><strong>"Zoomies?" and "Zoom!"</strong> start the zoomies.</li>
+                        <li class="mb-2"><strong>"Talk dirty to me"</strong> and <strong>"suck it"</strong> get an answer when you reply to the bot.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="v1.7.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Bot 1.7.0 - 2026-11-17</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>The bot chats about your day, gets the zoomies, and has a lot more to say in voice.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Small talk.</strong> Tell the bot what you're up to (playing a game, eating, coding, at work, sick, excited) and it answers, often naming the thing you said. Ask about its life ("wyd", "do you sleep", "tell me a story", "did you miss me") or bring up a topic like Python, Unity, VRChat, avatars, pets or furries, and it has a take.</li>
+                        <li class="mb-2"><strong>Short replies to the bot</strong> like "why", "fr?", "same", "no u" or "rude" get a real answer.</li>
+                        <li class="mb-2"><strong>Ask the bot to stop.</strong> "Stop talking to me" or "go away" makes it leave you alone until you @ it again.</li>
+                        <li class="mb-2"><strong>Zoomies.</strong> Praise the bot enough, or ask it to zoom, and it changes its status, runs through a few busy channels making fox noises, then flops back down. Once an hour at most.</li>
+                        <li class="mb-2"><strong>Sing, tricks and opinions.</strong> Ask the bot to sing, do a trick (sit, roll over, play dead, zoom), or give its opinion on something.</li>
+                        <li class="mb-2"><strong>Voice:</strong> a line when someone goes live, hour marks for long hangouts (with a gentle nudge late at night), a party line when a channel fills up, and a recap when a long hangout ends.</li>
+                        <li class="mb-2"><strong>/voice hangouts</strong> shows which voice channels are busy right now.</li>
+                        <li class="mb-2"><strong>/voice hide</strong> keeps your voice time off <strong>/voice top</strong> and private to others.</li>
+                        <li class="mb-2"><strong>/sound random</strong> plays a random soundboard sound.</li>
+                        <li class="mb-2">Staff can set a <strong>join sound</strong> the bot plays when someone joins its voice channel, and switch each new voice line on or off.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Hundreds of new lines</strong> for praise, comebacks, greetings, "how are you", 8-ball answers, welcomes, pic replies and more. Spamming "good bot" now takes a lot longer to run out of reactions.</li>
+                        <li class="mb-2"><strong>More ways to praise the bot</strong>: "amazing bot", "bestest bot", "goodest bot" and similar now count.</li>
+                        <li class="mb-2"><strong>The 18+ den has a lot more to say</strong>, and its would you rathers are fixed so every one shows up.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="v1.6.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Bot 1.6.0 - 2026-11-07</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>The bot reacts to every pic in the photo channel and knows a lot more about the fandom.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Every pic in the photo channel gets a reaction</strong>, not just some of them.</li>
+                        <li class="mb-2"><strong>Furry fandom facts and a glossary of fandom terms.</strong></li>
+                        <li class="mb-2"><strong>Reactions to custom emoji</strong>: the bot understands what a custom emoji is about from its name, like a hug, a wave or a headpat.</li>
+                        <li class="mb-2"><strong>Staff get a heads up when a brand-new account joins.</strong></li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>"Later" and "I'm out"</strong> said on their own count as goodbyes, without catching "I'll do it later".</li>
+                        <li class="mb-2"><strong>The Privacy Policy and Terms</strong> describe everything the bot does as of this version.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="v1.5.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Bot 1.5.0 - 2026-11-04</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Link your own PiShock, and the bot has fresh lines everywhere.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>PiShock.</strong> Link your own PiShock with <strong>/pishock link</strong> and choose who may send to it. Allowed members can send a shock, vibration or beep with a command or a card button, and you can turn on penalties for a wrong quiz answer or a roast aimed at you.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Every reply bank got new lines</strong>, and repeated or wrong facts were cleaned out.</li>
+                        <li class="mb-2"><strong>Stretched greetings</strong> like "heyyyy" and "hiiii" are recognised.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="v1.4.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Bot 1.4.1 - 2026-11-02</h5>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Headpats.</strong> Pet, pat or scritch the bot and it pretends not to like it. Keep going and it melts.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="v1.4.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Bot 1.4.0 - 2026-11-01</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Welcomes, holidays, a live status, and the bot joins voice.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Welcomes.</strong> New members get a hello by name in the welcome channel, and their first hi gets an answer.</li>
+                        <li class="mb-2"><strong>Room hellos.</strong> Say hi or good morning to the whole room and the bot says it back.</li>
+                        <li class="mb-2"><strong>Holiday greetings</strong> for the big holidays, with matching reactions.</li>
+                        <li class="mb-2"><strong>A live status</strong> that changes through the day and shows things like a new release or how many people are in voice.</li>
+                        <li class="mb-2"><strong>Voice.</strong> <strong>/voice join</strong> brings the bot into your voice channel to play soundboard sounds with <strong>/sound</strong>. <strong>/voice time</strong> and <strong>/voice top</strong> show time spent in voice. The bot can't hear anyone.</li>
+                        <li class="mb-2"><strong>Score your own comebacks.</strong> Write a burn back at one of the bot's roasts and it rates it out of 10, then fires back.</li>
+                        <li class="mb-2"><strong>Follow-up reactions</strong> when you answer the bot with something short.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The bot knows more small talk</strong> and answers more replies to its cards.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="v1.3.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Bot 1.3.0 - 2026-10-29</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A real personality: roasts with heat levels, a praise-hungry fox puppy, pets and an 18+ den.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Roast heat.</strong> Roasts get spicier as a battle goes on. Say "nuclear roast me" for the brutal ones.</li>
+                        <li class="mb-2"><strong>Praise the bot</strong> and it gets happier and happier, all the way to a full puppy meltdown.</li>
+                        <li class="mb-2"><strong>Pets.</strong> Adopt a virtual pet with <strong>/pet</strong> and look after it.</li>
+                        <li class="mb-2"><strong>An 18+ den</strong> for members who opt in with <strong>/spicy</strong>, in the age-restricted channel only.</li>
+                        <li class="mb-2"><strong>Pic replies.</strong> Reply to a pic and ask the bot to rate it, rizz it up or give its opinion.</li>
+                        <li class="mb-2"><strong>The bot answers when you talk about it</strong> without an @, like "thanks bot" or "the bot is cute", and adds emoji reactions to some messages.</li>
+                        <li class="mb-2"><strong>Download updates.</strong> The bot posts the toolbox download count when it changes, and celebrates every 500.</li>
+                        <li class="mb-2"><strong>"Are you an AI?"</strong> gets an honest answer: no, the bot picks from lines we wrote.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="v1.2.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Bot 1.2.0 - 2026-10-28</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Ask the bot things and reply to it without a ping.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Direct answers.</strong> Ask the bot to spell a word, count letters, do quick maths, tell the time or the date, or pick a number.</li>
+                        <li class="mb-2"><strong>"This or that?"</strong> The bot picks one for you.</li>
+                        <li class="mb-2"><strong>Questions about the bot</strong> like who made it, its name and how old it is.</li>
+                        <li class="mb-2"><strong>Reply to the bot</strong> and it answers, no @ needed.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="v1.1.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Bot 1.1.0 - 2026-10-10</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>The bot learned to talk, play games and run tickets.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Fun replies.</strong> @ the bot to say hi, ask how it is, get a joke or a fact, or ask for a roast.</li>
+                        <li class="mb-2"><strong>Games and fun commands</strong>: trivia, riddles, fact or cap, would you rather, truth or dare, ship, rate, coin flip, dice, fortunes, compliments, pickup lines, topics and more, with scores and a leaderboard.</li>
+                        <li class="mb-2"><strong>Adventures.</strong> Play a text adventure with <strong>/adventure play</strong>. Supporters can submit their own for staff review.</li>
+                        <li class="mb-2"><strong>Support tickets.</strong> <strong>/ticket create</strong> opens a private channel with staff.</li>
+                        <li class="mb-2"><strong>/versions</strong> shows the latest version of each of our products.</li>
+                        <li class="mb-2"><strong>Ghost ping notices.</strong> If someone pings you and deletes it, the bot says who it was.</li>
+                        <li class="mb-2"><strong>Staff alerts</strong> when Discord's own AutoMod blocks a message.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>The GitHub feed</strong> shows what people did and new releases, and skips automated noise.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="v1.0.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Bot 1.0.0 - 2026-08-23</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>The first tracked version: GitHub updates in Discord and a guard against scams.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>GitHub updates.</strong> New code, releases, issues and pull requests from our public repositories are posted in a channel.</li>
+                        <li class="mb-2"><strong>Scam protection.</strong> Known scam images, scam links, mass mentions, spam bursts and raids are caught and handled automatically.</li>
+                        <li class="mb-2"><strong>Single-server lock.</strong> The bot only works in our server and leaves any other it gets added to.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>GitHub updates no longer post twice.</strong></li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+
+        </div>
+      </div>
+
+        <button id="jumpToTopBtn" class="jump-to-top" title="Back to top">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+            </svg>
+        </button>
+
+    </main>
+
+    <script type="module" src="app.js"></script>
+    <script src="docs-shell.js" defer></script>
+</body>
+</html>
