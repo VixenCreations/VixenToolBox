@@ -227,7 +227,7 @@
                 <p class="text-glow-cyan" style="font-size: 1.1rem; max-width: 850px; margin: 0 auto; line-height: 1.6;">
                     What our website, the Vixens Toolbox, our shaders, VixForge Camera Pro, our Discord server and its bot, and our supporter platforms do with your information. Most of it collects nothing at all. The Discord bot is the one that keeps records, and this page says exactly what it keeps.
                 </p>
-                <p class="legal-updated">Last updated 17 November 2026. Read it with our <a href="terms.html">Terms of Service</a>.</p>
+                <p class="legal-updated">Last updated 18 November 2026. Read it with our <a href="terms.html">Terms of Service</a>.</p>
             </div>
 
             <div class="competitive-grid" style="margin-top: 2rem;">
@@ -432,6 +432,7 @@
                             <li>When staff turn on the server log, the bot posts to a private staff channel the text of deleted and edited messages (with the author, the channel and attachment file names), joins, leaves, bans, and nickname, role and timeout changes. Text from our age-restricted channels is hidden unless the log channel is age-restricted too. The bot deletes its log posts after 90 days.</li>
                             <li>When you enter a giveaway, the bot saves your user ID with it until 90 days after the giveaway ends. Winners are named in the channel.</li>
                             <li>When you mark yourself interested in a server event, the bot reads that list from Discord to mention you in the event's reminders. It only saves which reminders it has already posted.</li>
+                            <li>The bot keeps a copy of the server's audit log, the record Discord already keeps of staff and server changes (bans, role changes, deleted messages, channel edits and so on), with who made each change, who it affected and the reason. It is stored on a computer we operate, only staff can read it, and entries older than 90 days are deleted automatically.</li>
                         </ul>
 
                         <p class="comp-text mt-2"><strong>Support tickets.</strong> When you run <code>/ticket create</code>, the bot makes a private channel named after your username that only you, the server owner, our listed staff and server administrators can see. The channel's topic holds your user ID so the bot knows whose ticket it is. When the ticket is closed, the bot saves a transcript to a text file on its computer (each message's author, user ID, text, attachment links, embed titles and descriptions, and sticker names) and then deletes the channel. Transcripts are kept until we delete them.</p>
@@ -444,7 +445,11 @@
 
                         <p class="comp-text mt-2"><strong>Welcomes.</strong> When you join, the bot welcomes you by name in the welcome channel, and its status can show your name for 15 minutes.</p>
 
-                        <p class="comp-text mt-2"><strong>Voice.</strong> The bot can join a voice channel and play soundboard sounds, but it can't hear anyone, so nothing said in voice is recorded. It adds up how long you spend in voice: your total time, how many hangouts, your longest one and when you were last there. <code>/voice time</code> and <code>/voice top</code> show those totals to anyone in the server. <code>/voice hide</code> keeps your time off <code>/voice top</code> and private to others; the bot saves that choice with your voice time. In a voice channel's own chat, the bot may name you when you go live or pass an hour in voice.</p>
+                        <p class="comp-text mt-2"><strong>Fox Coins.</strong> The bot keeps your coin balance, the items and titles you own, your claim streaks and cooldowns, and your display name, so <code>/coins top</code> and <code>/profile</code> can show them to anyone in the server. It also keeps a log of each coin change (amount, reason and time, including gifts between members) and deletes entries after 90 days. Coins are play money: they have no cash value and can't be bought or sold.</p>
+
+                        <p class="comp-text mt-2"><strong>Urban Dictionary.</strong> When you use <code>/urban</code>, the word you look up is sent to Urban Dictionary, a separate website with its own privacy policy. Your Discord account is not sent. The bot keeps the results for 8 hours to avoid asking twice, and its log keeps your user ID and the word.</p>
+
+                        <p class="comp-text mt-2"><strong>Voice.</strong> The bot can join a voice channel, play soundboard sounds and talk, but it can't hear anyone, so nothing said in voice is recorded. Its voice is made on our own computer by Windows' built-in speech engine; no text is sent to any other service. When you use <code>/voice say</code>, the bot's log keeps your user ID and the text you asked it to say. It adds up how long you spend in voice: your total time, how many hangouts, your longest one and when you were last there. <code>/voice time</code> and <code>/voice top</code> show those totals to anyone in the server. <code>/voice hide</code> keeps your time off <code>/voice top</code> and private to others; the bot saves that choice with your voice time. In a voice channel's own chat, the bot may name you when you go live or pass an hour in voice.</p>
 
                         <p class="comp-text mt-2"><strong>PiShock.</strong> If you link a PiShock with <code>/pishock link</code>, the bot saves your PiShock username and API key, encrypted so only the bot can read them. It also saves your PiShock user ID, your devices, when you linked, and your settings: which modes are on, your limits and level, who you allow, your penalties and whether you've paused it. It sends your username and key to PiShock to check them, and again each time it sends a command to your device. When someone sends to your device, the bot posts who sent what in the channel. <code>/pishock unlink</code> deletes all of it.</p>
 
@@ -473,7 +478,7 @@
 
                         <p class="comp-text mt-2"><strong>Ghost pings.</strong> If someone mentions a person or the bot and then deletes or edits away the mention within two minutes, the bot posts a notice in that channel saying who pinged whom.</p>
 
-                        <p class="comp-text mt-2"><strong>Discord AutoMod.</strong> When Discord's own AutoMod acts on a message, the bot posts a note to the private staff channel with the account, the channel, the rule, what it matched and part of the message.</p>
+                        <p class="comp-text mt-2"><strong>Discord AutoMod.</strong> When Discord's own AutoMod acts on a message, the bot posts a note to the private staff channel with the account, the channel, the rule, what it matched and part of the message. It also keeps a record of each AutoMod hit (the account, the channel, the rule, what matched and the message text) on a computer we operate, and deletes it after 90 days.</p>
 
                         <p class="comp-text mt-2"><strong>The bot's working logs.</strong> Separate logs record errors, the actions the bot took, and the bot leaving servers it was not meant to be in. They note which commands, buttons and replies each person used (your username, user ID and the channel, not your message), plus up to 300 characters of a deleted ghost ping and of a message Discord AutoMod acted on. When the join check flags a new account, they note the account, its user ID and its age. They also hold notices from the software the bot is built on, such as Discord connection and rate limit messages. Everything goes into one combined log, and each part of the bot also has its own log. When we switch on detailed logging to track a problem, they also record each message's author, channel and size (not its text), each new member's account age, and the member names and newest audit log entries from each start-up snapshot.</p>
 
@@ -533,7 +538,7 @@
                         <ul class="legal-list comp-text">
                             <li><strong>Keeping the Discord server safe</strong>: the message log, automatic moderation, join checks, the server snapshot, staff records, warnings and the server log (our legitimate interest in protecting members from scams, spam and raids, and in running the server well).</li>
                             <li><strong>Helping you</strong>: tickets, transcripts, emails and messages (our legitimate interest in giving support, and performing our agreement with you when you are a supporter).</li>
-                            <li><strong>Running the bot's games, chat and extras</strong>: scores, pets, adventure saves, voice time, your 18+ choice, the stop list, giveaway entries, event reminders and your PiShock link (our legitimate interest in running the features you choose to use).</li>
+                            <li><strong>Running the bot's games, chat and extras</strong>: scores, pets, adventure saves, voice time, Fox Coins and their history, Urban Dictionary lookups, your 18+ choice, the stop list, giveaway entries, event reminders and your PiShock link (our legitimate interest in running the features you choose to use).</li>
                             <li><strong>Delivering what you paid for</strong>: purchase and membership records and Discord roles (performing our agreement with you).</li>
                             <li><strong>Keeping financial records</strong> that tax law requires (legal obligation).</li>
                             <li><strong>Thanking supporters</strong> on the supporter wall (our legitimate interest, and you can opt out at any time).</li>
@@ -596,8 +601,16 @@
                                         <td>Until we delete them.</td>
                                     </tr>
                                     <tr>
-                                        <td>Game scores, pets, adventure saves, voice time and your 18+ choice</td>
+                                        <td>Game scores, pets, adventure saves, voice time, Fox Coins balances and items, and your 18+ choice</td>
                                         <td>Until you ask us to delete them, or we reset the feature.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>The Fox Coins history (each coin change)</td>
+                                        <td>90 days, then deleted automatically.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Urban Dictionary results</td>
+                                        <td>8 hours, then looked up fresh.</td>
                                     </tr>
                                     <tr>
                                         <td>The stop list (when you ask the bot to stop)</td>
@@ -622,6 +635,14 @@
                                     <tr>
                                         <td>Server log posts in the staff channel</td>
                                         <td>90 days, then the bot deletes them.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>The bot's copy of the server audit log</td>
+                                        <td>90 days, then deleted automatically.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Records of Discord AutoMod hits</td>
+                                        <td>90 days, then deleted automatically.</td>
                                     </tr>
                                     <tr>
                                         <td>Giveaway entries</td>
@@ -656,7 +677,7 @@
                         <ul class="legal-list comp-text">
                             <li>tell you what we hold about you and give you a copy;</li>
                             <li>correct anything that is wrong;</li>
-                            <li>delete it, including your entries in the bot's logs and server snapshot, your ticket transcripts, your scores, pets, adventure saves, voice time and giveaway entries, and your PiShock link;</li>
+                            <li>delete it, including your entries in the bot's logs, server snapshot, audit log copy and AutoMod records, your ticket transcripts, your scores, pets, adventure saves, voice time, Fox Coins and their history, and giveaway entries, and your PiShock link;</li>
                             <li>stop using it for a purpose, or take you off the supporter wall.</li>
                         </ul>
                         <p class="comp-text">
