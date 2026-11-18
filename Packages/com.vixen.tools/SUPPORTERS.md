@@ -11,6 +11,7 @@
 * SpaydeWolf
 * NemmieDragon
 * 《MANA》
+* CutestBean
 
 ## //: SCRIPT KITTY
 
@@ -22,7 +23,7 @@
 
 > $15 / month - wiring the backbone together.
 
-* Lykai150
+* Nobody here yet. This could be you.
 
 ## [/// CYBER-NOIR VANGUARD ///]
 
