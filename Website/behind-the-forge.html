@@ -385,6 +385,115 @@
                 </div>
             </div>
             <!-- FORGE:START -->
+            <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-11-19-vixens-toolbox-2-23-0-a-toggle-per-blend">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-tag">Vixens Toolbox</span>
+                        <span class="news-date">November 19, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Vixens Toolbox 2.23.0: a toggle per blend shape, and numbers that match VRChat</h2>
+                    <p class="forge-intro"><em>Got an accessory that hides its parts with blend shapes, like a piercing set? Making a toggle for each one by hand takes ages. And the Optimization Suite's numbers didn't always match what VRChat showed you. This release fixes both, and adds a stack of new fixes, including ones that only touch the copy you upload.</em></p>
+                    <h3 class="text-glow-cyan">Generator</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Avatars &gt; Animator Forge</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Pick the mesh and the section of its blend shapes, and the <strong>Generator</strong> tab makes one toggle per blend shape, with readable names.</li>
+                        <li>Make them <strong>VRCFury</strong> toggles on the accessory, so they travel with it, or pick <strong>Avatar FX Layers</strong> to put them in your avatar's own FX controller and menu.</li>
+                        <li>Every toggle has its own <strong>Default On</strong> tick, and big sets go into submenus, so you never hit the eight-item limit.</li>
+                        <li>Toggles that already exist are kept, and Undo takes back what it adds.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Numbers you can trust</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Avatars &gt; Optimization Suite</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Texture memory, material slots, bones and PhysBones now match VRChat's own performance check. Texture memory used to show about twice the real amount.</li>
+                        <li>A new <strong>Mesh Memory</strong> row shows what your meshes cost. VRChat's rank leaves it out.</li>
+                        <li>The bounding box warning names the object that makes your avatar too big.</li>
+                        <li>Using VRCFury or Modular Avatar? The suite tells you they add parts when you upload, and <strong>BUILD TEST COPY</strong> builds that copy so you can check the final numbers.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">New fixes</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Avatars &gt; Optimization Suite</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Remove unused blend shapes. Shapes set above zero are baked in first, and visemes, eyelids, MMD shapes and anything a tool names are kept.</li>
+                        <li>Merge material slots that use the same material twice on one mesh.</li>
+                        <li>Remove PhysBone colliders that no PhysBone uses.</li>
+                        <li>Upgrade normal maps to BC5: smoother bumps at the same memory, on PC only.</li>
+                        <li>Convert Unity constraints to VRChat constraints with the SDK's own converter.</li>
+                        <li>Turn off motion vectors on skinned meshes. VRChat doesn't use them on avatars.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">New warnings</h3>
+                    <ul class="pledge-list">
+                        <li>A Contact Receiver that writes to a mesh that isn't on this avatar. That happens when you copy an avatar and delete parts, and VRChat's website can fail the avatar's security check for it. <strong>CLEAN UP</strong> or <strong>REMOVE</strong> sorts it out.</li>
+                        <li>Shaders that copy the whole screen with a grab pass, more than 100 Any State transitions, and animations that point at things your avatar doesn't have.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Fixed</h3>
+                    <ul class="pledge-list">
+                        <li>Upgrading transparent textures now only changes PC, so Quest builds no longer double their memory.</li>
+                        <li>Mesh fixes save only the new mesh, not every unsaved change in your project.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">On Upload</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Avatars &gt; Optimization Suite</strong>, at the bottom.</p>
+                    <ul class="pledge-list">
+                        <li>Tick what you want for each avatar. Everything starts off.</li>
+                        <li><strong>Remove Unused Blend Shapes</strong>, <strong>Merge Repeated Material Slots</strong>, <strong>Remove Unused PhysBone Colliders</strong> and <strong>Turn Off Skinned Motion Vectors</strong> run on the built avatar, so they also catch what the build tools leave behind.</li>
+                        <li><strong>Turn Off PhysBones With Their Mesh</strong>: hidden hair, skirts or tails stop costing anything while they're hidden.</li>
+                        <li><strong>Ring Finger Colliders on Feet</strong>: your feet can push other players' PhysBones, and your ring fingers stop touching them.</li>
+                        <li><strong>Merge Same-Ratio Blend Shapes</strong> and <strong>Remove Unused Animator Parameters</strong> tidy up what's left.</li>
+                        <li>Any of your own clips or controllers they change are copied first.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Thanks</h3>
+                    <ul class="pledge-list">
+                        <li>Ideas from d4rkAvatarOptimizer, Thry's Avatar Performance Tools and the KaleidoVR VRChat Model Optimizer. Full credits are in the package's Third Party Notices.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Out in the Creator Companion once the release is published. Update Vixens Toolbox to get it.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-11-12-vixens-toolbox-2-22-0-and-vixenmmd-1-0-0">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-tag">Vixens Toolbox</span>
+                        <span class="news-date">November 12, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Vixens Toolbox 2.22.0 and VixenMMD 1.0.0: VixenMMD gets its own package</h2>
+                    <p class="forge-intro"><em>You told us you'd rather not load VixenMMD alongside the whole toolbox in every project. Fair enough. VixenMMD is its own package now, in the same listing as the toolbox, so you add it only where your avatar dances.</em></p>
+                    <h3 class="text-glow-cyan">VixenMMD 1.0.0</h3>
+                    <p class="forge-where">In the Creator Companion, in the Vixens Toolbox listing.</p>
+                    <ul class="pledge-list">
+                        <li>Add <strong>VixenMMD</strong> only to the avatar projects that need it. Projects without it don't load it at all.</li>
+                        <li>It's the same VixenMMD as toolbox 2.21.1, and your avatars keep their VixenMMD settings.</li>
+                        <li>It doesn't need the rest of the toolbox. It needs VRChat SDK 3.10.6 and NDMF 1.14.7 or newer, and the Creator Companion installs NDMF with it from the Modular Avatar listing.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Vixens Toolbox 2.22.0</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Hub Dashboard</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>VixenMMD isn't part of the toolbox any more.</li>
+                        <li>The Hub's <strong>VixenMMD</strong> card tells you how to add VixenMMD when your project doesn't have it.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Safe with Modular Avatar</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Avatars &gt; Optimization Suite</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Delete Unused Empty Objects</strong> and <strong>Collapse Unused End Bones</strong> keep every object and bone a Modular Avatar component points at or animates, like a Bone Proxy target or an object a Merge Animator toggles.</li>
+                        <li>They also keep what a VRCFury Full Controller animates on a prop, and your Anchor Override objects.</li>
+                        <li><strong>Remove Disabled Components</strong> keeps components an animation turns on, like a PhysBone that a toggle switches on.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Using VixenMMD?</h3>
+                    <ul class="pledge-list">
+                        <li>Add <strong>VixenMMD</strong> in the Creator Companion when you update the toolbox, and your avatars keep their VixenMMD settings.</li>
+                        <li>You'll find it under <code>VixenTools/Avatars/VixenMMD</code>, same as before.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Out now in the Creator Companion. Update Vixens Toolbox, and add VixenMMD wherever you dance.</li>
+                    </ul>
+                </div>
+            </article>
+
             <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-11-07-vixens-toolbox-2-21-0-vixenmmd-gets-your">
                 <div class="news-body">
                     <div class="news-meta">

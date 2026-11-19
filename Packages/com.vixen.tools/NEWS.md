@@ -1,19 +1,25 @@
-# What's New In 2.22
+# What's New In 2.23
 
-**VixenMMD has its own package now, so it only loads in the projects that use it.**
+**The Optimization Suite counts the way VRChat does, and can tidy your avatar on the copy you upload.**
 
-## Using VixenMMD?
+## On Upload
 
-Add **VixenMMD** from the Vixens Toolbox listing in the Creator Companion. This update takes it out of the toolbox, and adding it keeps your avatars' VixenMMD settings. Then open it from `VixenTools/Avatars/VixenMMD` as before. It needs VRChat SDK 3.10.6 and NDMF 1.14.7 or newer, and NDMF comes with Modular Avatar.
+Open `VixenTools/Avatars/Optimization Suite`, pick your avatar, and tick the fixes you want under **On Upload** at the bottom. They run on the copy VRChat uploads, after VRCFury and Modular Avatar have built it, so the avatar in your scene and your files never change. Everything starts off.
 
-## New In 2.21
+* **Turn Off PhysBones With Their Mesh**: hidden hair, skirts and tails cost nothing while they're hidden.
+* **Remove Unused Blend Shapes**, **Merge Repeated Material Slots**, **Remove Unused PhysBone Colliders**, **Remove Unused Animator Parameters** and **Merge Same-Ratio Blend Shapes** tidy up what's left after the build.
+* **Ring Finger Colliders on Feet** lets your feet push other players' PhysBones.
 
-* **VixenMMD** gets your avatar dancing in MMD worlds. It builds the face shapes those worlds animate from your face tracking shapes and visemes, when you upload.
-* **Auto-fill** sets up most MMD morphs in one go, and **Dance Check** shows which shapes a dance's `.vmd` file uses and which ones your avatar is missing.
-* **Convert Make It MMD Setup** moves an avatar's Make It MMD settings into VixenMMD in one click.
-* **PhysBone Blueprints keep colliders, ignore lists and root transforms.** Save your blueprints again to keep them.
-* **Auto-Rig leaves meshes that are skinned to several bones as they were.**
-* **The World Engine no longer leaves Unity's importing paused**, and **Live Surface Snapping** keeps a prefab's new position.
+## Also New In 2.23
+
+* Texture memory, material slots, bones and PhysBones match VRChat's own numbers, and **Mesh Memory** shows what your meshes cost.
+* **Animator Forge** has a **Generator** tab that makes one toggle per blend shape on an accessory, like a piercing set.
+* New warnings catch grab passes, too many Any State transitions, animations aimed at missing parts, and a Contact Receiver aimed at a mesh that isn't on the avatar, which can fail VRChat's security check.
+
+## New In 2.22
+
+* **VixenMMD** has its own package. Add it from the Vixens Toolbox listing in the Creator Companion, and your avatars keep their VixenMMD settings.
+* The **Optimization Suite** keeps everything that Modular Avatar, a VRCFury prop or an animation still needs.
 
 ***
 # Thank You For 3,500 Downloads
