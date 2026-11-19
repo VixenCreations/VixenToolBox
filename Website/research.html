@@ -585,8 +585,8 @@
                 <p class="paper-meta">Eight experiments across 23rd to 26th of September 2026 based on our original Fibonacci lattice script from August 31st 2026.</p>
                 <div class="paper-status">
                     <strong>Status:</strong> Every result below has been verified against the Unity Engine and <a href="https://x.com/VixForge/status/2103512757110976617?s=20" target="_blank" rel="noopener noreferrer">works in game in VRChat.</a> The shader changes that came out of it shipped in
-                    the 25 and 27 September releases. The Light Baker changes are built and checked in the Unity editor, and come out with
-                    Light Baker 1.0; see <a href="planned-features.html">Planned Features</a>.
+                    the 25 and 27 September releases. The Light Baker changes were built and checked in the Unity editor, and retired with the baker
+                    on 19 November 2026, because z3y's Glim covers what it was for.
                 </div>
                 <div class="row mt-3" style="gap: 10px; flex-wrap: wrap; justify-content: center;">
                     <fluent-anchor href="upcoming-changes.html" class="custom-stealth-btn">Upcoming Changes</fluent-anchor>
@@ -1672,11 +1672,11 @@ $$\mathbf E(\mathbf N) = \mathbf E(\mathbf n_0)\,\frac{\max(1 + \mathbf N\cdot\m
                             <tr><td>Band weights, the rebuilt L2 band, per-vertex lights through the per-pixel code</td><td>All six shaders</td><td>Shipped 25 September, behind the Unified Light switch, off by default</td></tr>
                             <tr><td>Box projection without the tier setting, darken-only leak correction, probe reflections for rough surfaces, eight-lookup anisotropic reflections</td><td>All six shaders</td><td>Shipped 25 September, behind the Unified Light switch, off by default</td></tr>
                             <tr><td>Sharper Probes</td><td>All six shaders</td><td>Kept as an artistic option</td></tr>
-                            <tr><td>Lattice sampling, texel jitter, soft baked shadows, direct light in the directional map, emissive units</td><td>Light Baker</td><td>Built and checked in the editor, ships with Light Baker 1.0</td></tr>
-                            <tr><td>Light units, falloff, bounce, spot cone and soft shadows matched to Unity; Rectangle and Disc area lights</td><td>Light Baker</td><td>Built and checked in the editor, ships with Light Baker 1.0</td></tr>
-                            <tr><td>Exposure and bloom fitted to rendered views after each bake</td><td>Light Baker</td><td>Built and checked in the editor, ships with Light Baker 1.0</td></tr>
-                            <tr><td>MonoSH ratio lightmaps (section 10)</td><td>World shaders and Light Baker</td><td>World shaders: shipped 27 September as Unified Light Lightmaps, off by default. Light Baker: the Unified Light directional mode, ships with 1.0</td></tr>
-                            <tr><td>Trace and probe kernels that compile in under 2.5 seconds (section 11)</td><td>Light Baker</td><td>Built, ships with Light Baker 1.0</td></tr>
+                            <tr><td>Lattice sampling, texel jitter, soft baked shadows, direct light in the directional map, emissive units</td><td>Light Baker</td><td>Built and checked in the editor, retired with the Light Baker on 19 November 2026</td></tr>
+                            <tr><td>Light units, falloff, bounce, spot cone and soft shadows matched to Unity; Rectangle and Disc area lights</td><td>Light Baker</td><td>Built and checked in the editor, retired with the Light Baker on 19 November 2026</td></tr>
+                            <tr><td>Exposure and bloom fitted to rendered views after each bake</td><td>Light Baker</td><td>Built and checked in the editor, retired with the Light Baker on 19 November 2026</td></tr>
+                            <tr><td>MonoSH ratio lightmaps (section 10)</td><td>World shaders and Light Baker</td><td>World shaders: shipped 27 September as Unified Light Lightmaps, removed in World Surface and World Fur 1.8.0. Light Baker: retired with the Light Baker on 19 November 2026</td></tr>
+                            <tr><td>Trace and probe kernels that compile in under 2.5 seconds (section 11)</td><td>Light Baker</td><td>Built, retired with the Light Baker on 19 November 2026</td></tr>
                             <tr><td>Light Volume point, spot and area lights shaded one at a time, at their real size, with Light Volumes' energy</td><td>All six shaders</td><td>Shipped 25 September, behind the Unified Light switch, off by default</td></tr>
                             <tr><td>Direct highlights at Unity's brightness</td><td>All six shaders</td><td>A defect fix, shipped 25 September</td></tr>
                             <tr><td>Normal strength above 1 as a taller surface</td><td>All six shaders</td><td>A defect fix, shipped 25 September</td></tr>
