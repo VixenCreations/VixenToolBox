@@ -12,7 +12,18 @@ namespace VixenTools.Editor
     {
         private const string GENERATED_ASSET_PATH = "Assets/VixenTools/Meshes/Patched/";
 
-        public static void PatchSkinnedMesh(SkinnedMeshRenderer smr, string patchLabel, System.Action<Mesh, SkinnedMeshRenderer> patchingLogic)
+        public static string FolderOverride;
+
+        public static void EnsureFolder(string folder)
+        {
+            if (AssetDatabase.IsValidFolder(folder)) return;
+            int slash = folder.LastIndexOf('/');
+            string parent = folder.Substring(0, slash);
+            EnsureFolder(parent);
+            AssetDatabase.CreateFolder(parent, folder.Substring(slash + 1));
+        }
+
+        public static void PatchSkinnedMesh(SkinnedMeshRenderer smr, string patchLabel, System.Action<Mesh, SkinnedMeshRenderer> patchingLogic, bool recalculateNormals = true)
         {
             if (smr == null || smr.sharedMesh == null) return;
 
@@ -22,21 +33,18 @@ namespace VixenTools.Editor
             patchingLogic?.Invoke(clonedMesh, smr);
 
             clonedMesh.RecalculateBounds();
-            clonedMesh.RecalculateNormals();
-            clonedMesh.RecalculateTangents();
+            if (recalculateNormals)
+            {
+                clonedMesh.RecalculateNormals();
+                clonedMesh.RecalculateTangents();
+            }
 
-            if (!AssetDatabase.IsValidFolder("Assets/VixenTools"))
-                AssetDatabase.CreateFolder("Assets", "VixenTools");
+            string folder = (string.IsNullOrEmpty(FolderOverride) ? GENERATED_ASSET_PATH : FolderOverride).TrimEnd('/');
+            EnsureFolder(folder);
 
-            if (!AssetDatabase.IsValidFolder("Assets/VixenTools/Meshes"))
-                AssetDatabase.CreateFolder("Assets/VixenTools", "Meshes");
-
-            if (!AssetDatabase.IsValidFolder("Assets/VixenTools/Meshes/Patched"))
-                AssetDatabase.CreateFolder("Assets/VixenTools/Meshes", "Patched");
-
-            string assetPath = $"{GENERATED_ASSET_PATH}{clonedMesh.name}_{System.Guid.NewGuid().ToString().Substring(0, 5)}.asset";
+            string assetPath = $"{folder}/{clonedMesh.name}_{System.Guid.NewGuid().ToString().Substring(0, 5)}.asset";
             AssetDatabase.CreateAsset(clonedMesh, assetPath);
-            AssetDatabase.SaveAssets();
+            AssetDatabase.SaveAssetIfDirty(clonedMesh);
 
             Undo.RecordObject(smr, "Apply Patched Mesh");
             smr.sharedMesh = clonedMesh;

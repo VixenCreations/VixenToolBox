@@ -13,12 +13,21 @@ namespace VixenTools.Editor
     {
         private const string UssPath = "Packages/com.vixencreations.vixens-toolbox/Editor/UiStyles/VixenAnimatorForgeStyles.uss";
 
-        private enum Mode { Doctor, Forge }
+        private enum Mode { Doctor, Forge, Generator }
         private Mode _mode = Mode.Doctor;
 
         private ObjectField _targetField;
         private Button _btnDoctor;
         private Button _btnForge;
+        private Button _btnGenerator;
+
+        private SkinnedMeshRenderer _genRenderer;
+        private GameObject _genRoot;
+        private List<BlendShapeSetForge.Section> _genSections = new List<BlendShapeSetForge.Section>();
+        private int _genSection;
+        private List<BlendShapeSetForge.Entry> _genEntries = new List<BlendShapeSetForge.Entry>();
+        private readonly BlendShapeSetForge.Settings _genSettings = new BlendShapeSetForge.Settings();
+        private readonly List<string> _genLog = new List<string>();
         private VisualElement _content;
 
         private List<AnimatorDoctor.AnimatorFinding> _findings = new List<AnimatorDoctor.AnimatorFinding>();
@@ -91,8 +100,10 @@ namespace VixenTools.Editor
             var tabs = new VisualElement { style = { flexDirection = FlexDirection.Row, paddingLeft = 15, paddingRight = 15, paddingTop = 8, paddingBottom = 4 } };
             _btnDoctor = MakeTab("Doctor", Mode.Doctor);
             _btnForge = MakeTab("Forge", Mode.Forge);
+            _btnGenerator = MakeTab("Generator", Mode.Generator);
             tabs.Add(_btnDoctor);
             tabs.Add(_btnForge);
+            tabs.Add(_btnGenerator);
             root.Add(tabs);
 
             var scroll = new ScrollView { style = { flexGrow = 1, paddingLeft = 15, paddingRight = 15, paddingTop = 8 } };
@@ -116,10 +127,158 @@ namespace VixenTools.Editor
             if (_content == null) return;
             _btnDoctor.EnableInClassList("forge-tab-active", _mode == Mode.Doctor);
             _btnForge.EnableInClassList("forge-tab-active", _mode == Mode.Forge);
+            _btnGenerator.EnableInClassList("forge-tab-active", _mode == Mode.Generator);
 
             _content.Clear();
             if (_mode == Mode.Doctor) RenderDoctor();
-            else RenderForge();
+            else if (_mode == Mode.Forge) RenderForge();
+            else RenderGenerator();
+        }
+
+        private void SetGenRenderer(SkinnedMeshRenderer smr)
+        {
+            _genRenderer = smr;
+            _genSections = BlendShapeSetForge.FindSections(smr != null ? smr.sharedMesh : null);
+            _genSection = BlendShapeSetForge.GuessSection(_genSections);
+            _genEntries = _genSections.Count > 0 ? BlendShapeSetForge.BuildEntries(_genSections[_genSection].Shapes) : new List<BlendShapeSetForge.Entry>();
+            if (smr != null && _genRoot == null && smr.transform.parent != null) _genRoot = smr.transform.parent.gameObject;
+            _genLog.Clear();
+        }
+
+        private void RenderGenerator()
+        {
+            var panel = Panel("Blend Shape Toggle Generator", "#ff00aa");
+            panel.Add(Hint("Makes one toggle per blend shape, for accessories that switch parts on and off with blend shapes, like a piercing set. Pick the mesh, then the section of its blend shapes the toggles cover."));
+
+            var rendererField = new ObjectField("Skinned Mesh") { objectType = typeof(SkinnedMeshRenderer), allowSceneObjects = true, value = _genRenderer };
+            rendererField.RegisterValueChangedCallback(e => { SetGenRenderer(e.newValue as SkinnedMeshRenderer); RenderContent(); });
+            panel.Add(rendererField);
+
+            if (_genSections.Count > 0)
+            {
+                var names = _genSections.Select(s => $"{s.Name} ({s.Shapes.Count})").ToList();
+                var sectionField = new DropdownField("Section", names, Mathf.Clamp(_genSection, 0, names.Count - 1));
+                sectionField.RegisterValueChangedCallback(e =>
+                {
+                    _genSection = Mathf.Max(0, names.IndexOf(e.newValue));
+                    _genEntries = BlendShapeSetForge.BuildEntries(_genSections[_genSection].Shapes);
+                    RenderContent();
+                });
+                panel.Add(sectionField);
+            }
+
+            var outputField = new EnumField("Output", _genSettings.Output);
+            outputField.RegisterValueChangedCallback(e => { _genSettings.Output = (BlendShapeSetForge.Output)e.newValue; RenderContent(); });
+            panel.Add(outputField);
+
+            if (_genSettings.Output == BlendShapeSetForge.Output.VRCFuryOnAccessory)
+            {
+                if (!BlendShapeSetForge.VRCFuryAvailable)
+                    panel.Add(Hint("<color=#ffaa00>VRCFury is not installed in this project.</color> Install it, or pick Avatar FX Layers."));
+                var rootField = new ObjectField("Accessory Root") { objectType = typeof(GameObject), allowSceneObjects = true, value = _genRoot };
+                rootField.RegisterValueChangedCallback(e => _genRoot = e.newValue as GameObject);
+                panel.Add(rootField);
+                panel.Add(Hint("The toggles go on child objects named Toggles <Group> under this object, so they travel with the accessory. Toggles that already exist with the same menu path are left as they are."));
+            }
+            else
+            {
+                panel.Add(Hint("Writes a layer, a parameter and a menu item per toggle into the avatar's own FX controller and menu, in a submenu per group. Uses the Avatar Root at the top."));
+            }
+
+            var prefixField = new TextField("Menu Prefix") { value = _genSettings.MenuPrefix };
+            prefixField.RegisterValueChangedCallback(e => _genSettings.MenuPrefix = e.newValue);
+            panel.Add(prefixField);
+
+            var verbField = new TextField("Name Prefix") { value = _genSettings.Verb };
+            verbField.RegisterValueChangedCallback(e => _genSettings.Verb = e.newValue);
+            panel.Add(verbField);
+
+            var valueField = new FloatField("Blend Shape Value") { value = _genSettings.Value };
+            valueField.RegisterValueChangedCallback(e => _genSettings.Value = Mathf.Clamp(e.newValue, 0f, 100f));
+            panel.Add(valueField);
+
+            var saved = new Toggle("Saved") { value = _genSettings.Saved };
+            saved.RegisterValueChangedCallback(e => _genSettings.Saved = e.newValue);
+            panel.Add(saved);
+
+            if (_genSettings.Output == BlendShapeSetForge.Output.AvatarFxLayers)
+            {
+                var synced = new Toggle("Synced") { value = _genSettings.Synced };
+                synced.RegisterValueChangedCallback(e => _genSettings.Synced = e.newValue);
+                panel.Add(synced);
+            }
+            _content.Add(panel);
+
+            if (_genEntries.Count > 0)
+            {
+                var list = Panel($"Toggles ({_genEntries.Count(e => e.Include)} of {_genEntries.Count})", "#00e5ff");
+                var bulk = new VisualElement { style = { flexDirection = FlexDirection.Row, marginBottom = 6 } };
+                var all = new Button(() => { foreach (var e in _genEntries) e.Include = true; RenderContent(); }) { text = "ALL" };
+                var none = new Button(() => { foreach (var e in _genEntries) e.Include = false; RenderContent(); }) { text = "NONE" };
+                all.AddToClassList("data-tag-btn"); all.AddToClassList("data-tag-locate");
+                none.AddToClassList("data-tag-btn"); none.AddToClassList("data-tag-destructive");
+                var allOn = new Button(() => { foreach (var e in _genEntries) e.DefaultOn = true; RenderContent(); }) { text = "ALL DEFAULT ON" };
+                var allOff = new Button(() => { foreach (var e in _genEntries) e.DefaultOn = false; RenderContent(); }) { text = "ALL DEFAULT OFF" };
+                allOn.AddToClassList("data-tag-btn"); allOn.AddToClassList("data-tag-locate");
+                allOff.AddToClassList("data-tag-btn"); allOff.AddToClassList("data-tag-destructive");
+                bulk.Add(all); bulk.Add(none); bulk.Add(allOn); bulk.Add(allOff);
+                list.Add(bulk);
+                list.Add(Hint("First box: make this toggle. Second box: Default On, so the blend shape starts at its value. For a Hide toggle that starts the part hidden. Every toggle starts off unless you tick it."));
+
+                foreach (var entry in _genEntries)
+                {
+                    var e = entry;
+                    var row = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 2 } };
+                    var include = new Toggle { value = e.Include, tooltip = "Make a toggle for this blend shape." };
+                    include.RegisterValueChangedCallback(v => e.Include = v.newValue);
+                    row.Add(include);
+                    var defaultOn = new Toggle { value = e.DefaultOn, tooltip = "Default On: the blend shape starts at its value. Off by default." };
+                    defaultOn.RegisterValueChangedCallback(v => e.DefaultOn = v.newValue);
+                    row.Add(defaultOn);
+                    var shape = new Label(e.Shape) { style = { width = 90, overflow = Overflow.Hidden } };
+                    shape.AddToClassList("md-p");
+                    row.Add(shape);
+                    var groupField = new TextField { value = e.Group, tooltip = "The submenu the toggle sits in." };
+                    groupField.style.flexGrow = 1; groupField.style.flexBasis = 0;
+                    groupField.RegisterValueChangedCallback(v => e.Group = v.newValue);
+                    row.Add(groupField);
+                    var labelField = new TextField { value = e.Label, tooltip = "The toggle's name, after the Name Prefix." };
+                    labelField.style.flexGrow = 1; labelField.style.flexBasis = 0;
+                    labelField.RegisterValueChangedCallback(v => e.Label = v.newValue);
+                    row.Add(labelField);
+                    list.Add(row);
+                }
+                _content.Add(list);
+            }
+            else if (_genRenderer != null)
+            {
+                _content.Add(Para("This mesh has no blend shapes to toggle."));
+            }
+
+            var genBtn = new Button(ExecuteGenerator) { text = "GENERATE TOGGLES" };
+            genBtn.AddToClassList("cyber-action-btn");
+            genBtn.AddToClassList("pink-btn");
+            _content.Add(genBtn);
+
+            if (_genLog.Count > 0)
+            {
+                var logPanel = Panel("Result", "#00e5ff");
+                foreach (var line in _genLog) logPanel.Add(Para(line));
+                _content.Add(logPanel);
+            }
+        }
+
+        private void ExecuteGenerator()
+        {
+            _genLog.Clear();
+            int count = _genEntries.Count(e => e.Include);
+            string where = _genSettings.Output == BlendShapeSetForge.Output.VRCFuryOnAccessory
+                ? $"as VRCFury toggles under '{(_genRoot != null ? _genRoot.name : "the mesh's parent")}'"
+                : $"into the FX controller and menu of '{(Descriptor != null ? Descriptor.name : "?")}'";
+            if (!EditorUtility.DisplayDialog("Animator Forge", $"Generate {count} toggle(s) {where}?\n\nToggles that already exist are kept. Undo removes what this adds.", "Generate", "Cancel"))
+                return;
+            _genLog.AddRange(BlendShapeSetForge.Generate(Descriptor, _genRenderer, _genRoot, _genEntries, _genSettings));
+            RenderContent();
         }
 
         private void RenderDoctor()

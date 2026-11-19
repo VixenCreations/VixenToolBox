@@ -71,6 +71,7 @@ namespace VixenTools.Editor
             public GameObject ArmatureRoot;
             public int BoneCount = 0;
             public float TotalVRAM_MB = 0f;
+            public float MeshVRAM_MB = 0f;
             public HashSet<Texture> UniqueTextures = new HashSet<Texture>();
 
             public int PolyCount = 0;
@@ -93,6 +94,7 @@ namespace VixenTools.Editor
 
             public string OfficialOverallRating = null;
             public List<Anomaly> OfficialPerfWarnings = new List<Anomaly>();
+            public AvatarPerformanceStats OfficialStats;
         }
 
         public static ValidationReport RunFullSweep(GameObject avatarRoot, int targetTexSize = 1024, PCPerformanceRank targetRank = PCPerformanceRank.Poor, ResizeMode resizeMode = ResizeMode.Downscale, int decimateTarget = 24000)
@@ -198,8 +200,147 @@ namespace VixenTools.Editor
             }
 
             var animatedEnabled = new Dictionary<Transform, List<System.Type>>();
-            HashSet<Transform> referencedTransforms = CollectReferencedTransforms(avatarRoot, descriptor, animatedEnabled);
+            var clipRoots = new Dictionary<AnimationClip, HashSet<Transform>>();
+            HashSet<Transform> referencedTransforms = CollectReferencedTransforms(avatarRoot, descriptor, animatedEnabled, clipRoots);
             protectedTransforms.UnionWith(referencedTransforms);
+
+            var toolRefs = CollectToolReferences(avatarRoot);
+
+            var protectedShapes = CollectProtectedBlendShapeNames(avatarRoot, descriptor, skinnedRenderers, clipRoots);
+            var shapeEdits = new List<(SkinnedMeshRenderer smr, HashSet<string> remove, Dictionary<string, float> bake)>();
+            int shapeRemoveCount = 0, shapeBakeCount = 0;
+            foreach (var smr in skinnedRenderers)
+            {
+                var mesh = smr != null ? smr.sharedMesh : null;
+                if (mesh == null || mesh.blendShapeCount == 0) continue;
+                var remove = new HashSet<string>();
+                var bake = new Dictionary<string, float>();
+                for (int i = 0; i < mesh.blendShapeCount; i++)
+                {
+                    string shapeName = mesh.GetBlendShapeName(i);
+                    if (protectedShapes.Contains(shapeName) || BlendShapeDivider.IsMatch(shapeName)) continue;
+                    float weight = smr.GetBlendShapeWeight(i);
+                    if (Mathf.Approximately(weight, 0f)) remove.Add(shapeName);
+                    else if (mesh.GetBlendShapeFrameCount(i) == 1) bake[shapeName] = weight;
+                }
+                if (remove.Count + bake.Count == 0) continue;
+                shapeEdits.Add((smr, remove, bake));
+                shapeRemoveCount += remove.Count;
+                shapeBakeCount += bake.Count;
+            }
+            if (shapeEdits.Count > 0)
+            {
+                string bakeNote = shapeBakeCount > 0 ? $" {shapeBakeCount} of them are set above zero, so they're baked into the mesh first and the avatar looks the same." : "";
+                AddTask(new OptimizationTask
+                {
+                    ID = "REMOVE_UNUSED_BLENDSHAPES",
+                    Label = $"Remove {shapeRemoveCount + shapeBakeCount} Unused Blend Shapes",
+                    Description = $"<color=#ff0033>Destructive.</color> Removes blend shapes that nothing uses: no animation, viseme, eyelid, VRCFury, Modular Avatar or VixenMMD setting names them, and no other mesh has one with the same name.{bakeNote} Every blend shape costs memory and skinning time. Your meshes are replaced with patched copies, so keep an eye on the result before you save.",
+                    ComputeSignature = () => "blendshapes:" + string.Join("|", shapeEdits
+                        .Where(e => e.smr != null && e.smr.sharedMesh != null)
+                        .Select(e => AnimationUtility.CalculateTransformPath(e.smr.transform, avatarRoot.transform) + ":" + e.smr.sharedMesh.blendShapeCount)),
+                    Execute = () =>
+                    {
+                        foreach (var e in shapeEdits) if (e.smr != null) RemoveBlendShapes(e.smr, e.remove, e.bake, descriptor);
+                    }
+                });
+            }
+
+            var swapTargets = CollectMaterialSwapTargets(avatarRoot, clipRoots);
+            var slotMerges = new List<SkinnedMeshRenderer>();
+            int slotsSaved = 0;
+            foreach (var smr in skinnedRenderers)
+            {
+                if (smr == null || smr.sharedMesh == null || swapTargets.Contains(smr)) continue;
+                int saved = CountRepeatedSlots(smr);
+                if (saved == 0) continue;
+                slotMerges.Add(smr);
+                slotsSaved += saved;
+            }
+            if (slotMerges.Count > 0)
+            {
+                AddTask(new OptimizationTask
+                {
+                    ID = "MERGE_REPEATED_SLOTS",
+                    Label = $"Merge {slotsSaved} Repeated Material Slots",
+                    Description = "Where one mesh uses the same material in more than one slot, joins those parts into one slot. Every slot is a separate draw call and counts toward the material slot limit. Meshes with material swaps are left alone. Your meshes are replaced with patched copies.",
+                    ComputeSignature = () => "slots:" + string.Join("|", slotMerges
+                        .Where(s => s != null)
+                        .Select(s => AnimationUtility.CalculateTransformPath(s.transform, avatarRoot.transform) + ":" + s.sharedMaterials.Length)),
+                    Execute = () =>
+                    {
+                        foreach (var smr in slotMerges) if (smr != null) MergeRepeatedSlots(smr);
+                    }
+                });
+            }
+
+            var listedColliders = new HashSet<VRCPhysBoneColliderBase>();
+            foreach (var pb in avatarRoot.GetComponentsInChildren<VRCPhysBoneBase>(true))
+            {
+                if (pb == null || pb.colliders == null) continue;
+                foreach (var c in pb.colliders) if (c != null) listedColliders.Add(c);
+            }
+            var unusedColliders = avatarRoot.GetComponentsInChildren<VRCPhysBoneColliderBase>(true)
+                .Where(c => c != null && !listedColliders.Contains(c) && !toolRefs.Contains(c) && !toolRefs.Contains(c.gameObject))
+                .ToList();
+            if (unusedColliders.Count > 0)
+            {
+                AddTask(new OptimizationTask
+                {
+                    ID = "REMOVE_UNUSED_COLLIDERS",
+                    Label = $"Remove {unusedColliders.Count} Unused PhysBone Colliders",
+                    Description = "Deletes PhysBone colliders that no PhysBone on the avatar lists and that no VRCFury or Modular Avatar component points at. They do nothing, but VRChat still counts them.",
+                    ComputeSignature = () => "colliders:" + string.Join("|", unusedColliders
+                        .Where(c => c != null)
+                        .Select(c => AnimationUtility.CalculateTransformPath(c.transform, avatarRoot.transform))),
+                    Execute = () =>
+                    {
+                        foreach (var c in unusedColliders) if (c != null) Undo.DestroyObjectImmediate(c);
+                    }
+                });
+            }
+
+            var unityConstraints = avatarRoot.GetComponentsInChildren<UnityEngine.Animations.IConstraint>(true)
+                .OfType<Component>()
+                .Where(c => c != null && c.GetType().Namespace == "UnityEngine.Animations")
+                .ToList();
+            var constraintConverter = FindConstraintConverter();
+            if (unityConstraints.Count > 0 && constraintConverter != null)
+            {
+                AddTask(new OptimizationTask
+                {
+                    ID = "CONVERT_UNITY_CONSTRAINTS",
+                    Label = $"Convert {unityConstraints.Count} Unity Constraints to VRChat Constraints",
+                    Description = "Runs the VRChat SDK's own converter on this avatar. VRChat constraints are much cheaper than Unity's, and the game converts Unity ones at load anyway, so converting here makes Play mode match what other players see. The SDK asks you to confirm, and the animations that drive these constraints are updated too.",
+                    ComputeSignature = () => "constraints:" + string.Join("|", unityConstraints
+                        .Where(c => c != null)
+                        .Select(c => AnimationUtility.CalculateTransformPath(c.transform, avatarRoot.transform) + ":" + c.GetType().Name)),
+                    Execute = () => constraintConverter.Invoke(null, new object[] { new List<GameObject> { avatarRoot } })
+                });
+            }
+
+            var motionVectorMeshes = skinnedRenderers.Where(s => s != null && s.skinnedMotionVectors).ToList();
+            if (motionVectorMeshes.Count > 0)
+            {
+                AddTask(new OptimizationTask
+                {
+                    ID = "SKINNED_MOTION_VECTORS_OFF",
+                    Label = $"Turn Off Motion Vectors on {motionVectorMeshes.Count} Skinned Meshes",
+                    Description = "Each skinned mesh with motion vectors on keeps a second copy of its skinned vertices every frame. VRChat doesn't use motion vectors on avatars, so turning them off saves memory and skinning time with no change to how the avatar looks.",
+                    ComputeSignature = () => "motionvectors:" + string.Join("|", motionVectorMeshes
+                        .Where(s => s != null)
+                        .Select(s => AnimationUtility.CalculateTransformPath(s.transform, avatarRoot.transform))),
+                    Execute = () =>
+                    {
+                        foreach (var s in motionVectorMeshes)
+                        {
+                            if (s == null) continue;
+                            Undo.RecordObject(s, "Turn Off Skinned Motion Vectors");
+                            s.skinnedMotionVectors = false;
+                        }
+                    }
+                });
+            }
 
             List<Transform> orphanedTransforms = new List<Transform>();
             foreach (var t in allTransforms)
@@ -253,7 +394,7 @@ namespace VixenTools.Editor
             {
                 ID = "OPTIMIZE_BOUNDS",
                 Label = $"<color=#00e5ff>Auto-Fit Mesh Bounds</color>",
-                Description = "Vixen Core Fix: Fits each renderer's bounds to its real skinned geometry in root-bone space (Unity's own posed AABB, so meshes driven by many bones or a scaled armature measure their true size, not the authored mesh AABB). Adds a small skinning margin for animation range. Uses a scale-aware world-space floor so meshes authored at odd scales aren't over-inflated, and sets Update When Offscreen off since VRChat uses these bounds to decide when the mesh is drawn.",
+                Description = "Fits each mesh's bounds to the mesh as it's posed, even on a scaled armature, with a little room for animation. VRChat uses these bounds to decide when to draw a mesh, so bounds that are too big cost frames and bounds that are too small make parts vanish. Also turns off Update When Offscreen.",
                 ComputeSignature = () => {
                     var sb = new System.Text.StringBuilder("bounds:");
                     foreach (var s in skinnedRenderers)
@@ -374,8 +515,8 @@ namespace VixenTools.Editor
                 AddTask(new OptimizationTask
                 {
                     ID = "WELD_VERTICES",
-                    Label = $"<color=#00e5ff>Shrink {heavyMeshes.Count} Heavy Meshes (QEM Decimation)</color>",
-                    Description = $"Quadric Error Metric edge-collapse decimation (Garland-Heckbert), the same class of algorithm as Blender's Decimate. Drives each heavy mesh toward the slider target of ~{decimateTargetTris:N0} triangles while preventing face flips. <color=#00ff66><b>Preserves UV/normal seams, material (submesh) boundaries, open borders, and locks eye/face/hand submeshes plus humanoid Hand bones.</b></color> Interpolates UVs, colors and bone weights across each collapse, and remaps blendshapes. Halts early rather than shredding protected geometry.",
+                    Label = $"<color=#00e5ff>Shrink {heavyMeshes.Count} Heavy Meshes</color>",
+                    Description = $"Reduces each heavy mesh toward the slider target of ~{decimateTargetTris:N0} triangles, the way Blender's Decimate does, without flipping faces. <color=#00ff66><b>Keeps UV and normal seams, material borders and open edges, and leaves the eyes, face and hands alone.</b></color> UVs, colours, bone weights and blend shapes carry over. It stops early rather than damage the parts it protects.",
                     ComputeSignature = () => "decimate:" + string.Join("|", heavyMeshes
                         .Where(s => s != null && s.sharedMesh != null)
                         .Select(s => AnimationUtility.CalculateTransformPath(s.transform, avatarRoot.transform) + ":" + CountTriangles(s.sharedMesh))),
@@ -456,7 +597,7 @@ namespace VixenTools.Editor
                 var deps = EditorUtility.CollectDependencies(new UnityEngine.Object[] { mat });
                 foreach (var d in deps)
                 {
-                    if (d is Texture tex && report.UniqueTextures.Add(tex)) totalBytes += Profiler.GetRuntimeMemorySizeLong(tex);
+                    if (d is Texture tex && report.UniqueTextures.Add(tex)) totalBytes += TextureBytes(tex);
                 }
             }
             report.TotalVRAM_MB = totalBytes / (1024f * 1024f);
@@ -493,6 +634,7 @@ namespace VixenTools.Editor
                 if (alphaImporter == null) continue;
                 if (alphaImporter.textureCompression != TextureImporterCompression.Compressed) continue;
                 if (alphaImporter.textureType == TextureImporterType.NormalMap) continue;
+                if (alphaImporter.GetPlatformTextureSettings("Standalone").overridden) continue;
                 if (alphaImporter.alphaSource == TextureImporterAlphaSource.None) continue;
 
                 bool hasAlpha;
@@ -508,7 +650,7 @@ namespace VixenTools.Editor
                 {
                     ID = "UPGRADE_TEXTURE_QUALITY",
                     Label = $"<color=#00e5ff>Upgrade {lowQualityAlphaTexPaths.Count} Transparent Texture(s) to Higher Quality</color>",
-                    Description = "Better looking, same memory. These already use compression, but the older DXT5 block format. High quality compression gives them BC7 instead, which is also 8 bits per pixel, so VRAM does not move while gradient banding and block artifacts largely go away. Worth it on skin, eyes, and anything with a smooth colour ramp. This only covers textures that actually carry alpha, because an opaque texture sits on 4-bit DXT1 today and moving it to BC7 would double its memory instead of costing nothing.",
+                    Description = "Better looking, same memory. These already use compression, but the older DXT5 block format. High quality compression gives them BC7 instead, which is also 8 bits per pixel, so VRAM does not move while gradient banding and block artifacts largely go away. Worth it on skin, eyes, and anything with a smooth colour ramp. It's set as a PC override, so Quest builds stay as they are. This only covers textures that actually carry alpha, because an opaque texture sits on 4-bit DXT1 today and moving it to BC7 would double its memory instead of costing nothing.",
                     ComputeSignature = () => "texquality:" + string.Join("|", lowQualityAlphaTexPaths.OrderBy(p => p, System.StringComparer.Ordinal)),
                     Execute = () => {
                         int upgraded = 0;
@@ -519,7 +661,11 @@ namespace VixenTools.Editor
                             {
                                 var imp = AssetImporter.GetAtPath(path) as TextureImporter;
                                 if (imp == null) continue;
-                                imp.textureCompression = TextureImporterCompression.CompressedHQ;
+                                var pc = imp.GetPlatformTextureSettings("Standalone");
+                                pc.overridden = true;
+                                pc.format = TextureImporterFormat.BC7;
+                                pc.maxTextureSize = imp.maxTextureSize;
+                                imp.SetPlatformTextureSettings(pc);
                                 imp.SaveAndReimport();
                                 upgraded++;
                             }
@@ -529,6 +675,53 @@ namespace VixenTools.Editor
                             AssetDatabase.StopAssetEditing();
                         }
                         Debug.Log($"[VixForge] Texture Quality Pass: {upgraded} transparent texture(s) moved from DXT5 to BC7 at the same memory cost.");
+                    }
+                }, prepend: true);
+            }
+
+            List<string> dxtNormalPaths = new List<string>();
+            foreach (var tex in report.UniqueTextures)
+            {
+                if (!IsProcessableTexture(tex, out string normalPath)) continue;
+                var normalImporter = AssetImporter.GetAtPath(normalPath) as TextureImporter;
+                if (normalImporter == null || normalImporter.textureType != TextureImporterType.NormalMap) continue;
+                if (normalImporter.textureCompression != TextureImporterCompression.Compressed) continue;
+                if (normalImporter.GetPlatformTextureSettings("Standalone").overridden) continue;
+                dxtNormalPaths.Add(normalPath);
+            }
+
+            if (dxtNormalPaths.Count > 0)
+            {
+                AddTask(new OptimizationTask
+                {
+                    ID = "NORMALS_BC5",
+                    Label = $"<color=#00e5ff>Upgrade {dxtNormalPaths.Count} Normal Map(s) to BC5</color>",
+                    Description = "Better looking, same memory. These normal maps use the older DXT5 format. BC5 keeps the two channels a normal map needs at full quality, so bumps get smoother and lose their blocky steps, at the same 8 bits per pixel. It's set as a PC override, so Quest builds stay as they are. Shaders that use Unity's normal map functions read BC5 without any change.",
+                    ComputeSignature = () => "bc5:" + string.Join("|", dxtNormalPaths.OrderBy(p => p, System.StringComparer.Ordinal)),
+                    Execute = () =>
+                    {
+                        int upgraded = 0;
+                        try
+                        {
+                            AssetDatabase.StartAssetEditing();
+                            foreach (string path in dxtNormalPaths)
+                            {
+                                var imp = AssetImporter.GetAtPath(path) as TextureImporter;
+                                if (imp == null) continue;
+                                var pc = imp.GetPlatformTextureSettings("Standalone");
+                                pc.overridden = true;
+                                pc.format = TextureImporterFormat.BC5;
+                                pc.maxTextureSize = imp.maxTextureSize;
+                                imp.SetPlatformTextureSettings(pc);
+                                imp.SaveAndReimport();
+                                upgraded++;
+                            }
+                        }
+                        finally
+                        {
+                            AssetDatabase.StopAssetEditing();
+                        }
+                        Debug.Log($"[VixForge] Normal Map Pass: {upgraded} normal map(s) moved from DXT5 to BC5 on PC at the same memory cost.");
                     }
                 }, prepend: true);
             }
@@ -644,6 +837,8 @@ namespace VixenTools.Editor
                 });
             }
 
+            CheckMaterialContactTargets(avatarRoot, report);
+
             foreach (var smr in skinnedRenderers)
             {
                 if (smr.sharedMesh != null) report.PolyCount += CountTriangles(smr.sharedMesh);
@@ -707,6 +902,7 @@ namespace VixenTools.Editor
             }
 
             report.PBTransforms = uniquePbTransforms.Count;
+            ApplyOfficialCounts(report);
 
             report.PhysicsNodes.Sort((a, b) => GetDepth(b.Component.transform).CompareTo(GetDepth(a.Component.transform)));
 
@@ -734,16 +930,30 @@ namespace VixenTools.Editor
             if (report.Contacts > maxContacts) report.PCPerformanceWarnings.Add(new Anomaly { Description = $"<b>Exceeds Target:</b> Contacts ({report.Contacts} / {maxContacts})", ContextObject = avatarRoot });
 
             var mobileShaderWhitelist = new HashSet<string>(VRC.SDKBase.Validation.AvatarValidation.ShaderWhiteList);
+            var questMeshes = new Dictionary<Shader, List<string>>();
+            var questMaterial = new Dictionary<Shader, Material>();
             foreach (var r in renderers)
             {
                 foreach (var m in r.sharedMaterials)
                 {
                     if (m != null && m.shader != null && !mobileShaderWhitelist.Contains(m.shader.name) && m.shader.name != "Hidden/InternalErrorShader")
                     {
-                        report.IsQuestUploadReady = false;
-                        report.QuestErrors.Add(new Anomaly { Description = $"Unsupported Quest Shader: <b>{m.shader.name}</b> (Mesh: {r.gameObject.name})", ContextObject = m });
+                        if (!questMeshes.TryGetValue(m.shader, out var meshes))
+                        {
+                            meshes = new List<string>();
+                            questMeshes[m.shader] = meshes;
+                            questMaterial[m.shader] = m;
+                        }
+                        if (!meshes.Contains(r.gameObject.name)) meshes.Add(r.gameObject.name);
                     }
                 }
+            }
+            foreach (var kv in questMeshes)
+            {
+                report.IsQuestUploadReady = false;
+                var names = kv.Value;
+                string list = names.Count <= 4 ? string.Join(", ", names) : $"{string.Join(", ", names.Take(3))} and {names.Count - 3} more";
+                report.QuestErrors.Add(new Anomaly { Description = $"Unsupported Quest Shader: <b>{kv.Key.name}</b> ({(names.Count == 1 ? "Mesh" : "Meshes")}: {list})", ContextObject = questMaterial[kv.Key] });
             }
 
             foreach (var joint in avatarRoot.GetComponentsInChildren<Joint>(true))
@@ -758,7 +968,580 @@ namespace VixenTools.Editor
                 report.QuestErrors.Add(new Anomaly { Description = $"Camera found on <b>{cam.gameObject.name}</b>. Prohibited on Quest.", ContextObject = cam.gameObject, AutoFix = () => Undo.DestroyObjectImmediate(cam.gameObject), FixLabel = "REMOVE CAMERA" });
             }
 
+            var meshSet = new HashSet<Mesh>();
+            foreach (var smr in skinnedRenderers) if (smr != null && smr.sharedMesh != null) meshSet.Add(smr.sharedMesh);
+            foreach (var mf in avatarRoot.GetComponentsInChildren<MeshFilter>(true)) if (mf != null && mf.sharedMesh != null) meshSet.Add(mf.sharedMesh);
+            long meshBytes = 0;
+            foreach (var m in meshSet) meshBytes += MeshBytes(m);
+            report.MeshVRAM_MB = meshBytes / (1024f * 1024f);
+            if (report.MeshVRAM_MB > 80f)
+                report.PCPerformanceWarnings.Add(new Anomaly { Description = $"<b>Very Poor:</b> Mesh memory ({report.MeshVRAM_MB:F1} MB / 80 MB). VRChat's rank doesn't count it, but it uses video memory just like textures. Removing unused blend shapes and shrinking heavy meshes both help.", ContextObject = avatarRoot });
+
+            CheckAnyStateTransitions(descriptor, report);
+            CheckDeadAnimationBindings(avatarRoot, descriptor, report);
+            CheckGrabPasses(allMaterials, report);
+            AddBuildTimeNotice(avatarRoot, report);
+
             return report;
+        }
+
+        private static readonly Dictionary<UnityEngine.Rendering.VertexAttributeFormat, int> VertexAttributeBytes = new Dictionary<UnityEngine.Rendering.VertexAttributeFormat, int>
+        {
+            { UnityEngine.Rendering.VertexAttributeFormat.UNorm8, 1 }, { UnityEngine.Rendering.VertexAttributeFormat.SNorm8, 1 },
+            { UnityEngine.Rendering.VertexAttributeFormat.UInt8, 1 }, { UnityEngine.Rendering.VertexAttributeFormat.SInt8, 1 },
+            { UnityEngine.Rendering.VertexAttributeFormat.UNorm16, 2 }, { UnityEngine.Rendering.VertexAttributeFormat.SNorm16, 2 },
+            { UnityEngine.Rendering.VertexAttributeFormat.UInt16, 2 }, { UnityEngine.Rendering.VertexAttributeFormat.SInt16, 2 },
+            { UnityEngine.Rendering.VertexAttributeFormat.Float16, 2 },
+            { UnityEngine.Rendering.VertexAttributeFormat.Float32, 4 }, { UnityEngine.Rendering.VertexAttributeFormat.UInt32, 4 },
+            { UnityEngine.Rendering.VertexAttributeFormat.SInt32, 4 },
+        };
+
+        private static long MeshBytes(Mesh mesh)
+        {
+            if (mesh == null) return 0;
+            bool skinned = mesh.HasVertexAttribute(UnityEngine.Rendering.VertexAttribute.BlendIndices) && mesh.HasVertexAttribute(UnityEngine.Rendering.VertexAttribute.BlendWeight);
+            long perVertex = 0;
+            foreach (var a in mesh.GetVertexAttributes())
+            {
+                int doubled = skinned && (a.attribute == UnityEngine.Rendering.VertexAttribute.Position || a.attribute == UnityEngine.Rendering.VertexAttribute.Normal || a.attribute == UnityEngine.Rendering.VertexAttribute.Tangent) ? 2 : 1;
+                perVertex += (VertexAttributeBytes.TryGetValue(a.format, out int size) ? size : 4) * a.dimension * doubled;
+            }
+            long shapeBytes = 0;
+            if (mesh.blendShapeCount > 0)
+            {
+                var dv = new Vector3[mesh.vertexCount];
+                var dn = new Vector3[mesh.vertexCount];
+                var dt = new Vector3[mesh.vertexCount];
+                for (int i = 0; i < mesh.blendShapeCount; i++)
+                {
+                    for (int f = 0; f < mesh.GetBlendShapeFrameCount(i); f++)
+                    {
+                        mesh.GetBlendShapeFrameVertices(i, f, dv, dn, dt);
+                        for (int k = 0; k < dv.Length; k++)
+                            if (dv[k] != Vector3.zero || dn[k] != Vector3.zero || dt[k] != Vector3.zero) shapeBytes += 40;
+                    }
+                }
+            }
+            return perVertex * mesh.vertexCount + shapeBytes;
+        }
+
+        private static void CheckAnyStateTransitions(VRCAvatarDescriptor descriptor, ValidationReport report)
+        {
+            if (descriptor == null) return;
+            int count = 0;
+            var seen = new HashSet<RuntimeAnimatorController>();
+            int Count(UnityEditor.Animations.AnimatorStateMachine sm)
+            {
+                if (sm == null) return 0;
+                int n = sm.anyStateTransitions.Length;
+                foreach (var child in sm.stateMachines) n += Count(child.stateMachine);
+                return n;
+            }
+            foreach (var layer in descriptor.baseAnimationLayers.Concat(descriptor.specialAnimationLayers))
+            {
+                if (!(layer.animatorController is UnityEditor.Animations.AnimatorController controller) || !seen.Add(controller)) continue;
+                foreach (var l in controller.layers) count += Count(l.stateMachine);
+            }
+            if (count <= 100) return;
+            report.PCPerformanceWarnings.Add(new Anomaly
+            {
+                Description = $"<b>{(count > 150 ? "Very Poor" : "Poor")}:</b> Any State transitions ({count} / 100). The animator checks every one of them on every frame. A toggle with two states and normal transitions costs far less.",
+                ContextObject = descriptor
+            });
+        }
+
+        private static void CheckDeadAnimationBindings(GameObject avatarRoot, VRCAvatarDescriptor descriptor, ValidationReport report)
+        {
+            if (descriptor == null) return;
+            Transform root = avatarRoot.transform;
+            var seen = new HashSet<RuntimeAnimatorController>();
+            foreach (var layer in descriptor.baseAnimationLayers.Concat(descriptor.specialAnimationLayers))
+            {
+                var controller = layer.animatorController;
+                if (controller == null || layer.isDefault || !seen.Add(controller)) continue;
+                var deadBindings = new HashSet<string>();
+                var examples = new List<string>();
+                foreach (var clip in controller.animationClips.Where(c => c != null).Distinct())
+                {
+                    var bindings = AnimationUtility.GetCurveBindings(clip).Concat(AnimationUtility.GetObjectReferenceCurveBindings(clip));
+                    foreach (var b in bindings)
+                    {
+                        if (string.IsNullOrEmpty(b.path)) continue;
+                        var t = root.Find(b.path);
+                        bool dead;
+                        if (t == null) dead = true;
+                        else if (b.type == typeof(GameObject) || b.type == typeof(Transform) || !typeof(Component).IsAssignableFrom(b.type)) dead = false;
+                        else if (t.GetComponent(b.type) == null) dead = true;
+                        else if (b.type == typeof(SkinnedMeshRenderer) && b.propertyName.StartsWith("blendShape."))
+                        {
+                            var smr = t.GetComponent<SkinnedMeshRenderer>();
+                            dead = smr.sharedMesh == null || smr.sharedMesh.GetBlendShapeIndex(b.propertyName.Substring(11)) < 0;
+                        }
+                        else dead = false;
+                        if (!dead) continue;
+                        if (deadBindings.Add(b.path + "|" + b.type.Name + "|" + b.propertyName) && examples.Count < 3 && !examples.Contains(b.path))
+                            examples.Add(b.path);
+                    }
+                }
+                if (deadBindings.Count == 0) continue;
+                report.PCPerformanceWarnings.Add(new Anomaly
+                {
+                    Description = $"{deadBindings.Count} animated properties in <b>{controller.name}</b> ({layer.type}) point at objects, components or blend shapes this avatar doesn't have, for example <b>{string.Join("</b>, <b>", examples)}</b>. They do nothing. This usually happens when an avatar is copied and parts are deleted from the copy.",
+                    ContextObject = controller
+                });
+            }
+        }
+
+        private static readonly Dictionary<Shader, bool> GrabPassCache = new Dictionary<Shader, bool>();
+        private static readonly System.Text.RegularExpressions.Regex GrabPassPattern =
+            new System.Text.RegularExpressions.Regex(@"^(?![ \t]*//).*\bGrabPass\s*\{", System.Text.RegularExpressions.RegexOptions.Multiline);
+
+        private static bool ShaderHasGrabPass(Shader shader)
+        {
+            if (shader == null) return false;
+            if (GrabPassCache.TryGetValue(shader, out bool cached)) return cached;
+            bool found = false;
+            string path = AssetDatabase.GetAssetPath(shader);
+            if (!string.IsNullOrEmpty(path))
+            {
+                string full = path;
+                if (path.StartsWith("Packages/"))
+                {
+                    var info = UnityEditor.PackageManager.PackageInfo.FindForAssetPath(path);
+                    string prefix = info != null ? "Packages/" + info.name + "/" : null;
+                    if (prefix != null && path.StartsWith(prefix)) full = Path.Combine(info.resolvedPath, path.Substring(prefix.Length));
+                }
+                try { if (File.Exists(full)) found = GrabPassPattern.IsMatch(File.ReadAllText(full)); }
+                catch (System.Exception) { found = false; }
+            }
+            GrabPassCache[shader] = found;
+            return found;
+        }
+
+        private static void CheckGrabPasses(IEnumerable<Material> materials, ValidationReport report)
+        {
+            var hits = new List<string>();
+            UnityEngine.Object context = null;
+            foreach (var group in materials.Where(m => m != null && m.shader != null).GroupBy(m => m.shader))
+            {
+                if (!ShaderHasGrabPass(group.Key)) continue;
+                bool unlocked = group.Any(m => m.HasProperty("_ShaderOptimizerEnabled") && m.GetFloat("_ShaderOptimizerEnabled") < 0.5f);
+                hits.Add(group.Key.name + (unlocked ? " (unlocked, locking may remove it)" : ""));
+                if (context == null) context = group.First();
+            }
+            if (hits.Count == 0) return;
+            string list = hits.Count <= 4 ? string.Join(", ", hits) : $"{string.Join(", ", hits.Take(3))} and {hits.Count - 3} more";
+            report.PCPerformanceWarnings.Add(new Anomaly
+            {
+                Description = $"{hits.Count} shader(s) copy the whole screen with a grab pass: {list}. Every player who can see you pays for each copy, so keep them to effects that need one.",
+                ContextObject = context
+            });
+        }
+
+        private static System.Reflection.MethodInfo FindConstraintConverter()
+        {
+            foreach (var asm in System.AppDomain.CurrentDomain.GetAssemblies())
+            {
+                var type = asm.GetType("VRC.SDK3.Avatars.AvatarDynamicsSetup", false);
+                var method = type?.GetMethod("ConvertUnityConstraintsAcrossGameObjects",
+                    System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static, null, new[] { typeof(List<GameObject>) }, null);
+                if (method != null) return method;
+            }
+            return null;
+        }
+
+        private static HashSet<UnityEngine.Object> CollectToolReferences(GameObject avatarRoot)
+        {
+            var refs = new HashSet<UnityEngine.Object>();
+            foreach (var mono in avatarRoot.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                if (mono == null || IsVRChatType(mono.GetType())) continue;
+                var it = new SerializedObject(mono).GetIterator();
+                while (it.Next(true))
+                    if (it.propertyType == SerializedPropertyType.ObjectReference && it.objectReferenceValue != null) refs.Add(it.objectReferenceValue);
+            }
+            return refs;
+        }
+
+        private static bool IsVRChatType(System.Type type)
+        {
+            string ns = type.Namespace ?? "";
+            return ns.StartsWith("VRC.") || ns == "VRC";
+        }
+
+        private static readonly HashSet<string> MmdStandardNames = new HashSet<string>
+        {
+            "まばたき", "笑い", "ウィンク", "ウィンク右", "ウィンク２", "ｳｨﾝｸ２右", "なごみ", "はぅ", "びっくり", "じと目", "ｷﾘｯ",
+            "はちゅ目", "星目", "はぁと", "瞳小", "瞳縦潰れ", "光下", "恐ろしい子！", "ハイライト消", "映り込み消", "喜び", "わぉ?!",
+            "なごみω", "悲しむ", "敵意", "あ", "い", "う", "え", "お", "あ２", "ん", "▲", "∧", "□", "ワ", "ω", "ω□", "にやり",
+            "にやり２", "にっこり", "ぺろっ", "てへぺろ", "てへぺろ２", "口角上げ", "口角下げ", "口横広げ", "歯無し上", "歯無し下",
+            "真面目", "困る", "にこり", "怒り", "上", "下", "前", "眉頭左", "眉頭右", "照れ", "涙", "青ざめ", "白目", "瞳大",
+        };
+
+        private static HashSet<string> _vixenMmdNames;
+        private static readonly System.Text.RegularExpressions.Regex BlendShapeDivider = new System.Text.RegularExpressions.Regex(@"^\s*[-=_*#~]{3,}");
+
+        internal static HashSet<string> CollectProtectedBlendShapeNames(GameObject avatarRoot, VRCAvatarDescriptor descriptor, SkinnedMeshRenderer[] skinnedRenderers, Dictionary<AnimationClip, HashSet<Transform>> clipRoots)
+        {
+            var names = new HashSet<string>();
+
+            void Harvest(UnityEngine.Object obj)
+            {
+                var it = new SerializedObject(obj).GetIterator();
+                while (it.Next(true))
+                    if (it.propertyType == SerializedPropertyType.String && !string.IsNullOrEmpty(it.stringValue)) names.Add(it.stringValue);
+            }
+
+            if (descriptor != null)
+            {
+                Harvest(descriptor);
+                var eye = descriptor.customEyeLookSettings;
+                var lidMesh = eye.eyelidsSkinnedMesh != null ? eye.eyelidsSkinnedMesh.sharedMesh : null;
+                if (lidMesh != null && eye.eyelidsBlendshapes != null)
+                    foreach (int i in eye.eyelidsBlendshapes)
+                        if (i >= 0 && i < lidMesh.blendShapeCount) names.Add(lidMesh.GetBlendShapeName(i));
+            }
+
+            foreach (var mono in avatarRoot.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                if (mono == null || IsVRChatType(mono.GetType())) continue;
+                Harvest(mono);
+            }
+            names.UnionWith(MmdStandardNames);
+            names.UnionWith(VixenMmdNames());
+
+            foreach (var pair in clipRoots)
+                foreach (var b in AnimationUtility.GetCurveBindings(pair.Key))
+                    if (b.type == typeof(SkinnedMeshRenderer) && b.propertyName.StartsWith("blendShape."))
+                        names.Add(b.propertyName.Substring(11));
+
+            var seenOnce = new HashSet<string>();
+            foreach (var smr in skinnedRenderers)
+            {
+                var mesh = smr != null ? smr.sharedMesh : null;
+                if (mesh == null) continue;
+                var local = new HashSet<string>();
+                for (int i = 0; i < mesh.blendShapeCount; i++) local.Add(mesh.GetBlendShapeName(i));
+                foreach (var n in local) if (!seenOnce.Add(n)) names.Add(n);
+            }
+            return names;
+        }
+
+        private static HashSet<string> VixenMmdNames()
+        {
+            if (_vixenMmdNames != null) return _vixenMmdNames;
+            var names = new HashSet<string>();
+            foreach (var asm in System.AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (asm.GetName().Name.IndexOf("VixenMMD", System.StringComparison.OrdinalIgnoreCase) < 0) continue;
+                System.Type[] types;
+                try { types = asm.GetTypes(); }
+                catch (System.Reflection.ReflectionTypeLoadException e) { types = e.Types.Where(t => t != null).ToArray(); }
+                foreach (var type in types)
+                {
+                    if (type.Name != "VixenMMDRecipes" && type.Name != "VixenMMDNames") continue;
+                    var field = type.GetField("All", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+                    if (field != null && field.GetValue(null) is System.Collections.IEnumerable all)
+                        foreach (var item in all) HarvestStrings(item, names, 0);
+                }
+            }
+            _vixenMmdNames = names;
+            return names;
+        }
+
+        private static void HarvestStrings(object value, HashSet<string> names, int depth)
+        {
+            if (value == null || depth > 5) return;
+            if (value is string s) { if (s.Length > 0) names.Add(s); return; }
+            var type = value.GetType();
+            if (type.IsPrimitive || type.IsEnum || value is UnityEngine.Object) return;
+            if (value is System.Collections.IEnumerable list)
+            {
+                foreach (var item in list) HarvestStrings(item, names, depth + 1);
+                return;
+            }
+            foreach (var f in type.GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic))
+                HarvestStrings(f.GetValue(value), names, depth + 1);
+        }
+
+        private static void RemoveBlendShapes(SkinnedMeshRenderer smr, HashSet<string> remove, Dictionary<string, float> bake, VRCAvatarDescriptor descriptor)
+        {
+            var source = smr.sharedMesh;
+            if (source == null) return;
+            var weights = new Dictionary<string, float>();
+            for (int i = 0; i < source.blendShapeCount; i++) weights[source.GetBlendShapeName(i)] = smr.GetBlendShapeWeight(i);
+
+            string[] lidNames = null;
+            bool lids = descriptor != null && descriptor.customEyeLookSettings.eyelidsSkinnedMesh == smr && descriptor.customEyeLookSettings.eyelidsBlendshapes != null;
+            if (lids)
+                lidNames = descriptor.customEyeLookSettings.eyelidsBlendshapes
+                    .Select(i => i >= 0 && i < source.blendShapeCount ? source.GetBlendShapeName(i) : null).ToArray();
+
+            Undo.RecordObject(smr, "Remove Unused Blend Shapes");
+            VixenMeshPatcher.PatchSkinnedMesh(smr, "BlendShapes", (m, r) =>
+            {
+                int vc = m.vertexCount;
+                var verts = m.vertices;
+                var norms = m.normals;
+                var tans = m.tangents;
+                bool hasNormals = norms != null && norms.Length == vc;
+                bool hasTangents = tans != null && tans.Length == vc;
+                var dv = new Vector3[vc];
+                var dn = new Vector3[vc];
+                var dt = new Vector3[vc];
+                var kept = new List<(string name, float weight, Vector3[] v, Vector3[] n, Vector3[] t)>();
+
+                for (int i = 0; i < m.blendShapeCount; i++)
+                {
+                    string shapeName = m.GetBlendShapeName(i);
+                    if (remove.Contains(shapeName)) continue;
+                    if (bake.TryGetValue(shapeName, out float w))
+                    {
+                        float frameWeight = m.GetBlendShapeFrameWeight(i, 0);
+                        if (Mathf.Approximately(frameWeight, 0f)) continue;
+                        float f = w / frameWeight;
+                        m.GetBlendShapeFrameVertices(i, 0, dv, dn, dt);
+                        for (int k = 0; k < vc; k++)
+                        {
+                            verts[k] += dv[k] * f;
+                            if (hasNormals) norms[k] += dn[k] * f;
+                            if (hasTangents)
+                            {
+                                var tk = tans[k];
+                                tans[k] = new Vector4(tk.x + dt[k].x * f, tk.y + dt[k].y * f, tk.z + dt[k].z * f, tk.w);
+                            }
+                        }
+                        continue;
+                    }
+                    for (int fr = 0; fr < m.GetBlendShapeFrameCount(i); fr++)
+                    {
+                        var fv = new Vector3[vc];
+                        var fn = new Vector3[vc];
+                        var ft = new Vector3[vc];
+                        m.GetBlendShapeFrameVertices(i, fr, fv, fn, ft);
+                        kept.Add((shapeName, m.GetBlendShapeFrameWeight(i, fr), fv, fn, ft));
+                    }
+                }
+
+                if (hasNormals) for (int k = 0; k < vc; k++) norms[k] = norms[k].normalized;
+                m.ClearBlendShapes();
+                m.vertices = verts;
+                if (hasNormals) m.normals = norms;
+                if (hasTangents) m.tangents = tans;
+                foreach (var frame in kept) m.AddBlendShapeFrame(frame.name, frame.weight, frame.v, frame.n, frame.t);
+            }, false);
+
+            var patched = smr.sharedMesh;
+            for (int i = 0; i < patched.blendShapeCount; i++)
+                smr.SetBlendShapeWeight(i, weights.TryGetValue(patched.GetBlendShapeName(i), out float keep) ? keep : 0f);
+
+            if (lids)
+            {
+                Undo.RecordObject(descriptor, "Remove Unused Blend Shapes");
+                var eye = descriptor.customEyeLookSettings;
+                eye.eyelidsBlendshapes = lidNames.Select(n => n == null ? -1 : patched.GetBlendShapeIndex(n)).ToArray();
+                descriptor.customEyeLookSettings = eye;
+                EditorUtility.SetDirty(descriptor);
+            }
+        }
+
+        private static HashSet<Renderer> CollectMaterialSwapTargets(GameObject avatarRoot, Dictionary<AnimationClip, HashSet<Transform>> clipRoots)
+        {
+            var targets = new HashSet<Renderer>();
+            foreach (var pair in clipRoots)
+            {
+                foreach (var b in AnimationUtility.GetObjectReferenceCurveBindings(pair.Key))
+                {
+                    if (!b.propertyName.StartsWith("m_Materials")) continue;
+                    foreach (var root in pair.Value)
+                    {
+                        var t = string.IsNullOrEmpty(b.path) ? root : root.Find(b.path);
+                        if (t != null && t.GetComponent(b.type) is Renderer r) targets.Add(r);
+                    }
+                }
+            }
+            foreach (var mono in avatarRoot.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                if (mono == null || IsVRChatType(mono.GetType())) continue;
+                bool swaps = mono.GetType().Name.IndexOf("Material", System.StringComparison.OrdinalIgnoreCase) >= 0;
+                var found = new List<Renderer>();
+                var it = new SerializedObject(mono).GetIterator();
+                while (it.Next(true))
+                {
+                    if (it.name == "materialIndex") swaps = true;
+                    if (it.propertyType != SerializedPropertyType.ObjectReference || it.objectReferenceValue == null) continue;
+                    if (it.objectReferenceValue is Renderer r) found.Add(r);
+                    else if (it.objectReferenceValue is GameObject go) found.AddRange(go.GetComponents<Renderer>());
+                }
+                if (swaps) targets.UnionWith(found);
+            }
+            return targets;
+        }
+
+        private static int CountRepeatedSlots(SkinnedMeshRenderer smr)
+        {
+            var mesh = smr.sharedMesh;
+            var mats = smr.sharedMaterials;
+            if (mesh == null || mats.Length != mesh.subMeshCount || mats.Length < 2) return 0;
+            for (int i = 0; i < mesh.subMeshCount; i++)
+                if (mesh.GetTopology(i) != MeshTopology.Triangles) return 0;
+            var seen = new HashSet<Material>();
+            int repeats = 0;
+            foreach (var m in mats) if (m != null && !seen.Add(m)) repeats++;
+            return repeats;
+        }
+
+        private static void MergeRepeatedSlots(SkinnedMeshRenderer smr)
+        {
+            if (CountRepeatedSlots(smr) == 0) return;
+            var mats = smr.sharedMaterials;
+            var groups = new List<List<int>>();
+            var firstOf = new Dictionary<Material, int>();
+            for (int i = 0; i < mats.Length; i++)
+            {
+                if (mats[i] != null && firstOf.TryGetValue(mats[i], out int g)) { groups[g].Add(i); continue; }
+                if (mats[i] != null) firstOf[mats[i]] = groups.Count;
+                groups.Add(new List<int> { i });
+            }
+
+            Undo.RecordObject(smr, "Merge Repeated Material Slots");
+            VixenMeshPatcher.PatchSkinnedMesh(smr, "Slots", (m, r) =>
+            {
+                var triangles = groups.Select(g => g.SelectMany(i => m.GetTriangles(i)).ToArray()).ToList();
+                m.subMeshCount = triangles.Count;
+                for (int s = 0; s < triangles.Count; s++) m.SetTriangles(triangles[s], s, false);
+            }, false);
+            smr.sharedMaterials = groups.Select(g => mats[g[0]]).ToArray();
+        }
+
+        private static System.Reflection.MethodInfo _textureStorageSize;
+        private static bool _textureStorageLooked;
+
+        private static long TextureBytes(Texture tex)
+        {
+            if (tex == null) return 0;
+            if (!_textureStorageLooked)
+            {
+                _textureStorageLooked = true;
+                var util = typeof(UnityEditor.Editor).Assembly.GetType("UnityEditor.TextureUtil");
+                _textureStorageSize = util?.GetMethod("GetStorageMemorySizeLong",
+                    System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic,
+                    null, new[] { typeof(Texture) }, null);
+            }
+            if (_textureStorageSize != null)
+            {
+                try { return (long)_textureStorageSize.Invoke(null, new object[] { tex }); }
+                catch (System.Exception) { _textureStorageSize = null; }
+            }
+            return Profiler.GetRuntimeMemorySizeLong(tex);
+        }
+
+        private static void ApplyOfficialCounts(ValidationReport report)
+        {
+            var s = report.OfficialStats;
+            if (s == null) return;
+            if (s.polyCount.HasValue) report.PolyCount = s.polyCount.Value;
+            if (s.skinnedMeshCount.HasValue) report.SkinnedMeshCount = s.skinnedMeshCount.Value;
+            if (s.materialCount.HasValue) report.MaterialSlotCount = s.materialCount.Value;
+            if (s.boneCount.HasValue) report.BoneCount = s.boneCount.Value;
+            if (s.textureMegabytes.HasValue) report.TotalVRAM_MB = (float)s.textureMegabytes.Value;
+            if (s.physBone.HasValue)
+            {
+                report.PBComponents = s.physBone.Value.componentCount;
+                report.PBTransforms = s.physBone.Value.transformCount;
+            }
+        }
+
+        private static void AddBuildTimeNotice(GameObject avatarRoot, ValidationReport report)
+        {
+            bool fury = false, ma = false;
+            foreach (var mono in avatarRoot.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                if (mono == null) continue;
+                var type = mono.GetType();
+                if (type.Name == "VRCFury") fury = true;
+                else if (type.Namespace != null && type.Namespace.StartsWith("nadena.dev.modular_avatar")) ma = true;
+                if (fury && ma) break;
+            }
+            if (!fury && !ma) return;
+
+            string tools = fury && ma ? "VRCFury and Modular Avatar add" : fury ? "VRCFury adds" : "Modular Avatar adds";
+            string example = fury ? "SPS sockets and their lights" : "merged armatures and menus";
+            var notice = new Anomaly
+            {
+                Description = $"{tools} parts when the avatar builds, such as {example}, so VRChat will count more than this check sees. Build a test copy and check that for the final numbers.",
+                ContextObject = avatarRoot
+            };
+            if (fury)
+            {
+                var root = avatarRoot;
+                notice.AutoFix = () =>
+                {
+                    Selection.activeGameObject = root;
+                    EditorApplication.ExecuteMenuItem("Tools/VRCFury/Build an Editor Test Copy");
+                };
+                notice.FixLabel = "BUILD TEST COPY";
+            }
+            report.PCPerformanceWarnings.Add(notice);
+        }
+
+        private static void CheckMaterialContactTargets(GameObject avatarRoot, ValidationReport report)
+        {
+            Transform root = avatarRoot.transform;
+            foreach (var receiver in avatarRoot.GetComponentsInChildren<VRCContactReceiver>(true))
+            {
+                var so = new SerializedObject(receiver);
+                var write = so.FindProperty("writeToMaterials");
+                var targets = so.FindProperty("shaderTargetRenderers");
+                if (write == null || targets == null || !write.boolValue || !targets.isArray) continue;
+
+                var bad = new List<string>();
+                int good = 0, empty = 0;
+                for (int i = 0; i < targets.arraySize; i++)
+                {
+                    var r = targets.GetArrayElementAtIndex(i).objectReferenceValue as Renderer;
+                    if (r == null) empty++;
+                    else if (!r.transform.IsChildOf(root)) bad.Add($"<b>{r.name}</b> on {r.transform.root.name}");
+                    else good++;
+                }
+                if (empty == 1) bad.Add("an empty slot");
+                else if (empty > 1) bad.Add($"{empty} empty slots");
+                if (bad.Count == 0) continue;
+
+                var rc = receiver;
+                report.IsPCUploadReady = false;
+                report.PCErrors.Add(new Anomaly {
+                    Description = $"Contact Receiver <b>{receiver.gameObject.name}</b> writes to materials on {string.Join(", ", bad)}. VRChat's website can fail the avatar's security check for this. Point it at this avatar's meshes or remove it.",
+                    ContextObject = receiver.gameObject,
+                    AutoFix = good > 0 ? (System.Action)(() => RemoveForeignShaderTargets(rc, root)) : () => RemoveReceiver(rc),
+                    FixLabel = good > 0 ? "CLEAN UP" : "REMOVE"
+                });
+            }
+        }
+
+        private static void RemoveReceiver(VRCContactReceiver receiver)
+        {
+            if (receiver == null) return;
+            var go = receiver.gameObject;
+            Undo.DestroyObjectImmediate(receiver);
+            if (go != null && go.transform.childCount == 0 && go.GetComponents<Component>().Length == 1)
+                Undo.DestroyObjectImmediate(go);
+        }
+
+        private static void RemoveForeignShaderTargets(VRCContactReceiver receiver, Transform root)
+        {
+            if (receiver == null) return;
+            var so = new SerializedObject(receiver);
+            var targets = so.FindProperty("shaderTargetRenderers");
+            if (targets == null || !targets.isArray) return;
+            for (int i = targets.arraySize - 1; i >= 0; i--)
+            {
+                var r = targets.GetArrayElementAtIndex(i).objectReferenceValue as Renderer;
+                if (r != null && r.transform.IsChildOf(root)) continue;
+                targets.GetArrayElementAtIndex(i).objectReferenceValue = null;
+                targets.DeleteArrayElementAtIndex(i);
+            }
+            so.ApplyModifiedProperties();
         }
 
         private const string ModularAvatarAvatarRoot = "$$$AVATAR_ROOT$$$";
@@ -779,10 +1562,10 @@ namespace VixenTools.Editor
             return false;
         }
 
-        private static HashSet<Transform> CollectReferencedTransforms(GameObject avatarRoot, VRCAvatarDescriptor descriptor, Dictionary<Transform, List<System.Type>> animatedEnabled)
+        private static HashSet<Transform> CollectReferencedTransforms(GameObject avatarRoot, VRCAvatarDescriptor descriptor, Dictionary<Transform, List<System.Type>> animatedEnabled, Dictionary<AnimationClip, HashSet<Transform>> clipRootsOut = null)
         {
             var referenced = new HashSet<Transform>();
-            var clipRoots = new Dictionary<AnimationClip, HashSet<Transform>>();
+            var clipRoots = clipRootsOut ?? new Dictionary<AnimationClip, HashSet<Transform>>();
             Transform avatar = avatarRoot.transform;
             var avatarOnly = new[] { avatar };
 
@@ -1064,6 +1847,7 @@ namespace VixenTools.Editor
                 bool isMobile = EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android;
                 var perfStats = new AvatarPerformanceStats(isMobile);
                 AvatarPerformance.CalculatePerformanceStats(avatarRoot.name, avatarRoot, perfStats, isMobile);
+                report.OfficialStats = perfStats;
 
                 var overall = perfStats.GetPerformanceRatingForCategory(AvatarPerformanceCategory.Overall);
                 report.OfficialOverallRating = AvatarPerformanceStats.GetPerformanceRatingDisplayName(overall);
@@ -1087,6 +1871,8 @@ namespace VixenTools.Editor
                         {
                             UnityEngine.Object ctx = (offenders.TryGetValue(category, out var offender) && offender != null)
                                 ? offender : avatarRoot;
+                            if (category == AvatarPerformanceCategory.AABB && ctx is GameObject widest && widest != avatarRoot)
+                                msg += $" Largest: <b>{AnimationUtility.CalculateTransformPath(widest.transform, avatarRoot.transform)}</b>.";
                             report.OfficialPerfWarnings.Add(new Anomaly { Description = msg, ContextObject = ctx });
                         }
                     }
@@ -1183,7 +1969,7 @@ namespace VixenTools.Editor
             foreach (var tex in report.UniqueTextures)
             {
                 if (tex == null) continue;
-                long bytes = Profiler.GetRuntimeMemorySizeLong(tex);
+                long bytes = TextureBytes(tex);
                 if (bytes > heaviestBytes) { heaviestBytes = bytes; heaviestTex = tex; }
             }
             if (heaviestTex != null) map[AvatarPerformanceCategory.TextureMegabytes] = heaviestTex;
@@ -1479,6 +2265,53 @@ namespace VixenTools.Editor
             root.Add(scroll);
         }
 
+        private VisualElement BuildUploadPanel(GameObject avatar)
+        {
+            var panel = CreateCyberPanel("On Upload", "#00ff66");
+            var intro = new Label("These run on the copy that VRChat uploads, after VRCFury and Modular Avatar have built it. The avatar in your scene and your assets stay as they are. Each one starts off and is saved for this avatar in this project.") { enableRichText = true };
+            intro.AddToClassList("opt-task-desc");
+            panel.Add(intro);
+
+            var settings = VixenUploadSettings.instance;
+            var entry = settings.Find(avatar, false);
+
+            void Row(string label, string description, System.Func<VixenUploadSettings.Entry, bool> get, System.Action<VixenUploadSettings.Entry, bool> set)
+            {
+                var row = new VisualElement();
+                row.AddToClassList("opt-task-row");
+                var toggle = new Toggle { value = entry != null && get(entry) };
+                toggle.RegisterValueChangedCallback(e =>
+                {
+                    if (entry == null) entry = settings.Find(avatar, true);
+                    set(entry, e.newValue);
+                    settings.SaveNow();
+                });
+                row.Add(toggle);
+                var text = new Label($"<b>{label}</b>\n<color=#aaaaaa>{description}</color>") { enableRichText = true };
+                text.AddToClassList("opt-task-desc");
+                row.Add(text);
+                panel.Add(row);
+            }
+
+            Row("Remove Unused Blend Shapes", "The same check as the fix above, on the upload copy. It also catches shapes that only VRCFury or Modular Avatar needed before they built.",
+                e => e.RemoveUnusedBlendShapes, (e, v) => e.RemoveUnusedBlendShapes = v);
+            Row("Merge Repeated Material Slots", "Joins slots that use the same material, including ones that VRCFury or Modular Avatar created.",
+                e => e.MergeRepeatedSlots, (e, v) => e.MergeRepeatedSlots = v);
+            Row("Remove Unused PhysBone Colliders", "Deletes colliders that no PhysBone lists once everything is built.",
+                e => e.RemoveUnusedColliders, (e, v) => e.RemoveUnusedColliders = v);
+            Row("Turn Off Skinned Motion Vectors", "Saves memory and skinning time. VRChat doesn't use them on avatars.",
+                e => e.MotionVectorsOff, (e, v) => e.MotionVectorsOff = v);
+            Row("Ring Finger Colliders on Feet", "Moves your ring finger contacts to your feet, so your feet can push other players' PhysBones. Your ring fingers stop touching PhysBones.",
+                e => e.RingFingerOnFeet, (e, v) => e.RingFingerOnFeet = v);
+            Row("Turn Off PhysBones With Their Mesh", "When only one mesh moves with a PhysBone, the PhysBone turns off whenever a toggle hides that mesh, so hidden hair or tails cost nothing. PhysBones with a parameter, or with anything else on their bones, are left alone.",
+                e => e.DisablePhysBonesWithMesh, (e, v) => e.DisablePhysBonesWithMesh = v);
+            Row("Merge Same-Ratio Blend Shapes", "Blend shapes that every animation moves together in the same ratio become one shape, with the same look. Visemes, eyelids, MMD shapes and shapes other tools name are kept.",
+                e => e.MergeSameRatioBlendShapes, (e, v) => e.MergeSameRatioBlendShapes = v);
+            Row("Remove Unused Animator Parameters", "Removes parameters that nothing in a controller uses. Anything in your expression parameters stays.",
+                e => e.RemoveUnusedParameters, (e, v) => e.RemoveUnusedParameters = v);
+            return panel;
+        }
+
         private void ExecuteDeepScan()
         {
             _resultsContainer.Clear();
@@ -1494,6 +2327,8 @@ namespace VixenTools.Editor
 
                 string vramHex = _lastReport.TotalVRAM_MB > 150f ? "#ff0033" : (_lastReport.TotalVRAM_MB > 40f ? "#ffaa00" : "#00e5ff");
                 archPanel.Add(CreateRow($"<b>Hardware VRAM Footprint:</b> {_lastReport.TotalVRAM_MB:F2} MB ({_lastReport.UniqueTextures.Count} Textures)", null, vramHex));
+                string meshHex = _lastReport.MeshVRAM_MB > 80f ? "#ff0033" : (_lastReport.MeshVRAM_MB > 35f ? "#ffaa00" : "#00e5ff");
+                archPanel.Add(CreateRow($"<b>Mesh Memory:</b> {_lastReport.MeshVRAM_MB:F2} MB (not part of VRChat's rank)", null, meshHex));
             }
             _resultsContainer.Add(archPanel);
 
@@ -1653,6 +2488,9 @@ namespace VixenTools.Editor
 
                 _resultsContainer.Add(suitePanel);
             }
+
+            if (target != null && target.GetComponent<VRC.SDK3.Avatars.Components.VRCAvatarDescriptor>() != null)
+                _resultsContainer.Add(BuildUploadPanel(target));
 
             if (_lastReport.TextureNodes.Count > 0)
             {

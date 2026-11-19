@@ -5,6 +5,38 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.23.0] - 2026-11-19
+
+*Animator Forge generates a toggle for every blend shape on an accessory, and the Optimization Suite counts the way VRChat does and can tidy your avatar as it uploads.*
+
+### Added
+
+* **Animator Forge** has a **Generator** tab that makes one toggle per blend shape, for accessories that switch parts on and off with blend shapes, like a piercing set. Pick the mesh and the section of its blend shapes, check the readable names it suggests, tick **Default On** for any toggle that should start on (every toggle starts off unless you tick it), and choose where the toggles go: as **VRCFury** toggles on the accessory, so they travel with it, or as layers, parameters and menu items in the avatar's own FX controller and menu, in a submenu per group. Toggles that already exist are kept, and Undo removes what it adds.
+* **Animator Forge** can put a forged toggle in a submenu path instead of the root menu, so a big set no longer overflows the eight-item limit.
+* The **Optimization Suite** flags a Contact Receiver that writes to materials on a mesh outside the avatar, or on an empty slot. This happens when you duplicate an avatar and delete meshes from the copy, and VRChat's website can then fail the avatar's security check even though the SDK uploads it. **CLEAN UP** drops the bad targets, and **REMOVE** deletes a receiver that has none left.
+* The **Optimization Suite** tells you when VRCFury or Modular Avatar will add parts at build time, like SPS sockets and their lights, and **BUILD TEST COPY** builds VRCFury's test copy so you can check the numbers VRChat will actually see.
+* The **Optimization Suite** can **Remove Unused Blend Shapes**: shapes that no animation, viseme, eyelid, VRCFury, Modular Avatar or VixenMMD setting names, and that no other mesh shares by name. Shapes set above zero are baked in first, so the avatar looks the same. The idea comes from d4rkAvatarOptimizer. It also keeps the standard MMD face shapes, so MMD worlds can still use them.
+* The **Optimization Suite** can **Merge Repeated Material Slots** when one mesh uses the same material in more than one slot, which saves draw calls and material slots. Meshes with material swaps are left alone. The idea comes from d4rkAvatarOptimizer.
+* The **Optimization Suite** can **Remove Unused PhysBone Colliders** that no PhysBone lists. The idea comes from d4rkAvatarOptimizer.
+* The **Optimization Suite** shows **Mesh Memory** next to texture memory, and warns above 80 MB. VRChat's rank doesn't count it. The estimate is adapted from Thry's Avatar Performance Tools.
+* The **Optimization Suite** warns about shaders that copy the whole screen with a grab pass, about more than 100 Any State transitions, and about animations that point at objects, components or blend shapes the avatar doesn't have. The grab pass and Any State checks are adapted from Thry's Avatar Performance Tools.
+* The **Optimization Suite** can **Upgrade Normal Maps to BC5**: same memory as DXT5, smoother bumps without blocky steps. It's set as a PC override, so Quest builds stay as they are. The idea comes from d4rkAvatarOptimizer.
+* The **Optimization Suite** can **Convert Unity Constraints to VRChat Constraints** with the VRChat SDK's own converter, so Play mode matches what other players see. The idea comes from the KaleidoVR VRChat Model Optimizer.
+* The **Optimization Suite** can **Turn Off Motion Vectors** on skinned meshes. VRChat doesn't use them on avatars, so this saves memory and skinning time with no change to the look. The idea comes from the KaleidoVR VRChat Model Optimizer.
+* The **Optimization Suite** has an **On Upload** panel. The fixes you tick there run on the copy that VRChat uploads, after VRCFury and Modular Avatar have built it, so the avatar in your scene and your assets stay as they are: **Remove Unused Blend Shapes**, **Merge Repeated Material Slots**, **Remove Unused PhysBone Colliders**, **Turn Off Skinned Motion Vectors**, **Ring Finger Colliders on Feet** (your feet can push other players' PhysBones), **Turn Off PhysBones With Their Mesh** (hidden hair, skirts or tails cost nothing), **Merge Same-Ratio Blend Shapes** and **Remove Unused Animator Parameters**. Any of your own clips or controllers they change are copied first. Each one starts off and is saved per avatar in this project. The ideas and the foot collider placement come from d4rkAvatarOptimizer.
+
+### Changed
+
+* The Quest list in the **Optimization Suite** shows each unsupported shader once, with the meshes that use it, instead of one line per mesh.
+
+### Fixed
+
+* The **Optimization Suite** now shows the same texture memory, material slots, bones and PhysBone transforms as VRChat's own performance check. It used to show about twice the real texture memory, miss particle materials, and count only the main armature's bones.
+* The bounding box warning names the object that makes the avatar too big.
+* **Upgrade Transparent Textures to Higher Quality** in the **Optimization Suite** now changes PC only. It used to change the compression for every platform, which more than doubled those textures' memory in a Quest build.
+* The **Optimization Suite** fixes that patch a mesh now save only the new mesh. They used to save every unsaved change in the project at the same time.
+
+***
 ## [2.22.0] - 2026-11-13
 *VixenMMD has its own package now, and the Optimization Suite stops deleting what Modular Avatar still needs.*
 

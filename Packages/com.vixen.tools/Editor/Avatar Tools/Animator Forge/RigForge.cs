@@ -35,6 +35,8 @@ namespace VixenTools.Editor
             public Material SwapMaterial;
 
             public List<GameObject> Options = new List<GameObject>();
+
+            public string MenuPath = "";
         }
 
         public class RigResult
@@ -70,6 +72,7 @@ namespace VixenTools.Editor
 
             string folder = EnsureAssetFolder(descriptor);
             var root = descriptor.transform;
+            menu = ResolveMenu(menu, req.MenuPath, folder, result);
 
             try
             {
@@ -506,6 +509,37 @@ namespace VixenTools.Editor
                 EditorUtility.SetDirty(descriptor);
                 result.Info($"Created Expressions Menu.");
             }
+        }
+
+        private static VRCExpressionsMenu ResolveMenu(VRCExpressionsMenu root, string menuPath, string folder, RigResult result)
+        {
+            if (string.IsNullOrWhiteSpace(menuPath)) return root;
+            var menu = root;
+            foreach (string raw in menuPath.Split('/'))
+            {
+                string segment = raw.Trim();
+                if (segment.Length == 0) continue;
+                if (menu.controls == null) menu.controls = new List<VRCExpressionsMenu.Control>();
+                var existing = menu.controls.FirstOrDefault(c => c.type == VRCExpressionsMenu.Control.ControlType.SubMenu
+                                                               && c.name == segment && c.subMenu != null);
+                if (existing != null)
+                {
+                    menu = existing.subMenu;
+                    continue;
+                }
+                var sub = CreateMenuAsset(folder, "Menu_" + segment);
+                AddMenuControl(menu, new VRCExpressionsMenu.Control
+                {
+                    name = segment,
+                    type = VRCExpressionsMenu.Control.ControlType.SubMenu,
+                    subMenu = sub
+                }, result);
+                EditorUtility.SetDirty(menu);
+                result.Info($"Created submenu '{segment}'.");
+                menu = sub;
+            }
+            EditorUtility.SetDirty(menu);
+            return menu;
         }
 
         private static VRCExpressionsMenu CreateMenuAsset(string folder, string name)
