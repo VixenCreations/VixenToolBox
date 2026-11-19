@@ -669,6 +669,21 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="v2.11.1">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.11.1 - 2026-07-10</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>A maintenance patch focused on restoring project compilation stability within Udon-managed world environments and refreshing our public web content.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Web Infrastructure and News Tab Updates:</strong> Updated the official website and the existing news tab to roll out coverage for the 1,500 download milestone and keep documentation aligned with recent studio updates.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Removed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>AreaLitBroadcaster Component (World Diagnostics / Udon Infrastructure):</strong> Temporarily removed the AreaLitBroadcaster component from the core distribution package. A critical dependency conflict between its automated editor scripting hooks and the UdonSharp assembly compilation pipeline was triggering a total compilation failure across the host project when imported into worlds. The component has been completely isolated and extracted from the main assembly loop to unblock world creators immediately. A rewritten, strictly decoupled version will be re-added in a future release once the Udon compilation lifecycle hooks are fully stabilized.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="v2.11.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.11.0 - 2026-07-09</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>The Latex Ultra shaders reach 3.0.0 - a major overhaul. Hyper-realism gains a dedicated occlusion and baked-shadow map pair; high-gloss sparkle is gone by default; MatCaps grow to five layers with an avatar-lock Freeze, super-bright intensity and a fully reorganized panel; Emissions grow to five layers with consistent AudioLink; VRSL becomes its own tab; Light Volumes gain optional per-light speculars; and locked materials compile faster. Both shaders. Built-in Render Pipeline / VRChat only, as always. Every new feature is off or neutral by default so existing materials keep their look, but this is a big release - re-lock and spot-check your materials.</em></p>

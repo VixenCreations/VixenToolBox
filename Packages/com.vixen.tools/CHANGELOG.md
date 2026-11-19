@@ -336,6 +336,31 @@ All notable changes to the VixForge project will be documented in this file.
 
 * **AreaLitBroadcaster Component (World Diagnostics / Udon Infrastructure):** Temporarily removed the AreaLitBroadcaster component from the core distribution package. A critical dependency conflict between its automated editor scripting hooks and the UdonSharp assembly compilation pipeline was triggering a total compilation failure across the host project when imported into worlds. The component has been completely isolated and extracted from the main assembly loop to unblock world creators immediately. A rewritten, strictly decoupled version will be re-added in a future release once the Udon compilation lifecycle hooks are fully stabilized.
 
+## [2.11.0] - 2026-07-09
+
+*The Latex Ultra shaders reach 3.0.0 - a major overhaul. Hyper-realism gains a dedicated occlusion and baked-shadow map pair; high-gloss sparkle is gone by default; MatCaps grow to five layers with an avatar-lock Freeze, super-bright intensity and a fully reorganized panel; Emissions grow to five layers with consistent AudioLink; VRSL becomes its own tab; Light Volumes gain optional per-light speculars; and locked materials compile faster. Both shaders. Built-in Render Pipeline / VRChat only, as always. Every new feature is off or neutral by default so existing materials keep their look, but this is a big release - re-lock and spot-check your materials.*
+
+### Added
+
+* **Occlusion & Baked Shadow maps - new Lighting Detail section (Both Shaders):** A dedicated Occlusion Map darkens ambient / indirect light in crevices, and a Baked Shadow Map paints permanent contact shadows that also cut direct light - both for added realism on the latex. Each has a channel picker and strength, and both share the Albedo sampler, so they add no sampler-budget cost. Off by default, so existing materials are unchanged.
+* **Two more MatCap layers, five total (Both Shaders):** MatCap 4 and MatCap 5 join 1-3, each a full matcap layer (texture, mask and channel, tint, rotation, intensity, blend mode, lighting mix, tiling, position, scroll). Off by default; no added sampler-budget cost.
+* **MatCap Freeze - lock a matcap to the material (Both Shaders):** A per-matcap Freeze slider stops a matcap sliding as the camera moves, so it reads as baked-in detail that turns naturally with the avatar instead of a mirror-like reflection. Default off (classic reflective matcap).
+* **Three more Emission layers, five total (Both Shaders):** Emission layers 3, 4 and 5 join 1 and 2, each with its own colour, map, mask channel and AudioLink band and amplitude. Off by default; no added sampler-budget cost.
+* **Optional per-light Light Volume specular (Both Shaders):** A new toggle routes Point Light Volumes through the light-source-size-aware per-light specular path for sharper, more accurate point-light glints on glossy latex, alongside a new Point Light Volume Shading strength control. Off by default (keeps the prior look).
+
+### Changed
+
+* **Specular anti-aliasing on by default - no more sparkle (Both Shaders):** High-gloss latex no longer shimmers or fizzes under motion. The specular anti-aliasing that already existed now defaults on, and an always-on roughness floor protects even previously-saved materials and distant surfaces. If you preferred the razor-sharp highlights, turn the anti-aliasing back down.
+* **MatCaps reorganized into one panel (Both Shaders):** The separate matcap tabs are consolidated into a single MatCaps section with Global Settings and Matcap 1-5 as sub-sections. Each matcap now has a Tiling & Movement sub-section (holding the Freeze control) and a dedicated Offsets sub-section, with clearly labelled position controls - Offset X moves side to side, Offset Y up and down (previously present but hidden inside an unlabelled field).
+* **Brighter MatCaps (Both Shaders):** MatCap Intensity now ranges up to 6 (was 2), so a matcap can push a strong, over-driven glow.
+* **Emissions reorganized, AudioLink made consistent (Both Shaders):** Each emission layer is now its own sub-section, and every layer's AudioLink band and amplitude sit inline with that layer and hide unless AudioLink is enabled. Previously only the second layer showed its AudioLink controls in this panel while the first layer's lived over in the AudioLink tab.
+* **VRSL promoted to its own tab (Both Shaders):** "Stage Lighting & VRSL" is now a top-level tab instead of being buried inside the AudioLink panel.
+* **Faster locked-material compiles (Both Shaders):** When a procedural effect is turned off (water drips, melting goo, the AudioLink HUD ring, fracture shards / trails), locked materials now drop that effect's geometry pass entirely at lock time, so locking and in-headset shader compilation are quicker. Animated toggles are respected - a pass is kept whenever its toggle is marked animated - so runtime toggling still works. Unlocked materials are unchanged.
+
+### Fixed
+
+* **Light Volumes point-light bugfix and re-sync (Both Shaders):** Re-synced the vendored Light Volumes to the current upstream revision, which fixes an off-by-one in the point-light attenuation lookup. The Light Volumes version stays 3 and every entry point the shaders use is unchanged, so the fix comes in transparently; no new samplers, keywords or variants, and existing worlds render unchanged.
+
 ## [2.10.1] - 2026-07-05
 
 *A same-cycle hotfix that finishes the per-mesh bounds work introduced in 2.10.0. The 2.10.0 auto-fit could still mis-place the culling box on meshes that carry a Blender import scale (they would vanish as you got close), and its PhysBone swing inflation over-bloated body meshes that are genuinely weighted to a far-swinging bone. Both are resolved by fitting to Unity's own posed bounds and dropping the swing-reach heuristic entirely. Built-in Render Pipeline / VRChat only.*
