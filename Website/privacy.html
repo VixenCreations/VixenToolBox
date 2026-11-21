@@ -227,7 +227,7 @@
                 <p class="text-glow-cyan" style="font-size: 1.1rem; max-width: 850px; margin: 0 auto; line-height: 1.6;">
                     What our website, the Vixens Toolbox, our shaders, VixForge Camera Pro, our Discord server and its bot, and our supporter platforms do with your information. Most of it collects nothing at all. The Discord bot is the one that keeps records, and this page says exactly what it keeps.
                 </p>
-                <p class="legal-updated">Last updated 18 November 2026. Read it with our <a href="terms.html">Terms of Service</a>.</p>
+                <p class="legal-updated">Last updated 20 November 2026. Read it with our <a href="terms.html">Terms of Service</a>.</p>
             </div>
 
             <div class="competitive-grid" style="margin-top: 2rem;">
@@ -300,7 +300,7 @@
                                     </tr>
                                     <tr>
                                         <td>Discord server and bot</td>
-                                        <td>Messages you post, DMs you send the bot (read to reply, not kept), voice channel joins and leaves, your username and user ID, the member list, moderation records and warnings, a staff log of deleted and edited messages, giveaway entries, ticket transcripts, your game scores, pets, adventure saves and voice time, and your PiShock link if you make one. No AI ever sees any of it.</td>
+                                        <td>Messages you post, DMs you send the bot (read to reply; what it remembers from them is kept encrypted, and you can turn that off), voice channel joins and leaves, your username and user ID, the member list, moderation records and warnings, a staff log of deleted and edited messages, giveaway entries, ticket transcripts, your game scores, pets, adventure saves and voice time, and your PiShock link if you make one. No AI ever sees any of it.</td>
                                         <td>A computer we run ourselves, Discord, and PiShock if you link it</td>
                                     </tr>
                                     <tr>
@@ -439,8 +439,16 @@
 
                         <p class="comp-text mt-2"><strong>GitHub updates.</strong> GitHub sends news of activity in our public repositories (new code, releases, issues and pull requests) through a relay service, smee.io, and the bot posts it in a channel. The bot keeps the raw notices in files on its computer, up to 64 MB per file with the two files before it kept. They hold what GitHub sends: the public activity itself and the GitHub usernames of the people involved.</p>
 
-                        <p class="comp-text mt-2"><strong>Chat, reactions and fun commands.</strong> The bot reads a message to decide whether to answer it when you @ it, reply to one of its messages, or mention it by name (like "thanks bot" or "the bot is cute"). It also says hi back when you greet the room, and adds an emoji reaction to some short messages, emojis, stickers and pic posts. When you ask it to pass a message to "them", it looks at the channel's last 15 messages to work out who you mean. The cooldowns and counters behind all this, and the bot's short memory of what it last said to you, live only in memory. Apart from the message log above and the stop list below, none of it is saved.</p>
-                        <p class="comp-text mt-2"><strong>Direct messages to the bot.</strong> If you're a member of our server, you can DM the bot and it chats back. It reads your DM only to pick a reply and doesn't keep the text; DMs aren't added to the message log. DMs from people who aren't in the server get no answer.</p>
+                        <p class="comp-text mt-2"><strong>Chat, reactions and fun commands.</strong> The bot reads a message to decide whether to answer it when you @ it, reply to one of its messages, or mention it by name (like "thanks bot" or "the bot is cute"). It also says hi back when you greet the room, adds an emoji reaction to some short messages, emojis, stickers and pic posts, and puts back a flipped table. While a knock-knock joke is going, it reads your next reply without a ping. When you ask it to pass a message to "them", it looks at the channel's last 15 messages to work out who you mean. The cooldowns and counters behind all this, and the bot's short memory of what it last said to you, live only in memory. Apart from the message log above and the stop list below, none of it is saved.</p>
+                        <p class="comp-text mt-2"><strong>Direct messages to the bot.</strong> If you're a member of our server, you can DM the bot and it chats back. DMs aren't added to the message log, and the bot's working logs never hold their text. When the bot answers a DM about how you're feeling, with help lines, or about its memory, its working logs only note that it sent you a private reply. DMs from people who aren't in the server get no answer.</p>
+                        <p class="comp-text mt-2"><strong>What the bot remembers from your DMs.</strong> So you can pick up where you left off, the bot remembers things from your DMs. It tells you so the first time you DM it. It keeps:</p>
+                        <ul class="legal-list comp-text">
+                            <li>only if you say yes to mood notes (below): your last 40 messages to it, up to 300 characters each. A message that brings up the crisis line list is never kept;</li>
+                            <li>the name you give it, your pets' names and kinds, things you say you like, and plans you mention (like an exam on Friday), so it can ask how they went. Health plans, like a doctor's appointment or surgery, count as mood notes. Likes that would show your sexuality, religion, politics or ethnic background are never saved;</li>
+                            <li>only if you say yes: health plans, your last 40 messages, and how you've seemed lately, as a word from a short fixed list (such as sad, stressed, lonely or grieving) and when, so it can check on you gently after a rough few days. The first time you tell it you're having a hard time, it asks. Say "remember my moods" or use <code>/memory moods on</code> for yes. It saves your answer and when you gave it. Until you say yes, it keeps no mood notes and none of your messages. "Don't remember my moods" or <code>/memory moods off</code> stops all three and deletes what it has.</li>
+                        </ul>
+                        <p class="comp-text">All of it is encrypted on the bot's computer, with a separate key for each member, and the file doesn't contain your user ID. The bot only uses it in your own DMs. It never shows it to anyone else, and if someone asks it what you said, it says no. Our staff have no command, log or channel that shows it. It is deleted after 90 days without a DM from you. <code>/memory show</code> (or "what do you remember") shows what it has, <code>/memory forget</code> (or "forget me") deletes it, and <code>/memory off</code> deletes it and stops the bot remembering, keeping only a note that you turned it off. <code>/memory on</code> turns it back on. If you don't DM the bot for 90 days, that note goes too, and the bot tells you about its memory again the next time you DM it.</p>
+                        <p class="comp-text mt-2"><strong>Hard times.</strong> If you tell the bot you're struggling, it can show a list of crisis lines, and in DMs it switches to a gentler mode until you say you feel better. For some topics it points you to <a href="https://findahelpline.com/" target="_blank" rel="noopener">findahelpline.com</a>, a free directory of help lines. These are only links: the bot doesn't contact anyone or pass on what you said. Whether the gentler mode is on lives only in memory and is gone when the bot restarts. The bot isn't a therapist or a crisis service.</p>
                         <p class="comp-text mt-2"><strong>Asking the bot to stop.</strong> If you tell the bot to stop or go away, it stays quiet for you until you @ it or DM it again. So that a restart doesn't undo this, it saves your user ID and the time the quiet ends, 12 hours at most.</p>
 
                         <p class="comp-text mt-2"><strong>Welcomes.</strong> When you join, the bot welcomes you by name in the welcome channel, and its status can show your name for 15 minutes.</p>
@@ -538,7 +546,8 @@
                         <ul class="legal-list comp-text">
                             <li><strong>Keeping the Discord server safe</strong>: the message log, automatic moderation, join checks, the server snapshot, staff records, warnings and the server log (our legitimate interest in protecting members from scams, spam and raids, and in running the server well).</li>
                             <li><strong>Helping you</strong>: tickets, transcripts, emails and messages (our legitimate interest in giving support, and performing our agreement with you when you are a supporter).</li>
-                            <li><strong>Running the bot's games, chat and extras</strong>: scores, pets, adventure saves, voice time, Fox Coins and their history, Urban Dictionary lookups, your 18+ choice, the stop list, giveaway entries, event reminders and your PiShock link (our legitimate interest in running the features you choose to use).</li>
+                            <li><strong>Running the bot's games, chat and extras</strong>: what the bot remembers from your DMs apart from the items below, scores, pets, adventure saves, voice time, Fox Coins and their history, Urban Dictionary lookups, your 18+ choice, the stop list, giveaway entries, event reminders and your PiShock link (our legitimate interest in running the features you choose to use).</li>
+                            <li><strong>Mood notes, health plans and recent messages the bot remembers from your DMs</strong>: only after you say yes, and you can take it back at any time (your explicit consent).</li>
                             <li><strong>Delivering what you paid for</strong>: purchase and membership records and Discord roles (performing our agreement with you).</li>
                             <li><strong>Keeping financial records</strong> that tax law requires (legal obligation).</li>
                             <li><strong>Thanking supporters</strong> on the supporter wall (our legitimate interest, and you can opt out at any time).</li>
@@ -617,6 +626,10 @@
                                         <td>Until you @ or DM the bot again, and 12 hours at most.</td>
                                     </tr>
                                     <tr>
+                                        <td>What the bot remembers from your DMs, including mood notes if you said yes</td>
+                                        <td>90 days after your last DM, or until you run <code>/memory forget</code> or <code>/memory off</code>.</td>
+                                    </tr>
+                                    <tr>
                                         <td>PiShock link and settings</td>
                                         <td>Until you run <code>/pishock unlink</code> or ask us to delete them.</td>
                                     </tr>
@@ -677,7 +690,7 @@
                         <ul class="legal-list comp-text">
                             <li>tell you what we hold about you and give you a copy;</li>
                             <li>correct anything that is wrong;</li>
-                            <li>delete it, including your entries in the bot's logs, server snapshot, audit log copy and AutoMod records, your ticket transcripts, your scores, pets, adventure saves, voice time, Fox Coins and their history, and giveaway entries, and your PiShock link;</li>
+                            <li>delete it, including your entries in the bot's logs, server snapshot, audit log copy and AutoMod records, your ticket transcripts, your scores, pets, adventure saves, voice time, Fox Coins and their history, giveaway entries, what the bot remembers from your DMs, and your PiShock link;</li>
                             <li>stop using it for a purpose, or take you off the supporter wall.</li>
                         </ul>
                         <p class="comp-text">
@@ -699,7 +712,7 @@
                     </div>
                     <div class="comp-section comp-vixen">
                         <p class="comp-text">
-                            The bot's logs, transcripts, snapshot and saved records stay on a private computer we control. They are never published, and only we can open them. The bot's Discord access key is kept private, and PiShock API keys are stored encrypted. No setup is perfectly secure, so if something ever goes wrong in a way that affects you, we'll tell you and, where the law requires it, the authorities.
+                            The bot's logs, transcripts, snapshot and saved records stay on a private computer we control. They are never published, and only we can open them. The bot's Discord access key is kept private, PiShock API keys are stored encrypted, and so is what the bot remembers from your DMs. That key sits on the same private computer, so reading a member's memory would take both the key and the file, and we don't open them. No setup is perfectly secure, so if something ever goes wrong in a way that affects you, we'll tell you and, where the law requires it, the authorities.
                         </p>
                     </div>
                 </div>
