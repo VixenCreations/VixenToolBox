@@ -16,6 +16,14 @@
         .catch(revealPage);
     setTimeout(revealPage, 2000);
 
+    const promoHost = document.querySelector('.main-wrapper');
+    if (promoHost) {
+        const promo = document.createElement('div');
+        promo.className = 'promo-banner';
+        promo.innerHTML = "<a href='https://www.lovense.com/r/2t6myx' target='_blank' rel='sponsored noopener'><img border='0' width='728' height='90' alt='Lovense' src='https://cdn.lovense.com/UploadFiles/web/black-friday-2026/affiliate/phase2/toolkit-728x90.jpg?v=1288877560' /></a>";
+        promoHost.prepend(promo);
+    }
+
     // --- Mobile navigation dropdown (site-wide) ---
     // Desktop keeps the fixed sidebar. On mobile the sidebar collapses (styles.css)
     // and this injects a "Menu" toggle that drops the tab list down. Adding the
