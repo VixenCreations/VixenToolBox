@@ -229,6 +229,35 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
+                <div class="changelog-entry" data-version="worldsurface-1.8.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / World Surface 1.8.0 - 2026-11-27</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>RGBA Color Masking, two more colour layers, Viewer Context by time of day, and Ink Weight that follows point lights and Light Volumes.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Time of Day</strong> in every <strong>Viewer Context</strong> part: show a part only between two hours, read from the clock of each viewer, so everyone sees their own evening or morning at the same moment. <strong>From</strong> later than <strong>To</strong> runs past midnight, and <strong>Softness</strong> fades it over the hours you choose. It starts off, so nothing changes until you turn it up.</li>
+                        <li class="mb-2"><strong>Viewer Context</strong> <strong>Show</strong> has three new choices: <strong>Only in Screenshots</strong>, <strong>Never in Screenshots</strong> and <strong>Only in Handheld Camera</strong>, so a saved photo and the live camera view can look different.</li>
+                        <li class="mb-2"><strong>RGBA Color Masking</strong> under <strong>BASE</strong>: recolour up to four parts of the material from the red, green, blue and alpha of one mask. Each part has its own colour, texture, blend mode and glow. It works like the colour settings of Poiyomi's RGBA Color Masking and uses the same property names, so a Poiyomi material you switch over keeps them.</li>
+                        <li class="mb-2"><strong>Second and Third Color Layers</strong> under <strong>BASE</strong>: lay up to two more colours or textures over the Albedo, each with its own UV, mask, blend, sides, distance fade and AudioLink. They work like Main Color 2nd and 3rd in lilToon and use the same property names, so a lilToon material you switch over keeps them.</li>
+                        <li class="mb-2"><strong>Anti-Alias Reflections</strong> and <strong>Anti-Alias Limit</strong> in <strong>Specular Response</strong>, under <strong>Specular Anti-Aliasing</strong>. <strong>Anti-Alias Reflections</strong> calms reflections of the world the way the slider calms highlights, so they stop crawling on tight detail as you move. <strong>Anti-Alias Limit</strong> caps how far the anti-aliasing can soften a highlight, so sharp creases and hard edges keep their shine. Both start off, so nothing changes until you turn them on.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Sharpness</strong> in <strong>Glitter Settings</strong> now also sets how fine the flakes of a layer with <strong>Sparkle</strong> on <strong>View</strong> are, on the surface and <strong>Above</strong> it. Raise it for smaller, tighter twinkles and lower it for broader, softer ones. At 90, the default, a flake is exactly <strong>Flake Size</strong>, so a material left at 90 looks the same. A material with another value shows smaller or bigger View flakes than before: set <strong>Sharpness</strong> to 90 to get the old flake size back.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Removed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Unified Light Lightmaps</strong> under <strong>Baked Lighting</strong>. It read lightmaps the way the VixForge Light Baker wrote them, and we've stopped work on that baker because z3y's Glim does the job well. A material that had it on now reads its lightmaps the standard way, which is right for Unity and Glim bakes.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Ink Weight</strong> follows point lights and Light Volumes, not only the main light. A lamp or a Light Volume point light next to the object used to leave the line weight unchanged. The weight now comes from every light the outline can see: the main light, Unity's vertex point lights, light probes, and Light Volumes with their point lights, following the material's <strong>Light Volumes</strong> settings. A point light that Unity draws per pixel still cannot change it, because the outline is drawn in one pass. Set that light's <strong>Render Mode</strong> to <strong>Not Important</strong> to include it.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="worldsurface-1.7.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / World Surface 1.7.0 - 2026-11-07</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Multilayer Math paints coloured shadow layers, glitter sparkles as you move and can float above the material, every moving effect can share one clock with everyone in the instance, and your VRSL light can follow a VixForge Director's light show.</em></p>
@@ -640,6 +669,35 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="worldfur-1.8.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / World Fur 1.8.0 - 2026-11-27</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>RGBA Color Masking, two more colour layers, Viewer Context by time of day, and Ink Weight that follows point lights and Light Volumes.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Time of Day</strong> in every <strong>Viewer Context</strong> part: show a part only between two hours, read from the clock of each viewer, so everyone sees their own evening or morning at the same moment. <strong>From</strong> later than <strong>To</strong> runs past midnight, and <strong>Softness</strong> fades it over the hours you choose. It starts off, so nothing changes until you turn it up.</li>
+                        <li class="mb-2"><strong>Viewer Context</strong> <strong>Show</strong> has three new choices: <strong>Only in Screenshots</strong>, <strong>Never in Screenshots</strong> and <strong>Only in Handheld Camera</strong>, so a saved photo and the live camera view can look different.</li>
+                        <li class="mb-2"><strong>RGBA Color Masking</strong> under <strong>BASE</strong>: recolour up to four parts of the material from the red, green, blue and alpha of one mask. Each part has its own colour, texture, blend mode and glow. It works like the colour settings of Poiyomi's RGBA Color Masking and uses the same property names, so a Poiyomi material you switch over keeps them.</li>
+                        <li class="mb-2"><strong>Second and Third Color Layers</strong> under <strong>BASE</strong>: lay up to two more colours or textures over the Albedo, each with its own UV, mask, blend, sides, distance fade and AudioLink. They work like Main Color 2nd and 3rd in lilToon and use the same property names, so a lilToon material you switch over keeps them.</li>
+                        <li class="mb-2"><strong>Anti-Alias Reflections</strong> and <strong>Anti-Alias Limit</strong> in <strong>Specular Response</strong>, under <strong>Specular Anti-Aliasing</strong>. <strong>Anti-Alias Reflections</strong> calms reflections of the world the way the slider calms highlights, so they stop crawling on tight detail as you move. <strong>Anti-Alias Limit</strong> caps how far the anti-aliasing can soften a highlight, so sharp creases and hard edges keep their shine. Both start off, so nothing changes until you turn them on.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Sharpness</strong> in <strong>Glitter Settings</strong> now also sets how fine the flakes of a layer with <strong>Sparkle</strong> on <strong>View</strong> are, on the surface and <strong>Above</strong> it. Raise it for smaller, tighter twinkles and lower it for broader, softer ones. At 90, the default, a flake is exactly <strong>Flake Size</strong>, so a material left at 90 looks the same. A material with another value shows smaller or bigger View flakes than before: set <strong>Sharpness</strong> to 90 to get the old flake size back.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Removed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Unified Light Lightmaps</strong> under <strong>Baked Lighting</strong>. It read lightmaps the way the VixForge Light Baker wrote them, and we've stopped work on that baker because z3y's Glim does the job well. A material that had it on now reads its lightmaps the standard way, which is right for Unity and Glim bakes.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Ink Weight</strong> follows point lights and Light Volumes, not only the main light. A lamp or a Light Volume point light next to the object used to leave the line weight unchanged. The weight now comes from every light the outline can see: the main light, Unity's vertex point lights, light probes, and Light Volumes with their point lights, following the material's <strong>Light Volumes</strong> settings. A point light that Unity draws per pixel still cannot change it, because the outline is drawn in one pass. Set that light's <strong>Render Mode</strong> to <strong>Not Important</strong> to include it.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="worldfur-1.7.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / World Fur 1.7.0 - 2026-11-07</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Multilayer Math paints coloured shadow layers, glitter sparkles as you move and can float above the material, every moving effect can share one clock with everyone in the instance, and your VRSL light can follow a VixForge Director's light show.</em></p>
@@ -1030,6 +1088,30 @@
                     <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
                         <li class="mb-2"><strong>The first lock after a bake takes a while.</strong> Supporting lightmaps, shadowmask and soft shadows means more shader variants to build. It is working, not stuck, so let it finish.</li>
                         <li class="mb-2"><strong>No Wet or Goo here, on purpose.</strong> A carpet has no use for them and the textures are not free, so they are left out to keep the shader lighter. World Surface has both if you want a wet floor next to the rug.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="toon-2.10.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Toon 2.10.0 - 2026-11-27</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>RGBA Color Masking, two more colour layers, Viewer Context by time of day, and Ink Weight that follows point lights and Light Volumes.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Time of Day</strong> in every <strong>Viewer Context</strong> part: show a part only between two hours, read from the clock of each viewer, so everyone sees their own evening or morning at the same moment. <strong>From</strong> later than <strong>To</strong> runs past midnight, and <strong>Softness</strong> fades it over the hours you choose. It starts off, so nothing changes until you turn it up.</li>
+                        <li class="mb-2"><strong>Viewer Context</strong> <strong>Show</strong> has three new choices: <strong>Only in Screenshots</strong>, <strong>Never in Screenshots</strong> and <strong>Only in Handheld Camera</strong>, so a saved photo and the live camera view can look different.</li>
+                        <li class="mb-2"><strong>RGBA Color Masking</strong> under <strong>BASE</strong>: recolour up to four parts of the material from the red, green, blue and alpha of one mask. Each part has its own colour, texture, blend mode and glow. It works like the colour settings of Poiyomi's RGBA Color Masking and uses the same property names, so a Poiyomi material you switch over keeps them.</li>
+                        <li class="mb-2"><strong>Second and Third Color Layers</strong> under <strong>BASE</strong>: lay up to two more colours or textures over the Albedo, each with its own UV, mask, blend, sides, distance fade and AudioLink. They work like Main Color 2nd and 3rd in lilToon and use the same property names, so a lilToon material you switch over keeps them.</li>
+                        <li class="mb-2"><strong>Anti-Alias Reflections</strong> and <strong>Anti-Alias Limit</strong> in <strong>Specular Response</strong>, under <strong>Specular Anti-Aliasing</strong>. <strong>Anti-Alias Reflections</strong> calms reflections of the world the way the slider calms highlights, so they stop crawling on tight detail as you move. <strong>Anti-Alias Limit</strong> caps how far the anti-aliasing can soften a highlight, so sharp creases and hard edges keep their shine. Both start off, so nothing changes until you turn them on.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Sharpness</strong> in <strong>Glitter Settings</strong> now also sets how fine the flakes of a layer with <strong>Sparkle</strong> on <strong>View</strong> are, on the surface and <strong>Above</strong> it. Raise it for smaller, tighter twinkles and lower it for broader, softer ones. At 90, the default, a flake is exactly <strong>Flake Size</strong>, so a material left at 90 looks the same. A material with another value shows smaller or bigger View flakes than before: set <strong>Sharpness</strong> to 90 to get the old flake size back.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Ink Weight</strong> follows point lights and Light Volumes, not only the main light. A lamp or a Light Volume point light next to you used to leave the line weight unchanged. The weight now comes from every light the outline can see: the main light, Unity's vertex point lights, light probes, and Light Volumes with their point lights, following your <strong>Light Volumes</strong> settings. A point light that Unity draws per pixel still cannot change it, because the outline is drawn in one pass. Set that light's <strong>Render Mode</strong> to <strong>Not Important</strong> to include it.</li>
                     </ul>
                 </div>
 
@@ -1783,6 +1865,30 @@
                         <li class="mb-2"><strong>Lock your materials before uploading</strong>, the same three ways as Latex Ultra. The SDK Build button does it for you.</li>
                         <li class="mb-2"><strong>Toon needs triangle meshes.</strong> If a model looks torn or shredded, turn off <strong>Keep Quads</strong> in its import settings, or run <strong>VixenTools &gt; VixForge Mesh Fixes &gt; Scan for Quad Meshes</strong>.</li>
                         <li class="mb-2"><strong>Light Volumes and LTCGI start off</strong>, because they make Unity builds much slower. Turn them on only if your world uses them.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="latex-5.10.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Latex Ultra 5.10.0 - 2026-11-27</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>RGBA Color Masking, two more colour layers, Viewer Context by time of day, and Ink Weight that follows point lights and Light Volumes.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Time of Day</strong> in every <strong>Viewer Context</strong> part: show a part only between two hours, read from the clock of each viewer, so everyone sees their own evening or morning at the same moment. <strong>From</strong> later than <strong>To</strong> runs past midnight, and <strong>Softness</strong> fades it over the hours you choose. It starts off, so nothing changes until you turn it up.</li>
+                        <li class="mb-2"><strong>Viewer Context</strong> <strong>Show</strong> has three new choices: <strong>Only in Screenshots</strong>, <strong>Never in Screenshots</strong> and <strong>Only in Handheld Camera</strong>, so a saved photo and the live camera view can look different.</li>
+                        <li class="mb-2"><strong>RGBA Color Masking</strong> under <strong>BASE</strong>: recolour up to four parts of the material from the red, green, blue and alpha of one mask. Each part has its own colour, texture, blend mode and glow. It works like the colour settings of Poiyomi's RGBA Color Masking and uses the same property names, so a Poiyomi material you switch over keeps them.</li>
+                        <li class="mb-2"><strong>Second and Third Color Layers</strong> under <strong>BASE</strong>: lay up to two more colours or textures over the Albedo, each with its own UV, mask, blend, sides, distance fade and AudioLink. They work like Main Color 2nd and 3rd in lilToon and use the same property names, so a lilToon material you switch over keeps them.</li>
+                        <li class="mb-2"><strong>Anti-Alias Reflections</strong> and <strong>Anti-Alias Limit</strong> in <strong>Specular Response</strong>, under <strong>Specular Anti-Aliasing</strong>. <strong>Anti-Alias Reflections</strong> calms reflections of the world the way the slider calms highlights, so they stop crawling on tight detail as you move. <strong>Anti-Alias Limit</strong> caps how far the anti-aliasing can soften a highlight, so sharp creases and hard edges keep their shine. Both start off, so nothing changes until you turn them on.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Sharpness</strong> in <strong>Glitter Settings</strong> now also sets how fine the flakes of a layer with <strong>Sparkle</strong> on <strong>View</strong> are, on the surface and <strong>Above</strong> it. Raise it for smaller, tighter twinkles and lower it for broader, softer ones. At 90, the default, a flake is exactly <strong>Flake Size</strong>, so a material left at 90 looks the same. A material with another value shows smaller or bigger View flakes than before: set <strong>Sharpness</strong> to 90 to get the old flake size back.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Ink Weight</strong> follows point lights and Light Volumes, not only the main light. A lamp or a Light Volume point light next to you used to leave the line weight unchanged. The weight now comes from every light the outline can see: the main light, Unity's vertex point lights, light probes, and Light Volumes with their point lights, following your <strong>Light Volumes</strong> settings. A point light that Unity draws per pixel still cannot change it, because the outline is drawn in one pass. Set that light's <strong>Render Mode</strong> to <strong>Not Important</strong> to include it.</li>
                     </ul>
                 </div>
 
@@ -2991,6 +3097,30 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="clothingpro-2.10.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Clothing Pro 2.10.0 - 2026-11-27</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>RGBA Color Masking, two more colour layers, Viewer Context by time of day, and Ink Weight that follows point lights and Light Volumes.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Time of Day</strong> in every <strong>Viewer Context</strong> part: show a part only between two hours, read from the clock of each viewer, so everyone sees their own evening or morning at the same moment. <strong>From</strong> later than <strong>To</strong> runs past midnight, and <strong>Softness</strong> fades it over the hours you choose. It starts off, so nothing changes until you turn it up.</li>
+                        <li class="mb-2"><strong>Viewer Context</strong> <strong>Show</strong> has three new choices: <strong>Only in Screenshots</strong>, <strong>Never in Screenshots</strong> and <strong>Only in Handheld Camera</strong>, so a saved photo and the live camera view can look different.</li>
+                        <li class="mb-2"><strong>RGBA Color Masking</strong> under <strong>BASE</strong>: recolour up to four parts of the material from the red, green, blue and alpha of one mask. Each part has its own colour, texture, blend mode and glow. It works like the colour settings of Poiyomi's RGBA Color Masking and uses the same property names, so a Poiyomi material you switch over keeps them.</li>
+                        <li class="mb-2"><strong>Second and Third Color Layers</strong> under <strong>BASE</strong>: lay up to two more colours or textures over the Albedo, each with its own UV, mask, blend, sides, distance fade and AudioLink. They work like Main Color 2nd and 3rd in lilToon and use the same property names, so a lilToon material you switch over keeps them.</li>
+                        <li class="mb-2"><strong>Anti-Alias Reflections</strong> and <strong>Anti-Alias Limit</strong> in <strong>Specular Response</strong>, under <strong>Specular Anti-Aliasing</strong>. <strong>Anti-Alias Reflections</strong> calms reflections of the world the way the slider calms highlights, so they stop crawling on tight detail as you move. <strong>Anti-Alias Limit</strong> caps how far the anti-aliasing can soften a highlight, so sharp creases and hard edges keep their shine. Both start off, so nothing changes until you turn them on.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Sharpness</strong> in <strong>Glitter Settings</strong> now also sets how fine the flakes of a layer with <strong>Sparkle</strong> on <strong>View</strong> are, on the surface and <strong>Above</strong> it. Raise it for smaller, tighter twinkles and lower it for broader, softer ones. At 90, the default, a flake is exactly <strong>Flake Size</strong>, so a material left at 90 looks the same. A material with another value shows smaller or bigger View flakes than before: set <strong>Sharpness</strong> to 90 to get the old flake size back.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Ink Weight</strong> follows point lights and Light Volumes, not only the main light. A lamp or a Light Volume point light next to you used to leave the line weight unchanged. The weight now comes from every light the outline can see: the main light, Unity's vertex point lights, light probes, and Light Volumes with their point lights, following your <strong>Light Volumes</strong> settings. A point light that Unity draws per pixel still cannot change it, because the outline is drawn in one pass. Set that light's <strong>Render Mode</strong> to <strong>Not Important</strong> to include it.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="clothingpro-2.9.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixenWear / Clothing Pro 2.9.0 - 2026-11-07</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Multilayer Math paints coloured shadow layers, WEAR makes the material look worn in, glitter sparkles as you move and can float above the material, and your rim light can dance to the music.</em></p>
@@ -3655,6 +3785,30 @@
                     </ul>
                 </div>
 
+                <div class="changelog-entry" data-version="furpro-2.10.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Fur Pro 2.10.0 - 2026-11-27</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>RGBA Color Masking, two more colour layers, Viewer Context by time of day, and Ink Weight that follows point lights and Light Volumes.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Time of Day</strong> in every <strong>Viewer Context</strong> part: show a part only between two hours, read from the clock of each viewer, so everyone sees their own evening or morning at the same moment. <strong>From</strong> later than <strong>To</strong> runs past midnight, and <strong>Softness</strong> fades it over the hours you choose. It starts off, so nothing changes until you turn it up.</li>
+                        <li class="mb-2"><strong>Viewer Context</strong> <strong>Show</strong> has three new choices: <strong>Only in Screenshots</strong>, <strong>Never in Screenshots</strong> and <strong>Only in Handheld Camera</strong>, so a saved photo and the live camera view can look different.</li>
+                        <li class="mb-2"><strong>RGBA Color Masking</strong> under <strong>BASE</strong>: recolour up to four parts of the material from the red, green, blue and alpha of one mask. Each part has its own colour, texture, blend mode and glow. It works like the colour settings of Poiyomi's RGBA Color Masking and uses the same property names, so a Poiyomi material you switch over keeps them.</li>
+                        <li class="mb-2"><strong>Second and Third Color Layers</strong> under <strong>BASE</strong>: lay up to two more colours or textures over the Albedo, each with its own UV, mask, blend, sides, distance fade and AudioLink. They work like Main Color 2nd and 3rd in lilToon and use the same property names, so a lilToon material you switch over keeps them.</li>
+                        <li class="mb-2"><strong>Anti-Alias Reflections</strong> and <strong>Anti-Alias Limit</strong> in <strong>Specular Response</strong>, under <strong>Specular Anti-Aliasing</strong>. <strong>Anti-Alias Reflections</strong> calms reflections of the world the way the slider calms highlights, so they stop crawling on tight detail as you move. <strong>Anti-Alias Limit</strong> caps how far the anti-aliasing can soften a highlight, so sharp creases and hard edges keep their shine. Both start off, so nothing changes until you turn them on.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Sharpness</strong> in <strong>Glitter Settings</strong> now also sets how fine the flakes of a layer with <strong>Sparkle</strong> on <strong>View</strong> are, on the surface and <strong>Above</strong> it. Raise it for smaller, tighter twinkles and lower it for broader, softer ones. At 90, the default, a flake is exactly <strong>Flake Size</strong>, so a material left at 90 looks the same. A material with another value shows smaller or bigger View flakes than before: set <strong>Sharpness</strong> to 90 to get the old flake size back.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Ink Weight</strong> follows point lights and Light Volumes, not only the main light. A lamp or a Light Volume point light next to you used to leave the line weight unchanged. The weight now comes from every light the outline can see: the main light, Unity's vertex point lights, light probes, and Light Volumes with their point lights, following your <strong>Light Volumes</strong> settings. A point light that Unity draws per pixel still cannot change it, because the outline is drawn in one pass. Set that light's <strong>Render Mode</strong> to <strong>Not Important</strong> to include it.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="furpro-2.9.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge / Fur Pro 2.9.0 - 2026-11-07</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>TATTOOS arrive from Toon, Multilayer Math paints coloured shadow layers, glitter sparkles as you move and can float above the material, and your rim light can dance to the music.</em></p>
@@ -4307,6 +4461,22 @@
                         <li class="mb-2"><strong>Lock your materials before uploading.</strong> The SDK Build button does it for you.</li>
                         <li class="mb-2"><strong>Fur Pro needs triangle meshes.</strong> Like the others it tessellates, so if a model looks torn, turn off <strong>Keep Quads</strong> in its import settings, or run <strong>VixenTools &gt; VixForge Mesh Fixes &gt; Scan for Quad Meshes</strong>.</li>
                         <li class="mb-2"><strong>Light Volumes and LTCGI start off</strong>, because they make Unity builds much slower. Turn them on only if your world uses them.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-entry" data-version="editor-2.11.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">VixForge Editor 2.11.0 - 2026-11-27</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Switching a material onto a VixForge shader keeps its VRChat fallback.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2">Switching a cutout or transparent material onto a VixForge shader keeps the matching <strong>VRChat Fallback Shader</strong>. Since VRChat SDK 3.10.6 it went back to the opaque fallback after the switch, so anyone with your shaders hidden saw that part solid.</li>
+                        <li class="mb-2"><strong>Add Director Preview Rig</strong> keeps an AudioLink that is already in your scene working. It used to point that AudioLink at a new, empty Audio Source of its own, so the <strong>AudioLinkAvatar</strong> prefab's YTDLP player stopped reaching it and the Director heard nothing. The rig now listens to the AudioLink's own input (<strong>AudioLinkInput</strong> in the prefab) and changes nothing on it. If that AudioLink has no Audio Source yet, the rig uses the one its video player plays into.</li>
+                        <li class="mb-2">Locked materials no longer carry effects that can never turn on. When a material marked one setting as <strong>Animated</strong>, locking kept every effect whose on/off check mentioned that setting, even when another setting had already switched the effect off. The most common case was Kinetic Shards: with <strong>AudioLink</strong> animated, two kinetic passes stayed in the locked shader while Kinetics was off, which made the upload bigger. Locking now removes an effect whenever it stays off whatever the animated setting does. Everything that is kept draws exactly as before. Re-lock your avatar to get the smaller upload.</li>
+                        <li class="mb-2"><strong>Movement Setup</strong> gives each avatar's FX controller its own clips. Avatars whose FX controllers sat in the same folder used to share one set, so setting up one avatar pointed the others' <strong>Velocity</strong> and <strong>Landing</strong> at its meshes, and their <strong>Velocity Smear</strong> and <strong>Movement</strong> stopped reacting. If you've set up more than one avatar from one folder, open Movement Setup on each one and press <strong>Build Layers</strong> again.</li>
+                        <li class="mb-2">Changing one material or updating a shader no longer makes every locked material compile from scratch on your next build. Unity remembers a compiled pass by the line it starts on, so any setting that added or removed a line in a locked shader moved every pass below it, and Unity compiled them all again. Locked shaders now keep each pass on a fixed line, so only the passes that really changed compile again. The first build after you re-lock compiles everything once more.</li>
+                        <li class="mb-2">Locking a second time in the same session no longer leaves materials unlocked. When two materials shared a locked shader, unlocking and locking them again pointed both at the shader the unlock had just removed, so neither locked.</li>
+                        <li class="mb-2">A locked material no longer stays marked with "Couldn't open include file" when that file is right there. Unity could keep the failed result from a moment during a lock when the folder was being rewritten, and showed it again after every lock and reimport. Locking now spots that case, clears Unity's saved result for that one shader and imports it again. Your uploads were not affected: the build compiled those shaders correctly.</li>
                     </ul>
                 </div>
 

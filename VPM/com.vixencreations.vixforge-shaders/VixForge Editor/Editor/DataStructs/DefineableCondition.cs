@@ -154,6 +154,13 @@ namespace VixForgeEditor
                 }
             }
 
+            public bool IsUnknown(Func<string, bool> isUnknown)
+            {
+                if (_type == DataType.MATERIAL_PROPERTY) return isUnknown(_key);
+                if (_type == DataType.CONDITION) return _condition.TestUnknown(isUnknown) == null;
+                return false;
+            }
+
             public ComparisonData(float value)
             {
                 _type = DataType.FLOAT;
@@ -215,6 +222,13 @@ namespace VixForgeEditor
             public override bool Test()
             {
                 if (_isConstant) return _constant;
+                return Evaluate();
+            }
+
+            public override bool? TestUnknown(Func<string, bool> isUnknown)
+            {
+                if (_isConstant) return _constant;
+                if (_left.IsUnknown(isUnknown) || _right.IsUnknown(isUnknown)) return null;
                 return Evaluate();
             }
 
@@ -434,6 +448,22 @@ namespace VixForgeEditor
                 return Evaluate();
             }
 
+            public override bool? TestUnknown(Func<string, bool> isUnknown)
+            {
+                if (_isConstant) return _constant;
+                bool? a = _condition1.TestUnknown(isUnknown);
+                bool? b = _condition2.TestUnknown(isUnknown);
+                if (_type == CombinationType.AND)
+                {
+                    if (a == false || b == false) return false;
+                    if (a == true && b == true) return true;
+                    return null;
+                }
+                if (a == true || b == true) return true;
+                if (a == false && b == false) return false;
+                return null;
+            }
+
             private bool Evaluate()
             {
                 if (_type == CombinationType.AND) return _condition1.Test() && _condition2.Test();
@@ -450,6 +480,7 @@ namespace VixForgeEditor
 
         protected abstract bool IsConstant { get; }
         public abstract bool Test();
+        public virtual bool? TestUnknown(Func<string, bool> isUnknown) { return Test(); }
 
         private static DefineableCondition ParseForVixForgeParser(string s)
         {

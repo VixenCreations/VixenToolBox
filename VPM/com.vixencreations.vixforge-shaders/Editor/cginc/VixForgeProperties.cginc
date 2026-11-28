@@ -102,13 +102,11 @@
             #endif
             //endex
 
-            #ifdef VIXFORGE_TOON
             //ifex _UseToon==0 || _Toon_Mode!=0
             #ifdef VF_TEX_TOONRAMP
             Texture2D _ToonRamp;
             #endif
             //endex
-            #endif
         #endif
 
         // Wet and Goo ship on VixenWear Latex and on the World shader. Toon, Clothing Pro and
@@ -157,7 +155,11 @@
             #endif
         #endif
 
-        #ifdef VIXFORGE_TOON
+        //ifex _UseToon==0 || _Toon_Mode!=5
+        #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeMultilayer.cginc"
+        //endex
+
+        //ifex _UseToon==0
         float _UseToon;
         float _Toon_RampOffset;
         float _Toon_Smooth;
@@ -195,6 +197,13 @@
             {
                 half w = saturate(_Real_Wrap);
                 shaded = saturate((ndl + w) / ((1.0 + w) * (1.0 + w)));
+            }
+            else if (mode == 5)
+            {
+                shaded = ndl;
+                //ifex _Toon_Mode!=5
+                shaded = VF_MLBandLevel(ndl);
+                //endex
             }
             else
             {
@@ -242,6 +251,13 @@
                 half w = saturate(_Real_Wrap);
                 shaded = saturate((ndl + w) / ((1.0 + w) * (1.0 + w)));
             }
+            else if (mode == 5)
+            {
+                shaded = ndl;
+                //ifex _Toon_Mode!=5
+                shaded = VF_MLBandLevel(ndl);
+                //endex
+            }
             else
             {
                 half band = smoothstep(0.5 - edge * 0.5, 0.5 + edge * 0.5, u);
@@ -257,6 +273,14 @@
 
             return lerp(ndl, shaded, saturate(_UseToon));
         }
+
+        #define VF_TOON_RAMP(x) VF_ToonRamp(x)
+        #define VF_TOON_RAMP_LEVEL(x) VF_ToonRampLevel(x)
+        //endex
+
+        #ifndef VF_TOON_RAMP
+        #define VF_TOON_RAMP(x) (x)
+        #define VF_TOON_RAMP_LEVEL(x) (x)
         #endif
 
         float3 vw_CameraPos()    { return UNITY_MATRIX_I_V._m03_m13_m23; }
@@ -339,10 +363,13 @@
             half  SpecularMask;
             half  CtxShadeHide;
             half3 InkFluor;
-            #if defined(VF_TATTOO) && defined(VIXFORGE_TOON) && !defined(VIXFORGE_CLOTHING) && !defined(VIXFORGE_WORLD)
+            #if defined(VF_TATTOO)
             half3 TatUV;
             half3 TatKey;
             #endif
+            //ifex _UseToon==0 || _Toon_Mode!=5
+            VFMLMaps ML;
+            //endex
             half  CavRefl;
             #ifdef VIXFORGE_CLOTHING
             #if VF_HAS_SHEEN
@@ -998,6 +1025,16 @@
         float _CC_Strength;
         float _CC_Smoothness;
         float _CC_Spec_AA;
+        //ifex _CC_Spec_AA_Refl==0 || _CC_Spec_AA==0
+        float _CC_Spec_AA_Refl;
+        //endex
+        //ifex _CC_Spec_AA_Limit>=1 || _CC_Spec_AA==0
+        float _CC_Spec_AA_Limit;
+        #define VF_SPECAA_LIMIT(k) min(k, _CC_Spec_AA_Limit * _CC_Spec_AA_Limit)
+        //endex
+        #ifndef VF_SPECAA_LIMIT
+        #define VF_SPECAA_LIMIT(k) (k)
+        #endif
         float _CC_Flat;
         float _CC_F0;
         float _Film_Str;
@@ -1436,6 +1473,68 @@
         float _Glit4_Gain; float _Glit4_SizeVar; float _Glit4_SparkVar; float _Glit4_HueVar; float _Glit4_Burst; float _Glit4_Clump; float _Glit4_ClumpScale; float _Glit4_Mix; float4 _Glit4_Color2;
         float _Glit5_Gain; float _Glit5_SizeVar; float _Glit5_SparkVar; float _Glit5_HueVar; float _Glit5_Burst; float _Glit5_Clump; float _Glit5_ClumpScale; float _Glit5_Mix; float4 _Glit5_Color2;
 
+        //ifex _Glit_Merge==0
+        float _Glit_Merge;
+        #define VF_GLIT_MERGE (_Glit_Merge > 0.5)
+        //endex
+        #ifndef VF_GLIT_MERGE
+        #define VF_GLIT_MERGE false
+        #endif
+        //ifex _Glit_Sparkle==0 && _Glit2_Sparkle==0 && _Glit3_Sparkle==0 && _Glit4_Sparkle==0 && _Glit5_Sparkle==0
+        float _Glit_Stereo;
+        #define VF_GLIT_VIEW 1
+        //endex
+        //ifex _Glit_Sparkle==0
+        float _Glit_Sparkle;  float _Glit_Sens;
+        #define VF_GLIT1_SPARK float2(_Glit_Sparkle, _Glit_Sens)
+        //endex
+        //ifex _Glit2_Sparkle==0
+        float _Glit2_Sparkle; float _Glit2_Sens;
+        #define VF_GLIT2_SPARK float2(_Glit2_Sparkle, _Glit2_Sens)
+        //endex
+        //ifex _Glit3_Sparkle==0
+        float _Glit3_Sparkle; float _Glit3_Sens;
+        #define VF_GLIT3_SPARK float2(_Glit3_Sparkle, _Glit3_Sens)
+        //endex
+        //ifex _Glit4_Sparkle==0
+        float _Glit4_Sparkle; float _Glit4_Sens;
+        #define VF_GLIT4_SPARK float2(_Glit4_Sparkle, _Glit4_Sens)
+        //endex
+        //ifex _Glit5_Sparkle==0
+        float _Glit5_Sparkle; float _Glit5_Sens;
+        #define VF_GLIT5_SPARK float2(_Glit5_Sparkle, _Glit5_Sens)
+        //endex
+        #ifndef VF_GLIT1_SPARK
+        #define VF_GLIT1_SPARK float2(0.0, 0.0)
+        #endif
+        #ifndef VF_GLIT2_SPARK
+        #define VF_GLIT2_SPARK float2(0.0, 0.0)
+        #endif
+        #ifndef VF_GLIT3_SPARK
+        #define VF_GLIT3_SPARK float2(0.0, 0.0)
+        #endif
+        #ifndef VF_GLIT4_SPARK
+        #define VF_GLIT4_SPARK float2(0.0, 0.0)
+        #endif
+        #ifndef VF_GLIT5_SPARK
+        #define VF_GLIT5_SPARK float2(0.0, 0.0)
+        #endif
+        //ifex _Glit_Position==0
+        float _Glit_Position;
+        //endex
+        //ifex _Glit2_Position==0
+        float _Glit2_Position;
+        //endex
+        //ifex _Glit3_Position==0
+        float _Glit3_Position;
+        //endex
+        //ifex _Glit4_Position==0
+        float _Glit4_Position;
+        //endex
+        //ifex _Glit5_Position==0
+        float _Glit5_Position;
+        //endex
+
         #ifndef VF_VRC_VIEW_DECLARED
         #define VF_VRC_VIEW_DECLARED
         float _VRChatMirrorMode;
@@ -1475,6 +1574,7 @@
         float4 _CtxInkLightCol;
         float4 _CtxInkLight;
         float4 _CtxInkDark;
+        float4 _CtxInkTime;
         float4 _CtxInkBeat;
         float _CtxInkBand;
         float _CtxInkInvert;
@@ -1500,6 +1600,7 @@
         float4 _CtxBaseLightCol;
         float4 _CtxBaseLight;
         float4 _CtxBaseDark;
+        float4 _CtxBaseTime;
         float4 _CtxBaseBeat;
         float _CtxBaseBand;
         float _CtxBaseInvert;
@@ -1517,6 +1618,7 @@
         float4 _CtxNormLightCol;
         float4 _CtxNormLight;
         float4 _CtxNormDark;
+        float4 _CtxNormTime;
         float4 _CtxNormBeat;
         float _CtxNormBand;
         float _CtxNormInvert;
@@ -1534,6 +1636,7 @@
         float4 _CtxSurfLightCol;
         float4 _CtxSurfLight;
         float4 _CtxSurfDark;
+        float4 _CtxSurfTime;
         float4 _CtxSurfBeat;
         float _CtxSurfBand;
         float _CtxSurfInvert;
@@ -1551,6 +1654,7 @@
         float4 _CtxShadeLightCol;
         float4 _CtxShadeLight;
         float4 _CtxShadeDark;
+        float4 _CtxShadeTime;
         float4 _CtxShadeBeat;
         float _CtxShadeBand;
         float _CtxShadeInvert;
@@ -1568,6 +1672,7 @@
         float4 _CtxDecalLightCol;
         float4 _CtxDecalLight;
         float4 _CtxDecalDark;
+        float4 _CtxDecalTime;
         float4 _CtxDecalBeat;
         float _CtxDecalBand;
         float _CtxDecalInvert;
@@ -1586,6 +1691,7 @@
         float4 _CtxPolishLightCol;
         float4 _CtxPolishLight;
         float4 _CtxPolishDark;
+        float4 _CtxPolishTime;
         float4 _CtxPolishBeat;
         float _CtxPolishBand;
         float _CtxPolishInvert;
@@ -1603,6 +1709,7 @@
         float4 _CtxSfxLightCol;
         float4 _CtxSfxLight;
         float4 _CtxSfxDark;
+        float4 _CtxSfxTime;
         float4 _CtxSfxBeat;
         float _CtxSfxBand;
         float _CtxSfxInvert;
@@ -1623,6 +1730,7 @@
         float4 _CtxOutlineLightCol;
         float4 _CtxOutlineLight;
         float4 _CtxOutlineDark;
+        float4 _CtxOutlineTime;
         float4 _CtxOutlineBeat;
         float _CtxOutlineBand;
         float _CtxOutlineInvert;
@@ -1640,6 +1748,7 @@
         float4 _CtxEmisLightCol;
         float4 _CtxEmisLight;
         float4 _CtxEmisDark;
+        float4 _CtxEmisTime;
         float4 _CtxEmisBeat;
         float _CtxEmisBand;
         float _CtxEmisInvert;
@@ -1658,6 +1767,7 @@
         float4 _CtxMatcapLightCol;
         float4 _CtxMatcapLight;
         float4 _CtxMatcapDark;
+        float4 _CtxMatcapTime;
         float4 _CtxMatcapBeat;
         float _CtxMatcapBand;
         float _CtxMatcapInvert;
@@ -1675,6 +1785,7 @@
         float4 _CtxALLightCol;
         float4 _CtxALLight;
         float4 _CtxALDark;
+        float4 _CtxALTime;
         float4 _CtxALBeat;
         float _CtxALBand;
         float _CtxALInvert;
@@ -2364,7 +2475,6 @@
         float _LM_Bicubic;
         float _LM_Specular;
         float _LM_SpecSmoothCap;
-        float _LM_Unified;
         // Triplanar projection and stochastic tiling. World shaders only, for the reason given above
         // vw_TriWeights in VixForgeCommon.cginc.
         float _UseTriplanar;
@@ -2383,9 +2493,9 @@
         float _LV_Pt_Int;
         float _LV_Pt_Edge;
         float _LV_Pt_Shading;
-        #ifdef VIXFORGE_TOON
+        //ifex _LV_Pt_Toon==0
         float _LV_Pt_Toon;
-        #endif
+        //endex
 
         float _LV_CC_Spec_Mix;
         float _LV_CC_Tight;
@@ -2507,6 +2617,11 @@
         float _AL_Fur_Mod;
         float _AL_Band_Rim;
         float _AL_Rim_Mod;
+        float _AL_Rim_Color;
+        float _AL_Rim_Spectrum;
+        float _AL_Rim_Octave;
+        float _AL_Rim_Mirror;
+        float _AL_Rim_Spin;
         float _AL_Band_Shadow;
         float _AL_Shadow_Mod;
         float _AL_Band_Detail;

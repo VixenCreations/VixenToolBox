@@ -101,6 +101,11 @@
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeTattoo.cginc"
         #endif
         //endex
+        //ifex _UseWear==0
+        #ifdef VF_WEAR
+        #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeWear.cginc"
+        #endif
+        //endex
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeVertex.cginc"
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeProbeVolume.cginc"
         #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeShadow.cginc"

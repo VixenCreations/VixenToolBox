@@ -2,7 +2,7 @@
 
 A free set of Unity editor tools for VRChat avatars and worlds. It checks your work against VRChat's limits, fixes what it can in one click, and takes the repetitive setup off your hands.
 
-* **Package:** `com.vixencreations.vixens-toolbox` (v2.23.0)
+* **Package:** `com.vixencreations.vixens-toolbox` (v2.24.0)
 * **Needs:** Unity 2022.3.22f1 and VRChat SDK 3.10.3 or newer
 * **Docs and install:** [vixencreations.github.io/VixenToolBox](https://vixencreations.github.io/VixenToolBox/)
 
@@ -59,6 +59,9 @@ Everything lives under the **VixenTools** menu. The **Hub** (`VixenTools/Hub Das
 * **Animation Workbench Pro** (`VixenTools/Unity Engine/Animation Workbench Pro`): a visual workspace for building and easing animation curves, with a live preview on your scene object.
 * **Pipeline Preset Manager** (`VixenTools/Unity Engine/Pipeline Preset Manager`): pulls import settings out of your assets, or creates a preset from scratch, and can make it the default for everything you import next.
 * **Fix Scene Data** (`VixenTools/Unity Engine/Fix Scene Data`): reattaches a scene's lighting data when it has gone missing.
+* **Reset Selected Blend Shapes to Zero** (`VixenTools/Unity Engine/Reset Selected Blend Shapes to Zero`): sets every blend shape to zero on the selected meshes. Select an avatar to reset all of its meshes at once. One Ctrl+Z puts them back.
+* **Clean Missing Scripts** (`VixenTools/Unity Engine/Clean Missing Scripts`): removes "missing script" components from your selection or from every open scene. Select prefabs in the Project window to clean the prefab files themselves.
+* **Texture compression** (`VixenTools/Unity Engine/Textures`): **Reset Compression to Default** puts the selected textures back on Unity's default compression, keeping each platform's max size. **Turn Off Compression (Testing)** does the opposite, for checking your optimization tools. Both work on selected textures, folders, materials, or an avatar in the scene.
 
 ### 7. The Hub
 

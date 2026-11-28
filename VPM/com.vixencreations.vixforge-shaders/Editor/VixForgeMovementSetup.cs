@@ -279,6 +279,22 @@ public class VixForgeMovementSetup : EditorWindow
         }
     }
 
+    // This controller's own clip folder: the first of "<name>", "<name> 2", ... whose clips no other controller plays.
+    static string ClipFolder(string ctrlPath, string parent)
+    {
+        var elsewhere = new List<string>();
+        foreach (string guid in AssetDatabase.FindAssets("t:RuntimeAnimatorController"))
+        {
+            string p = AssetDatabase.GUIDToAssetPath(guid);
+            if (p == ctrlPath) continue;
+            elsewhere.AddRange(AssetDatabase.GetDependencies(p, false).Where(d => d.StartsWith(parent + "/")));
+        }
+        string name = Path.GetFileNameWithoutExtension(ctrlPath);
+        string folder = parent + "/" + name;
+        for (int n = 2; elsewhere.Any(d => d.StartsWith(folder + "/")); n++) folder = parent + "/" + name + " " + n;
+        return folder;
+    }
+
     static AnimatorStateTransition Link(AnimatorState from, AnimatorState to, AnimatorConditionMode mode, bool exitTime)
     {
         AnimatorStateTransition t = from.AddTransition(to);
@@ -391,14 +407,16 @@ public class VixForgeMovementSetup : EditorWindow
                                          .Where(m => m != null && m.HasProperty(VelocityProp)).Distinct().ToList();
         string ctrlPath = AssetDatabase.GetAssetPath(_controller);
         string ctrlDir = Path.GetDirectoryName(ctrlPath).Replace('\\', '/');
-        string folder = ctrlDir + "/" + Prefix;
+        string parent = ctrlDir + "/" + Prefix;
+        string folder = ClipFolder(ctrlPath, parent);
         int layerCount = (_doVelocity ? 1 : 0) + (_doLanding ? 1 : 0);
         string msg = "This adds " + layerCount + " layer(s) to " + _controller.name + ", saves its clips in " + folder +
                      ", and marks the Movement properties Animated (when locked) on " + materials.Count +
                      " material(s). Running it again rebuilds the same layers.";
         if (!EditorUtility.DisplayDialog("Movement Setup", msg, "Build", "Cancel")) return;
 
-        if (!AssetDatabase.IsValidFolder(folder)) AssetDatabase.CreateFolder(ctrlDir, Prefix);
+        if (!AssetDatabase.IsValidFolder(parent)) AssetDatabase.CreateFolder(ctrlDir, Prefix);
+        if (!AssetDatabase.IsValidFolder(folder)) AssetDatabase.CreateFolder(parent, Path.GetFileName(folder));
 
         var specs = new List<ClipSpec>();
         if (_doVelocity)

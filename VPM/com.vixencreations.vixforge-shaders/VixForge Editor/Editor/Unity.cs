@@ -38,19 +38,34 @@ namespace VixForgeEditor
         {
             try
             {
+#if UNITY_6000_0_OR_NEWER
+                string symbols = PlayerSettings.GetScriptingDefineSymbols(
+                        UnityEditor.Build.NamedBuildTarget.Standalone);
+#else
                 string symbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(
                         BuildTargetGroup.Standalone);
+#endif
                 if (!symbols.Contains(symbol) && active)
                 {
+#if UNITY_6000_0_OR_NEWER
+                    PlayerSettings.SetScriptingDefineSymbols(
+                                  UnityEditor.Build.NamedBuildTarget.Standalone, symbols + ";" + symbol);
+#else
                     PlayerSettings.SetScriptingDefineSymbolsForGroup(
                                   BuildTargetGroup.Standalone, symbols + ";" + symbol);
+#endif
                     if(refresh_if_changed)
                         AssetDatabase.Refresh();
                 }
                 else if (symbols.Contains(symbol) && !active)
                 {
+#if UNITY_6000_0_OR_NEWER
+                    PlayerSettings.SetScriptingDefineSymbols(
+                                  UnityEditor.Build.NamedBuildTarget.Standalone, Regex.Replace(symbols, @";?" + @symbol, ""));
+#else
                     PlayerSettings.SetScriptingDefineSymbolsForGroup(
                                   BuildTargetGroup.Standalone, Regex.Replace(symbols, @";?" + @symbol, ""));
+#endif
                     if(refresh_if_changed)
                         AssetDatabase.Refresh();
                 }
@@ -336,7 +351,11 @@ namespace VixForgeEditor
                 PlayerSettings.GetApiCompatibilityLevel(BuildTargetGroup.Standalone);
 #endif
             if (level == ApiCompatibilityLevel.NET_2_0_Subset)
+#if UNITY_6000_0_OR_NEWER
+                PlayerSettings.SetApiCompatibilityLevel(UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(BuildTargetGroup.Standalone), ApiCompatibilityLevel.NET_2_0);
+#else
                 PlayerSettings.SetApiCompatibilityLevel(BuildTargetGroup.Standalone, ApiCompatibilityLevel.NET_2_0);
+#endif
 
             return level;
         }

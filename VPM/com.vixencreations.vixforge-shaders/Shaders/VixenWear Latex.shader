@@ -165,6 +165,98 @@ Shader "VixenWear/Latex Ultra"
         [HideInInspector] s_end_ColorAdjustColorGrading ("", Float) = 0
         [HideInInspector] m_end_coloradjust ("", Float) = 0
         //endex
+        //ifex _RGBMaskEnabled==0
+        [HideInInspector] m_start_RGBMask ("RGBA Color Masking--{reference_property:_RGBMaskEnabled,tooltip:''Recolours up to four parts of the material from the red, green, blue and alpha of one mask, each part with its own colour, texture, blend and glow.''}", Float) = 0
+        [HideInInspector][VixForgeToggleUI(VF_RGBMASK)] _RGBMaskEnabled ("Enable--{tooltip:''Turns this feature on. It costs nothing while it is off.''}", Float) = 0
+        [VixForgeHelpbox] _RGBMask_Attribution ("Works like RGBA Color Masking in Poiyomi Toon, by Poiyomi, with the same property names for its colour settings. Click for github.com/poiyomi/PoiyomiToonShader--{onClick:{type:URL,data:https://github.com/poiyomi/PoiyomiToonShader}}", Float) = 0
+        [VixForgesRGBWarning][VixForgeTextureKeyword(VF_TEX_RGBMASK)] _RGBMask ("Masks--{tooltip:''Each channel marks one part: red, green, blue and alpha. Paint white where that part takes its colour. Its tiling scales the mask.''}", 2D) = "white" {}
+        [VixForgeWideEnum(UV0, 0, UV1, 1)] _RGBMaskUV ("UV--{tooltip:''Which UV set the mask follows.''}", Float) = 0
+        [HideInInspector] s_start_RGBRed ("Red--{reference_property:_RGBARedEnable,tooltip:''The part the red channel of the mask marks.''}", Float) = 0
+        [HideInInspector][ToggleUI] _RGBARedEnable ("Enable--{tooltip:''Colours the part the red channel marks.''}", Float) = 0
+        //ifex _RGBARedEnable==0
+        _RedColor ("Color--{tooltip:''The colour for this part. Its alpha is how strongly it covers.''}", Color) = (1, 1, 1, 1)
+        [VixForgesRGBWarning(gamma)][VixForgeTextureKeyword(VF_TEX_REDTEXTURE)] _RedTexture ("Texture--{tooltip:''Multiplies the colour, so the part can carry a pattern. Its tiling scales the pattern.''}", 2D) = "white" {}
+        [VixForgeWideEnum(UV0, 0, UV1, 1)] _RedTextureUV ("Texture UV--{tooltip:''Which UV set the texture follows.''}", Float) = 0
+        _RGBARedScaleOffset ("Scale & Offset--{tooltip:''Extra tiling (x, y) and offset (z, w) on top of the tiling of the texture.''}", Vector) = (1, 1, 0, 0)
+        [VixForgeWideEnum(Replace, 0, Darken, 1, Multiply, 2, Lighten, 5, Screen, 6, Subtract, 7, Add, 8, Overlay, 9)] _RGBARedBlendType ("Color Blend--{tooltip:''How the colour sits on the material: replacing it, multiplied into it, added as light, and so on.''}", Float) = 0
+        _RedAlphaAdd ("Alpha Add--{tooltip:''Added to the alpha of the colour, so you can push the part fully on or pull it back.''}", Range(-1, 1)) = 0
+        [VixForgeWideEnum(R, 0, G, 1, B, 2, A, 3)] _RgbRedMaskChannel ("Mask Channel--{tooltip:''Which channel of the mask marks this part.''}", Float) = 0
+        _RGBARedEmissionStrength ("Emission Strength--{tooltip:''Makes the part glow in its own colour. 0 is no glow.''}", Range(0, 20)) = 0
+        //endex
+        [HideInInspector] s_end_RGBRed ("", Float) = 0
+        [HideInInspector] s_start_RGBGreen ("Green--{reference_property:_RGBAGreenEnable,tooltip:''The part the green channel of the mask marks.''}", Float) = 0
+        [HideInInspector][ToggleUI] _RGBAGreenEnable ("Enable--{tooltip:''Colours the part the green channel marks.''}", Float) = 0
+        //ifex _RGBAGreenEnable==0
+        _GreenColor ("Color--{tooltip:''The colour for this part. Its alpha is how strongly it covers.''}", Color) = (1, 1, 1, 1)
+        [VixForgesRGBWarning(gamma)][VixForgeTextureKeyword(VF_TEX_GREENTEXTURE)] _GreenTexture ("Texture--{tooltip:''Multiplies the colour, so the part can carry a pattern. Its tiling scales the pattern.''}", 2D) = "white" {}
+        [VixForgeWideEnum(UV0, 0, UV1, 1)] _GreenTextureUV ("Texture UV--{tooltip:''Which UV set the texture follows.''}", Float) = 0
+        _RGBAGreenScaleOffset ("Scale & Offset--{tooltip:''Extra tiling (x, y) and offset (z, w) on top of the tiling of the texture.''}", Vector) = (1, 1, 0, 0)
+        [VixForgeWideEnum(Replace, 0, Darken, 1, Multiply, 2, Lighten, 5, Screen, 6, Subtract, 7, Add, 8, Overlay, 9)] _RGBAGreenBlendType ("Color Blend--{tooltip:''How the colour sits on the material: replacing it, multiplied into it, added as light, and so on.''}", Float) = 0
+        _GreenAlphaAdd ("Alpha Add--{tooltip:''Added to the alpha of the colour, so you can push the part fully on or pull it back.''}", Range(-1, 1)) = 0
+        [VixForgeWideEnum(R, 0, G, 1, B, 2, A, 3)] _RgbGreenMaskChannel ("Mask Channel--{tooltip:''Which channel of the mask marks this part.''}", Float) = 1
+        _RGBAGreenEmissionStrength ("Emission Strength--{tooltip:''Makes the part glow in its own colour. 0 is no glow.''}", Range(0, 20)) = 0
+        //endex
+        [HideInInspector] s_end_RGBGreen ("", Float) = 0
+        [HideInInspector] s_start_RGBBlue ("Blue--{reference_property:_RGBABlueEnable,tooltip:''The part the blue channel of the mask marks.''}", Float) = 0
+        [HideInInspector][ToggleUI] _RGBABlueEnable ("Enable--{tooltip:''Colours the part the blue channel marks.''}", Float) = 0
+        //ifex _RGBABlueEnable==0
+        _BlueColor ("Color--{tooltip:''The colour for this part. Its alpha is how strongly it covers.''}", Color) = (1, 1, 1, 1)
+        [VixForgesRGBWarning(gamma)][VixForgeTextureKeyword(VF_TEX_BLUETEXTURE)] _BlueTexture ("Texture--{tooltip:''Multiplies the colour, so the part can carry a pattern. Its tiling scales the pattern.''}", 2D) = "white" {}
+        [VixForgeWideEnum(UV0, 0, UV1, 1)] _BlueTextureUV ("Texture UV--{tooltip:''Which UV set the texture follows.''}", Float) = 0
+        _RGBABlueScaleOffset ("Scale & Offset--{tooltip:''Extra tiling (x, y) and offset (z, w) on top of the tiling of the texture.''}", Vector) = (1, 1, 0, 0)
+        [VixForgeWideEnum(Replace, 0, Darken, 1, Multiply, 2, Lighten, 5, Screen, 6, Subtract, 7, Add, 8, Overlay, 9)] _RGBABlueBlendType ("Color Blend--{tooltip:''How the colour sits on the material: replacing it, multiplied into it, added as light, and so on.''}", Float) = 0
+        _BlueAlphaAdd ("Alpha Add--{tooltip:''Added to the alpha of the colour, so you can push the part fully on or pull it back.''}", Range(-1, 1)) = 0
+        [VixForgeWideEnum(R, 0, G, 1, B, 2, A, 3)] _RgbBlueMaskChannel ("Mask Channel--{tooltip:''Which channel of the mask marks this part.''}", Float) = 2
+        _RGBABlueEmissionStrength ("Emission Strength--{tooltip:''Makes the part glow in its own colour. 0 is no glow.''}", Range(0, 20)) = 0
+        //endex
+        [HideInInspector] s_end_RGBBlue ("", Float) = 0
+        [HideInInspector] s_start_RGBAlpha ("Alpha--{reference_property:_RGBAAlphaEnable,tooltip:''The part the alpha channel of the mask marks.''}", Float) = 0
+        [HideInInspector][ToggleUI] _RGBAAlphaEnable ("Enable--{tooltip:''Colours the part the alpha channel marks.''}", Float) = 0
+        //ifex _RGBAAlphaEnable==0
+        _AlphaColor ("Color--{tooltip:''The colour for this part. Its alpha is how strongly it covers.''}", Color) = (1, 1, 1, 1)
+        [VixForgesRGBWarning(gamma)][VixForgeTextureKeyword(VF_TEX_ALPHATEXTURE)] _AlphaTexture ("Texture--{tooltip:''Multiplies the colour, so the part can carry a pattern. Its tiling scales the pattern.''}", 2D) = "white" {}
+        [VixForgeWideEnum(UV0, 0, UV1, 1)] _AlphaTextureUV ("Texture UV--{tooltip:''Which UV set the texture follows.''}", Float) = 0
+        _RGBAAlphaScaleOffset ("Scale & Offset--{tooltip:''Extra tiling (x, y) and offset (z, w) on top of the tiling of the texture.''}", Vector) = (1, 1, 0, 0)
+        [VixForgeWideEnum(Replace, 0, Darken, 1, Multiply, 2, Lighten, 5, Screen, 6, Subtract, 7, Add, 8, Overlay, 9)] _RGBAAlphaBlendType ("Color Blend--{tooltip:''How the colour sits on the material: replacing it, multiplied into it, added as light, and so on.''}", Float) = 0
+        _AlphaAlphaAdd ("Alpha Add--{tooltip:''Added to the alpha of the colour, so you can push the part fully on or pull it back.''}", Range(-1, 1)) = 0
+        [VixForgeWideEnum(R, 0, G, 1, B, 2, A, 3)] _RgbAlphaMaskChannel ("Mask Channel--{tooltip:''Which channel of the mask marks this part.''}", Float) = 3
+        _RGBAAlphaEmissionStrength ("Emission Strength--{tooltip:''Makes the part glow in its own colour. 0 is no glow.''}", Range(0, 20)) = 0
+        //endex
+        [HideInInspector] s_end_RGBAlpha ("", Float) = 0
+        [HideInInspector] m_end_RGBMask ("", Float) = 0
+        //endex
+
+        //ifex _UseMain2ndTex==0
+        [HideInInspector] m_start_Main2nd ("Second Color Layer--{reference_property:_UseMain2ndTex,tooltip:''Lays another colour or texture over the Albedo before lighting, with its own UV, mask and blend.''}", Float) = 0
+        [HideInInspector][VixForgeToggleUI(VF_MAIN2ND)] _UseMain2ndTex ("Enable--{tooltip:''Turns this feature on. It costs nothing while it is off.''}", Float) = 0
+        [VixForgeHelpbox] _Main2nd_Attribution ("Works like Main Color 2nd in lilToon, by lilxyzw, with the same property names. Click for github.com/lilxyzw/lilToon--{onClick:{type:URL,data:https://github.com/lilxyzw/lilToon}}", Float) = 0
+        _Color2nd ("Color--{tooltip:''Multiplies the texture. Its alpha is how strongly the layer covers.''}", Color) = (1, 1, 1, 1)
+        [VixForgesRGBWarning(gamma)][VixForgeTextureKeyword(VF_TEX_MAIN2NDTEX)] _Main2ndTex ("Texture--{tooltip:''The image for this layer. Its alpha cuts it out, and its tiling scales it.''}", 2D) = "white" {}
+        [VixForgeWideEnum(UV0, 0, UV1, 1)] _Main2ndTex_UVMode ("UV--{tooltip:''Which UV set the texture follows.''}", Float) = 0
+        [VixForgesRGBWarning][NoScaleOffset][VixForgeTextureKeyword(VF_TEX_MAIN2NDBLENDMASK)] _Main2ndBlendMask ("Mask--{tooltip:''White shows the layer and black hides it. Read from the red channel, on the Albedo UV.''}", 2D) = "white" {}
+        [VixForgeWideEnum(Normal, 0, Add, 1, Screen, 2, Multiply, 3)] _Main2ndTexBlendMode ("Blend--{tooltip:''How the layer sits on the colour below: laid over it, added as light, screened or multiplied.''}", Float) = 0
+        [VixForgeWideEnum(Both Sides, 0, Back Only, 1, Front Only, 2)] _Main2ndTex_Cull ("Sides--{tooltip:''Which side of the mesh shows the layer.''}", Float) = 0
+        [VixForgeVectorToSliders(Start, p0, p20, End, p0, p20, Amount, p0, p1)] _Main2ndDistanceFade ("Distance Fade--{tooltip:''Fades the layer by distance from the camera, in metres, between Start and End.'',tooltips:[''Fully shown at this distance.'',''Gone at this distance. Smaller than Start fades it out as the camera comes close.'',''How much the distance decides. 0 turns it off.'']}", Vector) = (0.1, 0.01, 0, 0)
+        [VixForgeWideEnum(Bass, 0, Low Mid, 1, High Mid, 2, Treble, 3, Volume, 4)] _Main2ndALBand ("AudioLink Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music the layer follows.''}", Float) = 0
+        _Main2ndALAmount ("Beat Amount--{condition_show:(_UseAudioLink==1),tooltip:''How much the music decides. At 1 the layer shows only as loud as the band.''}", Range(0, 1)) = 0
+        [HideInInspector] m_end_Main2nd ("", Float) = 0
+        //endex
+
+        //ifex _UseMain3rdTex==0
+        [HideInInspector] m_start_Main3rd ("Third Color Layer--{reference_property:_UseMain3rdTex,tooltip:''Lays another colour or texture over the Albedo before lighting, with its own UV, mask and blend.''}", Float) = 0
+        [HideInInspector][VixForgeToggleUI(VF_MAIN3RD)] _UseMain3rdTex ("Enable--{tooltip:''Turns this feature on. It costs nothing while it is off.''}", Float) = 0
+        [VixForgeHelpbox] _Main3rd_Attribution ("Works like Main Color 3rd in lilToon, by lilxyzw, with the same property names. Click for github.com/lilxyzw/lilToon--{onClick:{type:URL,data:https://github.com/lilxyzw/lilToon}}", Float) = 0
+        _Color3rd ("Color--{tooltip:''Multiplies the texture. Its alpha is how strongly the layer covers.''}", Color) = (1, 1, 1, 1)
+        [VixForgesRGBWarning(gamma)][VixForgeTextureKeyword(VF_TEX_MAIN3RDTEX)] _Main3rdTex ("Texture--{tooltip:''The image for this layer. Its alpha cuts it out, and its tiling scales it.''}", 2D) = "white" {}
+        [VixForgeWideEnum(UV0, 0, UV1, 1)] _Main3rdTex_UVMode ("UV--{tooltip:''Which UV set the texture follows.''}", Float) = 0
+        [VixForgesRGBWarning][NoScaleOffset][VixForgeTextureKeyword(VF_TEX_MAIN3RDBLENDMASK)] _Main3rdBlendMask ("Mask--{tooltip:''White shows the layer and black hides it. Read from the red channel, on the Albedo UV.''}", 2D) = "white" {}
+        [VixForgeWideEnum(Normal, 0, Add, 1, Screen, 2, Multiply, 3)] _Main3rdTexBlendMode ("Blend--{tooltip:''How the layer sits on the colour below: laid over it, added as light, screened or multiplied.''}", Float) = 0
+        [VixForgeWideEnum(Both Sides, 0, Back Only, 1, Front Only, 2)] _Main3rdTex_Cull ("Sides--{tooltip:''Which side of the mesh shows the layer.''}", Float) = 0
+        [VixForgeVectorToSliders(Start, p0, p20, End, p0, p20, Amount, p0, p1)] _Main3rdDistanceFade ("Distance Fade--{tooltip:''Fades the layer by distance from the camera, in metres, between Start and End.'',tooltips:[''Fully shown at this distance.'',''Gone at this distance. Smaller than Start fades it out as the camera comes close.'',''How much the distance decides. 0 turns it off.'']}", Vector) = (0.1, 0.01, 0, 0)
+        [VixForgeWideEnum(Bass, 0, Low Mid, 1, High Mid, 2, Treble, 3, Volume, 4)] _Main3rdALBand ("AudioLink Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music the layer follows.''}", Float) = 0
+        _Main3rdALAmount ("Beat Amount--{condition_show:(_UseAudioLink==1),tooltip:''How much the music decides. At 1 the layer shows only as loud as the band.''}", Range(0, 1)) = 0
+        [HideInInspector] m_end_Main3rd ("", Float) = 0
+        //endex
 
         //ifex _EnableUDIMDiscardOptions==0
         [HideInInspector] m_start_udimdiscard ("UV Tile Discard--{reference_property:_EnableUDIMDiscardOptions}", Float) = 0
@@ -374,6 +466,100 @@ Shader "VixenWear/Latex Ultra"
         
         [HideInInspector] m_shading ("SHADING--{button_help:{action:{type:URL,data:https://vixencreations.github.io/VixenToolBox/shaderdocs.html#shading}}}", Float) = 0
 
+        //ifex _UseToon==0
+        [HideInInspector] m_start_toon ("Shading Options--{reference_property:_UseToon}", Float) = 0
+        [Toggle] _UseToon ("Enable--{tooltip:''Switch from realistic shading to a stylised look, with the light stepping between bands instead of fading.''}", Float) = 0
+        [HideInInspector] s_start_tog_UseToon ("Shading Options Settings--{condition_show:(_UseToon==1)}", Float) = 0
+        [VixForgeWideEnum(Ramp Texture,0,Cel Steps,1,Soft,2,Hard,3,Realistic,4,Multilayer Math,5)] _Toon_Mode ("Style--{tooltip:''Which stylised look. Ramp Texture reads your Gradient, Cel Steps posterises into flat bands, Soft stays smooth, Hard gives one crisp edge, Realistic leaves the physical light alone, and Multilayer Math paints up to three coloured shadow layers like Poiyomi Toon.''}", Float) = 0
+
+        [HideInInspector] s_start_shade_ramp ("Ramp--{condition_show:(_Toon_Mode==0)}", Float) = 0
+        //ifex _UseToon==0 || _Toon_Mode!=0
+        [VixForgesRGBWarning(gamma)][VixForgeGradient(gamma)][NoScaleOffset][VixForgeTextureKeyword(VF_TEX_TOONRAMP)] _ToonRamp ("Gradient--{tooltip:''Edit the gradient inline, or drop a texture. It reads left (unlit) to right (lit). Leave it empty for a clean two-tone. Only its brightness is used.''}", 2D) = "white" {}
+        //endex
+        _Toon_RampOffset ("Offset--{tooltip:''Slides your ramp texture along, which moves where light turns into shade.''}", Range(-1,1)) = 0.0
+        [HideInInspector] s_end_shade_ramp ("", Float) = 0
+
+        [HideInInspector] s_start_shade_steps ("Bands--{condition_show:(_Toon_Mode==1)}", Float) = 0
+        _Toon_Steps ("Count--{tooltip:''How many bands the light steps through. 2 is the classic hard cel look.''}", Range(2,8)) = 3
+        [HideInInspector] s_end_shade_steps ("", Float) = 0
+
+        [HideInInspector] s_start_shade_real ("Realistic--{condition_show:(_Toon_Mode==4)}", Float) = 0
+        _Real_Wrap ("Light Wrap--{tooltip:''Full physically based falloff, no stylising. Light Wrap softens the terminator the way skin, fabric and fur do, without losing energy.''}", Range(0,1)) = 0.0
+        [HideInInspector] s_end_shade_real ("", Float) = 0
+        [HideInInspector] s_start_shade_ml ("Multilayer Math--{condition_show:(_Toon_Mode==5)}", Float) = 0
+        //ifex _UseToon==0 || _Toon_Mode!=5
+        [VixForgeHelpbox] _Multilayer_Attribution ("Works like Multilayer Math in Poiyomi Toon, by Poiyomi, with the same property names. Click for github.com/poiyomi/PoiyomiToonShader--{onClick:{type:URL,data:https://github.com/poiyomi/PoiyomiToonShader}}", Float) = 0
+        [HideInInspector] s_start_ml_layer1 ("Shadow Layer 1", Float) = 0
+        _ShadowColor ("Color--{tooltip:''The colour of this shadow layer. Its alpha sets how strong it is, and 0 turns the layer off.''}", Color) = (0.82, 0.76, 0.85, 1)
+        [VixForgesRGBWarning(gamma)][VixForgeTextureKeyword(VF_TEX_SHADOWCOLORTEX)] _ShadowColorTex ("Color Texture--{tooltip:''Paints this layer per pixel, multiplied by the colour above. Its alpha sets how much it counts.''}", 2D) = "white" {}
+        [VixForgeWideEnum(UV0, 0, UV1, 1)] _ShadowColorTexUV ("Texture UV--{tooltip:''Which UV set the colour texture reads.''}", Float) = 0
+        _ShadowColorTexAddition ("Texture Brightness--{tooltip:''Brightens or darkens the colour texture before it tints.''}", Range(-1, 1)) = 0
+        _ShadowBorder ("Border--{tooltip:''Where the shadow starts. 0.5 is where the surface turns away from the light, and higher pushes the shadow toward the light.''}", Range(0, 1)) = 0.5
+        _ShadowBlur ("Blur--{tooltip:''How soft this layer's edge is.''}", Range(0, 1)) = 0.1
+        _ShadowReceive ("Receive Shadow--{tooltip:''How much shadows cast by other things add to this layer, from the main light. At 0 the layer ignores them.''}", Range(0, 1)) = 0
+        _ShadowNormalStrength ("Normal Blend--{tooltip:''How much your normal map shapes this layer. 0 follows the smooth mesh.''}", Range(0, 1)) = 1
+        [HideInInspector] s_end_ml_layer1 ("", Float) = 0
+        [HideInInspector] s_start_ml_layer2 ("Shadow Layer 2", Float) = 0
+        _Shadow2ndColor ("Color--{tooltip:''The colour of this shadow layer. Its alpha sets how strong it is, and 0 turns the layer off.''}", Color) = (0.68, 0.66, 0.79, 1)
+        [VixForgesRGBWarning(gamma)][VixForgeTextureKeyword(VF_TEX_SHADOW2NDCOLORTEX)] _Shadow2ndColorTex ("Color Texture--{tooltip:''Paints this layer per pixel, multiplied by the colour above. Its alpha sets how much it counts.''}", 2D) = "white" {}
+        [VixForgeWideEnum(UV0, 0, UV1, 1)] _Shadow2ndColorTexUV ("Texture UV--{tooltip:''Which UV set the colour texture reads.''}", Float) = 0
+        _Shadow2ndColorTexAddition ("Texture Brightness--{tooltip:''Brightens or darkens the colour texture before it tints.''}", Range(-1, 1)) = 0
+        _Shadow2ndBorder ("Border--{tooltip:''Where this deeper layer starts. Lower keeps it further into the shadow.''}", Range(0, 1)) = 0.15
+        _Shadow2ndBlur ("Blur--{tooltip:''How soft this layer's edge is.''}", Range(0, 1)) = 0.1
+        _Shadow2ndReceive ("Receive Shadow--{tooltip:''How much shadows cast by other things add to this layer, from the main light. At 0 the layer ignores them.''}", Range(0, 1)) = 0
+        _Shadow2ndNormalStrength ("Normal Blend--{tooltip:''How much your normal map shapes this layer. 0 follows the smooth mesh.''}", Range(0, 1)) = 1
+        [HideInInspector] s_end_ml_layer2 ("", Float) = 0
+        [HideInInspector] s_start_ml_layer3 ("Shadow Layer 3", Float) = 0
+        _Shadow3rdColor ("Color--{tooltip:''The colour of this shadow layer. Its alpha sets how strong it is, and 0 turns the layer off.''}", Color) = (0, 0, 0, 0)
+        [VixForgesRGBWarning(gamma)][VixForgeTextureKeyword(VF_TEX_SHADOW3RDCOLORTEX)] _Shadow3rdColorTex ("Color Texture--{tooltip:''Paints this layer per pixel, multiplied by the colour above. Its alpha sets how much it counts.''}", 2D) = "white" {}
+        [VixForgeWideEnum(UV0, 0, UV1, 1)] _Shadow3rdColorTexUV ("Texture UV--{tooltip:''Which UV set the colour texture reads.''}", Float) = 0
+        _Shadow3rdColorTexAddition ("Texture Brightness--{tooltip:''Brightens or darkens the colour texture before it tints.''}", Range(-1, 1)) = 0
+        _Shadow3rdBorder ("Border--{tooltip:''Where this deepest layer starts. Lower keeps it further into the shadow.''}", Range(0, 1)) = 0.25
+        _Shadow3rdBlur ("Blur--{tooltip:''How soft this layer's edge is.''}", Range(0, 1)) = 0.1
+        _Shadow3rdReceive ("Receive Shadow--{tooltip:''How much shadows cast by other things add to this layer, from the main light. At 0 the layer ignores them.''}", Range(0, 1)) = 0
+        _Shadow3rdNormalStrength ("Normal Blend--{tooltip:''How much your normal map shapes this layer. 0 follows the smooth mesh.''}", Range(0, 1)) = 1
+        [HideInInspector] s_end_ml_layer3 ("", Float) = 0
+        [HideInInspector] s_start_ml_border ("Border", Float) = 0
+        _ShadowBorderColor ("Color--{tooltip:''Colours the thin band where light turns to shadow, like light scattering under skin. Its alpha sets how strong it is.''}", Color) = (1, 0.1, 0, 1)
+        _ShadowBorderRange ("Width--{tooltip:''How far the band reaches into the shadow.''}", Range(0, 1)) = 0.08
+        [HideInInspector] s_end_ml_border ("", Float) = 0
+        [HideInInspector] s_start_ml_map ("Shadow Map", Float) = 0
+        [VixForgeWideEnum(Strength, 0, Flat, 1)] _ShadowMaskType ("Map Type--{tooltip:''Strength fades the shadow where the map is dark. Flat swaps in a flat shadow facing forward where the map is dark, which suits faces.''}", Float) = 0
+        [VixForgesRGBWarning][VixForgeTextureKeyword(VF_TEX_SHADOWSTRENGTHMASK)] _ShadowStrengthMask ("Map--{tooltip:''Reads the red channel. White keeps the shading as set, and black fades it or swaps in the flat shadow.''}", 2D) = "white" {}
+        [VixForgeWideEnum(UV0, 0, UV1, 1)] _ShadowStrengthMaskUV ("Map UV--{tooltip:''Which UV set the map reads.''}", Float) = 0
+        _ShadowFlatBorder ("Flat Border--{condition_show:(_ShadowMaskType==1),tooltip:''Where the flat shadow starts.''}", Range(-2, 2)) = 1
+        _ShadowFlatBlur ("Flat Blur--{condition_show:(_ShadowMaskType==1),tooltip:''How soft the flat shadow's edge is.''}", Range(0.001, 2)) = 1
+        [HideInInspector] s_end_ml_map ("", Float) = 0
+        [HideInInspector] s_start_ml_bordermap ("Shadow Border Map", Float) = 0
+        [ToggleUI] _ShadowBorderMapToggle ("Enable--{tooltip:''Moves each layer's shadow per pixel with a map, like ambient occlusion pulling shadow into creases.''}", Float) = 0
+        [VixForgesRGBWarning][VixForgeTextureKeyword(VF_TEX_SHADOWBORDERMASK)] _ShadowBorderMask ("AO Map--{condition_show:(_ShadowBorderMapToggle==1),tooltip:''Red, green and blue darken layers 1, 2 and 3. With Packed RGBA the channels combine into one map for all three.''}", 2D) = "white" {}
+        [VixForgeWideEnum(UV0, 0, UV1, 1)] _ShadowBorderMaskUV ("Map UV--{condition_show:(_ShadowBorderMapToggle==1),tooltip:''Which UV set the map reads.''}", Float) = 0
+        [VixForgeWideEnum(RGB Per Layer, 0, Packed RGBA, 1)] _ShadowBorderMaskMode ("Channel Mode--{condition_show:(_ShadowBorderMapToggle==1),tooltip:''RGB Per Layer gives each layer its own channel. Packed RGBA mixes the four channels by the strengths below into one map.''}", Float) = 0
+        _ShadowBorderMaskStrengthR ("R Strength--{condition_show:(_ShadowBorderMapToggle==1 && _ShadowBorderMaskMode==1),tooltip:''How much the red channel counts.''}", Range(0, 1)) = 1
+        _ShadowBorderMaskStrengthG ("G Strength--{condition_show:(_ShadowBorderMapToggle==1 && _ShadowBorderMaskMode==1),tooltip:''How much the green channel counts.''}", Range(0, 1)) = 0
+        _ShadowBorderMaskStrengthB ("B Strength--{condition_show:(_ShadowBorderMapToggle==1 && _ShadowBorderMaskMode==1),tooltip:''How much the blue channel counts.''}", Range(0, 1)) = 0
+        _ShadowBorderMaskStrengthA ("A Strength--{condition_show:(_ShadowBorderMapToggle==1 && _ShadowBorderMaskMode==1),tooltip:''How much the alpha channel counts.''}", Range(0, 1)) = 0
+        _ShadowBorderMaskLOD ("Map Blur--{condition_show:(_ShadowBorderMapToggle==1),tooltip:''Blurs the map, which hides blocky texels on a low resolution bake.''}", Range(0, 1)) = 0
+        [ToggleUI] _ShadowPostAO ("Ignore Border Properties--{condition_show:(_ShadowBorderMapToggle==1),tooltip:''Off, the map moves where each shadow starts. On, it darkens the finished shadow instead.''}", Float) = 0
+        [VixForgeVectorToSliders(Layer 1 Min, n0.01, p1.01, Layer 1 Max, n0.01, p1.01, Layer 2 Min, n0.01, p1.01, Layer 2 Max, n0.01, p1.01)] _ShadowAOShift ("Shift--{condition_show:(_ShadowBorderMapToggle==1),tooltip:''Remaps the map for layers 1 and 2. Raise Min to pull the shadow back, lower Max to spread it.''}", Vector) = (0, 1, 0, 1)
+        [VixForgeVectorToSliders(Layer 3 Min, n0.01, p1.01, Layer 3 Max, n0.01, p1.01)] _ShadowAOShift2 ("Shift Layer 3--{condition_show:(_ShadowBorderMapToggle==1),tooltip:''Remaps the map for layer 3.''}", Vector) = (0, 1, 0, 1)
+        [HideInInspector] s_end_ml_bordermap ("", Float) = 0
+        [VixForgesRGBWarning][VixForgeTextureKeyword(VF_TEX_MULTILAYERMATHBLURMAP)] _MultilayerMathBlurMap ("Blur Map--{tooltip:''Scales each layer's blur per pixel: red for layer 1, green for 2 and blue for 3.''}", 2D) = "white" {}
+        [VixForgeWideEnum(UV0, 0, UV1, 1)] _MultilayerMathBlurMapUV ("Blur Map UV--{tooltip:''Which UV set the blur map reads.''}", Float) = 0
+        [ToggleUI] _LightingMulitlayerNonLinear ("Non Linear Lightmap--{tooltip:''Rounds each shadow edge with a curve instead of a straight ramp. On is the classic look.''}", Float) = 1
+        _ShadowMainStrength ("Base Color Blend--{tooltip:''Multiplies the shadow colour by your base colour, so shadows pick up the colour of the skin or cloth.''}", Range(0, 1)) = 0
+        _ShadowEnvStrength ("Ambient Lift--{tooltip:''Lets the world's ambient light lift the shadow colour toward the lit colour.''}", Range(0, 1)) = 0
+        _LightingIgnoreAmbientColor ("Ignore Indirect Shadow Color--{tooltip:''At 1 the light reaches the shadow side through the shadow colours, so shadows keep their colour in any world. At 0 the shadow side gets only the world's ambient light, tinted the same way.''}", Range(0, 1)) = 1
+        _ShadowStrength ("Shadow Strength--{tooltip:''How strong the shadow colours are. 0 leaves the light untouched.''}", Range(0, 1)) = 1
+        //endex
+        [HideInInspector] s_end_shade_ml ("", Float) = 0
+
+        _Toon_Smooth ("Edge Softness--{condition_show:(_Toon_Mode<2),tooltip:''How soft the edge between light and shadow is.''}", Range(0,1)) = 0.05
+        _Toon_Wrap ("Light Wrap--{condition_show:(_Toon_Mode<4),tooltip:''How far the light carries past the point it would normally stop. Higher softens the whole look and lifts the shaded side.''}", Range(0,1)) = 0.0
+        [HideInInspector] s_end_tog_UseToon ("", Float) = 0
+        [HideInInspector] m_end_toon ("", Float) = 0
+        //endex
+
         [HideInInspector] m_start_lightdata ("Light Data--{tooltip:''Which extra lights in a world reach you, and whether they bring shadows and cookies.''}", Float) = 0
         [VixForgeHelpbox] _LightData_Attribution ("Works like Light Data in Poiyomi Toon, by Poiyomi, with the same property names for Pixel Lights and Vertex Lights. Click for github.com/poiyomi/PoiyomiToonShader--{onClick:{type:URL,data:https://github.com/poiyomi/PoiyomiToonShader}}", Float) = 0
         [HideInInspector] s_start_lightdata_lights ("Lights", Float) = 0
@@ -405,6 +591,11 @@ Shader "VixenWear/Latex Ultra"
         _Rim_Str ("Strength--{tooltip:''How bright that edge gets. 0 turns it off.''}", Range(0,1)) = 0.0
         [Enum(Bass,0,Low Mid,1,High Mid,2,Treble,3,Volume,4,Peak Hold,5)] _AL_Band_Rim ("Band--{condition_show:(_UseAudioLink==1),tooltip:''Which part of the music the edge listens to.''}", Float) = 1
         _AL_Rim_Mod ("Flare--{condition_show:(_UseAudioLink==1),tooltip:''How far the beat pushes the edge brightness up.''}", Range(0,1)) = 0.0
+        _AL_Rim_Color ("Music Colour--{condition_show:(_UseAudioLink==1),tooltip:''Tints the edge with the colour of the music, picked by Color Source in the AudioLink section. With ColorChord Strip the colour runs around your outline. 0 keeps the edge its own colour.''}", Range(0,1)) = 0.0
+        _AL_Rim_Spectrum ("Spectrum--{condition_show:(_UseAudioLink==1),tooltip:''Turns the edge into a ring of notes: each point around your outline brightens with one note of the music. 0 keeps the edge even.''}", Range(0,1)) = 0.0
+        _AL_Rim_Octave ("Octave--{condition_show:(_UseAudioLink==1 && _AL_Rim_Spectrum>0),tooltip:''Which octave of notes goes around the edge. Low numbers follow the bass, high numbers the treble.''}", Range(0,9)) = 3.0
+        [ToggleUI] _AL_Rim_Mirror ("Mirror--{condition_show:(_UseAudioLink==1 && _AL_Rim_Spectrum>0),tooltip:''Runs the notes up both sides of your outline instead of once around it, so the ring is symmetrical.''}", Float) = 0
+        _AL_Rim_Spin ("Spin--{condition_show:(_UseAudioLink==1),tooltip:''Turns the spectrum and the music colour around your outline with the beat of Band. 0 holds them still.''}", Range(0,1)) = 0.0
         _Rim_Power ("Width--{tooltip:''How far in from your outline the edge reaches, in tenths of the way to the middle. 1 is a thin line, 10 covers the whole surface.''}", Range(0,10)) = 4.0
         _Rim_Blur ("Blur--{tooltip:''How soft the inner side of the edge is. 0 is a crisp band, 1 fades all the way from your outline to Width.''}", Range(0,1)) = 0.8
         _Rim_Follow ("Follow Light--{tooltip:''Ties the edge to where the light comes from. At 0 the whole outline glows evenly. At 1 the lights behind and beside you light the edge the way a real rim light does, a light in front of you barely touches it, and detail in your height map shadows it.''}", Range(0,1)) = 1.0
@@ -455,6 +646,12 @@ Shader "VixenWear/Latex Ultra"
         _Horizon_Occ ("Horizon Occlusion--{tooltip:''Stops reflections leaking through the surface when you look at it edge-on. 1 is full, 0 is off.''}", Range(0,1)) = 1.0
         _Spec_Clamp ("Highlight Clamp--{tooltip:''Tames the hotspot on very glossy material so it stops sparkling. 1 leaves it alone, lower softens the highlight, and the bottom of the slider takes it out. Scene lights only, so reflections are not affected.''}", Range(0,1)) = 1.0
         _CC_Spec_AA ("Specular Anti-Aliasing--{tooltip:''Stops highlights sparkling and crawling on tight detail when you move, on the material and its clear coat. Leave it on unless you want the sparkle.''}", Range(0,1)) = 1.0
+        //ifex _CC_Spec_AA_Refl==0 || _CC_Spec_AA==0
+        [ToggleUI] _CC_Spec_AA_Refl ("Anti-Alias Reflections--{condition_show:(_CC_Spec_AA>0),tooltip:''Also calms reflections of the world, so they stop crawling on tight detail when you move. Off keeps reflections the way they were.''}", Float) = 0
+        //endex
+        //ifex _CC_Spec_AA_Limit>=1 || _CC_Spec_AA==0
+        _CC_Spec_AA_Limit ("Anti-Alias Limit--{condition_show:(_CC_Spec_AA>0),tooltip:''Caps how far anti-aliasing can soften a highlight, so sharp creases and hard edges keep their shine. 1 is no cap. Try 0.2 if edges look dull.''}", Range(0,1)) = 1.0
+        //endex
         [HideInInspector] s_end_specresp ("", Float) = 0
 
         [HideInInspector] s_start_reflclamp ("Reflection Clamp--{tooltip:''The same idea as Highlight Clamp above, but for light bouncing off the world around you rather than from the lights in the room.''}", Float) = 0
@@ -553,6 +750,7 @@ Shader "VixenWear/Latex Ultra"
         _LV_Pt_Int ("Point Light Strength--{tooltip:''How strongly the point lights placed in the world reach this material. They used to arrive welded to the baked volumes, so the only way to bring one down was the Light Volumes strength above, and that pulls the whole room down with it. This moves the point lights on their own. 1 leaves them exactly as the world author placed them, above 1 leans into them, 0 takes them out.''}", Range(0,2)) = 1.0
         _LV_Pt_Edge ("Light Edge--{tooltip:''How strongly the point, spot and area lights catch your edges when they sit behind or beside you. That edge is the light reflecting in your gloss and clear coat, which is why the Rim Light sliders don't reach it. 1 is true to life, lower tames it.''}", Range(0,1)) = 1.0
         _LV_Pt_Shading ("Point Light Shading--{tooltip:''How much a point light in the volume wraps around your shape. Low reads flat and even, high reads like a real light off to one side.''}", Range(0, 4)) = 3.0
+        [Toggle] _LV_Pt_Toon ("Use Shading Options--{condition_show:(_UseToon==1),tooltip:''Point, spot and area lights from the volumes take the same bands as the lights in the room, from your Shading Options style. Off, they light you smoothly, like ambient light. While this is on, the style shapes these lights and Point Light Shading is set aside.''}", Float) = 0
         _LV_Pt_Stability ("Normal Stability--{tooltip:''Keeps point, spot and area lights and their baked shadows from smearing when you use parallax, detail normals, wetness or drip. 1 is fully stable.''}", Range(0,1)) = 0.0
         _LV_Bias ("Normal Bias--{tooltip:''Nudges where the material takes its reading from, along its own normal. A small amount stops a surface picking up light from the far side of a thin wall.''}", Float) = 0.0
         [VixForgeVector3] _LV_PosOffset ("Position Offset--{tooltip:''Shifts where the material takes its reading from, in world space. Useful when a volume boundary cuts through you.''}", Vector) = (0,0,0,0)
@@ -585,8 +783,8 @@ Shader "VixenWear/Latex Ultra"
         [VixForgeHelpbox] _VRSL_Attribution ("VR Stage Lighting (VRSL) by AcChosen, under MIT. Click for github.com/AcChosen/VR-Stage-Lighting--{onClick:{type:URL,data:https://github.com/AcChosen/VR-Stage-Lighting}}", Float) = 0
         [VixForgeToggleUI(VF_VRSL)] _UseVRSL ("Enable VRSL DMX Link--{tooltip:''Take light from a world's VRSL stage rig, so the club's moving lights actually land on you instead of only on the stage.''}", Float) = 0
         [HideInInspector] s_start_tog_UseVRSL ("VRSL Settings--{condition_show:(_UseVRSL==1),tooltip:''Stage Hijack hands your emission and vertex effects over to the world's DMX stage rig, taking over from AudioLink whenever stage light is on you. Stage GI Wash instead spills the fixture colour onto the material as real light.''}", Float) = 0
-        _DMX_Channel ("DMX Base Channel--{tooltip:''Which fixture in the rig you follow. Ask the world or the DJ which channel to sit on, or pick one and see what lands on you.''}", Int) = 1
-        [VixForgeWideEnum(1CH,0,4CH,1,5CH,2,13CH,3)] _VRSL_ChannelMode ("Channel Mode--{tooltip:''Match this to the Channel Mode on your VRSL fixture, so the material reads the right channels. Counting from your base channel: 1CH is dimmer only and takes its colour from the material. 4CH is dimmer, then red, green and blue. 5CH is the same with a strobe channel after it. 13CH is a moving head: pan and tilt first, dimmer on 6, then red, green and blue on 8, 9 and 10.''}", Float) = 3
+        [VixForgeVRSLFixture] _DMX_Channel ("DMX Base Channel--{tooltip:''Which fixture in the rig you follow. Ask the world or the DJ which channel to sit on, or pick one and see what lands on you.''}", Int) = 1
+        [VixForgeWideEnum(1CH,0,4CH,1,5CH,2,13CH,3,Director,4)] _VRSL_ChannelMode ("Channel Mode--{tooltip:''Match this to the Channel Mode on your VRSL fixture, so the material reads the right channels. Counting from your base channel: 1CH is dimmer only and takes its colour from the material. 4CH is dimmer, then red, green and blue. 5CH is the same with a strobe channel after it. 13CH is a moving head: pan and tilt first, dimmer on 6, then red, green and blue on 8, 9 and 10. Director follows the light show a VixForge Director runs in the world, with no channel to set.''}", Float) = 3
         _VRSL_Intensity ("Override Strength--{tooltip:''How much that fixture overrides your own colour when it hits you.''}", Range(0, 1)) = 1.0
         _VRSL_Geo_Warp ("Pan/Tilt Geo-Warping--{tooltip:''Let the fixture's pan and tilt push your surface about as it sweeps. Needs a height source to push against.''}", Range(0, 5)) = 1.0
         _VRSL_Color_Hijack ("Color Hijack--{tooltip:''Let the fixture drive your colour outright rather than only lighting you, so you change colour with the show.''}", Range(0, 1)) = 0.0
@@ -765,6 +963,68 @@ Shader "VixenWear/Latex Ultra"
         [VixForgeWideEnum(Off, 0, Symmetry, 1, Flipped, 2)] _Decal3Symmetry ("Symmetry--{tooltip:''Place a matching decal on the other side, so a pair takes one slot instead of two.''}", Int) = 0
         [ToggleUI] _Decal3Tiled ("Tiled--{tooltip:''Repeat the decal across the whole surface instead of placing one.''}", Float) = 0
         [HideInInspector] s_end_decal3 ("", Float) = 0
+        //endex
+
+        [HideInInspector] m_wear ("WEAR--{button_help:{action:{type:URL,data:https://vixencreations.github.io/VixenToolBox/shaderdocs.html#wear}}}", Float) = 0
+        //ifex _UseWear==0
+        [HideInInspector] m_start_wear ("Wear and Scuffs--{reference_property:_UseWear,tooltip:''Rubbed edges, scuff marks, creases and dust, so the material looks worn in rather than new.''}", Float) = 0
+        [HideInInspector][VixForgeToggleUI(VF_WEAR)] _UseWear ("Enable--{tooltip:''Turns Wear and Scuffs on. It costs nothing while it is off.''}", Float) = 0
+        [HideInInspector] s_start_wear_where ("Where It Wears--{condition_show:(_UseWear==1)}", Float) = 0
+        _Wear_Amount ("Amount--{tooltip:''How worn the whole material looks. 0 looks new, and higher spreads every kind of wear further.''}", Range(0, 1)) = 0.5
+        [VixForgesRGBWarning][VixForgeTextureKeyword(VF_TEX_WEARMASK)] _Wear_Mask ("Mask--{tooltip:''Paint where each kind of wear can show: red for edges, green for scuffs, blue for creases, alpha for dust. Black keeps that spot new. Empty lets it show everywhere.''}", 2D) = "white" {}
+        [Enum(UV0,0,UV1,1)] _Wear_Mask_UV ("Mask UV--{tooltip:''Which UV the mask follows.''}", Float) = 0
+        [Enum(From The Mesh,0,Curvature Map,1)] _Wear_CurvSource ("Edges From--{tooltip:''Where the edges and hollows come from. From The Mesh reads how your mesh bends, with nothing to set up, but it only finds rounded edges, not sharp ones, and on a low-poly mesh it follows the triangles. A Curvature Map from your baker catches every edge.''}", Float) = 0
+        [VixForgesRGBWarning][VixForgeTextureKeyword(VF_TEX_WEARCURV)] _Wear_CurvMap ("Curvature Map--{condition_show:(_Wear_CurvSource==1),tooltip:''A curvature bake: grey is flat, lighter is an edge, darker is a hollow.''}", 2D) = "grey" {}
+        [Enum(UV0,0,UV1,1)] _Wear_CurvMap_UV ("Curvature UV--{condition_show:(_Wear_CurvSource==1),tooltip:''Which UV the curvature map follows.''}", Float) = 0
+        _Wear_Sensitivity ("Sensitivity--{tooltip:''How strongly a bend counts as an edge or a hollow. Raise it to wear gentler curves too.''}", Range(0, 4)) = 1
+        _Wear_Breakup ("Breakup--{tooltip:''Breaks the wear into uneven patches instead of clean bands.''}", Range(0, 1)) = 0.6
+        _Wear_BreakupScale ("Breakup Scale--{tooltip:''How small the patches are. Higher makes them finer.''}", Range(1, 200)) = 40
+        [HideInInspector] s_end_wear_where ("", Float) = 0
+        //ifex _Wear_Edge==0
+        [HideInInspector] s_start_wear_edge ("Rubbed Edges--{condition_show:(_UseWear==1)}", Float) = 0
+        _Wear_Edge ("Amount--{tooltip:''How much the edges and raised parts rub. 0 turns it off.''}", Range(0, 1)) = 1
+        _Wear_EdgeWidth ("Width--{tooltip:''How far the rubbing reaches in from each edge.''}", Range(0, 1)) = 0.5
+        _Wear_EdgeSharp ("Sharpness--{tooltip:''How crisp the border of the rubbed area is.''}", Range(0, 1)) = 0.5
+        _Wear_EdgeFade ("Fade--{tooltip:''Fades and lightens the colour on the edges, like rubbed latex or washed fabric.''}", Range(0, 1)) = 0.35
+        _Wear_EdgeColor ("Colour--{tooltip:''A colour the edges take, like a layer underneath showing through. Its alpha sets how much, and 0 keeps your colour.''}", Color) = (1, 1, 1, 0)
+        _Wear_EdgeGloss ("Gloss--{tooltip:''Below 0 the edges go dull. Above 0 they rub to a polish.''}", Range(-1, 1)) = -0.4
+        _Wear_EdgeFlatten ("Flatten--{tooltip:''Smooths your normal map on the edges, the way raised texture wears flat.''}", Range(0, 1)) = 0.5
+        [HideInInspector] s_end_wear_edge ("", Float) = 0
+        //endex
+        //ifex _Wear_Scuff==0
+        [HideInInspector] s_start_wear_scuff ("Scuffs--{condition_show:(_UseWear==1)}", Float) = 0
+        _Wear_Scuff ("Amount--{tooltip:''How many scuff marks show. 0 turns them off.''}", Range(0, 1)) = 0.5
+        _Wear_ScuffScale ("Scale--{tooltip:''How many marks fit across the texture. Higher makes them smaller.''}", Range(2, 100)) = 20
+        _Wear_ScuffLength ("Length--{tooltip:''From short dabs to long drag marks.''}", Range(0, 1)) = 0.5
+        _Wear_ScuffAngle ("Direction--{tooltip:''Which way the marks run across your UVs.''}", Range(0, 180)) = 0
+        _Wear_ScuffSpread ("Spread--{tooltip:''0 lines every mark up. 1 points them every which way.''}", Range(0, 1)) = 0.5
+        _Wear_ScuffEdges ("Follow Edges--{tooltip:''Keeps the marks on the edges and raised parts, where things rub.''}", Range(0, 1)) = 0.5
+        _Wear_ScuffColor ("Colour--{tooltip:''The colour of the marks. Its alpha sets how strongly they show.''}", Color) = (0.85, 0.85, 0.85, 0.6)
+        _Wear_ScuffGloss ("Gloss--{tooltip:''Below 0 the marks are dull. Above 0 they shine.''}", Range(-1, 1)) = -0.6
+        _Wear_ScuffDepth ("Depth--{tooltip:''How deep the marks look in the light.''}", Range(0, 1)) = 0.3
+        [HideInInspector] s_end_wear_scuff ("", Float) = 0
+        //endex
+        //ifex _Wear_Crease==0
+        [HideInInspector] s_start_wear_crease ("Creases--{condition_show:(_UseWear==1)}", Float) = 0
+        _Wear_Crease ("Amount--{tooltip:''Fold lines where the material bends. Paint the mask's blue to place them. 0 turns them off.''}", Range(0, 1)) = 0
+        _Wear_CreaseScale ("Scale--{tooltip:''How close together the lines sit.''}", Range(2, 100)) = 24
+        _Wear_CreaseAngle ("Direction--{tooltip:''Which way the lines run across your UVs.''}", Range(0, 180)) = 90
+        _Wear_CreaseHollows ("Follow Hollows--{tooltip:''Keeps the creases in the hollows of the mesh, like the inside of an elbow.''}", Range(0, 1)) = 0.7
+        _Wear_CreaseColor ("Colour--{tooltip:''The colour of the lines. Its alpha sets how strongly they show.''}", Color) = (1, 1, 1, 0.25)
+        _Wear_CreaseGloss ("Gloss--{tooltip:''Below 0 the lines are dull. Above 0 they shine.''}", Range(-1, 1)) = -0.3
+        _Wear_CreaseDepth ("Depth--{tooltip:''How deep the folds look in the light.''}", Range(0, 1)) = 0.5
+        [HideInInspector] s_end_wear_crease ("", Float) = 0
+        //endex
+        //ifex _Wear_Dust==0
+        [HideInInspector] s_start_wear_dust ("Dust--{condition_show:(_UseWear==1)}", Float) = 0
+        _Wear_Dust ("Amount--{tooltip:''How much dust settles. It turns the surface matte. 0 turns it off.''}", Range(0, 1)) = 0
+        _Wear_DustColor ("Colour--{tooltip:''The colour of the dust.''}", Color) = (0.62, 0.57, 0.5, 1)
+        _Wear_DustHollows ("In Hollows--{tooltip:''Dust in creases, seams and wherever your ambient occlusion is dark.''}", Range(0, 1)) = 1
+        _Wear_DustTop ("On Top--{tooltip:''Dust on surfaces that face up.''}", Range(0, 1)) = 0.5
+        _Wear_DustSoft ("Softness--{tooltip:''How gradually the dust fades out at its edges.''}", Range(0, 1)) = 0.5
+        [HideInInspector] s_end_wear_dust ("", Float) = 0
+        //endex
+        [HideInInspector] m_end_wear ("", Float) = 0
         //endex
 
         [HideInInspector] m_polish ("POLISH--{reference_property:_UsePolish,button_help:{action:{type:URL,data:https://vixencreations.github.io/VixenToolBox/shaderdocs.html#polish}}}", Float) = 0
@@ -1503,7 +1763,10 @@ Shader "VixenWear/Latex Ultra"
         _Hypno_Focus ("Focus--{tooltip:''Opens a clear window in the middle of your view, so you still see what is right in front of you while the spiral fills the rest. 0 closes it.''}", Range(0, 1)) = 0
         _Hypno_FocusEdge ("Focus Edge--{condition_show:(_Hypno_Focus>0),tooltip:''How soft the edge of the window is.''}", Range(0, 1)) = 0.3
         _Hypno_FocusGlow ("Focus Glow--{condition_show:(_Hypno_Focus>0),tooltip:''How brightly Color A glows just inside the edge of the window.''}", Range(0, 1)) = 0.5
-        [VixForgeWideEnum(Spiral, 0, Endless Spiral, 1, Rings, 2, Pinwheel, 3)] _Hypno_Pattern ("Pattern--{tooltip:''Spiral is the classic hypno swirl. Endless Spiral zooms inward forever. Rings pulse out from the middle. Pinwheel spins blades round it.''}", Float) = 0
+        _Hypno_Wake ("Wake--{tooltip:''Opens the clear window out to the edges of your view. 1 is wide awake and 0 is fully under. The Focus style in Hypno Setup plays it as you go under and wake up.''}", Range(0, 1)) = 0
+        [VixForgeWideEnum(Spiral, 0, Endless Spiral, 1, Rings, 2, Pinwheel, 3, Your Image, 4)] _Hypno_Pattern ("Pattern--{tooltip:''Spiral is the classic hypno swirl. Endless Spiral zooms inward forever. Rings pulse out from the middle. Pinwheel spins blades round it. Your Image wraps your own picture round the middle.''}", Float) = 0
+        [NoScaleOffset][VixForgeTextureKeyword(VF_TEX_HYPNOIMAGE)] _Hypno_Image ("Image--{condition_show:(_Hypno_Pattern==4),tooltip:''Your pattern. It repeats round the middle once for each arm and flows inward with Speed. Tightness sets how often it repeats from the middle out. Clear parts show the world.''}", 2D) = "white" {}
+        _Hypno_ImageSpiral ("Image Twist--{condition_show:(_Hypno_Pattern==4),tooltip:''Twists the rows of your image into a spiral. 0 keeps them as rings.''}", Range(-2, 2)) = 0.5
         _Hypno_Arms ("Arms--{tooltip:''How many arms the spiral or the pinwheel has.''}", Range(1, 12)) = 2
         _Hypno_Twist ("Tightness--{tooltip:''How close together the stripes sit.''}", Range(0.5, 30)) = 6
         _Hypno_Size ("Size--{tooltip:''Scales the whole pattern up or down.''}", Range(0.1, 4)) = 1
@@ -1514,6 +1777,10 @@ Shader "VixenWear/Latex Ultra"
         [HDR] _Hypno_ColorA ("Color A--{tooltip:''One of the two stripe colours.''}", Color) = (1, 1, 1, 1)
         [HDR] _Hypno_ColorB ("Color B--{tooltip:''The other stripe colour.''}", Color) = (0, 0, 0, 1)
         _Hypno_Soft ("Softness--{tooltip:''How soft the edge between the stripes is.''}", Range(0, 1)) = 0.2
+        [Enum(Off,0,Across Each Stripe,1,Stripe To Stripe,2)] _Hypno_GradMode ("Gradient--{tooltip:''Colours the stripes from your own gradient instead of Color A and Color B. Across Each Stripe runs it across every stripe. Stripe To Stripe gives each stripe the next colour along it, with Color B between them.''}", Float) = 0
+        [NoScaleOffset][VixForgeTextureKeyword(VF_TEX_HYPNOGRAD)] _Hypno_Gradient ("Gradient Image--{condition_show:(_Hypno_GradMode>0),tooltip:''A gradient that runs left to right. Only its middle row is read.''}", 2D) = "white" {}
+        _Hypno_GradSpeed ("Gradient Speed--{condition_show:(_Hypno_GradMode==2),tooltip:''How fast the colours move from stripe to stripe. Below 0 they move the other way.''}", Range(-2, 2)) = 0.2
+        [HideInInspector] _Hypno_GradSpeed_Ph ("", Float) = 0
         _Hypno_Wobble ("Wobble--{tooltip:''Makes the edges of the stripes ripple like water.''}", Range(0, 0.5)) = 0
         _Hypno_WobbleSpeed ("Wobble Speed--{condition_show:(_Hypno_Wobble>0),tooltip:''How fast the ripples move.''}", Range(0, 4)) = 1
         [HideInInspector] _Hypno_WobbleSpeed_Ph ("", Float) = 0
@@ -1526,6 +1793,34 @@ Shader "VixenWear/Latex Ultra"
         [HideInInspector] _Hypno_PulseSpeed_Ph ("", Float) = 0
         _AL_Hypno_Pulse ("Beat Pulse--{condition_show:(_UseAudioLink==1),tooltip:''Each beat throbs the spiral toward you.''}", Range(0, 1)) = 0
         [ToggleUI] _Hypno_Photos ("Show In Photos--{tooltip:''Lets your own VRChat camera photos and screenshots show the Hypno as you see it. Off keeps them clear.''}", Float) = 0
+        //ifex _Hypno2_On==0
+        [HideInInspector] s_start_hypno2 ("Second Pattern--{reference_property:_Hypno2_On,condition_show:(_UseHypno==1)}", Float) = 0
+        [HideInInspector][VixForgeToggleUI(VF_HYPNO_LAYER2)] _Hypno2_On ("Enable--{tooltip:''Lays a second pattern over the first, with its own shape, speed and colours.''}", Float) = 0
+        _Hypno2_Opacity ("Amount--{tooltip:''How strongly the second pattern shows. 0 hides it.''}", Range(0, 1)) = 1
+        [Enum(Mix,0,Add,1,Multiply,2,Screen,3)] _Hypno2_Blend ("Blend--{tooltip:''Mix lays it on top, and the alpha of its colours lets the first pattern show through. Add brightens, Multiply darkens and Screen brightens softly.''}", Float) = 0
+        [VixForgeWideEnum(Spiral, 0, Endless Spiral, 1, Rings, 2, Pinwheel, 3)] _Hypno2_Pattern ("Pattern--{tooltip:''The shape of the second pattern.''}", Float) = 2
+        _Hypno2_Arms ("Arms--{tooltip:''How many arms its spiral or pinwheel has.''}", Range(1, 12)) = 1
+        _Hypno2_Twist ("Tightness--{tooltip:''How close together its stripes sit.''}", Range(0.5, 30)) = 4
+        _Hypno2_Size ("Size--{tooltip:''Scales the second pattern up or down.''}", Range(0.1, 4)) = 1
+        _Hypno2_Speed ("Speed--{tooltip:''How fast it turns. Below 0 it turns the other way.''}", Range(-4, 4)) = -0.3
+        [HideInInspector] _Hypno2_Speed_Ph ("", Float) = 0
+        [HDR] _Hypno2_ColorA ("Color A--{tooltip:''One of its stripe colours. Its alpha sets how solid that stripe is.''}", Color) = (1, 0.3, 0.8, 1)
+        [HDR] _Hypno2_ColorB ("Color B--{tooltip:''Its other stripe colour. At alpha 0 the first pattern shows through these stripes.''}", Color) = (0, 0, 0, 0)
+        [HideInInspector] s_end_hypno2 ("", Float) = 0
+        //endex
+        //ifex _Hypno_SubOn==0
+        [HideInInspector] s_start_hypnosub ("Subliminal--{reference_property:_Hypno_SubOn,condition_show:(_UseHypno==1)}", Float) = 0
+        [HideInInspector][ToggleUI] _Hypno_SubOn ("Enable--{tooltip:''Flashes your own words or images in the middle of your view while you are under. Subliminal in Hypno Setup makes them for you.''}", Float) = 0
+        [VixForgeTextureKeyword(VF_TEX_HYPNOSUB)] _Hypno_SubTex ("Words And Images--{tooltip:''A sheet of up to eight words or images, two across and four down. Subliminal in Hypno Setup makes one from what you type.''}", 2D) = "black" {}
+        _Hypno_SubCount ("Count--{tooltip:''How many places on the sheet to use, counting across and then down.''}", Range(1, 8)) = 1
+        _Hypno_Sub ("Amount--{tooltip:''How strongly they flash. 0 hides them.''}", Range(0, 1)) = 1
+        _Hypno_SubEvery ("Every--{tooltip:''Seconds from one flash to the next.''}", Range(0.25, 30)) = 3
+        _Hypno_SubLength ("Show For--{tooltip:''How long each flash lasts, in seconds.''}", Range(0.02, 3)) = 0.2
+        _Hypno_SubSize ("Size--{tooltip:''How big they are.''}", Range(0.1, 2)) = 0.6
+        [HDR] _Hypno_SubColor ("Colour--{tooltip:''Tints them. White keeps their own colours.''}", Color) = (1, 1, 1, 1)
+        [Enum(In Order,0,Shuffled,1)] _Hypno_SubOrder ("Order--{tooltip:''In Order shows them one after another. Shuffled picks one at random each time.''}", Float) = 1
+        [HideInInspector] s_end_hypnosub ("", Float) = 0
+        //endex
         [HideInInspector] s_end_tog_UseHypno ("", Float) = 0
         //endex
         [HideInInspector] m_end_hypno ("", Float) = 0
@@ -1683,13 +1978,18 @@ Shader "VixenWear/Latex Ultra"
         //ifex _UseGlitter==0
         [HideInInspector] s_start_tog_UseGlitter ("Glitter Settings--{condition_show:(_UseGlitter==1)}", Float) = 0
         [VixForgeWideEnum(UV, 0, World Space, 1)] _Glit_Space ("Anchor--{tooltip:''Whether the flakes are fixed to the surface or to the world, so they can either travel with you or shimmer as you move past them.''}", Float) = 0
-        _Glit_Sharp ("Sharpness--{tooltip:''How briefly each flake flashes as you move. High is a hard twinkle, low a softer shimmer. It changes the character, not how much glitter you get.''}", Range(1, 512)) = 90
+        _Glit_Sharp ("Sharpness--{tooltip:''How briefly each flake flashes as you move, and on a View sparkle layer how fine each flake is. High is a hard, tiny twinkle, low a softer, broader shimmer. At 90 a View flake is exactly Flake Size. It changes the character, not how much glitter you get.''}", Range(1, 512)) = 90
         [VixForgeWideEnum(Natural, 0, Light Volumes, 1, LTCGI, 2, VRSL, 3, Everything, 5, Always Lit, 6)] _Glit_LitBy ("Lit By--{tooltip:''Which lights the flakes are allowed to catch.''}", Float) = 0
         _Glit_Str ("Brightness--{tooltip:''How brightly the flakes flash. Each layer's Strength scales it again.''}", Range(0, 50)) = 2
         _Glit_Env ("Ambient Sparkle--{tooltip:''How much the flakes catch the room around you rather than only direct light.''}", Range(0, 10)) = 0.6
         _Glit_MinLight ("Minimum Light--{tooltip:''A floor under how dim the flakes go, so they still read in a dark room.''}", Range(0, 1)) = 0
         _Glit_LightTint ("Take Light Colour--{tooltip:''How much each flake takes the colour of the light hitting it rather than its own.''}", Range(0, 1)) = 1
         _Glit_OverCC ("Over Clearcoat--{condition_show:(_UsePolish==1),tooltip:''Put the flakes on top of the clear coat rather than under it, so they look sprinkled on rather than sealed in.''}", Range(0, 1)) = 1
+        _Glit_Stereo ("Stereo--{tooltip:''For layers set to View. At 1 each eye catches its own flashes, which reads as real glitter in VR. At 0 both eyes see the same ones.''}", Range(0, 1)) = 1
+        [ToggleUI] _Glit_Merge ("Keep Far Sparkle--{tooltip:''Far away, flakes smaller than a pixel join into bigger ones, so the glitter still sparkles from a distance instead of settling into an even shimmer.''}", Float) = 0
+        _Glit_FloatHeight ("Float Height--{condition_show:(_Glit_Position==1 || (_Glit2_On==1 && _Glit2_Position==1) || (_Glit3_On==1 && _Glit3_Position==1) || (_Glit4_On==1 && _Glit4_Position==1) || (_Glit5_On==1 && _Glit5_Position==1)),tooltip:''How far above the material the stars of an Above layer hover, in centimetres.''}", Range(0, 5)) = 0.5
+        _Glit_FloatVar ("Height Variation--{condition_show:(_Glit_Position==1 || (_Glit2_On==1 && _Glit2_Position==1) || (_Glit3_On==1 && _Glit3_Position==1) || (_Glit4_On==1 && _Glit4_Position==1) || (_Glit5_On==1 && _Glit5_Position==1)),tooltip:''Gives every hovering star its own height up to Float Height, so they fill the air over the material instead of one flat sheet. 0 keeps them all at Float Height.''}", Range(0, 1)) = 0.5
+        [VixForgeHelpbox] _Glit_Attribution ("View sparkle and Keep Far Sparkle work like the glitter in lilToon, by lilxyzw. Click for github.com/lilxyzw/lilToon--{onClick:{type:URL,data:https://github.com/lilxyzw/lilToon}}", Float) = 0
         //ifex _UseGlitter==0
         [VixForgesRGBWarning][NoScaleOffset][VixForgeTextureKeyword(VF_TEX_GLITMASK)] _GlitMask ("Mask--{condition_show:(_Glit_BorrowSrc==0 || (_Glit2_On==1 && _Glit2_BorrowSrc==0) || (_Glit3_On==1 && _Glit3_BorrowSrc==0) || (_Glit4_On==1 && _Glit4_BorrowSrc==0) || (_Glit5_On==1 && _Glit5_BorrowSrc==0)),tooltip:''Where the flakes go. White carries glitter, black carries none.''}", 2D) = "white" {}
         //endex
@@ -1721,6 +2021,9 @@ Shader "VixenWear/Latex Ultra"
         _Glit_Twinkle ("Twinkle--{tooltip:''Every flake blinks on its own clock, so the material shimmers even when you and the light are both still.''}", Range(0, 1)) = 0
         _Glit_TwinkRate ("Twinkle Rate--{condition_show:(_Glit_Twinkle>0),tooltip:''How fast the flakes blink.''}", Range(0.1, 10)) = 2
         [HideInInspector] _Glit_TwinkRate_Ph ("", Float) = 0
+        [Enum(Lights,0,View,1)] _Glit_Sparkle ("Sparkle--{tooltip:''Lights makes a flake flash where a light catches it. View makes the flakes flash as you move, in any light. Ambient Sparkle sets how bright View flakes flash.''}", Float) = 0
+        _Glit_Sens ("Sensitivity--{condition_show:(_Glit_Sparkle==1),tooltip:''How quickly a flake flashes on and off as you move. Higher twinkles more.''}", Range(0, 2)) = 0.35
+        [Enum(On Surface,0,Above,1)] _Glit_Position ("Position--{tooltip:''On Surface puts this layer's flakes in the material. Above lifts them off it as little stars that hover over the surface, the way an outline sits outside it.''}", Float) = 0
         [HideInInspector] s_start_glit_l1_style ("Style", Float) = 0
         _Glit_Gain ("Strength--{tooltip:''How bright this layer's flakes are, on top of Brightness above. Let one layer blaze while another only glints.''}", Range(0, 10)) = 1
         _Glit_SizeVar ("Size Variation--{tooltip:''Lets every flake pick its own size around Flake Size, so the layer mixes chunky flakes with fine dust instead of a field of identical dots. 0 keeps them all the same.''}", Range(0, 1)) = 0
@@ -1763,6 +2066,9 @@ Shader "VixenWear/Latex Ultra"
         _Glit2_Twinkle ("Twinkle--{condition_show:(_Glit2_On==1),tooltip:''Every flake blinks on its own clock, so the material shimmers even when you and the light are both still.''}", Range(0, 1)) = 0
         _Glit2_TwinkRate ("Twinkle Rate--{condition_show:(_Glit2_On==1 && _Glit2_Twinkle>0),tooltip:''How fast the flakes blink.''}", Range(0.1, 10)) = 2
         [HideInInspector] _Glit2_TwinkRate_Ph ("", Float) = 0
+        [Enum(Lights,0,View,1)] _Glit2_Sparkle ("Sparkle--{condition_show:(_Glit2_On==1),tooltip:''Lights makes a flake flash where a light catches it. View makes the flakes flash as you move, in any light. Ambient Sparkle sets how bright View flakes flash.''}", Float) = 0
+        _Glit2_Sens ("Sensitivity--{condition_show:(_Glit2_On==1 && _Glit2_Sparkle==1),tooltip:''How quickly a flake flashes on and off as you move. Higher twinkles more.''}", Range(0, 2)) = 0.35
+        [Enum(On Surface,0,Above,1)] _Glit2_Position ("Position--{tooltip:''On Surface puts this layer's flakes in the material. Above lifts them off it as little stars that hover over the surface, the way an outline sits outside it.''}", Float) = 0
         [HideInInspector] s_start_glit_l2_style ("Style--{condition_show:(_Glit2_On==1)}", Float) = 0
         _Glit2_Gain ("Strength--{condition_show:(_Glit2_On==1),tooltip:''How bright this layer's flakes are, on top of Brightness above. Let one layer blaze while another only glints.''}", Range(0, 10)) = 1
         _Glit2_SizeVar ("Size Variation--{condition_show:(_Glit2_On==1),tooltip:''Lets every flake pick its own size around Flake Size, so the layer mixes chunky flakes with fine dust instead of a field of identical dots. 0 keeps them all the same.''}", Range(0, 1)) = 0
@@ -1806,6 +2112,9 @@ Shader "VixenWear/Latex Ultra"
         _Glit3_Twinkle ("Twinkle--{condition_show:(_Glit3_On==1),tooltip:''Every flake blinks on its own clock, so the material shimmers even when you and the light are both still.''}", Range(0, 1)) = 0
         _Glit3_TwinkRate ("Twinkle Rate--{condition_show:(_Glit3_On==1 && _Glit3_Twinkle>0),tooltip:''How fast the flakes blink.''}", Range(0.1, 10)) = 2
         [HideInInspector] _Glit3_TwinkRate_Ph ("", Float) = 0
+        [Enum(Lights,0,View,1)] _Glit3_Sparkle ("Sparkle--{condition_show:(_Glit3_On==1),tooltip:''Lights makes a flake flash where a light catches it. View makes the flakes flash as you move, in any light. Ambient Sparkle sets how bright View flakes flash.''}", Float) = 0
+        _Glit3_Sens ("Sensitivity--{condition_show:(_Glit3_On==1 && _Glit3_Sparkle==1),tooltip:''How quickly a flake flashes on and off as you move. Higher twinkles more.''}", Range(0, 2)) = 0.35
+        [Enum(On Surface,0,Above,1)] _Glit3_Position ("Position--{tooltip:''On Surface puts this layer's flakes in the material. Above lifts them off it as little stars that hover over the surface, the way an outline sits outside it.''}", Float) = 0
         [HideInInspector] s_start_glit_l3_style ("Style--{condition_show:(_Glit3_On==1)}", Float) = 0
         _Glit3_Gain ("Strength--{condition_show:(_Glit3_On==1),tooltip:''How bright this layer's flakes are, on top of Brightness above. Let one layer blaze while another only glints.''}", Range(0, 10)) = 1
         _Glit3_SizeVar ("Size Variation--{condition_show:(_Glit3_On==1),tooltip:''Lets every flake pick its own size around Flake Size, so the layer mixes chunky flakes with fine dust instead of a field of identical dots. 0 keeps them all the same.''}", Range(0, 1)) = 0
@@ -1849,6 +2158,9 @@ Shader "VixenWear/Latex Ultra"
         _Glit4_Twinkle ("Twinkle--{condition_show:(_Glit4_On==1),tooltip:''Every flake blinks on its own clock, so the material shimmers even when you and the light are both still.''}", Range(0, 1)) = 0
         _Glit4_TwinkRate ("Twinkle Rate--{condition_show:(_Glit4_On==1 && _Glit4_Twinkle>0),tooltip:''How fast the flakes blink.''}", Range(0.1, 10)) = 2
         [HideInInspector] _Glit4_TwinkRate_Ph ("", Float) = 0
+        [Enum(Lights,0,View,1)] _Glit4_Sparkle ("Sparkle--{condition_show:(_Glit4_On==1),tooltip:''Lights makes a flake flash where a light catches it. View makes the flakes flash as you move, in any light. Ambient Sparkle sets how bright View flakes flash.''}", Float) = 0
+        _Glit4_Sens ("Sensitivity--{condition_show:(_Glit4_On==1 && _Glit4_Sparkle==1),tooltip:''How quickly a flake flashes on and off as you move. Higher twinkles more.''}", Range(0, 2)) = 0.35
+        [Enum(On Surface,0,Above,1)] _Glit4_Position ("Position--{tooltip:''On Surface puts this layer's flakes in the material. Above lifts them off it as little stars that hover over the surface, the way an outline sits outside it.''}", Float) = 0
         [HideInInspector] s_start_glit_l4_style ("Style--{condition_show:(_Glit4_On==1)}", Float) = 0
         _Glit4_Gain ("Strength--{condition_show:(_Glit4_On==1),tooltip:''How bright this layer's flakes are, on top of Brightness above. Let one layer blaze while another only glints.''}", Range(0, 10)) = 1
         _Glit4_SizeVar ("Size Variation--{condition_show:(_Glit4_On==1),tooltip:''Lets every flake pick its own size around Flake Size, so the layer mixes chunky flakes with fine dust instead of a field of identical dots. 0 keeps them all the same.''}", Range(0, 1)) = 0
@@ -1892,6 +2204,9 @@ Shader "VixenWear/Latex Ultra"
         _Glit5_Twinkle ("Twinkle--{condition_show:(_Glit5_On==1),tooltip:''Every flake blinks on its own clock, so the material shimmers even when you and the light are both still.''}", Range(0, 1)) = 0
         _Glit5_TwinkRate ("Twinkle Rate--{condition_show:(_Glit5_On==1 && _Glit5_Twinkle>0),tooltip:''How fast the flakes blink.''}", Range(0.1, 10)) = 2
         [HideInInspector] _Glit5_TwinkRate_Ph ("", Float) = 0
+        [Enum(Lights,0,View,1)] _Glit5_Sparkle ("Sparkle--{condition_show:(_Glit5_On==1),tooltip:''Lights makes a flake flash where a light catches it. View makes the flakes flash as you move, in any light. Ambient Sparkle sets how bright View flakes flash.''}", Float) = 0
+        _Glit5_Sens ("Sensitivity--{condition_show:(_Glit5_On==1 && _Glit5_Sparkle==1),tooltip:''How quickly a flake flashes on and off as you move. Higher twinkles more.''}", Range(0, 2)) = 0.35
+        [Enum(On Surface,0,Above,1)] _Glit5_Position ("Position--{tooltip:''On Surface puts this layer's flakes in the material. Above lifts them off it as little stars that hover over the surface, the way an outline sits outside it.''}", Float) = 0
         [HideInInspector] s_start_glit_l5_style ("Style--{condition_show:(_Glit5_On==1)}", Float) = 0
         _Glit5_Gain ("Strength--{condition_show:(_Glit5_On==1),tooltip:''How bright this layer's flakes are, on top of Brightness above. Let one layer blaze while another only glints.''}", Range(0, 10)) = 1
         _Glit5_SizeVar ("Size Variation--{condition_show:(_Glit5_On==1),tooltip:''Lets every flake pick its own size around Flake Size, so the layer mixes chunky flakes with fine dust instead of a field of identical dots. 0 keeps them all the same.''}", Range(0, 1)) = 0
@@ -2420,7 +2735,7 @@ Shader "VixenWear/Latex Ultra"
         //endex
 
         //ifex _OutlineInk==0
-        [HideInInspector] m_start_outline_ink ("Ink Weight--{condition_show:(_UseOutline==1 || _UseOutline2==1),reference_property:_OutlineInk,tooltip:''Draws your outline the way an inker would: heavier where your body turns away from the light and lighter where the light hits it. It follows the room's main light and light probes, so the weight shifts as you walk past a lamp.''}", Float) = 0
+        [HideInInspector] m_start_outline_ink ("Ink Weight--{condition_show:(_UseOutline==1 || _UseOutline2==1),reference_property:_OutlineInk,tooltip:''Draws your outline the way an inker would: heavier where your body turns away from the light and lighter where the light hits it. It follows the room's main light, nearby point lights, light probes and Light Volumes, so the weight shifts as you walk past a lamp.''}", Float) = 0
         [HideInInspector][ToggleUI] _OutlineInk ("Enable", Float) = 0
         //ifex _OutlineInk==0
         _OutlineInkLit ("Lit Side--{tooltip:''How thick the line is where the light hits it, as a share of its Width. 0 lets it vanish in full light.''}", Range(0, 1)) = 0.4
@@ -2830,7 +3145,7 @@ Shader "VixenWear/Latex Ultra"
         [VixForgeWideEnum(View, 0, Skew Free, 1, Reflection, 2, Fresnel Ramp, 3, Light Direction, 4, Screen, 5)] _MatCap_Proj ("Mode--{tooltip:''How the sphere image is wrapped onto you. View is the classic look. Skew Free stops it stretching at the edge of the screen. Reflection tracks like real chrome. Fresnel Ramp reads the image left to right by viewing angle, so a plain gradient becomes a rim light. Light Direction turns it with the world light. Screen pins it to the camera.''}", Float) = 0
         _MatCap_Zoom ("Zoom--{tooltip:''Higher shows less of the sphere, so the middle of the image fills more of you.''}", Range(0.25,4)) = 1
         _MatCap_Rot ("Rotation--{tooltip:''Turns the matcap, in degrees.''}", Float) = 0
-        _MatCap_NrmFollow ("Normal Follow--{tooltip:''At 0 the matcap ignores your normal map and reads as paint over the detail. Turn it up and it follows every bump, which is what makes it look like the surface is really that material. Left at 0 so nothing you already set changes.''}", Range(0,1)) = 0
+        _MatCap_NrmFollow ("Normal Follow--{tooltip:''At 0 the matcap ignores your normal map and reads as paint over the detail. Turn it up and it follows every bump, which is what makes it look like the surface is really that material.''}", Range(0,1)) = 1
         [VixForgeWideEnum(Surface, 0, Bent, 1, Flat, 2)] _MatCap_NrmSrc ("Normal--{tooltip:''Which normal Normal Follow leans on. Surface is your normal map and detail. Bent follows the Bent Normals map and darkens the matcap where the shape closes in, as far as Reflection Shaping dims reflections. It needs Bent Normals on. Flat is the raw mesh.''}", Float) = 0
         _MatCap_Depth ("Depth--{tooltip:''Sinks the layer below the surface so it slides against you as you move around it, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.''}", Range(0,1)) = 0
         [ToggleUI] _MatCap_Mirror ("Mirror Flip--{tooltip:''Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do. Works in View and Skew Free. Reflection is already right in a mirror.''}", Float) = 0
@@ -2939,7 +3254,7 @@ Shader "VixenWear/Latex Ultra"
         [VixForgeWideEnum(View, 0, Skew Free, 1, Reflection, 2, Fresnel Ramp, 3, Light Direction, 4, Screen, 5)] _MatCap2_Proj ("Mode--{tooltip:''How the sphere image is wrapped onto you. View is the classic look. Skew Free stops it stretching at the edge of the screen. Reflection tracks like real chrome. Fresnel Ramp reads the image left to right by viewing angle, so a plain gradient becomes a rim light. Light Direction turns it with the world light. Screen pins it to the camera.''}", Float) = 0
         _MatCap2_Zoom ("Zoom--{tooltip:''Higher shows less of the sphere, so the middle of the image fills more of you.''}", Range(0.25,4)) = 1
         _MatCap2_Rot ("Rotation--{tooltip:''Turns the matcap, in degrees.''}", Float) = 0
-        _MatCap2_NrmFollow ("Normal Follow--{tooltip:''At 0 the matcap ignores your normal map and reads as paint over the detail. Turn it up and it follows every bump, which is what makes it look like the surface is really that material. Left at 0 so nothing you already set changes.''}", Range(0,1)) = 0
+        _MatCap2_NrmFollow ("Normal Follow--{tooltip:''At 0 the matcap ignores your normal map and reads as paint over the detail. Turn it up and it follows every bump, which is what makes it look like the surface is really that material.''}", Range(0,1)) = 1
         [VixForgeWideEnum(Surface, 0, Bent, 1, Flat, 2)] _MatCap2_NrmSrc ("Normal--{tooltip:''Which normal Normal Follow leans on. Surface is your normal map and detail. Bent follows the Bent Normals map and darkens the matcap where the shape closes in, as far as Reflection Shaping dims reflections. It needs Bent Normals on. Flat is the raw mesh.''}", Float) = 0
         _MatCap2_Depth ("Depth--{tooltip:''Sinks the layer below the surface so it slides against you as you move around it, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.''}", Range(0,1)) = 0
         [ToggleUI] _MatCap2_Mirror ("Mirror Flip--{tooltip:''Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do. Works in View and Skew Free. Reflection is already right in a mirror.''}", Float) = 0
@@ -3048,7 +3363,7 @@ Shader "VixenWear/Latex Ultra"
         [VixForgeWideEnum(View, 0, Skew Free, 1, Reflection, 2, Fresnel Ramp, 3, Light Direction, 4, Screen, 5)] _MatCap3_Proj ("Mode--{tooltip:''How the sphere image is wrapped onto you. View is the classic look. Skew Free stops it stretching at the edge of the screen. Reflection tracks like real chrome. Fresnel Ramp reads the image left to right by viewing angle, so a plain gradient becomes a rim light. Light Direction turns it with the world light. Screen pins it to the camera.''}", Float) = 0
         _MatCap3_Zoom ("Zoom--{tooltip:''Higher shows less of the sphere, so the middle of the image fills more of you.''}", Range(0.25,4)) = 1
         _MatCap3_Rot ("Rotation--{tooltip:''Turns the matcap, in degrees.''}", Float) = 0
-        _MatCap3_NrmFollow ("Normal Follow--{tooltip:''At 0 the matcap ignores your normal map and reads as paint over the detail. Turn it up and it follows every bump, which is what makes it look like the surface is really that material. Left at 0 so nothing you already set changes.''}", Range(0,1)) = 0
+        _MatCap3_NrmFollow ("Normal Follow--{tooltip:''At 0 the matcap ignores your normal map and reads as paint over the detail. Turn it up and it follows every bump, which is what makes it look like the surface is really that material.''}", Range(0,1)) = 1
         [VixForgeWideEnum(Surface, 0, Bent, 1, Flat, 2)] _MatCap3_NrmSrc ("Normal--{tooltip:''Which normal Normal Follow leans on. Surface is your normal map and detail. Bent follows the Bent Normals map and darkens the matcap where the shape closes in, as far as Reflection Shaping dims reflections. It needs Bent Normals on. Flat is the raw mesh.''}", Float) = 0
         _MatCap3_Depth ("Depth--{tooltip:''Sinks the layer below the surface so it slides against you as you move around it, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.''}", Range(0,1)) = 0
         [ToggleUI] _MatCap3_Mirror ("Mirror Flip--{tooltip:''Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do. Works in View and Skew Free. Reflection is already right in a mirror.''}", Float) = 0
@@ -3157,7 +3472,7 @@ Shader "VixenWear/Latex Ultra"
         [VixForgeWideEnum(View, 0, Skew Free, 1, Reflection, 2, Fresnel Ramp, 3, Light Direction, 4, Screen, 5)] _MatCap4_Proj ("Mode--{tooltip:''How the sphere image is wrapped onto you. View is the classic look. Skew Free stops it stretching at the edge of the screen. Reflection tracks like real chrome. Fresnel Ramp reads the image left to right by viewing angle, so a plain gradient becomes a rim light. Light Direction turns it with the world light. Screen pins it to the camera.''}", Float) = 0
         _MatCap4_Zoom ("Zoom--{tooltip:''Higher shows less of the sphere, so the middle of the image fills more of you.''}", Range(0.25,4)) = 1
         _MatCap4_Rot ("Rotation--{tooltip:''Turns the matcap, in degrees.''}", Float) = 0
-        _MatCap4_NrmFollow ("Normal Follow--{tooltip:''At 0 the matcap ignores your normal map and reads as paint over the detail. Turn it up and it follows every bump, which is what makes it look like the surface is really that material. Left at 0 so nothing you already set changes.''}", Range(0,1)) = 0
+        _MatCap4_NrmFollow ("Normal Follow--{tooltip:''At 0 the matcap ignores your normal map and reads as paint over the detail. Turn it up and it follows every bump, which is what makes it look like the surface is really that material.''}", Range(0,1)) = 1
         [VixForgeWideEnum(Surface, 0, Bent, 1, Flat, 2)] _MatCap4_NrmSrc ("Normal--{tooltip:''Which normal Normal Follow leans on. Surface is your normal map and detail. Bent follows the Bent Normals map and darkens the matcap where the shape closes in, as far as Reflection Shaping dims reflections. It needs Bent Normals on. Flat is the raw mesh.''}", Float) = 0
         _MatCap4_Depth ("Depth--{tooltip:''Sinks the layer below the surface so it slides against you as you move around it, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.''}", Range(0,1)) = 0
         [ToggleUI] _MatCap4_Mirror ("Mirror Flip--{tooltip:''Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do. Works in View and Skew Free. Reflection is already right in a mirror.''}", Float) = 0
@@ -3266,7 +3581,7 @@ Shader "VixenWear/Latex Ultra"
         [VixForgeWideEnum(View, 0, Skew Free, 1, Reflection, 2, Fresnel Ramp, 3, Light Direction, 4, Screen, 5)] _MatCap5_Proj ("Mode--{tooltip:''How the sphere image is wrapped onto you. View is the classic look. Skew Free stops it stretching at the edge of the screen. Reflection tracks like real chrome. Fresnel Ramp reads the image left to right by viewing angle, so a plain gradient becomes a rim light. Light Direction turns it with the world light. Screen pins it to the camera.''}", Float) = 0
         _MatCap5_Zoom ("Zoom--{tooltip:''Higher shows less of the sphere, so the middle of the image fills more of you.''}", Range(0.25,4)) = 1
         _MatCap5_Rot ("Rotation--{tooltip:''Turns the matcap, in degrees.''}", Float) = 0
-        _MatCap5_NrmFollow ("Normal Follow--{tooltip:''At 0 the matcap ignores your normal map and reads as paint over the detail. Turn it up and it follows every bump, which is what makes it look like the surface is really that material. Left at 0 so nothing you already set changes.''}", Range(0,1)) = 0
+        _MatCap5_NrmFollow ("Normal Follow--{tooltip:''At 0 the matcap ignores your normal map and reads as paint over the detail. Turn it up and it follows every bump, which is what makes it look like the surface is really that material.''}", Range(0,1)) = 1
         [VixForgeWideEnum(Surface, 0, Bent, 1, Flat, 2)] _MatCap5_NrmSrc ("Normal--{tooltip:''Which normal Normal Follow leans on. Surface is your normal map and detail. Bent follows the Bent Normals map and darkens the matcap where the shape closes in, as far as Reflection Shaping dims reflections. It needs Bent Normals on. Flat is the raw mesh.''}", Float) = 0
         _MatCap5_Depth ("Depth--{tooltip:''Sinks the layer below the surface so it slides against you as you move around it, the way flake does under a clear coat. Give two layers different Depth and they read as suspended in something thick.''}", Range(0,1)) = 0
         [ToggleUI] _MatCap5_Mirror ("Mirror Flip--{tooltip:''Flips the matcap left to right in a mirror, so your reflection catches light from the same side you do. Works in View and Skew Free. Reflection is already right in a mirror.''}", Float) = 0
@@ -3370,8 +3685,9 @@ Shader "VixenWear/Latex Ultra"
         _CtxInkStrength ("Strength--{condition_show:(_CtxInkMode!=2),tooltip:''How bright the glow is.''}", Range(0, 20)) = 3
         [HideInInspector] s_end_ctx_Ink_layer ("", Float) = 0
         [HideInInspector] s_start_ctx_Ink_where ("Where", Float) = 0
-        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxInkWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6, Only in Screenshots, 7, Never in Screenshots, 8, Only in Handheld Camera, 9)] _CtxInkWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.''}", Float) = 0
         [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxInkEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, From, p0, p24, To, p0, p24, Softness, p0, p4)] _CtxInkTime ("Time of Day--{tooltip:''Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight.'',tooltips:[''How much the time decides. 0 turns it off.'',''The hour it starts showing, 0 to 24.'',''The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day.'',''How many hours it fades in and out over.'']}", Vector) = (0, 18, 6, 0.5)
         [HideInInspector] s_end_ctx_Ink_where ("", Float) = 0
         [HideInInspector] s_start_ctx_Ink_look ("Distance & Gaze", Float) = 0
         [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxInkDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
@@ -3402,8 +3718,9 @@ Shader "VixenWear/Latex Ultra"
         [HideInInspector] s_start_tog_CtxBase ("Base Settings--{condition_show:(_CtxBaseOn==1)}", Float) = 0
         [VixForgeHelpbox(1)] _CtxBase_Help ("Set Rendering Mode to Cutout, Fade or Transparent under RENDERING, or the material cannot be hidden.", Float) = 0
         [HideInInspector] s_start_ctx_Base_where ("Where", Float) = 0
-        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxBaseWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6, Only in Screenshots, 7, Never in Screenshots, 8, Only in Handheld Camera, 9)] _CtxBaseWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.''}", Float) = 0
         [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxBaseEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, From, p0, p24, To, p0, p24, Softness, p0, p4)] _CtxBaseTime ("Time of Day--{tooltip:''Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight.'',tooltips:[''How much the time decides. 0 turns it off.'',''The hour it starts showing, 0 to 24.'',''The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day.'',''How many hours it fades in and out over.'']}", Vector) = (0, 18, 6, 0.5)
         [HideInInspector] s_end_ctx_Base_where ("", Float) = 0
         [HideInInspector] s_start_ctx_Base_look ("Distance & Gaze", Float) = 0
         [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxBaseDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
@@ -3433,8 +3750,9 @@ Shader "VixenWear/Latex Ultra"
         //ifex _CtxNormOn==0
         [HideInInspector] s_start_tog_CtxNorm ("Normal Maps Settings--{condition_show:(_CtxNormOn==1)}", Float) = 0
         [HideInInspector] s_start_ctx_Norm_where ("Where", Float) = 0
-        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxNormWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6, Only in Screenshots, 7, Never in Screenshots, 8, Only in Handheld Camera, 9)] _CtxNormWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.''}", Float) = 0
         [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxNormEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, From, p0, p24, To, p0, p24, Softness, p0, p4)] _CtxNormTime ("Time of Day--{tooltip:''Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight.'',tooltips:[''How much the time decides. 0 turns it off.'',''The hour it starts showing, 0 to 24.'',''The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day.'',''How many hours it fades in and out over.'']}", Vector) = (0, 18, 6, 0.5)
         [HideInInspector] s_end_ctx_Norm_where ("", Float) = 0
         [HideInInspector] s_start_ctx_Norm_look ("Distance & Gaze", Float) = 0
         [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxNormDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
@@ -3464,8 +3782,9 @@ Shader "VixenWear/Latex Ultra"
         //ifex _CtxSurfOn==0
         [HideInInspector] s_start_tog_CtxSurf ("Surface Settings--{condition_show:(_CtxSurfOn==1)}", Float) = 0
         [HideInInspector] s_start_ctx_Surf_where ("Where", Float) = 0
-        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxSurfWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6, Only in Screenshots, 7, Never in Screenshots, 8, Only in Handheld Camera, 9)] _CtxSurfWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.''}", Float) = 0
         [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxSurfEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, From, p0, p24, To, p0, p24, Softness, p0, p4)] _CtxSurfTime ("Time of Day--{tooltip:''Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight.'',tooltips:[''How much the time decides. 0 turns it off.'',''The hour it starts showing, 0 to 24.'',''The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day.'',''How many hours it fades in and out over.'']}", Vector) = (0, 18, 6, 0.5)
         [HideInInspector] s_end_ctx_Surf_where ("", Float) = 0
         [HideInInspector] s_start_ctx_Surf_look ("Distance & Gaze", Float) = 0
         [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxSurfDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
@@ -3495,8 +3814,9 @@ Shader "VixenWear/Latex Ultra"
         //ifex _CtxShadeOn==0
         [HideInInspector] s_start_tog_CtxShade ("Shading Settings--{condition_show:(_CtxShadeOn==1)}", Float) = 0
         [HideInInspector] s_start_ctx_Shade_where ("Where", Float) = 0
-        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxShadeWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6, Only in Screenshots, 7, Never in Screenshots, 8, Only in Handheld Camera, 9)] _CtxShadeWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.''}", Float) = 0
         [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxShadeEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, From, p0, p24, To, p0, p24, Softness, p0, p4)] _CtxShadeTime ("Time of Day--{tooltip:''Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight.'',tooltips:[''How much the time decides. 0 turns it off.'',''The hour it starts showing, 0 to 24.'',''The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day.'',''How many hours it fades in and out over.'']}", Vector) = (0, 18, 6, 0.5)
         [HideInInspector] s_end_ctx_Shade_where ("", Float) = 0
         [HideInInspector] s_start_ctx_Shade_look ("Distance & Gaze", Float) = 0
         [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxShadeDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
@@ -3526,8 +3846,9 @@ Shader "VixenWear/Latex Ultra"
         //ifex _CtxDecalOn==0
         [HideInInspector] s_start_tog_CtxDecal ("Decals Settings--{condition_show:(_CtxDecalOn==1)}", Float) = 0
         [HideInInspector] s_start_ctx_Decal_where ("Where", Float) = 0
-        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxDecalWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6, Only in Screenshots, 7, Never in Screenshots, 8, Only in Handheld Camera, 9)] _CtxDecalWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.''}", Float) = 0
         [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxDecalEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, From, p0, p24, To, p0, p24, Softness, p0, p4)] _CtxDecalTime ("Time of Day--{tooltip:''Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight.'',tooltips:[''How much the time decides. 0 turns it off.'',''The hour it starts showing, 0 to 24.'',''The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day.'',''How many hours it fades in and out over.'']}", Vector) = (0, 18, 6, 0.5)
         [HideInInspector] s_end_ctx_Decal_where ("", Float) = 0
         [HideInInspector] s_start_ctx_Decal_look ("Distance & Gaze", Float) = 0
         [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxDecalDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
@@ -3558,8 +3879,9 @@ Shader "VixenWear/Latex Ultra"
         //ifex _CtxPolishOn==0
         [HideInInspector] s_start_tog_CtxPolish ("Polish Settings--{condition_show:(_CtxPolishOn==1)}", Float) = 0
         [HideInInspector] s_start_ctx_Polish_where ("Where", Float) = 0
-        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxPolishWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6, Only in Screenshots, 7, Never in Screenshots, 8, Only in Handheld Camera, 9)] _CtxPolishWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.''}", Float) = 0
         [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxPolishEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, From, p0, p24, To, p0, p24, Softness, p0, p4)] _CtxPolishTime ("Time of Day--{tooltip:''Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight.'',tooltips:[''How much the time decides. 0 turns it off.'',''The hour it starts showing, 0 to 24.'',''The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day.'',''How many hours it fades in and out over.'']}", Vector) = (0, 18, 6, 0.5)
         [HideInInspector] s_end_ctx_Polish_where ("", Float) = 0
         [HideInInspector] s_start_ctx_Polish_look ("Distance & Gaze", Float) = 0
         [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxPolishDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
@@ -3594,8 +3916,9 @@ Shader "VixenWear/Latex Ultra"
         [ToggleUI] _CtxSfxOther ("Every Other Effect--{tooltip:''These rules show or hide every other special effect: Ghost, Hologram, Pearl, Eyes, Skeleton X-Ray, Sheer & Lace, Dissolve and the effects that glow.''}", Float) = 1
         [HideInInspector] s_end_ctx_Sfx_reach ("", Float) = 0
         [HideInInspector] s_start_ctx_Sfx_where ("Where", Float) = 0
-        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxSfxWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6, Only in Screenshots, 7, Never in Screenshots, 8, Only in Handheld Camera, 9)] _CtxSfxWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.''}", Float) = 0
         [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxSfxEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, From, p0, p24, To, p0, p24, Softness, p0, p4)] _CtxSfxTime ("Time of Day--{tooltip:''Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight.'',tooltips:[''How much the time decides. 0 turns it off.'',''The hour it starts showing, 0 to 24.'',''The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day.'',''How many hours it fades in and out over.'']}", Vector) = (0, 18, 6, 0.5)
         [HideInInspector] s_end_ctx_Sfx_where ("", Float) = 0
         [HideInInspector] s_start_ctx_Sfx_look ("Distance & Gaze", Float) = 0
         [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxSfxDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
@@ -3625,8 +3948,9 @@ Shader "VixenWear/Latex Ultra"
         //ifex _CtxOutlineOn==0
         [HideInInspector] s_start_tog_CtxOutline ("Outlines Settings--{condition_show:(_CtxOutlineOn==1)}", Float) = 0
         [HideInInspector] s_start_ctx_Outline_where ("Where", Float) = 0
-        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxOutlineWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6, Only in Screenshots, 7, Never in Screenshots, 8, Only in Handheld Camera, 9)] _CtxOutlineWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.''}", Float) = 0
         [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxOutlineEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, From, p0, p24, To, p0, p24, Softness, p0, p4)] _CtxOutlineTime ("Time of Day--{tooltip:''Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight.'',tooltips:[''How much the time decides. 0 turns it off.'',''The hour it starts showing, 0 to 24.'',''The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day.'',''How many hours it fades in and out over.'']}", Vector) = (0, 18, 6, 0.5)
         [HideInInspector] s_end_ctx_Outline_where ("", Float) = 0
         [HideInInspector] s_start_ctx_Outline_look ("Distance & Gaze", Float) = 0
         [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxOutlineDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
@@ -3656,8 +3980,9 @@ Shader "VixenWear/Latex Ultra"
         //ifex _CtxEmisOn==0
         [HideInInspector] s_start_tog_CtxEmis ("Emissions Settings--{condition_show:(_CtxEmisOn==1)}", Float) = 0
         [HideInInspector] s_start_ctx_Emis_where ("Where", Float) = 0
-        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxEmisWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6, Only in Screenshots, 7, Never in Screenshots, 8, Only in Handheld Camera, 9)] _CtxEmisWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.''}", Float) = 0
         [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxEmisEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, From, p0, p24, To, p0, p24, Softness, p0, p4)] _CtxEmisTime ("Time of Day--{tooltip:''Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight.'',tooltips:[''How much the time decides. 0 turns it off.'',''The hour it starts showing, 0 to 24.'',''The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day.'',''How many hours it fades in and out over.'']}", Vector) = (0, 18, 6, 0.5)
         [HideInInspector] s_end_ctx_Emis_where ("", Float) = 0
         [HideInInspector] s_start_ctx_Emis_look ("Distance & Gaze", Float) = 0
         [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxEmisDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
@@ -3688,8 +4013,9 @@ Shader "VixenWear/Latex Ultra"
         //ifex _CtxMatcapOn==0
         [HideInInspector] s_start_tog_CtxMatcap ("Matcaps Settings--{condition_show:(_CtxMatcapOn==1)}", Float) = 0
         [HideInInspector] s_start_ctx_Matcap_where ("Where", Float) = 0
-        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxMatcapWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6, Only in Screenshots, 7, Never in Screenshots, 8, Only in Handheld Camera, 9)] _CtxMatcapWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.''}", Float) = 0
         [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxMatcapEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, From, p0, p24, To, p0, p24, Softness, p0, p4)] _CtxMatcapTime ("Time of Day--{tooltip:''Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight.'',tooltips:[''How much the time decides. 0 turns it off.'',''The hour it starts showing, 0 to 24.'',''The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day.'',''How many hours it fades in and out over.'']}", Vector) = (0, 18, 6, 0.5)
         [HideInInspector] s_end_ctx_Matcap_where ("", Float) = 0
         [HideInInspector] s_start_ctx_Matcap_look ("Distance & Gaze", Float) = 0
         [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxMatcapDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
@@ -3719,8 +4045,9 @@ Shader "VixenWear/Latex Ultra"
         //ifex _CtxALOn==0
         [HideInInspector] s_start_tog_CtxAL ("AudioLink Settings--{condition_show:(_CtxALOn==1)}", Float) = 0
         [HideInInspector] s_start_ctx_AL_where ("Where", Float) = 0
-        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6)] _CtxALWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.''}", Float) = 0
+        [VixForgeWideEnum(Anywhere, 0, Only in Mirrors, 1, Never in Mirrors, 2, Only in Photos, 3, Never in Photos, 4, Only in VR, 5, Only on Desktop, 6, Only in Screenshots, 7, Never in Screenshots, 8, Only in Handheld Camera, 9)] _CtxALWhere ("Show--{tooltip:''Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.''}", Float) = 0
         [VixForgeWideEnum(Both Eyes, 0, Left Eye Only, 1, Right Eye Only, 2)] _CtxALEye ("Seen By--{tooltip:''Which eye sees it in VR. Pick one eye to show it to that eye only.''}", Float) = 0
+        [VixForgeVectorToSliders(Amount, p0, p1, From, p0, p24, To, p0, p24, Softness, p0, p4)] _CtxALTime ("Time of Day--{tooltip:''Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight.'',tooltips:[''How much the time decides. 0 turns it off.'',''The hour it starts showing, 0 to 24.'',''The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day.'',''How many hours it fades in and out over.'']}", Vector) = (0, 18, 6, 0.5)
         [HideInInspector] s_end_ctx_AL_where ("", Float) = 0
         [HideInInspector] s_start_ctx_AL_look ("Distance & Gaze", Float) = 0
         [VixForgeWideEnum(Off, 0, Closer is Stronger, 1, Further is Stronger, 2)] _CtxALDistMode ("Distance--{tooltip:''Whether it reacts to the viewer coming closer or moving away.''}", Float) = 0
@@ -4083,6 +4410,7 @@ Shader "VixenWear/Latex Ultra"
         [Toggle] _AlphaToMask ("Alpha To Coverage--{tooltip:''Smooths the edges of cutout transparency instead of leaving them jagged. Costs nothing and usually looks better.''}", Float) = 0
         [Enum(Classic,0,Fast,1)] _HashMode ("Noise Pattern--{tooltip:''Classic keeps random patterns like glitch slices, fracture and car paint flakes exactly as they are. Fast builds them with cheaper maths, so a locked material is a little lighter to draw, but every pattern comes out in a new arrangement.''}", Float) = 0
         [VixForgeWideEnum(Classic, 0, Rec.709, 1)] _LumaRec709 ("Luma--{tooltip:''How colours are weighed when something fades them toward grey, like Saturation, glitter, Tattoo ageing and the music colour. Classic keeps your current look. Rec.709 matches how bright each colour really is, so blues fade darker and greens lighter.''}", Float) = 0
+        [ToggleUI] _SharedClock ("Shared Clock--{tooltip:''Runs every moving effect on the clock VRChat shares with everyone in the instance, so scrolling, spinning and pulsing patterns sit at the same point for every player. Off keeps each player on their own clock.''}", Float) = 0
         [DoNotAnimate][HideInInspector] Instancing ("Instancing--{tooltip:''Draws every copy of this material in one go when the same material sits on lots of separate meshes, which can be much faster. It does nothing on a skinned mesh. Leave it off unless you reuse one material across many separate meshes, because turning it on makes the shader build the extra versions instancing needs.''}", Float) = 0
 
         [HideInInspector] m_start_blending ("Blending", Float) = 0
@@ -4159,6 +4487,9 @@ Shader "VixenWear/Latex Ultra"
         Offset [_OutlineOffsetFactor], [_OutlineOffsetUnits]
 
         CGPROGRAM
+        //ifex 0==0
+        #pragma skip_optimizations d3d11
+        //endex
         #pragma vertex vert_outlineSurf
         #pragma geometry geom_outlineSurf
         #pragma fragment frag_outlineSurf
@@ -4240,6 +4571,9 @@ Shader "VixenWear/Latex Ultra"
         Offset [_OutlineOffsetFactor], [_OutlineOffsetUnits]
 
         CGPROGRAM
+        //ifex 0==0
+        #pragma skip_optimizations d3d11
+        //endex
         #pragma vertex vert_outlineSurf
         #pragma geometry geom_outlineSurf
         #pragma fragment frag_outlineSurf
@@ -4334,6 +4668,9 @@ Shader "VixenWear/Latex Ultra"
             }
 
             CGPROGRAM
+            //ifex 0==0
+            #pragma skip_optimizations d3d11
+            //endex
             #pragma vertex tessvert_surf
             #pragma fragment frag_surf
             #pragma hull hs_surf
@@ -4418,6 +4755,18 @@ Shader "VixenWear/Latex Ultra"
             #pragma shader_feature_local VF_DISSOLVE
             #pragma shader_feature_local VF_CONTACTS
             #pragma shader_feature_local VF_COLORADJUST
+            #pragma shader_feature_local VF_RGBMASK
+            #pragma shader_feature_local VF_TEX_RGBMASK
+            #pragma shader_feature_local VF_TEX_REDTEXTURE
+            #pragma shader_feature_local VF_TEX_GREENTEXTURE
+            #pragma shader_feature_local VF_TEX_BLUETEXTURE
+            #pragma shader_feature_local VF_TEX_ALPHATEXTURE
+            #pragma shader_feature_local VF_MAIN2ND
+            #pragma shader_feature_local VF_TEX_MAIN2NDTEX
+            #pragma shader_feature_local VF_TEX_MAIN2NDBLENDMASK
+            #pragma shader_feature_local VF_MAIN3RD
+            #pragma shader_feature_local VF_TEX_MAIN3RDTEX
+            #pragma shader_feature_local VF_TEX_MAIN3RDBLENDMASK
             #pragma shader_feature_local VF_TEX_COLORADJUSTMASK
             #pragma shader_feature_local VF_TEX_MAINTINT
             #pragma shader_feature_local VF_TEX_GRADATION
@@ -4426,6 +4775,9 @@ Shader "VixenWear/Latex Ultra"
             #pragma shader_feature_local VF_EYES
             #pragma shader_feature_local VF_TEX_HOLORAMP
             #pragma shader_feature_local VF_PEARL
+            #pragma shader_feature_local VF_WEAR
+            #pragma shader_feature_local VF_TEX_WEARMASK
+            #pragma shader_feature_local VF_TEX_WEARCURV
             #pragma shader_feature_local VF_SKELETON
             #pragma shader_feature_local VF_TEX_SKELMASK
             #pragma shader_feature_local VF_TEX_DISSOLVENOISE
@@ -4468,6 +4820,13 @@ Shader "VixenWear/Latex Ultra"
             #pragma shader_feature_local VF_TEX_POLISHMASK
             #pragma shader_feature_local VF_TEX_REGIONMASK
             #pragma shader_feature_local VF_TEX_SHADOWMASK
+            #pragma shader_feature_local VF_TEX_TOONRAMP
+            #pragma shader_feature_local VF_TEX_SHADOWCOLORTEX
+            #pragma shader_feature_local VF_TEX_SHADOW2NDCOLORTEX
+            #pragma shader_feature_local VF_TEX_SHADOW3RDCOLORTEX
+            #pragma shader_feature_local VF_TEX_SHADOWSTRENGTHMASK
+            #pragma shader_feature_local VF_TEX_SHADOWBORDERMASK
+            #pragma shader_feature_local VF_TEX_MULTILAYERMATHBLURMAP
             #pragma shader_feature_local VF_TEX_TOUCHMASK
             #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRECTIONAL_COOKIE POINT_COOKIE SHADOWS_CUBE SHADOWS_SOFT
             #pragma multi_compile_instancing
@@ -4525,6 +4884,9 @@ Shader "VixenWear/Latex Ultra"
             }
 
             CGPROGRAM
+            //ifex 0==0
+            #pragma skip_optimizations d3d11
+            //endex
             #pragma vertex tessvert_surf
             #pragma fragment frag_surf
             #pragma hull hs_surf
@@ -4608,6 +4970,18 @@ Shader "VixenWear/Latex Ultra"
             #pragma shader_feature_local VF_DISSOLVE
             #pragma shader_feature_local VF_CONTACTS
             #pragma shader_feature_local VF_COLORADJUST
+            #pragma shader_feature_local VF_RGBMASK
+            #pragma shader_feature_local VF_TEX_RGBMASK
+            #pragma shader_feature_local VF_TEX_REDTEXTURE
+            #pragma shader_feature_local VF_TEX_GREENTEXTURE
+            #pragma shader_feature_local VF_TEX_BLUETEXTURE
+            #pragma shader_feature_local VF_TEX_ALPHATEXTURE
+            #pragma shader_feature_local VF_MAIN2ND
+            #pragma shader_feature_local VF_TEX_MAIN2NDTEX
+            #pragma shader_feature_local VF_TEX_MAIN2NDBLENDMASK
+            #pragma shader_feature_local VF_MAIN3RD
+            #pragma shader_feature_local VF_TEX_MAIN3RDTEX
+            #pragma shader_feature_local VF_TEX_MAIN3RDBLENDMASK
             #pragma shader_feature_local VF_TEX_COLORADJUSTMASK
             #pragma shader_feature_local VF_TEX_MAINTINT
             #pragma shader_feature_local VF_TEX_GRADATION
@@ -4616,6 +4990,9 @@ Shader "VixenWear/Latex Ultra"
             #pragma shader_feature_local VF_EYES
             #pragma shader_feature_local VF_TEX_HOLORAMP
             #pragma shader_feature_local VF_PEARL
+            #pragma shader_feature_local VF_WEAR
+            #pragma shader_feature_local VF_TEX_WEARMASK
+            #pragma shader_feature_local VF_TEX_WEARCURV
             #pragma shader_feature_local VF_SKELETON
             #pragma shader_feature_local VF_TEX_SKELMASK
             #pragma shader_feature_local VF_TEX_DISSOLVENOISE
@@ -4658,6 +5035,13 @@ Shader "VixenWear/Latex Ultra"
             #pragma shader_feature_local VF_TEX_POLISHMASK
             #pragma shader_feature_local VF_TEX_REGIONMASK
             #pragma shader_feature_local VF_TEX_SHADOWMASK
+            #pragma shader_feature_local VF_TEX_TOONRAMP
+            #pragma shader_feature_local VF_TEX_SHADOWCOLORTEX
+            #pragma shader_feature_local VF_TEX_SHADOW2NDCOLORTEX
+            #pragma shader_feature_local VF_TEX_SHADOW3RDCOLORTEX
+            #pragma shader_feature_local VF_TEX_SHADOWSTRENGTHMASK
+            #pragma shader_feature_local VF_TEX_SHADOWBORDERMASK
+            #pragma shader_feature_local VF_TEX_MULTILAYERMATHBLURMAP
             #pragma shader_feature_local VF_TEX_TOUCHMASK
             #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRECTIONAL_COOKIE POINT_COOKIE SHADOWS_CUBE SHADOWS_SOFT
             #pragma multi_compile_instancing
@@ -4715,6 +5099,9 @@ Shader "VixenWear/Latex Ultra"
             }
 
             CGPROGRAM
+            //ifex 0==0
+            #pragma skip_optimizations d3d11
+            //endex
             #pragma vertex tessvert_surf
             #pragma fragment frag_surf
             #pragma hull hs_surf
@@ -4798,6 +5185,18 @@ Shader "VixenWear/Latex Ultra"
             #pragma shader_feature_local VF_DISSOLVE
             #pragma shader_feature_local VF_CONTACTS
             #pragma shader_feature_local VF_COLORADJUST
+            #pragma shader_feature_local VF_RGBMASK
+            #pragma shader_feature_local VF_TEX_RGBMASK
+            #pragma shader_feature_local VF_TEX_REDTEXTURE
+            #pragma shader_feature_local VF_TEX_GREENTEXTURE
+            #pragma shader_feature_local VF_TEX_BLUETEXTURE
+            #pragma shader_feature_local VF_TEX_ALPHATEXTURE
+            #pragma shader_feature_local VF_MAIN2ND
+            #pragma shader_feature_local VF_TEX_MAIN2NDTEX
+            #pragma shader_feature_local VF_TEX_MAIN2NDBLENDMASK
+            #pragma shader_feature_local VF_MAIN3RD
+            #pragma shader_feature_local VF_TEX_MAIN3RDTEX
+            #pragma shader_feature_local VF_TEX_MAIN3RDBLENDMASK
             #pragma shader_feature_local VF_TEX_COLORADJUSTMASK
             #pragma shader_feature_local VF_TEX_MAINTINT
             #pragma shader_feature_local VF_TEX_GRADATION
@@ -4806,6 +5205,9 @@ Shader "VixenWear/Latex Ultra"
             #pragma shader_feature_local VF_EYES
             #pragma shader_feature_local VF_TEX_HOLORAMP
             #pragma shader_feature_local VF_PEARL
+            #pragma shader_feature_local VF_WEAR
+            #pragma shader_feature_local VF_TEX_WEARMASK
+            #pragma shader_feature_local VF_TEX_WEARCURV
             #pragma shader_feature_local VF_SKELETON
             #pragma shader_feature_local VF_TEX_SKELMASK
             #pragma shader_feature_local VF_TEX_DISSOLVENOISE
@@ -4848,6 +5250,13 @@ Shader "VixenWear/Latex Ultra"
             #pragma shader_feature_local VF_TEX_POLISHMASK
             #pragma shader_feature_local VF_TEX_REGIONMASK
             #pragma shader_feature_local VF_TEX_SHADOWMASK
+            #pragma shader_feature_local VF_TEX_TOONRAMP
+            #pragma shader_feature_local VF_TEX_SHADOWCOLORTEX
+            #pragma shader_feature_local VF_TEX_SHADOW2NDCOLORTEX
+            #pragma shader_feature_local VF_TEX_SHADOW3RDCOLORTEX
+            #pragma shader_feature_local VF_TEX_SHADOWSTRENGTHMASK
+            #pragma shader_feature_local VF_TEX_SHADOWBORDERMASK
+            #pragma shader_feature_local VF_TEX_MULTILAYERMATHBLURMAP
             #pragma shader_feature_local VF_TEX_TOUCHMASK
             #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRECTIONAL_COOKIE POINT_COOKIE SHADOWS_CUBE SHADOWS_SOFT
             #pragma multi_compile_instancing
@@ -4886,6 +5295,9 @@ Shader "VixenWear/Latex Ultra"
             ZWrite Off Blend One One
 
             CGPROGRAM
+            //ifex 0==0
+            #pragma skip_optimizations d3d11
+            //endex
             #pragma vertex tessvert_surf
             #pragma fragment frag_surf
             #pragma hull hs_surf
@@ -4954,6 +5366,18 @@ Shader "VixenWear/Latex Ultra"
             #pragma shader_feature_local VF_DISSOLVE
             #pragma shader_feature_local VF_CONTACTS
             #pragma shader_feature_local VF_COLORADJUST
+            #pragma shader_feature_local VF_RGBMASK
+            #pragma shader_feature_local VF_TEX_RGBMASK
+            #pragma shader_feature_local VF_TEX_REDTEXTURE
+            #pragma shader_feature_local VF_TEX_GREENTEXTURE
+            #pragma shader_feature_local VF_TEX_BLUETEXTURE
+            #pragma shader_feature_local VF_TEX_ALPHATEXTURE
+            #pragma shader_feature_local VF_MAIN2ND
+            #pragma shader_feature_local VF_TEX_MAIN2NDTEX
+            #pragma shader_feature_local VF_TEX_MAIN2NDBLENDMASK
+            #pragma shader_feature_local VF_MAIN3RD
+            #pragma shader_feature_local VF_TEX_MAIN3RDTEX
+            #pragma shader_feature_local VF_TEX_MAIN3RDBLENDMASK
             #pragma shader_feature_local VF_TEX_COLORADJUSTMASK
             #pragma shader_feature_local VF_TEX_MAINTINT
             #pragma shader_feature_local VF_TEX_GRADATION
@@ -4962,6 +5386,9 @@ Shader "VixenWear/Latex Ultra"
             #pragma shader_feature_local VF_EYES
             #pragma shader_feature_local VF_TEX_HOLORAMP
             #pragma shader_feature_local VF_PEARL
+            #pragma shader_feature_local VF_WEAR
+            #pragma shader_feature_local VF_TEX_WEARMASK
+            #pragma shader_feature_local VF_TEX_WEARCURV
             #pragma shader_feature_local VF_SKELETON
             #pragma shader_feature_local VF_TEX_DISSOLVENOISE
             #pragma shader_feature_local VF_TEX_DISSOLVETO
@@ -5000,6 +5427,13 @@ Shader "VixenWear/Latex Ultra"
             #pragma shader_feature_local VF_TEX_POLISHMASK
             #pragma shader_feature_local VF_TEX_REGIONMASK
             #pragma shader_feature_local VF_TEX_SHADOWMASK
+            #pragma shader_feature_local VF_TEX_TOONRAMP
+            #pragma shader_feature_local VF_TEX_SHADOWCOLORTEX
+            #pragma shader_feature_local VF_TEX_SHADOW2NDCOLORTEX
+            #pragma shader_feature_local VF_TEX_SHADOW3RDCOLORTEX
+            #pragma shader_feature_local VF_TEX_SHADOWSTRENGTHMASK
+            #pragma shader_feature_local VF_TEX_SHADOWBORDERMASK
+            #pragma shader_feature_local VF_TEX_MULTILAYERMATHBLURMAP
             #pragma shader_feature_local VF_TEX_TOUCHMASK
             #pragma skip_variants LOD_FADE_CROSSFADE LIGHTMAP_ON DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK
             //ifex _LightingPointShadows==1
@@ -5041,6 +5475,62 @@ Shader "VixenWear/Latex Ultra"
         }
         //endex
 
+        //ifex _UseGlitter==0
+        //ifex _Glit_Position==0 && (_Glit2_On==0 || _Glit2_Position==0) && (_Glit3_On==0 || _Glit3_Position==0) && (_Glit4_On==0 || _Glit4_Position==0) && (_Glit5_On==0 || _Glit5_Position==0)
+        Pass
+        {
+            Name "GLITTER_FLOAT"
+            Tags { "LightMode" = "ForwardBase" }
+            ZWrite Off
+            ZTest LEqual
+            Cull Off
+            Blend One One
+
+            CGPROGRAM
+            //ifex 0==0
+            #pragma skip_optimizations d3d11
+            //endex
+            #pragma vertex gfVert
+            #pragma geometry gfGeom
+            #pragma fragment gfFrag
+            #pragma target 5.0
+            #pragma only_renderers d3d11 glcore vulkan
+            #pragma require geometry
+            #pragma multi_compile_instancing
+            #pragma dynamic_branch _ FOG_LINEAR FOG_EXP FOG_EXP2
+            #pragma shader_feature_local VF_GLITTER
+            #pragma shader_feature_local VF_GLIT2_ON
+            #pragma shader_feature_local VF_GLIT3_ON
+            #pragma shader_feature_local VF_GLIT4_ON
+            #pragma shader_feature_local VF_GLIT5_ON
+            #pragma shader_feature_local VF_TEX_GLITMASK
+            #pragma shader_feature_local VF_CUTOUTMASK
+            #pragma shader_feature_local VF_TEX_CUTOUTMASK
+            #pragma shader_feature_local VF_UDIMDISCARD
+            #pragma shader_feature_local VF_DISSOLVE
+            #pragma shader_feature_local VF_TEX_DISSOLVENOISE
+            #pragma shader_feature_local VF_TEX_DISSOLVETO
+            #pragma shader_feature_local VF_TEX_DISSOLVEDETAIL
+            #pragma shader_feature_local VF_TEX_DISSOLVEMASK
+            #pragma shader_feature_local VF_LIGHTVOLUMES
+            #pragma shader_feature_local VF_CTX
+            #pragma shader_feature_local VF_TEX_CTXMASK
+            #pragma shader_feature_local VF_TEX_EMISSIONMAP
+            #pragma shader_feature_local VF_TEX_EMISSIONMAP2
+            #pragma shader_feature_local VF_TEX_EMISSIONMAP3
+            #pragma shader_feature_local VF_TEX_EMISSIONMAP4
+            #pragma shader_feature_local VF_TEX_EMISSIONMAP5
+            #pragma shader_feature_local VF_TEX_MATCAPMASK
+            #pragma shader_feature_local VF_TEX_MATCAP2_MASK
+            #pragma shader_feature_local VF_TEX_MATCAP3_MASK
+            #pragma shader_feature_local VF_TEX_MATCAP4_MASK
+            #pragma shader_feature_local VF_TEX_MATCAP5_MASK
+            #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeGlitterFloat.cginc"
+            ENDCG
+        }
+        //endex
+        //endex
+
         Pass
         {
             Name "ShadowCaster"
@@ -5051,6 +5541,9 @@ Shader "VixenWear/Latex Ultra"
             Offset [_ShadowOffsetFactor], [_ShadowOffsetUnits]
 
             CGPROGRAM
+            //ifex 0==0
+            #pragma skip_optimizations d3d11
+            //endex
             #pragma vertex tessvert_surf
             #pragma fragment frag_surf
             #pragma hull hs_surf
@@ -5387,10 +5880,14 @@ Shader "VixenWear/Latex Ultra"
             Cull Back
 
             CGPROGRAM
+            //ifex 0==0
+            #pragma skip_optimizations d3d11
+            //endex
             #pragma vertex clingVert
             #pragma fragment clingFrag
             #pragma shader_feature_local VF_TEX_CUTOUTMASK
             #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeCutout.cginc"
+            #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeClock.cginc"
             UNITY_DECLARE_TEX2D_NOSAMPLER(_MainTex);
             float4 _MainTex_ST;
             fixed4 _Color;
@@ -5486,7 +5983,7 @@ Shader "VixenWear/Latex Ultra"
             float2 clingMaskUV(float2 uv)
             {
                 uv = uv * _MainTex_ST.xy + _MainTex_ST.zw;
-                float2 sc = float2(_SpeedX, _SpeedY) * _Time.y + float2(_SpeedX_Ph, _SpeedY_Ph);
+                float2 sc = float2(_SpeedX, _SpeedY) * VF_TIME + float2(_SpeedX_Ph, _SpeedY_Ph);
                 uv += frac(sc);
                 [branch] if (abs(_UV_Rot) > 0.001)
                 {
@@ -5697,7 +6194,7 @@ Shader "VixenWear/Latex Ultra"
                         cL = vw_CtxLightBasic(wp, wn);
                     float4 cB = AL_Active() ? float4(AL_Band(0), AL_Band(1), AL_Band(2), AL_Band(3)) : float4(0.0, 0.0, 0.0, 0.0);
                     VFCtxView cV = vw_CtxView(wp, wn, cL, cB, cTex);
-                    float2 cR = vw_CtxRule(cV, _CtxSfxWhere, _CtxSfxEye, _CtxSfxDistMode, _CtxSfxDist, _CtxSfxGaze, _CtxSfxTorch, _CtxSfxLightCol, _CtxSfxLight, _CtxSfxDark, _CtxSfxBeat, _CtxSfxBand, _CtxSfxInvert, _CtxSfxHidden, _CtxSfxMaskCh, 1.0);
+                    float2 cR = vw_CtxRule(cV, _CtxSfxWhere, _CtxSfxEye, _CtxSfxDistMode, _CtxSfxDist, _CtxSfxGaze, _CtxSfxTorch, _CtxSfxLightCol, _CtxSfxLight, _CtxSfxDark, _CtxSfxTime, _CtxSfxBeat, _CtxSfxBand, _CtxSfxInvert, _CtxSfxHidden, _CtxSfxMaskCh, 1.0);
                     mask *= lerp(1.0, cR.x, cR.y);
                 }
                 //endex
@@ -5708,9 +6205,9 @@ Shader "VixenWear/Latex Ultra"
                 // the wearer walks, exactly as Writhe does. A world-anchored field would make the strands
                 // crawl whenever the wearer moved and stand still whenever they did not.
                 // Read once for the strand field. Beat Speed ADDS the beat clock rather than scaling
-                // _Time.y, because scaling the multiplier of elapsed time teleports the field.
+                // VF_TIME, because scaling the multiplier of elapsed time teleports the field.
                 float ampGooC = AL_Active() ? AL_Band((int)_AL_Band_Goo) : 0.0;
-                float t = _Time.y * _Goo_ClingSpeed + _Goo_ClingSpeed_Ph;
+                float t = VF_TIME * _Goo_ClingSpeed + _Goo_ClingSpeed_Ph;
                 [branch] if (_AL_Goo_ClingSpeed > 0.001 && AL_Active())
                     t += AL_BeatClock(_AL_Band_Goo) * _AL_Goo_ClingSpeed;
                 float3 q = v.vertex.xyz * _Goo_ClingStrands;
@@ -5793,7 +6290,7 @@ Shader "VixenWear/Latex Ultra"
                 // One matrix multiply is cheaper than carrying the object position through an interpolator.
                 float3 opos = mul(unity_WorldToObject, float4(i.wpos, 1.0)).xyz;
 
-                float t = _Time.y * _Goo_ClingSpeed + _Goo_ClingSpeed_Ph;
+                float t = VF_TIME * _Goo_ClingSpeed + _Goo_ClingSpeed_Ph;
                 float rip = clingNoise3(opos * _Goo_ClingStrands * 1.3 + float3(0.0, -t, 0.0)) - 0.5;
 
                 // Scaled by how far this fragment was actually pushed, so the drag is strongest out at the
@@ -5893,11 +6390,15 @@ Shader "VixenWear/Latex Ultra"
             Cull Off
 
             CGPROGRAM
+            //ifex 0==0
+            #pragma skip_optimizations d3d11
+            //endex
             #pragma vertex dripVert
             #pragma geometry dripGeom
             #pragma fragment dripFrag
             #pragma shader_feature_local VF_TEX_CUTOUTMASK
             #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeCutout.cginc"
+            #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeClock.cginc"
             UNITY_DECLARE_TEX2D_NOSAMPLER(_MainTex);
             float4 _MainTex_ST;
             fixed4 _Color;
@@ -6055,7 +6556,7 @@ Shader "VixenWear/Latex Ultra"
             float2 dripMaskUV(float2 uv)
             {
                 uv = uv * _MainTex_ST.xy + _MainTex_ST.zw;
-                float2 sc = float2(_SpeedX, _SpeedY) * _Time.y + float2(_SpeedX_Ph, _SpeedY_Ph);
+                float2 sc = float2(_SpeedX, _SpeedY) * VF_TIME + float2(_SpeedX_Ph, _SpeedY_Ph);
                 float rs, rc;
                 sincos(_UV_Rot * (UNITY_PI / 180.0), rs, rc);
                 float2x2 rm = float2x2(rc, -rs, rs, rc);
@@ -6226,7 +6727,7 @@ Shader "VixenWear/Latex Ultra"
                         cL = vw_CtxLightBasic(C, N);
                     float4 cB = AL_Active() ? float4(AL_Band(0), AL_Band(1), AL_Band(2), AL_Band(3)) : float4(0.0, 0.0, 0.0, 0.0);
                     VFCtxView cV = vw_CtxView(C, N, cL, cB, cTex);
-                    float2 cR = vw_CtxRule(cV, _CtxSfxWhere, _CtxSfxEye, _CtxSfxDistMode, _CtxSfxDist, _CtxSfxGaze, _CtxSfxTorch, _CtxSfxLightCol, _CtxSfxLight, _CtxSfxDark, _CtxSfxBeat, _CtxSfxBand, _CtxSfxInvert, _CtxSfxHidden, _CtxSfxMaskCh, 1.0);
+                    float2 cR = vw_CtxRule(cV, _CtxSfxWhere, _CtxSfxEye, _CtxSfxDistMode, _CtxSfxDist, _CtxSfxGaze, _CtxSfxTorch, _CtxSfxLightCol, _CtxSfxLight, _CtxSfxDark, _CtxSfxTime, _CtxSfxBeat, _CtxSfxBand, _CtxSfxInvert, _CtxSfxHidden, _CtxSfxMaskCh, 1.0);
                     float  cK = lerp(1.0, cR.x, cR.y);
                     wetMask *= cK;
                     gooMask *= cK;
@@ -6323,7 +6824,7 @@ Shader "VixenWear/Latex Ultra"
                 float dripBeatT = 0.0;
                 [branch] if (isGoo && _AL_Goo_DripSpeed > 0.001 && AL_Active())
                     dripBeatT = AL_BeatClock(_AL_Band_Goo) * _AL_Goo_DripSpeed;
-                float phase = frac((_Time.y * spd + spdPh) * (0.5 + h) + dripBeatT + h);
+                float phase = frac((VF_TIME * spd + spdPh) * (0.5 + h) + dripBeatT + h);
                 [branch] if (extra && landBurst >= alBurst && landBurst > 0.001)
                     phase = 0.42 + (1.0 - saturate(_WG_Land)) * 0.5;
                 float swell = smoothstep(0.0, 0.18, phase);
@@ -6373,8 +6874,8 @@ Shader "VixenWear/Latex Ultra"
 
                 float swayAmt   = isGoo ? _Goo_Sway : _Drip_Sway;
                 float swaySpeed = isGoo ? _Goo_SwaySpeed : 3.0;
-                float swayBase = _Time.y * swaySpeed + (isGoo ? _Goo_SwaySpeed_Ph : 0.0) + h * 6.2831;
-                float localTurbulence = sin(objC.x * 10.0 + _Time.y) * cos(objC.z * 10.0 - _Time.y);
+                float swayBase = VF_TIME * swaySpeed + (isGoo ? _Goo_SwaySpeed_Ph : 0.0) + h * 6.2831;
+                float localTurbulence = sin(objC.x * 10.0 + VF_TIME) * cos(objC.z * 10.0 - VF_TIME);
                 float2 swayXZ = float2(
                     sin(swayBase + localTurbulence), 
                     sin(swayBase * 0.7 + 1.3 - localTurbulence)
@@ -6628,7 +7129,7 @@ Shader "VixenWear/Latex Ultra"
                     float3 kL, kC;
                     VF_KeyLight(i.wpos.xyz, _WorldSpaceLightPos0.xyz, _LightColor0.rgb, kL, kC);
                     float gsp = pow(saturate(dot(reflect(-viewDir, nWorld), VF_SafeNormalize(kL))), 300.0);
-                    float tw  = lerp(1.0, 0.5 + 0.5 * sin(_Time.y * (5.0 + dropHash * 7.0) + dropHash * 6.2831853), saturate(_Wet_Glint.w));
+                    float tw  = lerp(1.0, 0.5 + 0.5 * sin(VF_TIME * (5.0 + dropHash * 7.0) + dropHash * 6.2831853), saturate(_Wet_Glint.w));
                     col += kC * (gsp * tw * gloss * _Wet_Glint.x * 4.0);
                 }
 
@@ -6658,6 +7159,9 @@ Shader "VixenWear/Latex Ultra"
             Cull Off
 
             CGPROGRAM
+            //ifex 0==0
+            #pragma skip_optimizations d3d11
+            //endex
             #pragma vertex hudVert
             #pragma geometry hudGeom
             #pragma fragment hudFrag
@@ -6668,9 +7172,20 @@ Shader "VixenWear/Latex Ultra"
             #pragma shader_feature_local VF_TEX_DISSOLVEDETAIL
             #pragma shader_feature_local VF_TEX_DISSOLVEMASK
             #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeUVTileDiscard.cginc"
+            #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeClock.cginc"
             #pragma target 5.0
             #pragma shader_feature_local VF_TEX_CYBERMASK
             #pragma shader_feature_local VF_CYBERDMX
+            #pragma shader_feature_local VF_TEX_EMISSIONMAP
+            #pragma shader_feature_local VF_TEX_EMISSIONMAP2
+            #pragma shader_feature_local VF_TEX_EMISSIONMAP3
+            #pragma shader_feature_local VF_TEX_EMISSIONMAP4
+            #pragma shader_feature_local VF_TEX_EMISSIONMAP5
+            #pragma shader_feature_local VF_TEX_MATCAPMASK
+            #pragma shader_feature_local VF_TEX_MATCAP2_MASK
+            #pragma shader_feature_local VF_TEX_MATCAP3_MASK
+            #pragma shader_feature_local VF_TEX_MATCAP4_MASK
+            #pragma shader_feature_local VF_TEX_MATCAP5_MASK
             #pragma only_renderers d3d11 glcore vulkan
             
             #pragma require geometry
@@ -6807,7 +7322,7 @@ Shader "VixenWear/Latex Ultra"
                 {
                     amps = float4(AL_Band(0), AL_Band(1), AL_Band(2), AL_Band(3));
                     alExtra = float2(AL_Band(AL_BAND_VOLUME), AL_Band(AL_BAND_PEAK));
-                    float wavePhase = frac(uv.y * 2.0 - _Time.y * 0.2);
+                    float wavePhase = frac(uv.y * 2.0 - VF_TIME * 0.2);
                     // Was row 0 only, a sixteenth of the 2048 samples, with a 0.5 offset on a signal
                     // already centred on zero. AL_WaveAt is the one accessor now.
                     raw_waveform = AL_WaveAt(wavePhase);
@@ -6913,7 +7428,7 @@ Shader "VixenWear/Latex Ultra"
                 float m2 = VF_FB_BLACK.r;
                 #endif
                 if (max(m0, max(m1, m2)) < 0.5) return;
-                float lift = _Cyber_Hover + sin(_Time.y * 1.6) * _Cyber_Hover * _Cyber_Hover_Bob * 0.25;
+                float lift = _Cyber_Hover + sin(VF_TIME * 1.6) * _Cyber_Hover * _Cyber_Hover_Bob * 0.25;
 
                 hudG2F o;
                 UNITY_INITIALIZE_OUTPUT(hudG2F, o);
@@ -7395,7 +7910,7 @@ Shader "VixenWear/Latex Ultra"
                         }
 
                         float shimmerAmp   = alLive ? HUD_AL_BAND(amps, alExtra, _Cyber_Auto_Shimmer_Band)   : 0.6;
-                        float popAmp       = alLive ? HUD_AL_BAND(amps, alExtra, _Cyber_Auto_Pop_Band)       : pow(0.5 + 0.5 * sin(_Time.y * 3.0), 8.0);
+                        float popAmp       = alLive ? HUD_AL_BAND(amps, alExtra, _Cyber_Auto_Pop_Band)       : pow(0.5 + 0.5 * sin(VF_TIME * 3.0), 8.0);
                         float sizzleAmp    = alLive ? HUD_AL_BAND(amps, alExtra, _Cyber_Auto_Sizzle_Band)    : 0.6;
                         float electrifyAmp = alLive ? HUD_AL_BAND(amps, alExtra, _Cyber_Auto_Electrify_Band) : 0.6;
                         shimmerAmp   *= _Cyber_Auto_Shimmer;
@@ -7405,20 +7920,20 @@ Shader "VixenWear/Latex Ultra"
 
                         float pop = pow(saturate(popAmp), 3.0);
                         acVal += pop * 0.05;
-                        float crackle = hudHash21(float2(floor(acPos * 90.0), floor(frac(_Time.y / 600.0) * 16800.0))) - 0.5;
+                        float crackle = hudHash21(float2(floor(acPos * 90.0), floor(frac(VF_TIME / 600.0) * 16800.0))) - 0.5;
                         acVal += crackle * 0.014 * sizzleAmp;
                         const float baselineR = 0.6;
                         float bandDist = abs(r - baselineR) - acVal;
                         float trace = abs(smoothstep(0.02, 0.01, bandDist));
-                        float shimmer = pow(0.5 + 0.5 * sin(acPos * 36.0 - _Time.y * 6.0 + acVal * 400.0), 4.0) * shimmerAmp;
-                        float arcField = sin(acPos * 64.0 + _Time.y * 9.0) + sin(r * 26.0 - _Time.y * 7.0 + acPos * 12.0);
+                        float shimmer = pow(0.5 + 0.5 * sin(acPos * 36.0 - VF_TIME * 6.0 + acVal * 400.0), 4.0) * shimmerAmp;
+                        float arcField = sin(acPos * 64.0 + VF_TIME * 9.0) + sin(r * 26.0 - VF_TIME * 7.0 + acPos * 12.0);
                         float electrify = pow(saturate(1.0 - abs(arcField) * 2.5), 3.0) * electrifyAmp;
                         float halo = smoothstep(0.06 + pop * 0.06, 0.0, abs(bandDist)) * pop;
 
                         float bright = lerp(0.15, 1.0, max(vuI, autoBand));
                         bright *= 1.0 + shimmer * 1.6 + pop * 2.0;
                         float tailFade = 1.0 - smoothstep(0.0, 1.0, acPos);
-                        float spark = pow(hudHash21(float2(floor(acPos * 160.0), floor(frac(_Time.y / 600.0) * 21600.0))), 9.0);
+                        float spark = pow(hudHash21(float2(floor(acPos * 160.0), floor(frac(VF_TIME / 600.0) * 21600.0))), 9.0);
                         float sizzle = spark * smoothstep(0.025, 0.0, abs(bandDist)) * (0.3 + sizzleAmp * 3.0);
                         float3 acRing = al_color * trace * bright + al_color * halo * 0.6;
                         acRing = lerp(acRing, 1.0, saturate(trace * pop));
@@ -7449,12 +7964,16 @@ Shader "VixenWear/Latex Ultra"
             Blend Off
 
             CGPROGRAM
+            //ifex 0==0
+            #pragma skip_optimizations d3d11
+            //endex
             #pragma vertex shardVert
             #pragma geometry shardGeom
             #pragma fragment shardFrag
             #pragma shader_feature_local VF_CUTOUTMASK
             #pragma shader_feature_local VF_TEX_CUTOUTMASK
             #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeCutout.cginc"
+            #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeClock.cginc"
             #pragma shader_feature_local VF_UDIMDISCARD
             #pragma shader_feature_local VF_DISSOLVE
             #pragma shader_feature_local VF_TEX_DISSOLVENOISE
@@ -7603,16 +8122,16 @@ Shader "VixenWear/Latex Ultra"
                              out float3 push, out float3 axis, out float ang, out float3 velDir)
             {
                 axis = normalize(float3(frac(h * 1.0) * 2.0 - 1.0, frac(h * 1.37) * 2.0 - 1.0, frac(h * 3.11) * 2.0 - 1.0) + 1e-4);
-                ang = shardProg * _Vtx_Fracture_Spin * 6.2831853 + (_Time.y * _Vtx_Fracture_Spin + _Vtx_Fracture_Spin_Ph) * 0.6 * (h - 0.5);
-                float travel = sqrt(shardProg) * _Vtx_Fracture_Dist + sin(_Time.y * 1.3 + h * 6.2831) * 0.01 * shardProg;
+                ang = shardProg * _Vtx_Fracture_Spin * 6.2831853 + (VF_TIME * _Vtx_Fracture_Spin + _Vtx_Fracture_Spin_Ph) * 0.6 * (h - 0.5);
+                float travel = sqrt(shardProg) * _Vtx_Fracture_Dist + sin(VF_TIME * 1.3 + h * 6.2831) * 0.01 * shardProg;
                 const float3 up = float3(0.0, 1.0, 0.0);
-                float spiralAng = (_Time.y * _Vtx_Fracture_Spiral + _Vtx_Fracture_Spiral_Ph) * 1.2 + shardProg * 6.2831853 * _Vtx_Fracture_Spiral;
+                float spiralAng = (VF_TIME * _Vtx_Fracture_Spiral + _Vtx_Fracture_Spiral_Ph) * 1.2 + shardProg * 6.2831853 * _Vtx_Fracture_Spiral;
                 float3 pushDir = shardRotate(faceN, up, spiralAng);
                 push = pushDir * travel;
                 push += up * _Vtx_Fracture_Spiral * shardProg * _Vtx_Fracture_Dist * 0.5;
-                push += float3(sin(_Time.y * 0.8 + h * 6.2831),
-                               sin(_Time.y * 0.6 + h * 12.566 + 1.3),
-                               cos(_Time.y * 0.7 + h * 9.42 + 2.1)) * (_Vtx_Fracture_Float * 0.08 * shardProg);
+                push += float3(sin(VF_TIME * 0.8 + h * 6.2831),
+                               sin(VF_TIME * 0.6 + h * 12.566 + 1.3),
+                               cos(VF_TIME * 0.7 + h * 9.42 + 2.1)) * (_Vtx_Fracture_Float * 0.08 * shardProg);
                 push += up * (_Vtx_Fracture_Lift * shardProg);
 
                 velDir = (length(push) > 1e-4) ? normalize(push) : pushDir;
@@ -7890,14 +8409,14 @@ Shader "VixenWear/Latex Ultra"
                 emis += albedo * regionEmis;
                 if (_Shard_ColorMod > 0.001)
                 {
-                    float hueAng = (_Time.y * _Shard_ColorMod_Speed + _Shard_ColorMod_Speed_Ph + h) * 6.2831853;
+                    float hueAng = (VF_TIME * _Shard_ColorMod_Speed + _Shard_ColorMod_Speed_Ph + h) * 6.2831853;
                     albedo = lerp(albedo, shardHueRotate(albedo, hueAng), _Shard_ColorMod);
                     emis   = lerp(emis,   shardHueRotate(emis,   hueAng), _Shard_ColorMod);
                 }
 
                 if (_UseShardCC > 0.5 && AL_Active())
                 {
-                    float ccPos = frac(h + _Time.y * 0.05);
+                    float ccPos = frac(h + VF_TIME * 0.05);
                     float3 ccCol = AudioLinkData(ALPASS_CCSTRIP + int2((int)(saturate(ccPos) * 127.0), 0)).rgb;
                     albedo = lerp(albedo, ccCol, _Shard_CC_Str * 0.8);
                     emis  += ccCol * _Shard_CC_Str * shardProg;
@@ -7979,12 +8498,16 @@ Shader "VixenWear/Latex Ultra"
             Cull Off
 
             CGPROGRAM
+            //ifex 0==0
+            #pragma skip_optimizations d3d11
+            //endex
             #pragma vertex trailVert
             #pragma geometry trailGeom
             #pragma fragment trailFrag
             #pragma shader_feature_local VF_CUTOUTMASK
             #pragma shader_feature_local VF_TEX_CUTOUTMASK
             #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeCutout.cginc"
+            #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeClock.cginc"
             #pragma shader_feature_local VF_UDIMDISCARD
             #pragma shader_feature_local VF_DISSOLVE
             #pragma shader_feature_local VF_TEX_DISSOLVENOISE
@@ -8047,16 +8570,16 @@ Shader "VixenWear/Latex Ultra"
                              out float3 push, out float3 axis, out float ang, out float3 velDir)
             {
                 axis = normalize(float3(frac(h * 1.0) * 2.0 - 1.0, frac(h * 1.37) * 2.0 - 1.0, frac(h * 3.11) * 2.0 - 1.0) + 1e-4);
-                ang = shardProg * _Vtx_Fracture_Spin * 6.2831853 + (_Time.y * _Vtx_Fracture_Spin + _Vtx_Fracture_Spin_Ph) * 0.6 * (h - 0.5);
-                float travel = sqrt(shardProg) * _Vtx_Fracture_Dist + sin(_Time.y * 1.3 + h * 6.2831) * 0.01 * shardProg;
+                ang = shardProg * _Vtx_Fracture_Spin * 6.2831853 + (VF_TIME * _Vtx_Fracture_Spin + _Vtx_Fracture_Spin_Ph) * 0.6 * (h - 0.5);
+                float travel = sqrt(shardProg) * _Vtx_Fracture_Dist + sin(VF_TIME * 1.3 + h * 6.2831) * 0.01 * shardProg;
                 const float3 up = float3(0.0, 1.0, 0.0);
-                float spiralAng = (_Time.y * _Vtx_Fracture_Spiral + _Vtx_Fracture_Spiral_Ph) * 1.2 + shardProg * 6.2831853 * _Vtx_Fracture_Spiral;
+                float spiralAng = (VF_TIME * _Vtx_Fracture_Spiral + _Vtx_Fracture_Spiral_Ph) * 1.2 + shardProg * 6.2831853 * _Vtx_Fracture_Spiral;
                 float3 pushDir = shardRotate(faceN, up, spiralAng);
                 push = pushDir * travel;
                 push += up * _Vtx_Fracture_Spiral * shardProg * _Vtx_Fracture_Dist * 0.5;
-                push += float3(sin(_Time.y * 0.8 + h * 6.2831),
-                               sin(_Time.y * 0.6 + h * 12.566 + 1.3),
-                               cos(_Time.y * 0.7 + h * 9.42 + 2.1)) * (_Vtx_Fracture_Float * 0.08 * shardProg);
+                push += float3(sin(VF_TIME * 0.8 + h * 6.2831),
+                               sin(VF_TIME * 0.6 + h * 12.566 + 1.3),
+                               cos(VF_TIME * 0.7 + h * 9.42 + 2.1)) * (_Vtx_Fracture_Float * 0.08 * shardProg);
                 push += up * (_Vtx_Fracture_Lift * shardProg);
                 velDir = (length(push) > 1e-4) ? normalize(push) : pushDir;
             }
@@ -8200,12 +8723,12 @@ Shader "VixenWear/Latex Ultra"
                 float3 col = (tex2Dlod(_MainTex, float4(uvC * _MainTex_ST.xy + _MainTex_ST.zw, 0, 0)) * _Color).rgb;
                 if (_Shard_ColorMod > 0.001)
                 {
-                    float hueAng = (_Time.y * _Shard_ColorMod_Speed + _Shard_ColorMod_Speed_Ph + h) * 6.2831853;
+                    float hueAng = (VF_TIME * _Shard_ColorMod_Speed + _Shard_ColorMod_Speed_Ph + h) * 6.2831853;
                     col = lerp(col, shardHueRotate(col, hueAng), _Shard_ColorMod);
                 }
                 if (_UseShardCC > 0.5 && AL_Active())
                 {
-                    float ccPos = frac(h + _Time.y * 0.05);
+                    float ccPos = frac(h + VF_TIME * 0.05);
                     float3 ccCol = AudioLinkData(ALPASS_CCSTRIP + int2((int)(saturate(ccPos) * 127.0), 0)).rgb;
                     col = lerp(col, ccCol, _Shard_CC_Str * 0.8);
                 }
@@ -8264,12 +8787,19 @@ Shader "VixenWear/Latex Ultra"
             ColorMask RGBA
 
             CGPROGRAM
+            //ifex 0==0
+            #pragma skip_optimizations d3d11
+            //endex
             #pragma vertex hypnoVert
             #pragma geometry hypnoGeom
             #pragma fragment hypnoFrag
             #pragma target 5.0
             #pragma only_renderers d3d11 glcore vulkan
             #pragma multi_compile_instancing
+            #pragma shader_feature_local VF_HYPNO_LAYER2
+            #pragma shader_feature_local VF_TEX_HYPNOIMAGE
+            #pragma shader_feature_local VF_TEX_HYPNOGRAD
+            #pragma shader_feature_local VF_TEX_HYPNOSUB
             #include "UnityCG.cginc"
             #include "Packages/com.vixencreations.vixforge-shaders/Editor/cginc/VixForgeHypno.cginc"
             ENDCG

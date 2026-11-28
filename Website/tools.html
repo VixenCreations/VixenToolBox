@@ -229,7 +229,7 @@
                 <p class="caption2 mt-3 page-subtitle">
                     What you see depends on your project: avatar projects get the avatar tools, world projects get the world
                     tools, and the ones marked Any Project load everywhere. Everything except Animation Workbench Pro, the
-                    Pipeline Preset Manager, the Scene View Enhancer and Memory Diagnostics needs the VRChat SDK.
+                    Pipeline Preset Manager, the Scene View Enhancer, Memory Diagnostics and the Unity Engine Utilities needs the VRChat SDK.
                 </p>
             </div>
         </div>
@@ -565,6 +565,27 @@
                     <li>Open <code>VixenTools &gt; Unity Engine &gt; Memory Diagnostics</code> and press <strong>Take Snapshot</strong>.</li>
                     <li>Repeat the thing you are testing a few times, then press <strong>Free Unused Memory</strong>.</li>
                     <li>Press <strong>Compare With Snapshot</strong>. Whatever grew is what stayed behind.</li>
+                </ol>
+            </section>
+
+            <section id="unity-engine-utilities" class="glass-panel shader-section tool-section">
+                <div class="row justify-content-between align-items-center tool-head">
+                    <h2 class="m-0">Unity Engine Utilities</h2>
+                    <span class="shader-tag">Any Project</span>
+                </div>
+                <p class="tab-desc">Quick fixes for blend shapes, missing scripts and texture compression, run on whatever you select.</p>
+                <h3 class="opt-group">What it does</h3>
+                <ul class="custom-list">
+                    <li><strong>Reset Selected Blend Shapes to Zero</strong> - Sets every blend shape on the selected meshes to zero. Select an avatar to reset all of its meshes at once.</li>
+                    <li><strong>Clean Missing Scripts</strong> - Removes "missing script" components from your selection or from every open scene. Select prefabs in the Project window to clean the prefab files themselves.</li>
+                    <li><strong>Reset Compression to Default</strong> - Puts textures back on Unity's default compression. Each platform override stays on and keeps its max size.</li>
+                    <li><strong>Turn Off Compression (Testing)</strong> - Turns compression off, so you can check that your optimization tools find it.</li>
+                </ul>
+                <h3 class="opt-group">How to use it</h3>
+                <ol class="custom-list">
+                    <li>Select meshes, objects, textures, folders or materials, depending on the tool.</li>
+                    <li>Open <code>VixenTools &gt; Unity Engine</code> and pick the tool. The texture tools are under <code>Textures</code>.</li>
+                    <li>Scene changes undo with one Ctrl+Z. Prefab files and texture settings ask before they change.</li>
                 </ol>
             </section>
 

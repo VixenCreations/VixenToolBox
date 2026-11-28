@@ -27,6 +27,7 @@
         float4 _CtxSfxLightCol;
         float4 _CtxSfxLight;
         float4 _CtxSfxDark;
+        float4 _CtxSfxTime;
         float4 _CtxSfxBeat;
         float _CtxSfxBand;
         float _CtxSfxInvert;
@@ -52,6 +53,19 @@
         #define VF_CTX_SFX(x) (x)
         #endif
 
+        #ifndef VF_VRC_TIME_DECLARED
+        #define VF_VRC_TIME_DECLARED
+        #ifndef VRCTIME_CGINC
+        uint _VRChatTimeEncoded1;
+        #endif
+        #endif
+
+        float vw_CtxLocalHours()
+        {
+            uint t1 = asuint(_VRChatTimeEncoded1);
+            return (float)((t1 >> 17) & 0x1Fu) + (float)((t1 >> 22) & 0x3Fu) / 60.0 + (float)((t1 >> 11) & 0x3Fu) / 3600.0;
+        }
+
         float3 vw_ViewerPos()
         {
             #if defined(USING_STEREO_MATRICES)
@@ -72,6 +86,7 @@
             float3 fwd;
             float  inMirror;
             float  inCamera;
+            float  camMode;
             float  inVR;
             float  rightEye;
             float3 light;
@@ -111,6 +126,7 @@
             v.fwd      = -normalize(UNITY_MATRIX_V[2].xyz);
             v.inMirror = step(0.5, max(_VRChatMirrorMode, _VRChatFaceMirrorMode));
             v.inCamera = step(0.5, _VRChatCameraMode);
+            v.camMode  = _VRChatCameraMode;
             #if defined(USING_STEREO_MATRICES)
             float3 me  = vw_CameraPos();
             v.inVR     = 1.0;
@@ -126,7 +142,7 @@
         }
 
         float2 vw_CtxRule(VFCtxView v, float where, float eye, float distMode, float4 dist, float gaze, float4 torch,
-                          float4 lightCol, float4 lightSet, float4 dark, float4 beat, float band, float invert,
+                          float4 lightCol, float4 lightSet, float4 dark, float4 timeWin, float4 beat, float band, float invert,
                           float hidden, float maskCh, float useLight)
         {
             float gate = 1.0;
@@ -136,7 +152,19 @@
             else if (where < 3.5)      gate = v.inCamera;
             else if (where < 4.5)      gate = 1.0 - v.inCamera;
             else if (where < 5.5)      gate = v.inVR;
-            else                       gate = 1.0 - v.inVR;
+            else if (where < 6.5)      gate = 1.0 - v.inVR;
+            else if (where < 7.5)      gate = step(2.5, v.camMode);
+            else if (where < 8.5)      gate = 1.0 - step(2.5, v.camMode);
+            else                       gate = step(0.5, v.camMode) * (1.0 - step(2.5, v.camMode));
+
+            [branch] if (timeWin.x > 0.001)
+            {
+                float span = frac((timeWin.z - timeWin.y) / 24.0) * 24.0;
+                float into = frac((vw_CtxLocalHours() - timeWin.y) / 24.0) * 24.0;
+                float soft = clamp(timeWin.w, 1.0e-3, max(span * 0.5, 1.0e-3));
+                float inWin = (span < 1.0e-3) ? 1.0 : smoothstep(0.0, soft, into) * (1.0 - smoothstep(span - soft, span, into));
+                gate *= lerp(1.0, inWin, saturate(timeWin.x));
+            }
 
             #if defined(USING_STEREO_MATRICES)
             [branch] if (eye > 0.5)

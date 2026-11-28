@@ -67,23 +67,32 @@ public static class VixForgeDirectorRig
         root.transform.rotation = Quaternion.identity;
         root.transform.localScale = Vector3.one;
 
-        AudioSource source = root.AddComponent<AudioSource>();
-        source.playOnAwake = true;
-        source.loop = true;
-        source.spatialBlend = 0f;
-
-        Component audioLink = FindOrCreateAudioLink(root, audioLinkType, source);
-        Component director = root.AddComponent(directorType);
-
+        AudioSource source;
+#if UNITY_6000_0_OR_NEWER
+        Component audioLink = UnityEngine.Object.FindFirstObjectByType(audioLinkType) as Component;
+#else
+        Component audioLink = UnityEngine.Object.FindObjectOfType(audioLinkType) as Component;
+#endif
         if (audioLink != null)
         {
-            SetObject(audioLink, "audioSource", source);
-            // Point it at our source and stop it hunting for a different one at play time.
-            SetBool(audioLink, "autoDetectAudioTarget", false);
-            // The readback is what puts the analysis on the CPU where the Director can read it.
-            // Without this the rig looks wired up and reports nothing.
-            SetBool(audioLink, "audioDataToggle", true);
+            source = UseExistingAudioLink(root, audioLink);
         }
+        else
+        {
+            source = AddRootSource(root);
+            audioLink = CreateAudioLink(root, audioLinkType, source);
+            if (audioLink != null)
+            {
+                SetObject(audioLink, "audioSource", source);
+                // Point it at our source and stop it hunting for a different one at play time.
+                SetBool(audioLink, "autoDetectAudioTarget", false);
+                // The readback is what puts the analysis on the CPU where the Director can read it.
+                // Without this the rig looks wired up and reports nothing.
+                SetBool(audioLink, "audioDataToggle", true);
+            }
+        }
+
+        Component director = root.AddComponent(directorType);
 
         SetObject(director, "audioLink", audioLink);
 
@@ -115,12 +124,49 @@ public static class VixForgeDirectorRig
         return root;
     }
 
-    private static Component FindOrCreateAudioLink(GameObject root, Type audioLinkType, AudioSource keep)
+    private static AudioSource AddRootSource(GameObject root)
     {
-        // Reuse the one already in the scene rather than standing a second one up next to it.
-        UnityEngine.Object found = UnityEngine.Object.FindObjectOfType(audioLinkType);
-        if (found != null) return found as Component;
+        AudioSource source = root.AddComponent<AudioSource>();
+        source.playOnAwake = true;
+        source.loop = true;
+        source.spatialBlend = 0f;
+        return source;
+    }
 
+    private static AudioSource UseExistingAudioLink(GameObject root, Component audioLink)
+    {
+        SerializedObject so = new SerializedObject(audioLink);
+        SerializedProperty input = so.FindProperty("audioSource");
+        AudioSource current = input != null ? input.objectReferenceValue as AudioSource : null;
+        if (current != null)
+        {
+            Debug.Log("[" + RigName + "] Using the AudioLink already in the scene (" + audioLink.gameObject.name
+                + ") and its input " + current.gameObject.name + ". Its settings were not changed.", audioLink);
+            return current;
+        }
+
+        AudioSource fill = null;
+        foreach (UnityEngine.Video.VideoPlayer vp in audioLink.GetComponentsInChildren<UnityEngine.Video.VideoPlayer>(true))
+        {
+            if (vp.audioOutputMode != UnityEngine.Video.VideoAudioOutputMode.AudioSource) continue;
+            fill = vp.GetTargetAudioSource(0);
+            if (fill != null) break;
+        }
+        if (fill == null) fill = AddRootSource(root);
+
+        if (input != null)
+        {
+            Undo.RecordObject(audioLink, "Add " + RigName);
+            input.objectReferenceValue = fill;
+            so.ApplyModifiedProperties();
+        }
+        Debug.Log("[" + RigName + "] The AudioLink in the scene (" + audioLink.gameObject.name
+            + ") had no Audio Source, so it now listens to " + fill.gameObject.name + ".", audioLink);
+        return fill;
+    }
+
+    private static Component CreateAudioLink(GameObject root, Type audioLinkType, AudioSource keep)
+    {
         string path = AssetDatabase.GUIDToAssetPath(AudioLinkPrefabGuid);
         if (string.IsNullOrEmpty(path) || AssetDatabase.LoadAssetAtPath<GameObject>(path) == null)
         {

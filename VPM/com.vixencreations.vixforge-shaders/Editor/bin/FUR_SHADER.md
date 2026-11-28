@@ -67,6 +67,10 @@ The Real Fur mask does more than scope: it paints how long the hairs are. White 
 
 In **TOUCH**, with **Material Contacts** on, the coat answers real hands. **Parting** in **Surface Fur Touch** and **Real Fur Touch** parts it round a hand, and **Flatten** in Real Fur Touch lays the hairs flat under it.
 
+## Tattoos
+
+**TATTOOS**, after DECALS, gives you up to three tattoos that sit in the surface like real ink. They work as they do on Toon, and the **Toon** guide covers them.
+
 ## Worth knowing
 
 **Fur Pro needs triangle meshes.** If your model looks torn, turn off **Keep Quads** in its import settings, or run **Scan for Quad Meshes** with **Mesh Fixes** in the Shader Hub.

@@ -6,6 +6,55 @@
 Version history for the World Surface shader. World Surface shares its lighting stack and toolkit with Latex Ultra, Toon, Clothing Pro and Fur Pro, so that shared part tracks the Latex Ultra changelog. The inspector and its tools keep their own.
 
 ***
+## [1.8.0] - 2026-11-27
+
+*RGBA Color Masking, two more colour layers, Viewer Context by time of day, and Ink Weight that follows point lights and Light Volumes.*
+
+### Added
+
+* **Time of Day** in every **Viewer Context** part: show a part only between two hours, read from the clock of each viewer, so everyone sees their own evening or morning at the same moment. **From** later than **To** runs past midnight, and **Softness** fades it over the hours you choose. It starts off, so nothing changes until you turn it up.
+* **Viewer Context** **Show** has three new choices: **Only in Screenshots**, **Never in Screenshots** and **Only in Handheld Camera**, so a saved photo and the live camera view can look different.
+* **RGBA Color Masking** under **BASE**: recolour up to four parts of the material from the red, green, blue and alpha of one mask. Each part has its own colour, texture, blend mode and glow. It works like the colour settings of Poiyomi's RGBA Color Masking and uses the same property names, so a Poiyomi material you switch over keeps them.
+* **Second and Third Color Layers** under **BASE**: lay up to two more colours or textures over the Albedo, each with its own UV, mask, blend, sides, distance fade and AudioLink. They work like Main Color 2nd and 3rd in lilToon and use the same property names, so a lilToon material you switch over keeps them.
+* **Anti-Alias Reflections** and **Anti-Alias Limit** in **Specular Response**, under **Specular Anti-Aliasing**. **Anti-Alias Reflections** calms reflections of the world the way the slider calms highlights, so they stop crawling on tight detail as you move. **Anti-Alias Limit** caps how far the anti-aliasing can soften a highlight, so sharp creases and hard edges keep their shine. Both start off, so nothing changes until you turn them on.
+
+### Changed
+
+* **Sharpness** in **Glitter Settings** now also sets how fine the flakes of a layer with **Sparkle** on **View** are, on the surface and **Above** it. Raise it for smaller, tighter twinkles and lower it for broader, softer ones. At 90, the default, a flake is exactly **Flake Size**, so a material left at 90 looks the same. A material with another value shows smaller or bigger View flakes than before: set **Sharpness** to 90 to get the old flake size back.
+
+### Removed
+
+* **Unified Light Lightmaps** under **Baked Lighting**. It read lightmaps the way the VixForge Light Baker wrote them, and we've stopped work on that baker because z3y's Glim does the job well. A material that had it on now reads its lightmaps the standard way, which is right for Unity and Glim bakes.
+
+### Fixed
+
+* **Ink Weight** follows point lights and Light Volumes, not only the main light. A lamp or a Light Volume point light next to the object used to leave the line weight unchanged. The weight now comes from every light the outline can see: the main light, Unity's vertex point lights, light probes, and Light Volumes with their point lights, following the material's **Light Volumes** settings. A point light that Unity draws per pixel still cannot change it, because the outline is drawn in one pass. Set that light's **Render Mode** to **Not Important** to include it.
+
+***
+## [1.7.0] - 2026-11-07
+
+*Multilayer Math paints coloured shadow layers, glitter sparkles as you move and can float above the material, every moving effect can share one clock with everyone in the instance, and your VRSL light can follow a VixForge Director's light show.*
+
+### Added
+
+* **Music Colour**, **Spectrum** and **Spin** under **Rim Light** let your edge follow the music. **Music Colour** tints it with the colour from **Color Source**, **Spectrum** turns it into a ring of notes around your outline (pick the notes with **Octave**, and **Mirror** runs them up both sides), and **Spin** turns both with the beat of **Band**. They start at 0, so your materials look the same until you raise them.
+* **Shared Clock** under **Rendering** runs every moving effect on the clock VRChat shares with everyone in the instance, so scrolling, spinning and pulsing patterns sit at the same point for every player. It starts off.
+* **Director** in **Channel Mode** under **Stage Lighting & VRSL** takes your VRSL light from the light show a VixForge Director runs in the world, with no channel to set.
+* **Multilayer Math**, a new **Style** under **Shading Options**, paints up to three coloured shadow layers, each with its own **Border**, **Blur**, **Receive Shadow** and **Normal Blend**, and a coloured **Border** band where light turns to shadow. Maps can shape the colours, the strength, the edges and the blur. It works like Multilayer Math in Poiyomi Toon and keeps the same property names.
+* **Sparkle** on each **Glitter** layer. **View** makes the flakes flash as you move, in any light, with **Sensitivity** for how quickly they flash and **Stereo** for a different glint in each eye in VR. **Lights** keeps the sparkle you had.
+* **Keep Far Sparkle** in **Glitter** joins flakes that are smaller than a pixel into bigger ones, so the glitter still sparkles from a distance.
+* **Position** on each **Glitter** layer. **Above** lifts the flakes off the material as little stars that hover over it, the way an outline sits outside it. **Float Height** sets how high they float and **Height Variation** spreads them through the air. **On Surface** keeps the glitter you had.
+
+### Changed
+
+* **Normal Follow** on every matcap layer starts at 1 on a new material, so the matcap follows your normal map from the start. Materials you already have keep their setting.
+
+### Fixed
+
+* Unlocked materials compile several times faster, so Unity no longer hangs for minutes on material thumbnails or when you enter Play mode. Locked materials and uploads don't change. An unlocked material can draw a little slower in the editor until you lock it.
+* **Mask Source** on each **Cybernetic Overlays** meter now works on an unlocked material in the editor too, so what you see before you lock is what you upload. Locked materials and uploads were already right.
+
+***
 ## [1.6.0] - 2026-11-02
 
 *Wet streaks run like water with new Caustics, Viewer Context counts the world's vertex lights, and Color Adjust, Dissolve and shard colours keep their hue.*

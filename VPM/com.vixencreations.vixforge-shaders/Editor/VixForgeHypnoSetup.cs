@@ -16,7 +16,7 @@ using Object = UnityEngine.Object;
 // Everything it makes carries the "VixForge Hypno" name, so running it again updates the same objects instead of
 // adding copies. VRChat types are reached by name and through SerializedObject, so this file compiles in a world
 // project. Why each step is the way it is, in Internal-UseOnly/Research Notes/developer_info.md, "Hypno Setup".
-public class VixForgeHypnoSetup : EditorWindow
+public partial class VixForgeHypnoSetup : EditorWindow
 {
     const string ShaderName = "VixenWear/Latex Ultra";
     const string Prefix = "VixForge Hypno";
@@ -36,6 +36,7 @@ public class VixForgeHypnoSetup : EditorWindow
         public string name;
         public float shown;
         public float amount;
+        public float wake;
         public float length;
         public string path;
         public bool created;
@@ -60,6 +61,10 @@ public class VixForgeHypnoSetup : EditorWindow
     Quaternion _viewRotation;
     float _viewSize;
     bool _viewOrtho;
+    SceneView _previewView;
+    bool _viewDynamicClip;
+    float _viewNearClip;
+    float _viewFarClip;
 
     [MenuItem("VixenTools/VixForge Editor/Hypno Setup", priority = 11)]
     internal static void Open()
@@ -158,6 +163,7 @@ public class VixForgeHypnoSetup : EditorWindow
         Transform anchor = FindAnchor();
         MeshRenderer mr = anchor != null ? anchor.GetComponent<MeshRenderer>() : null;
         if (mr != null) _material = mr.sharedMaterial;
+        LoadSettings();
         if (_parameters != null) _othersCanJoin = ReadSynced(_parameters, _othersCanJoin);
     }
 
@@ -242,7 +248,7 @@ public class VixForgeHypnoSetup : EditorWindow
         {
             SerializedProperty e = list.GetArrayElementAtIndex(i);
             string name = e.FindPropertyRelative("name").stringValue;
-            if (string.IsNullOrEmpty(name) || name == ParamName) continue;
+            if (string.IsNullOrEmpty(name) || name == ParamName || name.StartsWith(ParamName + "/")) continue;
             SerializedProperty synced = e.FindPropertyRelative("networkSynced");
             if (synced != null && !synced.boolValue) continue;
             cost += ParameterBits(e);
@@ -273,7 +279,10 @@ public class VixForgeHypnoSetup : EditorWindow
     static int IndexOfControl(SerializedProperty controls)
     {
         for (int i = 0; controls != null && i < controls.arraySize; i++)
-            if (controls.GetArrayElementAtIndex(i).FindPropertyRelative("parameter.name").stringValue == ParamName) return i;
+        {
+            SerializedProperty c = controls.GetArrayElementAtIndex(i);
+            if (c.FindPropertyRelative("parameter.name").stringValue == ParamName || IsOurSubmenu(c)) return i;
+        }
         return -1;
     }
 
@@ -285,7 +294,7 @@ public class VixForgeHypnoSetup : EditorWindow
     }
 
     // A control the user already has keeps its own name and icon; only what makes it a Hypno toggle is rewritten.
-    static void WriteMenuControl(SerializedObject so)
+    static void WriteMenuControl(SerializedObject so, ScriptableObject controlsMenu)
     {
         SerializedProperty controls = so.FindProperty("controls");
         int i = IndexOfControl(controls);
@@ -307,8 +316,18 @@ public class VixForgeHypnoSetup : EditorWindow
             if (style != null && style.propertyType == SerializedPropertyType.Enum) style.enumValueIndex = 0;
             else if (style != null) style.intValue = 0;
         }
-        SetEnum(c.FindPropertyRelative("type"), "Toggle");
-        c.FindPropertyRelative("parameter.name").stringValue = ParamName;
+        if (controlsMenu != null)
+        {
+            SetEnum(c.FindPropertyRelative("type"), "SubMenu");
+            c.FindPropertyRelative("parameter.name").stringValue = "";
+            c.FindPropertyRelative("subMenu").objectReferenceValue = controlsMenu;
+        }
+        else
+        {
+            SetEnum(c.FindPropertyRelative("type"), "Toggle");
+            c.FindPropertyRelative("parameter.name").stringValue = ParamName;
+            c.FindPropertyRelative("subMenu").objectReferenceValue = null;
+        }
         c.FindPropertyRelative("value").floatValue = 1f;
     }
 
@@ -334,7 +353,7 @@ public class VixForgeHypnoSetup : EditorWindow
         for (int i = controls.arraySize - 1; i >= 0; i--)
         {
             SerializedProperty c = controls.GetArrayElementAtIndex(i);
-            if (c.FindPropertyRelative("parameter.name").stringValue == ParamName)
+            if (c.FindPropertyRelative("parameter.name").stringValue == ParamName || IsOurSubmenu(c))
             {
                 controls.DeleteArrayElementAtIndex(i);
                 removed++;
@@ -413,12 +432,14 @@ public class VixForgeHypnoSetup : EditorWindow
         _controller = (AnimatorController)EditorGUILayout.ObjectField(new GUIContent("FX Controller", "Your avatar's FX controller. Leave it empty and one is made for you."), _controller, typeof(AnimatorController), false);
         _parameters = ExpressionField("Parameters", "Your avatar's Expression Parameters. Leave it empty and one is made for you.", _parameters, "VRCExpressionParameters");
         _menu = ExpressionField("Menu", "The menu the toggle goes in. Pick a submenu if your main menu is full.", _menu, "VRCExpressionsMenu");
-        _goUnder = EditorGUILayout.Slider(new GUIContent("Going Under", "How long it takes to go under, in seconds."), _goUnder, 0.5f, 10f);
-        _wakeUp = EditorGUILayout.Slider(new GUIContent("Waking Up", "How long it takes to come back, in seconds."), _wakeUp, 0.1f, 5f);
+        _goUnder = EditorGUILayout.Slider(new GUIContent("Going Under", "How long it takes to go under, in seconds."), _goUnder, 0.5f, 120f);
+        _wakeUp = EditorGUILayout.Slider(new GUIContent("Waking Up", "How long it takes to come back, in seconds."), _wakeUp, 0.1f, 120f);
         _othersCanJoin = EditorGUILayout.Toggle(new GUIContent("Others Can Join", "Lets anyone whose eyes come inside Radius go under with you. Their game copies the screen every frame while you're under, so leave it off unless you want company."), _othersCanJoin);
+        DrawStyleAndRadials();
 
         Component desc = _root != null ? FindDescriptor(_root.transform) : null;
         Transform anchor = FindAnchor();
+        DrawSubliminal(anchor);
         List<string> problems = Check(desc);
         EditorGUILayout.Space();
         foreach (string p in problems) EditorGUILayout.HelpBox(p, MessageType.Warning);
@@ -485,8 +506,11 @@ public class VixForgeHypnoSetup : EditorWindow
         if (_parameters != null && _othersCanJoin)
         {
             int max = SdkConst(_parameters.GetType(), "MAX_PARAMETER_COST", 256);
-            if (SyncedCost(_parameters) + 1 > max)
-                p.Add("Your parameters have no room for one more synced toggle. Free one up, or turn off Others Can Join.");
+            int radials = ChosenRadials().Count;
+            if (SyncedCost(_parameters) + 1 + 8 * radials > max)
+                p.Add(radials > 0
+                    ? "Your parameters have no room for the synced toggle and " + radials + " radials. Free some up, pick fewer radials, or turn off Others Can Join."
+                    : "Your parameters have no room for one more synced toggle. Free one up, or turn off Others Can Join.");
         }
         return p;
     }
@@ -556,12 +580,14 @@ public class VixForgeHypnoSetup : EditorWindow
     }
 
     // Color Mask None hides the anchor's own surface; the HYPNO pass sets its own mask, so it still shows.
-    static void ApplyMaterial(Material m)
+    void ApplyMaterial(Material m)
     {
         m.SetFloat(UseProp, 1f);
         if (m.HasProperty("_ColorMask")) m.SetFloat("_ColorMask", 0f);
         m.renderQueue = UnderQueue;
         m.SetOverrideTag(AmountProp + AnimatedTagSuffix, "1");
+        if (FocusStyle) m.SetOverrideTag(WakeProp + AnimatedTagSuffix, "1");
+        foreach (RadialChoice c in ChosenRadials()) m.SetOverrideTag(c.prop + AnimatedTagSuffix, "1");
         EditorUtility.SetDirty(m);
     }
 
@@ -608,11 +634,13 @@ public class VixForgeHypnoSetup : EditorWindow
         return null;
     }
 
-    static void FillClip(AnimationClip clip, string path, ClipSpec s)
+    static void FillClip(AnimationClip clip, string path, ClipSpec s, bool focus)
     {
         clip.ClearCurves();
         AnimationUtility.SetEditorCurve(clip, EditorCurveBinding.FloatCurve(path, typeof(MeshRenderer), "m_Enabled"), AnimationCurve.Constant(0f, s.length, s.shown));
         AnimationUtility.SetEditorCurve(clip, EditorCurveBinding.FloatCurve(path, typeof(MeshRenderer), "material." + AmountProp), AnimationCurve.Constant(0f, s.length, s.amount));
+        if (focus)
+            AnimationUtility.SetEditorCurve(clip, EditorCurveBinding.FloatCurve(path, typeof(MeshRenderer), "material." + WakeProp), AnimationCurve.Constant(0f, s.length, s.wake));
     }
 
     // Match the controller: VRChat breaks in odd ways when one FX mixes states with Write Defaults on and off.
@@ -740,8 +768,10 @@ public class VixForgeHypnoSetup : EditorWindow
         string msg = (update ? "This updates Hypno on " : "This attaches Hypno to ") + _root.name + ":\n\n" +
                      "- an anchor at your eyes, under " + _head.name + "\n" +
                      "- " + (_material != null ? "the material " + _material.name : "a new Hypno material") + "\n" +
-                     "- a " + MenuLabel + " toggle in " + (_menu != null ? _menu.name : "a new menu") + "\n" +
-                     "- a layer in " + (_controller != null ? _controller.name : "a new FX controller") + "\n\n" +
+                     (ChosenRadials().Count > 0
+                         ? "- a " + MenuLabel + " submenu with the toggle and " + ChosenRadials().Count + " radials, in " + (_menu != null ? _menu.name : "a new menu") + "\n"
+                         : "- a " + MenuLabel + " toggle in " + (_menu != null ? _menu.name : "a new menu") + "\n") +
+                     "- layers in " + (_controller != null ? _controller.name : "a new FX controller") + "\n\n" +
                      "New files go in " + folder + ".";
         if (_menu == null) msg += "\n\nYour avatar has no menu of its own yet, so the new one holds just this toggle.";
         if (!EditorUtility.DisplayDialog("Hypno Setup", msg, update ? "Update" : "Attach", "Cancel")) return;
@@ -786,6 +816,27 @@ public class VixForgeHypnoSetup : EditorWindow
         AnimatorController ctrl = _controller;
         bool newCtrl = ctrl == null;
         if (newCtrl) ctrl = AnimatorController.CreateAnimatorControllerAtPath(AssetDatabase.GenerateUniqueAssetPath(folder + "/" + Prefix + " FX.controller"));
+        string tag = ctrl.name.StartsWith(Prefix) ? "" : " - " + ctrl.name;
+        bool focus = FocusStyle;
+
+        List<RadialBuild> radials = PrepareRadialClips(shader, folder, tag, path);
+        ScriptableObject controlsMenu = null;
+        bool newControls = false;
+        if (radials.Count > 0)
+        {
+            string controlsPath = folder + "/" + ControlsName + ".asset";
+            controlsMenu = AssetDatabase.LoadAssetAtPath<ScriptableObject>(controlsPath);
+            if (controlsMenu == null)
+            {
+                controlsMenu = CreateInstance(SdkType<ScriptableObject>("VRCExpressionsMenu"));
+                controlsMenu.name = ControlsName;
+                var cso = new SerializedObject(controlsMenu);
+                WriteControlsMenu(cso, radials);
+                cso.ApplyModifiedPropertiesWithoutUndo();
+                AssetDatabase.CreateAsset(controlsMenu, controlsPath);
+                newControls = true;
+            }
+        }
 
         ScriptableObject prms = _parameters;
         bool newParams = prms == null;
@@ -795,6 +846,7 @@ public class VixForgeHypnoSetup : EditorWindow
             prms.name = Prefix + " Parameters";
             var pso = new SerializedObject(prms);
             WriteParameter(pso, _othersCanJoin);
+            WriteRadialParameters(pso, radials, mat, _othersCanJoin);
             pso.ApplyModifiedPropertiesWithoutUndo();
             AssetDatabase.CreateAsset(prms, AssetDatabase.GenerateUniqueAssetPath(folder + "/" + prms.name + ".asset"));
         }
@@ -806,24 +858,23 @@ public class VixForgeHypnoSetup : EditorWindow
             menu = CreateInstance(SdkType<ScriptableObject>("VRCExpressionsMenu"));
             menu.name = Prefix + " Menu";
             var mso = new SerializedObject(menu);
-            WriteMenuControl(mso);
+            WriteMenuControl(mso, controlsMenu);
             mso.ApplyModifiedPropertiesWithoutUndo();
             AssetDatabase.CreateAsset(menu, AssetDatabase.GenerateUniqueAssetPath(folder + "/" + menu.name + ".asset"));
         }
 
-        string tag = ctrl.name.StartsWith(Prefix) ? "" : " - " + ctrl.name;
         var specs = new[]
         {
-            new ClipSpec { name = "Off", shown = 0f, amount = 0f, length = 1f / 60f },
-            new ClipSpec { name = "Surface", shown = 1f, amount = 0f, length = _wakeUp },
-            new ClipSpec { name = "Under", shown = 1f, amount = 1f, length = 1f / 60f },
+            new ClipSpec { name = "Off", shown = 0f, amount = 0f, wake = 1f, length = 1f / 60f },
+            new ClipSpec { name = "Surface", shown = 1f, amount = focus ? 1f : 0f, wake = 1f, length = _wakeUp },
+            new ClipSpec { name = "Under", shown = 1f, amount = 1f, wake = 0f, length = 1f / 60f },
         };
         foreach (ClipSpec s in specs)
         {
             s.path = folder + "/" + Prefix + " " + s.name + tag + ".anim";
             if (AssetDatabase.LoadAssetAtPath<AnimationClip>(s.path) != null) continue;
             var clip = new AnimationClip { name = Path.GetFileNameWithoutExtension(s.path) };
-            FillClip(clip, path, s);
+            FillClip(clip, path, s, focus);
             AssetDatabase.CreateAsset(clip, s.path);
             s.created = true;
         }
@@ -835,8 +886,16 @@ public class VixForgeHypnoSetup : EditorWindow
             s.clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(s.path);
             if (s.created || s.clip == null) continue;
             Undo.RecordObject(s.clip, UndoName);
-            FillClip(s.clip, path, s);
+            FillClip(s.clip, path, s, focus);
             EditorUtility.SetDirty(s.clip);
+        }
+        FillRadialClips(radials, path);
+        if (controlsMenu != null && !newControls)
+        {
+            Undo.RecordObject(controlsMenu, UndoName);
+            var cso = new SerializedObject(controlsMenu);
+            WriteControlsMenu(cso, radials);
+            cso.ApplyModifiedProperties();
         }
         if (!newMat)
         {
@@ -856,6 +915,7 @@ public class VixForgeHypnoSetup : EditorWindow
 
         Undo.RegisterCompleteObjectUndo(ctrl, UndoName);
         BuildLayer(ctrl, specs[0].clip, specs[1].clip, specs[2].clip);
+        BuildRadialLayers(ctrl, radials, mat, MajorityWriteDefaults(ctrl));
         RemoveOrphans(ctrl);
         EditorUtility.SetDirty(ctrl);
 
@@ -863,12 +923,13 @@ public class VixForgeHypnoSetup : EditorWindow
         {
             var pso = new SerializedObject(prms);
             WriteParameter(pso, _othersCanJoin);
+            WriteRadialParameters(pso, radials, mat, _othersCanJoin);
             pso.ApplyModifiedProperties();
         }
         if (!newMenu)
         {
             var mso = new SerializedObject(menu);
-            WriteMenuControl(mso);
+            WriteMenuControl(mso, controlsMenu);
             mso.ApplyModifiedProperties();
         }
         AssignToDescriptor(desc, newCtrl ? ctrl : null, newParams ? prms : null, newMenu ? menu : null);
@@ -890,10 +951,14 @@ public class VixForgeHypnoSetup : EditorWindow
         _menu = menu;
 
         List<string> problems = Verify(desc, anchor, mat, ctrl, prms, menu, chopType, specs);
+        problems.AddRange(VerifyRadials(ctrl, prms, controlsMenu, radials, mat));
         foreach (string p in problems) Debug.LogError("[VixForge Hypno Setup] " + p, anchor);
+        SaveSettings(folder);
 
         string report = problems.Count == 0
-            ? "Hypno is on " + _root.name + ". In game, pick " + MenuLabel + " in your menu to go under, and pick it again to come back."
+            ? (radials.Count > 0
+                ? "Hypno is on " + _root.name + ". In game, open " + MenuLabel + " in your menu: Go Under takes you under and back, and the radials tune it."
+                : "Hypno is on " + _root.name + ". In game, pick " + MenuLabel + " in your menu to go under, and pick it again to come back.")
             : "Hypno is on " + _root.name + ", but " + problems.Count + " check(s) failed. The Console lists them.";
         if (chopNote != null) report += "\n\n" + chopNote;
         ScriptableObject rootMenu = ReadExpressions(desc, "expressionsMenu");
@@ -936,7 +1001,7 @@ public class VixForgeHypnoSetup : EditorWindow
                     problems.Add("Clip " + s.clip.name + " points at " + b.path + ", which is not under " + _root.name + ".");
         }
         if (IndexOfParameter(new SerializedObject(prms).FindProperty("parameters")) < 0) problems.Add(prms.name + " has no " + ParamName + " parameter.");
-        if (IndexOfControl(new SerializedObject(menu).FindProperty("controls")) < 0) problems.Add(menu.name + " has no " + MenuLabel + " toggle.");
+        if (IndexOfControl(new SerializedObject(menu).FindProperty("controls")) < 0) problems.Add(menu.name + " has no " + MenuLabel + " control.");
         if (!_root.GetComponentsInChildren(chopType, true).Any(c => ChopIndex(c, anchor) >= 0))
             problems.Add("No VRC Head Chop holds the anchor, so it vanishes in first person.");
         if (ReadFxController(desc) != ctrl) problems.Add("The avatar's FX layer is not " + ctrl.name + ", so the toggle does nothing in game.");
@@ -952,7 +1017,7 @@ public class VixForgeHypnoSetup : EditorWindow
     {
         Transform anchor = FindAnchor();
         if (EditorUtility.DisplayDialog("Hypno Setup", "This takes Hypno off " + _root.name + ": its anchor, its layer, its parameter and its " +
-                                        "menu toggle. The material and clips stay where they are.", "Keep It", "Remove")) return;
+                                        "menu entry, with any radials. The material and clips stay where they are.", "Keep It", "Remove")) return;
         StopPreview();
 
         Type chopType = SdkType<MonoBehaviour>("VRCHeadChop");
@@ -978,6 +1043,7 @@ public class VixForgeHypnoSetup : EditorWindow
             AnimatorControllerParameter[] ps = ctrl.parameters;
             for (int i = ps.Length - 1; i >= 0; i--)
                 if (ps[i].name == ParamName) ctrl.RemoveParameter(i);
+            RemoveRadialLayers(ctrl, null);
             RemoveOrphans(ctrl);
             EditorUtility.SetDirty(ctrl);
         }
@@ -988,7 +1054,10 @@ public class VixForgeHypnoSetup : EditorWindow
             var so = new SerializedObject(prms);
             SerializedProperty list = so.FindProperty("parameters");
             for (int i = list.arraySize - 1; i >= 0; i--)
-                if (list.GetArrayElementAtIndex(i).FindPropertyRelative("name").stringValue == ParamName) list.DeleteArrayElementAtIndex(i);
+            {
+                string n = list.GetArrayElementAtIndex(i).FindPropertyRelative("name").stringValue;
+                if (n == ParamName || n.StartsWith(ParamName + "/")) list.DeleteArrayElementAtIndex(i);
+            }
             so.ApplyModifiedProperties();
         }
 
@@ -1019,6 +1088,13 @@ public class VixForgeHypnoSetup : EditorWindow
         _viewRotation = sv.rotation;
         _viewSize = sv.size;
         _viewOrtho = sv.orthographic;
+        _previewView = sv;
+        _viewDynamicClip = sv.cameraSettings.dynamicClip;
+        _viewNearClip = sv.cameraSettings.nearClip;
+        _viewFarClip = sv.cameraSettings.farClip;
+        sv.cameraSettings.dynamicClip = false;
+        sv.cameraSettings.nearClip = FirstPersonClip(anchor);
+        sv.cameraSettings.farClip = Mathf.Max(_viewFarClip, 1000f);
 
         // The Scene camera sits cameraDistance behind its pivot, so the pivot goes that far ahead of the eyes.
         sv.orthographic = false;
@@ -1034,6 +1110,55 @@ public class VixForgeHypnoSetup : EditorWindow
         SceneView.RepaintAll();
     }
 
+    float FirstPersonClip(Transform anchor)
+    {
+        Transform head = anchor.parent;
+        Vector3 eye = anchor.position;
+        Vector3 forward = anchor.rotation * Vector3.forward;
+        float reach = head != null ? Mathf.Max(Vector3.Distance(eye, head.position), 0.01f) : 0.1f;
+        float front = 0f;
+        if (head != null && _root != null)
+        {
+            foreach (SkinnedMeshRenderer smr in _root.GetComponentsInChildren<SkinnedMeshRenderer>())
+            {
+                Mesh shared = smr.sharedMesh;
+                Transform[] bones = smr.bones;
+                if (shared == null || bones == null) continue;
+                bool[] inHead = bones.Select(b => UnderHead(b, head)).ToArray();
+                if (!inHead.Any(x => x)) continue;
+                BoneWeight[] weights = shared.boneWeights;
+                var baked = new Mesh();
+                smr.BakeMesh(baked, true);
+                Vector3[] verts = baked.vertices;
+                Matrix4x4 toWorld = Matrix4x4.TRS(smr.transform.position, smr.transform.rotation, Vector3.one);
+                for (int i = 0; i < verts.Length && i < weights.Length; i++)
+                {
+                    BoneWeight w = weights[i];
+                    float hw = HeadWeight(inHead, w.boneIndex0, w.weight0) + HeadWeight(inHead, w.boneIndex1, w.weight1)
+                             + HeadWeight(inHead, w.boneIndex2, w.weight2) + HeadWeight(inHead, w.boneIndex3, w.weight3);
+                    if (hw < 0.5f) continue;
+                    float d = Vector3.Dot(toWorld.MultiplyPoint3x4(verts[i]) - eye, forward);
+                    if (d > front) front = d;
+                }
+                DestroyImmediate(baked);
+            }
+        }
+        float clip = Mathf.Max(front + reach * 0.1f, reach * 2f);
+        return Mathf.Clamp(clip, 0.02f, Mathf.Min(Mathf.Max(0.05f, reach * 8f), AnchorBounds * 0.45f));
+    }
+
+    static bool UnderHead(Transform bone, Transform head)
+    {
+        for (Transform t = bone; t != null; t = t.parent)
+            if (t == head || string.Equals(t.name, head.name, StringComparison.OrdinalIgnoreCase)) return true;
+        return false;
+    }
+
+    static float HeadWeight(bool[] inHead, int bone, float weight)
+    {
+        return bone >= 0 && bone < inHead.Length && inHead[bone] ? weight : 0f;
+    }
+
     void StopPreview()
     {
         if (!_previewing) return;
@@ -1041,8 +1166,16 @@ public class VixForgeHypnoSetup : EditorWindow
         EditorApplication.update -= PreviewTick;
         if (_previewRenderer != null) _previewRenderer.enabled = _previewWasShown;
         _previewRenderer = null;
-        SceneView sv = SceneView.lastActiveSceneView;
+        SceneView sv = _previewView != null ? _previewView : SceneView.lastActiveSceneView;
+        bool ownView = _previewView != null;
+        _previewView = null;
         if (sv == null) return;
+        if (ownView)
+        {
+            sv.cameraSettings.dynamicClip = _viewDynamicClip;
+            sv.cameraSettings.nearClip = _viewNearClip;
+            sv.cameraSettings.farClip = _viewFarClip;
+        }
         sv.orthographic = _viewOrtho;
         sv.LookAtDirect(_viewPivot, _viewRotation, _viewSize);
         sv.Repaint();

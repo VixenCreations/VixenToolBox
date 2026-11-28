@@ -10,6 +10,15 @@ pixel footprint so the shadow lands where the body is cut, the dot noise rides o
 world, Vertex Height reads the same Amount and mask as the body, and the colours come from AudioLink in place
 of Poiyomi's theme colours.
 
+**Multilayer Math** under Shading Options in all six shaders is adapted from the Multilayer Math lighting in
+Poiyomi Toon 10.0, in `VixForgeMultilayer.cginc`: the three shadow layers with their borders, blur, receive
+shadow and normal blend, the linear and non linear edges, the border band, the shadow strength map with its
+Flat type, the border AO map with its per layer shift, the blur map, Base Color Blend, Ignore Indirect Shadow
+Color and Shadow Strength. It keeps Poiyomi's property names, which follow lilToon's shadow settings (see
+`LICENSE-lilToon.md`). Changes from the original: the maps read UV0 or UV1 only and do not pan, the border map
+has no Global Mask, the edge has a floor so a zero blur cannot divide by zero, and the layer colour tints the
+light of each pixel light and vertex light through our own lighting instead of Poiyomi's.
+
 Poiyomi Toon's license file follows, unchanged.
 
 ---

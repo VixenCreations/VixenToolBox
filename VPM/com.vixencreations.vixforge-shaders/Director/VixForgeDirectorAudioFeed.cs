@@ -21,7 +21,7 @@ namespace VixForge
         private const int RawSize = 2048;
         private const int WaveformSize = 1024;
 
-        [Tooltip("The audio the Director listens to. Leave empty to use the Audio Source on this object.")]
+        [Tooltip("The audio the Director listens to. Leave empty to use the Audio Source on this object, or the AudioLink's input when this object has none.")]
         public AudioSource source;
 
         private VixForgeDirector _director;
@@ -32,6 +32,8 @@ namespace VixForge
         {
             _director = GetComponent<VixForgeDirector>();
             if (source == null) source = GetComponent<AudioSource>();
+            if (source == null && _director != null && _director.audioLink != null)
+                source = _director.audioLink.audioSource;
         }
 
         private void Update()

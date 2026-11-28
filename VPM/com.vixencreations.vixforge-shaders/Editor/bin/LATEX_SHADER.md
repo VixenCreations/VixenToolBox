@@ -54,6 +54,30 @@ Changes the colour of your Albedo before any lighting. It works like Poiyomi's C
 * **Color Grading** remaps the colour through a **Gradient Map** strip. **Exact sRGB** reads the strip exactly, so a plain black to white strip changes nothing; leave it off to keep the look your maps already have.
 * Real Fur takes the adjusted colour too, except for **Beat Hue Run**.
 
+### RGBA Color Masking
+
+Recolours up to four parts of the material from one mask. Paint the **Masks** texture so each channel, red, green, blue and alpha, is white over one part, then turn that part on and give it its own colour. It works like the colour settings of Poiyomi's RGBA Color Masking and uses the same property names, so a material you switch over keeps them.
+
+* **Color** sets the part's colour, and its alpha is how strongly it covers.
+* **Texture** multiplies the colour, so a part can carry a pattern. **Scale & Offset** tiles and shifts it on top of the texture's own tiling.
+* **Color Blend** chooses how the colour sits on the material: Replace, Darken, Multiply, Lighten, Screen, Subtract, Add or Overlay.
+* **Alpha Add** pushes a part fully on or pulls it back. **Mask Channel** picks which channel of the mask marks the part.
+* **Emission Strength** makes the part glow in its own colour.
+* **UV** and **Texture UV** pick UV0 or UV1. Poiyomi's per-part normal maps, metallic and smoothness maps, panning and Vertex Color mask are not carried over yet.
+
+### Second and Third Color Layers
+
+Lay up to two more colours or textures over the Albedo, before any lighting. Each layer has its own settings. They work like Main Color 2nd and 3rd in lilToon and use the same property names, so a lilToon material you switch over keeps them.
+
+* **Color** multiplies the texture, and its alpha is how strongly the layer covers.
+* **Texture** is the layer's image. Its alpha cuts it out, and its tiling scales it. **UV** picks UV0 or UV1.
+* **Mask** shows the layer where it is white and hides it where it is black. It reads the red channel, on the Albedo UV.
+* **Blend** lays the layer over the colour below (Normal), adds it as light (Add), screens it or multiplies it.
+* **Sides** shows the layer on both sides of the mesh, the back only, or the front only.
+* **Distance Fade** fades the layer by distance from the camera, in metres: fully shown at **Start**, gone at **End**, by **Amount**. An **End** smaller than **Start** fades the layer out as the camera comes close.
+* **AudioLink Band** and **Beat Amount** let the music drive the layer. At 1 it shows only as loud as the band.
+* Not carried over from lilToon yet: scrolling and rotating, the UV2, UV3 and MatCap UV modes, decal mode, per-layer dissolve, alpha mode and Enable Lighting.
+
 ### UV Tile Discard
 
 Hides parts of your mesh by UV tile, so one mesh can carry clothing and accessories that an animation switches on and off. It works like Poiyomi's and uses the same property names, so tile toggles you animated for Poiyomi drive it as they are.
@@ -161,9 +185,36 @@ Stretch is measured across the triangles of your mesh, so a joint with only a fe
 
 ## SHADING
 
+### Shading Options
+
+At the top of **SHADING**. Turn on **Enable** and pick a **Style** for a stylised look. Off, the surface lights like normal PBR. Toon starts with it on.
+
+| Style | What it does |
+| --- | --- |
+| **Ramp Texture** | Reads a gradient you supply, unlit on the left to lit on the right. Leave the slot empty for a clean two-tone, and use **Offset** to shift where it reads. |
+| **Cel Steps** | Posterises the light into flat bands. **Count** sets 2 to 8. |
+| **Soft** | A smooth, rounded falloff. |
+| **Hard** | One crisp line between lit and unlit. |
+| **Realistic** | The full physical light, with its own **Light Wrap** to soften the edge the way skin and fabric do. |
+| **Multilayer Math** | Up to three coloured shadow layers, like Poiyomi Toon. |
+
+**Edge Softness** (Ramp Texture and Cel Steps) sets how sharp the bands are. **Light Wrap** (Ramp Texture, Cel Steps, Soft and Hard) carries the light further round, which softens the whole look.
+
+#### Multilayer Math
+
+**Shadow Layer 1** is the main shadow, and **2** and **3** sit deeper inside it. Each has a **Color** (its alpha sets the strength, and 0 turns the layer off), a **Color Texture** to paint it, a **Border** where it starts, a **Blur** for its edge, **Receive Shadow** to let shadows from other things into it, and **Normal Blend** for how much your normal map shapes it.
+
+* **Border** colours the thin band where light turns to shadow, and **Width** sets how far it reaches.
+* **Shadow Map** fades the shadow where its map is dark. With **Flat** it swaps in a flat shadow facing forward there instead, which suits faces.
+* **Shadow Border Map** moves each layer's shadow with a map, like ambient occlusion: red, green and blue for layers 1 to 3. **Shift** remaps it for each layer.
+* **Blur Map** scales each layer's blur per pixel.
+* **Base Color Blend** tints the shadows with your base colour, and **Ambient Lift** lets the world's ambient light lift them.
+* **Ignore Indirect Shadow Color** at 1 lets the light reach the shadow side through the shadow colours, so shadows keep their colour in any world. At 0 the shadow side gets only the world's ambient light, tinted the same way. **Shadow Strength** at 0 leaves the light untouched.
+* The maps read **UV0** or **UV1**. **Receive Shadow** works on the main light; other lights keep their usual shadows. With **Use Shading Options** on, Light Volume lights take the first layer's edge.
+
 ### Light Data
 
-Picks which of a world's extra lights reach you. It sits at the top of **SHADING**, just after **Shading Options** on the shaders that have it.
+Picks which of a world's extra lights reach you. It sits at the top of **SHADING**, just after **Shading Options**.
 
 * **Pixel Lights** are the point lights, spot lights and extra suns a world sets to **Important**. **Vertex Lights** are the cheaper ones set to **Not Important**, up to four at a time. Untick either to ignore them. A locked material then leaves them out, so it locks faster, and without Pixel Lights it draws faster too.
 * **Point Light Shadows** lets point lights that cast shadows shadow you as well.
@@ -218,6 +269,8 @@ Stretches the highlight along the surface, the way a highlight pulls on stretche
 * **Horizon Occlusion** stops reflections leaking through the surface when you look at it edge on.
 * **Highlight Clamp** tames the hotspot on very glossy material so it stops sparkling.
 * **Specular Anti-Aliasing** stops highlights sparkling and crawling on tight detail as you move.
+* **Anti-Alias Reflections** gives reflections of the world the same treatment. It starts off.
+* **Anti-Alias Limit** caps how far the anti-aliasing can soften a highlight, so sharp creases and hard edges keep their shine. 1 is no cap.
 
 #### Reflection Clamp
 
@@ -252,7 +305,7 @@ Light Volumes start switched off. They make Unity builds a lot slower, so turn t
 * **Per-Light Specular:** gives every point, spot and area light its own highlight, sized by the light, with its cookie and shadow. It follows your **Anisotropy**, your clear coat and **Highlight Clamp**, the same as the lights in the room.
 * **Point Light Strength:** scales the world's point, spot and area lights on their own, without touching the baked volumes. **Light Edge** sets how strongly they catch your edges from behind and beside you.
 * **Point Light Shading:** how sharply those lights fall off around your shape. 0 turns the shaping off but keeps their shadows.
-* On Toon, Clothing Pro and Fur Pro, **Use Shading Options** gives those lights the same style as the lights in the room.
+* **Use Shading Options** gives those lights the same style as the lights in the room.
 * **Normal Stability:** stops parallax, detail normals, wetness and drips from smearing point light shading and shadows.
 * **Normal Bias** and **Position Offset:** move where the material reads the baked volumes, so a surface does not pick up light from the far side of a thin wall.
 * **Additive-Only Mode:** keeps your normal probe lighting and adds only the extra volumes and point lights a world layers on top.
@@ -284,6 +337,19 @@ Up to four decals (**Decal 0** to **Decal 3**): logos, stickers, tattoos. Each h
 * **Symmetry** places a matching copy on the other side, **Side Offset** shifts that copy, **Mirror UV** flips it, and **Tiled** repeats it across the surface.
 * **Color Blend** picks how the decal mixes with the material, and **Alpha Blend Mode** lets it change the opacity too.
 * **Decal Masks** is one image holding a mask for each decal: red for Decal 0, green for Decal 1, blue for Decal 2 and alpha for Decal 3.
+
+---
+
+## WEAR
+
+Makes the material look worn in rather than new. Turn on **Enable** and set **Amount** under **Where It Wears**. Rubbed edges and scuffs are on from the start.
+
+* **Mask** places each kind of wear: red for edges, green for scuffs, blue for creases, alpha for dust. Leave it empty and they can show everywhere.
+* **Edges From** picks where the edges and hollows come from. **From The Mesh** needs nothing, but it only finds rounded edges, not sharp ones, and on a low-poly mesh it follows the triangles. A **Curvature Map** from your baker catches every edge. **Sensitivity** sets how gentle a bend still counts, and **Breakup** splits the wear into patches.
+* **Rubbed Edges** fade and dull the edges. **Gloss** above 0 rubs them to a polish instead, **Colour** shows a layer underneath, and **Flatten** wears your normal map smooth there.
+* **Scuffs** are drag marks. Set their **Scale**, **Length**, **Direction** and **Spread**, and **Follow Edges** keeps them where things rub.
+* **Creases** are fold lines that gather in the hollows, like the inside of an elbow. They start at 0, so raise **Amount** and paint the mask's blue where you want them.
+* **Dust** settles in creases and on top and turns the surface matte. **In Hollows** follows your ambient occlusion, and **On Top** the surfaces that face up.
 
 ---
 
@@ -365,6 +431,10 @@ Latex Ultra only. A spiral that takes over your own view: as **Amount** rises th
 * Attach it with **Hypno Setup** in the Shader Hub: it gives Hypno its own material at your eyes and a **Hypno** toggle in your menu. Only eyes inside **Radius** see it: at the default that means you, and with **Others Can Join** on, raising it lets anyone who leans in go under too. **Radius** grows and shrinks with your avatar.
 * Pick **Spiral**, **Endless Spiral**, **Rings** or **Pinwheel**. **Swirl** twists your real view, **Fill** leaves the world showing round the edges, and **Show In Photos** lets your own photos catch it.
 * **Focus** opens a clear window in the middle, so you still see who's in front of you, and **Focus Glow** rims it with **Color A**. **Wobble** makes the stripes ripple.
+* **Your Image** is a pattern made from your own picture: it repeats round the middle as many times as **Arms** and flows inward with **Speed**. **Gradient** colours the stripes from your own gradient image instead of **Color A** and **Color B**.
+* **Second Pattern** lays another pattern over the first, with its own shape, speed and colours. With **Mix**, the alpha of its colours lets the first one show through.
+* **Subliminal** flashes your own words or images in the middle of your view while you are under. Type them in **Subliminal** in **Hypno Setup** and press **Make Subliminal**.
+* In **Hypno Setup**, **Style** picks how you go under: **Focus** closes a window in from the edges of your view and opens it again as you wake, and **Fade** fades the spiral in over everything. **Menu Radials** puts the settings you pick on radials in a **Hypno** submenu, and the tool remembers your choices for each avatar.
 * With AudioLink, **Beat Spin**, **Beat Pulse** and **Music Colour** let the music drive it.
 
 ### Eyes
@@ -402,6 +472,8 @@ There are **five layers**. Layer 1 is always there; **Layer 2** to **Layer 5** e
 * **Depth** sinks the layer below the surface, so it slides against you as you move, the way flake does under a clear coat.
 * **Colour:** *Tint* is one colour, *Iridescent* gives every flake its own hue, *ColorChord* takes the colours from the music, *Prism* sweeps the spectrum as a flake turns, and *Two Tone* mixes your Tint with a **Second Colour**. **Rainbow Amount** sets how far the colours spread.
 * **Scroll**, **Spin** and **Angle** move the whole field. **Swirl** pulls the flakes into flowing veins, and **Twinkle** makes every flake blink on its own clock.
+* **Sparkle:** *Lights* flashes a flake where a light catches it. *View* makes the flakes flash as you move, in any light, so the whole surface twinkles even in a dim room; **Sensitivity** sets how quickly they flash, and **Ambient Sparkle** sets how bright.
+* **Position:** *On Surface* puts the flakes in the material. *Above* lifts them off it as little stars that hover over the surface, the way an outline sits outside it. The stars are four point glints, and **Starburst** gives them four more rays, so **Shape**, **Depth**, **Scroll**, **Swirl** and **Over Clearcoat** only change flakes on the surface. They catch the main directional light, the room and Light Volumes. Other lights, LTCGI and VRSL only reach flakes on the surface.
 * **AudioLink Band** and **AudioLink Amount** make the layer flare on the beat. Each layer picks its own band.
 * **Mask Source** limits the layer to part of the material by borrowing an emission layer or a matcap mask.
 
@@ -412,10 +484,12 @@ Everything here starts at a setting that changes nothing. **Strength** scales th
 #### Shared by all layers
 
 * **Anchor:** *UV* follows your unwrap. *World Space* keeps every flake the same real size across the whole avatar, which is usually what you want for an all-over finish.
-* **Sharpness** sets how briefly each flake flashes, from hard pinpricks to a broad shimmer, without dimming the glitter.
+* **Sharpness** sets how briefly each flake flashes, from hard pinpricks to a broad shimmer, without dimming the glitter. On a layer with **Sparkle** on **View** it also sets how fine the flakes are: higher makes them smaller and tighter, lower makes them broader. At 90 a flake is exactly **Flake Size**.
 * **Lit By** picks what the flakes react to: *Natural*, *Light Volumes*, *LTCGI*, *VRSL*, *Everything*, or *Always Lit*, which shows them even in a pitch black room.
 * **Brightness** and **Ambient Sparkle** set the flash from lights and from the room. **Minimum Light** stops the flakes going fully dark. **Take Light Colour** decides whether flakes take the colour of the light hitting them.
 * **Over Clearcoat** puts the flakes on top of the clear coat at 1, or underneath it like real car paint at 0.
+* **Stereo**, for layers set to *View*: at 1 each eye catches its own flashes, which reads as real glitter in VR. **Keep Far Sparkle** joins flakes smaller than a pixel into bigger ones, so the glitter still sparkles from a distance.
+* **Float Height** sets how high the *Above* layers hover, in centimetres. **Height Variation** gives every star its own height, so they fill the air over the material instead of one flat sheet.
 * **Mask** covers all the layers at once. Once every layer you use has a **Mask Source** of its own, the shared Mask has nothing to do, so it stops applying and its rows hide.
 * **Motion:** **Beat Drift**, **Beat Spin**, **Beat Swirl** and **Beat Twinkle** put the movement on the music.
 
@@ -566,7 +640,7 @@ Lays a car paint finish over the material: a base colour, a second colour that a
 
 **Zoom**, **Rotation**, **Tiling** and the **Offsets** group place the image.
 
-**Normal Follow** is the one to reach for when a matcap looks painted on. Turn it up and the matcap follows every bump in your normal map. **Normal** picks what it follows: your normal map and detail, the bent normal, or the raw mesh.
+**Normal Follow** is the one to reach for when a matcap looks painted on. At 1, where a new material starts, the matcap follows every bump in your normal map; lower it for a flatter, painted look. **Normal** picks what it follows: your normal map and detail, the bent normal, or the raw mesh.
 
 **Depth** sinks the layer below the surface so it slides against you as you move. **Freeze** locks it to you so it stops sliding as you turn. **Mirror Flip** flips it in a mirror, so your reflection catches light from the same side you do.
 
@@ -628,8 +702,9 @@ The material can tell where it is being drawn, who is looking and what light is 
 
 Turn on **Enable**, then open the part you want to change: **Base**, **Normal Maps**, **Surface**, **Shading**, **Decals**, **Polish**, **Special Effects**, **Outlines**, **Emissions**, **Matcaps** or **AudioLink**. Each has its own **Enable** and its own rules, and every rule you set has to pass for the part to show:
 
-* **Show:** *Only in Mirrors* hides the part from everyone else while you still see it in a mirror, and *Never in Mirrors* does the reverse. *Only in Photos* and *Never in Photos* catch VRChat's camera and screenshots. *Only in VR* and *Only on Desktop* split by headset and flatscreen.
+* **Show:** *Only in Mirrors* hides the part from everyone else while you still see it in a mirror, and *Never in Mirrors* does the reverse. *Only in Photos* and *Never in Photos* catch VRChat's camera and screenshots. *Only in VR* and *Only on Desktop* split by headset and flatscreen. *Only in Screenshots* and *Never in Screenshots* tell a saved photo apart from the live camera, and *Only in Handheld Camera* shows it only in the camera view itself.
 * **Seen By:** in VR you can send the part to one eye only.
+* **Time of Day** shows the part only between two hours of the day, read from the clock of each viewer, so everyone sees their own evening or morning. When **To** is earlier than **From** it runs past midnight, and the same hour for both shows it all day. **Softness** is how many hours it fades over. The editor reads midnight, so test it in VRChat.
 * **Distance** fades the part in as someone comes closer, or as they back away, between the **Distance Range** values in metres.
 * **Face-On Only** shows it only where the surface faces the viewer.
 * **Gaze Torch** shows it only where someone is looking, like a torch beam that follows their eyes.
@@ -767,7 +842,7 @@ Leave this section alone unless you know you need it.
 * **Cull** picks which sides draw. Set it to **Off** to see both sides of a single-sided part.
 * **Alpha To Coverage** smooths cut-out edges in Cutout mode.
 * **Noise Pattern:** *Classic* keeps random patterns like glitch slices and car paint flakes exactly as they are. *Fast* makes a locked material a little lighter to draw, but every pattern comes out in a new arrangement.
-* **Luma:** how colours fade to grey in **Saturation**, glitter, Tattoo ageing and the music colour. *Classic* keeps your current look. *Rec.709* matches how bright each colour really is, so blues fade darker and greens lighter.
+* **Luma:** how colours fade to grey in **Saturation**, glitter and the music colour. *Classic* keeps your current look. *Rec.709* matches how bright each colour really is, so blues fade darker and greens lighter.
 * **Enable GPU Instancing** lets Unity draw many copies of a mesh together.
 * **Blending** and **Stencil** are the raw render state, for effects like see-through masks.
 * **Shadow & Depth** sets how the shadow draws. **Match Rendering** keeps it in step with the settings above. **Ignore Fog** keeps your own colour in a foggy world instead of fading with everything else.

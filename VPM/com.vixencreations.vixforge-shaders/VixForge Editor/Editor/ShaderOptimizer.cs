@@ -106,6 +106,16 @@ namespace VixForgeEditor
 
         public const string LockOnlyLinePrefix = "//VF_LOCK ";
 
+        public const string ProgramSlotMarker = "//VF_PROGRAM_SLOT ";
+        public const int ProgramSlotBase = 8192;
+        public const int ProgramSlotStride = 1024;
+
+        private static bool IsProgramBlockStart(string trimmedStartLine)
+        {
+            string t = trimmedStartLine.TrimEnd();
+            return t == "CGPROGRAM" || t == "HLSLPROGRAM" || t == "CGINCLUDE" || t == "HLSLINCLUDE";
+        }
+
         // VixForge addition. DYNAMICLIGHTMAP_ON doubles the forward base variant count and only a
         // scene with Realtime Global Illumination ever sets it, so the world shaders ship the keyword
         // enabled and locking can strip it back out. The strip appends nodynlightmap to every
@@ -952,8 +962,48 @@ namespace VixForgeEditor
         }
 
         private static Dictionary<string, List<Material>> s_shaderPropertyCombinations = new Dictionary<string, List<Material>>();
+        private static bool ClearStaleIncludeFailure(Shader shader)
+        {
+            if (shader == null || !ShaderUtil.ShaderHasError(shader)) return false;
+            string path = AssetDatabase.GetAssetPath(shader);
+            string folder = Path.GetDirectoryName(path);
+            bool stale = false;
+            foreach (ShaderMessage msg in ShaderUtil.GetShaderMessages(shader))
+            {
+                if (msg.severity != UnityEditor.Rendering.ShaderCompilerMessageSeverity.Error) continue;
+                Match include = Regex.Match(msg.message, "^Couldn't open include file '([^']+)'");
+                if (!include.Success) continue;
+                string included = include.Groups[1].Value;
+                if (!File.Exists(included) || !Path.GetDirectoryName(included).Replace('\\', '/').Equals(folder.Replace('\\', '/'), StringComparison.OrdinalIgnoreCase)) return false;
+                stale = true;
+            }
+            if (!stale) return false;
+            string guid = AssetDatabase.AssetPathToGUID(path);
+            string cacheFolder = Path.Combine("Library", "ShaderCache", "shader", Path.GetFileNameWithoutExtension(path) + guid.Substring(0, 4));
+            ShaderUtil.ClearShaderMessages(shader);
+            try
+            {
+                if (Directory.Exists(cacheFolder)) Directory.Delete(cacheFolder, true);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[VixForge Editor] Could not clear Unity's shader cache for {path}: {e.Message}");
+            }
+            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate | ImportAssetOptions.ForceSynchronousImport);
+            VixForgeLogger.LogDetail($"[Lock] {path}: Unity had kept a failed include from an earlier lock. Cleared it and imported the shader again.");
+            return true;
+        }
+
+        private static void RepairStaleIncludeFailures(IEnumerable<Material> materials)
+        {
+            foreach (Shader s in materials.Where(m => m != null).Select(m => m.GetRoot().shader).Distinct())
+                if (s != null && !s.IsBroken() && IsShaderLockedInternal(s) && IsShaderUsingVixForgeOptimizer(s))
+                    ClearStaleIncludeFailure(s);
+        }
+
         private static void ReimportLockedShadersWithErrors(IEnumerable<Material> materials)
         {
+            RepairStaleIncludeFailures(materials);
             string[] folders = materials.Where(m => m != null)
                 .Select(m => m.GetRoot().shader)
                 .Distinct()
@@ -1020,6 +1070,7 @@ namespace VixForgeEditor
             }
 
             //Create shader assets
+            HashSet<Material> lockedThisBatch = new HashSet<Material>();
             foreach (Material m in materialsToChangeLock)
             {
                 //do progress bar
@@ -1046,7 +1097,11 @@ namespace VixForgeEditor
                         if (s_shaderPropertyCombinations.ContainsKey(hash))
                         {
                             s_shaderPropertyCombinations[hash].RemoveAll(m2 => m2 == null);
-                            reference = s_shaderPropertyCombinations[hash].FirstOrDefault(m2 => m2 != m && (materialsToChangeLock.Contains(m2) || Shader.Find(s_applyStructsLater[m2].newShaderName) != null));
+                            reference = s_shaderPropertyCombinations[hash].FirstOrDefault(m2 => m2 != m
+                                && (lockedThisBatch.Contains(m2)
+                                    || (!materialsToChangeLock.Contains(m2)
+                                        && s_applyStructsLater.TryGetValue(m2, out ApplyStruct earlier)
+                                        && Shader.Find(earlier.newShaderName) != null)));
                         }
                         if (reference != null)
                         {
@@ -1068,7 +1123,9 @@ namespace VixForgeEditor
                             s_shaderPropertyCombinations[hash] = new List<Material>();
                         }
                         // Add material to list of materials with same shader property hash
-                        s_shaderPropertyCombinations[hash].Add(m);
+                        if (!s_shaderPropertyCombinations[hash].Contains(m))
+                            s_shaderPropertyCombinations[hash].Add(m);
+                        lockedThisBatch.Add(m);
                         // Update TAG_ALL_MATERIALS_GUIDS_USING_THIS_LOCKED_SHADER of all materials with same shader property hash
                         string tag = string.Join(",", s_shaderPropertyCombinations[hash].Select(m2 => AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(m2))));
                         foreach (Material m2 in s_shaderPropertyCombinations[hash])
@@ -1123,6 +1180,7 @@ namespace VixForgeEditor
                         m.SetNumber(GetOptimizerPropertyName(m.shader), 1);
                     }
                 }
+                RepairStaleIncludeFailures(materialsToChangeLock);
             }
             AssetDatabase.Refresh();
 
@@ -1705,8 +1763,21 @@ namespace VixForgeEditor
                     totalLen += line.Length;
                 StringBuilder sb = new StringBuilder(totalLen);
                 // This appendLine function is incompatible with the '\n's that are being added elsewhere
+                int nextLine = 1;
                 foreach (string line in psf.lines)
+                {
+                    if (line.StartsWith(ProgramSlotMarker, StringComparison.Ordinal))
+                    {
+                        int target = ProgramSlotBase + ProgramSlotStride * int.Parse(line.Substring(ProgramSlotMarker.Length), CultureInfo.InvariantCulture);
+                        if (nextLine > target)
+                            target = (nextLine + ProgramSlotStride - 1) / ProgramSlotStride * ProgramSlotStride;
+                        for (; nextLine < target; nextLine++)
+                            sb.AppendLine();
+                        continue;
+                    }
                     sb.AppendLine(line);
+                    nextLine += 1 + line.Count(c => c == '\n');
+                }
                 string output = sb.ToString();
 
                 //cull shader file path
@@ -1872,28 +1943,13 @@ namespace VixForgeEditor
             return true;
         }
 
-        // True if any property the ifex/endex condition tests is marked "Animated (when locked)" ("1") or
-        // animated + renamed ("2"). Such a gate can be flipped on at runtime by an animation or a VRCFury
-        // toggle, so its block must never be stripped even when the material's stored value is currently off.
-        private static bool ConditionTestsAnimatedProperty(string condition, Material material)
+        // True if the property is marked "Animated (when locked)" ("1") or animated + renamed ("2"). An animation
+        // or a VRCFury toggle can change it at runtime, so a lock condition treats its value as unknown.
+        private static bool IsAnimatedGateToken(Material material, string prop)
         {
-            int i = 0;
-            while (i < condition.Length)
-            {
-                if (condition[i] == '_' || char.IsLetter(condition[i]))
-                {
-                    int start = i;
-                    while (i < condition.Length && (condition[i] == '_' || char.IsLetterOrDigit(condition[i]))) i++;
-                    string token = condition.Substring(start, i - start);
-                    if (token[0] == '_')
-                    {
-                        string tag = GetAnimatedTag(material, token);
-                        if (tag == "1" || tag == "2") return true;
-                    }
-                }
-                else i++;
-            }
-            return false;
+            if (string.IsNullOrEmpty(prop) || prop[0] != '_') return false;
+            string tag = GetAnimatedTag(material, prop);
+            return tag == "1" || tag == "2";
         }
 
         // The Mask Source dropdowns count None as 0, Emission 1 to 5 as 1 to 5, and Matcap 1 to 5 as 6 to 10.
@@ -1998,14 +2054,11 @@ namespace VixForgeEditor
 
             string condition = ConditionShow(display);
             if (condition == null) return;
-            if (ConditionTestsAnimatedProperty(condition, material))
-            {
-                animated = true;
-                return;
-            }
             try
             {
-                if (!DefineableCondition.Parse(condition, material).Test()) off = true;
+                bool? shown = DefineableCondition.Parse(condition, material).TestUnknown(p => IsAnimatedGateToken(material, p));
+                if (shown == null) animated = true;
+                else if (shown == false) off = true;
             }
             catch (Exception e)
             {
@@ -2164,6 +2217,8 @@ namespace VixForgeEditor
             string[] fileLines = fileContents.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             List<string> includedLines = new List<string>();
+            bool isShaderFile = filePath.EndsWith(".shader", StringComparison.OrdinalIgnoreCase);
+            int programSlot = 0;
 
             bool isIncluded = true;
             int isNotIncludedAtDepth = 0;
@@ -2182,6 +2237,7 @@ namespace VixForgeEditor
             for (int i=0; i<fileLines.Length; i++)
             {
                 string lineParsed = fileLines[i].TrimStart();
+                int slotForLine = isShaderFile && IsProgramBlockStart(lineParsed) ? programSlot++ : -1;
 
                 // VixForge addition: a //VF_LOCK line outside a stripped ifex region goes live in the locked copy (developer_info.md, "LIGHT DATA").
                 if (!doExclude && lineParsed.StartsWith(LockOnlyLinePrefix, StringComparison.Ordinal))
@@ -2198,10 +2254,9 @@ namespace VixForgeEditor
                         if (!doExclude) // if already excluding, only track depth
                         {
                             var condition = DefineableCondition.Parse(lineParsed.Substring(6), material);
-                            // Do not strip a block whose gate is animated: the toggle may turn the feature on
-                            // at runtime, so its maps and code must stay even if the stored value is off now.
-                            if (condition.Test()
-                                && !ConditionTestsAnimatedProperty(lineParsed.Substring(6), material)
+                            // An animated gate can change at runtime, so it counts as unknown: strip only when
+                            // the condition holds whatever value it takes (developer_info.md, "Lock: animated gates").
+                            if (condition.TestUnknown(prop => IsAnimatedGateToken(material, prop)) == true
                                 && !ConditionGatesABorrowedLayer(lineParsed.Substring(6), material))
                             {
                                 doExclude = true;
@@ -2416,6 +2471,8 @@ namespace VixForgeEditor
                     }
                 }
 
+                if (slotForLine >= 0)
+                    includedLines.Add(ProgramSlotMarker + slotForLine.ToString(CultureInfo.InvariantCulture));
                 includedLines.Add(fileLines[i]);
             }
 
@@ -3640,8 +3697,13 @@ namespace VixForgeEditor
                 List<Material> materials = new List<Material>();
                 if (requestedBuildType == VRCSDKRequestedBuildType.Scene)
                 {
+#if UNITY_6000_0_OR_NEWER
+                    if (UnityEngine.Object.FindObjectsByType(typeof(VRC_SceneDescriptor), FindObjectsSortMode.InstanceID) is VRC_SceneDescriptor[] descriptors && descriptors.Length > 0){
+                        var renderers = UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.InstanceID);
+#else
                     if (UnityEngine.Object.FindObjectsOfType(typeof(VRC_SceneDescriptor)) is VRC_SceneDescriptor[] descriptors && descriptors.Length > 0){
                         var renderers = UnityEngine.Object.FindObjectsOfType<Renderer>();
+#endif
                         foreach (var rend in renderers)
                         {
                             foreach (var mat in rend.sharedMaterials){

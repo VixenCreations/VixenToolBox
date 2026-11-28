@@ -46,5 +46,5 @@ The **Sheer** fabrics in **Material Type** (Soft Tulle, Mesh, Chiffon, Organza, 
 
 * **Lock before uploading.** The SDK Build button does it for you, or use Lock All in the Hub.
 * **Triangle meshes only.** Clothing Pro tessellates, so a Keep-Quads model can render torn. Turn Keep Quads off in the mesh import settings, or run **Scan for Quad Meshes** with **Mesh Fixes** in the Shader Hub.
-* **No Wet, Goo, Hypno, Eyes or Tattoo Ink.** Wet and Goo are liquid-latex effects, and the others are for skin and eyes, so fabric leaves them out.
+* **No Wet, Goo, Hypno, Eyes or Tattoo Ink.** Wet and Goo are liquid-latex effects, and the others are for skin and eyes, so fabric leaves them out. **WEAR** is here, for rubbed edges, scuffs, creases and dust, and the **Latex Ultra** reference covers it.
 * **Inside First and Tint Through each draw the material once more**, only while they're on.

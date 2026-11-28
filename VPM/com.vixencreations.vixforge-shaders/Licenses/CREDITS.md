@@ -22,8 +22,13 @@ or a paper we learned from.
   filter. gitlab.com/s-ilent/filamented. Notice: `LICENSE-Filamented.md`.
 - **Poiyomi Toon** by **Poiyomi** (Poiyomi Labs). Dissolve, Color Adjust and Alpha Options (its Global Mask
   too) are adapted from its sections of the same names, the dither pattern included, and so are each
-  decal's Alpha, Alpha Blend Mode and Hue Shift. All of them keep the same property names.
-  github.com/poiyomi/PoiyomiToonShader. Notice: `LICENSE-PoiyomiToon.md`.
+  decal's Alpha, Alpha Blend Mode and Hue Shift, the Multilayer Math style under Shading Options, and the
+  colour settings of RGBA Color Masking. All of
+  them keep the same property names. github.com/poiyomi/PoiyomiToonShader. Notice: `LICENSE-PoiyomiToon.md`.
+- **lilToon** by **lilxyzw**. Poiyomi's Multilayer Math follows lilToon's shadow settings, and our Multilayer
+  Math keeps their property names. The glitter **View** sparkle and **Keep Far Sparkle** follow lilToon's glitter
+  (`lilCalcGlitter`). The Second and Third Color Layers follow lilToon's Main Color 2nd and 3rd and keep their
+  property names. github.com/lilxyzw/lilToon. Notice: `LICENSE-lilToon.md`.
 - **Björn Ottosson**. Hue Shift's gamut clipping and its Okhsv colour space follow his OKLab work; the
   clipping came by way of Filament's colour code (github.com/google/filament). bottosson.github.io.
   Notice: `LICENSE-Ottosson.md`.
@@ -98,7 +103,7 @@ ThryEditor brought in work by other people, and it keeps their credit here:
 - Specular occlusion from ambient occlusion: Lagarde and de Rousiers 2014 (Moving Frostbite to PBR).
 - Multi-scatter energy compensation: Kulla and Conty 2017, as Filament writes it.
 - Brushed reflections: Filament's bent reflection vector.
-- Specular anti-aliasing: Kaplanyan et al. 2016, Tokuyoshi and Kaplanyan 2019.
+- Specular anti-aliasing: Kaplanyan et al. 2016, Tokuyoshi and Kaplanyan 2019. Anti-Alias Reflections and Anti-Alias Limit follow the geometric normal filtering in Unity's HDRP, which filters reflections too and caps the added roughness.
 - Fabric sheen: Estevez and Kulla 2017, with the Ashikhmin visibility term as Neubelt and Pettineo use it.
 - Fur highlight: Scheuermann 2004, after Marschner et al. 2003.
 - Sharper Probes: the Geomerics non-linear reconstruction of light probes.

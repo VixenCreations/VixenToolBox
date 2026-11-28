@@ -6,6 +6,39 @@
 Version history for the material inspector and the tools that ship with it. These are the editor's own version numbers, starting at 1.0.0 when the VixForge Editor was first built. They do not track the shader releases; shader changes live in the Latex Ultra and Toon changelogs.
 
 ***
+## [2.11.0] - 2026-11-27
+
+*Switching a material onto a VixForge shader keeps its VRChat fallback.*
+
+### Fixed
+
+* Switching a cutout or transparent material onto a VixForge shader keeps the matching **VRChat Fallback Shader**. Since VRChat SDK 3.10.6 it went back to the opaque fallback after the switch, so anyone with your shaders hidden saw that part solid.
+* **Add Director Preview Rig** keeps an AudioLink that is already in your scene working. It used to point that AudioLink at a new, empty Audio Source of its own, so the **AudioLinkAvatar** prefab's YTDLP player stopped reaching it and the Director heard nothing. The rig now listens to the AudioLink's own input (**AudioLinkInput** in the prefab) and changes nothing on it. If that AudioLink has no Audio Source yet, the rig uses the one its video player plays into.
+* Locked materials no longer carry effects that can never turn on. When a material marked one setting as **Animated**, locking kept every effect whose on/off check mentioned that setting, even when another setting had already switched the effect off. The most common case was Kinetic Shards: with **AudioLink** animated, two kinetic passes stayed in the locked shader while Kinetics was off, which made the upload bigger. Locking now removes an effect whenever it stays off whatever the animated setting does. Everything that is kept draws exactly as before. Re-lock your avatar to get the smaller upload.
+* **Movement Setup** gives each avatar's FX controller its own clips. Avatars whose FX controllers sat in the same folder used to share one set, so setting up one avatar pointed the others' **Velocity** and **Landing** at its meshes, and their **Velocity Smear** and **Movement** stopped reacting. If you've set up more than one avatar from one folder, open Movement Setup on each one and press **Build Layers** again.
+* Changing one material or updating a shader no longer makes every locked material compile from scratch on your next build. Unity remembers a compiled pass by the line it starts on, so any setting that added or removed a line in a locked shader moved every pass below it, and Unity compiled them all again. Locked shaders now keep each pass on a fixed line, so only the passes that really changed compile again. The first build after you re-lock compiles everything once more.
+* Locking a second time in the same session no longer leaves materials unlocked. When two materials shared a locked shader, unlocking and locking them again pointed both at the shader the unlock had just removed, so neither locked.
+* A locked material no longer stays marked with "Couldn't open include file" when that file is right there. Unity could keep the failed result from a moment during a lock when the folder was being rewritten, and showed it again after every lock and reimport. Locking now spots that case, clears Unity's saved result for that one shader and imports it again. Your uploads were not affected: the build compiled those shaders correctly.
+
+***
+## [2.10.0] - 2026-11-07
+
+*Hypno Setup gains a Focus style, menu radials, Subliminal sheets and settings for each avatar, and Follow Fixture sets your VRSL channel from the fixtures in your scene.*
+
+### Added
+
+* **Follow Fixture** above **DMX Base Channel** in **Stage Lighting & VRSL** lists the VRSL fixtures in your open scene. Pick one and every selected material takes its channel and **Channel Mode**.
+* A speed change on a material with **Shared Clock** on keeps its pattern in place in Play mode too.
+* **Style** in **Hypno Setup**. **Focus** closes a window in from the edges of your view as you go under and opens it again as you wake up, then switches Hypno off. **Fade** is the fade you had before, and an avatar you set up earlier keeps it.
+* **Menu Radials** in **Hypno Setup** puts up to seven Hypno settings on radials in a **Hypno** submenu, next to the toggle.
+* **Subliminal** in **Hypno Setup** turns up to eight words or images into a sheet for your Hypno material and switches Subliminal on.
+* **Hypno Setup** remembers its settings for each avatar, and **Going Under** and **Waking Up** now go up to two minutes.
+
+### Fixed
+
+* **Look Through Your Eyes** in **Hypno Setup** hides your own head the way first person in VRChat does, so the **Focus** window shows the world instead of the inside of your head, hood or hair. Your Scene view's clipping settings come back when you stop.
+
+***
 ## [2.9.0] - 2026-11-02
 
 *Touch Setup puts each touch receiver next to the meshes it serves, and Preset Toggle and Hypno Setup are ready for VRChat SDK 3.10.6.*

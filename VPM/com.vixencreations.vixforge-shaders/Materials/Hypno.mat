@@ -18,7 +18,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 4000
+  m_CustomRenderQueue: 3000
   stringTagMap:
     RenderType: Transparent
     VRCFallback: ToonTransparentDoubleSided
@@ -53,6 +53,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CosmosMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CtxInkTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -256,6 +260,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MultilayerMathBlurMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Normal2Map:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -288,7 +296,27 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Shadow2ndColorTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Shadow3rdColorTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ShadowBorderMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ShadowColorTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ShadowMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ShadowStrengthMask:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -300,7 +328,23 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Tattoo1_Map:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Tattoo2_Map:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Tattoo3_Map:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ThicknessMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ToonRamp:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -308,11 +352,19 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Wear_CurvMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Wear_Mask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - GeometryShader_Enabled: 1
     - Instancing: 0
-    - Tessellation_Enabled: 1
+    - Tessellation_Enabled: 0
     - _AL_AutoCorr_Mod: 0
     - _AL_AutoCorr_Norm: 0
     - _AL_Band_CarPaint: 3
@@ -361,6 +413,10 @@ Material:
     - _AL_Band_Skel: 0
     - _AL_Band_Sonar: 0
     - _AL_Band_Spectrum: 0
+    - _AL_Band_Tattoo1: 0
+    - _AL_Band_Tattoo2: 0
+    - _AL_Band_Tattoo3: 0
+    - _AL_Band_TouchGlow: 0
     - _AL_Band_Trans: 1
     - _AL_Band_Wet: 0
     - _AL_CC_Shatter: 0
@@ -548,7 +604,12 @@ Material:
     - _AL_Pump_Str: 0.35
     - _AL_Response: 0
     - _AL_Response_Help: 0
+    - _AL_Rim_Color: 0
+    - _AL_Rim_Mirror: 0
     - _AL_Rim_Mod: 0
+    - _AL_Rim_Octave: 3
+    - _AL_Rim_Spectrum: 0
+    - _AL_Rim_Spin: 0
     - _AL_Scan_Density: 50
     - _AL_Scan_MaskCh: 3
     - _AL_Scan_MaskInv: 0
@@ -561,9 +622,13 @@ Material:
     - _AL_Skel_Mod: 0
     - _AL_Smooth_Vol: 0
     - _AL_Strip_Pos: 0.5
+    - _AL_Tattoo1: 0
+    - _AL_Tattoo2: 0
+    - _AL_Tattoo3: 0
     - _AL_Thump_MaskCh: 3
     - _AL_Thump_MaskInv: 0
     - _AL_Thump_MaskSrc: 0
+    - _AL_TouchGlow: 0
     - _AL_Trans_Mod: 0
     - _AL_Vortex_Band: 2
     - _AL_Vortex_MaskCh: 3
@@ -680,6 +745,21 @@ Material:
     - _ColorAdjust_Attribution: 0
     - _ColorGradingToggle: 0
     - _ColorMask: 0
+    - _ColorTouch_Mode: 0
+    - _ColorTouch_Shine: 0
+    - _ColorTouch_Size: 1.5
+    - _ColorTouch_Sparkle: 0
+    - _ColorTouch_Strength: 0.6
+    - _Contact_Body: 0
+    - _Contact_Feet: 0
+    - _Contact_Fingers: 1
+    - _Contact_Hands: 1
+    - _Contact_Head: 1
+    - _Contact_Props: 1
+    - _Contact_Reach: 1
+    - _Contact_Size: 4
+    - _Contacts_Help: 0
+    - _Contacts_SdkWarn: 0
     - _ContinuousDissolveBlend: 0
     - _ContinuousDissolveEnabled: 0
     - _ContinuousDissolvePhase: 0
@@ -706,10 +786,126 @@ Material:
     - _Cosmos_Steps: 12
     - _Cosmos_Swirl: 0.6
     - _Cosmos_Warp: 0.2
+    - _CtxALBand: 0
+    - _CtxALDistMode: 0
+    - _CtxALEye: 0
+    - _CtxALGaze: 0
+    - _CtxALHidden: 0
+    - _CtxALInvert: 0
+    - _CtxALMaskCh: 0
+    - _CtxALOn: 0
+    - _CtxALWhere: 0
+    - _CtxBaseBand: 0
+    - _CtxBaseDistMode: 0
+    - _CtxBaseEye: 0
+    - _CtxBaseGaze: 0
+    - _CtxBaseHidden: 0
+    - _CtxBaseInvert: 0
+    - _CtxBaseMaskCh: 0
+    - _CtxBaseOn: 0
+    - _CtxBaseWhere: 0
+    - _CtxBase_Help: 0
+    - _CtxDecalBand: 0
+    - _CtxDecalDistMode: 0
+    - _CtxDecalEye: 0
+    - _CtxDecalGaze: 0
+    - _CtxDecalHidden: 0
+    - _CtxDecalInvert: 0
+    - _CtxDecalMaskCh: 0
+    - _CtxDecalOn: 0
+    - _CtxDecalWhere: 0
+    - _CtxEmisBand: 0
+    - _CtxEmisDistMode: 0
+    - _CtxEmisEye: 0
+    - _CtxEmisGaze: 0
+    - _CtxEmisHidden: 0
+    - _CtxEmisInvert: 0
+    - _CtxEmisMaskCh: 0
+    - _CtxEmisOn: 0
+    - _CtxEmisWhere: 0
+    - _CtxInkBand: 0
+    - _CtxInkDistMode: 0
+    - _CtxInkEye: 0
+    - _CtxInkGaze: 0
+    - _CtxInkHidden: 0
+    - _CtxInkInvert: 0
+    - _CtxInkMaskCh: 0
+    - _CtxInkMode: 0
+    - _CtxInkOn: 0
+    - _CtxInkStrength: 3
+    - _CtxInkUV: 0
+    - _CtxInkWhere: 0
+    - _CtxMatcapBand: 0
+    - _CtxMatcapDistMode: 0
+    - _CtxMatcapEye: 0
+    - _CtxMatcapGaze: 0
+    - _CtxMatcapHidden: 0
+    - _CtxMatcapInvert: 0
+    - _CtxMatcapMaskCh: 0
+    - _CtxMatcapOn: 0
+    - _CtxMatcapWhere: 0
+    - _CtxNormBand: 0
+    - _CtxNormDistMode: 0
+    - _CtxNormEye: 0
+    - _CtxNormGaze: 0
+    - _CtxNormHidden: 0
+    - _CtxNormInvert: 0
+    - _CtxNormMaskCh: 0
+    - _CtxNormOn: 0
+    - _CtxNormWhere: 0
+    - _CtxOutlineBand: 0
+    - _CtxOutlineDistMode: 0
+    - _CtxOutlineEye: 0
+    - _CtxOutlineGaze: 0
+    - _CtxOutlineHidden: 0
+    - _CtxOutlineInvert: 0
+    - _CtxOutlineMaskCh: 0
+    - _CtxOutlineOn: 0
+    - _CtxOutlineWhere: 0
+    - _CtxPolishBand: 0
+    - _CtxPolishDistMode: 0
+    - _CtxPolishEye: 0
+    - _CtxPolishGaze: 0
+    - _CtxPolishHidden: 0
+    - _CtxPolishInvert: 0
+    - _CtxPolishMaskCh: 0
+    - _CtxPolishOn: 0
+    - _CtxPolishWhere: 0
+    - _CtxSfxBand: 0
+    - _CtxSfxDistMode: 0
+    - _CtxSfxEye: 0
+    - _CtxSfxGaze: 0
+    - _CtxSfxGlitter: 1
+    - _CtxSfxHidden: 0
+    - _CtxSfxInvert: 0
+    - _CtxSfxMaskCh: 0
+    - _CtxSfxOn: 0
+    - _CtxSfxOther: 1
+    - _CtxSfxWetGoo: 1
+    - _CtxSfxWhere: 0
+    - _CtxShadeBand: 0
+    - _CtxShadeDistMode: 0
+    - _CtxShadeEye: 0
+    - _CtxShadeGaze: 0
+    - _CtxShadeHidden: 0
+    - _CtxShadeInvert: 0
+    - _CtxShadeMaskCh: 0
+    - _CtxShadeOn: 0
+    - _CtxShadeWhere: 0
+    - _CtxSurfBand: 0
+    - _CtxSurfDistMode: 0
+    - _CtxSurfEye: 0
+    - _CtxSurfGaze: 0
+    - _CtxSurfHidden: 0
+    - _CtxSurfInvert: 0
+    - _CtxSurfMaskCh: 0
+    - _CtxSurfOn: 0
+    - _CtxSurfWhere: 0
     - _Ctx_DistMode: 0
     - _Ctx_Eye: 0
     - _Ctx_Far: 3
     - _Ctx_Gaze: 0
+    - _Ctx_Help: 0
     - _Ctx_Hidden: 0
     - _Ctx_MaskCh: 4
     - _Ctx_Near: 0.5
@@ -972,6 +1168,7 @@ Material:
     - _DripMaskCh: 0
     - _Drip_Angle: 0
     - _Drip_BodyFollow: 0
+    - _Drip_Caustics: 0
     - _Drip_Coverage: 0.4
     - _Drip_Density: 40
     - _Drip_FloorCollide: 0
@@ -1388,25 +1585,31 @@ Material:
     - _Hyper_Turb: 1
     - _Hyper_Twist: 1
     - _Hypno_Amount: 1
-    - _Hypno_Arms: 12
-    - _Hypno_CycleSpeed: -2
-    - _Hypno_CycleSpeed_Ph: 1666.384
+    - _Hypno_Arms: 1
+    - _Hypno_CycleSpeed: 0.18
+    - _Hypno_CycleSpeed_Ph: -10412.672
     - _Hypno_Fill: 1
+    - _Hypno_Focus: 0
+    - _Hypno_FocusEdge: 1
+    - _Hypno_FocusGlow: 1
     - _Hypno_Opacity: 1
-    - _Hypno_Pattern: 1
-    - _Hypno_Photos: 0
-    - _Hypno_Pulse: 0
+    - _Hypno_Pattern: 2
+    - _Hypno_Photos: 1
+    - _Hypno_Pulse: 0.077
     - _Hypno_PulseSpeed: 0
     - _Hypno_PulseSpeed_Ph: 309.417
     - _Hypno_Radius: 1
-    - _Hypno_Rainbow: 0
+    - _Hypno_Rainbow: 0.615
     - _Hypno_SetupHelp: 0
     - _Hypno_Size: 1
-    - _Hypno_Soft: 0
-    - _Hypno_Speed: 1
-    - _Hypno_Speed_Ph: -336.75848
+    - _Hypno_Soft: 0.522
+    - _Hypno_Speed: -0.13
+    - _Hypno_Speed_Ph: 5388.6333
     - _Hypno_Swirl: 4
     - _Hypno_Twist: 15
+    - _Hypno_Wobble: 0.027
+    - _Hypno_WobbleSpeed: 1
+    - _Hypno_WobbleSpeed_Ph: 0
     - _IgnoreFog: 1
     - _Infinity_Approach: 0
     - _Infinity_Attribution: 0
@@ -1438,9 +1641,21 @@ Material:
     - _LV_Pt_Shading: 3
     - _LV_Pt_Spec: 1
     - _LV_Pt_Stability: 0
+    - _LV_Pt_Toon: 0
     - _LV_Spec_Dominant: 1
     - _LV_Spec_Fresnel: 0
     - _LV_Spec_Mix: 1
+    - _LightData_Attribution: 0
+    - _LightingAdditiveEnable: 1
+    - _LightingCookies: 0
+    - _LightingIgnoreAmbientColor: 1
+    - _LightingMirrorLight: 0
+    - _LightingMirrorLightStrength: 1
+    - _LightingMulitlayerNonLinear: 1
+    - _LightingPointShadows: 0
+    - _LightingSoftShadows: 0
+    - _LightingVertexLightingEnabled: 1
+    - _LumaRec709: 0
     - _MC_SecHelp: 0
     - _ML_Ambient: 1
     - _ML_Direct: 1
@@ -1458,8 +1673,10 @@ Material:
     - _MainBrightness: 0
     - _MainChromatize: 0
     - _MainColorAdjustClamp: 1
+    - _MainColorAdjustClampKeepHue: 0
     - _MainColorAdjustToggle: 0
     - _MainGamma: 1
+    - _MainGradationExactSRGB: 0
     - _MainGradationMaskChannel: 0
     - _MainGradationStrength: 0
     - _MainHueALCTEnabled: 0
@@ -1761,6 +1978,8 @@ Material:
     - _Mode: 3
     - _ModelAngleMax: 90
     - _ModelAngleMin: 45
+    - _MultilayerMathBlurMapUV: 0
+    - _Multilayer_Attribution: 0
     - _Norm2_Blend: 0
     - _Norm2_BorrowCh: 3
     - _Norm2_BorrowInv: 0
@@ -1809,6 +2028,10 @@ Material:
     - _OutlineSmearLen: 1
     - _OutlineSmearStreakScale: 60
     - _OutlineSmearStreaks: 0.6
+    - _OutlineTouch_ColorBlend: 0
+    - _OutlineTouch_Glow: 0
+    - _OutlineTouch_Size: 2
+    - _OutlineTouch_Width: 1
     - _OutlineWidth: 1
     - _OutlineZTest: 4
     - _OutlineZWrite: 1
@@ -1868,6 +2091,7 @@ Material:
     - _RC_LV: 1
     - _RC_Probe: 1
     - _RC_VRSL: 1
+    - _Real_Wrap: 0
     - _ReflFromMask: 0
     - _ReflFromMask_Rough: 0.1
     - _ReflMask_Ch: 2
@@ -1896,13 +2120,48 @@ Material:
     - _Shad_NormalBiasMode: 0
     - _Shad_Soft: 0
     - _ShaderOptimizerEnabled: 0
+    - _Shadow2ndBlur: 0.1
+    - _Shadow2ndBorder: 0.15
+    - _Shadow2ndColorTexAddition: 0
+    - _Shadow2ndColorTexUV: 0
+    - _Shadow2ndNormalStrength: 1
+    - _Shadow2ndReceive: 0
+    - _Shadow3rdBlur: 0.1
+    - _Shadow3rdBorder: 0.25
+    - _Shadow3rdColorTexAddition: 0
+    - _Shadow3rdColorTexUV: 0
+    - _Shadow3rdNormalStrength: 1
+    - _Shadow3rdReceive: 0
+    - _ShadowBlur: 0.1
+    - _ShadowBorder: 0.5
+    - _ShadowBorderMapToggle: 0
+    - _ShadowBorderMaskLOD: 0
+    - _ShadowBorderMaskMode: 0
+    - _ShadowBorderMaskStrengthA: 0
+    - _ShadowBorderMaskStrengthB: 0
+    - _ShadowBorderMaskStrengthG: 0
+    - _ShadowBorderMaskStrengthR: 1
+    - _ShadowBorderMaskUV: 0
+    - _ShadowBorderRange: 0.08
+    - _ShadowColorTexAddition: 0
+    - _ShadowColorTexUV: 0
     - _ShadowCull: 2
+    - _ShadowEnvStrength: 0
+    - _ShadowFlatBlur: 1
+    - _ShadowFlatBorder: 1
+    - _ShadowMainStrength: 0
+    - _ShadowMaskType: 0
     - _ShadowMask_Ch: 0
     - _ShadowMask_Indirect: 0.35
     - _ShadowMask_Str: 1
     - _ShadowMatch: 1
+    - _ShadowNormalStrength: 1
     - _ShadowOffsetFactor: 0
     - _ShadowOffsetUnits: 0
+    - _ShadowPostAO: 0
+    - _ShadowReceive: 0
+    - _ShadowStrength: 1
+    - _ShadowStrengthMaskUV: 0
     - _ShadowZTest: 4
     - _ShadowZWrite: 1
     - _Shard_CC_Str: 0
@@ -1910,6 +2169,7 @@ Material:
     - _Shard_ColorMod_Speed: 0
     - _Shard_ColorMod_Speed_Ph: 0
     - _Shard_LV: 1
+    - _SharedClock: 0
     - _Sheer_AlbedoRelief: 0
     - _Sheer_Backlight: 0.5
     - _Sheer_Density: 1
@@ -2009,6 +2269,14 @@ Material:
     - _StencilRef: 0
     - _StencilWriteMask: 255
     - _StencilZFail: 0
+    - _Stretch_Clear: 0
+    - _Stretch_Debug: 0
+    - _Stretch_Gloss: 0.2
+    - _Stretch_Help: 0
+    - _Stretch_Normal: 0.5
+    - _Stretch_Pale: 0.2
+    - _Stretch_Scale: 1
+    - _Stretch_Wrinkle: 0.4
     - _Swarm_Count: 8
     - _Swarm_Drift: 0.4
     - _Swarm_Drift_Ph: 0
@@ -2020,14 +2288,78 @@ Material:
     - _Swarm_Spread: 4
     - _Swarm_Strength: 2
     - _Swarm_Wander: 0.5
+    - _Tattoo1_Age: 0
+    - _Tattoo1_Bleed: 0.15
+    - _Tattoo1_Flow: 0
+    - _Tattoo1_FlowSpeed: 1
+    - _Tattoo1_FlowSpeed_Ph: 0
+    - _Tattoo1_Fresh: 0
+    - _Tattoo1_Glow: 0
+    - _Tattoo1_Halftone: 0
+    - _Tattoo1_HalftoneScale: 120
+    - _Tattoo1_Hatch: 0
+    - _Tattoo1_Opacity: 1
+    - _Tattoo1_Outline: 0
+    - _Tattoo1_Rim: 0
+    - _Tattoo1_Sheen: 0
+    - _Tattoo1_UV: 0
+    - _Tattoo1_UVInk: 0
+    - _Tattoo2_Age: 0
+    - _Tattoo2_Bleed: 0.15
+    - _Tattoo2_Flow: 0
+    - _Tattoo2_FlowSpeed: 1
+    - _Tattoo2_FlowSpeed_Ph: 0
+    - _Tattoo2_Fresh: 0
+    - _Tattoo2_Glow: 0
+    - _Tattoo2_Halftone: 0
+    - _Tattoo2_HalftoneScale: 120
+    - _Tattoo2_Hatch: 0
+    - _Tattoo2_Opacity: 1
+    - _Tattoo2_Outline: 0
+    - _Tattoo2_Rim: 0
+    - _Tattoo2_Sheen: 0
+    - _Tattoo2_UV: 0
+    - _Tattoo2_UVInk: 0
+    - _Tattoo3_Age: 0
+    - _Tattoo3_Bleed: 0.15
+    - _Tattoo3_Flow: 0
+    - _Tattoo3_FlowSpeed: 1
+    - _Tattoo3_FlowSpeed_Ph: 0
+    - _Tattoo3_Fresh: 0
+    - _Tattoo3_Glow: 0
+    - _Tattoo3_Halftone: 0
+    - _Tattoo3_HalftoneScale: 120
+    - _Tattoo3_Hatch: 0
+    - _Tattoo3_Opacity: 1
+    - _Tattoo3_Outline: 0
+    - _Tattoo3_Rim: 0
+    - _Tattoo3_Sheen: 0
+    - _Tattoo3_UV: 0
+    - _Tattoo3_UVInk: 0
     - _Tess_Detail: 0.5
     - _Thick_Ch: 4
     - _Thickness: 0
     - _ToonStdSetup: 0
+    - _Toon_Mode: 0
+    - _Toon_RampOffset: 0
+    - _Toon_Smooth: 0.05
+    - _Toon_Steps: 3
+    - _Toon_Wrap: 0
     - _Touch0: 0
     - _Touch1: 0
     - _Touch2: 0
     - _Touch3: 0
+    - _TouchGlow_Emis: 0
+    - _TouchGlow_EmisBoost: 2
+    - _TouchGlow_Mode: 0
+    - _TouchGlow_PerPerson: 0
+    - _TouchGlow_Size: 1.5
+    - _TouchGlow_Spacing: 2
+    - _TouchGlow_Speed: 1
+    - _TouchGlow_Speed_Ph: 0
+    - _TouchGlow_Strength: 1
+    - _TouchGlow_Who: 0
+    - _Touch_Contacts: 0
     - _Touch_Depth: 0.04
     - _Touch_Flow: 0.4
     - _Touch_Native: 0
@@ -2093,12 +2425,16 @@ Material:
     - _UseALVortex: 0
     - _UseAOMap: 0
     - _UseAlphaMask: 0
+    - _UseAniso: 1
     - _UseAudioLink: 0
     - _UseBentNormal: 0
     - _UseBio: 0
     - _UseCarPaint: 0
+    - _UseCavLight: 1
     - _UseChroma: 0
     - _UseChronoFX: 0
+    - _UseColorTouch: 0
+    - _UseContacts: 0
     - _UseCosmos: 0
     - _UseCosmos_AL: 0
     - _UseCtx: 0
@@ -2139,26 +2475,41 @@ Material:
     - _UseMatCap5: 0
     - _UseMediaState: 0
     - _UseMetallicMap: 0
+    - _UseMicroLight: 1
+    - _UseMicroShadow: 1
     - _UseMultiScatter: 1
     - _UseNonLinearSH: 0
     - _UseNormal2: 0
     - _UseOutline: 0
     - _UseOutline2: 0
+    - _UseOutlineTouch: 0
     - _UsePackedMasks: 0
     - _UsePathing: 0
     - _UsePearl: 0
     - _UsePolish: 0
     - _UseRegionMask: 0
+    - _UseRim: 1
+    - _UseSSS: 1
     - _UseShadowMask: 0
     - _UseShardCC: 0
     - _UseSheer: 0
     - _UseSkeleton: 0
     - _UseSonar: 0
     - _UseSpectrum: 0
+    - _UseStretch: 0
     - _UseSwarm: 0
+    - _UseTattoo1: 0
+    - _UseTattoo2: 0
+    - _UseTattoo3: 0
+    - _UseTattoos: 0
+    - _UseToon: 0
     - _UseTouch: 0
+    - _UseTouchGlow: 0
+    - _UseTransmission: 1
     - _UseVRSL: 0
     - _UseVtxKinetic: 0
+    - _UseWear: 0
+    - _UseWetTouch: 0
     - _UseWorldPost: 0
     - _VRSL_Attribution: 0
     - _VRSL_ChannelMode: 3
@@ -2187,6 +2538,50 @@ Material:
     - _Vtx_Pump_Str: 0
     - _WG_Land: 0
     - _WP_Limit: 4
+    - _Wear_Amount: 0.5
+    - _Wear_Breakup: 0.6
+    - _Wear_BreakupScale: 40
+    - _Wear_Crease: 0
+    - _Wear_CreaseAngle: 90
+    - _Wear_CreaseDepth: 0.5
+    - _Wear_CreaseGloss: -0.3
+    - _Wear_CreaseHollows: 0.7
+    - _Wear_CreaseScale: 24
+    - _Wear_CurvMap_UV: 0
+    - _Wear_CurvSource: 0
+    - _Wear_Dust: 0
+    - _Wear_DustHollows: 1
+    - _Wear_DustSoft: 0.5
+    - _Wear_DustTop: 0.5
+    - _Wear_Edge: 1
+    - _Wear_EdgeFade: 0.35
+    - _Wear_EdgeFlatten: 0.5
+    - _Wear_EdgeGloss: -0.4
+    - _Wear_EdgeSharp: 0.5
+    - _Wear_EdgeWidth: 0.5
+    - _Wear_Mask_UV: 0
+    - _Wear_Scuff: 0.5
+    - _Wear_ScuffAngle: 0
+    - _Wear_ScuffDepth: 0.3
+    - _Wear_ScuffEdges: 0.5
+    - _Wear_ScuffGloss: -0.6
+    - _Wear_ScuffLength: 0.5
+    - _Wear_ScuffScale: 20
+    - _Wear_ScuffSpread: 0.5
+    - _Wear_Sensitivity: 1
+    - _WetTouch_Contacts: 1
+    - _WetTouch_DripLength: 15
+    - _WetTouch_DripSpeed: 1
+    - _WetTouch_DripSpeed_Ph: 0
+    - _WetTouch_Drips: 0
+    - _WetTouch_Hands: 0
+    - _WetTouch_Native: 0
+    - _WetTouch_RippleReach: 8
+    - _WetTouch_RippleSize: 1.2
+    - _WetTouch_RippleSpeed: 1
+    - _WetTouch_RippleSpeed_Ph: 0
+    - _WetTouch_Ripples: 0
+    - _WetTouch_Streaks: 0
     - _Wet_Amount: 0.7
     - _Wet_BorrowCh: 3
     - _Wet_BorrowInv: 0
@@ -2236,8 +2631,19 @@ Material:
     - m_end_carpaint: 0
     - m_end_chroma: 0
     - m_end_coloradjust: 0
-    - m_end_context: 0
     - m_end_cosmos: 0
+    - m_end_ctx_AL: 0
+    - m_end_ctx_Base: 0
+    - m_end_ctx_Decal: 0
+    - m_end_ctx_Emis: 0
+    - m_end_ctx_Ink: 0
+    - m_end_ctx_Matcap: 0
+    - m_end_ctx_Norm: 0
+    - m_end_ctx_Outline: 0
+    - m_end_ctx_Polish: 0
+    - m_end_ctx_Sfx: 0
+    - m_end_ctx_Shade: 0
+    - m_end_ctx_Surf: 0
     - m_end_cymatics: 0
     - m_end_dissolve: 0
     - m_end_drip: 0
@@ -2270,6 +2676,7 @@ Material:
     - m_end_hypno: 0
     - m_end_infinity: 0
     - m_end_lightcheck: 0
+    - m_end_lightdata: 0
     - m_end_lightdetail: 0
     - m_end_lighting: 0
     - m_end_lightvolumes: 0
@@ -2298,12 +2705,21 @@ Material:
     - m_end_spectrum: 0
     - m_end_stage: 0
     - m_end_stencil: 0
+    - m_end_stretch: 0
     - m_end_surf_masks: 0
     - m_end_surf_pbr: 0
     - m_end_surf_sepmaps: 0
     - m_end_surf_shape: 0
     - m_end_swarm: 0
+    - m_end_tattoos: 0
+    - m_end_toon: 0
+    - m_end_touch_color: 0
+    - m_end_touch_contacts: 0
+    - m_end_touch_glow: 0
+    - m_end_touch_outline: 0
+    - m_end_touch_wet: 0
     - m_end_udimdiscard: 0
+    - m_end_wear: 0
     - m_end_wg_motion: 0
     - m_end_worldpost: 0
     - m_matcaps: 0
@@ -2338,8 +2754,19 @@ Material:
     - m_start_carpaint: 0
     - m_start_chroma: 0
     - m_start_coloradjust: 0
-    - m_start_context: 0
     - m_start_cosmos: 0
+    - m_start_ctx_AL: 0
+    - m_start_ctx_Base: 0
+    - m_start_ctx_Decal: 0
+    - m_start_ctx_Emis: 0
+    - m_start_ctx_Ink: 0
+    - m_start_ctx_Matcap: 0
+    - m_start_ctx_Norm: 0
+    - m_start_ctx_Outline: 0
+    - m_start_ctx_Polish: 0
+    - m_start_ctx_Sfx: 0
+    - m_start_ctx_Shade: 0
+    - m_start_ctx_Surf: 0
     - m_start_cymatics: 0
     - m_start_dissolve: 0
     - m_start_drip: 0
@@ -2372,6 +2799,7 @@ Material:
     - m_start_hypno: 0
     - m_start_infinity: 0
     - m_start_lightcheck: 0
+    - m_start_lightdata: 0
     - m_start_lightdetail: 0
     - m_start_lighting: 0
     - m_start_lightvolumes: 0
@@ -2400,15 +2828,28 @@ Material:
     - m_start_spectrum: 0
     - m_start_stage: 0
     - m_start_stencil: 0
+    - m_start_stretch: 0
     - m_start_surf_masks: 0
     - m_start_surf_pbr: 0
     - m_start_surf_sepmaps: 0
     - m_start_surf_shape: 0
     - m_start_swarm: 0
+    - m_start_tattoos: 0
+    - m_start_toon: 0
+    - m_start_touch_color: 0
+    - m_start_touch_contacts: 0
+    - m_start_touch_glow: 0
+    - m_start_touch_outline: 0
+    - m_start_touch_wet: 0
     - m_start_udimdiscard: 0
+    - m_start_wear: 0
     - m_start_wg_motion: 0
     - m_start_worldpost: 0
     - m_surface: 0
+    - m_tattoos: 0
+    - m_touch: 0
+    - m_viewercontext: 0
+    - m_wear: 0
     - s_end_AlphaAngular: 0
     - s_end_AlphaDistanceFade: 0
     - s_end_AlphaDithering: 0
@@ -2452,6 +2893,68 @@ Material:
     - s_end_al_smooth: 0
     - s_end_aniso: 0
     - s_end_cavlight: 0
+    - s_end_ctx_AL_beat: 0
+    - s_end_ctx_AL_light: 0
+    - s_end_ctx_AL_look: 0
+    - s_end_ctx_AL_result: 0
+    - s_end_ctx_AL_where: 0
+    - s_end_ctx_Base_beat: 0
+    - s_end_ctx_Base_light: 0
+    - s_end_ctx_Base_look: 0
+    - s_end_ctx_Base_result: 0
+    - s_end_ctx_Base_where: 0
+    - s_end_ctx_Decal_beat: 0
+    - s_end_ctx_Decal_light: 0
+    - s_end_ctx_Decal_look: 0
+    - s_end_ctx_Decal_result: 0
+    - s_end_ctx_Decal_where: 0
+    - s_end_ctx_Emis_beat: 0
+    - s_end_ctx_Emis_light: 0
+    - s_end_ctx_Emis_look: 0
+    - s_end_ctx_Emis_result: 0
+    - s_end_ctx_Emis_where: 0
+    - s_end_ctx_Ink_beat: 0
+    - s_end_ctx_Ink_layer: 0
+    - s_end_ctx_Ink_light: 0
+    - s_end_ctx_Ink_look: 0
+    - s_end_ctx_Ink_result: 0
+    - s_end_ctx_Ink_where: 0
+    - s_end_ctx_Matcap_beat: 0
+    - s_end_ctx_Matcap_light: 0
+    - s_end_ctx_Matcap_look: 0
+    - s_end_ctx_Matcap_result: 0
+    - s_end_ctx_Matcap_where: 0
+    - s_end_ctx_Norm_beat: 0
+    - s_end_ctx_Norm_light: 0
+    - s_end_ctx_Norm_look: 0
+    - s_end_ctx_Norm_result: 0
+    - s_end_ctx_Norm_where: 0
+    - s_end_ctx_Outline_beat: 0
+    - s_end_ctx_Outline_light: 0
+    - s_end_ctx_Outline_look: 0
+    - s_end_ctx_Outline_result: 0
+    - s_end_ctx_Outline_where: 0
+    - s_end_ctx_Polish_beat: 0
+    - s_end_ctx_Polish_light: 0
+    - s_end_ctx_Polish_look: 0
+    - s_end_ctx_Polish_result: 0
+    - s_end_ctx_Polish_where: 0
+    - s_end_ctx_Sfx_beat: 0
+    - s_end_ctx_Sfx_light: 0
+    - s_end_ctx_Sfx_look: 0
+    - s_end_ctx_Sfx_reach: 0
+    - s_end_ctx_Sfx_result: 0
+    - s_end_ctx_Sfx_where: 0
+    - s_end_ctx_Shade_beat: 0
+    - s_end_ctx_Shade_light: 0
+    - s_end_ctx_Shade_look: 0
+    - s_end_ctx_Shade_result: 0
+    - s_end_ctx_Shade_where: 0
+    - s_end_ctx_Surf_beat: 0
+    - s_end_ctx_Surf_light: 0
+    - s_end_ctx_Surf_look: 0
+    - s_end_ctx_Surf_result: 0
+    - s_end_ctx_Surf_where: 0
     - s_end_decal0: 0
     - s_end_decal1: 0
     - s_end_decal2: 0
@@ -2490,6 +2993,8 @@ Material:
     - s_end_global_dft: 0
     - s_end_global_surf: 0
     - s_end_heightmap: 0
+    - s_end_lightdata_lights: 0
+    - s_end_lightdata_shadows: 0
     - s_end_lobe_glitch: 0
     - s_end_matcap1_al: 0
     - s_end_matcap1_atlas: 0
@@ -2538,6 +3043,12 @@ Material:
     - s_end_matcap5_tiling: 0
     - s_end_microlight: 0
     - s_end_microshade: 0
+    - s_end_ml_border: 0
+    - s_end_ml_bordermap: 0
+    - s_end_ml_layer1: 0
+    - s_end_ml_layer2: 0
+    - s_end_ml_layer3: 0
+    - s_end_ml_map: 0
     - s_end_path_a: 0
     - s_end_path_b: 0
     - s_end_path_g: 0
@@ -2547,6 +3058,10 @@ Material:
     - s_end_reflmask: 0
     - s_end_region: 0
     - s_end_rim: 0
+    - s_end_shade_ml: 0
+    - s_end_shade_ramp: 0
+    - s_end_shade_real: 0
+    - s_end_shade_steps: 0
     - s_end_sheer_amount: 0
     - s_end_sheer_distress: 0
     - s_end_sheer_lace: 0
@@ -2558,6 +3073,35 @@ Material:
     - s_end_specmask: 0
     - s_end_specresp: 0
     - s_end_sss: 0
+    - s_end_stretch_crease: 0
+    - s_end_stretch_look: 0
+    - s_end_tattoo1: 0
+    - s_end_tattoo1_bands: 0
+    - s_end_tattoo1_glow: 0
+    - s_end_tattoo1_line: 0
+    - s_end_tattoo1_skin: 0
+    - s_end_tattoo2: 0
+    - s_end_tattoo2_bands: 0
+    - s_end_tattoo2_glow: 0
+    - s_end_tattoo2_line: 0
+    - s_end_tattoo2_skin: 0
+    - s_end_tattoo3: 0
+    - s_end_tattoo3_bands: 0
+    - s_end_tattoo3_glow: 0
+    - s_end_tattoo3_line: 0
+    - s_end_tattoo3_skin: 0
+    - s_end_tog_CtxAL: 0
+    - s_end_tog_CtxBase: 0
+    - s_end_tog_CtxDecal: 0
+    - s_end_tog_CtxEmis: 0
+    - s_end_tog_CtxInk: 0
+    - s_end_tog_CtxMatcap: 0
+    - s_end_tog_CtxNorm: 0
+    - s_end_tog_CtxOutline: 0
+    - s_end_tog_CtxPolish: 0
+    - s_end_tog_CtxSfx: 0
+    - s_end_tog_CtxShade: 0
+    - s_end_tog_CtxSurf: 0
     - s_end_tog_Dissolve: 0
     - s_end_tog_UDIMDiscard: 0
     - s_end_tog_UseALFracture: 0
@@ -2568,8 +3112,9 @@ Material:
     - s_end_tog_UseCarPaint: 0
     - s_end_tog_UseChroma: 0
     - s_end_tog_UseChronoFX: 0
+    - s_end_tog_UseColorTouch: 0
+    - s_end_tog_UseContacts: 0
     - s_end_tog_UseCosmos: 0
-    - s_end_tog_UseCtx: 0
     - s_end_tog_UseCyber: 0
     - s_end_tog_UseCyberAuto: 0
     - s_end_tog_UseCyberCC: 0
@@ -2600,15 +3145,20 @@ Material:
     - s_end_tog_UseNormal2: 0
     - s_end_tog_UseOutline: 0
     - s_end_tog_UseOutline2: 0
+    - s_end_tog_UseOutlineTouch: 0
     - s_end_tog_UsePearl: 0
     - s_end_tog_UseShardCC: 0
     - s_end_tog_UseSkeleton: 0
     - s_end_tog_UseSonar: 0
     - s_end_tog_UseSpectrum: 0
+    - s_end_tog_UseStretch: 0
     - s_end_tog_UseSwarm: 0
+    - s_end_tog_UseToon: 0
     - s_end_tog_UseTouch: 0
+    - s_end_tog_UseTouchGlow: 0
     - s_end_tog_UseVRSL: 0
     - s_end_tog_UseVtxKinetic: 0
+    - s_end_tog_UseWetTouch: 0
     - s_end_tog_UseWorldPost: 0
     - s_end_trans: 0
     - s_end_udimface: 0
@@ -2617,6 +3167,11 @@ Material:
     - s_end_vtx_autocorr: 0
     - s_end_vtx_fracture: 0
     - s_end_vtx_pump: 0
+    - s_end_wear_crease: 0
+    - s_end_wear_dust: 0
+    - s_end_wear_edge: 0
+    - s_end_wear_scuff: 0
+    - s_end_wear_where: 0
     - s_start_AlphaAngular: 0
     - s_start_AlphaDistanceFade: 0
     - s_start_AlphaDithering: 0
@@ -2660,6 +3215,68 @@ Material:
     - s_start_al_smooth: 0
     - s_start_aniso: 0
     - s_start_cavlight: 0
+    - s_start_ctx_AL_beat: 0
+    - s_start_ctx_AL_light: 0
+    - s_start_ctx_AL_look: 0
+    - s_start_ctx_AL_result: 0
+    - s_start_ctx_AL_where: 0
+    - s_start_ctx_Base_beat: 0
+    - s_start_ctx_Base_light: 0
+    - s_start_ctx_Base_look: 0
+    - s_start_ctx_Base_result: 0
+    - s_start_ctx_Base_where: 0
+    - s_start_ctx_Decal_beat: 0
+    - s_start_ctx_Decal_light: 0
+    - s_start_ctx_Decal_look: 0
+    - s_start_ctx_Decal_result: 0
+    - s_start_ctx_Decal_where: 0
+    - s_start_ctx_Emis_beat: 0
+    - s_start_ctx_Emis_light: 0
+    - s_start_ctx_Emis_look: 0
+    - s_start_ctx_Emis_result: 0
+    - s_start_ctx_Emis_where: 0
+    - s_start_ctx_Ink_beat: 0
+    - s_start_ctx_Ink_layer: 0
+    - s_start_ctx_Ink_light: 0
+    - s_start_ctx_Ink_look: 0
+    - s_start_ctx_Ink_result: 0
+    - s_start_ctx_Ink_where: 0
+    - s_start_ctx_Matcap_beat: 0
+    - s_start_ctx_Matcap_light: 0
+    - s_start_ctx_Matcap_look: 0
+    - s_start_ctx_Matcap_result: 0
+    - s_start_ctx_Matcap_where: 0
+    - s_start_ctx_Norm_beat: 0
+    - s_start_ctx_Norm_light: 0
+    - s_start_ctx_Norm_look: 0
+    - s_start_ctx_Norm_result: 0
+    - s_start_ctx_Norm_where: 0
+    - s_start_ctx_Outline_beat: 0
+    - s_start_ctx_Outline_light: 0
+    - s_start_ctx_Outline_look: 0
+    - s_start_ctx_Outline_result: 0
+    - s_start_ctx_Outline_where: 0
+    - s_start_ctx_Polish_beat: 0
+    - s_start_ctx_Polish_light: 0
+    - s_start_ctx_Polish_look: 0
+    - s_start_ctx_Polish_result: 0
+    - s_start_ctx_Polish_where: 0
+    - s_start_ctx_Sfx_beat: 0
+    - s_start_ctx_Sfx_light: 0
+    - s_start_ctx_Sfx_look: 0
+    - s_start_ctx_Sfx_reach: 0
+    - s_start_ctx_Sfx_result: 0
+    - s_start_ctx_Sfx_where: 0
+    - s_start_ctx_Shade_beat: 0
+    - s_start_ctx_Shade_light: 0
+    - s_start_ctx_Shade_look: 0
+    - s_start_ctx_Shade_result: 0
+    - s_start_ctx_Shade_where: 0
+    - s_start_ctx_Surf_beat: 0
+    - s_start_ctx_Surf_light: 0
+    - s_start_ctx_Surf_look: 0
+    - s_start_ctx_Surf_result: 0
+    - s_start_ctx_Surf_where: 0
     - s_start_decal0: 0
     - s_start_decal1: 0
     - s_start_decal2: 0
@@ -2698,6 +3315,8 @@ Material:
     - s_start_global_dft: 0
     - s_start_global_surf: 0
     - s_start_heightmap: 0
+    - s_start_lightdata_lights: 0
+    - s_start_lightdata_shadows: 0
     - s_start_lobe_glitch: 0
     - s_start_matcap1_al: 0
     - s_start_matcap1_atlas: 0
@@ -2746,6 +3365,12 @@ Material:
     - s_start_matcap5_tiling: 0
     - s_start_microlight: 0
     - s_start_microshade: 0
+    - s_start_ml_border: 0
+    - s_start_ml_bordermap: 0
+    - s_start_ml_layer1: 0
+    - s_start_ml_layer2: 0
+    - s_start_ml_layer3: 0
+    - s_start_ml_map: 0
     - s_start_path_a: 0
     - s_start_path_b: 0
     - s_start_path_g: 0
@@ -2755,6 +3380,10 @@ Material:
     - s_start_reflmask: 0
     - s_start_region: 0
     - s_start_rim: 0
+    - s_start_shade_ml: 0
+    - s_start_shade_ramp: 0
+    - s_start_shade_real: 0
+    - s_start_shade_steps: 0
     - s_start_sheer_amount: 0
     - s_start_sheer_distress: 0
     - s_start_sheer_lace: 0
@@ -2766,6 +3395,35 @@ Material:
     - s_start_specmask: 0
     - s_start_specresp: 0
     - s_start_sss: 0
+    - s_start_stretch_crease: 0
+    - s_start_stretch_look: 0
+    - s_start_tattoo1: 0
+    - s_start_tattoo1_bands: 0
+    - s_start_tattoo1_glow: 0
+    - s_start_tattoo1_line: 0
+    - s_start_tattoo1_skin: 0
+    - s_start_tattoo2: 0
+    - s_start_tattoo2_bands: 0
+    - s_start_tattoo2_glow: 0
+    - s_start_tattoo2_line: 0
+    - s_start_tattoo2_skin: 0
+    - s_start_tattoo3: 0
+    - s_start_tattoo3_bands: 0
+    - s_start_tattoo3_glow: 0
+    - s_start_tattoo3_line: 0
+    - s_start_tattoo3_skin: 0
+    - s_start_tog_CtxAL: 0
+    - s_start_tog_CtxBase: 0
+    - s_start_tog_CtxDecal: 0
+    - s_start_tog_CtxEmis: 0
+    - s_start_tog_CtxInk: 0
+    - s_start_tog_CtxMatcap: 0
+    - s_start_tog_CtxNorm: 0
+    - s_start_tog_CtxOutline: 0
+    - s_start_tog_CtxPolish: 0
+    - s_start_tog_CtxSfx: 0
+    - s_start_tog_CtxShade: 0
+    - s_start_tog_CtxSurf: 0
     - s_start_tog_Dissolve: 0
     - s_start_tog_UDIMDiscard: 0
     - s_start_tog_UseALFracture: 0
@@ -2776,8 +3434,9 @@ Material:
     - s_start_tog_UseCarPaint: 0
     - s_start_tog_UseChroma: 0
     - s_start_tog_UseChronoFX: 0
+    - s_start_tog_UseColorTouch: 0
+    - s_start_tog_UseContacts: 0
     - s_start_tog_UseCosmos: 0
-    - s_start_tog_UseCtx: 0
     - s_start_tog_UseCyber: 0
     - s_start_tog_UseCyberAuto: 0
     - s_start_tog_UseCyberCC: 0
@@ -2808,15 +3467,20 @@ Material:
     - s_start_tog_UseNormal2: 0
     - s_start_tog_UseOutline: 0
     - s_start_tog_UseOutline2: 0
+    - s_start_tog_UseOutlineTouch: 0
     - s_start_tog_UsePearl: 0
     - s_start_tog_UseShardCC: 0
     - s_start_tog_UseSkeleton: 0
     - s_start_tog_UseSonar: 0
     - s_start_tog_UseSpectrum: 0
+    - s_start_tog_UseStretch: 0
     - s_start_tog_UseSwarm: 0
+    - s_start_tog_UseToon: 0
     - s_start_tog_UseTouch: 0
+    - s_start_tog_UseTouchGlow: 0
     - s_start_tog_UseVRSL: 0
     - s_start_tog_UseVtxKinetic: 0
+    - s_start_tog_UseWetTouch: 0
     - s_start_tog_UseWorldPost: 0
     - s_start_trans: 0
     - s_start_udimface: 0
@@ -2825,6 +3489,11 @@ Material:
     - s_start_vtx_autocorr: 0
     - s_start_vtx_fracture: 0
     - s_start_vtx_pump: 0
+    - s_start_wear_crease: 0
+    - s_start_wear_dust: 0
+    - s_start_wear_edge: 0
+    - s_start_wear_scuff: 0
+    - s_start_wear_where: 0
     - shader_is_using_vixforge_editor: 0
     - shader_master_label: 0
     m_Colors:
@@ -2895,10 +3564,86 @@ Material:
     - _CenterOutDissolveDirection: {r: 0, g: 0, b: 1, a: 0}
     - _Chroma_UV: {r: 0, g: 0, b: 1, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _ColorTouch_Tint: {r: 1, g: 0.54999995, b: 0.6, a: 1}
     - _ContinuousDissolveRange: {r: 0, g: 1, b: 0, a: 1}
     - _Cosmos_AL_Flare: {r: 1, g: 0.6, b: 0.2, a: 1}
     - _Cosmos_ColA: {r: 0.15, g: 0, b: 0.45, a: 1}
     - _Cosmos_ColB: {r: 0.25, g: 0.9, b: 1, a: 1}
+    - _CtxALBeat: {r: 0, g: 0.4, b: 0.2, a: 0}
+    - _CtxALDark: {r: 0, g: 0.05, b: 0.5, a: 0}
+    - _CtxALDist: {r: 0.5, g: 3, b: 0, a: 0}
+    - _CtxALLight: {r: 0, g: 20, b: 0.05, a: 0.5}
+    - _CtxALLightCol: {r: 0.54999995, g: 0.14999998, b: 1, a: 1}
+    - _CtxALTorch: {r: 0, g: 12, b: 0.5, a: 0}
+    - _CtxBaseBeat: {r: 0, g: 0.4, b: 0.2, a: 0}
+    - _CtxBaseDark: {r: 0, g: 0.05, b: 0.5, a: 0}
+    - _CtxBaseDist: {r: 0.5, g: 3, b: 0, a: 0}
+    - _CtxBaseLight: {r: 0, g: 20, b: 0.05, a: 0.5}
+    - _CtxBaseLightCol: {r: 0.54999995, g: 0.14999998, b: 1, a: 1}
+    - _CtxBaseTorch: {r: 0, g: 12, b: 0.5, a: 0}
+    - _CtxDecalBeat: {r: 0, g: 0.4, b: 0.2, a: 0}
+    - _CtxDecalDark: {r: 0, g: 0.05, b: 0.5, a: 0}
+    - _CtxDecalDist: {r: 0.5, g: 3, b: 0, a: 0}
+    - _CtxDecalGlow: {r: 0, g: 0, b: 0, a: 1}
+    - _CtxDecalLight: {r: 0, g: 20, b: 0.05, a: 0.5}
+    - _CtxDecalLightCol: {r: 0.54999995, g: 0.14999998, b: 1, a: 1}
+    - _CtxDecalTorch: {r: 0, g: 12, b: 0.5, a: 0}
+    - _CtxEmisBeat: {r: 0, g: 0.4, b: 0.2, a: 0}
+    - _CtxEmisDark: {r: 0, g: 0.05, b: 0.5, a: 0}
+    - _CtxEmisDist: {r: 0.5, g: 3, b: 0, a: 0}
+    - _CtxEmisGlow: {r: 0, g: 0, b: 0, a: 1}
+    - _CtxEmisLight: {r: 0, g: 20, b: 0.05, a: 0.5}
+    - _CtxEmisLightCol: {r: 0.54999995, g: 0.14999998, b: 1, a: 1}
+    - _CtxEmisTorch: {r: 0, g: 12, b: 0.5, a: 0}
+    - _CtxInkBeat: {r: 0, g: 0.4, b: 0.2, a: 0}
+    - _CtxInkColor: {r: 0.2, g: 1, b: 0.6, a: 1}
+    - _CtxInkDark: {r: 0, g: 0.05, b: 0.5, a: 0}
+    - _CtxInkDist: {r: 0.5, g: 3, b: 0, a: 0}
+    - _CtxInkLight: {r: 1, g: 25, b: 0.02, a: 0.5}
+    - _CtxInkLightCol: {r: 0.54999995, g: 0.14999998, b: 1, a: 1}
+    - _CtxInkTorch: {r: 0, g: 12, b: 0.5, a: 0}
+    - _CtxMatcapBeat: {r: 0, g: 0.4, b: 0.2, a: 0}
+    - _CtxMatcapDark: {r: 0, g: 0.05, b: 0.5, a: 0}
+    - _CtxMatcapDist: {r: 0.5, g: 3, b: 0, a: 0}
+    - _CtxMatcapLight: {r: 0, g: 20, b: 0.05, a: 0.5}
+    - _CtxMatcapLightCol: {r: 0.54999995, g: 0.14999998, b: 1, a: 1}
+    - _CtxMatcapTorch: {r: 0, g: 12, b: 0.5, a: 0}
+    - _CtxNormBeat: {r: 0, g: 0.4, b: 0.2, a: 0}
+    - _CtxNormDark: {r: 0, g: 0.05, b: 0.5, a: 0}
+    - _CtxNormDist: {r: 0.5, g: 3, b: 0, a: 0}
+    - _CtxNormLight: {r: 0, g: 20, b: 0.05, a: 0.5}
+    - _CtxNormLightCol: {r: 0.54999995, g: 0.14999998, b: 1, a: 1}
+    - _CtxNormTorch: {r: 0, g: 12, b: 0.5, a: 0}
+    - _CtxOutlineBeat: {r: 0, g: 0.4, b: 0.2, a: 0}
+    - _CtxOutlineDark: {r: 0, g: 0.05, b: 0.5, a: 0}
+    - _CtxOutlineDist: {r: 0.5, g: 3, b: 0, a: 0}
+    - _CtxOutlineLight: {r: 0, g: 20, b: 0.05, a: 0.5}
+    - _CtxOutlineLightCol: {r: 0.54999995, g: 0.14999998, b: 1, a: 1}
+    - _CtxOutlineTorch: {r: 0, g: 12, b: 0.5, a: 0}
+    - _CtxPolishBeat: {r: 0, g: 0.4, b: 0.2, a: 0}
+    - _CtxPolishDark: {r: 0, g: 0.05, b: 0.5, a: 0}
+    - _CtxPolishDist: {r: 0.5, g: 3, b: 0, a: 0}
+    - _CtxPolishLight: {r: 0, g: 20, b: 0.05, a: 0.5}
+    - _CtxPolishLightCol: {r: 0.54999995, g: 0.14999998, b: 1, a: 1}
+    - _CtxPolishTorch: {r: 0, g: 12, b: 0.5, a: 0}
+    - _CtxSfxBeat: {r: 0, g: 0.4, b: 0.2, a: 0}
+    - _CtxSfxDark: {r: 0, g: 0.05, b: 0.5, a: 0}
+    - _CtxSfxDist: {r: 0.5, g: 3, b: 0, a: 0}
+    - _CtxSfxLight: {r: 0, g: 20, b: 0.05, a: 0.5}
+    - _CtxSfxLightCol: {r: 0.54999995, g: 0.14999998, b: 1, a: 1}
+    - _CtxSfxTorch: {r: 0, g: 12, b: 0.5, a: 0}
+    - _CtxShadeBeat: {r: 0, g: 0.4, b: 0.2, a: 0}
+    - _CtxShadeDark: {r: 0, g: 0.05, b: 0.5, a: 0}
+    - _CtxShadeDist: {r: 0.5, g: 3, b: 0, a: 0}
+    - _CtxShadeLight: {r: 0, g: 20, b: 0.05, a: 0.5}
+    - _CtxShadeLightCol: {r: 0.54999995, g: 0.14999998, b: 1, a: 1}
+    - _CtxShadeTorch: {r: 0, g: 12, b: 0.5, a: 0}
+    - _CtxSurfBeat: {r: 0, g: 0.4, b: 0.2, a: 0}
+    - _CtxSurfDark: {r: 0, g: 0.05, b: 0.5, a: 0}
+    - _CtxSurfDist: {r: 0.5, g: 3, b: 0, a: 0}
+    - _CtxSurfLight: {r: 0, g: 20, b: 0.05, a: 0.5}
+    - _CtxSurfLightCol: {r: 0.54999995, g: 0.14999998, b: 1, a: 1}
+    - _CtxSurfTorch: {r: 0, g: 12, b: 0.5, a: 0}
     - _Ctx_Glow: {r: 0, g: 0, b: 0, a: 1}
     - _Cyber_Auto_Transform: {r: 0, g: 0, b: 1, a: 0}
     - _Cyber_CC_Transform: {r: 0, g: 0, b: 1, a: 0}
@@ -3183,6 +3928,7 @@ Material:
     - _OutlineScroll: {r: 0, g: 0, b: 0, a: 0}
     - _OutlineScroll_Ph: {r: 0, g: 0, b: 0, a: 0}
     - _OutlineSphPivot: {r: 0, g: 0, b: 0, a: 0}
+    - _OutlineTouch_Color: {r: 1, g: 0.4, b: 0.8, a: 1}
     - _PathA_Color: {r: 1, g: 1, b: 1, a: 1}
     - _PathB_Color: {r: 1, g: 1, b: 1, a: 1}
     - _PathG_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -3204,6 +3950,12 @@ Material:
     - _Region_B_Tint: {r: 1, g: 1, b: 1, a: 1}
     - _Region_G_Tint: {r: 1, g: 1, b: 1, a: 1}
     - _Region_R_Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _Shadow2ndColor: {r: 0.68, g: 0.65999997, b: 0.78999996, a: 1}
+    - _Shadow3rdColor: {r: 0, g: 0, b: 0, a: 0}
+    - _ShadowAOShift: {r: 0, g: 1, b: 0, a: 1}
+    - _ShadowAOShift2: {r: 0, g: 1, b: 0, a: 1}
+    - _ShadowBorderColor: {r: 1, g: 0.09999997, b: 0, a: 1}
+    - _ShadowColor: {r: 0.82, g: 0.76, b: 0.85, a: 1}
     - _Sheer_EyeletColor: {r: 0.75, g: 0.7, b: 0.6, a: 1}
     - _Sheer_LaceColor: {r: 1, g: 1, b: 1, a: 1}
     - _Sheer_PrintColorA: {r: 0.85, g: 0.82, b: 0.75, a: 1}
@@ -3221,11 +3973,42 @@ Material:
     - _Spec_Color: {r: 1, g: 0.4, b: 0.8, a: 1}
     - _Spec_UV: {r: 0, g: 0, b: 1, a: 0}
     - _SphericalDissolveCenter: {r: 0, g: 0, b: 0, a: 0}
+    - _Stretch_Color: {r: 1, g: 0.9, b: 0.85, a: 1}
+    - _Stretch_Range: {r: 1.15, g: 2.4, b: 0, a: 0}
+    - _Stretch_Squash: {r: 0.9, g: 0.55, b: 0, a: 0}
+    - _Stretch_WrinkleSet: {r: 180, g: 0.6, b: 0.5, a: 0}
     - _Swarm_UV: {r: 0, g: 0, b: 1, a: 0}
+    - _Tattoo1_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Tattoo1_FlowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Tattoo1_GlowColor: {r: 0.2, g: 1, b: 0.8, a: 1}
+    - _Tattoo1_OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Tattoo1_SheenColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Tattoo1_SheenSet: {r: 0.85, g: 0.05, b: 0, a: 0}
+    - _Tattoo1_UVKey: {r: 0.5, g: 0.09999997, b: 1, a: 1}
+    - _Tattoo2_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Tattoo2_FlowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Tattoo2_GlowColor: {r: 0.2, g: 1, b: 0.8, a: 1}
+    - _Tattoo2_OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Tattoo2_SheenColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Tattoo2_SheenSet: {r: 0.85, g: 0.05, b: 0, a: 0}
+    - _Tattoo2_UVKey: {r: 0.5, g: 0.09999997, b: 1, a: 1}
+    - _Tattoo3_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Tattoo3_FlowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Tattoo3_GlowColor: {r: 0.2, g: 1, b: 0.8, a: 1}
+    - _Tattoo3_OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Tattoo3_SheenColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Tattoo3_SheenSet: {r: 0.85, g: 0.05, b: 0, a: 0}
+    - _Tattoo3_UVKey: {r: 0.5, g: 0.09999997, b: 1, a: 1}
+    - _TouchGlow_Color: {r: 1, g: 0.4, b: 0.8, a: 1}
     - _Touch_NativeCtl: {r: 0.8, g: 3, b: 1.5, a: 1}
     - _Vtx_Fracture_Drop: {r: 0, g: 0.85, b: 0.5, a: 0.1}
     - _Vtx_Pump_EQ: {r: 0, g: 0, b: 1.7, a: 1}
     - _WG_Motion: {r: 0, g: 0, b: 0, a: 0}
     - _WG_Velocity: {r: 0, g: 0, b: 0, a: 0}
+    - _Wear_CreaseColor: {r: 1, g: 1, b: 1, a: 0.25}
+    - _Wear_DustColor: {r: 0.62, g: 0.56999993, b: 0.5, a: 1}
+    - _Wear_EdgeColor: {r: 1, g: 1, b: 1, a: 0}
+    - _Wear_ScuffColor: {r: 0.85, g: 0.85, b: 0.85, a: 0.6}
+    - _WetTouch_NativeCtl: {r: 0.8, g: 3, b: 1.5, a: 1}
     - _Wet_Glint: {r: 0, g: 60, b: 0.3, a: 0.5}
   m_BuildTextureStacks: []

@@ -719,6 +719,7 @@ namespace VixForgeEditor
             _doReloadNextDraw = true;
             _didSwapToShader = true;
             SetShader(newShader, oldShader);
+            MaterialHelper.KeepFallbackPastUndoRecordedSwap(material);
         }
 
         private const double DRAG_PASS_VALVE_SECONDS = 0.05;

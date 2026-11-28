@@ -159,6 +159,8 @@ namespace VixForge
         [UdonSynced] private float _netDirectorMultiplier = 2f;
         [UdonSynced] private float _netDirectorTrailBeats = 1f;
         [UdonSynced] private float _netDirectorMaxBPM = 200f;
+        [UdonSynced] private int[] _grantedPlayerIds = new int[0];
+        private int[] _seenGrants;
 #endif
 
         // Listener registry.
@@ -173,6 +175,7 @@ namespace VixForge
         private const string EVENT_DROP = "_OnVixForgeDrop";
         private const string EVENT_SECTION = "_OnVixForgeSectionChange";
         private const string EVENT_STATE = "_OnVixForgeStateChanged";
+        private const string EVENT_ACCESS = "_OnVixForgeAccessChanged";
         private const float BeatSensitivity = 1.30f;  // short energy must exceed long energy by this factor
         private const float MinBeatInterval = 0.18f;  // baseline >330 BPM double-trigger guard
         private const float MaxBeatInterval = 1.20f;  // ignore gaps longer than this for tempo tracking
@@ -245,6 +248,7 @@ namespace VixForge
         {
             EnsureDirectorInitialized();
             SetDirectorSuppression(_autoDirectorMode);
+            StartDMX();
 
 #if UDONSHARP
         // Owner seeds the synced state for late joiners
@@ -262,12 +266,16 @@ namespace VixForge
 
         void Update()
         {
+            UpdateDMX();
             bool analysing = enableAnalysis || _autoDirectorMode;
             UpdateReadback(analysing);
 
             // Director disabled?
             if (!analysing)
+            {
+                PublishMusicClock(false);
                 return;
+            }
 
             // Resolve audio source (raw speaker first, AudioLink fallback)
             AudioSource src = overrideAudioSource != null
@@ -275,7 +283,10 @@ namespace VixForge
                 : (audioLink != null ? audioLink.audioSource : null);
 
             if (src == null || !src.isPlaying)
+            {
+                PublishMusicClock(false);
                 return;
+            }
 
             EnsureDirectorInitialized();
 
@@ -289,6 +300,7 @@ namespace VixForge
 
             // 3. Drop + Section (modernized)
             DetectDropsAndSections();
+            UpdateDMXScene(dt);
 
             // 4. Auto‑Director → AudioLink (unchanged logic)
             if (_autoDirectorMode)
@@ -307,6 +319,8 @@ namespace VixForge
                         $"buildup {buildup:F2}, BPM {bpm:F1}");
                 }
             }
+
+            PublishMusicClock(true);
         }
 
 #if UDONSHARP
@@ -314,6 +328,7 @@ namespace VixForge
         {
             // Mirror the owner's synced state
             ApplyDirectorStateFromNetwork();
+            if (!directorSyncedExternally) NoteGrantsChanged();
         }
 #endif
 
@@ -557,6 +572,7 @@ namespace VixForge
 
                 _timeSinceBeat = 0f;
                 DispatchDirectorEvent(EVENT_BEAT);
+                NoteDMXBeat();
             }
 
             // 4. Beat pulse decay
@@ -593,6 +609,7 @@ namespace VixForge
                 drop = 1f;
                 _dropCooldown = Mathf.Max(0.5f, DropCooldownTime * 0.6f);  // faster cooldown
                 DispatchDirectorEvent(EVENT_DROP);
+                NoteDMXDrop();
             }
 
             // Faster decay for punchier drops
@@ -610,6 +627,7 @@ namespace VixForge
                 _sectionLevel = _energyLong;
                 _sectionCooldown = Mathf.Max(2f, SectionCooldownTime * 0.5f); // faster section changes
                 DispatchDirectorEvent(EVENT_SECTION);
+                NoteDMXSection();
             }
         }
 
@@ -893,33 +911,147 @@ namespace VixForge
 
         public bool LocalPlayerCanControlDirector()
         {
+            if (LocalPlayerCanManageAccess()) return true;
+#if UDONSHARP
+            VRCPlayerApi lp = Networking.LocalPlayer;
+            return lp != null && lp.IsValid() && IsPlayerGranted(lp.playerId);
+#else
+            return true;
+#endif
+        }
+
+        public bool LocalPlayerCanManageAccess()
+        {
 #if UDONSHARP
             if (directorControlAccess == DirectorControlAccess.EVERYONE) return true;
 
             VRCPlayerApi lp = Networking.LocalPlayer;
             if (lp == null || !lp.IsValid()) return true; // no networked player yet - don't lock out
-
-            // Allowlist is additive: a named player can always control, whatever the base access mode.
-            if (directorControlAllowlist != null)
-            {
-                string localName = lp.displayName;
-                for (int i = 0; i < directorControlAllowlist.Length; i++)
-                    if (directorControlAllowlist[i] == localName) return true;
-            }
-
-            if (directorControlAccess == DirectorControlAccess.MASTER_ONLY)
-                return lp.isMaster;
-            if (directorControlAccess == DirectorControlAccess.INSTANCE_OWNER_ONLY)
-                return lp.isInstanceOwner;
-            if (directorControlAccess == DirectorControlAccess.MASTER_OR_INSTANCE_OWNER)
-                return lp.isMaster || lp.isInstanceOwner;
-
-            // ALLOWLIST_ONLY: only the allowlist (checked above) grants access.
-            return false;
+            return PlayerHasBaseAccess(lp);
 #else
             return true;
 #endif
         }
+
+#if UDONSHARP
+        public bool PlayerHasBaseAccess(VRCPlayerApi player)
+        {
+            if (directorControlAccess == DirectorControlAccess.EVERYONE) return true;
+            if (player == null || !player.IsValid()) return false;
+
+            // Allowlist is additive: a named player can always control, whatever the base access mode.
+            if (directorControlAllowlist != null)
+            {
+                string name = player.displayName;
+                for (int i = 0; i < directorControlAllowlist.Length; i++)
+                    if (directorControlAllowlist[i] == name) return true;
+            }
+
+            if (directorControlAccess == DirectorControlAccess.MASTER_ONLY)
+                return player.isMaster;
+            if (directorControlAccess == DirectorControlAccess.INSTANCE_OWNER_ONLY)
+                return player.isInstanceOwner;
+            if (directorControlAccess == DirectorControlAccess.MASTER_OR_INSTANCE_OWNER)
+                return player.isMaster || player.isInstanceOwner;
+
+            // ALLOWLIST_ONLY: only the allowlist (checked above) grants access.
+            return false;
+        }
+
+        public bool PlayerCanControlDirector(VRCPlayerApi player)
+        {
+            if (PlayerHasBaseAccess(player)) return true;
+            return player != null && player.IsValid() && IsPlayerGranted(player.playerId);
+        }
+
+        public bool IsPlayerGranted(int playerId)
+        {
+            if (_grantedPlayerIds == null) return false;
+            for (int i = 0; i < _grantedPlayerIds.Length; i++)
+                if (_grantedPlayerIds[i] == playerId) return true;
+            return false;
+        }
+
+        public int[] GetGrantedPlayerIds()
+        {
+            return _grantedPlayerIds;
+        }
+
+        public void GrantDirectorControl(int playerId)
+        {
+            if (directorSyncedExternally || playerId < 0 || IsPlayerGranted(playerId)) return;
+            if (!LocalPlayerCanManageAccess())
+            {
+                if (directorDebug)
+                    DebugLogToFile("[VixForge] Grant denied: only players with Director Control Access can hand out control.");
+                return;
+            }
+            int count = _grantedPlayerIds == null ? 0 : _grantedPlayerIds.Length;
+            int[] next = new int[count + 1];
+            for (int i = 0; i < count; i++) next[i] = _grantedPlayerIds[i];
+            next[count] = playerId;
+            WriteGrants(next);
+        }
+
+        public void RevokeDirectorControl(int playerId)
+        {
+            if (directorSyncedExternally || !IsPlayerGranted(playerId)) return;
+            if (!LocalPlayerCanManageAccess())
+            {
+                if (directorDebug)
+                    DebugLogToFile("[VixForge] Revoke denied: only players with Director Control Access can take control back.");
+                return;
+            }
+            WriteGrants(GrantsWithout(playerId));
+        }
+
+        private int[] GrantsWithout(int playerId)
+        {
+            int keep = 0;
+            for (int i = 0; i < _grantedPlayerIds.Length; i++)
+                if (_grantedPlayerIds[i] != playerId) keep++;
+            int[] next = new int[keep];
+            int w = 0;
+            for (int i = 0; i < _grantedPlayerIds.Length; i++)
+            {
+                if (_grantedPlayerIds[i] == playerId) continue;
+                next[w] = _grantedPlayerIds[i];
+                w++;
+            }
+            return next;
+        }
+
+        private void WriteGrants(int[] next)
+        {
+            if (!Networking.IsOwner(gameObject))
+                Networking.SetOwner(Networking.LocalPlayer, gameObject);
+            _grantedPlayerIds = next;
+            RequestSerialization();
+            NoteGrantsChanged();
+        }
+
+        private void NoteGrantsChanged()
+        {
+            int count = _grantedPlayerIds == null ? 0 : _grantedPlayerIds.Length;
+            bool same = _seenGrants != null && _seenGrants.Length == count;
+            for (int i = 0; same && i < count; i++)
+                if (_seenGrants[i] != _grantedPlayerIds[i]) same = false;
+            if (same) return;
+
+            _seenGrants = new int[count];
+            for (int i = 0; i < count; i++) _seenGrants[i] = _grantedPlayerIds[i];
+            DispatchDirectorEvent(EVENT_ACCESS);
+        }
+
+        public override void OnPlayerLeft(VRCPlayerApi player)
+        {
+            if (directorSyncedExternally || player == null || !Networking.IsOwner(gameObject)) return;
+            if (!IsPlayerGranted(player.playerId)) return;
+            _grantedPlayerIds = GrantsWithout(player.playerId);
+            RequestSerialization();
+            NoteGrantsChanged();
+        }
+#endif
 
         private bool DirectorControlAllowed()
         {
@@ -931,6 +1063,19 @@ namespace VixForge
             if (directorDebug)
                 DebugLogToFile("[VixForge] Auto-Director control denied: local player lacks permission.");
             return false;
+        }
+
+        private bool RejectNetworkCall()
+        {
+#if UDONSHARP
+            if (directorSyncedExternally) return false;
+            if (!VRC.SDK3.UdonNetworkCalling.NetworkCalling.InNetworkCall) return false;
+            if (directorDebug)
+                DebugLogToFile("[VixForge] Ignored a control call that arrived over the network.");
+            return true;
+#else
+            return false;
+#endif
         }
 
         /// <summary>Enable or disable the Auto-Director. Takes ownership and syncs to all players.</summary>
@@ -985,6 +1130,7 @@ namespace VixForge
 
         public void ApplyDirectorParams()
         {
+            if (RejectNetworkCall()) return;
             if (!DirectorControlAllowed()) return;
             autoDirectorSpeed = Mathf.Clamp(autoDirectorSpeed, 0.1f, 20f);
             autoDirectorMultiplier = Mathf.Clamp(autoDirectorMultiplier, 0.1f, 10f);
@@ -1030,19 +1176,20 @@ namespace VixForge
 #endif
 
         // Parameterless Udon event endpoints (wire these to VRC UI buttons via SendCustomEvent).
-        public void EnableAutoDirector() { SetAutoDirectorMode(true); }
-        public void DisableAutoDirector() { SetAutoDirectorMode(false); }
-        public void ToggleAutoDirector() { SetAutoDirectorMode(!_autoDirectorMode); }
+        public void EnableAutoDirector() { if (RejectNetworkCall()) return; SetAutoDirectorMode(true); }
+        public void DisableAutoDirector() { if (RejectNetworkCall()) return; SetAutoDirectorMode(false); }
+        public void ToggleAutoDirector() { if (RejectNetworkCall()) return; SetAutoDirectorMode(!_autoDirectorMode); }
 
         // Aliases kept for compatibility with the earlier naming.
-        public void EnableAutoDirectorMode() { SetAutoDirectorMode(true); }
-        public void DisableAutoDirectorMode() { SetAutoDirectorMode(false); }
-        public void ToggleAutoDirectorMode() { SetAutoDirectorMode(!_autoDirectorMode); }
+        public void EnableAutoDirectorMode() { if (RejectNetworkCall()) return; SetAutoDirectorMode(true); }
+        public void DisableAutoDirectorMode() { if (RejectNetworkCall()) return; SetAutoDirectorMode(false); }
+        public void ToggleAutoDirectorMode() { if (RejectNetworkCall()) return; SetAutoDirectorMode(!_autoDirectorMode); }
 
         [HideInInspector] public bool directorEnabledInput;
 
         public void ApplyDirectorToggle()
         {
+            if (RejectNetworkCall()) return;
             if (directorSyncedExternally)
                 ApplyDirectorEnabledLocal(directorEnabledInput); // External framework owns sync
             else
@@ -1051,6 +1198,7 @@ namespace VixForge
 
         public void ApplyDirectorParamsLocal()
         {
+            if (RejectNetworkCall()) return;
             // 1. Sanitize the raw inputs injected by the external UI's "Set Floats"
             autoDirectorSpeed = Mathf.Clamp(autoDirectorSpeed, 0.1f, 20f);
             autoDirectorMultiplier = Mathf.Clamp(autoDirectorMultiplier, 0.1f, 10f);
@@ -1065,6 +1213,7 @@ namespace VixForge
 
         public void ApplyDirectorToggleLocal()
         {
+            if (RejectNetworkCall()) return;
             ApplyDirectorToggle();
         }
 

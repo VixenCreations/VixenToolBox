@@ -84,6 +84,7 @@ The inspector is a stack of sections. Click a header to open it, and right-click
 | **NORMAL MAPS** | Normal map and the micro detail layer |
 | **SURFACE** | Packed PBR map and its channel pickers, parallax, displacement, Stretch Response on the avatar shaders |
 | **SHADING** | The lighting model and every world-lighting integration, grouped below |
+| ↳ Shading Options | Stylised shading: cel steps, a ramp, soft, hard, realistic, or Multilayer Math with up to three coloured shadow layers |
 | ↳ Light Data | Which of a world's extra lights reach you, their shadows and cookies, and a light for mirrors, on the avatar shaders |
 | ↳ Lighting | Rim, subsurface, transmission, anisotropy, and the realism refinements |
 | ↳ Shadow Detail | Occlusion and baked shadow maps |
@@ -91,11 +92,13 @@ The inspector is a stack of sections. Click a header to open it, and right-click
 | ↳ LTCGI V2 | World area lights |
 | ↳ Stage Lighting & VRSL | Stage takeover and the GI wash |
 | **DECALS** | Up to four logos, stickers or tattoos, dragged into place in the Scene view |
+| **TATTOOS** | Up to three tattoos that sit in the surface like real ink, with toon highlights, glow and comic linework (Toon and Fur Pro) |
+| **WEAR** | Rubbed edges, scuffs, creases and dust, so the material looks worn in (Latex Ultra and Clothing Pro) |
 | **POLISH** | The shine layer: clearcoat and thin film |
 | **SPECIAL EFFECTS** | The extra effect layers, grouped below |
 | ↳ Wet Effects | Soaked look, running streaks, and 3D droplets (Latex Ultra and World Surface) |
 | ↳ Goo Effects | Melting sag and tendrils (Latex Ultra and World Surface) |
-| ↳ Glitter | Procedural sparkling flakes, up to five layers, in any shape you like |
+| ↳ Glitter | Procedural sparkling flakes, up to five layers, in any shape you like, in the material or floating above it |
 | ↳ Flipbook | An animated overlay baked from a GIF or a set of images |
 | ↳ Infinity Mirror | Glass over a receding tunnel of lights that shifts as you move |
 | ↳ Chromatic Bloom | The twelve notes laid across the material, each lighting as it plays (needs AudioLink) |
@@ -113,7 +116,7 @@ The inspector is a stack of sections. Click a header to open it, and right-click
 | **RENDERING** | Blend, stencil and render-state overrides |
 | **DEBUG TOOLS** | Views of the light reaching you and of any broken pixels |
 
-Every shader has these unless the row says otherwise, and yours adds a few groups of its own: shading styles on every shader but Latex Ultra, a **TATTOOS** section on Toon, Fabric on Clothing Pro and the world shaders, Gemstones on Clothing Pro, Real Fur on Clothing Pro, Fur Pro and World Fur, Sheer & Lace on Latex Ultra and Clothing Pro, Eyes on Latex Ultra and Toon, Hypno on Latex Ultra, and Baked Lighting, Triplanar Projection and Tiling Breakup on the world shaders. Open your shader's page for those.
+Every shader has these unless the row says otherwise, and yours adds a few groups of its own: Fabric on Clothing Pro and the world shaders, Gemstones on Clothing Pro, Real Fur on Clothing Pro, Fur Pro and World Fur, Sheer & Lace on Latex Ultra and Clothing Pro, Eyes on Latex Ultra and Toon, Hypno on Latex Ultra, and Baked Lighting, Triplanar Projection and Tiling Breakup on the world shaders. Open your shader's page for those.
 
 **Light Volumes and LTCGI start switched off.** They are the two most expensive features here and they make Unity builds a lot slower, so turn them on only if your world uses them.
 
@@ -270,7 +273,7 @@ Every tool lives in the Shader Hub. Open **VixenTools > Shader Hub** and pick th
 | Tool | What It Does |
 | --- | --- |
 | **Movement Setup** | Feeds how you move to your materials: the Movement group of Wet and Goo on Latex Ultra, and **Velocity Smear** on the outlines of every shader. Pick the avatar and its FX controller, then press **Build Layers**. |
-| **Hypno Setup** | Attaches Latex Ultra's Hypno to your avatar: an anchor at your eyes, its own material and a **Hypno** toggle in your menu. Pick the avatar, then press **Attach Hypno**. Needs a Humanoid rig, or pick the head bone yourself. |
+| **Hypno Setup** | Attaches Latex Ultra's Hypno to your avatar: an anchor at your eyes, its own material and a **Hypno** toggle in your menu, with radials for the settings you pick and your own Subliminal words. Pick the avatar, then press **Attach Hypno**. It remembers your settings for each avatar. Needs a Humanoid rig, or pick the head bone yourself. |
 | **Touch Setup** | Adds the VRChat contact receivers that **TOUCH** reads, one on your head, chest or hips next to the meshes it serves, so hands, fingers and heads can touch your materials. Pick the avatar and tick the meshes, then press **Add Touch Receivers**. **Preview Touch** shows a touch in the editor, so you can tune it without going into VRChat. It needs VRChat SDK 3.10.6 or newer (the 3.10.6 betas count). On an older SDK it shows a warning and adds nothing. |
 | **Preset Toggle** | Turns a preset into a toggle or a radial in your avatar's menu, with a picture of the preset as its icon. In game the material fades to the preset and back. Pick the avatar, the mesh and the preset, then press **Add Preset Toggle**. Unlock the material first. Textures stay as they are, because a toggle can't swap them. |
 | **Skeleton Mask** | Reads your avatar's bones and draws a skeleton into the UV layout of a mesh as black and white masks, one for each ticked material: skull, spine, ribs, pelvis, arms, legs, hands and feet. Pick the avatar and the mesh, tick the material slots, choose **Skeleton X-Ray** or an emission layer under **Apply To**, then press **Bake Skeleton Mask**. Needs a Humanoid rig. |

@@ -254,6 +254,29 @@
 
             <div class="col w-100 glass-panel" style="padding: 2.5rem; margin-top: 0;">
 
+                <div class="changelog-entry" data-version="v2.24.0">
+                    <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.24.0 - 2026-11-27</h5>
+                    <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Three new Unity Engine tools for blend shapes, missing scripts and texture compression, and an Optimization Suite that finds every uncompressed texture.</em></p>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Added</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Reset Selected Blend Shapes to Zero</strong> under <strong>VixenTools &gt; Unity Engine</strong> sets every blend shape on the selected meshes to zero. Select an avatar to reset all of its meshes at once. One Ctrl+Z puts them back.</li>
+                        <li class="mb-2"><strong>Clean Missing Scripts</strong> under <strong>VixenTools &gt; Unity Engine</strong> removes "missing script" components, <strong>From Selection</strong> or <strong>From Open Scenes</strong>. One Ctrl+Z puts them back. Select prefabs in the Project window to clean the prefab files themselves: it asks first, because changes to a prefab file can't be undone with Ctrl+Z. A missing script that belongs to a prefab is listed with that prefab, so you know which one to open.</li>
+                        <li class="mb-2"><strong>Textures</strong> under <strong>VixenTools &gt; Unity Engine</strong> has <strong>Reset Compression to Default</strong>, which puts textures back on Unity's default compression, and <strong>Turn Off Compression (Testing)</strong>, which turns compression off so you can check that your optimization tools find it. Both work on the textures, folders and materials you select, or on an avatar in the scene, and ask before they change anything. Each platform override stays on and keeps its max size.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Changed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2">The <strong>Optimization Suite</strong> lists textures without mipmap streaming as one <strong>Fix Missing Mipmap Streaming</strong> fix with the others, instead of a warning for every texture. Textures without mipmaps are left out, because streaming does nothing for them.</li>
+                    </ul>
+
+                    <p class="caption1 m-0 mb-2 mt-2"><strong>Fixed</strong></p>
+                    <ul class="custom-list m-0 ps-4 caption1 mb-0" style="line-height: 1.5;">
+                        <li class="mb-2"><strong>Compress Uncompressed Textures to High Quality</strong> in the <strong>Optimization Suite</strong> now finds textures whose PC override is set to an uncompressed format. It only looked at the default settings, so those textures stayed uncompressed on PC after the fix ran. It now fixes the override too, and keeps the override's max size.</li>
+                        <li class="mb-2"><strong>Upgrade Normal Maps to BC5</strong> and <strong>Upgrade Transparent Textures to Higher Quality</strong> no longer give the PC override a bigger max size than the texture can use. A 2048 texture whose default max size was 4096 got 4096 on its PC override. The size the texture imports at does not change.</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-entry" data-version="v2.23.0">
                     <h5 class="text-glow-cyan m-0 mb-1" style="font-size: 1.25rem;">v2.23.0 - 2026-11-19</h5>
                     <p class="caption1 m-0 mb-2 mt-2" style="color: #bfa8d2;"><em>Animator Forge generates a toggle for every blend shape on an accessory, and the Optimization Suite counts the way VRChat does and can tidy your avatar as it uploads.</em></p>

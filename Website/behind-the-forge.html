@@ -385,6 +385,128 @@
                 </div>
             </div>
             <!-- FORGE:START -->
+            <article class="glass-panel news-article w-100 mb-5" data-chips="shaders" id="forge-2026-11-27-rgba-color-masking-and-two-more-colour-l">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-tag">Latex Ultra</span>
+                        <span class="news-tag">Toon</span>
+                        <span class="news-tag">Clothing Pro</span>
+                        <span class="news-tag">Fur Pro</span>
+                        <span class="news-tag">World Surface</span>
+                        <span class="news-tag">World Fur</span>
+                        <span class="news-date">November 27, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">RGBA Color Masking and two more colour layers on Latex Ultra, Toon, Clothing Pro, Fur Pro, World Surface and World Fur</h2>
+                    <p class="forge-intro"><em>Moving a Poiyomi or lilToon material across used to mean rebuilding its colours by hand. This release brings the colour tools you already know to all six shaders, lets Viewer Context follow the clock, and makes locked materials compile far less often. It is also free in the Creator Companion.</em></p>
+                    <h3 class="text-glow-cyan">RGBA Color Masking</h3>
+                    <p class="forge-where">Under <strong>BASE</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Recolour up to four parts of the material from the red, green, blue and alpha of one mask.</li>
+                        <li>Each part has its own colour, texture, blend mode and glow.</li>
+                        <li>It works like Poiyomi's RGBA Color Masking and uses the same property names, so a Poiyomi material you switch over keeps its colours.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Second Color Layer<strong> and </strong>Third Color Layer</h3>
+                    <p class="forge-where">Under <strong>BASE</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Lay up to two more colours or textures over the <strong>Albedo</strong>.</li>
+                        <li>Each layer has its own UV, mask, blend, sides, distance fade and AudioLink.</li>
+                        <li>They work like Main Color 2nd and 3rd in lilToon and use the same property names, so a lilToon material you switch over keeps them.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Time of Day</h3>
+                    <p class="forge-where">In every part of <strong>VIEWER CONTEXT</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Show a part only between two hours, read from each viewer's own clock, so everyone sees their own evening or morning.</li>
+                        <li><strong>From</strong> later than <strong>To</strong> runs past midnight, and <strong>Softness</strong> fades it in over the hours you choose.</li>
+                        <li><strong>Show</strong> has three new choices: <strong>Only in Screenshots</strong>, <strong>Never in Screenshots</strong> and <strong>Only in Handheld Camera</strong>, so a saved photo can look different from the live camera.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Locking</h3>
+                    <p class="forge-where"><em>Changing one material used to make every locked material compile again on your next build. That is fixed, with a few other locking problems and some new shine control.</em></p>
+                    <ul class="pledge-list">
+                        <li>Changing one material or updating a shader no longer makes every locked material compile from scratch. Only the passes that really changed compile again. The first build after you re-lock still compiles everything once.</li>
+                        <li>Locked materials no longer carry effects that can never turn on, like Kinetic Shards when <strong>AudioLink</strong> is animated and Kinetics is off. Re-lock for a smaller upload.</li>
+                        <li>Locking twice in one session no longer leaves materials unlocked.</li>
+                        <li>"Couldn't open include file" no longer sticks to a locked material when the file is there.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Ink Weight</h3>
+                    <p class="forge-where">Under <strong>OUTLINES</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Ink Weight</strong> now follows point lights and Light Volumes, not only the main light.</li>
+                        <li>A light Unity draws per pixel still can't change it. Set that light's <strong>Render Mode</strong> to <strong>Not Important</strong> to include it.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Anti-Alias Reflections</h3>
+                    <p class="forge-where">Under <strong>SHADING &gt; Lighting</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Anti-Alias Reflections</strong> calms reflections of the world, so they stop crawling on tight detail as you move.</li>
+                        <li><strong>Anti-Alias Limit</strong> caps how far anti-aliasing can soften a highlight, so hard edges keep their shine.</li>
+                        <li>Both start off.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Also fixed</h3>
+                    <p class="forge-where"><em>A few editor fixes, and two changes that can alter a material you already have.</em></p>
+                    <ul class="pledge-list">
+                        <li>Switching a cutout or transparent material onto a VixForge shader keeps the matching <strong>VRChat Fallback Shader</strong>.</li>
+                        <li><strong>Add Director Preview Rig</strong> keeps the AudioLink already in your scene working.</li>
+                        <li><strong>Movement Setup</strong> gives each avatar's FX controller its own clips, so avatars in one folder no longer share them.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Before you update</h3>
+                    <ul class="pledge-list">
+                        <li><strong>Sharpness</strong> in <strong>Glitter Settings</strong> now also sets the size of flakes with <strong>Sparkle</strong> on <strong>View</strong>. At 90 nothing changes. Any other value shows smaller or bigger flakes: set it to 90 for the old size.</li>
+                        <li>World Surface and World Fur: <strong>Unified Light Lightmaps</strong> is gone with the VixForge Light Baker. A material that had it on now reads its lightmaps the standard way, which is right for Unity and Glim bakes.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Free in the Creator Companion through the Vixens Toolbox listing, once the release is published.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-11-27-vixens-toolbox-2-24-0-three-quick-fixes">
+                <div class="news-body">
+                    <div class="news-meta">
+                        <span class="news-tag">Release Notes</span>
+                        <span class="news-tag">Vixens Toolbox</span>
+                        <span class="news-date">November 27, 2026</span>
+                    </div>
+
+                    <h2 class="text-glow-cyan" style="margin-top: 0;">Vixens Toolbox 2.24.0: three quick fixes in one menu, and textures that really get compressed</h2>
+                    <p class="forge-intro"><em>Ever had an avatar stuck with half its blend shapes turned up, a scene full of "missing script" warnings, or textures that stayed uncompressed after you told the Optimization Suite to fix them? This release adds tools for the first two and fixes the third.</em></p>
+                    <h3 class="text-glow-cyan">Reset Selected Blend Shapes to Zero</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Unity Engine</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>Sets every blend shape on the selected meshes to zero.</li>
+                        <li>Select the whole avatar to reset every mesh on it at once.</li>
+                        <li>One Ctrl+Z puts them all back.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Clean Missing Scripts</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Unity Engine &gt; Clean Missing Scripts</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>From Selection</strong> or <strong>From Open Scenes</strong> removes the empty "missing script" components left behind when a script is deleted.</li>
+                        <li>One Ctrl+Z puts them back.</li>
+                        <li>Select prefabs in the Project window to clean the prefab files themselves. It asks first, because a prefab file can't be undone with Ctrl+Z.</li>
+                        <li>If a missing script belongs to a prefab, it tells you which prefab to open.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Texture compression</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Unity Engine &gt; Textures</strong>.</p>
+                    <ul class="pledge-list">
+                        <li><strong>Reset Compression to Default</strong> puts textures back on Unity's default compression.</li>
+                        <li><strong>Turn Off Compression (Testing)</strong> turns it off, so you can check that your optimization tools catch it.</li>
+                        <li>Both work on selected textures, folders and materials, or on an avatar in the scene, and ask before they change anything. Every platform keeps its max size.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Optimization Suite</h3>
+                    <p class="forge-where">Under <strong>VixenTools &gt; Avatars &gt; Optimization Suite</strong>.</p>
+                    <ul class="pledge-list">
+                        <li>The "Compress Uncompressed Textures" fix now finds textures whose PC setting is uncompressed. It only looked at the default settings, so those stayed uncompressed on PC after the fix ran.</li>
+                        <li><strong>Fix Missing Mipmap Streaming</strong> is one fix in the list now, instead of a warning for every texture.</li>
+                        <li>The BC5 and transparent texture upgrades no longer set a bigger max size than the texture can use.</li>
+                    </ul>
+                    <h3 class="text-glow-cyan">Where this is at</h3>
+                    <ul class="pledge-list">
+                        <li>Out in the Creator Companion once the release is published.</li>
+                    </ul>
+                </div>
+            </article>
+
             <article class="glass-panel news-article w-100 mb-5" data-chips="tools" id="forge-2026-11-19-vixens-toolbox-2-23-0-a-toggle-per-blend">
                 <div class="news-body">
                     <div class="news-meta">

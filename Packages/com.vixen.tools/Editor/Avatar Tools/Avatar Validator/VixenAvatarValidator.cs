@@ -664,7 +664,7 @@ namespace VixenTools.Editor
                                 var pc = imp.GetPlatformTextureSettings("Standalone");
                                 pc.overridden = true;
                                 pc.format = TextureImporterFormat.BC7;
-                                pc.maxTextureSize = imp.maxTextureSize;
+                                pc.maxTextureSize = SourceCappedMaxSize(imp, imp.maxTextureSize);
                                 imp.SetPlatformTextureSettings(pc);
                                 imp.SaveAndReimport();
                                 upgraded++;
@@ -711,7 +711,7 @@ namespace VixenTools.Editor
                                 var pc = imp.GetPlatformTextureSettings("Standalone");
                                 pc.overridden = true;
                                 pc.format = TextureImporterFormat.BC5;
-                                pc.maxTextureSize = imp.maxTextureSize;
+                                pc.maxTextureSize = SourceCappedMaxSize(imp, imp.maxTextureSize);
                                 imp.SetPlatformTextureSettings(pc);
                                 imp.SaveAndReimport();
                                 upgraded++;
@@ -731,7 +731,7 @@ namespace VixenTools.Editor
             {
                 if (!IsProcessableTexture(tex, out string uncompressedPath)) continue;
                 var texImporter = AssetImporter.GetAtPath(uncompressedPath) as TextureImporter;
-                if (texImporter != null && texImporter.textureCompression == TextureImporterCompression.Uncompressed)
+                if (texImporter != null && IsUncompressedOnPC(texImporter))
                     uncompressedTexPaths.Add(uncompressedPath);
             }
 
@@ -741,7 +741,7 @@ namespace VixenTools.Editor
                 {
                     ID = "COMPRESS_TEXTURES",
                     Label = $"<color=#00ff66>Compress {uncompressedTexPaths.Count} Uncompressed Texture(s) to High Quality</color>",
-                    Description = "Do this before you shrink anything. An uncompressed RGBA texture costs 32 bits per pixel; high-quality block compression costs 8, so this drops those textures to a quarter of their VRAM. That is the same saving you get from halving the resolution, without the blur and the mushy edges. Unity picks the right block format per texture, so colour maps get BC7 and normal maps stay normal maps. Resolution is the blunt instrument: reach for it after the format is already right.",
+                    Description = "Do this before you shrink anything. An uncompressed RGBA texture costs 32 bits per pixel; high-quality block compression costs 8, so this drops those textures to a quarter of their VRAM. That is the same saving you get from halving the resolution, without the blur and the mushy edges. Unity picks the right block format per texture, so colour maps get BC7 and normal maps stay normal maps. A PC override set to an uncompressed format is fixed too, and it keeps its max size. Resolution is the blunt instrument: reach for it after the format is already right.",
                     ComputeSignature = () => "compress:" + string.Join("|", uncompressedTexPaths.OrderBy(p => p, System.StringComparer.Ordinal)),
                     Execute = () => {
                         int converted = 0;
@@ -752,7 +752,17 @@ namespace VixenTools.Editor
                             {
                                 var imp = AssetImporter.GetAtPath(path) as TextureImporter;
                                 if (imp == null) continue;
-                                imp.textureCompression = TextureImporterCompression.CompressedHQ;
+                                if (imp.textureCompression == TextureImporterCompression.Uncompressed)
+                                    imp.textureCompression = TextureImporterCompression.CompressedHQ;
+                                var pc = imp.GetPlatformTextureSettings("Standalone");
+                                if (pc.overridden && IsUncompressedOverride(pc))
+                                {
+                                    pc.format = TextureImporterFormat.Automatic;
+                                    pc.textureCompression = TextureImporterCompression.CompressedHQ;
+                                    pc.crunchedCompression = false;
+                                    pc.maxTextureSize = SourceCappedMaxSize(imp, pc.maxTextureSize);
+                                    imp.SetPlatformTextureSettings(pc);
+                                }
                                 imp.SaveAndReimport();
                                 converted++;
                             }
@@ -766,29 +776,48 @@ namespace VixenTools.Editor
                 }, prepend: true);
             }
 
+            List<string> noStreamingPaths = new List<string>();
             foreach (var tex in report.UniqueTextures)
             {
-                if (tex is RenderTexture) continue;
+                if (tex == null || tex is RenderTexture) continue;
 
                 string texPath = AssetDatabase.GetAssetPath(tex);
                 if (string.IsNullOrEmpty(texPath) || !texPath.StartsWith("Assets/")) continue;
 
                 TextureImporter importer = AssetImporter.GetAtPath(texPath) as TextureImporter;
-                if (importer != null && !importer.streamingMipmaps)
+                if (importer != null && importer.mipmapEnabled && !importer.streamingMipmaps && !noStreamingPaths.Contains(texPath))
+                    noStreamingPaths.Add(texPath);
+            }
+
+            if (noStreamingPaths.Count > 0)
+            {
+                AddTask(new OptimizationTask
                 {
-                    report.PCPerformanceWarnings.Add(new Anomaly {
-                        Description = $"<b>VRAM Bottleneck:</b> Texture [{tex.name}] lacks Mip Streaming. Causes aggressive VRAM overhead.",
-                        ContextObject = tex,
-                        FixLabel = "ENABLE STREAMING",
-                        AutoFix = () => {
-                            var imp = AssetImporter.GetAtPath(texPath) as TextureImporter;
-                            if (imp != null) {
+                    ID = "ENABLE_MIP_STREAMING",
+                    Label = $"<color=#00e5ff>Fix Missing Mipmap Streaming on {noStreamingPaths.Count} Texture(s)</color>",
+                    Description = "Turns on Mip Streaming for these textures. VRChat can then load only the mip levels a texture needs at its distance from the camera, instead of the whole texture, so far-away textures use less video memory. The texture itself does not change.",
+                    ComputeSignature = () => "mipstream:" + string.Join("|", noStreamingPaths.OrderBy(p => p, System.StringComparer.Ordinal)),
+                    Execute = () => {
+                        int enabled = 0;
+                        try
+                        {
+                            AssetDatabase.StartAssetEditing();
+                            foreach (string path in noStreamingPaths)
+                            {
+                                var imp = AssetImporter.GetAtPath(path) as TextureImporter;
+                                if (imp == null || imp.streamingMipmaps) continue;
                                 imp.streamingMipmaps = true;
                                 imp.SaveAndReimport();
+                                enabled++;
                             }
                         }
-                    });
-                }
+                        finally
+                        {
+                            AssetDatabase.StopAssetEditing();
+                        }
+                        Debug.Log($"[VixForge] Mip Streaming Pass: turned on for {enabled} texture(s).");
+                    }
+                });
             }
 
             foreach (var mat in allMaterials)
@@ -1991,6 +2020,44 @@ namespace VixenTools.Editor
             if (string.IsNullOrEmpty(assetPath) || !assetPath.StartsWith("Assets/")) return false;
             if (VixenMagickKit.IsProtectedAsset(assetPath)) return false;
             return true;
+        }
+
+        private static bool IsUncompressedOnPC(TextureImporter imp)
+        {
+            if (imp.textureCompression == TextureImporterCompression.Uncompressed) return true;
+            var pc = imp.GetPlatformTextureSettings("Standalone");
+            return pc.overridden && IsUncompressedOverride(pc);
+        }
+
+        private static bool IsUncompressedOverride(TextureImporterPlatformSettings pc)
+        {
+            if (pc.format == TextureImporterFormat.Automatic)
+                return pc.textureCompression == TextureImporterCompression.Uncompressed;
+            switch (pc.format)
+            {
+                case TextureImporterFormat.RGBA32:
+                case TextureImporterFormat.RGB24:
+                case TextureImporterFormat.ARGB32:
+                case TextureImporterFormat.ARGB16:
+                case TextureImporterFormat.RGBA16:
+                case TextureImporterFormat.RGB16:
+                case TextureImporterFormat.Alpha8:
+                case TextureImporterFormat.R8:
+                case TextureImporterFormat.R16:
+                case TextureImporterFormat.RG16:
+                case TextureImporterFormat.RG32:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        private static int SourceCappedMaxSize(TextureImporter imp, int cap)
+        {
+            imp.GetSourceTextureWidthAndHeight(out int w, out int h);
+            int side = Mathf.Max(w, h);
+            if (side <= 0) return cap;
+            return Mathf.Min(cap, Mathf.Max(32, Mathf.NextPowerOfTwo(side)));
         }
 
         public static void ProcessTexturesWithMagick(IEnumerable<Texture> textures, int targetSize, ResizeMode mode)

@@ -898,12 +898,16 @@ public class VixenWearLatexEditor : VixForgeEditor.ShaderEditor
     public override void AssignNewShaderToMaterial(Material material, Shader oldShader, Shader newShader)
     {
         base.AssignNewShaderToMaterial(material, oldShader, newShader);
-        if (material == null || IsLocked(material)) return;
-        if (material.HasProperty("_Mode"))
-            VixenWearMaterials.SetupMaterialWithBlendMode(material, (int)material.GetFloat("_Mode"));
-        // Swapping onto a world shader is the moment the material first has a Global Illumination
-        // mode to hold, so let the one place that owns that decision set it.
-        VixForgeEditor.ShaderEditor.SyncGlobalIlluminationFlags(material);
+        if (material == null) return;
+        if (!IsLocked(material))
+        {
+            if (material.HasProperty("_Mode"))
+                VixenWearMaterials.SetupMaterialWithBlendMode(material, (int)material.GetFloat("_Mode"));
+            // Swapping onto a world shader is the moment the material first has a Global Illumination
+            // mode to hold, so let the one place that owns that decision set it.
+            VixForgeEditor.ShaderEditor.SyncGlobalIlluminationFlags(material);
+        }
+        VixForgeEditor.Helpers.MaterialHelper.KeepFallbackPastUndoRecordedSwap(material);
     }
 
     [InitializeOnLoadMethod]

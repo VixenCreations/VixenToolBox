@@ -57,8 +57,16 @@
         // The dimmer is applied here for the same reason upstream's GetDMXColor applies it: a
         // fixture faded to black must contribute no light. _VRSL_GI_Int is the user's own
         // slider on top of that, not a stand-in for it.
+        float4 _Udon_VixForge_DMXWash;
+
         half3 VF_VRSLWash(Texture2D grid, float4 texelSize, float baseChannel, float mode, float saturation)
         {
+            [branch] if (mode > 3.5)
+            {
+                half3 show = _Udon_VixForge_DMXWash.rgb * saturate(_Udon_VixForge_DMXWash.a);
+                half showLum = dot(show, VF_LUMA_W(half3(0.299, 0.587, 0.114)));
+                return lerp(showLum.xxx, show, saturate(saturation));
+            }
             uint giBase = (uint)baseChannel;
             uint dimOff, colOff; bool hasCol;
             VF_VRSLChannelMap(mode, dimOff, colOff, hasCol);

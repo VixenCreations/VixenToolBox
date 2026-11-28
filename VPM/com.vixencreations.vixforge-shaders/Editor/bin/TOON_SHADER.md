@@ -15,8 +15,8 @@ Toon is a superset in one direction. Set the style to **Realistic**, or turn sha
 
 A few things differ from Latex Ultra:
 
-- **New:** a **Shading Options** block at the top of the **SHADING** section, and a **TATTOOS** section for tattoo ink (both covered below).
-- **Dropped:** the Wet and Goo effects, with Goo Touch, Wet Touch and the Movement group that drive them. Those are liquid-latex tricks that do not fit a toon surface. Hypno and Sheer & Lace stay on Latex Ultra too. Everything else is here and behaves the same: Polish, Outlines, Emissions, Matcaps, Eyes, AudioLink, Light Volumes, LTCGI and VRSL.
+- **New:** a **TATTOOS** section for tattoo ink (covered below).
+- **Dropped:** the Wet and Goo effects, with Goo Touch, Wet Touch and the Movement group that drive them. Those are liquid-latex tricks that do not fit a toon surface. Hypno, Sheer & Lace and Wear stay on Latex Ultra too. Everything else is here and behaves the same: Polish, Outlines, Emissions, Matcaps, Eyes, AudioLink, Light Volumes, LTCGI and VRSL.
 
 ---
 
@@ -44,6 +44,7 @@ The toon controls sit at the top of the **SHADING** section.
 | **Soft** | A smooth, rounded falloff. | A gentle stylise that keeps some gradient. |
 | **Hard** | One crisp terminator line, lit or unlit. | Bold two-tone and comic ink. |
 | **Realistic** | No stylising, the full physical response. | Realistic parts on a Toon material. **Light Wrap** softens the terminator the way skin and fabric do. |
+| **Multilayer Math** | Up to three coloured shadow layers, each with its own border and blur, like Poiyomi Toon. | Anime skin with tinted shadows. The **Latex Ultra** reference covers its controls. |
 
 The controls for each style appear only when that style is picked:
 
@@ -54,7 +55,7 @@ The controls for each style appear only when that style is picked:
 ### The two shared sliders
 
 - **Edge Softness** (Ramp and Cel Steps) sets how sharp the band edges are. Low is crisp, high blurs the step.
-- **Light Wrap** (every style but Realistic) pulls light further around the surface, so more of it reads as lit and the terminator softens. 0 keeps the plain terminator.
+- **Light Wrap** (Ramp, Cel Steps, Soft and Hard) pulls light further around the surface, so more of it reads as lit and the terminator softens. 0 keeps the plain terminator.
 
 ### Light Volumes
 
@@ -64,7 +65,7 @@ Point, spot and area lights from a world's Light Volumes light you smoothly, lik
 
 ## Tattoo Ink
 
-**TATTOOS**, just after DECALS, holds up to three tattoos that sit in your skin like real ink. Turn on **Enable**, turn on **Tattoo 1**, **Tattoo 2** or **Tattoo 3**, and give it **Art**: its alpha says where the ink is, and Tiling and Offset place it.
+**TATTOOS**, just after DECALS, holds up to three tattoos that sit in your skin like real ink. Fur Pro has it too. Turn on **Enable**, turn on **Tattoo 1**, **Tattoo 2** or **Tattoo 3**, and give it **Art**: its alpha says where the ink is, and Tiling and Offset place it.
 
 * **Bleed** softens the edges the way ink spreads under skin. **Age** fades and blurs it and turns black toward the blue-green of an old tattoo. **Fresh Ink** adds a new-ink gloss.
 * **Sheen Band** and **Rim Band** put hard toon highlights on the ink only. **Sheen Shape** sets where the band starts and how soft its edge is.

@@ -50,11 +50,24 @@ namespace VixForgeEditor.Helpers
                 if (m == null || !m.HasProperty(property) || !m.HasProperty(twin) || ShaderOptimizer.IsMaterialLocked(m)) continue;
                 Vector4 delta = Rate(property, before[i]) - Rate(property, Read(m, property, isVector));
                 if (delta == Vector4.zero) continue;
-                if (time < 0f) time = ShaderTime();
+                float t = SharedClockTime(m);
+                if (t < 0f)
+                {
+                    if (time < 0f) time = ShaderTime();
+                    t = time;
+                }
                 Undo.RecordObject(m, Undo.GetCurrentGroupName());
-                if (isVector) m.SetVector(twin, m.GetVector(twin) + delta * time);
-                else m.SetFloat(twin, m.GetFloat(twin) + delta.x * time);
+                if (isVector) m.SetVector(twin, m.GetVector(twin) + delta * t);
+                else m.SetFloat(twin, m.GetFloat(twin) + delta.x * t);
             }
+        }
+
+        private static float SharedClockTime(Material m)
+        {
+            if (!m.HasProperty("_SharedClock") || m.GetFloat("_SharedClock") < 0.5f) return -1f;
+            int ms = Shader.GetGlobalInteger("_VRChatTimeNetworkMs");
+            if (ms == 0) return -1f;
+            return (ms & 0xFFFFFF) * 0.001f;
         }
 
         public static float Reach(string key)

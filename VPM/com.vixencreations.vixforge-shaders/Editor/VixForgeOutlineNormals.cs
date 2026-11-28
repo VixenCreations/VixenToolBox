@@ -79,7 +79,9 @@ public static class VixForgeOutlineNormals
     {
         // FindObjectsOfType<T>(bool) is 2020.1 and newer. Before that the only way to reach an inactive object is
         // FindObjectsOfTypeAll, which also returns prefab and asset instances, so those are filtered by scene.
-#if UNITY_2020_1_OR_NEWER
+#if UNITY_6000_0_OR_NEWER
+        return root != null ? root.GetComponentsInChildren<Renderer>(true) : Object.FindObjectsByType<Renderer>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID);
+#elif UNITY_2020_1_OR_NEWER
         return root != null ? root.GetComponentsInChildren<Renderer>(true) : Object.FindObjectsOfType<Renderer>(true);
 #else
         return root != null

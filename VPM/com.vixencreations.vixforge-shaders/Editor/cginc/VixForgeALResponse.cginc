@@ -132,8 +132,11 @@
         // VRChat hands every shader the local time of day itself (VRCTime.cginc in the base SDK): local hours in
         // bits 17 to 21 of _VRChatTimeEncoded1, minutes in 22 to 27, seconds in 11 to 16. It reads 0, midnight,
         // outside the client. The guard keeps one declaration if a program ever includes VRChat's own file.
+        #ifndef VF_VRC_TIME_DECLARED
+        #define VF_VRC_TIME_DECLARED
         #ifndef VRCTIME_CGINC
         uint _VRChatTimeEncoded1;
+        #endif
         #endif
 
         float AL_VRCLocalHours()

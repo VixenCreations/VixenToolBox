@@ -409,9 +409,7 @@
                 float  blend = saturate(2.5 * sqrt(sin2));
                 float  c     = dot(m.N, L);
                 float  shape = vw_ULSizedShape(c, sin2, m.soft, m.hardP);
-                #ifdef VIXFORGE_TOON
-                shape = VF_ToonRampLevel(shape);
-                #endif
+                shape = VF_TOON_RAMP_LEVEL(shape);
                 float  LdH = saturate(dot(L, Unity_SafeNormalize(L + m.V)));
                 a.diff  += m.diffColor * W * (shape * Burley_Diffuse(m.NdotV, saturate(c), LdH, m.aBase) * UNITY_PI) * m.baseEnergy;
                 a.light += W * shape;
@@ -803,9 +801,7 @@
             // surface faced the light at all. Anything that reached zero stays at zero.
             finalNdotL = pow(finalNdotL, lerp(1.0, 0.15, saturate(_Shad_Hard)));
 
-            #ifdef VIXFORGE_TOON
-            finalNdotL = VF_ToonRamp(finalNdotL);
-            #endif
+            finalNdotL = VF_TOON_RAMP(finalNdotL);
 
             half3 ccF0      = _CC_F0 * _CC_Tint.rgb;
             #ifdef VF_HAS_FILM
@@ -856,6 +852,18 @@
             // FIX: Supply raw NdotL into Burley to preserve physical surface scattering geometry
             float burley = Burley_Diffuse(NdotV, NdotL, LdotH, aBase);
             half3 baseDiffuse = diffColor * light.color * finalNdotL * burley * UNITY_PI * baseEnergy * shadowTrace;
+            //ifex _UseToon==0 || _Toon_Mode!=5
+            half3 vwMLAmb = 1.0;
+            bool  vwMLOn  = _UseToon > 0.5 && _Toon_Mode > 4.5;
+            VFMLCtx vwMLC = VF_MLMakeCtx(s.ML, s.GeomNormalWS, N, s.Albedo);
+            if (vwMLOn)
+            {
+                half3 vwMLDirect;
+                VF_MLFactors(vwMLC, L, (vwMLAtten >= 0.0) ? vwMLAtten : 1.0, true, ambPlain, vwMLDirect, vwMLAmb);
+                half3 vwMLLit = (vwMLAtten >= 0.0) ? vwMLLight : light.color;
+                baseDiffuse = diffColor * vwMLLit * burley * UNITY_PI * baseEnergy * shadowTrace * vwMLDirect;
+            }
+            //endex
 
             float D_cc = D_GGX(NcH, VF_UL_A2CC);
             float V_cc = V_SmithJointGGX(NcL, NcV, a2_cc);
@@ -897,10 +905,16 @@
                         half   vNdL = saturate(vRaw);
                         float  vLdH = saturate(dot(vL, vH));
                         half   vShape = pow(saturate((vRaw + softW) / (1.0 + softW)), vlHardP);
-                        #ifdef VIXFORGE_TOON
-                        vShape = VF_ToonRamp(vShape);
-                        #endif
+                        vShape = VF_TOON_RAMP(vShape);
                         baseDiffuse  += diffColor * vCol * vShape * Burley_Diffuse(NdotV, vNdL, vLdH, aBase) * UNITY_PI * baseEnergy;
+                        //ifex _UseToon==0 || _Toon_Mode!=5
+                        if (vwMLOn)
+                        {
+                            half3 vMLD, vMLA;
+                            VF_MLFactors(vwMLC, vL, 1.0, false, 0.0, vMLD, vMLA);
+                            baseDiffuse += diffColor * vCol * (vMLD - vShape) * Burley_Diffuse(NdotV, vNdL, vLdH, aBase) * UNITY_PI * baseEnergy;
+                        }
+                        //endex
                         baseSpecular += D_GGX(saturate(dot(N, vH)), a2_lit) * V_SmithJointGGX(vNdL, NdotV, a2_base)
                                       * UNITY_PI * F_Schlick(vLdH, specColor) * vCol * vNdL * baseEnergy;
                         half  vNcL = saturate(dot(Nc, vL));
@@ -1007,6 +1021,21 @@
             half3 rimTint = saturate(max(diffColor, specColor) + 0.5);
             half3 rimColor = 0;
             //ifex _UseRim==0
+            //ifex _UseAudioLink==0
+            [branch] if (rim > 1e-4 && (_AL_Rim_Color > 0.0 || _AL_Rim_Spectrum > 0.0) && AL_Active())
+            {
+                float3 rimVN = mul((float3x3)UNITY_MATRIX_V, N);
+                float rimAngle = frac(atan2(rimVN.y, rimVN.x) * (0.5 / UNITY_PI) + 0.5 + AL_BeatClock(_AL_Band_Rim) * _AL_Rim_Spin);
+                float rimPos = _AL_Rim_Mirror > 0.5 ? 1.0 - abs(rimAngle * 2.0 - 1.0) : rimAngle;
+                [branch] if (_AL_Rim_Spectrum > 0.0)
+                {
+                    float rimNote = AudioLinkGetAmplitudeAtQuarterNote(clamp(round(_AL_Rim_Octave), 0.0, 9.0), rimPos * 23.0).b;
+                    rim *= lerp(1.0, saturate(rimNote * 2.0), saturate(_AL_Rim_Spectrum));
+                }
+                [branch] if (_AL_Rim_Color > 0.0)
+                    rimTint = lerp(rimTint, AL_MusicColor(_AL_ColorMode, _AL_ColorMode > 5.5 ? rimPos : _AL_Strip_Pos, floor(rimPos * 11.0)), saturate(_AL_Rim_Color));
+            }
+            //endex
             [branch] if (rim > 1e-4)
             {
                 half rimWrap   = saturate(_Rim_Wrap);
@@ -1082,9 +1111,11 @@
                 ulm.rimFlat    = vw_RimA0(ulm.rimWrap) * 0.25;
                 ulm.rimFollow  = saturate(_Rim_Follow);
                 float ulPls    = _LV_Pt_Shading;
-                #ifdef VIXFORGE_TOON
+                //ifex _UseToon==0
+                //ifex _LV_Pt_Toon==0
                 ulPls = (_LV_Pt_Toon > 0.5 && _UseToon > 0.5) ? 0.0 : ulPls;
-                #endif
+                //endex
+                //endex
                 ulm.pls        = vw_LVMaskMoments(ulPls);
                 ulm.specMix    = _LV_Spec_Mix;
                 ulm.ccMix      = _LV_CC_Spec_Mix;
@@ -1285,7 +1316,7 @@
             //endex
             #endif
             //endex
-            #if defined(VF_TATTOO) && defined(VIXFORGE_TOON) && !defined(VIXFORGE_CLOTHING) && !defined(VIXFORGE_WORLD)
+            #if defined(VF_TATTOO)
             half tatEx = 0.0;
             //ifex _UseTattoos==0
             [branch] if (any(s.TatUV > 0.0))
@@ -1309,7 +1340,7 @@
             //endex
             #endif
             //endex
-            #if defined(VF_TATTOO) && defined(VIXFORGE_TOON) && !defined(VIXFORGE_CLOTHING) && !defined(VIXFORGE_WORLD)
+            #if defined(VF_TATTOO)
             //ifex _UseTattoos==0
             finalColor += s.TatUV * tatEx;
             //endex
@@ -1326,6 +1357,10 @@
             half  reflClampLV  = vw_ReflClampAmt(_RC_LV);
             half3 lvSpecTerm   = vw_ClampSpecular(s.LVSpec * baseEnergy * baseSpecOcc, reflClampLV);
             half3 lvCCSpecTerm = vw_ClampSpecular(s.LVCCSpec * s.ClearcoatStrength * thinFilmColor * ccSpecOcc, reflClampLV);
+
+            //ifex _UseToon==0 || _Toon_Mode!=5
+            ambOccluded *= vwMLAmb;
+            //endex
 
             finalColor +=
                 ambOccluded * diffColor * baseEnergy * (1.0 - s.BakedShadow * _ShadowMask_Indirect) +
@@ -1426,7 +1461,7 @@
             //endex
             #endif
             //endex
-            #if defined(VF_TATTOO) && defined(VIXFORGE_TOON) && !defined(VIXFORGE_CLOTHING) && !defined(VIXFORGE_WORLD)
+            #if defined(VF_TATTOO)
             //ifex _UseTattoos==0
             [branch] if (any(s.TatUV > 0.0))
                 tatEx += VF_TatExcite(ambPlain, s.TatKey) + VF_TatExcite(lvLoopLight, s.TatKey);
@@ -1839,17 +1874,7 @@
             #ifdef DIRLIGHTMAP_COMBINED
                 fixed4 bakedDir = UNITY_SAMPLE_TEX2D_SAMPLER(unity_LightmapInd, unity_Lightmap,
                                                              data.lightmapUV.xy);
-                half3 lmDiffuse;
-                [branch] if (_LM_Unified > 0.5)
-                {
-                    float3 lmV = (bakedDir.xyz - 0.5) * 4.0;
-                    float3 lmN0 = normalize(s.GeomNormalWS);
-                    lmDiffuse = baked * (max(1.0 + dot(giNormal, lmV), 0.0) / max(1.0 + dot(lmN0, lmV), 1e-3));
-                }
-                else
-                {
-                    lmDiffuse = DecodeDirectionalLightmap(baked, bakedDir, giNormal);
-                }
+                half3 lmDiffuse = DecodeDirectionalLightmap(baked, bakedDir, giNormal);
             #else
                 half3 lmDiffuse = baked;
             #endif
@@ -1900,6 +1925,9 @@
         #endif
 
         #if !defined(UNITY_PASS_FORWARDADD)
+            //ifex _CC_Spec_AA_Refl==0 || _CC_Spec_AA==0
+            s.Smoothness = (_CC_Spec_AA_Refl > 0.5) ? 1.0 - VF_SpecAAWiden(saturate(1.0 - s.Smoothness), VF_SpecAAVariance(s.Normal), s.SpecAA) : s.Smoothness;
+            //endex
             Unity_GlossyEnvironmentData g =
                 UnityGlossyEnvironmentSetup(s.Smoothness, data.worldViewDir, s.Normal,
                                             lerp(unity_ColorSpaceDielectricSpec.rgb, s.Albedo, s.Metallic));
@@ -1921,6 +1949,9 @@
             viewDir = vw_WorldViewDir(s.WorldPos);
             half3 clearcoatEnv = 0;
         #if !defined(UNITY_PASS_FORWARDADD)
+            //ifex _CC_Spec_AA_Refl==0 || _CC_Spec_AA==0
+            float vfCcAAVar = VF_SpecAAVariance(s.ClearcoatNormal);
+            //endex
             [branch] if (s.ClearcoatStrength * saturate(s.PolishMask) > 0.0 VF_FILM_OR(s.FilmCoat > 0.0))
             {
             float3 reflDir = reflect(-viewDir, s.ClearcoatNormal);
@@ -1931,6 +1962,9 @@
             // mip 7 on a chain that ends at 6. The coat and the surface disagreed on how blurred the
             // same room was.
             half ccPerceptual = saturate((1.0 - s.ClearcoatSmoothness) - s.CavRefl * _MicroGloss_Rough);
+            //ifex _CC_Spec_AA_Refl==0 || _CC_Spec_AA==0
+            ccPerceptual = (_CC_Spec_AA_Refl > 0.5) ? VF_SpecAAWiden(ccPerceptual, vfCcAAVar, s.SpecAA) : ccPerceptual;
+            //endex
             half mip = perceptualRoughnessToMipmapLevel(ccPerceptual * (1.7 - 0.7 * ccPerceptual));
 
             //ifex _UnifiedLight==0

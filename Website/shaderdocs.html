@@ -586,6 +586,115 @@
                     </ul>
                 </div>
 
+                <h3 class="text-glow-pink opt-group">RGBA Color Masking</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Masks</strong> - Each channel marks one part: red, green, blue and alpha. Paint white where that part takes its colour. Its tiling scales the mask.</li>
+                    <li class="mb-2"><strong>UV</strong> - Which UV set the mask follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
+                </ul>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Red</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Colours the part the red channel marks.</li>
+                    <li class="mb-2"><strong>Color</strong> - The colour for this part. Its alpha is how strongly it covers.</li>
+                    <li class="mb-2"><strong>Texture</strong> - Multiplies the colour, so the part can carry a pattern. Its tiling scales the pattern.</li>
+                    <li class="mb-2"><strong>Texture UV</strong> - Which UV set the texture follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
+                    <li class="mb-2"><strong>Scale &amp; Offset</strong> - Extra tiling (x, y) and offset (z, w) on top of the tiling of the texture.</li>
+                    <li class="mb-2"><strong>Color Blend</strong> - How the colour sits on the material: replacing it, multiplied into it, added as light, and so on.
+                        <span class="opt-values">Options: <code>Replace</code>, <code>Darken</code>, <code>Multiply</code>, <code>Lighten</code>, <code>Screen</code>, <code>Subtract</code>, <code>Add</code>, <code>Overlay</code></span></li>
+                    <li class="mb-2"><strong>Alpha Add</strong> - Added to the alpha of the colour, so you can push the part fully on or pull it back.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask marks this part.</li>
+                    <li class="mb-2"><strong>Emission Strength</strong> - Makes the part glow in its own colour. 0 is no glow.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Green</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Colours the part the green channel marks.</li>
+                    <li class="mb-2"><strong>Color</strong> - The colour for this part. Its alpha is how strongly it covers.</li>
+                    <li class="mb-2"><strong>Texture</strong> - Multiplies the colour, so the part can carry a pattern. Its tiling scales the pattern.</li>
+                    <li class="mb-2"><strong>Texture UV</strong> - Which UV set the texture follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
+                    <li class="mb-2"><strong>Scale &amp; Offset</strong> - Extra tiling (x, y) and offset (z, w) on top of the tiling of the texture.</li>
+                    <li class="mb-2"><strong>Color Blend</strong> - How the colour sits on the material: replacing it, multiplied into it, added as light, and so on.
+                        <span class="opt-values">Options: <code>Replace</code>, <code>Darken</code>, <code>Multiply</code>, <code>Lighten</code>, <code>Screen</code>, <code>Subtract</code>, <code>Add</code>, <code>Overlay</code></span></li>
+                    <li class="mb-2"><strong>Alpha Add</strong> - Added to the alpha of the colour, so you can push the part fully on or pull it back.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask marks this part.</li>
+                    <li class="mb-2"><strong>Emission Strength</strong> - Makes the part glow in its own colour. 0 is no glow.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Blue</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Colours the part the blue channel marks.</li>
+                    <li class="mb-2"><strong>Color</strong> - The colour for this part. Its alpha is how strongly it covers.</li>
+                    <li class="mb-2"><strong>Texture</strong> - Multiplies the colour, so the part can carry a pattern. Its tiling scales the pattern.</li>
+                    <li class="mb-2"><strong>Texture UV</strong> - Which UV set the texture follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
+                    <li class="mb-2"><strong>Scale &amp; Offset</strong> - Extra tiling (x, y) and offset (z, w) on top of the tiling of the texture.</li>
+                    <li class="mb-2"><strong>Color Blend</strong> - How the colour sits on the material: replacing it, multiplied into it, added as light, and so on.
+                        <span class="opt-values">Options: <code>Replace</code>, <code>Darken</code>, <code>Multiply</code>, <code>Lighten</code>, <code>Screen</code>, <code>Subtract</code>, <code>Add</code>, <code>Overlay</code></span></li>
+                    <li class="mb-2"><strong>Alpha Add</strong> - Added to the alpha of the colour, so you can push the part fully on or pull it back.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask marks this part.</li>
+                    <li class="mb-2"><strong>Emission Strength</strong> - Makes the part glow in its own colour. 0 is no glow.</li>
+                    </ul>
+                </div>
+
+                <div class="opt-subgroup">
+                    <p class="opt-note mt-2 mb-2"><strong>Alpha</strong></p>
+                    <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Enable</strong> - Colours the part the alpha channel marks.</li>
+                    <li class="mb-2"><strong>Color</strong> - The colour for this part. Its alpha is how strongly it covers.</li>
+                    <li class="mb-2"><strong>Texture</strong> - Multiplies the colour, so the part can carry a pattern. Its tiling scales the pattern.</li>
+                    <li class="mb-2"><strong>Texture UV</strong> - Which UV set the texture follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
+                    <li class="mb-2"><strong>Scale &amp; Offset</strong> - Extra tiling (x, y) and offset (z, w) on top of the tiling of the texture.</li>
+                    <li class="mb-2"><strong>Color Blend</strong> - How the colour sits on the material: replacing it, multiplied into it, added as light, and so on.
+                        <span class="opt-values">Options: <code>Replace</code>, <code>Darken</code>, <code>Multiply</code>, <code>Lighten</code>, <code>Screen</code>, <code>Subtract</code>, <code>Add</code>, <code>Overlay</code></span></li>
+                    <li class="mb-2"><strong>Alpha Add</strong> - Added to the alpha of the colour, so you can push the part fully on or pull it back.</li>
+                    <li class="mb-2"><strong>Mask Channel</strong> - Which channel of the mask marks this part.</li>
+                    <li class="mb-2"><strong>Emission Strength</strong> - Makes the part glow in its own colour. 0 is no glow.</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-glow-pink opt-group">Second Color Layer</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Color</strong> - Multiplies the texture. Its alpha is how strongly the layer covers.</li>
+                    <li class="mb-2"><strong>Texture</strong> - The image for this layer. Its alpha cuts it out, and its tiling scales it.</li>
+                    <li class="mb-2"><strong>UV</strong> - Which UV set the texture follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
+                    <li class="mb-2"><strong>Mask</strong> - White shows the layer and black hides it. Read from the red channel, on the Albedo UV.</li>
+                    <li class="mb-2"><strong>Blend</strong> - How the layer sits on the colour below: laid over it, added as light, screened or multiplied.
+                        <span class="opt-values">Options: <code>Normal</code>, <code>Add</code>, <code>Screen</code>, <code>Multiply</code></span></li>
+                    <li class="mb-2"><strong>Sides</strong> - Which side of the mesh shows the layer.
+                        <span class="opt-values">Options: <code>Both Sides</code>, <code>Back Only</code>, <code>Front Only</code></span></li>
+                    <li class="mb-2"><strong>Distance Fade</strong> - Fades the layer by distance from the camera, in metres, between Start and End. <em>Start</em>: Fully shown at this distance. <em>End</em>: Gone at this distance. Smaller than Start fades it out as the camera comes close. <em>Amount</em>: How much the distance decides. 0 turns it off.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music the layer follows.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code></span></li>
+                    <li class="mb-2"><strong>Beat Amount</strong> - How much the music decides. At 1 the layer shows only as loud as the band.</li>
+                </ul>
+
+                <h3 class="text-glow-pink opt-group">Third Color Layer</h3>
+                <ul class="custom-list m-0 ps-4 mb-4">
+                    <li class="mb-2"><strong>Color</strong> - Multiplies the texture. Its alpha is how strongly the layer covers.</li>
+                    <li class="mb-2"><strong>Texture</strong> - The image for this layer. Its alpha cuts it out, and its tiling scales it.</li>
+                    <li class="mb-2"><strong>UV</strong> - Which UV set the texture follows.
+                        <span class="opt-values">Options: <code>UV0</code>, <code>UV1</code></span></li>
+                    <li class="mb-2"><strong>Mask</strong> - White shows the layer and black hides it. Read from the red channel, on the Albedo UV.</li>
+                    <li class="mb-2"><strong>Blend</strong> - How the layer sits on the colour below: laid over it, added as light, screened or multiplied.
+                        <span class="opt-values">Options: <code>Normal</code>, <code>Add</code>, <code>Screen</code>, <code>Multiply</code></span></li>
+                    <li class="mb-2"><strong>Sides</strong> - Which side of the mesh shows the layer.
+                        <span class="opt-values">Options: <code>Both Sides</code>, <code>Back Only</code>, <code>Front Only</code></span></li>
+                    <li class="mb-2"><strong>Distance Fade</strong> - Fades the layer by distance from the camera, in metres, between Start and End. <em>Start</em>: Fully shown at this distance. <em>End</em>: Gone at this distance. Smaller than Start fades it out as the camera comes close. <em>Amount</em>: How much the distance decides. 0 turns it off.</li>
+                    <li class="mb-2"><strong>AudioLink Band</strong> - Which part of the music the layer follows.
+                        <span class="opt-values">Options: <code>Bass</code>, <code>Low Mid</code>, <code>High Mid</code>, <code>Treble</code>, <code>Volume</code></span></li>
+                    <li class="mb-2"><strong>Beat Amount</strong> - How much the music decides. At 1 the layer shows only as loud as the band.</li>
+                </ul>
+
                 <h3 class="text-glow-pink opt-group">UV Tile Discard</h3>
 
                 <div class="opt-subgroup">
@@ -1113,6 +1222,8 @@
                     <li class="mb-2"><strong>Horizon Occlusion</strong> - Stops reflections leaking through the surface when you look at it edge-on. 1 is full, 0 is off.</li>
                     <li class="mb-2"><strong>Highlight Clamp</strong> - Tames the hotspot on very glossy material so it stops sparkling. 1 leaves it alone, lower softens the highlight, and the bottom of the slider takes it out. Scene lights only, so reflections are not affected.</li>
                     <li class="mb-2"><strong>Specular Anti-Aliasing</strong> - Stops highlights sparkling and crawling on tight detail when you move, on the material and its clear coat. Leave it on unless you want the sparkle.</li>
+                    <li class="mb-2"><strong>Anti-Alias Reflections</strong> - Also calms reflections of the world, so they stop crawling on tight detail when you move. Off keeps reflections the way they were.</li>
+                    <li class="mb-2"><strong>Anti-Alias Limit</strong> - Caps how far anti-aliasing can soften a highlight, so sharp creases and hard edges keep their shine. 1 is no cap. Try 0.2 if edges look dull.</li>
                     </ul>
                 </div>
 
@@ -2930,7 +3041,7 @@
                     <ul class="custom-list m-0 ps-4 mb-4">
                     <li class="mb-2"><strong>Anchor</strong> - Whether the flakes are fixed to the surface or to the world, so they can either travel with you or shimmer as you move past them.
                         <span class="opt-values">Options: <code>UV</code>, <code>World Space</code></span></li>
-                    <li class="mb-2"><strong>Sharpness</strong> - How briefly each flake flashes as you move. High is a hard twinkle, low a softer shimmer. It changes the character, not how much glitter you get.</li>
+                    <li class="mb-2"><strong>Sharpness</strong> - How briefly each flake flashes as you move, and on a View sparkle layer how fine each flake is. High is a hard, tiny twinkle, low a softer, broader shimmer. At 90 a View flake is exactly Flake Size. It changes the character, not how much glitter you get.</li>
                     <li class="mb-2"><strong>Lit By</strong> - Which lights the flakes are allowed to catch.
                         <span class="opt-values">Options: <code>Natural</code>, <code>Light Volumes</code>, <code>LTCGI</code>, <code>VRSL</code>, <code>Everything</code>, <code>Always Lit</code></span></li>
                     <li class="mb-2"><strong>Brightness</strong> - How brightly the flakes flash. Each layer's Strength scales it again.</li>
@@ -5035,10 +5146,11 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
-                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code>, <code>Only in Screenshots</code>, <code>Never in Screenshots</code>, <code>Only in Handheld Camera</code></span></li>
                     <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
                         <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                    <li class="mb-2"><strong>Time of Day</strong> - Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight. <em>Amount</em>: How much the time decides. 0 turns it off. <em>From</em>: The hour it starts showing, 0 to 24. <em>To</em>: The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day. <em>Softness</em>: How many hours it fades in and out over.</li>
                         </ul>
                     </div>
 
@@ -5090,10 +5202,11 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
-                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code>, <code>Only in Screenshots</code>, <code>Never in Screenshots</code>, <code>Only in Handheld Camera</code></span></li>
                     <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
                         <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                    <li class="mb-2"><strong>Time of Day</strong> - Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight. <em>Amount</em>: How much the time decides. 0 turns it off. <em>From</em>: The hour it starts showing, 0 to 24. <em>To</em>: The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day. <em>Softness</em>: How many hours it fades in and out over.</li>
                         </ul>
                     </div>
 
@@ -5145,10 +5258,11 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
-                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code>, <code>Only in Screenshots</code>, <code>Never in Screenshots</code>, <code>Only in Handheld Camera</code></span></li>
                     <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
                         <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                    <li class="mb-2"><strong>Time of Day</strong> - Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight. <em>Amount</em>: How much the time decides. 0 turns it off. <em>From</em>: The hour it starts showing, 0 to 24. <em>To</em>: The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day. <em>Softness</em>: How many hours it fades in and out over.</li>
                         </ul>
                     </div>
 
@@ -5200,10 +5314,11 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
-                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code>, <code>Only in Screenshots</code>, <code>Never in Screenshots</code>, <code>Only in Handheld Camera</code></span></li>
                     <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
                         <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                    <li class="mb-2"><strong>Time of Day</strong> - Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight. <em>Amount</em>: How much the time decides. 0 turns it off. <em>From</em>: The hour it starts showing, 0 to 24. <em>To</em>: The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day. <em>Softness</em>: How many hours it fades in and out over.</li>
                         </ul>
                     </div>
 
@@ -5255,10 +5370,11 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
-                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code>, <code>Only in Screenshots</code>, <code>Never in Screenshots</code>, <code>Only in Handheld Camera</code></span></li>
                     <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
                         <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                    <li class="mb-2"><strong>Time of Day</strong> - Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight. <em>Amount</em>: How much the time decides. 0 turns it off. <em>From</em>: The hour it starts showing, 0 to 24. <em>To</em>: The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day. <em>Softness</em>: How many hours it fades in and out over.</li>
                         </ul>
                     </div>
 
@@ -5310,10 +5426,11 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
-                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code>, <code>Only in Screenshots</code>, <code>Never in Screenshots</code>, <code>Only in Handheld Camera</code></span></li>
                     <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
                         <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                    <li class="mb-2"><strong>Time of Day</strong> - Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight. <em>Amount</em>: How much the time decides. 0 turns it off. <em>From</em>: The hour it starts showing, 0 to 24. <em>To</em>: The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day. <em>Softness</em>: How many hours it fades in and out over.</li>
                         </ul>
                     </div>
 
@@ -5366,10 +5483,11 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
-                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code>, <code>Only in Screenshots</code>, <code>Never in Screenshots</code>, <code>Only in Handheld Camera</code></span></li>
                     <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
                         <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                    <li class="mb-2"><strong>Time of Day</strong> - Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight. <em>Amount</em>: How much the time decides. 0 turns it off. <em>From</em>: The hour it starts showing, 0 to 24. <em>To</em>: The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day. <em>Softness</em>: How many hours it fades in and out over.</li>
                         </ul>
                     </div>
 
@@ -5430,10 +5548,11 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
-                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code>, <code>Only in Screenshots</code>, <code>Never in Screenshots</code>, <code>Only in Handheld Camera</code></span></li>
                     <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
                         <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                    <li class="mb-2"><strong>Time of Day</strong> - Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight. <em>Amount</em>: How much the time decides. 0 turns it off. <em>From</em>: The hour it starts showing, 0 to 24. <em>To</em>: The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day. <em>Softness</em>: How many hours it fades in and out over.</li>
                         </ul>
                     </div>
 
@@ -5485,10 +5604,11 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
-                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code>, <code>Only in Screenshots</code>, <code>Never in Screenshots</code>, <code>Only in Handheld Camera</code></span></li>
                     <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
                         <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                    <li class="mb-2"><strong>Time of Day</strong> - Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight. <em>Amount</em>: How much the time decides. 0 turns it off. <em>From</em>: The hour it starts showing, 0 to 24. <em>To</em>: The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day. <em>Softness</em>: How many hours it fades in and out over.</li>
                         </ul>
                     </div>
 
@@ -5540,10 +5660,11 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
-                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code>, <code>Only in Screenshots</code>, <code>Never in Screenshots</code>, <code>Only in Handheld Camera</code></span></li>
                     <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
                         <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                    <li class="mb-2"><strong>Time of Day</strong> - Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight. <em>Amount</em>: How much the time decides. 0 turns it off. <em>From</em>: The hour it starts showing, 0 to 24. <em>To</em>: The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day. <em>Softness</em>: How many hours it fades in and out over.</li>
                         </ul>
                     </div>
 
@@ -5596,10 +5717,11 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
-                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code>, <code>Only in Screenshots</code>, <code>Never in Screenshots</code>, <code>Only in Handheld Camera</code></span></li>
                     <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
                         <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                    <li class="mb-2"><strong>Time of Day</strong> - Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight. <em>Amount</em>: How much the time decides. 0 turns it off. <em>From</em>: The hour it starts showing, 0 to 24. <em>To</em>: The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day. <em>Softness</em>: How many hours it fades in and out over.</li>
                         </ul>
                     </div>
 
@@ -5651,10 +5773,11 @@
                     <div class="opt-subgroup">
                         <p class="opt-note mt-2 mb-2"><strong>Where</strong></p>
                         <ul class="custom-list m-0 ps-4 mb-4">
-                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, or only on desktop.
-                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code></span></li>
+                    <li class="mb-2"><strong>Show</strong> - Where it shows: anywhere, only or never in mirrors, only or never in photos, only in VR, only on desktop, only or never in screenshots, or only in the handheld camera.
+                        <span class="opt-values">Options: <code>Anywhere</code>, <code>Only in Mirrors</code>, <code>Never in Mirrors</code>, <code>Only in Photos</code>, <code>Never in Photos</code>, <code>Only in VR</code>, <code>Only on Desktop</code>, <code>Only in Screenshots</code>, <code>Never in Screenshots</code>, <code>Only in Handheld Camera</code></span></li>
                     <li class="mb-2"><strong>Seen By</strong> - Which eye sees it in VR. Pick one eye to show it to that eye only.
                         <span class="opt-values">Options: <code>Both Eyes</code>, <code>Left Eye Only</code>, <code>Right Eye Only</code></span></li>
+                    <li class="mb-2"><strong>Time of Day</strong> - Shows it only between these hours on the clock of each viewer, so everyone sees their own evening or morning. The editor reads midnight. <em>Amount</em>: How much the time decides. 0 turns it off. <em>From</em>: The hour it starts showing, 0 to 24. <em>To</em>: The hour it stops showing. An hour before From runs past midnight. The same hour as From shows it all day. <em>Softness</em>: How many hours it fades in and out over.</li>
                         </ul>
                     </div>
 

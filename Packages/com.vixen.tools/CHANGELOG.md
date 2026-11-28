@@ -5,6 +5,26 @@
 All notable changes to the VixForge project will be documented in this file.
 
 ***
+## [2.24.0] - 2026-11-27
+
+*Three new Unity Engine tools for blend shapes, missing scripts and texture compression, and an Optimization Suite that finds every uncompressed texture.*
+
+### Added
+
+* **Reset Selected Blend Shapes to Zero** under **VixenTools > Unity Engine** sets every blend shape on the selected meshes to zero. Select an avatar to reset all of its meshes at once. One Ctrl+Z puts them back.
+* **Clean Missing Scripts** under **VixenTools > Unity Engine** removes "missing script" components, **From Selection** or **From Open Scenes**. One Ctrl+Z puts them back. Select prefabs in the Project window to clean the prefab files themselves: it asks first, because changes to a prefab file can't be undone with Ctrl+Z. A missing script that belongs to a prefab is listed with that prefab, so you know which one to open.
+* **Textures** under **VixenTools > Unity Engine** has **Reset Compression to Default**, which puts textures back on Unity's default compression, and **Turn Off Compression (Testing)**, which turns compression off so you can check that your optimization tools find it. Both work on the textures, folders and materials you select, or on an avatar in the scene, and ask before they change anything. Each platform override stays on and keeps its max size.
+
+### Changed
+
+* The **Optimization Suite** lists textures without mipmap streaming as one **Fix Missing Mipmap Streaming** fix with the others, instead of a warning for every texture. Textures without mipmaps are left out, because streaming does nothing for them.
+
+### Fixed
+
+* **Compress Uncompressed Textures to High Quality** in the **Optimization Suite** now finds textures whose PC override is set to an uncompressed format. It only looked at the default settings, so those textures stayed uncompressed on PC after the fix ran. It now fixes the override too, and keeps the override's max size.
+* **Upgrade Normal Maps to BC5** and **Upgrade Transparent Textures to Higher Quality** no longer give the PC override a bigger max size than the texture can use. A 2048 texture whose default max size was 4096 got 4096 on its PC override. The size the texture imports at does not change.
+
+***
 ## [2.23.0] - 2026-11-19
 
 *Animator Forge generates a toggle for every blend shape on an accessory, and the Optimization Suite counts the way VRChat does and can tidy your avatar as it uploads.*

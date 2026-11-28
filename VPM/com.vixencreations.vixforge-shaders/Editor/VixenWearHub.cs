@@ -60,7 +60,6 @@ public partial class VixenWearHub : EditorWindow
     private static readonly Dictionary<string, DocMeta> KnownDocs = new Dictionary<string, DocMeta>(System.StringComparer.OrdinalIgnoreCase)
     {
         { "HOW_TO_USE.md",      new DocMeta { Title = "How To Use",      Order = 0,  Category = CatStart,      Description = "Install, the inspector, editing a whole avatar at once, locking and the menus. Shared by every VixForge shader." } },
-        { "BAKER.md",           new DocMeta { Title = "Light Baker",     Order = 1,  Category = CatStart,      Description = "What the Light Baker does and how to bake a world with it. Ships with the Light Baker only." } },
         { "LATEX_SHADER.md",    new DocMeta { Title = "Latex Ultra",     Order = 2,  Category = CatShaders,    Description = "Every section of the Latex Ultra inspector, what it does and how to set it up." } },
         { "TOON_SHADER.md",     new DocMeta { Title = "Toon",            Order = 3,  Category = CatShaders,    Description = "What the VixForge Toon shader adds: the cel, ramp, soft, hard and realistic shading styles." } },
         { "CLOTHING_SHADER.md", new DocMeta { Title = "Clothing Pro",    Order = 4,  Category = CatShaders,    Description = "What the Clothing Pro shader adds: cloth sheen, real fur, sheer fabric and lace, and the one-click fabric presets." } },
@@ -72,7 +71,6 @@ public partial class VixenWearHub : EditorWindow
         { "FUR_CHANGELOG.md",   new DocMeta { Title = "Fur Pro",         Order = 13, Category = CatChangelogs, Description = "Every release of the VixForge Fur Pro shader." } },
         { "WORLD_SURFACE_CHANGELOG.md", new DocMeta { Title = "World Surface", Order = 14, Category = CatChangelogs, Description = "Every release of the VixForge World Surface shader." } },
         { "WORLD_FUR_CHANGELOG.md", new DocMeta { Title = "World Fur",    Order = 15, Category = CatChangelogs, Description = "Every release of the VixForge World Fur shader." } },
-        { "BAKER_CHANGELOG.md", new DocMeta { Title = "Light Baker",     Order = 16, Category = CatChangelogs, Description = "Every release of the VixForge Light Baker." } },
         { "EDITOR_CHANGELOG.md",new DocMeta { Title = "Editor",          Order = 17, Category = CatChangelogs, Description = "Every release of the VixForge Editor inspector and the tools that ship with it." } },
         { "PATREON.md",         new DocMeta { Title = "Supporters",      Order = 20, Category = CatAbout,      Description = "Everyone backing VixForge on Patreon and Ko-fi." } },
         { "LATEX_LICENSE.md",   new DocMeta { Title = "Latex Ultra License", Order = 21, Category = CatAbout,  Description = "The free use license agreement (EULA) for VixenWear Latex Ultra, the VixForge Editor and its tools." } },
@@ -81,7 +79,7 @@ public partial class VixenWearHub : EditorWindow
         { "FUR_LICENSE.md",     new DocMeta { Title = "Fur Pro License", Order = 24, Category = CatAbout,      Description = "The supporter-only license agreement (EULA) for the VixForge Fur Pro shader." } },
         { "WORLD_LICENSE.md",   new DocMeta { Title = "World License",   Order = 25, Category = CatAbout,      Description = "The supporter-only license agreement (EULA) for the VixForge World Surface and World Fur shaders." } },
         { "Usage Agreement.md", new DocMeta { Title = "Usage Agreement", Order = 26, Category = CatAbout,      Description = "The end user usage agreement for this package." } },
-        { "PLANNED_FEATURES.md", new DocMeta { Title = "Planned Features", Order = 30, Category = CatMore,     Description = "What we're building next for the shaders, the Light Baker and the tools." } },
+        { "PLANNED_FEATURES.md", new DocMeta { Title = "Planned Features", Order = 30, Category = CatMore,     Description = "What we're building next for the shaders and the tools." } },
     };
 
     private class HubPage

@@ -28,7 +28,7 @@ In **BASE**. Hides the repeat in a tiling texture, so a big floor or wall stops 
 
 ### Shading Options
 
-At the top of **SHADING**, the stylised looks from Toon. Turn on **Enable** and pick a **Style**: **Ramp Texture**, **Cel Steps**, **Soft**, **Hard** or **Realistic**. Off, the surface lights like normal PBR.
+At the top of **SHADING**, the stylised looks from Toon. Turn on **Enable** and pick a **Style**: **Ramp Texture**, **Cel Steps**, **Soft**, **Hard**, **Realistic** or **Multilayer Math**, which paints up to three coloured shadow layers. Off, the surface lights like normal PBR. The **Latex Ultra** reference covers every style.
 
 ### Baked Lighting
 
@@ -63,7 +63,7 @@ World Fur grows real strands, the same fur as Fur Pro.
 
 ## What they leave out
 
-The world shaders have no **Stretch Response**, no **Light Data** group under **SHADING**, and no **Material Contacts** or **Touch Glow** in **TOUCH**, because those follow an avatar. **Sheer & Lace**, **Hypno**, **Eyes**, **Gemstones** and **Tattoo Ink** stay on the avatar shaders too.
+The world shaders have no **Stretch Response**, no **Light Data** group under **SHADING**, and no **Material Contacts** or **Touch Glow** in **TOUCH**, because those follow an avatar. **Sheer & Lace**, **Hypno**, **Eyes**, **Gemstones**, **Tattoo Ink** and **Wear** stay on the avatar shaders too.
 
 ---
 
@@ -75,7 +75,6 @@ The world shaders have no **Stretch Response**, no **Light Data** group under **
    * **Global Illumination** set to **Baked** lets this material's glow light the room when you bake. On Realtime or None it stays out of the bake. **Emitted Light** sets how strong that light is without changing how the material looks: raise it when a neon sign barely lights anything, lower it when it floods the room.
    * **Smooth Filter**, on by default, reads the lightmap with a smoother filter so a low resolution bake stops looking blocky.
    * **Highlight** lets baked light throw a highlight, so a polished floor or a wet tile isn't flat under a bake. It needs **Directional Mode** set to **Directional**. **Highlight Softness** caps how sharp it can get, which hides the resolution of the lightmap.
-   * **Unified Light Lightmaps** reads which way the baked light arrived more closely, so normal maps catch your baked lamps more like realtime light. It helps a little with Unity's own directional lightmaps too.
    * **Realtime Global Illumination** follows the tick of the same name in your Lighting window and keeps itself in step, so you shouldn't need to touch it. **Sync Realtime GI Toggle** in the Hub's **World Lighting Check** sets it on every World Surface and World Fur material at once.
 
 The first lock after a bake takes a while, because baked lighting means more to build. It is working, not stuck, so let it finish.
